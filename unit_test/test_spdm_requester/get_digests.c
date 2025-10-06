@@ -1427,7 +1427,7 @@ static void req_get_digests_case22(void **state)
 /**
  * Test 23: a request message is successfully sent and a response message is successfully received.
  * Buffer B already has arbitrary data.
- * Expected Behavior: requester returns the status RETURN_SUCCESS and a DIGESTS message is
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS and a DIGESTS message is
  * received, buffer B appends the exchanged GET_DIGESTS and DIGESTS messages.
  **/
 static void req_get_digests_case23(void **state)

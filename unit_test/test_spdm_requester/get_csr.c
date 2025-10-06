@@ -343,7 +343,7 @@ static void req_get_csr_case1(void **state)
 
 /**
  * Test 2: Successful response to get csr
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void req_get_csr_case2(void **state)
 {
@@ -378,7 +378,7 @@ static void req_get_csr_case2(void **state)
 /**
  * Test 3: Successful response to get csr,
  * with a reset required
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void req_get_csr_case3(void **state)
 {
@@ -422,7 +422,7 @@ static void req_get_csr_case3(void **state)
 
 /**
  * Test 4: Send correct req_info and opaque_data
- * Expected Behavior: get a RETURN_SUCCESS return code and determine if req_info and opaque_data are correct
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code and determine if req_info and opaque_data are correct
  **/
 static void req_get_csr_case4(void **state)
 {

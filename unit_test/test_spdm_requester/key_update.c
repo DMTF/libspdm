@@ -3626,7 +3626,7 @@ static void req_key_update_case1(void **state)
 /**
  * Test 2: receiving a correct UPDATE_KEY_ACK message for updating
  * only the request data key.
- * Expected behavior: client returns a Status of RETURN_SUCCESS, the
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS, the
  * request data key is updated, but not the response data key.
  **/
 static void req_key_update_case2(void **state)
@@ -3829,7 +3829,7 @@ static void req_key_update_case5(void **state)
  * key, on the first try, receiving a Busy ERROR message, and on retry,
  * receiving a correct KEY_UPDATE_ACK message. The VERIFY_KEY behavior is
  * not altered.
- * Expected behavior: client returns a Status of RETURN_SUCCESS, the
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS, the
  * request data key is updated, but not the response data key.
  **/
 static void req_key_update_case6(void **state)
@@ -3983,7 +3983,7 @@ static void req_key_update_case8(void **state)
  * key, on the first try, receiving a ResponseNotReady ERROR message, and on
  * retry, receiving a correct KEY_UPDATE_ACK message. The VERIFY_KEY
  * behavior is not altered.
- * Expected behavior: client returns a Status of RETURN_SUCCESS, the
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS, the
  * request data key is updated, but not the response data key.
  **/
 static void req_key_update_case9(void **state)
@@ -4574,7 +4574,7 @@ static void req_key_update_case18(void **state)
  * verifying key, on the first try, receiving a Busy ERROR message,
  * and on retry, receiving a correct KEY_UPDATE_ACK message. The
  * VERIFY_KEY behavior is not altered.
- * Expected behavior: client returns a Status of RETURN_SUCCESS, the
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS, the
  * request data key is not rollbacked.
  **/
 static void req_key_update_case19(void **state)
@@ -4733,7 +4733,7 @@ static void req_key_update_case21(void **state)
  * Test 22: the requester is setup correctly (see Test 2), but, when verifying
  * key, on the first try, receiving a ResponseNotReady ERROR message, and on
  * retry, receiving a correct KEY_UPDATE_ACK message.
- * Expected behavior: client returns a Status of RETURN_SUCCESS, the
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS, the
  * request data key is not rollbacked.
  **/
 static void req_key_update_case22(void **state)
@@ -5049,7 +5049,7 @@ static void req_key_update_case26(void **state)
 /**
  * Test 27: receiving a correct UPDATE_KEY_ACK message for updating
  * both the request data key and the response data key.
- * Expected behavior: client returns a Status of RETURN_SUCCESS, and
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS, and
  * the request data key and response data key are updated.
  **/
 static void req_key_update_case27(void **state)
@@ -5246,7 +5246,7 @@ static void req_key_update_case29(void **state)
  * all keys, on the first try, receiving a Busy ERROR message, and on retry,
  * receiving a correct KEY_UPDATE_ACK message. The VERIFY_KEY behavior is
  * not altered.
- * Expected behavior: client returns a Status of RETURN_SUCCESS, and
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS, and
  * the request data key and response data key are updated.
  **/
 static void req_key_update_case30(void **state)
@@ -5450,7 +5450,7 @@ static void req_key_update_case32(void **state)
  * all keys, on the first try, receiving a ResponseNotReady ERROR message, and
  * on retry, receiving a correct KEY_UPDATE_ACK message. The VERIFY_KEY
  * behavior is not altered.
- * Expected behavior: client returns a Status of RETURN_SUCCESS, and
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS, and
  * the request data key and response data key are updated.
  **/
 static void req_key_update_case33(void **state)

@@ -2792,7 +2792,7 @@ static void rsp_algorithms_case30(void **state)
 
 /**
  * Test 31: NEGOTIATE_ALGORITHMS message received with MEL correct
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void rsp_algorithms_case31(void **state)
 {
@@ -2860,7 +2860,7 @@ static void rsp_algorithms_case31(void **state)
 
 /**
  * Test 32: NEGOTIATE_ALGORITHMS message received with MEAS correct
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void rsp_algorithms_case32(void **state)
 {

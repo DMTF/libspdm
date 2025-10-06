@@ -4077,7 +4077,7 @@ static void libspdm_test_requester_get_measurements_err_case21(void **state)
 
 /**
  * Test 22: request a large number of unsigned measurements before requesting a signature
- * Expected Behavior: RETURN_SUCCESS return code and correct transcript.message_m.buffer_size while transcript.message_m has room; RETURN_DEVICE_ERROR otherwise
+ * Expected Behavior: LIBSPDM_STATUS_SUCCESS return code and correct transcript.message_m.buffer_size while transcript.message_m has room; RETURN_DEVICE_ERROR otherwise
  **/
 static void libspdm_test_requester_get_measurements_err_case22(void **state)
 {

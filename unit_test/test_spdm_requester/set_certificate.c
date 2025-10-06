@@ -345,7 +345,7 @@ static void req_set_certificate_case1(void **state)
 
 /**
  * Test 2: Successful response to set certificate for slot 0
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void req_set_certificate_case2(void **state)
 {
@@ -405,7 +405,7 @@ static void req_set_certificate_case3(void **state)
 
 /**
  * Test 5: Successful response to set certificate for slot 1 in secure session
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void req_set_certificate_case5(void **state)
 {
@@ -464,7 +464,7 @@ static void req_set_certificate_case5(void **state)
 
 /**
  * Test 6: Successful response to set certificate for slot 0 with a reset required
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void req_set_certificate_case6(void **state)
 {
@@ -499,7 +499,7 @@ static void req_set_certificate_case6(void **state)
 
 /**
  * Test 7: Successful response to erase certificate for slot 0
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void req_set_certificate_case7(void **state)
 {

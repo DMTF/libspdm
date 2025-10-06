@@ -367,7 +367,7 @@ static void req_encap_challenge_auth_case6(void **state)
 /**
  * Test 7: receiving a correct CHALLENGE message from the requester with context field
  * no opaque data, no measurements, and slot number 0.
- * Expected behavior:  get a RETURN_SUCCESS return code, correct context field
+ * Expected behavior:  get a LIBSPDM_STATUS_SUCCESS return code, correct context field
  **/
 static void req_encap_challenge_auth_case7(void **state)
 {

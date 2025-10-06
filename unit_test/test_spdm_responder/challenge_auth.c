@@ -1060,7 +1060,7 @@ static void rsp_challenge_auth_case17(void **state)
 /**
  * Test 18: Successfully reply to V1.3 to get CHALLENGE message with context field
  * no opaque data, no measurements, and slot number 0.
- * Expected Behavior: get a RETURN_SUCCESS return code, correct context field
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct context field
  **/
 static void rsp_challenge_auth_case18(void **state)
 {

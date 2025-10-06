@@ -2167,7 +2167,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case14(void **state)
 
 /**
  * Test 15: Error case, request no signature but slot id not 0
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void libspdm_test_requester_get_endpoint_info_err_case15(void **state)
 {
@@ -2206,7 +2206,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case15(void **state)
 
 /**
  * Test 16: Error case, request no signature but responder's slot id not 0
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void libspdm_test_requester_get_endpoint_info_err_case16(void **state)
 {
@@ -2245,7 +2245,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case16(void **state)
 
 /**
  * Test 17: Error case, request no signature and response with wrong ep_info_length
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void libspdm_test_requester_get_endpoint_info_err_case17(void **state)
 {
@@ -2284,7 +2284,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case17(void **state)
 
 /**
  * Test 18: Error case, request no signature but response with signature
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void libspdm_test_requester_get_endpoint_info_err_case18(void **state)
 {
@@ -2413,7 +2413,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case19(void **state)
 
 /**
  * Test 20: Error case, input buffer ep_info_length too small.
- * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_e
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty transcript.message_e
  **/
 static void libspdm_test_requester_get_endpoint_info_err_case20(void **state)
 {

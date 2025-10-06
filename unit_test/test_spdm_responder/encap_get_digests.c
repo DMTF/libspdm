@@ -15,7 +15,7 @@ static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 
 /**
  * Test 1: Response message received successfully
- * Expected Behavior: requester returns the status RETURN_SUCCESS and a DIGESTS message is received
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS and a DIGESTS message is received
  **/
 static void rsp_encap_get_digests_case1(void **state)
 {
@@ -237,7 +237,7 @@ static void rsp_encap_get_digests_case5(void **state)
 
 /**
  * Test 6: a response message is successfully sent , Set multi_key_conn_req to check if it responds correctly
- * Expected Behavior: requester returns the status RETURN_SUCCESS
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS
  **/
 static void rsp_encap_get_digests_case6(void **state)
 {
@@ -339,7 +339,7 @@ static void rsp_encap_get_digests_case6(void **state)
 /**
  * Test 7: a response message is successfully sent ,
  * Check KeyPairID CertificateInfo and KeyUsageMask
- * Expected Behavior: requester returns the status RETURN_SUCCESS
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS
  **/
 static void rsp_encap_get_digests_case7(void **state)
 {
