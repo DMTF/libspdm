@@ -27,6 +27,7 @@ typedef struct {
 
 static expected_event_t m_expected_event[4];
 static uint32_t m_event_counter;
+static bool m_process_event_error = false;
 
 static libspdm_return_t process_event(void *spdm_context,
                                       uint32_t session_id,
@@ -38,6 +39,10 @@ static libspdm_return_t process_event(void *spdm_context,
                                       uint16_t event_detail_len,
                                       const void *event_detail)
 {
+    if (m_process_event_error) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+
     printf("Event Received\n");
     printf("Event Instance ID = [0x%x]\n", event_instance_id);
     printf("SVH ID = [0x%x], SVH VendorIDLen = [0x%x]\n", svh_id, svh_vendor_id_len);
@@ -122,7 +127,7 @@ static void rsp_event_ack_err_case1(void **state)
     libspdm_context_t *spdm_context;
     spdm_send_event_request_t *send_event;
     size_t request_size;
-    spdm_event_ack_response_t *event_ack;
+    spdm_error_response_t *spdm_response;
     size_t response_size =  sizeof(m_spdm_response_buffer);
     uint8_t event_data_size;
     spdm_dmtf_event_type_event_lost_t event_lost;
@@ -156,15 +161,15 @@ static void rsp_event_ack_err_case1(void **state)
         spdm_context, request_size, m_spdm_request_buffer,
         &response_size, m_spdm_response_buffer);
 
-    event_ack = (spdm_event_ack_response_t *)m_spdm_response_buffer;
+    spdm_response = (spdm_error_response_t *)m_spdm_response_buffer;
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    assert_int_equal(event_ack->header.spdm_version, SPDM_MESSAGE_VERSION_13);
-    assert_int_equal(event_ack->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(event_ack->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(event_ack->header.param2, 0);
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_13);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 
     assert_int_equal(m_event_counter, 0);
 }
@@ -180,7 +185,7 @@ static void rsp_event_ack_err_case2(void **state)
     libspdm_context_t *spdm_context;
     spdm_send_event_request_t *send_event;
     size_t request_size;
-    spdm_event_ack_response_t *event_ack;
+    spdm_error_response_t *spdm_response;
     size_t response_size =  sizeof(m_spdm_response_buffer);
     uint8_t event_data_size[2];
     spdm_dmtf_event_type_event_lost_t event_lost;
@@ -234,15 +239,15 @@ static void rsp_event_ack_err_case2(void **state)
         spdm_context, request_size, m_spdm_request_buffer,
         &response_size, m_spdm_response_buffer);
 
-    event_ack = (spdm_event_ack_response_t *)m_spdm_response_buffer;
+    spdm_response = (spdm_error_response_t *)m_spdm_response_buffer;
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    assert_int_equal(event_ack->header.spdm_version, SPDM_MESSAGE_VERSION_13);
-    assert_int_equal(event_ack->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(event_ack->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(event_ack->header.param2, 0);
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_13);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 
     assert_int_equal(m_event_counter, 0);
 }
@@ -258,7 +263,7 @@ static void rsp_event_ack_err_case3(void **state)
     libspdm_context_t *spdm_context;
     spdm_send_event_request_t *send_event;
     size_t request_size;
-    spdm_event_ack_response_t *event_ack;
+    spdm_error_response_t *spdm_response;
     size_t response_size =  sizeof(m_spdm_response_buffer);
     uint8_t event_data_size;
     spdm_dmtf_event_type_event_lost_t event_lost;
@@ -292,15 +297,15 @@ static void rsp_event_ack_err_case3(void **state)
         spdm_context, request_size, m_spdm_request_buffer,
         &response_size, m_spdm_response_buffer);
 
-    event_ack = (spdm_event_ack_response_t *)m_spdm_response_buffer;
+    spdm_response = (spdm_error_response_t *)m_spdm_response_buffer;
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    assert_int_equal(event_ack->header.spdm_version, SPDM_MESSAGE_VERSION_13);
-    assert_int_equal(event_ack->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(event_ack->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(event_ack->header.param2, 0);
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_13);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 
     assert_int_equal(m_event_counter, 0);
 }
@@ -316,7 +321,7 @@ static void rsp_event_ack_err_case4(void **state)
     libspdm_context_t *spdm_context;
     spdm_send_event_request_t *send_event;
     size_t request_size;
-    spdm_event_ack_response_t *event_ack;
+    spdm_error_response_t *spdm_response;
     size_t response_size =  sizeof(m_spdm_response_buffer);
     uint8_t event_data_size;
     spdm_dmtf_event_type_event_lost_t event_lost;
@@ -350,15 +355,234 @@ static void rsp_event_ack_err_case4(void **state)
         spdm_context, request_size, m_spdm_request_buffer,
         &response_size, m_spdm_response_buffer);
 
-    event_ack = (spdm_event_ack_response_t *)m_spdm_response_buffer;
+    spdm_response = (spdm_error_response_t *)m_spdm_response_buffer;
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    assert_int_equal(event_ack->header.spdm_version, SPDM_MESSAGE_VERSION_13);
-    assert_int_equal(event_ack->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(event_ack->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(event_ack->header.param2, 0);
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_13);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    assert_int_equal(m_event_counter, 0);
+}
+
+/**
+ * Test 5: Negotiated SPDM version does not support SEND_EVENT request message.
+ * Expected Behavior: Responder returns SPDM_ERROR_CODE_UNSUPPORTED_REQUEST.
+ **/
+static void rsp_event_ack_err_case5(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_send_event_request_t *send_event;
+    size_t request_size;
+    spdm_error_response_t *spdm_response;
+    size_t response_size =  sizeof(m_spdm_response_buffer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x05;
+
+    set_standard_state(spdm_context);
+
+    /* SPDM 1.2 does not support SEND_EVENT request message. */
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    send_event = (spdm_send_event_request_t *)m_spdm_request_buffer;
+
+    send_event->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    send_event->header.request_response_code = SPDM_SEND_EVENT;
+    send_event->header.param1 = 0;
+    send_event->header.param2 = 0;
+
+    m_event_counter = 0;
+
+    request_size = sizeof(spdm_send_event_request_t);
+
+    status = libspdm_get_response_send_event(
+        spdm_context, request_size, m_spdm_request_buffer,
+        &response_size, m_spdm_response_buffer);
+
+    spdm_response = (spdm_error_response_t *)m_spdm_response_buffer;
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal(spdm_response->header.param2, SPDM_SEND_EVENT);
+
+    assert_int_equal(m_event_counter, 0);
+}
+
+/**
+ * Test 6: SPDM version field in SEND_EVENT request message does not match the
+ *         connection's negotiated version.
+ * Expected Behavior: Responder returns SPDM_ERROR_CODE_VERSION_MISMATCH.
+ **/
+static void rsp_event_ack_err_case6(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_send_event_request_t *send_event;
+    size_t request_size;
+    spdm_error_response_t *spdm_response;
+    size_t response_size =  sizeof(m_spdm_response_buffer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x06;
+
+    set_standard_state(spdm_context);
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    send_event = (spdm_send_event_request_t *)m_spdm_request_buffer;
+
+    /* Value is not equal to the negotiated SPDM version (1.4). */
+    send_event->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    send_event->header.request_response_code = SPDM_SEND_EVENT;
+    send_event->header.param1 = 0;
+    send_event->header.param2 = 0;
+
+    m_event_counter = 0;
+
+    request_size = sizeof(spdm_send_event_request_t);
+
+    status = libspdm_get_response_send_event(
+        spdm_context, request_size, m_spdm_request_buffer,
+        &response_size, m_spdm_response_buffer);
+
+    spdm_response = (spdm_error_response_t *)m_spdm_response_buffer;
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_14);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_VERSION_MISMATCH);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    assert_int_equal(m_event_counter, 0);
+}
+
+/**
+ * Test 7: Requester does not support EVENT_CAP.
+ * Expected Behavior: Responder returns SPDM_ERROR_CODE_UNSUPPORTED_REQUEST.
+ **/
+static void rsp_event_ack_err_case7(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_send_event_request_t *send_event;
+    size_t request_size;
+    spdm_error_response_t *spdm_response;
+    size_t response_size =  sizeof(m_spdm_response_buffer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x07;
+
+    set_standard_state(spdm_context);
+
+    send_event = (spdm_send_event_request_t *)m_spdm_request_buffer;
+
+    send_event->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    send_event->header.request_response_code = SPDM_SEND_EVENT;
+    send_event->header.param1 = 0;
+    send_event->header.param2 = 0;
+
+    /* Requester sends SEND_EVENT but does not support EVENT_CAP. */
+    spdm_context->connection_info.capability.flags &=
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EVENT_CAP;
+
+    m_event_counter = 0;
+
+    request_size = sizeof(spdm_send_event_request_t);
+
+    status = libspdm_get_response_send_event(
+        spdm_context, request_size, m_spdm_request_buffer,
+        &response_size, m_spdm_response_buffer);
+
+    spdm_response = (spdm_error_response_t *)m_spdm_response_buffer;
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_13);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal(spdm_response->header.param2, SPDM_SEND_EVENT);
+
+    assert_int_equal(m_event_counter, 0);
+}
+
+/**
+ * Test 8: Call to process_event returns an error.
+ * Expected Behavior: Responder returns SPDM_ERROR_CODE_INVALID_REQUEST.
+ **/
+static void rsp_event_ack_err_case8(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_send_event_request_t *send_event;
+    size_t request_size;
+    spdm_error_response_t *spdm_response;
+    size_t response_size =  sizeof(m_spdm_response_buffer);
+    uint8_t event_data_size;
+    spdm_dmtf_event_type_event_lost_t event_lost;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x8;
+
+    set_standard_state(spdm_context);
+
+    send_event = (spdm_send_event_request_t *)m_spdm_request_buffer;
+
+    send_event->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    send_event->header.request_response_code = SPDM_SEND_EVENT;
+    send_event->header.param1 = 0;
+    send_event->header.param2 = 0;
+    send_event->event_count = 1;
+
+    event_lost.last_acked_event_inst_id = 0xffeeddcc;
+    event_lost.last_lost_event_inst_id = 0x55667788;
+
+    generate_dmtf_event_data(send_event + 1, &event_data_size, 0x11223344,
+                             SPDM_DMTF_EVENT_TYPE_EVENT_LOST, &event_lost);
+
+    m_event_counter = 0;
+
+    request_size = sizeof(spdm_send_event_request_t) + event_data_size;
+
+    /* Induce error in process_request. */
+    m_process_event_error = true;
+
+    status = libspdm_get_response_send_event(
+        spdm_context, request_size, m_spdm_request_buffer,
+        &response_size, m_spdm_response_buffer);
+
+    m_process_event_error = false;
+
+    spdm_response = (spdm_error_response_t *)m_spdm_response_buffer;
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_13);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 
     assert_int_equal(m_event_counter, 0);
 }
@@ -370,6 +594,10 @@ int libspdm_rsp_event_ack_error_test(void)
         cmocka_unit_test(rsp_event_ack_err_case2),
         cmocka_unit_test(rsp_event_ack_err_case3),
         cmocka_unit_test(rsp_event_ack_err_case4),
+        cmocka_unit_test(rsp_event_ack_err_case5),
+        cmocka_unit_test(rsp_event_ack_err_case6),
+        cmocka_unit_test(rsp_event_ack_err_case7),
+        cmocka_unit_test(rsp_event_ack_err_case8),
     };
 
     libspdm_test_context_t test_context = {
