@@ -267,6 +267,12 @@ int main(void)
     if (libspdm_req_encap_supported_event_types_error_test() != 0) {
         return_value = 1;
     }
+    if (libspdm_req_encap_subscribe_event_types_ack_test() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_req_encap_subscribe_event_types_ack_error_test() != 0) {
+        return_value = 1;
+    }
     if (libspdm_req_send_event_test() != 0) {
         return_value = 1;
     }

@@ -14,6 +14,8 @@ static uint8_t m_spdm_response_buffer[0x1000];
 
 static const uint32_t m_session_id = 0xffffffff;
 
+extern bool g_event_subscribe_error;
+
 static void set_standard_state(libspdm_context_t *spdm_context)
 {
     libspdm_session_info_t *session_info;
@@ -51,6 +53,8 @@ static void set_standard_state(libspdm_context_t *spdm_context)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
+
+    g_event_subscribe_error = false;
 }
 
 /**
@@ -63,7 +67,7 @@ static void test_encap_subscribe_event_types_ack_err_case1(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     spdm_subscribe_event_types_request_t *subscribe_event_types;
-    size_t request_size;
+    size_t request_size = sizeof(spdm_message_header_t);
     spdm_error_response_t *error_response;
     size_t response_size =  sizeof(m_spdm_response_buffer);
 
@@ -82,8 +86,6 @@ static void test_encap_subscribe_event_types_ack_err_case1(void **state)
     subscribe_event_types->header.request_response_code = SPDM_SUBSCRIBE_EVENT_TYPES;
     subscribe_event_types->header.param1 = 0;
     subscribe_event_types->header.param2 = 0;
-
-    request_size = sizeof(spdm_message_header_t);
 
     status = libspdm_get_encap_subscribe_event_types_ack(spdm_context,
                                                          request_size,
@@ -149,11 +151,155 @@ static void test_encap_subscribe_event_types_ack_err_case2(void **state)
     assert_int_equal(error_response->header.param2, 0);
 }
 
+/**
+ * Test 3: Connection version does not support SUBSCRIBE_EVENT_TYPES.
+ * Expected Behavior: Requester returns SPDM_ERROR_CODE_UNSUPPORTED_REQUEST.
+ **/
+static void test_encap_subscribe_event_types_ack_err_case3(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_subscribe_event_types_request_t *subscribe_event_types;
+    size_t request_size = sizeof(spdm_message_header_t);
+    spdm_error_response_t *error_response;
+    size_t response_size =  sizeof(m_spdm_response_buffer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x03;
+
+    set_standard_state(spdm_context);
+
+    /* SPDM 1.2 does not support SUBSCRIBE_EVENT_TYPES. */
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    subscribe_event_types = (spdm_subscribe_event_types_request_t *)m_spdm_request_buffer;
+
+    subscribe_event_types->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    subscribe_event_types->header.request_response_code = SPDM_SUBSCRIBE_EVENT_TYPES;
+    subscribe_event_types->header.param1 = 0;
+    subscribe_event_types->header.param2 = 0;
+
+    status = libspdm_get_encap_subscribe_event_types_ack(spdm_context,
+                                                         request_size,
+                                                         m_spdm_request_buffer,
+                                                         &response_size,
+                                                         m_spdm_response_buffer);
+
+    error_response = (spdm_error_response_t *)m_spdm_response_buffer;
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    assert_int_equal(error_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal(error_response->header.param2, SPDM_SUBSCRIBE_EVENT_TYPES);
+}
+
+/**
+ * Test 4: Message SPDMVersion does not match the connection's version.
+ * Expected Behavior: Requester returns SPDM_ERROR_CODE_VERSION_MISMATCH.
+ **/
+static void test_encap_subscribe_event_types_ack_err_case4(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_subscribe_event_types_request_t *subscribe_event_types;
+    size_t request_size = sizeof(spdm_message_header_t);
+    spdm_error_response_t *error_response;
+    size_t response_size =  sizeof(m_spdm_response_buffer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x04;
+
+    set_standard_state(spdm_context);
+
+    subscribe_event_types = (spdm_subscribe_event_types_request_t *)m_spdm_request_buffer;
+
+    /* SPDMVersion does not match the connection's negotiated version. */
+    subscribe_event_types->header.spdm_version = SPDM_MESSAGE_VERSION_14;
+    subscribe_event_types->header.request_response_code = SPDM_SUBSCRIBE_EVENT_TYPES;
+    subscribe_event_types->header.param1 = 0;
+    subscribe_event_types->header.param2 = 0;
+
+    status = libspdm_get_encap_subscribe_event_types_ack(spdm_context,
+                                                         request_size,
+                                                         m_spdm_request_buffer,
+                                                         &response_size,
+                                                         m_spdm_response_buffer);
+
+    error_response = (spdm_error_response_t *)m_spdm_response_buffer;
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    assert_int_equal(error_response->header.spdm_version, SPDM_MESSAGE_VERSION_13);
+    assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_VERSION_MISMATCH);
+    assert_int_equal(error_response->header.param2, 0);
+}
+
+/**
+ * Test 5: Call to libspdm_event_subscribe fails.
+ * Expected Behavior: Requester returns SPDM_ERROR_CODE_INVALID_REQUEST.
+ **/
+static void test_encap_subscribe_event_types_ack_err_case5(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_subscribe_event_types_request_t *subscribe_event_types;
+    size_t request_size = sizeof(spdm_message_header_t);
+    spdm_error_response_t *error_response;
+    size_t response_size =  sizeof(m_spdm_response_buffer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x05;
+
+    set_standard_state(spdm_context);
+
+    subscribe_event_types = (spdm_subscribe_event_types_request_t *)m_spdm_request_buffer;
+
+    subscribe_event_types->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    subscribe_event_types->header.request_response_code = SPDM_SUBSCRIBE_EVENT_TYPES;
+    subscribe_event_types->header.param1 = 0;
+    subscribe_event_types->header.param2 = 0;
+
+    /* Induce error in libspdm_event_subscribe. */
+    g_event_subscribe_error = true;
+
+    status = libspdm_get_encap_subscribe_event_types_ack(spdm_context,
+                                                         request_size,
+                                                         m_spdm_request_buffer,
+                                                         &response_size,
+                                                         m_spdm_response_buffer);
+    g_event_subscribe_error = false;
+
+    error_response = (spdm_error_response_t *)m_spdm_response_buffer;
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    assert_int_equal(error_response->header.spdm_version, SPDM_MESSAGE_VERSION_13);
+    assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(error_response->header.param2, 0);
+}
+
 int libspdm_req_encap_subscribe_event_types_ack_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(test_encap_subscribe_event_types_ack_err_case1),
         cmocka_unit_test(test_encap_subscribe_event_types_ack_err_case2),
+        cmocka_unit_test(test_encap_subscribe_event_types_ack_err_case3),
+        cmocka_unit_test(test_encap_subscribe_event_types_ack_err_case4),
+        cmocka_unit_test(test_encap_subscribe_event_types_ack_err_case5),
     };
 
     libspdm_test_context_t test_context = {
