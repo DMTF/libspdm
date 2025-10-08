@@ -130,6 +130,7 @@ uint32_t libspdm_get_scratch_buffer_capacity(libspdm_context_t *spdm_context) {
 static bool need_session_info_for_data(libspdm_data_type_t data_type)
 {
     switch (data_type) {
+    case LIBSPDM_DATA_SESSION_SECURED_MESSAGE_VERSION:
     case LIBSPDM_DATA_SESSION_USE_PSK:
     case LIBSPDM_DATA_SESSION_MUT_AUTH_REQUESTED:
     case LIBSPDM_DATA_SESSION_END_SESSION_ATTRIBUTES:
@@ -205,23 +206,14 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
     case LIBSPDM_DATA_SECURED_MESSAGE_VERSION:
         LIBSPDM_ASSERT (data_size <=
                         sizeof(spdm_version_number_t) * SECURED_SPDM_MAX_VERSION_COUNT);
-        if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
-            /* Only have one connected version */
-            LIBSPDM_ASSERT (data_size == sizeof(spdm_version_number_t));
-            libspdm_copy_mem(&(context->connection_info.secured_message_version),
-                             sizeof(context->connection_info.secured_message_version),
+        if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
+            context->local_context.secured_message_version.spdm_version_count =
+                (uint8_t)(data_size / sizeof(spdm_version_number_t));
+            libspdm_copy_mem(context->local_context.secured_message_version.spdm_version,
+                             sizeof(context->local_context.secured_message_version.spdm_version),
                              data,
+                             context->local_context.secured_message_version.spdm_version_count *
                              sizeof(spdm_version_number_t));
-        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
-            context->local_context.secured_message_version
-            .spdm_version_count = (uint8_t)(data_size / sizeof(spdm_version_number_t));
-            libspdm_copy_mem(context->local_context
-                             .secured_message_version.spdm_version,
-                             sizeof(context->local_context
-                                    .secured_message_version.spdm_version),
-                             data,
-                             context->local_context.secured_message_version.
-                             spdm_version_count * sizeof(spdm_version_number_t));
         } else {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
@@ -917,12 +909,9 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         target_data_size = sizeof(spdm_version_number_t);
         target_data = &(context->connection_info.version);
         break;
-    case LIBSPDM_DATA_SECURED_MESSAGE_VERSION:
-        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
+    case LIBSPDM_DATA_SESSION_SECURED_MESSAGE_VERSION:
         target_data_size = sizeof(spdm_version_number_t);
-        target_data = &(context->connection_info.secured_message_version);
+        target_data = &(secured_context->secured_message_version);
         break;
     case LIBSPDM_DATA_CAPABILITY_FLAGS:
         target_data_size = sizeof(uint32_t);
@@ -3275,6 +3264,7 @@ void libspdm_reset_context(void *spdm_context)
         libspdm_session_info_init(context,
                                   &context->session_info[index],
                                   INVALID_SESSION_ID,
+                                  0,
                                   false);
     }
 

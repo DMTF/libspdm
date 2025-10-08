@@ -98,6 +98,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     uint16_t context_length;
     const void *psk_hint;
     size_t psk_hint_size;
+    spdm_version_number_t secured_message_version;
 
     spdm_request = request;
 
@@ -256,7 +257,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
                                                    response_size, response);
         }
         status = libspdm_process_opaque_data_supported_version_data(
-            spdm_context, spdm_request->opaque_length, cptr);
+            spdm_context, spdm_request->opaque_length, cptr, &secured_message_version);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -313,7 +314,8 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
             response_size, response);
     }
     session_id = libspdm_generate_session_id(req_session_id, rsp_session_id);
-    session_info = libspdm_assign_session_id(spdm_context, session_id, true);
+    session_info = libspdm_assign_session_id(spdm_context, session_id, secured_message_version,
+                                             true);
     if (session_info == NULL) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED, 0,
@@ -369,7 +371,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     }
 
     libspdm_build_opaque_data_version_selection_data(
-        spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+        spdm_context, secured_message_version, &opaque_psk_exchange_rsp_size, ptr);
 
     ptr += opaque_psk_exchange_rsp_size;
 

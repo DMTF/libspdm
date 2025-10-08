@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -115,17 +115,12 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
                                           uint8_t element_id, uint8_t sm_data_id,
                                           const void **get_element_ptr, size_t *get_element_len)
 {
-    const secured_message_general_opaque_data_table_header_t
-    *general_opaque_data_table_header;
-    const spdm_general_opaque_data_table_header_t
-    *spdm_general_opaque_data_table_header;
-    const opaque_element_table_header_t
-    *opaque_element_table_header;
+    const secured_message_general_opaque_data_table_header_t *general_opaque_data_table_header;
+    const spdm_general_opaque_data_table_header_t *spdm_general_opaque_data_table_header;
+    const opaque_element_table_header_t *opaque_element_table_header;
     uint16_t opaque_element_data_len;
-    const secured_message_opaque_element_table_header_t
-    *secured_message_element_table_header;
-    const secured_message_opaque_element_header_t
-    *secured_message_element_header;
+    const secured_message_opaque_element_table_header_t *secured_message_element_table_header;
+    const secured_message_opaque_element_header_t *secured_message_element_header;
 
     bool result;
     uint8_t element_num;
@@ -133,9 +128,6 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
     size_t data_element_size;
     size_t current_element_len;
     size_t total_element_len;
-
-    total_element_len = 0;
-    result = false;
 
     /*check parameter in*/
     if (element_id > SPDM_REGISTRY_ID_MAX) {
@@ -163,10 +155,8 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
         if (data_in_size < sizeof(secured_message_general_opaque_data_table_header_t)) {
             return false;
         }
-        if ((general_opaque_data_table_header->spec_id !=
-             SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID) ||
-            (general_opaque_data_table_header->opaque_version !=
-             SECURED_MESSAGE_OPAQUE_VERSION) ||
+        if ((general_opaque_data_table_header->spec_id != SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID) ||
+            (general_opaque_data_table_header->opaque_version != SECURED_MESSAGE_OPAQUE_VERSION) ||
             (general_opaque_data_table_header->total_elements < 1)) {
             return false;
         }
@@ -177,6 +167,9 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
         data_element_size = data_in_size -
                             sizeof(secured_message_general_opaque_data_table_header_t);
     }
+
+    total_element_len = 0;
+    result = false;
 
     for (element_index = 0; element_index < element_num; element_index++) {
         /*ensure the opaque_element_table_header is valid*/
@@ -190,20 +183,17 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
             return false;
         }
 
-        if (total_element_len + sizeof(opaque_element_table_header_t) +
-            opaque_element_table_header->vendor_len + 2 >
-            data_element_size) {
+        if ((total_element_len + sizeof(opaque_element_table_header_t) +
+             opaque_element_table_header->vendor_len + 2) > data_element_size) {
             return false;
         }
 
         opaque_element_data_len = libspdm_read_uint16(
-            (const uint8_t *)opaque_element_table_header +
-            sizeof(opaque_element_table_header_t) +
+            (const uint8_t *)opaque_element_table_header + sizeof(opaque_element_table_header_t) +
             opaque_element_table_header->vendor_len);
 
         current_element_len = sizeof(opaque_element_table_header_t) +
-                              opaque_element_table_header->vendor_len +
-                              2 + opaque_element_data_len;
+                              opaque_element_table_header->vendor_len + 2 + opaque_element_data_len;
         /* Add Padding*/
         current_element_len = (current_element_len + 3) & ~3;
 

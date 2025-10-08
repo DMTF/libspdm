@@ -205,6 +205,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     libspdm_return_t status;
     size_t opaque_key_exchange_rsp_size;
     uint8_t th1_hash_data[LIBSPDM_MAX_HASH_SIZE];
+    spdm_version_number_t secured_message_version;
 
     spdm_request = request;
 
@@ -389,7 +390,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                                                    response_size, response);
         }
         status = libspdm_process_opaque_data_supported_version_data(
-            spdm_context, opaque_data_length, cptr);
+            spdm_context, opaque_data_length, cptr, &secured_message_version);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -439,7 +440,8 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             response_size, response);
     }
     session_id = libspdm_generate_session_id(req_session_id, rsp_session_id);
-    session_info = libspdm_assign_session_id(spdm_context, session_id, false);
+    session_info = libspdm_assign_session_id(spdm_context, session_id, secured_message_version,
+                                             false);
     if (session_info == NULL) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED, 0,
@@ -619,7 +621,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_version_selection_data(
-        spdm_context, &opaque_key_exchange_rsp_size, ptr);
+        spdm_context, secured_message_version, &opaque_key_exchange_rsp_size, ptr);
     ptr += opaque_key_exchange_rsp_size;
 
     if (slot_id != 0xFF) {

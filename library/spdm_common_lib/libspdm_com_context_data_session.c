@@ -14,7 +14,8 @@
  **/
 void libspdm_session_info_init(libspdm_context_t *spdm_context,
                                libspdm_session_info_t *session_info,
-                               uint32_t session_id, bool use_psk)
+                               uint32_t session_id, spdm_version_number_t secured_message_version,
+                               bool use_psk)
 {
     libspdm_session_type_t session_type;
     uint32_t capabilities_flag;
@@ -87,8 +88,7 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
 
     /* DSP0277 1.2 explicitly specifies a little-endian sequence number. 1.0 and 1.1 leave it up to
      * the Integrator to specify. */
-    if ((spdm_context->connection_info.secured_message_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >=
-        SECURED_SPDM_VERSION_12) {
+    if ((secured_message_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >= SECURED_SPDM_VERSION_12) {
         libspdm_secured_message_set_sequence_number_endian(
             session_info->secured_message_context,
             LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE);
@@ -102,7 +102,7 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
     libspdm_secured_message_set_algorithms(
         session_info->secured_message_context,
         spdm_context->connection_info.version,
-        spdm_context->connection_info.secured_message_version,
+        secured_message_version,
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.dhe_named_group,
         spdm_context->connection_info.algorithm.kem_alg,
@@ -225,15 +225,10 @@ uint32_t libspdm_generate_session_id(uint16_t req_session_id, uint16_t rsp_sessi
     return session_id;
 }
 
-/**
- * This function assigns a new session ID.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    The SPDM session ID.
- *
- * @return session info associated with this new session ID.
- **/
-void *libspdm_assign_session_id(libspdm_context_t *spdm_context, uint32_t session_id, bool use_psk)
+libspdm_session_info_t *libspdm_assign_session_id(libspdm_context_t *spdm_context,
+                                                  uint32_t session_id,
+                                                  spdm_version_number_t secured_message_version,
+                                                  bool use_psk)
 {
     libspdm_session_info_t *session_info;
     size_t index;
@@ -258,7 +253,7 @@ void *libspdm_assign_session_id(libspdm_context_t *spdm_context, uint32_t sessio
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == INVALID_SESSION_ID) {
             libspdm_session_info_init(spdm_context,
-                                      &session_info[index], session_id,
+                                      &session_info[index], session_id, secured_message_version,
                                       use_psk);
             spdm_context->latest_session_id = session_id;
             return &session_info[index];
@@ -295,7 +290,7 @@ void libspdm_free_session_id(libspdm_context_t *spdm_context, uint32_t session_i
         if (session_info[index].session_id == session_id) {
             libspdm_session_info_init(spdm_context,
                                       &session_info[index],
-                                      INVALID_SESSION_ID,
+                                      INVALID_SESSION_ID, 0,
                                       session_info[index].use_psk);
             return;
         }

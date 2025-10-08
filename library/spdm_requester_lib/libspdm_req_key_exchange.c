@@ -336,6 +336,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     size_t message_size;
     size_t transport_header_size;
     uint8_t mut_auth_requested;
+    spdm_version_number_t secured_message_version;
 
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
@@ -719,7 +720,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
             goto receive_done;
         }
         status = libspdm_process_opaque_data_version_selection_data(
-            spdm_context, opaque_length, ptr);
+            spdm_context, opaque_length, ptr, &secured_message_version);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
@@ -743,7 +744,8 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
 
     rsp_session_id = spdm_response->rsp_session_id;
     *session_id = libspdm_generate_session_id(req_session_id, rsp_session_id);
-    session_info = libspdm_assign_session_id(spdm_context, *session_id, false);
+    session_info = libspdm_assign_session_id(spdm_context, *session_id, secured_message_version,
+                                             false);
 
     if (session_info == NULL) {
         status = LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
