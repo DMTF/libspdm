@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -41,6 +41,7 @@ uint16_t libspdm_allocate_rsp_session_id(const libspdm_context_t *spdm_context, 
 }
 
 void libspdm_build_opaque_data_version_selection_data(const libspdm_context_t *spdm_context,
+                                                      spdm_version_number_t secured_message_version,
                                                       size_t *data_out_size,
                                                       void *data_out)
 {
@@ -84,22 +85,19 @@ void libspdm_build_opaque_data_version_selection_data(const libspdm_context_t *s
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
     opaque_element_version_section->sm_data_id =
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION;
-    opaque_element_version_section->selected_version =
-        spdm_context->connection_info.secured_message_version;
+    opaque_element_version_section->selected_version = secured_message_version;
+
     /* Zero Padding*/
     end = opaque_element_version_section + 1;
     libspdm_zero_mem(end, (size_t)data_out + final_data_size - (size_t)end);
 }
 
-libspdm_return_t
-libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
-                                                   size_t data_in_size,
-                                                   const void *data_in)
+libspdm_return_t libspdm_process_opaque_data_supported_version_data(
+    libspdm_context_t *spdm_context, size_t data_in_size, const void *data_in,
+    spdm_version_number_t *secured_message_version)
 {
-    const secured_message_opaque_element_table_header_t
-    *opaque_element_table_header;
-    const secured_message_opaque_element_supported_version_t
-    *opaque_element_support_version;
+    const secured_message_opaque_element_table_header_t *opaque_element_table_header;
+    const secured_message_opaque_element_supported_version_t *opaque_element_support_version;
     const spdm_version_number_t *versions_list;
     spdm_version_number_t common_version;
     uint8_t version_count;
@@ -150,8 +148,8 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
 
     if ((opaque_element_table_header->vendor_len != 0) ||
         (opaque_element_table_header->opaque_element_data_len !=
-         sizeof(secured_message_opaque_element_supported_version_t) +
-         sizeof(spdm_version_number_t) * version_count)) {
+         (sizeof(secured_message_opaque_element_supported_version_t) +
+          sizeof(spdm_version_number_t) * version_count))) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
 
@@ -171,10 +169,8 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    libspdm_copy_mem(&(spdm_context->connection_info.secured_message_version),
-                     sizeof(spdm_context->connection_info.secured_message_version),
-                     &(common_version),
-                     sizeof(spdm_version_number_t));
+    libspdm_copy_mem(secured_message_version, sizeof(spdm_version_number_t),
+                     &(common_version), sizeof(spdm_version_number_t));
 
     return LIBSPDM_STATUS_SUCCESS;
 }

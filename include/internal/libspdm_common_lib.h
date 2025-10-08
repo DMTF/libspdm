@@ -134,7 +134,6 @@ typedef struct {
     spdm_version_number_t version;
     libspdm_device_capability_t capability;
     libspdm_device_algorithm_t algorithm;
-    spdm_version_number_t secured_message_version;
 
     /* Peer digests buffer */
     uint8_t peer_provisioned_slot_mask;
@@ -865,7 +864,8 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
  **/
 void libspdm_session_info_init(libspdm_context_t *spdm_context,
                                libspdm_session_info_t *session_info,
-                               uint32_t session_id, bool use_psk);
+                               uint32_t session_id, spdm_version_number_t secured_message_version,
+                               bool use_psk);
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 /**
@@ -1623,7 +1623,10 @@ uint32_t libspdm_generate_session_id(uint16_t req_session_id, uint16_t rsp_sessi
  *
  * @return session info associated with this new session ID.
  **/
-void *libspdm_assign_session_id(libspdm_context_t *spdm_context, uint32_t session_id, bool use_psk);
+libspdm_session_info_t *libspdm_assign_session_id(libspdm_context_t *spdm_context,
+                                                  uint32_t session_id,
+                                                  spdm_version_number_t secured_message_version,
+                                                  bool use_psk);
 
 /**
  * This function frees a session ID.
