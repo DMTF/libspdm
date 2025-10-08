@@ -727,7 +727,8 @@ static void req_heartbeat_case1(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -793,7 +794,8 @@ static void req_heartbeat_case2(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -882,7 +884,8 @@ static void req_heartbeat_case3(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -970,7 +973,8 @@ static void req_heartbeat_case4(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1059,7 +1063,8 @@ static void req_heartbeat_case5(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1149,7 +1154,8 @@ static void req_heartbeat_case6(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1238,7 +1244,8 @@ static void req_heartbeat_case7(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1329,7 +1336,8 @@ static void req_heartbeat_case8(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1418,7 +1426,8 @@ static void req_heartbeat_case9(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1504,7 +1513,8 @@ static void req_heartbeat_case10(void **state) {
 
         session_id = 0xFFFFFFFF;
         session_info = &spdm_context->session_info[0];
-        libspdm_session_info_init (spdm_context, session_info, session_id, true);
+        libspdm_session_info_init (spdm_context, session_info, session_id,
+                                   SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
         libspdm_secured_message_set_session_state (session_info->secured_message_context,
                                                    LIBSPDM_SESSION_STATE_ESTABLISHED);
         session_info->heartbeat_period = 1;
@@ -1603,7 +1613,8 @@ static void req_heartbeat_case11(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1715,7 +1726,8 @@ static void req_heartbeat_case12(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
@@ -1796,7 +1808,8 @@ static void req_heartbeat_case13(void **state)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);

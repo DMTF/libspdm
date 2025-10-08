@@ -1473,6 +1473,7 @@ static void rsp_key_exchange_rsp_case17(void **state)
 
     libspdm_session_info_init(spdm_context,
                               spdm_context->session_info,
+                              0,
                               INVALID_SESSION_ID, false);
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
@@ -1788,6 +1789,7 @@ static void rsp_key_exchange_rsp_case20(void **state)
 
     libspdm_session_info_init(spdm_context,
                               spdm_context->session_info,
+                              0,
                               INVALID_SESSION_ID, false);
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
@@ -1885,6 +1887,7 @@ static void rsp_key_exchange_rsp_case21(void **state)
 
     libspdm_session_info_init(spdm_context,
                               spdm_context->session_info,
+                              0,
                               INVALID_SESSION_ID, false);
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
@@ -1979,7 +1982,8 @@ static void rsp_key_exchange_rsp_case22(void **state)
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->connection_info.multi_key_conn_rsp = false;
 
-    libspdm_session_info_init(spdm_context, spdm_context->session_info, INVALID_SESSION_ID, false);
+    libspdm_session_info_init(spdm_context, spdm_context->session_info, INVALID_SESSION_ID,
+                              0, false);
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);

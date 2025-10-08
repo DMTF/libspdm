@@ -19,7 +19,7 @@ void libspdm_test_process_opaque_data_case1(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-
+    spdm_version_number_t secured_message_version;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -37,7 +37,7 @@ void libspdm_test_process_opaque_data_case1(void **State)
 
     libspdm_process_opaque_data_supported_version_data(
         spdm_context, spdm_test_context->test_buffer_size,
-        (uint8_t *)spdm_test_context->test_buffer);
+        (uint8_t *)spdm_test_context->test_buffer, &secured_message_version);
 
 }
 
@@ -46,7 +46,7 @@ void libspdm_test_process_opaque_data_case2(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-
+    spdm_version_number_t secured_message_version;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -64,7 +64,7 @@ void libspdm_test_process_opaque_data_case2(void **State)
 
     libspdm_process_opaque_data_supported_version_data(
         spdm_context, spdm_test_context->test_buffer_size,
-        (uint8_t *)spdm_test_context->test_buffer);
+        (uint8_t *)spdm_test_context->test_buffer, &secured_message_version);
 
 }
 

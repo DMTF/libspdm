@@ -51,7 +51,8 @@ void libspdm_test_encode_secured_message(void **State)
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, false);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     secured_message_context = session_info->secured_message_context;
     secured_message_context->session_type = LIBSPDM_SESSION_TYPE_MAC_ONLY;
     secured_message_context->session_state = LIBSPDM_SESSION_STATE_HANDSHAKING;

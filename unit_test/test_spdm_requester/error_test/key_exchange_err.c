@@ -390,8 +390,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -448,7 +447,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -615,7 +615,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -849,8 +850,8 @@ static libspdm_return_t receive_message(
             *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
             ptr += sizeof(uint16_t);
             libspdm_build_opaque_data_version_selection_data(
-                spdm_context, &opaque_key_exchange_rsp_size,
-                ptr);
+                spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                    &opaque_key_exchange_rsp_size, ptr);
             ptr += opaque_key_exchange_rsp_size;
             libspdm_read_responder_public_certificate_chain(
                 m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
@@ -1106,8 +1107,8 @@ static libspdm_return_t receive_message(
             *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
             ptr += sizeof(uint16_t);
             libspdm_build_opaque_data_version_selection_data(
-                spdm_context, &opaque_key_exchange_rsp_size,
-                ptr);
+                spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                    &opaque_key_exchange_rsp_size, ptr);
             ptr += opaque_key_exchange_rsp_size;
             libspdm_read_responder_public_certificate_chain(
                 m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
@@ -1319,7 +1320,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -1495,7 +1497,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -1667,7 +1670,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -1843,7 +1847,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -2011,7 +2016,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -2179,7 +2185,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -2356,7 +2363,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -2525,7 +2533,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -2699,7 +2708,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -2856,7 +2866,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = SPDM_MAX_OPAQUE_DATA_SIZE + 1;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -3017,7 +3028,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -3186,7 +3198,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -3355,7 +3368,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -3524,7 +3538,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -3695,7 +3710,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -3866,7 +3882,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -4037,7 +4054,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -4193,7 +4211,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -4300,8 +4319,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -4358,7 +4376,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -4527,7 +4546,8 @@ static libspdm_return_t receive_message(
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_key_exchange_rsp_size, ptr);
         ptr += opaque_key_exchange_rsp_size;
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
