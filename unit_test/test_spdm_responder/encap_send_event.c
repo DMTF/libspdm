@@ -52,7 +52,8 @@ static void set_standard_state(libspdm_context_t *spdm_context)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = m_session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, m_session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, m_session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);

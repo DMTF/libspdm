@@ -230,8 +230,7 @@ size_t libspdm_get_multi_element_opaque_data_version_selection_data_size(
     size_t size;
     uint8_t element_index;
 
-    if (spdm_context->local_context.secured_message_version
-        .spdm_version_count == 0) {
+    if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
         return 0;
     }
 
@@ -256,21 +255,9 @@ size_t libspdm_get_multi_element_opaque_data_version_selection_data_size(
     return size;
 }
 
-/**
- * Build opaque data selection version test.
- *
- * @param  data_out_size[in]                 size in bytes of the data_out.
- *                                           On input, it means the size in bytes of data_out buffer.
- *                                           On output, it means the size in bytes of copied data_out buffer if LIBSPDM_STATUS_SUCCESS is returned,
- *                                           and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  data_out[in]                      A pointer to the destination buffer to store the opaque data selection version.
- * @param  element_num[in]                   in this test function, the element number < 9 is right. because element id is changed with element_index
- **/
-libspdm_return_t
-libspdm_build_opaque_data_version_selection_data_test(const libspdm_context_t *spdm_context,
-                                                      size_t *data_out_size,
-                                                      void *data_out,
-                                                      uint8_t element_num)
+static libspdm_return_t libspdm_build_opaque_data_version_selection_data_test(
+    const libspdm_context_t *spdm_context, spdm_version_number_t secured_message_version,
+    size_t *data_out_size, void *data_out, uint8_t element_num)
 {
     size_t final_data_size;
     secured_message_general_opaque_data_table_header_t
@@ -285,15 +272,14 @@ libspdm_build_opaque_data_version_selection_data_test(const libspdm_context_t *s
     uint8_t element_index;
     size_t current_element_len;
 
-    if (spdm_context->local_context.secured_message_version
-        .spdm_version_count == 0) {
+    if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
         *data_out_size = 0;
         return LIBSPDM_STATUS_SUCCESS;
     }
 
-    final_data_size =
-        libspdm_get_multi_element_opaque_data_version_selection_data_size(spdm_context,
-                                                                          element_num);
+    final_data_size = libspdm_get_multi_element_opaque_data_version_selection_data_size(
+        spdm_context, element_num);
+
     if (*data_out_size < final_data_size) {
         *data_out_size = final_data_size;
         return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
@@ -304,19 +290,15 @@ libspdm_build_opaque_data_version_selection_data_test(const libspdm_context_t *s
         spdm_general_opaque_data_table_header->total_elements = element_num;
         libspdm_write_uint24(spdm_general_opaque_data_table_header->reserved, 0);
 
-        opaque_element_table_header =
-            (void *)(spdm_general_opaque_data_table_header + 1);
+        opaque_element_table_header = (void *)(spdm_general_opaque_data_table_header + 1);
     } else {
         general_opaque_data_table_header = data_out;
-        general_opaque_data_table_header->spec_id =
-            SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID;
-        general_opaque_data_table_header->opaque_version =
-            SECURED_MESSAGE_OPAQUE_VERSION;
+        general_opaque_data_table_header->spec_id = SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID;
+        general_opaque_data_table_header->opaque_version = SECURED_MESSAGE_OPAQUE_VERSION;
         general_opaque_data_table_header->total_elements = element_num;
         general_opaque_data_table_header->reserved = 0;
 
-        opaque_element_table_header =
-            (void *)(general_opaque_data_table_header + 1);
+        opaque_element_table_header = (void *)(general_opaque_data_table_header + 1);
     }
 
     for (element_index = 0; element_index < element_num; element_index++) {
@@ -331,8 +313,7 @@ libspdm_build_opaque_data_version_selection_data_test(const libspdm_context_t *s
             SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
         opaque_element_version_section->sm_data_id =
             SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION;
-        opaque_element_version_section->selected_version =
-            spdm_context->connection_info.secured_message_version;
+        opaque_element_version_section->selected_version = secured_message_version;
 
         /*move to next element*/
         current_element_len = sizeof(secured_message_opaque_element_table_header_t) +
@@ -962,6 +943,7 @@ void libspdm_test_process_opaque_data_supported_version_data_case10(void **state
     libspdm_context_t *spdm_context;
     size_t opaque_data_size;
     uint8_t element_num;
+    spdm_version_number_t secured_message_version;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -987,7 +969,8 @@ void libspdm_test_process_opaque_data_supported_version_data_case10(void **state
 
     status = libspdm_process_opaque_data_supported_version_data(spdm_context,
                                                                 opaque_data_size,
-                                                                opaque_data_ptr);
+                                                                opaque_data_ptr,
+                                                                &secured_message_version);
 
     assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
 
@@ -1001,6 +984,7 @@ void libspdm_test_process_opaque_data_supported_version_data_case11(void **state
     libspdm_context_t *spdm_context;
     size_t opaque_data_size;
     uint8_t element_num;
+    spdm_version_number_t secured_message_version;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1027,7 +1011,8 @@ void libspdm_test_process_opaque_data_supported_version_data_case11(void **state
 
     status = libspdm_process_opaque_data_supported_version_data(spdm_context,
                                                                 opaque_data_size,
-                                                                opaque_data_ptr);
+                                                                opaque_data_ptr,
+                                                                &secured_message_version);
 
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 
@@ -1041,6 +1026,7 @@ void libspdm_test_process_opaque_data_supported_version_data_case12(void **state
     libspdm_context_t *spdm_context;
     size_t opaque_data_size;
     uint8_t element_num;
+    spdm_version_number_t secured_message_version;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1066,7 +1052,8 @@ void libspdm_test_process_opaque_data_supported_version_data_case12(void **state
 
     status = libspdm_process_opaque_data_supported_version_data(spdm_context,
                                                                 opaque_data_size,
-                                                                opaque_data_ptr);
+                                                                opaque_data_ptr,
+                                                                &secured_message_version);
 
     assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
 
@@ -1080,6 +1067,7 @@ void libspdm_test_process_opaque_data_supported_version_data_case13(void **state
     libspdm_context_t *spdm_context;
     size_t opaque_data_size;
     uint8_t element_num;
+    spdm_version_number_t secured_message_version;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1106,7 +1094,8 @@ void libspdm_test_process_opaque_data_supported_version_data_case13(void **state
 
     status = libspdm_process_opaque_data_supported_version_data(spdm_context,
                                                                 opaque_data_size,
-                                                                opaque_data_ptr);
+                                                                opaque_data_ptr,
+                                                                &secured_message_version);
 
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 
@@ -1121,6 +1110,7 @@ void libspdm_test_process_opaque_data_selection_version_data_case14(void **state
     libspdm_context_t *spdm_context;
     size_t opaque_data_size;
     uint8_t element_num;
+    spdm_version_number_t secured_message_version;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1130,8 +1120,6 @@ void libspdm_test_process_opaque_data_selection_version_data_case14(void **state
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->connection_info.secured_message_version =
-        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
@@ -1145,13 +1133,17 @@ void libspdm_test_process_opaque_data_selection_version_data_case14(void **state
     opaque_data_ptr = malloc(opaque_data_size);
 
     libspdm_build_opaque_data_version_selection_data_test(
-        spdm_context, &opaque_data_size, opaque_data_ptr, element_num);
+        spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, &opaque_data_size,
+            opaque_data_ptr, element_num);
 
     status = libspdm_process_opaque_data_version_selection_data(spdm_context,
                                                                 opaque_data_size,
-                                                                opaque_data_ptr);
+                                                                opaque_data_ptr,
+                                                                &secured_message_version);
 
     assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal (secured_message_version,
+                      SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT);
 
     free(opaque_data_ptr);
 }
@@ -1164,6 +1156,7 @@ void libspdm_test_process_opaque_data_selection_version_data_case15(void **state
     libspdm_context_t *spdm_context;
     size_t opaque_data_size;
     uint8_t element_num;
+    spdm_version_number_t secured_message_version;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1173,8 +1166,6 @@ void libspdm_test_process_opaque_data_selection_version_data_case15(void **state
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->connection_info.secured_message_version =
-        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
@@ -1189,11 +1180,13 @@ void libspdm_test_process_opaque_data_selection_version_data_case15(void **state
     opaque_data_ptr = malloc(opaque_data_size);
 
     libspdm_build_opaque_data_version_selection_data_test(
-        spdm_context, &opaque_data_size, opaque_data_ptr, element_num);
+        spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, &opaque_data_size,
+            opaque_data_ptr, element_num);
 
     status = libspdm_process_opaque_data_version_selection_data(spdm_context,
                                                                 opaque_data_size,
-                                                                opaque_data_ptr);
+                                                                opaque_data_ptr,
+                                                                &secured_message_version);
 
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 
@@ -1208,6 +1201,7 @@ void libspdm_test_process_opaque_data_selection_version_data_case16(void **state
     libspdm_context_t *spdm_context;
     size_t opaque_data_size;
     uint8_t element_num;
+    spdm_version_number_t secured_message_version;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1217,26 +1211,24 @@ void libspdm_test_process_opaque_data_selection_version_data_case16(void **state
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->connection_info.secured_message_version =
-        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     element_num = 2;
-    opaque_data_size =
-        libspdm_get_multi_element_opaque_data_version_selection_data_size(
-            spdm_context,
-            element_num);
+    opaque_data_size = libspdm_get_multi_element_opaque_data_version_selection_data_size(
+        spdm_context, element_num);
 
     uint8_t *opaque_data_ptr;
     opaque_data_ptr = malloc(opaque_data_size);
 
     libspdm_build_opaque_data_version_selection_data_test(
-        spdm_context, &opaque_data_size, opaque_data_ptr, element_num);
+        spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, &opaque_data_size,
+            opaque_data_ptr, element_num);
 
     status = libspdm_process_opaque_data_version_selection_data(spdm_context,
                                                                 opaque_data_size,
-                                                                opaque_data_ptr);
+                                                                opaque_data_ptr,
+                                                                &secured_message_version);
 
     assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
 
@@ -1250,6 +1242,7 @@ void libspdm_test_process_opaque_data_selection_version_data_case17(void **state
     libspdm_context_t *spdm_context;
     size_t opaque_data_size;
     uint8_t element_num;
+    spdm_version_number_t secured_message_version;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1259,8 +1252,6 @@ void libspdm_test_process_opaque_data_selection_version_data_case17(void **state
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->connection_info.secured_message_version =
-        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
@@ -1275,11 +1266,13 @@ void libspdm_test_process_opaque_data_selection_version_data_case17(void **state
     opaque_data_ptr = malloc(opaque_data_size);
 
     libspdm_build_opaque_data_version_selection_data_test(
-        spdm_context, &opaque_data_size, opaque_data_ptr, element_num);
+        spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, &opaque_data_size,
+            opaque_data_ptr, element_num);
 
     status = libspdm_process_opaque_data_version_selection_data(spdm_context,
                                                                 opaque_data_size,
-                                                                opaque_data_ptr);
+                                                                opaque_data_ptr,
+                                                                &secured_message_version);
 
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 
@@ -1522,7 +1515,10 @@ static void libspdm_test_max_session_count_case21(void **state)
                 assert_int_not_equal (rsp_id, (INVALID_SESSION_ID & 0xFFFF0000) >> 16);
 
                 session_id = libspdm_generate_session_id (req_id, rsp_id);
-                session_info = libspdm_assign_session_id (spdm_context, session_id, false);
+                session_info = libspdm_assign_session_id (spdm_context, session_id,
+                                                          SECURED_SPDM_VERSION_11 <<
+                                                          SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                                          false);
                 assert_ptr_not_equal (session_info, NULL);
             }
             req_id = libspdm_allocate_req_session_id (spdm_context, false);
@@ -1542,7 +1538,10 @@ static void libspdm_test_max_session_count_case21(void **state)
                 assert_int_not_equal (rsp_id, (INVALID_SESSION_ID & 0xFFFF0000) >> 16);
 
                 session_id = libspdm_generate_session_id (req_id, rsp_id);
-                session_info = libspdm_assign_session_id (spdm_context, session_id, true);
+                session_info = libspdm_assign_session_id (spdm_context, session_id,
+                                                          SECURED_SPDM_VERSION_11 <<
+                                                          SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                                          true);
                 assert_ptr_not_equal (session_info, NULL);
             }
             req_id = libspdm_allocate_req_session_id (spdm_context, true);

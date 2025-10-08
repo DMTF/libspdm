@@ -856,7 +856,8 @@ static void rsp_psk_exchange_rsp_case9(void **state)
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
     libspdm_session_info_init(spdm_context,
                               spdm_context->session_info,
-                              INVALID_SESSION_ID, false);
+                              0,
+                              INVALID_SESSION_ID, true);
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
@@ -1662,7 +1663,8 @@ static void rsp_psk_exchange_rsp_case17(void **state)
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
     libspdm_session_info_init(spdm_context,
                               spdm_context->session_info,
-                              INVALID_SESSION_ID, false);
+                              0,
+                              INVALID_SESSION_ID, true);
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);

@@ -119,7 +119,8 @@ static void rsp_psk_finish_rsp_case1(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -223,7 +224,8 @@ static void rsp_psk_finish_rsp_case2(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -330,7 +332,8 @@ static void rsp_psk_finish_rsp_case3(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -441,7 +444,8 @@ static void rsp_psk_finish_rsp_case4(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -555,7 +559,8 @@ static void rsp_psk_finish_rsp_case5(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -675,7 +680,8 @@ static void rsp_psk_finish_rsp_case6(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -778,7 +784,8 @@ static void rsp_psk_finish_rsp_case7(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -906,7 +913,8 @@ static void rsp_psk_finish_rsp_case8(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -1016,7 +1024,8 @@ static void rsp_psk_finish_rsp_case9(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -1123,7 +1132,8 @@ static void rsp_psk_finish_rsp_case10(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -1223,7 +1233,8 @@ static void rsp_psk_finish_rsp_case11(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -1327,7 +1338,8 @@ static void rsp_psk_finish_rsp_case12(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -1438,7 +1450,8 @@ static void rsp_psk_finish_rsp_case13(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -1540,7 +1553,8 @@ static void rsp_psk_finish_rsp_case14(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -1643,7 +1657,8 @@ static void rsp_psk_finish_rsp_case15(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_session_info_set_psk_hint(session_info,
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));

@@ -153,7 +153,8 @@ void libspdm_test_requester_heartbeat_case1(void **State)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     libspdm_set_mem(
@@ -225,7 +226,8 @@ void libspdm_test_requester_heartbeat_case2(void **State)
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
-    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     libspdm_set_mem(

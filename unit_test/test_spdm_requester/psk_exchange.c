@@ -338,8 +338,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -380,7 +379,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -500,7 +500,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -687,8 +688,8 @@ static libspdm_return_t receive_message(
             libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
             ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
             libspdm_build_opaque_data_version_selection_data(
-                spdm_context, &opaque_psk_exchange_rsp_size,
-                ptr);
+                spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                    &opaque_psk_exchange_rsp_size, ptr);
             ptr += opaque_psk_exchange_rsp_size;
             libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                              sizeof(m_libspdm_local_buffer)
@@ -895,8 +896,8 @@ static libspdm_return_t receive_message(
             libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
             ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
             libspdm_build_opaque_data_version_selection_data(
-                spdm_context, &opaque_psk_exchange_rsp_size,
-                ptr);
+                spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                    &opaque_psk_exchange_rsp_size, ptr);
             ptr += opaque_psk_exchange_rsp_size;
             libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                              sizeof(m_libspdm_local_buffer)
@@ -1060,7 +1061,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -1172,7 +1174,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
@@ -1249,8 +1252,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -1291,7 +1293,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -1372,8 +1375,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -1423,7 +1425,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -1505,8 +1508,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -1555,7 +1557,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -1637,8 +1640,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -1688,7 +1690,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -1768,8 +1771,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -1812,7 +1814,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -1892,8 +1895,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -1936,7 +1938,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -2018,8 +2021,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2069,7 +2071,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -2149,8 +2152,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2191,7 +2193,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -2271,8 +2274,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2313,7 +2315,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -2393,8 +2396,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2435,7 +2437,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -2515,8 +2518,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2557,7 +2559,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -2640,8 +2643,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2682,7 +2684,8 @@ static libspdm_return_t receive_message(
         /* libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
          * ptr += LIBSPDM_PSK_CONTEXT_LENGTH;*/
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -2762,8 +2765,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2882,8 +2884,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -3001,8 +3002,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -3043,7 +3043,8 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
         ptr += LIBSPDM_PSK_CONTEXT_LENGTH;
         libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_psk_exchange_rsp_size, ptr);
+            spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_psk_exchange_rsp_size, ptr);
         ptr += opaque_psk_exchange_rsp_size;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
@@ -3936,6 +3937,7 @@ static void req_psk_exchange_case13(void **state)
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
     libspdm_session_info_init(spdm_context,
                               spdm_context->session_info,
+                              0,
                               INVALID_SESSION_ID, false);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
@@ -5043,6 +5045,7 @@ static void req_psk_exchange_case27(void **state)
         m_libspdm_use_key_schedule_algo;
     libspdm_session_info_init(spdm_context,
                               spdm_context->session_info,
+                              0,
                               INVALID_SESSION_ID, false);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
