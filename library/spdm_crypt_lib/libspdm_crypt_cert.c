@@ -1320,11 +1320,13 @@ static bool libspdm_verify_leaf_cert_spdm_eku(const uint8_t *cert, size_t cert_s
     if (is_requester_cert) {
         /* it should not only contain responder auth oid */
         if (!req_auth_oid_find_success && rsp_auth_oid_find_success) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Requester certificate contains Responder OID.\n"));
             return false;
         }
     } else {
         /* it should not only contain requester auth oid */
         if (req_auth_oid_find_success && !rsp_auth_oid_find_success) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Responder certificate contains Requester OID.\n"));
             return false;
         }
     }
@@ -1419,6 +1421,8 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
     if (!is_requester_cert) {
         if ((find_sucessful) && (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT)) {
             /* Hardware_identity_OID is found in alias cert model */
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "Hardware identity OID present in alias leaf certificate.\n"));
             return false;
         }
     }
@@ -1465,36 +1469,44 @@ bool libspdm_x509_common_certificate_check(
     end_cert_from_len = 64;
     end_cert_to_len = 64;
 
-    /* 1. version*/
+    /* 1. Version */
     cert_version = 0;
     status = libspdm_x509_get_version(cert, cert_size, &cert_version);
     if (!status) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "The mandatory Version field is not present.\n"));
         goto cleanup;
     }
     if (cert_version != 2) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "Expected Version to be equal to 2 but it is actually %zu.\n", cert_version));
         status = false;
         goto cleanup;
     }
 
-    /* 2. serial_number*/
+    /* 2. Serial Number */
     asn1_buffer_len = 0;
     status = libspdm_x509_get_serial_number(cert, cert_size, NULL, &asn1_buffer_len);
     if (asn1_buffer_len == 0) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "The mandatory Serial Number field is not present.\n"));
         status = false;
         goto cleanup;
     }
 
-    /* 3. Verify signature algorithm. */
+    /* 3. Signature Algorithm */
     signature_algo_oid_size = 0;
     status = libspdm_x509_get_signature_algorithm(cert, cert_size, NULL, &signature_algo_oid_size);
     if (status) {
         if ((signature_algo_oid_size == 0) &&
             (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "The mandatory Signature Algorithm field is not present.\n"));
             status = false;
             goto cleanup;
         }
     } else {
         if (signature_algo_oid_size == 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "The mandatory Signature Algorithm field is not present.\n"));
             status = false;
             goto cleanup;
         }
@@ -1505,23 +1517,28 @@ bool libspdm_x509_common_certificate_check(
      *    check should be skipped as the Device Certificate CA's public key does not have to use
      *    the same algorithms as the connection's negotiated algorithms. */
     if (!set_cert || (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT)) {
-        status = libspdm_verify_cert_subject_public_key_info(cert, cert_size, base_asym_algo, pqc_asym_algo);
+        status = libspdm_verify_cert_subject_public_key_info(cert, cert_size, base_asym_algo,
+                                                             pqc_asym_algo);
         if (!status) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "Error in verifying the Public Key Algorithm field.\n"));
             goto cleanup;
         }
     }
 
-    /* 5. issuer_name*/
+    /* 5. Issuer */
     asn1_buffer_len = 0;
     status = libspdm_x509_get_issuer_name(cert, cert_size, NULL, &asn1_buffer_len);
     if (status) {
         if ((asn1_buffer_len == 0) &&
             (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "The mandatory Issuer field is not present.\n"));
             status = false;
             goto cleanup;
         }
     } else {
         if (asn1_buffer_len == 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "The mandatory Issuer field is not present.\n"));
             status = false;
             goto cleanup;
         }
@@ -1533,28 +1550,32 @@ bool libspdm_x509_common_certificate_check(
     if (status) {
         if ((asn1_buffer_len == 0) &&
             (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "The mandatory Subject field is not present.\n"));
             status = false;
             goto cleanup;
         }
     } else {
         if (asn1_buffer_len == 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "The mandatory Subject field is not present.\n"));
             status = false;
             goto cleanup;
         }
     }
 
-    /* 7. validity*/
+    /* 7. Validity */
     status = libspdm_x509_get_validity(cert, cert_size, end_cert_from,
                                        &end_cert_from_len, end_cert_to,
                                        &end_cert_to_len);
     if (status) {
         if ((end_cert_from_len == 0) &&
             (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "The mandatory Validity field is not present.\n"));
             status = false;
             goto cleanup;
         }
     } else {
         if (end_cert_from_len == 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "The mandatory Validity field is not present.\n"));
             status = false;
             goto cleanup;
         }
@@ -1564,11 +1585,13 @@ bool libspdm_x509_common_certificate_check(
         status = libspdm_internal_x509_date_time_check(
             end_cert_from, end_cert_from_len, end_cert_to, end_cert_to_len);
         if (!status) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "The certificate is outside its validity period.\n"));
             goto cleanup;
         }
     }
 
-    /* 8. subject_public_key*/
+    /* 8. Subject Public Key Info */
     if (base_asym_algo != 0) {
         status = libspdm_asym_get_public_key_from_x509(base_asym_algo, cert, cert_size, &context);
     }
@@ -1576,10 +1599,12 @@ bool libspdm_x509_common_certificate_check(
         status = libspdm_pqc_asym_get_public_key_from_x509(pqc_asym_algo, cert, cert_size, &context);
     }
     if (!status) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "The mandatory Subject Public Key Info field is not present.\n"));
         goto cleanup;
     }
 
-    /* 9. key_usage
+    /* 9. Key Usage
      *    If this is a SET_CERTIFICATE operation and the endpoint uses the AliasCert model then the
      *    check should be skipped as the SPDM specification does not specify the presence or absence
      *    of the Device Certificate CA's keyUsage field. */
@@ -1588,15 +1613,20 @@ bool libspdm_x509_common_certificate_check(
 
         status = libspdm_x509_get_key_usage(cert, cert_size, &value);
         if (!status) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "The mandatory Key Usage field is not present.\n"));
             goto cleanup;
         } else {
             if (value == 0) {
                 if (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) {
                     status = false;
+                    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                                   "The mandatory Key Usage field is not present.\n"));
                     goto cleanup;
                 }
             } else {
                 if ((LIBSPDM_CRYPTO_X509_KU_DIGITAL_SIGNATURE & value) == 0) {
+                    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                                   "The Mandatory digital signature bit in Key Usage field is not set.\n"));
                     status = false;
                     goto cleanup;
                 }
@@ -1604,7 +1634,7 @@ bool libspdm_x509_common_certificate_check(
         }
     }
 
-    /* 10. verify spdm defined extended key usage*/
+    /* 10. Extended Key Usage */
     status = libspdm_verify_leaf_cert_spdm_eku(cert, cert_size, is_requester_cert);
     if (!status) {
         goto cleanup;
