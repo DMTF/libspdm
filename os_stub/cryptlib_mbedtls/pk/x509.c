@@ -142,6 +142,11 @@ bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
     *single_x509_cert = (uint8_t *)(void *)mbedtls_cert;
     ret = wrapper_mbedtls_x509_crt_parse_der(mbedtls_cert, cert, cert_size);
 
+    if (ret != 0){
+        libspdm_x509_free(mbedtls_cert);
+        *single_x509_cert = NULL;
+    }
+
     return ret == 0;
 }
 
@@ -2049,6 +2054,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     mbedtls_x509write_csr_init(&req);
     mbedtls_pk_init(&key);
     csr_buffer_size = *csr_len;
+    libspdm_zero_mem(&extns, sizeof(mbedtls_asn1_sequence));
     next_oid = NULL;
 
     ret = 1;
@@ -2236,6 +2242,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     ret = 0;
 free_all:
     mbedtls_x509write_csr_free(&req);
+    mbedtls_asn1_sequence_free(extns.next);
     mbedtls_pk_free(&key);
 
     return(ret == 0);

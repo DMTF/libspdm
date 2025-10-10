@@ -157,6 +157,7 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
         if (!result) {
             libspdm_zero_mem(prikey, prikey_size);
             free(prikey);
+            libspdm_x509_free(x509_ca_cert);
             return false;
         }
         hash_nid = libspdm_get_hash_nid(base_hash_algo);
@@ -185,6 +186,7 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
         libspdm_zero_mem(prikey, prikey_size);
         free(prikey);
         free(cert);
+        libspdm_x509_free(x509_ca_cert);
     } else {
 #endif
     void *x509_ca_cert;
@@ -240,6 +242,7 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
                                       x509_ca_cert);
         libspdm_asym_free(base_asym_algo, context);
     }
+    libspdm_x509_free(x509_ca_cert);
     free(cert);
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
 }
