@@ -52,7 +52,7 @@
 
 #define CONFIG_HEADER_BN_H
 
-#if defined(LIBSPDM_CPU_X64) || defined(LIBSPDM_CPU_AARCH64) || defined(LIBSPDM_CPU_RISCV64)
+#if defined(LIBSPDM_CPU_X64) || defined(LIBSPDM_CPU_AARCH64) || defined(LIBSPDM_CPU_RISCV64) || defined(LIBSPDM_CPU_LOONGARCH64)
 
 /* With GCC we would normally use SIXTY_FOUR_BIT_LONG, but MSVC needs
  * SIXTY_FOUR_BIT, because 'long' is 32-bit and only 'long long' is

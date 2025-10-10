@@ -138,6 +138,16 @@ a) [ARC GNU](https://github.com/foss-for-synopsys-dwc-arc-processors).
 a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/current/gnu-command-line-tools.html).
   - Follow the NIOS II document.
 
+#### Compiler for LOONGARCH64
+
+a) [LOONGARCH64_GNU](https://github.com/loongson/build-tools/)
+  - Download [Release 2025.08.08](https://github.com/loongson/build-tools/releases/download/2025.08.08/x86_64-cross-tools-loongarch64-binutils_2.45-gcc_15.1.0-glibc_2.42.tar.xz): (loongarch64-unknown-linux-gnu), and unzip it`.
+  - Add <tool_path>/bin to the $PATH environment. For example:
+    ```
+    echo 'export PATH=~/x86_64-cross-tools-loongarch64-binutils_2.45-gcc_15.1.0-glibc_2.42/bin:$PATH' | sudo tee -a ~/.bashrc
+    source ~/.bashrc
+    ```
+
 ## Build
 
 ### Windows Builds for ARM/AARCH64
@@ -268,6 +278,26 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
    ```
    cmake -DARCH=riscv32 -DTOOLCHAIN=RISCV_XPACK -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
+   Note: `make -j` can be used to accelerate the build.
+
+#### Linux Builds for LOONGARCH64
+
+   For LOONGARCH64_GNU toolchain GNU/Linux target (loongarch64-unknown-linux-gnu) build on Linux,
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=loongarch64 -DTOOLCHAIN=LOONGARCH64_GNU -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   make copy_sample_key
+   make
+   ```
+
+   Example CMake commands:
+
+   ```
+   cmake -DARCH=loongarch64 -DTOOLCHAIN=LOONGARCH64_GNU -DTARGET=Release -DCRYPTO=mbedtls ..
+   ```
+
    Note: `make -j` can be used to accelerate the build.
 
 ### Linux Builds inside build environments
