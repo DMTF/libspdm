@@ -107,7 +107,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
             SPDM_SET_KEY_PAIR_INFO, response_size, response);
     }
 
-    total_key_pairs = spdm_context->local_context.total_key_pairs;
+    total_key_pairs = libspdm_read_total_key_pairs(spdm_context);
     key_pair_id = spdm_request->key_pair_id;
     if ((key_pair_id == 0) || (key_pair_id > total_key_pairs)) {
         return libspdm_generate_error_response(spdm_context,

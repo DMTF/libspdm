@@ -297,7 +297,7 @@ void libspdm_init_key_pair_info() {
     m_total_key_pair_count = index;
 }
 
-uint8_t libspdm_read_total_key_pairs ()
+uint8_t libspdm_read_total_key_pairs (void *spdm_context)
 {
     if (m_total_key_pair_count == 0) {
         libspdm_init_key_pair_info();
@@ -354,11 +354,11 @@ bool libspdm_read_key_pair_info(
         return false;
     }
 
-        LIBSPDM_ASSERT(total_key_pairs == libspdm_read_total_key_pairs());
+        LIBSPDM_ASSERT(total_key_pairs == libspdm_read_total_key_pairs(spdm_context));
         );
 
     /*check*/
-    if (key_pair_id > libspdm_read_total_key_pairs()) {
+    if (key_pair_id > libspdm_read_total_key_pairs(spdm_context)) {
         return false;
     }
 
@@ -460,11 +460,11 @@ bool libspdm_write_key_pair_info(
         return false;
     }
 
-        LIBSPDM_ASSERT(total_key_pairs == libspdm_read_total_key_pairs());
+        LIBSPDM_ASSERT(total_key_pairs == libspdm_read_total_key_pairs(spdm_context));
         );
 
     /*check*/
-    if (key_pair_id > libspdm_read_total_key_pairs()) {
+    if (key_pair_id > libspdm_read_total_key_pairs(spdm_context)) {
         return false;
     }
 

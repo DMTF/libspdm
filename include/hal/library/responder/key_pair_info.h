@@ -14,6 +14,14 @@
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
 
 /**
+ * return the total key pairs number.
+ * It is a fixed number per SPDM connection.
+ *
+ * @retval the total key pairs number.
+ */
+extern uint8_t libspdm_read_total_key_pairs (void *spdm_context);
+
+/**
  * read the key pair info of the key_pair_id.
  *
  * @param  spdm_context               A pointer to the SPDM context.

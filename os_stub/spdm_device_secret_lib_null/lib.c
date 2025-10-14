@@ -242,6 +242,11 @@ bool libspdm_generate_event_list(
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
 
+uint8_t libspdm_read_total_key_pairs (void *spdm_context)
+{
+    return 0;
+}
+
 /**
  * read the key pair info of the key_pair_id.
  *
