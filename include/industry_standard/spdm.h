@@ -1609,12 +1609,6 @@ typedef struct {
         SPDM_KEY_PAIR_CAP_ASYM_ALGO_CAP | \
         SPDM_KEY_PAIR_CAP_SHAREABLE_CAP)
 
-/* Key pair capabilities (1.4) */
-#define SPDM_KEY_PAIR_CAP_PQC_ASYM_ALGO_CAP 0x00000040
-#define SPDM_KEY_PAIR_CAP_14_MASK ( \
-        SPDM_KEY_PAIR_CAP_MASK | \
-        SPDM_KEY_PAIR_CAP_PQC_ASYM_ALGO_CAP)
-
 /* Key pair asym algorithm capabilities */
 #define SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA2048 0x00000001
 #define SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA3072 0x00000002
