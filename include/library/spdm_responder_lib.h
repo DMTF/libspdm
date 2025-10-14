@@ -329,6 +329,19 @@ libspdm_return_t libspdm_register_get_endpoint_info_callback_func(
     void *spdm_context, libspdm_get_endpoint_info_callback_func get_endpoint_info_callback);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP && LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
+/**
+ * This function allows the consumer to terminate a session.
+ * For example, it can be used when watchdog fires.
+ *
+ * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  session_id                   session_id of the session to be terminated.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS Success
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER session_id is invalid.
+ **/
+libspdm_return_t libspdm_terminate_session(
+    void *spdm_context, uint32_t session_id);
+
 #ifdef __cplusplus
 }
 #endif
