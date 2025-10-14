@@ -1013,6 +1013,7 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
  **/
 bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
                                                bool is_requester,
+                                               uint8_t slot_id,
                                                uint8_t *signature);
 
 /**
@@ -1087,6 +1088,7 @@ uint32_t libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_conte
 bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
                                               libspdm_session_info_t *session_info,
                                               bool is_requester,
+                                              uint8_t slot_id,
                                               uint8_t *signature);
 
 /**
@@ -1977,6 +1979,20 @@ uint32_t libspdm_mask_base_asym_algo(libspdm_context_t *spdm_context, uint32_t b
  * @retval false The ID and VendorIDLen are illegal.
  */
 bool libspdm_validate_svh_vendor_id_len(uint16_t id, uint8_t vendor_id_len);
+
+/**
+ * Map slot ID to key pair ID.
+ *
+ * @param  spdm_context   A pointer to the SPDM context.
+ * @param  slot_id        The slot ID.
+ * @param  is_requester   Indicate of the key generation for a requester or a responder.
+ *
+ * @return key pair ID.
+ */
+uint8_t libspdm_slot_id_to_key_pair_id (
+    void *spdm_context,
+    uint8_t slot_id,
+    bool is_requester);
 
 #if LIBSPDM_EVENT_RECIPIENT_SUPPORT
 /**

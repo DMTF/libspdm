@@ -47,6 +47,9 @@ extern bool libspdm_challenge_opaque_data(
  *
  * @param  spdm_context    A pointer to the SPDM context.
  * @param  spdm_version    Indicates the negotiated version.
+ * @param  key_pair_id     Indicates the key_pair_id in multi-key use case.
+ *                         It should be 0, if (SPDM version is < 1.3) OR
+ *                         ((SPDM version is >= 1.3) AND (LIBSPDM_DATA_MULTI_KEY_CONN_RSP is false))
  * @param  base_asym_algo  Indicates the signing algorithm.
  * @param  base_hash_algo  Indicates the hash algorithm.
  * @param  is_data_hash    Indicate the message type.
@@ -65,7 +68,8 @@ extern bool libspdm_challenge_opaque_data(
 extern bool libspdm_responder_data_sign(
     void *spdm_context,
     spdm_version_number_t spdm_version,
-    uint8_t op_code, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
+    uint8_t key_pair_id, uint8_t op_code,
+    uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     uint32_t base_hash_algo, bool is_data_hash,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size);

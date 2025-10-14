@@ -632,6 +632,7 @@ libspdm_return_t libspdm_process_opaque_data_version_selection_data(
  **/
 bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
                                            libspdm_session_info_t *session_info,
+                                           uint8_t slot_id,
                                            uint8_t *signature);
 #endif
 
