@@ -122,8 +122,6 @@ typedef struct {
 
     /*The device role*/
     bool is_requester;
-
-    uint8_t total_key_pairs;
 } libspdm_local_context_t;
 
 typedef struct {
