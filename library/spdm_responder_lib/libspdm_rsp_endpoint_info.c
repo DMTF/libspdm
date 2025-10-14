@@ -241,7 +241,8 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
                 0, response_size, response);
         }
 
-        result = libspdm_generate_endpoint_info_signature(spdm_context, session_info, false, ptr);
+        result = libspdm_generate_endpoint_info_signature(
+            spdm_context, session_info, false, slot_id, ptr);
 
         if (!result) {
             libspdm_reset_message_e(spdm_context, session_info);

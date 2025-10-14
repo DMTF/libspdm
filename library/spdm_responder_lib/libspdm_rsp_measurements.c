@@ -9,6 +9,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
                                             libspdm_session_info_t *session_info,
+                                            uint8_t slot_id,
                                             uint8_t *signature)
 {
     size_t signature_size;
@@ -46,7 +47,9 @@ bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
 
     result = libspdm_responder_data_sign(
         spdm_context,
-        spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+        spdm_context->connection_info.version,
+        libspdm_slot_id_to_key_pair_id(spdm_context, slot_id, false),
+        SPDM_MEASUREMENTS,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.pqc_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -54,7 +57,9 @@ bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
 #else
     result = libspdm_responder_data_sign(
         spdm_context,
-        spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+        spdm_context->connection_info.version,
+        libspdm_slot_id_to_key_pair_id(spdm_context, slot_id, false),
+        SPDM_MEASUREMENTS,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.pqc_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -488,7 +493,8 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
     if ((spdm_request->header.param1 &
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
 
-        ret = libspdm_generate_measurement_signature(spdm_context, session_info, fill_response_ptr);
+        ret = libspdm_generate_measurement_signature(
+            spdm_context, session_info, slot_id_param, fill_response_ptr);
 
         if (!ret) {
             libspdm_reset_message_m(spdm_context, session_info);
