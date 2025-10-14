@@ -163,8 +163,6 @@ typedef enum {
     LIBSPDM_DATA_MULTI_KEY_CONN_REQ,
     LIBSPDM_DATA_MULTI_KEY_CONN_RSP,
 
-    LIBSPDM_DATA_TOTAL_KEY_PAIRS,
-
     /* Control responder to use PQC first or traditional first,
      * if both PQC and traditional are supported by both requester and responder. */
     LIBSPDM_DATA_ALGO_PRIORITY_PQC_FIRST,

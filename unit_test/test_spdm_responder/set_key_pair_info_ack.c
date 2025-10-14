@@ -46,7 +46,7 @@ static void rsp_set_key_pair_info_ack_case1(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
-    spdm_context->local_context.total_key_pairs = libspdm_read_total_key_pairs(spdm_context);
+
     key_pair_id = 4;
 
     response_size = sizeof(response);
@@ -161,7 +161,7 @@ static void rsp_set_key_pair_info_ack_case2(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
-    spdm_context->local_context.total_key_pairs = libspdm_read_total_key_pairs(spdm_context);
+
     key_pair_id = 4;
 
     /*set responder need reset*/
@@ -318,7 +318,7 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
-    spdm_context->local_context.total_key_pairs = libspdm_read_total_key_pairs(spdm_context);
+
     key_pair_id = 4;
 
     /*set responder need reset*/
@@ -543,7 +543,7 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
     spdm_context->local_context.capability.flags = 0; /* clear flags */
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
-    spdm_context->local_context.total_key_pairs = libspdm_read_total_key_pairs(spdm_context);
+
     key_pair_id = 4;
 
     /*set responder need reset, spdm 1.4 */
