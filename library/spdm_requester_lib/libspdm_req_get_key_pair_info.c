@@ -215,6 +215,24 @@ static libspdm_return_t libspdm_try_get_key_pair_info(libspdm_context_t *spdm_co
     }
 
     /* -=[Process Response Phase]=- */
+
+    /*If responder doesn't support SET_KEY_PAIR_INFO_CAP,the capabilities should be 0*/
+    if ((!libspdm_is_capabilities_flag_supported(
+             spdm_context, true, 0,
+             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP)) &&
+        ((spdm_response->capabilities & SPDM_KEY_PAIR_CAP_MASK) != 0)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
+    }
+
+    *total_key_pairs = spdm_response->total_key_pairs;
+    *capabilities = spdm_response->capabilities & SPDM_KEY_PAIR_CAP_MASK;
+    if (((*capabilities & SPDM_KEY_PAIR_CAP_SHAREABLE_CAP) != 0) &&
+        ((*capabilities & SPDM_KEY_PAIR_CAP_CERT_ASSOC_CAP) == 0)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
+    }
+
     *key_usage_capabilities = (spdm_response->key_usage_capabilities) & SPDM_KEY_USAGE_BIT_MASK;
     if (*key_usage_capabilities == 0) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
@@ -262,24 +280,21 @@ static libspdm_return_t libspdm_try_get_key_pair_info(libspdm_context_t *spdm_co
         *current_pqc_asym_algo = rsp_current_pqc_asym_algo;
     }
 
-    /*If responder doesn't support SET_KEY_PAIR_INFO_CAP,the capabilities should be 0*/
-    if ((!libspdm_is_capabilities_flag_supported(
-             spdm_context, true, 0,
-             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP)) &&
-        ((spdm_response->capabilities & SPDM_KEY_PAIR_CAP_MASK) != 0)) {
+    *assoc_cert_slot_mask = spdm_response->assoc_cert_slot_mask;
+    if (!libspdm_onehot0(*assoc_cert_slot_mask) &&
+        (((*capabilities & SPDM_KEY_PAIR_CAP_SHAREABLE_CAP) == 0) &&
+         (libspdm_is_capabilities_flag_supported(
+              spdm_context, true, 0,
+              SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP)))) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
-
-    *total_key_pairs = spdm_response->total_key_pairs;
-    *capabilities = spdm_response->capabilities & SPDM_KEY_PAIR_CAP_MASK;
 
     if (*public_key_info_len < spdm_response->public_key_info_len) {
         status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
     *public_key_info_len = spdm_response->public_key_info_len;
-    *assoc_cert_slot_mask = spdm_response->assoc_cert_slot_mask;
 
     libspdm_copy_mem(public_key_info,
                      spdm_response->public_key_info_len,
