@@ -215,7 +215,7 @@ bool libspdm_get_requester_pqc_private_key_from_raw_data(uint32_t req_pqc_asym_a
 
 /* key pairs */
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
-uint8_t libspdm_read_total_key_pairs();
+uint8_t libspdm_read_total_key_pairs(void *spdm_context);
 #endif
 
 /* External*/
