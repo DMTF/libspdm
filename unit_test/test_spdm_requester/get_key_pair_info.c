@@ -198,7 +198,8 @@ static void req_get_key_pair_info_case1(void **state)
 }
 
 /**
- * Test 2: The collection of multiple sub-cases.
+ * Test 2: The collection of multiple sub-cases for invalid combination.
+ * Expected Behavior: get a LIBSPDM_STATUS_INVALID_MSG_FIELD return code
  **/
 void req_get_key_pair_info_case2(void **state)
 {
@@ -581,7 +582,8 @@ int libspdm_req_get_key_pair_info_test(void)
     const struct CMUnitTest test_cases[] = {
         /* Successful response to get key pair info, key_pair_id is 1*/
         cmocka_unit_test(req_get_key_pair_info_case1),
-        /* cmocka_unit_test(req_get_key_pair_info_case2) */
+        /* The collection of multiple sub-cases for invalid combination.*/
+        cmocka_unit_test(req_get_key_pair_info_case2),
     };
 
     libspdm_test_context_t test_context = {
