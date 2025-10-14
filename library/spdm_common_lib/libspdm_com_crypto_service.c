@@ -892,6 +892,7 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
  **/
 bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
                                                bool is_requester,
+                                               uint8_t slot_id,
                                                uint8_t *signature)
 {
     bool result;
@@ -936,7 +937,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         result = libspdm_requester_data_sign(
             spdm_context,
-            spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
+            spdm_context->connection_info.version, slot_id, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.req_pqc_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
@@ -944,7 +945,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
 #else
         result = libspdm_requester_data_sign(
             spdm_context,
-            spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
+            spdm_context->connection_info.version, slot_id, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.req_pqc_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
@@ -964,7 +965,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         result = libspdm_responder_data_sign(
             spdm_context,
-            spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
+            spdm_context->connection_info.version, slot_id, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.pqc_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
@@ -973,7 +974,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
 #else
         result = libspdm_responder_data_sign(
             spdm_context,
-            spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
+            spdm_context->connection_info.version, slot_id, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.pqc_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1388,6 +1389,7 @@ libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_context,
 bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
                                               libspdm_session_info_t *session_info,
                                               bool is_requester,
+                                              uint8_t slot_id,
                                               uint8_t *signature)
 {
     bool result;
@@ -1430,7 +1432,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         result = libspdm_requester_data_sign(
             spdm_context,
-            spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
+            spdm_context->connection_info.version, slot_id, SPDM_ENDPOINT_INFO,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.req_pqc_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1438,7 +1440,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
 #else
         result = libspdm_requester_data_sign(
             spdm_context,
-            spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
+            spdm_context->connection_info.version, slot_id, SPDM_ENDPOINT_INFO,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.req_pqc_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1455,7 +1457,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         result = libspdm_responder_data_sign(
             spdm_context,
-            spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
+            spdm_context->connection_info.version, slot_id, SPDM_ENDPOINT_INFO,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.pqc_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1464,7 +1466,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
 #else
         result = libspdm_responder_data_sign(
             spdm_context,
-            spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
+            spdm_context->connection_info.version, slot_id, SPDM_ENDPOINT_INFO,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.pqc_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
