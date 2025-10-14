@@ -1870,7 +1870,7 @@ static libspdm_return_t receive_message(
             libspdm_responder_data_sign(
                 spdm_context,
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                    SPDM_CHALLENGE_AUTH,
+                    0, SPDM_CHALLENGE_AUTH,
                     m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
                     false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                     ptr, &sig_size);
