@@ -126,7 +126,7 @@ static void rsp_encap_get_endpoint_info_case1(void **state)
     libspdm_requester_data_sign(
         spdm_context,
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-            SPDM_ENDPOINT_INFO,
+            0, SPDM_ENDPOINT_INFO,
             m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, (uint8_t*)spdm_response, response_size - sig_size,
             ptr, &sig_size);
@@ -181,7 +181,7 @@ static void rsp_encap_get_endpoint_info_case1(void **state)
     libspdm_requester_data_sign(
         spdm_context,
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-            SPDM_ENDPOINT_INFO,
+            0, SPDM_ENDPOINT_INFO,
             m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, (uint8_t*)spdm_response, response_size - sig_size,
             ptr, &sig_size);
@@ -275,7 +275,7 @@ static void rsp_encap_get_endpoint_info_case2(void **state)
     libspdm_requester_data_sign(
         spdm_context,
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-            SPDM_ENDPOINT_INFO,
+            0, SPDM_ENDPOINT_INFO,
             m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, (uint8_t*)spdm_response, response_size - sig_size,
             ptr, &sig_size);
@@ -484,7 +484,7 @@ static void rsp_encap_get_endpoint_info_case4(void **state)
     libspdm_requester_data_sign(
         spdm_context,
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-            SPDM_ENDPOINT_INFO,
+            0, SPDM_ENDPOINT_INFO,
             m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, (uint8_t*)spdm_response, response_size - sig_size,
             ptr, &sig_size);
