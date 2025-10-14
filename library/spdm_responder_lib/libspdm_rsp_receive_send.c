@@ -363,6 +363,31 @@ void libspdm_set_session_state(libspdm_context_t *spdm_context,
 }
 
 /**
+ * This function allows the consumer to terminate a session.
+ * For example, it can be used when the heartbeat period is over.
+ *
+ * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  session_id                   session_id of the session to be terminated.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS Success
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER session_id is invalid.
+ **/
+libspdm_return_t libspdm_terminate_session(
+    void *spdm_context, uint32_t session_id)
+{
+    libspdm_session_info_t *session_info;
+
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    if (session_info == NULL) {
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    }
+
+    libspdm_set_session_state(spdm_context, session_id, LIBSPDM_SESSION_STATE_NOT_STARTED);
+    libspdm_free_session_id(spdm_context, session_id);
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+/**
  * Notify the connection state to an SPDM context register.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
@@ -783,7 +808,6 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
             libspdm_set_session_state(context, *session_id, LIBSPDM_SESSION_STATE_ESTABLISHED);
             break;
         case SPDM_END_SESSION_ACK:
-            libspdm_set_session_state(context, *session_id, LIBSPDM_SESSION_STATE_NOT_STARTED);
             #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
             if (libspdm_is_capabilities_flag_supported(
                     context, false,
@@ -796,7 +820,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
                 }
             }
             #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
-            libspdm_free_session_id(context, *session_id);
+            libspdm_terminate_session(context, *session_id);
             break;
         default:
             #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
