@@ -225,7 +225,8 @@ libspdm_return_t libspdm_get_encap_response_endpoint_info(void *spdm_context,
                 0, response_size, response);
         }
 
-        result = libspdm_generate_endpoint_info_signature(context, session_info, true, ptr);
+        result = libspdm_generate_endpoint_info_signature(
+            context, session_info, true, slot_id, ptr);
 
         if (!result) {
             libspdm_reset_message_encap_e(context, session_info);

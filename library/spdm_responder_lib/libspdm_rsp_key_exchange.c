@@ -78,12 +78,12 @@ bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
 
 bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
                                                  libspdm_session_info_t *session_info,
+                                                 uint8_t slot_id,
                                                  uint8_t *signature)
 {
     bool result;
     size_t signature_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    uint8_t slot_id;
     uint8_t *th_curr_data;
     size_t th_curr_data_size;
     libspdm_th_managed_buffer_t th_curr;
@@ -109,7 +109,6 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
     if (slot_id == 0xFF) {
         result = libspdm_get_local_public_key_buffer(
@@ -152,7 +151,9 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_responder_data_sign(
         spdm_context,
-        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+        spdm_context->connection_info.version,
+        libspdm_slot_id_to_key_pair_id(spdm_context, slot_id, false),
+        SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.pqc_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -160,7 +161,9 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
 #else
     result = libspdm_responder_data_sign(
         spdm_context,
-        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+        spdm_context->connection_info.version,
+        libspdm_slot_id_to_key_pair_id(spdm_context, slot_id, false),
+        SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.pqc_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -647,7 +650,8 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
-    result = libspdm_generate_key_exchange_rsp_signature(spdm_context, session_info, ptr);
+    result = libspdm_generate_key_exchange_rsp_signature(
+        spdm_context, session_info, slot_id, ptr);
     if (!result) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(

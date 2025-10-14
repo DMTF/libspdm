@@ -65,7 +65,8 @@ extern bool libspdm_challenge_opaque_data(
 extern bool libspdm_responder_data_sign(
     void *spdm_context,
     spdm_version_number_t spdm_version,
-    uint8_t op_code, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
+    uint8_t key_pair_id, uint8_t op_code,
+    uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     uint32_t base_hash_algo, bool is_data_hash,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size);
