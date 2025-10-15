@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -386,7 +386,11 @@ bool libspdm_eddsa_sign(const void *ecd_context, size_t hash_nid,
         result = EVP_DigestSignInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params_default);
         break;
     case EVP_PKEY_ED448:
-        result = EVP_DigestSignInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params_ed448);
+        if (context == NULL || context_size == 0) {
+            result = EVP_DigestSignInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params_default);
+        } else {
+            result = EVP_DigestSignInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params_ed448);
+        }
         break;
     default:
         return false;
@@ -491,7 +495,11 @@ bool libspdm_eddsa_verify(const void *ecd_context, size_t hash_nid,
         result = EVP_DigestVerifyInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params_default);
         break;
     case EVP_PKEY_ED448:
-        result = EVP_DigestVerifyInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params_ed448);
+        if (context == NULL || context_size == 0) {
+            result = EVP_DigestVerifyInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params_default);
+        } else {
+            result = EVP_DigestVerifyInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params_ed448);
+        }
         break;
     default:
         return false;
