@@ -261,6 +261,10 @@ bool libspdm_ec_set_priv_key(void *ec_context, const uint8_t *private_key,
         goto done;
     }
 
+    if (!EVP_PKEY_assign_EC_KEY(evp_pkey, ec_key)) {
+        goto done;
+    }
+    ec_key = NULL;
     ret_val = true;
 
 done:
@@ -968,7 +972,7 @@ bool libspdm_ecdsa_sign_ex(void *ec_context, size_t hash_nid,
     }
 
     ecdsa_sig = ECDSA_do_sign_ex(message_hash, (uint32_t)hash_size, kinv, rp,
-                                 (EC_KEY *)ec_context);
+                                 (EC_KEY *)ec_key);
     if (ecdsa_sig == NULL) {
         result = false;
         goto cleanup;
