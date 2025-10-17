@@ -20,6 +20,11 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
             time_win.c
             watchdog.c
     )
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    target_sources(platform_lib_null
+        PRIVATE
+            time_darwin.c
+            watchdog.c
+    )
 
 endif()
-
