@@ -24,6 +24,7 @@
 #define LIBSPDM_FIPS_SELF_TEST_EDDSA         0x00008000
 #define LIBSPDM_FIPS_SELF_TEST_RSA_PSS       0x00010000
 #define LIBSPDM_FIPS_SELF_TEST_ML_KEM        0x00020000
+#define LIBSPDM_FIPS_SELF_TEST_ML_DSA        0x00040000
 
 #if LIBSPDM_SLH_DSA_SUPPORT
 #define LIBSPDM_FIPS_REQUIRED_BUFFER_SIZE 7856 /* SLH_DSA_SHA2_128S_SIG_SIZE */
@@ -118,5 +119,10 @@ bool libspdm_fips_selftest_eddsa(void *fips_selftest_context);
  * ML-KEM self_test
  **/
 bool libspdm_fips_selftest_mlkem(void *fips_selftest_context);
+
+/**
+ * ML-DSA self_test
+ **/
+bool libspdm_fips_selftest_mldsa(void *fips_selftest_context);
 
 #endif/*LIBSPDM_FIPS_MODE*/
