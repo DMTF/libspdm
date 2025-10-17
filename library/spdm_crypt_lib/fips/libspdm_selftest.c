@@ -49,6 +49,8 @@ bool libspdm_fips_run_selftest(void *fips_selftest_context)
 
     libspdm_fips_selftest_mldsa(context);
 
+    libspdm_fips_selftest_slhdsa(context);
+
     return (context->tested_algo == context->self_test_result);
 }
 
