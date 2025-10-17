@@ -56,11 +56,12 @@ c) [ARM GNU bare metal](https://developer.arm.com/downloads/-/arm-gnu-toolchain-
       source ~/.bashrc
       ```
 
-d) [ARM GCC](https://packages.ubuntu.com/bionic/gcc-arm-linux-gnueabi) for ARM only
-  - `sudo apt-get install gcc-arm-linux-gnueabi`
+d) [ARM GCC](https://pkgs.org/download/gcc-arm-linux-gnueabi) for ARM only
+  - Ubuntu, Debian:`sudo apt-get install gcc-arm-linux-gnueabi`
 
-e) [AARCH64 GCC](https://packages.ubuntu.com/bionic/gcc-aarch64-linux-gnu) for AARCH64 only
-  - `sudo apt-get install gcc-aarch64-linux-gnu`
+e) [AARCH64 GCC](https://pkgs.org/download/gcc-aarch64-linux-gnu) for AARCH64 only
+  - Ubuntu, Debian:`sudo apt-get install gcc-aarch64-linux-gnu`
+  - Fedora:`sudo dnf install gcc-aarch64-linux-gnu`
 
 #### Compiler for RISCV32/RISCV64 (Choose one)
 
@@ -94,8 +95,9 @@ b) [RISCV GNU](https://github.com/riscv-collab/riscv-gnu-toolchain)
       sudo ln -s /opt/riscv32/bin/* /usr/bin
       ```
 
-c) [RISCV64 GCC](https://packages.ubuntu.com/bionic/gcc-riscv64-linux-gnu) for RISCV64 only
-  - `sudo apt-get install gcc-riscv64-linux-gnu`
+c) [RISCV64 GCC](https://pkgs.org/download/gcc-riscv64-linux-gnu) for RISCV64 only
+  - Ubuntu, Debian:`sudo apt-get install gcc-riscv64-linux-gnu`
+  - Fedora:`sudo dnf install gcc-riscv64-linux-gnu`
 
 d) [RISCV NONE](https://archlinux.org/packages/extra/x86_64/riscv64-elf-gcc/)
   - Use a [GCC](https://gcc.gnu.org/) compiler configured for building
