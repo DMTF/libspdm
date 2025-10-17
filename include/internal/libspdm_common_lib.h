@@ -1011,6 +1011,7 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
  **/
 bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
                                                bool is_requester,
+                                               uint8_t slot_id,
                                                uint8_t *signature);
 
 /**
@@ -1085,6 +1086,7 @@ uint32_t libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_conte
 bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
                                               libspdm_session_info_t *session_info,
                                               bool is_requester,
+                                              uint8_t slot_id,
                                               uint8_t *signature);
 
 /**
