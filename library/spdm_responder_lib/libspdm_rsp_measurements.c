@@ -87,6 +87,8 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
     libspdm_session_state_t session_state;
     uint8_t content_changed;
     uint8_t *fill_response_ptr;
+    size_t request_context_size;
+    const void *request_context;
 
     spdm_request = request;
 
@@ -229,6 +231,19 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
         }
     }
 
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        request_context_size = SPDM_REQ_CONTEXT_SIZE;
+
+        if ((spdm_request->header.param1 &
+             SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
+            request_context = (const uint8_t *)spdm_request + sizeof(spdm_message_header_t);
+        } else {
+            request_context = spdm_request + 1;
+        }
+    } else {
+        request_context_size = 0;
+        request_context = NULL;
+    }
 
     /* response_size should be large enough to hold a MEASUREMENTS response without
      * measurements or opaque data. */
@@ -253,6 +268,8 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
         spdm_context->connection_info.algorithm.measurement_hash_algo,
         measurements_index,
         spdm_request->header.param1,
+        request_context_size,
+        request_context,
         &content_changed,
         &measurements_count,
         measurements,
@@ -299,6 +316,8 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
             spdm_context->connection_info.algorithm.measurement_hash_algo,
             measurements_index,
             spdm_request->header.param1,
+            request_context_size,
+            request_context,
             opaque_data,
             &opaque_data_size);
 

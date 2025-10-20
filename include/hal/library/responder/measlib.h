@@ -45,6 +45,10 @@
  *
  * @param request_attribute A bitmask who fields are SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_*.
  *
+ * @param  request_context_size  The size, in bytes, of request_context.
+ * @param  request_context       If spdm_version is greater than 1.2, then it is a pointer to the
+ *                               Context field in the request message, else it is NULL and ignore
+ *
  * @param  measurements_count
  * When "measurement_index" is zero, returns the total count of
  * measurements available for the device. None of the actual measurements are
@@ -72,6 +76,8 @@ extern libspdm_return_t libspdm_measurement_collection(
     uint32_t measurement_hash_algo,
     uint8_t measurement_index,
     uint8_t request_attribute,
+    size_t request_context_size,
+    const void *request_context,
     uint8_t *content_changed,
     uint8_t *measurements_count,
     void *measurements,
@@ -96,6 +102,10 @@ extern libspdm_return_t libspdm_measurement_collection(
  *
  * @param request_attribute A bitmask who fields are SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_*.
  *
+ * @param  request_context_size  The size, in bytes, of request_context.
+ * @param  request_context       If spdm_version is greater than 1.2, then it is a pointer to the
+ *                               Context field in the request message, else it is NULL and ignore
+ *
  * @param opaque_data
  * A pointer to a destination buffer whose size, in bytes, is opaque_data_size. The opaque data is
  * copied to this buffer.
@@ -111,6 +121,8 @@ extern bool libspdm_measurement_opaque_data(
     uint32_t measurement_hash_algo,
     uint8_t measurement_index,
     uint8_t request_attribute,
+    size_t request_context_size,
+    const void *request_context,
     void *opaque_data,
     size_t *opaque_data_size);
 

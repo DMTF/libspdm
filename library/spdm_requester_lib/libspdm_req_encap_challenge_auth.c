@@ -26,6 +26,8 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     uint8_t auth_attribute;
     libspdm_return_t status;
     uint8_t slot_mask;
+    size_t request_context_size;
+    const void *request_context;
     uint8_t *opaque_data;
     size_t opaque_data_size;
     size_t spdm_request_size;
@@ -114,6 +116,14 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
                    SPDM_NONCE_SIZE + measurement_summary_hash_size + sizeof(uint16_t) +
                    SPDM_REQ_CONTEXT_SIZE + signature_size);
 
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        request_context_size = SPDM_REQ_CONTEXT_SIZE;
+        request_context = spdm_request + 1;
+    } else {
+        request_context_size = 0;
+        request_context = NULL;
+    }
+
     libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
@@ -167,6 +177,8 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
         spdm_context,
         context->connection_info.version,
         slot_id,
+        request_context_size,
+        request_context,
         measurement_summary_hash, measurement_summary_hash_size,
         opaque_data, &opaque_data_size);
     if (!result) {
