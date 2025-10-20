@@ -377,6 +377,9 @@ size_t libspdm_fill_measurement_device_mode_block (
     return sizeof(spdm_measurement_block_dmtf_t) + sizeof(device_mode);
 }
 
+bool g_check_measurement_request_context = false;
+uint64_t g_measurement_request_context;
+
 libspdm_return_t libspdm_measurement_collection(
     void *spdm_context,
     spdm_version_number_t spdm_version,
@@ -384,6 +387,8 @@ libspdm_return_t libspdm_measurement_collection(
     uint32_t measurement_hash_algo,
     uint8_t measurements_index,
     uint8_t request_attribute,
+    size_t request_context_size,
+    const void *request_context,
     uint8_t *content_changed,
     uint8_t *measurements_count,
     void *measurements,
@@ -396,10 +401,19 @@ libspdm_return_t libspdm_measurement_collection(
     bool use_bit_stream;
     size_t measurement_block_size;
 
-    if ((measurement_specification !=
-         SPDM_MEASUREMENT_SPECIFICATION_DMTF) ||
+    if ((measurement_specification != SPDM_MEASUREMENT_SPECIFICATION_DMTF) ||
         (measurement_hash_algo == 0)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
+    if (g_check_measurement_request_context) {
+        if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >= SPDM_MESSAGE_VERSION_13) {
+            LIBSPDM_ASSERT(request_context_size == SPDM_REQ_CONTEXT_SIZE);
+            LIBSPDM_ASSERT(libspdm_read_uint64(request_context) == g_measurement_request_context);
+        } else {
+            LIBSPDM_ASSERT(request_context_size == 0);
+            LIBSPDM_ASSERT(request_context == NULL);
+        }
     }
 
     hash_size = libspdm_get_measurement_hash_size(measurement_hash_algo);
@@ -615,12 +629,24 @@ bool libspdm_measurement_opaque_data(
     uint32_t measurement_hash_algo,
     uint8_t measurement_index,
     uint8_t request_attribute,
+    size_t request_context_size,
+    const void *request_context,
     void *opaque_data,
     size_t *opaque_data_size)
 {
     size_t index;
 
     LIBSPDM_ASSERT(libspdm_secret_lib_meas_opaque_data_size <= *opaque_data_size);
+
+    if (g_check_measurement_request_context) {
+        if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >= SPDM_MESSAGE_VERSION_13) {
+            LIBSPDM_ASSERT(request_context_size == SPDM_REQ_CONTEXT_SIZE);
+            LIBSPDM_ASSERT(libspdm_read_uint64(request_context) == g_measurement_request_context);
+        } else {
+            LIBSPDM_ASSERT(request_context_size == 0);
+            LIBSPDM_ASSERT(request_context == NULL);
+        }
+    }
 
     *opaque_data_size = libspdm_secret_lib_meas_opaque_data_size;
 
@@ -669,6 +695,8 @@ bool libspdm_generate_measurement_summary_hash(
             measurement_hash_algo,
             0xFF, /* Get all measurements*/
             0,
+            0,
+            NULL,
             NULL,
             &device_measurement_count, device_measurement,
             &device_measurement_size);

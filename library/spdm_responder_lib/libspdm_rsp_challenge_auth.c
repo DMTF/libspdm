@@ -30,6 +30,8 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
     uint8_t slot_mask;
     uint8_t *opaque_data;
     size_t opaque_data_size;
+    size_t request_context_size;
+    const void *request_context;
     size_t spdm_response_size;
 
     spdm_request = request;
@@ -139,6 +141,14 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST,
                                                0, response_size, response);
+    }
+
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        request_context_size = SPDM_REQ_CONTEXT_SIZE;
+        request_context = spdm_request + 1;
+    } else {
+        request_context_size = 0;
+        request_context = NULL;
     }
 
     /* response_size should be large enough to hold a challenge response without opaque data. */
@@ -265,6 +275,8 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
             spdm_context,
             spdm_context->connection_info.version,
             slot_id,
+            request_context_size,
+            request_context,
             measurement_summary_hash, measurement_summary_hash_size,
             opaque_data, &opaque_data_size);
         if (!result) {

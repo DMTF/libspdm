@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -20,11 +20,15 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 size_t libspdm_secret_lib_challenge_opaque_data_size;
+bool g_check_challenge_request_context = false;
+uint64_t g_challenge_request_context;
 
 bool libspdm_challenge_opaque_data(
     void *spdm_context,
     spdm_version_number_t spdm_version,
     uint8_t slot_id,
+    size_t request_context_size,
+    const void *request_context,
     uint8_t *measurement_summary_hash,
     size_t measurement_summary_hash_size,
     void *opaque_data,
@@ -33,6 +37,16 @@ bool libspdm_challenge_opaque_data(
     size_t index;
 
     LIBSPDM_ASSERT(libspdm_secret_lib_challenge_opaque_data_size <= *opaque_data_size);
+
+    if (g_check_challenge_request_context) {
+        if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >= SPDM_MESSAGE_VERSION_13) {
+            LIBSPDM_ASSERT(request_context_size == SPDM_REQ_CONTEXT_SIZE);
+            LIBSPDM_ASSERT(libspdm_read_uint64(request_context) == g_challenge_request_context);
+        } else {
+            LIBSPDM_ASSERT(request_context_size == 0);
+            LIBSPDM_ASSERT(request_context == NULL);
+        }
+    }
 
     *opaque_data_size = libspdm_secret_lib_challenge_opaque_data_size;
 
@@ -43,13 +57,13 @@ bool libspdm_challenge_opaque_data(
 
     return true;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 bool libspdm_encap_challenge_opaque_data(
     void *spdm_context,
     spdm_version_number_t spdm_version,
     uint8_t slot_id,
+    size_t request_context_size,
+    const void *request_context,
     uint8_t *measurement_summary_hash,
     size_t measurement_summary_hash_size,
     void *opaque_data,
@@ -58,6 +72,16 @@ bool libspdm_encap_challenge_opaque_data(
     size_t index;
 
     LIBSPDM_ASSERT(libspdm_secret_lib_challenge_opaque_data_size <= *opaque_data_size);
+
+    if (g_check_challenge_request_context) {
+        if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >= SPDM_MESSAGE_VERSION_13) {
+            LIBSPDM_ASSERT(request_context_size == SPDM_REQ_CONTEXT_SIZE);
+            LIBSPDM_ASSERT(libspdm_read_uint64(request_context) == g_challenge_request_context);
+        } else {
+            LIBSPDM_ASSERT(request_context_size == 0);
+            LIBSPDM_ASSERT(request_context == NULL);
+        }
+    }
 
     *opaque_data_size = libspdm_secret_lib_challenge_opaque_data_size;
 

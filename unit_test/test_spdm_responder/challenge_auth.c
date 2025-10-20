@@ -9,6 +9,9 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
+extern uint64_t g_challenge_request_context;
+extern bool g_check_challenge_request_context;
+
 spdm_challenge_request_t m_libspdm_challenge_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0,
       SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH },
@@ -1109,7 +1112,10 @@ static void rsp_challenge_auth_case18(void **state)
     libspdm_copy_mem(request, sizeof(spdm_challenge_request_t),
                      &m_libspdm_challenge_request8, m_libspdm_challenge_request8_size);
     requester_context = request + m_libspdm_challenge_request8_size;
+
     libspdm_set_mem(requester_context, SPDM_REQ_CONTEXT_SIZE, 0xAA);
+    g_check_challenge_request_context = true;
+    g_challenge_request_context = 0xAAAAAAAA;
     m_libspdm_challenge_request8_size += SPDM_REQ_CONTEXT_SIZE;
 
     status = libspdm_get_response_challenge_auth(
@@ -1133,6 +1139,8 @@ static void rsp_challenge_auth_case18(void **state)
                          libspdm_get_hash_size(m_libspdm_use_hash_algo) +
                          SPDM_NONCE_SIZE + 0 + sizeof(uint16_t);
     assert_memory_equal(requester_context, responder_context, SPDM_REQ_CONTEXT_SIZE);
+
+    g_check_challenge_request_context = false;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);

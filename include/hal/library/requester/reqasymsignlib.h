@@ -48,7 +48,10 @@ extern bool libspdm_requester_data_sign(
  * @param  spdm_context  A pointer to the SPDM context.
  * @param  spdm_version  Indicates the negotiated version.
  *
- * @param  slot_id       The number of slot for the certificate chain.
+ * @param  slot_id               The number of slot for the certificate chain.
+ * @param  request_context_size  The size, in bytes, of request_context.
+ * @param  request_context       If spdm_version is greater than 1.2, then it is a pointer to the
+ *                               Context field in the request message, else it is NULL and ignored.
  *
  * @param  measurement_summary_hash        The measurement summary hash.
  * @param  measurement_summary_hash_size   The size of measurement summary hash.
@@ -65,6 +68,8 @@ extern bool libspdm_encap_challenge_opaque_data(
     void *spdm_context,
     spdm_version_number_t spdm_version,
     uint8_t slot_id,
+    size_t request_context_size,
+    const void *request_context,
     uint8_t *measurement_summary_hash,
     size_t measurement_summary_hash_size,
     void *opaque_data,
