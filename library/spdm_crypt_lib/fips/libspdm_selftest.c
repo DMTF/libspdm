@@ -45,6 +45,8 @@ bool libspdm_fips_run_selftest(void *fips_selftest_context)
 
     libspdm_fips_selftest_eddsa(context);
 
+    libspdm_fips_selftest_mlkem(context);
+
     return (context->tested_algo == context->self_test_result);
 }
 
