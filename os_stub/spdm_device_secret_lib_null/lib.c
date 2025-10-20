@@ -24,7 +24,7 @@ libspdm_return_t libspdm_measurement_collection(
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
-    uint8_t mesurements_index,
+    uint8_t measurements_index,
     uint8_t request_attribute,
     uint8_t *content_changed,
     uint8_t *device_measurement_count,
