@@ -8,6 +8,10 @@
 #include "library/spdm_crypt_lib.h"
 #include "internal/libspdm_common_lib.h"
 
+#if LIBSPDM_FIPS_MODE
+uint8_t m_selftest_buffer[0x2000];
+#endif
+
 void libspdm_test_fips(void **state)
 {
     bool status;
@@ -18,6 +22,8 @@ void libspdm_test_fips(void **state)
     libspdm_fips_selftest_context_t fips_selftest_context;
     fips_selftest_context.tested_algo = 0;
     fips_selftest_context.self_test_result = 0;
+    fips_selftest_context.selftest_buffer = m_selftest_buffer;
+    fips_selftest_context.selftest_buffer_size = sizeof(m_selftest_buffer);
 
     status = libspdm_fips_run_selftest(&fips_selftest_context);
     assert_true(status);

@@ -95,4 +95,50 @@ bool libspdm_mlkem_decapsulate(void *kem_context, const uint8_t *peer_cipher_tex
     return false;
 }
 
+#ifdef LIBSPDM_FIPS_MODE
+/**
+ * Computes exchanged common key. This API can be used for FIPS test.
+ *
+ * @param[in, out]  kem_context           Pointer to the KEM context.
+ * @param[in]       peer_encap_key        Pointer to the peer's public key.
+ * @param[in]       peer_encap_key_size   size of peer's public key in bytes.
+ * @param[out]      cipher_text           Pointer to the buffer to receive cipher text.
+ * @param[in, out]  cipher_text_size      On input, the size of cipher text buffer in bytes.
+ *                                        On output, the size of data returned in cipher text buffer in bytes.
+ * @param[out]      shared_secret         Pointer to the buffer to receive generated shared secret.
+ * @param[in, out]  shared_secret_size    On input, the size of shared secret buffer in bytes.
+ *                                        On output, the size of data returned in shared secret buffer in bytes.
+ * @param[in]       entropy               Pointer to the buffer to receive entropy.
+ * @param[in]       entropy_size          size of entropy buffer in bytes.
+ *
+ * @retval true   KEM exchanged key generation succeeded.
+ * @retval false  KEM exchanged key generation failed.
+ * @retval false  cipher_text_size is not large enough.
+ * @retval false  shared_secret_size is not large enough.
+ * @retval false  entropy_size is not large enough.
+ * @retval false  This interface is not supported.
+ **/
+bool libspdm_mlkem_encapsulate_ex(void *kem_context, const uint8_t *peer_encap_key,
+                                  size_t peer_encap_key_size, uint8_t *cipher_text,
+                                  size_t *cipher_text_size, uint8_t *shared_secret,
+                                  size_t *shared_secret_size, uint8_t *entropy,
+                                  size_t entropy_size)
+{
+    return false;
+}
+
+/**
+ * Sets the key component into the established KEM context.
+ *
+ * @param[in, out]  dsa_context  Pointer to KEM context being set.
+ * @param[in]       key_data     Pointer to octet integer buffer.
+ * @param[in]       key_size     Size of big number buffer in bytes.
+ *
+ * @retval  true   KEM key component was set successfully.
+ **/
+bool libspdm_mlkem_set_privkey(void *kem_context, const uint8_t *key_data, size_t key_size)
+{
+    return false;
+}
+#endif /* LIBSPDM_FIPS_MODE */
 #endif /* LIBSPDM_ML_KEM_SUPPORT */

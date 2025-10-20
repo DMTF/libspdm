@@ -3027,10 +3027,16 @@ void libspdm_set_last_spdm_error_struct(void *spdm_context, libspdm_error_struct
 }
 
 #if LIBSPDM_FIPS_MODE
-libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context)
+libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context,
+                                                    size_t buffer_size,
+                                                    void *buffer)
 {
     libspdm_fips_selftest_context_t *context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
+    LIBSPDM_ASSERT(buffer_size >= LIBSPDM_FIPS_REQUIRED_BUFFER_SIZE);
+    if (buffer_size > 0) {
+        LIBSPDM_ASSERT(buffer != NULL);
+    }
 
     context = fips_selftest_context;
 
@@ -3038,6 +3044,9 @@ libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context)
     context->tested_algo = 0;
     /*self_test result is false for every used algo*/
     context->self_test_result = 0;
+    /*The buffer provided by integrator to hold large intermediate results*/
+    context->selftest_buffer_size = buffer_size;
+    context->selftest_buffer = buffer;
 
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -3053,6 +3062,16 @@ size_t libspdm_get_fips_selftest_context_size(void)
 
     size = sizeof(libspdm_fips_selftest_context_t);
     return size;
+}
+
+/**
+ * Returns the required buffer size for FIPS self-tests.
+ *
+ * @retval  The required buffer size in bytes.
+ */
+size_t libspdm_get_fips_selftest_buffer_size(void)
+{
+    return LIBSPDM_FIPS_REQUIRED_BUFFER_SIZE;
 }
 
 /**

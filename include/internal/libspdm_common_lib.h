@@ -526,6 +526,11 @@ typedef struct {
      * See LIBSPDM_FIPS_SELF_TEST_xxx;
      **/
     uint32_t self_test_result;
+    /**
+     * Buffer provided by integrator to hold large intermediate results.
+     **/
+    void *selftest_buffer;
+    size_t selftest_buffer_size;
 } libspdm_fips_selftest_context_t;
 #endif /* LIBSPDM_FIPS_MODE */
 

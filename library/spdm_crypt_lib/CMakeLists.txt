@@ -32,4 +32,6 @@ target_sources(spdm_crypt_lib
         fips/libspdm_selftest_ffdh.c
         fips/libspdm_selftest_ecdsa.c
         fips/libspdm_selftest_eddsa.c
+        fips/libspdm_selftest_mlkem.c
+        fips/libspdm_selftest_mlkem_vec.c
 )

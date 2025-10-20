@@ -369,8 +369,13 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
  * Initialize an libspdm_fips_selftest_context.
  *
  * @param  spdm_context         A pointer to the SPDM context.
+ * @param  buffer_size          The buffer size to hold large intermediate results.
+ * @param  buffer               The buffer provided by integrator to
+ *                              hold large intermediate results.
  */
-libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context);
+libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context,
+                                                    size_t buffer_size,
+                                                    void *buffer);
 
 /**
  * Return the size in bytes of the fips_selftest_context.
@@ -378,6 +383,13 @@ libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context)
  * @return the size in bytes of the fips_selftest_context.
  **/
 size_t libspdm_get_fips_selftest_context_size(void);
+
+/**
+ * Returns the required buffer size for FIPS self-tests.
+ *
+ * @retval  The required buffer size in bytes.
+ */
+size_t libspdm_get_fips_selftest_buffer_size(void);
 
 /**
  * import fips_selftest_context to spdm_context;
