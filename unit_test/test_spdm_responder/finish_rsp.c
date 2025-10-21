@@ -12,7 +12,7 @@
 
 typedef struct {
     spdm_message_header_t header;
-    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
+    uint8_t signature[LIBSPDM_MAX_ASYM_SIG_SIZE];
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } libspdm_finish_request_mine_t;
 
@@ -20,7 +20,7 @@ typedef struct {
     spdm_message_header_t header;
     uint16_t opaque_data_size;
     uint8_t opaque_data[8];
-    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
+    uint8_t signature[LIBSPDM_MAX_ASYM_SIG_SIZE];
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } libspdm_finish_request_mine_14_t;
 

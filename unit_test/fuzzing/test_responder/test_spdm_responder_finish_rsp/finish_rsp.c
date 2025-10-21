@@ -38,7 +38,7 @@ void libspdm_secured_message_set_request_finished_key(void *spdm_secured_message
 typedef struct
 {
     spdm_message_header_t header;
-    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
+    uint8_t signature[LIBSPDM_MAX_ASYM_SIG_SIZE];
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } libspdm_finish_request_mine_t;
 
