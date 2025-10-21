@@ -81,7 +81,7 @@ bool libspdm_secured_message_kem_encapsulate(
     void *spdm_secured_message_context)
 {
     libspdm_secured_message_context_t *secured_message_context;
-    uint8_t final_key[LIBSPDM_MAX_KEM_SS_KEY_SIZE];
+    uint8_t final_key[LIBSPDM_MAX_KEM_SS_SIZE];
     size_t final_key_size;
     bool ret;
 
@@ -123,7 +123,7 @@ bool libspdm_secured_message_kem_decapsulate(
     void *spdm_secured_message_context)
 {
     libspdm_secured_message_context_t *secured_message_context;
-    uint8_t final_key[LIBSPDM_MAX_KEM_SS_KEY_SIZE];
+    uint8_t final_key[LIBSPDM_MAX_KEM_SS_SIZE];
     size_t final_key_size;
     bool ret;
 
