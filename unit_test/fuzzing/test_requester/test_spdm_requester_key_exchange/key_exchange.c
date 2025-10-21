@@ -111,7 +111,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
