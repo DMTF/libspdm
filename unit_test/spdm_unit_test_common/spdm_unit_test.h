@@ -32,27 +32,33 @@
 
 #define LIBSPDM_MAX_ENDPOINT_INFO_LENGTH 1024
 
-#define LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE (24 + \
-                                           LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT + \
+#define LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE (40 + \
+                                           (LIBSPDM_MAX_HASH_SIZE + 4) * SPDM_MAX_SLOT_COUNT + \
                                            LIBSPDM_MAX_CERT_CHAIN_SIZE)
 
-#define LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE (78 + \
+#define LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE (90 + \
                                            LIBSPDM_MAX_HASH_SIZE * 2 + \
-                                           LIBSPDM_MAX_ASYM_KEY_SIZE + SPDM_MAX_OPAQUE_DATA_SIZE)
+                                           LIBSPDM_RSP_SIGNATURE_DATA_MAX_SIZE + \
+                                           SPDM_MAX_OPAQUE_DATA_SIZE)
 
-#define LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE (47 + SPDM_NONCE_SIZE + \
+#define LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE (63 + SPDM_NONCE_SIZE + \
                                            LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE + \
-                                           LIBSPDM_MAX_ASYM_KEY_SIZE + SPDM_MAX_OPAQUE_DATA_SIZE)
+                                           LIBSPDM_RSP_SIGNATURE_DATA_MAX_SIZE + \
+                                           SPDM_MAX_OPAQUE_DATA_SIZE)
 
-#define LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE (84 + LIBSPDM_MAX_DHE_KEY_SIZE * 2 + \
-                                           LIBSPDM_MAX_HASH_SIZE * 2 + LIBSPDM_MAX_ASYM_KEY_SIZE + \
+#define LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE (84 + LIBSPDM_REQ_EXCHANGE_DATA_MAX_SIZE + \
+                                           LIBSPDM_RSP_EXCHANGE_DATA_MAX_SIZE + \
+                                           LIBSPDM_MAX_HASH_SIZE * 2 + \
+                                           LIBSPDM_RSP_SIGNATURE_DATA_MAX_SIZE + \
                                            SPDM_MAX_OPAQUE_DATA_SIZE * 2)
 
-#define LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE (8 + LIBSPDM_MAX_HASH_SIZE * 2 + \
-                                           LIBSPDM_MAX_ASYM_KEY_SIZE)
+#define LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE (12 + LIBSPDM_MAX_HASH_SIZE * 2 + \
+                                           LIBSPDM_REQ_SIGNATURE_DATA_MAX_SIZE + \
+                                           SPDM_MAX_OPAQUE_DATA_SIZE * 2)
 
 #define LIBSPDM_MAX_MESSAGE_E_BUFFER_SIZE (20 + SPDM_NONCE_SIZE * 2 + \
-                                           LIBSPDM_MAX_ENDPOINT_INFO_LENGTH)
+                                           LIBSPDM_MAX_ENDPOINT_INFO_LENGTH + \
+                                           LIBSPDM_RSP_SIGNATURE_DATA_MAX_SIZE)
 
 #define LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE \
     (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE)
@@ -61,13 +67,16 @@
     (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + \
      LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE)
 
+#define LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE \
+    (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + \
+     LIBSPDM_MAX_MESSAGE_D_BUFFER_SIZE + \
+     LIBSPDM_MAX_HASH_SIZE + LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE + \
+     LIBSPDM_MAX_MESSAGE_D_BUFFER_SIZE + \
+     LIBSPDM_MAX_HASH_SIZE + LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE)
+
 #define LIBSPDM_MAX_MESSAGE_IL1IL2_BUFFER_SIZE \
     (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_E_BUFFER_SIZE)
 
-#define LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE \
-    (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + \
-     LIBSPDM_MAX_CERT_CHAIN_SIZE + LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE + \
-     LIBSPDM_MAX_CERT_CHAIN_SIZE + LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE)
 
 typedef struct {
     size_t max_buffer_size;

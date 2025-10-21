@@ -174,7 +174,7 @@ typedef struct {
 
 /*
  * +--------------------------+------------------------------------------+---------+
- * | DIGESTS 1.3              | 4 + (H [+ 4]) * SlotNum = [36, 548]      | [1, 18] |
+ * | DIGESTS 1.4              | 4 + (H [+ 4]) * SlotNum = [36, 548]      | [1, 18] |
  * +--------------------------+------------------------------------------+---------+
  * It is for multi-key.
  */
@@ -191,70 +191,76 @@ typedef struct {
 
 /*
  * +--------------------------+------------------------------------------+---------+
- * | GET_DIGESTS 1.3          | 4                                        | 1       |
- * | DIGESTS 1.3              | 4 + (H [+ 4]) * SlotNum = [36, 548]      | [1, 18] |
+ * | GET_DIGESTS 1.4          | 4                                        | 1       |
+ * | DIGESTS 1.4              | 4 + (H [+ 4]) * SlotNum = [36, 548]      | [1, 18] |
  * +--------------------------+------------------------------------------+---------+
- * | GET_CERTIFICATE 1.3      | 8                                        | 1       |
- * | CERTIFICATE 1.3          | 8 + PortionLen                           | [1, ]   |
+ * | GET_CERTIFICATE 1.4      | 16                                       | 1       |
+ * | CERTIFICATE 1.4          | 16 + PortionLen                          | [1, ]   |
  * +--------------------------+------------------------------------------+---------+
  */
-#define LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE (24 + \
+#define LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE (40 + \
                                            (LIBSPDM_MAX_HASH_SIZE + 4) * SPDM_MAX_SLOT_COUNT + \
                                            LIBSPDM_MAX_CERT_CHAIN_SIZE)
 
 /*
  * +--------------------------+------------------------------------------+---------+
- * | CHALLENGE 1.3            | 44                                       | 1       |
- * | CHALLENGE_AUTH 1.3       | 46 + H * 2 + S [+ O] = [166, 678]        | [6, 23] |
+ * | CHALLENGE 1.4            | 44                                       | 1       |
+ * | CHALLENGE_AUTH 1.4       | 46 + H * 2 + S [+ O] = [166, 678]        | [6, 23] |
  * +--------------------------+------------------------------------------+---------+
  */
 #define LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE (90 + \
                                            LIBSPDM_MAX_HASH_SIZE * 2 + \
-                                           LIBSPDM_MAX_ASYM_KEY_SIZE + SPDM_MAX_OPAQUE_DATA_SIZE)
+                                           LIBSPDM_RSP_SIGNATURE_DATA_MAX_SIZE + \
+                                           SPDM_MAX_OPAQUE_DATA_SIZE)
 
 /*
  * +--------------------------+------------------------------------------+---------+
- * | GET_MEASUREMENTS 1.3     | 13 + Nonce (0 or 32)                     | 1       |
- * | MEASUREMENTS 1.3         | 50 + MeasRecLen (+ S) [+ O] = [106, 554] | [4, 19] |
+ * | GET_MEASUREMENTS 1.4     | 13 + Nonce (0 or 32)                     | 1       |
+ * | MEASUREMENTS 1.4         | 50 + MeasRecLen (+ S) [+ O] = [106, 554] | [4, 19] |
  * +--------------------------+------------------------------------------+---------+
  */
 #define LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE (63 + SPDM_NONCE_SIZE + \
                                            LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE + \
-                                           LIBSPDM_MAX_ASYM_KEY_SIZE + SPDM_MAX_OPAQUE_DATA_SIZE)
+                                           LIBSPDM_RSP_SIGNATURE_DATA_MAX_SIZE + \
+                                           SPDM_MAX_OPAQUE_DATA_SIZE)
 
 /*
  * +--------------------------+------------------------------------------+---------+
- * | KEY_EXCHANGE 1.3         | 42 + D [+ O] = [106, 554]                | [4, 19] |
- * | KEY_EXCHANGE_RSP 1.3     | 42 + D + H + S (+ H) [+ O] = [234, 1194] | [8, 40] |
+ * | KEY_EXCHANGE 1.4         | 42 + D [+ O] = [106, 554]                | [4, 19] |
+ * | KEY_EXCHANGE_RSP 1.4     | 42 + D + H + S (+ H) [+ O] = [234, 1194] | [8, 40] |
  * +--------------------------+------------------------------------------+---------+
- * | PSK_EXCHANGE 1.3         | 12 [+ PSKHint] + R [+ O] = 44            | 2       |
- * | PSK_EXCHANGE_RSP 1.3     | 12 + R + H (+ H) [+ O] = [108, 172]      | [4, 6]  |
+ * | PSK_EXCHANGE 1.4         | 12 [+ PSKHint] + R [+ O] = 44            | 2       |
+ * | PSK_EXCHANGE_RSP 1.4     | 12 + R + H (+ H) [+ O] = [108, 172]      | [4, 6]  |
  * +--------------------------+------------------------------------------+---------+
  */
-#define LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE (84 + LIBSPDM_MAX_DHE_KEY_SIZE * 2 + \
-                                           LIBSPDM_MAX_HASH_SIZE * 2 + LIBSPDM_MAX_ASYM_KEY_SIZE + \
+#define LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE (84 + LIBSPDM_REQ_EXCHANGE_DATA_MAX_SIZE + \
+                                           LIBSPDM_RSP_EXCHANGE_DATA_MAX_SIZE + \
+                                           LIBSPDM_MAX_HASH_SIZE * 2 + \
+                                           LIBSPDM_RSP_SIGNATURE_DATA_MAX_SIZE + \
                                            SPDM_MAX_OPAQUE_DATA_SIZE * 2)
 
 /*
  * +--------------------------+------------------------------------------+---------+
- * | FINISH 1.3               | 4 (+ S) + H = [100, 580]                 | [4, 20] |
- * | FINISH_RSP 1.3           | 4 (+ H) = [36, 69]                       | [1, 3]  |
+ * | FINISH 1.4               | 6 (+ S) + H [+ O] = [100, 580]           | [4, 20] |
+ * | FINISH_RSP 1.4           | 6 (+ H) [+ O] = [36, 69]                 | [1, 3]  |
  * +--------------------------+------------------------------------------+---------+
- * | PSK_FINISH 1.3           | 4 + H = [36, 68]                         | [1, 3]  |
- * | PSK_FINISH_RSP 1.3       | 4                                        | 1       |
+ * | PSK_FINISH 1.4           | 6 + H [+ O] = [36, 68]                   | [1, 3]  |
+ * | PSK_FINISH_RSP 1.4       | 6 [+ O]                                  | 1       |
  * +--------------------------+------------------------------------------+---------+
  */
-#define LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE (8 + LIBSPDM_MAX_HASH_SIZE * 2 + \
-                                           LIBSPDM_MAX_ASYM_KEY_SIZE)
+#define LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE (12 + LIBSPDM_MAX_HASH_SIZE * 2 + \
+                                           LIBSPDM_REQ_SIGNATURE_DATA_MAX_SIZE + \
+                                           SPDM_MAX_OPAQUE_DATA_SIZE * 2)
 
 /*
  * +--------------------------+------------------------------------------+---------+
- * | GET_EP_INFO 1.3          | 8 + Nonce (0 or 32) = [8, 40]            | 1       |
- * | EP_INFO 1.3              | 12 + Nonce + EPInfoLen = [12, 1024]      | [1, 25] |
+ * | GET_EP_INFO 1.4          | 8 + Nonce (0 or 32) = [8, 40]            | 1       |
+ * | EP_INFO 1.4              | 12 + Nonce + EPInfoLen (+ S) = [12, 1024]| [1, 25] |
  * +--------------------------+------------------------------------------+---------+
  */
 #define LIBSPDM_MAX_MESSAGE_E_BUFFER_SIZE (20 + SPDM_NONCE_SIZE * 2 + \
-                                           LIBSPDM_MAX_ENDPOINT_INFO_LENGTH)
+                                           LIBSPDM_MAX_ENDPOINT_INFO_LENGTH + \
+                                           LIBSPDM_RSP_SIGNATURE_DATA_MAX_SIZE)
 
 #define LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE \
     (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE)
