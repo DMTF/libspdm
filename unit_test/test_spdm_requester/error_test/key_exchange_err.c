@@ -368,7 +368,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -537,7 +537,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -769,7 +769,7 @@ static libspdm_return_t receive_message(
             uint32_t hmac_size;
             uint8_t *ptr;
             void *dhe_context;
-            uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+            uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
             size_t final_key_size;
             size_t opaque_key_exchange_rsp_size;
             void *data;
@@ -1026,7 +1026,7 @@ static libspdm_return_t receive_message(
             uint32_t hmac_size;
             uint8_t *ptr;
             void *dhe_context;
-            uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+            uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
             size_t final_key_size;
             size_t opaque_key_exchange_rsp_size;
             void *data;
@@ -1242,7 +1242,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -1410,7 +1410,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -1588,7 +1588,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -1761,7 +1761,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -1937,7 +1937,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -2106,7 +2106,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -2276,7 +2276,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -2454,7 +2454,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -2629,7 +2629,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -2798,7 +2798,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -2956,7 +2956,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -3118,7 +3118,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -3288,7 +3288,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -3458,7 +3458,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -3628,7 +3628,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -3800,7 +3800,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -3972,7 +3972,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -4144,7 +4144,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -4297,7 +4297,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
@@ -4466,7 +4466,7 @@ static libspdm_return_t receive_message(
         uint32_t hmac_size;
         uint8_t *ptr;
         void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+        uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];
         size_t final_key_size;
         size_t opaque_key_exchange_rsp_size;
         void *data;
