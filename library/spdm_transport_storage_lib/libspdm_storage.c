@@ -67,23 +67,23 @@ uint8_t libspdm_storage_get_sequence_number(uint64_t sequence_number,
  *
  * Limitations:
  *  - Implementation only supports parsing a single descriptor
- *  - Only supports proccessing of SPDM Message Descriptor
+ *  - Only supports processing of SPDM Message Descriptor
  *
  * Notes: Encapsulated Error Status shall be set in the response within the Secured descriptor
  *    message `status` field, if an erroneous or an unsupported message/field is detected.
- *    To accomodate this, keep track of the error state within the trasnport layer and append the error
+ *    To accommodate this, keep track of the error state within the transport layer and append the error
  *    status when encoding the subsequent response. This is done in `libspdm_transport_storage_encode_message()`
  *
  * @param  spdm_context            A pointer to the SPDM context.
  * @param  session_id              Secured Session ID
  * @param  message_size            SPDM Message Size.
  *                                 On output, size of the real SPDM Message.
- * @param  message                 Decryoted SDPM Message, pointing to the `num descriptors` field of the message.
+ * @param  message                 Decrypted SPDM Message, pointing to the `num descriptors` field of the message.
  *                                 On output, points the start of the real SPDM Message.
  * @param  is_request_message      Indicates if it is a request message.
  *
  **/
-libspdm_return_t libspdm_strorage_secured_message_decode(
+libspdm_return_t libspdm_storage_secured_message_decode(
     void *spdm_context, uint32_t session_id, size_t *message_size, void **message,
     bool is_request_message)
 {
@@ -137,7 +137,7 @@ libspdm_return_t libspdm_strorage_secured_message_decode(
 
         /* Next descriptor */
         descriptor = (void *)(spdm_storage_descriptor_start +
-                              (LISBPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE * i));
+                              (LIBSPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE * i));
     }
 
     *message = ((uint8_t *)*message) + spdm_msg_offset;
@@ -149,21 +149,21 @@ libspdm_return_t libspdm_strorage_secured_message_decode(
 /**
  * Encode the SPDM Storage Secured Descriptor into an SPDM message. This shall be
  * followed by a call to `libspdm_encode_secured_message()` to encrypt the
- * attached command buffer. This appends exacly one descriptor with the
+ * attached command buffer. This appends exactly one descriptor with the
  * SPDM message type, encapsulating the SPDM message data buffer.
  *
  * @param  spdm_context            A pointer to the SPDM context.
  * @param  message_size            SPDM Message Size.
- * @param  message                 SDPM Message.
+ * @param  message                 SPDM Message.
  * @param  secured_message_size    On output, size in bytes of the secured message to be encrypted.
- * @param  secured_message         On output, the start of an SPDM Storage secured message, poiting
- *                                 into the trasnport message.
+ * @param  secured_message         On output, the start of an SPDM Storage secured message, pointing
+ *                                 into the transport message.
  * @param  transport_message_size  Size in bytes of the transport message buffer.
  * @param  transport_message       A pointer to a source buffer to store the transport message.
  * @param  is_request_message      Indicates if it is a request message.
  *
  **/
-libspdm_return_t libspdm_strorage_secured_message_encode(
+libspdm_return_t libspdm_storage_secured_message_encode(
     void *spdm_context, size_t *message_size, void **message,
     size_t *secured_message_size, uint8_t **secured_message,
     size_t *transport_message_size, void **transport_message,
@@ -185,25 +185,25 @@ libspdm_return_t libspdm_strorage_secured_message_encode(
     *secured_message_size = *transport_message_size - sec_trans_header_size;
 
     if (*secured_message_size <
-        LISBPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE + *message_size) {
+        LIBSPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE + *message_size) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                       "No space in trasnport message buffer to append storage descriptors"));
+                       "No space in transport message buffer to append storage descriptors"));
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
     secured_storage_desc_start = *secured_message + (4 + 2 + 2 + 2 + 2);
     secured_storage_desc_end = secured_storage_desc_start +
-                               LISBPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE;
+                               LIBSPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE;
 
     /*
-     * Move the secured message within the trasnport message to allow space for
+     * Move the secured message within the transport message to allow space for
      * descriptors and zero the descriptor fields.
      */
     libspdm_copy_mem(secured_storage_desc_end,
-                     *secured_message_size - LISBPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE,
+                     *secured_message_size - LIBSPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE,
                      *message, *message_size);
     libspdm_zero_mem(secured_storage_desc_start,
-                     LISBPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE);
+                     LIBSPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE);
 
     /* Retrieve secured session encapsulated error status if any */
     libspdm_get_last_spdm_error_struct(spdm_context, &spdm_error);
@@ -225,7 +225,7 @@ libspdm_return_t libspdm_strorage_secured_message_encode(
      * by DSP0286: 158.
      */
     *message = secured_storage_desc_start;
-    *message_size += LISBPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE;
+    *message_size += LIBSPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE;
 
     /*
      * Only a single descriptor is used, the offset into the secure message data
@@ -233,7 +233,7 @@ libspdm_return_t libspdm_strorage_secured_message_encode(
      * the SPDM Storage Secured Message Header
      */
     descriptor->offset = (4 + 4 + 2 + 2 + 2 + 2 +
-                          LISBPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE);
+                          LIBSPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE);
 
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -443,11 +443,11 @@ libspdm_return_t libspdm_transport_storage_decode_message(
                 return status;
             }
 
-            status = libspdm_strorage_secured_message_decode(spdm_context, **session_id, message_size,
-                                                             message, is_request_message);
+            status = libspdm_storage_secured_message_decode(spdm_context, **session_id, message_size,
+                                                            message, is_request_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                               "libspdm_strorage_secured_message_decode - %xu\n", status));
+                               "libspdm_storage_secured_message_decode - %xu\n", status));
                 return status;
             }
 
@@ -498,11 +498,11 @@ libspdm_return_t libspdm_transport_storage_decode_message(
                 return status;
             }
 
-            status = libspdm_strorage_secured_message_decode(spdm_context, **session_id, message_size,
-                                                             message, is_request_message);
+            status = libspdm_storage_secured_message_decode(spdm_context, **session_id, message_size,
+                                                            message, is_request_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                               "libspdm_strorage_secured_message_decode - %xu\n", status));
+                               "libspdm_storage_secured_message_decode - %xu\n", status));
                 return status;
             }
             return LIBSPDM_STATUS_SUCCESS;
@@ -666,12 +666,12 @@ libspdm_return_t libspdm_transport_storage_encode_message(
         }
 
         /* Message to secured message*/
-        status = libspdm_strorage_secured_message_encode(
+        status = libspdm_storage_secured_message_encode(
             spdm_context, &message_size, &message, &secured_message_size, &secured_message,
             transport_message_size, transport_message, is_request_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                           "libspdm_strorage_secured_message_enconde_descriptors - %xu\n", status));
+                           "libspdm_storage_secured_message_encode_descriptors - %xu\n", status));
             return status;
         }
 

@@ -310,7 +310,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
    </pre>
 
    Note: You must use a command prompt with the current working directory at `libspdm/build/bin` when running unit tests or they may fail.
-   Eg. Don't run the unit tests from libsdpm/build directory by calling "bin/test_spdm_responder > NULL"
+   Eg. Don't run the unit tests from libspdm/build directory by calling "bin/test_spdm_responder > NULL"
 
 ### Other Tests
 

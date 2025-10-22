@@ -51,7 +51,7 @@ typedef struct {
  * Data as described by DSP0277. This macro defines the minimum size occupied
  * by one such descriptor.
  */
-#define LISBPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE (1 + 3 + (16 * 1))
+#define LIBSPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE (1 + 3 + (16 * 1))
 
 /*
  * Within an SPDM Storage Secured Message, this is the offset in the `Num Descriptors`
