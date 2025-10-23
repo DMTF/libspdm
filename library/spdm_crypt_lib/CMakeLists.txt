@@ -6,6 +6,7 @@ target_include_directories(spdm_crypt_lib
     PRIVATE
         ${LIBSPDM_DIR}/include
         ${LIBSPDM_DIR}/os_stub
+        ${LIBSPDM_DIR}/os_stub/include
 )
 
 target_sources(spdm_crypt_lib
@@ -32,4 +33,6 @@ target_sources(spdm_crypt_lib
         fips/libspdm_selftest_ffdh.c
         fips/libspdm_selftest_ecdsa.c
         fips/libspdm_selftest_eddsa.c
+        fips/libspdm_selftest_slhdsa.c
+        fips/libspdm_selftest_slhdsa_vec.c
 )
