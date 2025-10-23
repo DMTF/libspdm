@@ -217,12 +217,12 @@ bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
 
 bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
                                            libspdm_session_info_t *session_info,
+                                           uint8_t slot_id,
                                            uint8_t *signature)
 {
     bool result;
     size_t signature_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    uint8_t slot_id;
     uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
     uint8_t *mut_cert_chain_buffer;
@@ -252,7 +252,6 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
 #endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
     if (slot_id == 0xFF) {
         result = libspdm_get_peer_public_key_buffer(
@@ -310,7 +309,9 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_requester_data_sign(
         spdm_context,
-        spdm_context->connection_info.version, SPDM_FINISH,
+        spdm_context->connection_info.version,
+        libspdm_slot_id_to_key_pair_id(spdm_context, slot_id, true),
+        SPDM_FINISH,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.req_pqc_asym_alg,
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -318,7 +319,9 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
 #else
     result = libspdm_requester_data_sign(
         spdm_context,
-        spdm_context->connection_info.version, SPDM_FINISH,
+        spdm_context->connection_info.version,
+        libspdm_slot_id_to_key_pair_id(spdm_context, slot_id, true),
+        SPDM_FINISH,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.req_pqc_asym_alg,
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -496,7 +499,8 @@ static libspdm_return_t libspdm_try_send_receive_finish(
     }
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     if (session_info->mut_auth_requested != 0) {
-        result = libspdm_generate_finish_req_signature(spdm_context, session_info, ptr);
+        result = libspdm_generate_finish_req_signature(
+            spdm_context, session_info, req_slot_id_param, ptr);
         if (!result) {
             libspdm_release_sender_buffer (spdm_context);
             status = LIBSPDM_STATUS_CRYPTO_ERROR;
