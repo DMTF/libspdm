@@ -160,4 +160,101 @@ bool libspdm_mldsa_sign(void *dsa_context,
     return true;
 }
 
+#if LIBSPDM_FIPS_MODE
+/**
+ * Carries out the MLDSA signature generation. This API can be used for FIPS test.
+ *
+ * @param[in]      dsa_context   Pointer to DSA context for signature generation.
+ * @param[in]      context       The MLDSA signing context.
+ * @param[in]      context_size  Size of MLDSA signing context.
+ * @param[in]      message       Pointer to octet message to be signed.
+ * @param[in]      message_size  Size of the message in bytes.
+ * @param[out]     signature     Pointer to buffer to receive DSA signature.
+ * @param[in, out] sig_size      On input, the size of signature buffer in bytes.
+ *                               On output, the size of data returned in signature buffer in bytes.
+ * @param[in]      deterministic If true, then generate the signature in deterministic way.
+ *
+ * @retval  true   signature successfully generated.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
+ * @retval  false  This interface is not supported.
+ **/
+bool libspdm_mldsa_sign_ex(void *dsa_context,
+                           const uint8_t *context, size_t context_size,
+                           const uint8_t *message, size_t message_size,
+                           uint8_t *signature, size_t *sig_size,
+                           bool deterministic)
+{
+    EVP_PKEY *pkey;
+    EVP_MD_CTX *ctx;
+    size_t final_sig_size;
+    int32_t result;
+    OSSL_PARAM params[3];
+
+    if (dsa_context == NULL || message == NULL) {
+        return false;
+    }
+
+    if (signature == NULL || sig_size == NULL) {
+        return false;
+    }
+
+    pkey = (EVP_PKEY *)dsa_context;
+    switch (libspdm_mldsa_type_name_to_nid(EVP_PKEY_get0_type_name(pkey))) {
+    case LIBSPDM_CRYPTO_NID_ML_DSA_44:
+        final_sig_size = 2420;
+        break;
+    case LIBSPDM_CRYPTO_NID_ML_DSA_65:
+        final_sig_size = 3309;
+        break;
+    case LIBSPDM_CRYPTO_NID_ML_DSA_87:
+        final_sig_size = 4627;
+        break;
+    default:
+        return false;
+    }
+    if (*sig_size < final_sig_size) {
+        *sig_size = final_sig_size;
+        return false;
+    }
+    *sig_size = final_sig_size;
+    libspdm_zero_mem(signature, *sig_size);
+
+    uint32_t params_cnt = 0;
+    if (context_size != 0) {
+        params[params_cnt] = OSSL_PARAM_construct_octet_string(OSSL_SIGNATURE_PARAM_CONTEXT_STRING,
+                                                               (void *)(size_t)context, context_size);
+        params_cnt++;
+    }
+    if (deterministic) {
+        static int ml_dsa_deterministic = 1;
+        params[params_cnt] = OSSL_PARAM_construct_int(OSSL_SIGNATURE_PARAM_DETERMINISTIC, &ml_dsa_deterministic);
+        params_cnt++;
+    }
+    params[params_cnt] = OSSL_PARAM_construct_end();
+
+    ctx = EVP_MD_CTX_new();
+    if (ctx == NULL) {
+        return false;
+    }
+    if (params_cnt == 0) {
+        result = EVP_DigestSignInit(ctx, NULL, NULL, NULL, pkey);
+    } else {
+        result = EVP_DigestSignInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params);
+    }
+    if (result != 1) {
+        EVP_MD_CTX_free(ctx);
+        return false;
+    }
+    result = EVP_DigestSign(ctx, signature, sig_size, message, message_size);
+    if (result != 1) {
+        EVP_MD_CTX_free(ctx);
+        return false;
+    }
+
+    EVP_MD_CTX_free(ctx);
+    return true;
+}
+#endif /* LIBSPDM_FIPS_MODE */
+
 #endif /* LIBSPDM_ML_DSA_SUPPORT */
