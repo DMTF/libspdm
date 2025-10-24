@@ -22,7 +22,6 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
     size_t signature_size;
     uint8_t slot_id;
     uint32_t hash_size;
-    uint8_t *measurement_summary_hash;
     uint32_t measurement_summary_hash_size;
     uint8_t *ptr;
     uint8_t auth_attribute;
@@ -232,8 +231,6 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
     }
     ptr += SPDM_NONCE_SIZE;
 
-    measurement_summary_hash = ptr;
-
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
@@ -277,7 +274,6 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
             slot_id,
             request_context_size,
             request_context,
-            measurement_summary_hash, measurement_summary_hash_size,
             opaque_data, &opaque_data_size);
         if (!result) {
             return libspdm_generate_error_response(
