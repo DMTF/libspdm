@@ -804,7 +804,8 @@ static void req_chunk_get_case2(void** state)
     free(data);
 }
 #endif
-#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+
+#if LIBSPDM_SEND_CHALLENGE_SUPPORT
 static void req_chunk_get_case3(void** state)
 {
     /* Copied from Challenge Test Case 2*/
@@ -879,7 +880,8 @@ static void req_chunk_get_case3(void** state)
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size = 0;
     #endif
 }
-#endif
+#endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
+
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 static void req_chunk_get_case4(void** state)
 {
@@ -1225,7 +1227,7 @@ int libspdm_req_chunk_get_test(void)
         /* Request all measurements */
         cmocka_unit_test(req_chunk_get_case2),
 #endif
-#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+#if LIBSPDM_SEND_CHALLENGE_SUPPORT
         /* Request Challenge */
         cmocka_unit_test(req_chunk_get_case3),
 #endif
