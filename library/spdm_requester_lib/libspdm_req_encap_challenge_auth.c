@@ -19,7 +19,6 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     size_t signature_size;
     uint8_t slot_id;
     uint32_t hash_size;
-    uint8_t *measurement_summary_hash;
     uint32_t measurement_summary_hash_size;
     uint8_t *ptr;
     libspdm_context_t *context;
@@ -109,6 +108,9 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     }
     hash_size = libspdm_get_hash_size(
         context->connection_info.algorithm.base_hash_algo);
+
+    /* Requester does not support measurements,
+     * hence the size of MeasurementSummaryHash is always 0. */
     measurement_summary_hash_size = 0;
 
     /* response_size should be large enough to hold a challenge response without opaque data. */
@@ -163,7 +165,6 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     }
     ptr += SPDM_NONCE_SIZE;
 
-    measurement_summary_hash = ptr;
     ptr += measurement_summary_hash_size;
 
     opaque_data_size = *response_size - (sizeof(spdm_challenge_auth_response_t) + hash_size +
@@ -179,7 +180,6 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
         slot_id,
         request_context_size,
         request_context,
-        measurement_summary_hash, measurement_summary_hash_size,
         opaque_data, &opaque_data_size);
     if (!result) {
         return libspdm_generate_encap_error_response(

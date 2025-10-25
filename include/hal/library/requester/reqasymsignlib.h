@@ -53,9 +53,6 @@ extern bool libspdm_requester_data_sign(
  * @param  request_context       If spdm_version is greater than 1.2, then it is a pointer to the
  *                               Context field in the request message, else it is NULL and ignored.
  *
- * @param  measurement_summary_hash        The measurement summary hash.
- * @param  measurement_summary_hash_size   The size of measurement summary hash.
- *
  * @param opaque_data
  * A pointer to a destination buffer whose size, in bytes, is opaque_data_size. The opaque data is
  * copied to this buffer.
@@ -70,8 +67,6 @@ extern bool libspdm_encap_challenge_opaque_data(
     uint8_t slot_id,
     size_t request_context_size,
     const void *request_context,
-    uint8_t *measurement_summary_hash,
-    size_t measurement_summary_hash_size,
     void *opaque_data,
     size_t *opaque_data_size);
 #endif/*LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/

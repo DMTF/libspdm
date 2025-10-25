@@ -29,8 +29,6 @@ bool libspdm_challenge_opaque_data(
     uint8_t slot_id,
     size_t request_context_size,
     const void *request_context,
-    uint8_t *measurement_summary_hash,
-    size_t measurement_summary_hash_size,
     void *opaque_data,
     size_t *opaque_data_size)
 {
@@ -64,8 +62,6 @@ bool libspdm_encap_challenge_opaque_data(
     uint8_t slot_id,
     size_t request_context_size,
     const void *request_context,
-    uint8_t *measurement_summary_hash,
-    size_t measurement_summary_hash_size,
     void *opaque_data,
     size_t *opaque_data_size)
 {
