@@ -29,10 +29,10 @@ for the encapsulated flow or have it outside of a secure session. For libspdm th
 having an encapsulated context for each secure session and the non-session context. In addition,
 libspdm should support arbitrary and interleaved encapsulated messages between secure sessions and
 outside of a secure session. For example, libspdm should be able to accommodate the sequence
-1. `GET_ENCAPSULATED_REQUEST` in `Session1`.
-2. `GET_ENCAPSULATED_REQUEST` in `Session2`.
-3. `DELIVER_ENCAPSULATED_RESPONSE` in `Session1`.
-4. `DELIVER_ENCAPSULATED_RESPONSE` in `Session2`.
+1. `GET_ENCAPSULATED_REQUEST` / `ENCAPSULATED_REQUEST` in `Session1`.
+2. `GET_ENCAPSULATED_REQUEST` / `ENCAPSULATED_REQUEST` in `Session2`.
+3. `DELIVER_ENCAPSULATED_RESPONSE` / `ENCAPSULATED_RESPONSE_ACK` in `Session1`.
+4. `DELIVER_ENCAPSULATED_RESPONSE` / `ENCAPSULATED_RESPONSE_ACK` in `Session2`.
 
 ## Control and Decision Points
 
