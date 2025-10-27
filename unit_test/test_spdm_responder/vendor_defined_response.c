@@ -30,33 +30,6 @@ typedef struct {
 
 static uint32_t m_session_id = 0xffffffff;
 
-static libspdm_return_t libspdm_vendor_get_id_func_test(
-    void *spdm_context,
-    const uint32_t *session_id,
-    uint16_t *resp_standard_id,
-    uint8_t *resp_vendor_id_len,
-    void *resp_vendor_id)
-{
-    assert_int_equal(*session_id, m_session_id);
-
-    if (resp_standard_id == NULL ||
-        resp_vendor_id_len == NULL ||
-        resp_vendor_id == NULL)
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
-
-    /* vendor id length in bytes */
-    if (*resp_vendor_id_len < 2)
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
-
-    *resp_standard_id = 6;
-    /* vendor id length in bytes */
-    *resp_vendor_id_len = 2;
-    ((uint8_t*)resp_vendor_id)[0] = 0xAA;
-    ((uint8_t*)resp_vendor_id)[1] = 0xAA;
-
-    return LIBSPDM_STATUS_SUCCESS;
-}
-
 static libspdm_return_t libspdm_vendor_response_func_test(
     void *spdm_context,
     const uint32_t *session_id,
@@ -128,15 +101,13 @@ static void rsp_vendor_defined_response_case1(void **state)
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
-    status = libspdm_register_vendor_get_id_callback_func(spdm_context,
-                                                          libspdm_vendor_get_id_func_test);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     status = libspdm_register_vendor_callback_func(spdm_context,
                                                    libspdm_vendor_response_func_test);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
+    request.header.request_response_code = SPDM_VENDOR_DEFINED_REQUEST;
     request.standard_id = 6;
-    request.vendor_id_len = sizeof(request.vendor_id);
+    request.vendor_id_len = 2;
     libspdm_set_mem(request.vendor_id, sizeof(request.vendor_id), 0xAA);
 
     response_len = sizeof(response) + sizeof(uint16_t)
@@ -153,10 +124,21 @@ static void rsp_vendor_defined_response_case1(void **state)
     libspdm_set_mem(request_ptr, VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE, 0xAA);
 
     /* requires correctly encoded spdm vendor request message */
-    status = libspdm_get_vendor_defined_response(spdm_context, sizeof(request),
+    status = libspdm_get_vendor_defined_response(spdm_context,
+                                                 sizeof(spdm_vendor_defined_request_msg_t) + request.vendor_id_len + sizeof(uint16_t) + VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE,
                                                  request_buffer, &response_len, response_buffer);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    /* Verify response IDs are copied from request */
+    libspdm_copy_mem(&response, sizeof(response),
+                     response_buffer, sizeof(spdm_vendor_defined_response_msg_t) + request.vendor_id_len);
+
+    assert_int_equal(response.header.spdm_version, SPDM_MESSAGE_VERSION_11);
+    assert_int_equal(response.header.request_response_code, SPDM_VENDOR_DEFINED_RESPONSE);
+    assert_int_equal(response.standard_id, request.standard_id);
+    assert_int_equal(response.vendor_id_len, request.vendor_id_len);
+    assert_memory_equal(response.vendor_id, request.vendor_id, request.vendor_id_len);
 }
 
 /**
@@ -200,9 +182,6 @@ static void rsp_vendor_defined_response_case2(void **state)
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
-    status = libspdm_register_vendor_get_id_callback_func(spdm_context,
-                                                          libspdm_vendor_get_id_func_test);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     status = libspdm_register_vendor_callback_func(spdm_context,
                                                    libspdm_vendor_response_func_test);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -236,7 +215,7 @@ static void rsp_vendor_defined_response_case2(void **state)
 
     /* copy to response data structure in the same way as for request */
     libspdm_copy_mem(&response, sizeof(response),
-                     response_buffer, sizeof(spdm_vendor_defined_response_msg_t));
+                     response_buffer, sizeof(spdm_vendor_defined_response_msg_t) + request.vendor_id_len);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response.header.spdm_version, SPDM_MESSAGE_VERSION_14);
