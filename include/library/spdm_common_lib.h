@@ -945,24 +945,6 @@ bool libspdm_get_fips_mode(void);
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 
 /**
- * Vendor Response Get Vendor ID Callback Function Pointer.
- * Required to be able to compose the Vendor Defined Response correctly
- *
- * @param  spdm_context        A pointer to the SPDM context.
- * @param  session_id          If non-NULL then message is within a secure session.
- *                             If NULL then message is outside a secure session.
- * @param  resp_standard_id    Registry or Standards body used for response
- * @param  resp_vendor_id_len  Length in bytes of the vendor id field for the response
- * @param  resp_vendor_id      Vendor ID assigned by the Registry or Standards Body. Little-endian format
- **/
-typedef libspdm_return_t (*libspdm_vendor_get_id_callback_func)(
-    void *spdm_context,
-    const uint32_t *session_id,
-    uint16_t *resp_standard_id,
-    uint8_t *resp_vendor_id_len,
-    void *resp_vendor_id);
-
-/**
  * Vendor Response Callback Function Pointer.
  *
  * @param  spdm_context       A pointer to the SPDM context.
