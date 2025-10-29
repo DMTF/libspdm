@@ -28,9 +28,9 @@ libspdm integrator is expected to choose crypto module and support CMVP.
 | SM4-GCM (*) | [GB/T 32907-2016, GM/T 0002-2012](http://www.gmbz.org.cn/main/postDetail.html?id=20250123174734), [ISO/IEC 18033-3:2010/Amd 1:2021](https://www.iso.org/standard/81564.html), [rfc8998](https://tools.ietf.org/html/rfc8998) | KAT | not FIPS approved yet |
 | SM2-digital-signature (\*) <br> SM2-key-exchange (\*) | [GB/T 32918-2016, GM/T 0003-2012](http://www.gmbz.org.cn/main/postDetail.html?id=20241118111410), [ISO/IEC 14888-3:2018](https://www.iso.org/standard/76382.html) | KAT | not FIPS approved yet |
 | SPDM-Key-Schedule (*) | [DMTF-DSP0274](https://www.dmtf.org/dsp/DSP0274)          | KAT  | not FIPS approved yet |
-| ML-KEM              | [NIST.FIPS.203](https://doi.org/10.6028/NIST.FIPS.203)   | KAT  | TBD |
-| ML-DSA              | [NIST.FIPS.204](https://doi.org/10.6028/NIST.FIPS.204)   | KAT  | TBD |
-| SLH-DSA             | [NIST.FIPS.205](https://doi.org/10.6028/NIST.FIPS.2054)  | KAT  | TBD |
+| ML-KEM              | [NIST.FIPS.203](https://doi.org/10.6028/NIST.FIPS.203)   | KAT  | ML-KEM-1024 |
+| ML-DSA              | [NIST.FIPS.204](https://doi.org/10.6028/NIST.FIPS.204)   | KAT  | ML-DSA-87 |
+| SLH-DSA             | [NIST.FIPS.205](https://doi.org/10.6028/NIST.FIPS.2054)  | KAT  | SLH-DSA-SHA2-128s |
 
 The test maybe Known Answer Test (KAT) or Pairwise Consistency Test (PCT).
 
@@ -68,6 +68,9 @@ The integrator can define `LIBSPDM_FIPS_MODE=1` according to [spdm_lib_config.h]
  * `LIBSPDM_AEAD_AES_128_GCM_SUPPORT`, `LIBSPDM_AEAD_AES_256_GCM_SUPPORT`
  * `LIBSPDM_SHA256_SUPPORT`, `LIBSPDM_SHA384_SUPPORT`, `LIBSPDM_SHA512_SUPPORT`
  * `LIBSPDM_SHA3_256_SUPPORT`, `LIBSPDM_SHA3_384_SUPPORT`, `LIBSPDM_SHA3_512_SUPPORT`
+ * `LIBSPDM_ML_KEM_512_SUPPORT`, `LIBSPDM_ML_KEM_768_SUPPORT`, `LIBSPDM_ML_KEM_1024_SUPPORT`
+ * `LIBSPDM_ML_DSA_44_SUPPORT`, `LIBSPDM_ML_DSA_65_SUPPORT`, `LIBSPDM_ML_DSA_87_SUPPORT`
+ * `LIBSPDM_SLH_DSA_SHA2_128S_SUPPORT`, `LIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT`, `LIBSPDM_SLH_DSA_SHA2_128F_SUPPORT`, `LIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT`, `LIBSPDM_SLH_DSA_SHA2_192S_SUPPORT`, `LIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT`, `LIBSPDM_SLH_DSA_SHA2_192F_SUPPORT`, `LIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT`, `LIBSPDM_SLH_DSA_SHA2_256S_SUPPORT`, `LIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT`, `LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT`, `LIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT`
 
 Below algorithms will be disabled:
  * `LIBSPDM_SM2_DSA_P256_SUPPORT`
@@ -112,13 +115,16 @@ The pre-shared key (PSK) is managed by the [requester-psklib](https://github.com
  * `libspdm_fips_selftest_ffdh()`
  * `libspdm_fips_selftest_ecdsa()`
  * `libspdm_fips_selftest_eddsa()`
+ * `libspdm_fips_selftest_mlkem()`
+ * `libspdm_fips_selftest_mldsa()`
+ * `libspdm_fips_selftest_slhdsa()`
 
 If any test failed, then `libspdm_fips_run_selftest()` will return false.
 
 `libspdm_fips_run_selftest()` requires `fips_selftest_context` parameter, which is initialized by `libspdm_get_fips_selftest_context_size()`, `libspdm_init_fips_selftest_context()` in [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h).
 
 The expected step is as follows:
-1) The integrator invokes `libspdm_get_fips_selftest_context_size()` and `libspdm_init_fips_selftest_context()` to create the FIPS selftest context.
+1) The integrator invokes `libspdm_get_fips_selftest_context_size()`, `libspdm_get_fips_selftest_buffer_size()` and `libspdm_init_fips_selftest_context()` to create the FIPS selftest context and required buffer to hold intermediate result.
 2) The integrator invokes `libspdm_fips_run_selftest()` to trigger self-test.
 3) If fail, then return.
 
@@ -129,12 +135,18 @@ The expected step is as follows:
         return NULL;
     }
     fips_selftest_context = m_fips_selftest_context;
-    libspdm_init_fips_selftest_context(fips_selftest_context);
+    fips_selftest_buffer_size = libspdm_get_fips_selftest_buffer_size();
+    fips_selftest_buffer = (void *)malloc(fips_selftest_buffer_size);
+    if (fips_selftest_buffer == NULL) {
+        return NULL;
+    }
+    libspdm_init_fips_selftest_context(fips_selftest_context, fips_selftest_buffer_size, fips_selftest_buffer);
     result = libspdm_fips_run_selftest(fips_selftest_context);
+    free(fips_selftest_buffer);
     if (!result) {
         return NULL;
     }
 #endif
 ```
 
-NOTE: If a crypto library does not support a FIPS algorithm, then the algorithm must be disabled explicitly. Otherwise `libspdm_fips_run_selftest()` will fail. For example, if the integrator links libspdm with mbedtls, then SHA3 and RdDSA related algorithms must be disabled via `LIBSPDM_SHA3_256_SUPPORT=0`, `LIBSPDM_SHA3_384_SUPPORT=0`, `LIBSPDM_SHA3_512_SUPPORT=0`, `LIBSPDM_EDDSA_ED25519_SUPPORT=0`, `LIBSPDM_EDDSA_ED448_SUPPORT=0`, because they are not supported by mbedtls yet.
+NOTE: If a crypto library does not support a FIPS algorithm, then the algorithm must be disabled explicitly. Otherwise `libspdm_fips_run_selftest()` will fail. For example, if the integrator links libspdm with mbedtls, then SHA3, RdDSA, ML-KEM, ML-DSA and SLH-DSA related algorithms must be disabled via `LIBSPDM_SHA3_256_SUPPORT=0`, `LIBSPDM_SHA3_384_SUPPORT=0`, `LIBSPDM_SHA3_512_SUPPORT=0`, `LIBSPDM_EDDSA_ED25519_SUPPORT=0`, `LIBSPDM_EDDSA_ED448_SUPPORT=0`,`LIBSPDM_ML_KEM_512_SUPPORT=0`, `LIBSPDM_ML_KEM_768_SUPPORT=0`, `LIBSPDM_ML_KEM_1024_SUPPORT=0`, `LIBSPDM_ML_DSA_44_SUPPORT=0`, `LIBSPDM_ML_DSA_65_SUPPORT=0`, `LIBSPDM_ML_DSA_87_SUPPORT=0`, `LIBSPDM_SLH_DSA_SHA2_128S_SUPPORT=0`, `LIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT=0`, `LIBSPDM_SLH_DSA_SHA2_128F_SUPPORT=0`, `LIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT=0`, `LIBSPDM_SLH_DSA_SHA2_192S_SUPPORT=0`, `LIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT=0`, `LIBSPDM_SLH_DSA_SHA2_192F_SUPPORT=0`, `LIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT=0`, `LIBSPDM_SLH_DSA_SHA2_256S_SUPPORT=0`, `LIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT=0`, `LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT=0`, `LIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT=0`, because they are not supported by mbedtls yet.
