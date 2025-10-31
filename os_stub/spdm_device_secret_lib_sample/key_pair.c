@@ -471,6 +471,7 @@ bool libspdm_write_key_pair_info(
                 m_key_pair_info[key_pair_id - 1].assoc_cert_slot_mask =
                     desired_assoc_cert_slot_mask;
             } else {
+                free(cached_key_pair_info);
                 return false;
             }
 
