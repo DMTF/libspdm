@@ -31,6 +31,20 @@ bool libspdm_requester_data_sign(
     void *context;
     bool result;
 
+    const uint8_t version = spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT;
+    const bool multi_key_conn_rsp =
+        ((libspdm_context_t *)spdm_context)->connection_info.multi_key_conn_req;
+
+    if (version < SPDM_MESSAGE_VERSION_13) {
+        LIBSPDM_ASSERT(key_pair_id == 0);
+    } else if (version >= SPDM_MESSAGE_VERSION_13) {
+        if (multi_key_conn_rsp) {
+            LIBSPDM_ASSERT(key_pair_id > 0);
+        } else {
+            LIBSPDM_ASSERT(key_pair_id == 0);
+        }
+    }
+
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
     if (g_private_key_mode) {
         void *private_pem;
@@ -156,6 +170,21 @@ bool libspdm_responder_data_sign(
 {
     void *context;
     bool result;
+
+    const uint8_t version = spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT;
+    const bool multi_key_conn_rsp =
+        ((libspdm_context_t *)spdm_context)->connection_info.multi_key_conn_rsp;
+
+    if (version < SPDM_MESSAGE_VERSION_13) {
+        LIBSPDM_ASSERT(key_pair_id == 0);
+    } else if (version >= SPDM_MESSAGE_VERSION_13) {
+        if (multi_key_conn_rsp) {
+            LIBSPDM_ASSERT(key_pair_id > 0);
+        } else {
+            LIBSPDM_ASSERT(key_pair_id == 0);
+        }
+    }
+
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
     if (g_private_key_mode) {
         void *private_pem;

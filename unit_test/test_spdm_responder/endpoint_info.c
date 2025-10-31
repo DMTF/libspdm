@@ -110,6 +110,7 @@ static void rsp_endpoint_info_case1(void **state)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
+        spdm_context->local_context.local_key_pair_id[i] = 1;
         spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
         spdm_context->local_context.local_cert_chain_provision[i] = data;
     }
@@ -326,6 +327,7 @@ static void rsp_endpoint_info_case3(void **state)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
+        spdm_context->local_context.local_key_pair_id[i] = 1;
         spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
         spdm_context->local_context.local_cert_chain_provision[i] = data;
     }
@@ -520,6 +522,7 @@ static void rsp_endpoint_info_case5(void **state)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
+        spdm_context->local_context.local_key_pair_id[i] = 1;
         spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
         spdm_context->local_context.local_cert_chain_provision[i] = data;
     }
