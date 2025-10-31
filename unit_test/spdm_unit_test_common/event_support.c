@@ -136,6 +136,9 @@ void generate_dmtf_event_data(void *buffer, uint8_t *total_bytes, uint32_t event
     case SPDM_DMTF_EVENT_TYPE_CERTIFICATE_CHANGED:
         event_detail_len = SPDM_DMTF_EVENT_TYPE_CERTIFICATE_CHANGED_SIZE;
         break;
+    default:
+        event_detail_len = 0;
+        assert(false);
     }
 
     event_data->event_detail_len = event_detail_len;
