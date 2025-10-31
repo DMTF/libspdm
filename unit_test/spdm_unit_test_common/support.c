@@ -107,6 +107,7 @@ bool libspdm_read_input_file(const char *file_name, void **file_data,
     if (temp_result == -1) {
         printf("Unable to open file %s\n", file_name);
         *file_data = NULL;
+        close(fp_in);
         return false;
     } else {
         *file_size = (size_t)temp_result;
