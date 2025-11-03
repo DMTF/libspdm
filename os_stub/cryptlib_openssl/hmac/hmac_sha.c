@@ -9,7 +9,10 @@
  **/
 
 #include "internal_crypt_lib.h"
-#include <openssl/hmac.h>
+#include "key_context.h"
+#include <openssl/evp.h>
+#include <openssl/core_names.h>
+#include <string.h>
 
 /**
  * Allocates and initializes one HMAC_CTX context for subsequent HMAC-MD use.
@@ -20,10 +23,31 @@
  **/
 void *hmac_md_new(void)
 {
+    libspdm_mac_context *mac_ctx;
 
-    /* Allocates & Initializes HMAC_CTX context by OpenSSL HMAC_CTX_new()*/
+    /* Allocate MAC context wrapper */
+    mac_ctx = (libspdm_mac_context *)malloc(sizeof(libspdm_mac_context));
+    if (mac_ctx == NULL) {
+        return NULL;
+    }
+    memset(mac_ctx, 0, sizeof(libspdm_mac_context));
 
-    return (void *)HMAC_CTX_new();
+    /* Create EVP_MAC context for HMAC using new API */
+    EVP_MAC *mac = EVP_MAC_fetch(NULL, "HMAC", NULL);
+    if (mac == NULL) {
+        free(mac_ctx);
+        return NULL;
+    }
+
+    mac_ctx->mac_ctx = EVP_MAC_CTX_new(mac);
+    EVP_MAC_free(mac);
+
+    if (mac_ctx->mac_ctx == NULL) {
+        free(mac_ctx);
+        return NULL;
+    }
+
+    return (void *)mac_ctx;
 }
 
 /**
@@ -34,10 +58,21 @@ void *hmac_md_new(void)
  **/
 void hmac_md_free(void *hmac_md_ctx)
 {
+    libspdm_mac_context *mac_ctx;
 
-    /* Free OpenSSL HMAC_CTX context*/
+    if (hmac_md_ctx == NULL) {
+        return;
+    }
 
-    HMAC_CTX_free((HMAC_CTX *)hmac_md_ctx);
+    mac_ctx = (libspdm_mac_context *)hmac_md_ctx;
+
+    /* Free EVP_MAC_CTX context */
+    if (mac_ctx->mac_ctx != NULL) {
+        EVP_MAC_CTX_free(mac_ctx->mac_ctx);
+    }
+
+    /* Free wrapper structure */
+    free(mac_ctx);
 }
 
 /**
@@ -58,15 +93,30 @@ void hmac_md_free(void *hmac_md_ctx)
 bool hmac_md_set_key(const EVP_MD *md, void *hmac_md_ctx,
                      const uint8_t *key, size_t key_size)
 {
+    libspdm_mac_context *mac_ctx;
+    const char *digest_name;
+    OSSL_PARAM params[2];
 
-    /* Check input parameters.*/
-
-    if (hmac_md_ctx == NULL || key_size > INT_MAX) {
+    /* Check input parameters */
+    if (hmac_md_ctx == NULL || key == NULL || key_size == 0) {
         return false;
     }
 
-    if (HMAC_Init_ex((HMAC_CTX *)hmac_md_ctx, key, (uint32_t)key_size, md,
-                     NULL) != 1) {
+    mac_ctx = (libspdm_mac_context *)hmac_md_ctx;
+
+    /* Get digest name from EVP_MD */
+    digest_name = EVP_MD_get0_name(md);
+    if (digest_name == NULL) {
+        return false;
+    }
+
+    /* Setup parameters for HMAC */
+    params[0] = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_DIGEST,
+                                                 (char *)digest_name, 0);
+    params[1] = OSSL_PARAM_construct_end();
+
+    /* Initialize MAC operation with key and parameters */
+    if (EVP_MAC_init(mac_ctx->mac_ctx, key, key_size, params) != 1) {
         return false;
     }
 
@@ -88,17 +138,28 @@ bool hmac_md_set_key(const EVP_MD *md, void *hmac_md_ctx,
  **/
 bool hmac_md_duplicate(const void *hmac_md_ctx, void *new_hmac_md_ctx)
 {
-
-    /* Check input parameters.*/
+    libspdm_mac_context *src_mac_ctx;
+    libspdm_mac_context *dst_mac_ctx;
+    EVP_MAC_CTX *dup_ctx;
 
     if (hmac_md_ctx == NULL || new_hmac_md_ctx == NULL) {
         return false;
     }
 
-    if (HMAC_CTX_copy((HMAC_CTX *)new_hmac_md_ctx,
-                      (HMAC_CTX *)hmac_md_ctx) != 1) {
+    src_mac_ctx = (libspdm_mac_context *)hmac_md_ctx;
+    dst_mac_ctx = (libspdm_mac_context *)new_hmac_md_ctx;
+
+    /* Use EVP_MAC_CTX_dup to duplicate the source context */
+    dup_ctx = EVP_MAC_CTX_dup(src_mac_ctx->mac_ctx);
+    if (dup_ctx == NULL) {
         return false;
     }
+
+    /* Free the old destination context and replace with duplicated one */
+    if (dst_mac_ctx->mac_ctx != NULL) {
+        EVP_MAC_CTX_free(dst_mac_ctx->mac_ctx);
+    }
+    dst_mac_ctx->mac_ctx = dup_ctx;
 
     return true;
 }
@@ -124,24 +185,27 @@ bool hmac_md_duplicate(const void *hmac_md_ctx, void *new_hmac_md_ctx)
 bool hmac_md_update(void *hmac_md_ctx, const void *data,
                     size_t data_size)
 {
+    libspdm_mac_context *mac_ctx;
 
-    /* Check input parameters.*/
-
+    /* Check input parameters */
     if (hmac_md_ctx == NULL) {
         return false;
     }
 
+    mac_ctx = (libspdm_mac_context *)hmac_md_ctx;
 
-    /* Check invalid parameters, in case that only DataLength was checked in OpenSSL*/
-
+    /* Check invalid parameters */
     if (data == NULL && data_size != 0) {
         return false;
     }
 
+    /* If data_size is 0 and data is NULL, it's a valid case - do nothing */
+    if (data_size == 0) {
+        return true;
+    }
 
-    /* OpenSSL HMAC-MD digest update*/
-
-    if (HMAC_Update((HMAC_CTX *)hmac_md_ctx, data, data_size) != 1) {
+    /* Update MAC computation with new data */
+    if (EVP_MAC_update(mac_ctx->mac_ctx, data, data_size) != 1) {
         return false;
     }
 
@@ -170,22 +234,19 @@ bool hmac_md_update(void *hmac_md_ctx, const void *data,
  **/
 bool hmac_md_final(void *hmac_md_ctx, uint8_t *hmac_value)
 {
-    uint32_t length;
+    libspdm_mac_context *mac_ctx;
+    size_t out_len = 0;
 
-
-    /* Check input parameters.*/
-
+    /* Check input parameters */
     if (hmac_md_ctx == NULL || hmac_value == NULL) {
         return false;
     }
 
+    mac_ctx = (libspdm_mac_context *)hmac_md_ctx;
 
-    /* OpenSSL HMAC-MD digest finalization*/
-
-    if (HMAC_Final((HMAC_CTX *)hmac_md_ctx, hmac_value, &length) != 1) {
-        return false;
-    }
-    if (HMAC_CTX_reset((HMAC_CTX *)hmac_md_ctx) != 1) {
+    /* Finalize MAC computation and get the result */
+    if (EVP_MAC_final(mac_ctx->mac_ctx, hmac_value, &out_len,
+                      EVP_MAC_CTX_get_mac_size(mac_ctx->mac_ctx)) != 1) {
         return false;
     }
 
@@ -217,35 +278,60 @@ bool hmac_md_all(const EVP_MD *md, const void *data,
                  size_t data_size, const uint8_t *key, size_t key_size,
                  uint8_t *hmac_value)
 {
-    uint32_t length;
-    HMAC_CTX *ctx;
-    bool ret_val;
+    EVP_MAC *mac = NULL;
+    EVP_MAC_CTX *ctx = NULL;
+    size_t out_len = 0;
+    bool ret_val = false;
 
-    ctx = HMAC_CTX_new();
-    if (ctx == NULL) {
+    /* Check input parameters */
+    if (md == NULL || data == NULL || key == NULL || hmac_value == NULL) {
         return false;
     }
 
-    ret_val = (bool)HMAC_CTX_reset(ctx);
-    if (!ret_val) {
+    /* Create MAC object and context */
+    mac = EVP_MAC_fetch(NULL, "HMAC", NULL);
+    if (mac == NULL) {
         goto done;
     }
-    ret_val = (bool)HMAC_Init_ex(ctx, key, (uint32_t)key_size, md, NULL);
-    if (!ret_val) {
+
+    ctx = EVP_MAC_CTX_new(mac);
+    if (ctx == NULL) {
         goto done;
     }
-    ret_val = (bool)HMAC_Update(ctx, data, data_size);
-    if (!ret_val) {
+
+    /* Get digest name */
+    const char *digest_name = EVP_MD_get0_name(md);
+    if (digest_name == NULL) {
         goto done;
     }
-    ret_val = (bool)HMAC_Final(ctx, hmac_value, &length);
-    if (!ret_val) {
+
+    /* Setup parameters */
+    OSSL_PARAM params[2];
+    params[0] = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_DIGEST,
+                                                 (char *)digest_name, 0);
+    params[1] = OSSL_PARAM_construct_end();
+
+    /* Initialize with key */
+    if (EVP_MAC_init(ctx, key, key_size, params) != 1) {
         goto done;
     }
+
+    /* Update with data */
+    if (data_size > 0 && EVP_MAC_update(ctx, data, data_size) != 1) {
+        goto done;
+    }
+
+    /* Finalize and get result */
+    size_t mac_size = EVP_MAC_CTX_get_mac_size(ctx);
+    if (EVP_MAC_final(ctx, hmac_value, &out_len, mac_size) != 1) {
+        goto done;
+    }
+
+    ret_val = true;
 
 done:
-    HMAC_CTX_free(ctx);
-
+    EVP_MAC_CTX_free(ctx);
+    EVP_MAC_free(mac);
     return ret_val;
 }
 
@@ -289,7 +375,13 @@ void libspdm_hmac_sha256_free(void *hmac_sha256_ctx)
 bool libspdm_hmac_sha256_set_key(void *hmac_sha256_ctx, const uint8_t *key,
                                  size_t key_size)
 {
-    return hmac_md_set_key(EVP_sha256(), hmac_sha256_ctx, key, key_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA256", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_set_key(md, hmac_sha256_ctx, key, key_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -384,8 +476,13 @@ bool libspdm_hmac_sha256_all(const void *data, size_t data_size,
                              const uint8_t *key, size_t key_size,
                              uint8_t *hmac_value)
 {
-    return hmac_md_all(EVP_sha256(), data, data_size, key, key_size,
-                       hmac_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA256", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_all(md, data, data_size, key, key_size, hmac_value);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -430,7 +527,13 @@ void libspdm_hmac_sha384_free(void *hmac_sha384_ctx)
 bool libspdm_hmac_sha384_set_key(void *hmac_sha384_ctx, const uint8_t *key,
                                  size_t key_size)
 {
-    return hmac_md_set_key(EVP_sha384(), hmac_sha384_ctx, key, key_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA384", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_set_key(md, hmac_sha384_ctx, key, key_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -531,8 +634,13 @@ bool libspdm_hmac_sha384_all(const void *data, size_t data_size,
                              const uint8_t *key, size_t key_size,
                              uint8_t *hmac_value)
 {
-    return hmac_md_all(EVP_sha384(), data, data_size, key, key_size,
-                       hmac_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA384", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_all(md, data, data_size, key, key_size, hmac_value);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -577,7 +685,13 @@ void libspdm_hmac_sha512_free(void *hmac_sha512_ctx)
 bool libspdm_hmac_sha512_set_key(void *hmac_sha512_ctx, const uint8_t *key,
                                  size_t key_size)
 {
-    return hmac_md_set_key(EVP_sha512(), hmac_sha512_ctx, key, key_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA512", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_set_key(md, hmac_sha512_ctx, key, key_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -678,6 +792,11 @@ bool libspdm_hmac_sha512_all(const void *data, size_t data_size,
                              const uint8_t *key, size_t key_size,
                              uint8_t *hmac_value)
 {
-    return hmac_md_all(EVP_sha512(), data, data_size, key, key_size,
-                       hmac_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA512", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_all(md, data, data_size, key, key_size, hmac_value);
+    EVP_MD_free(md);
+    return result;
 }

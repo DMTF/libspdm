@@ -63,7 +63,13 @@ void libspdm_hmac_sha3_256_free(void *hmac_sha3_256_ctx)
 bool libspdm_hmac_sha3_256_set_key(void *hmac_sha3_256_ctx, const uint8_t *key,
                                    size_t key_size)
 {
-    return hmac_md_set_key(EVP_sha3_256(), hmac_sha3_256_ctx, key, key_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-256", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_set_key(md, hmac_sha3_256_ctx, key, key_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -158,8 +164,13 @@ bool libspdm_hmac_sha3_256_all(const void *data, size_t data_size,
                                const uint8_t *key, size_t key_size,
                                uint8_t *hmac_value)
 {
-    return hmac_md_all(EVP_sha3_256(), data, data_size, key, key_size,
-                       hmac_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-256", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_all(md, data, data_size, key, key_size, hmac_value);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -204,7 +215,13 @@ void libspdm_hmac_sha3_384_free(void *hmac_sha3_384_ctx)
 bool libspdm_hmac_sha3_384_set_key(void *hmac_sha3_384_ctx, const uint8_t *key,
                                    size_t key_size)
 {
-    return hmac_md_set_key(EVP_sha3_384(), hmac_sha3_384_ctx, key, key_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-384", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_set_key(md, hmac_sha3_384_ctx, key, key_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -305,8 +322,13 @@ bool libspdm_hmac_sha3_384_all(const void *data, size_t data_size,
                                const uint8_t *key, size_t key_size,
                                uint8_t *hmac_value)
 {
-    return hmac_md_all(EVP_sha3_384(), data, data_size, key, key_size,
-                       hmac_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-384", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_all(md, data, data_size, key, key_size, hmac_value);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -351,7 +373,13 @@ void libspdm_hmac_sha3_512_free(void *hmac_sha3_512_ctx)
 bool libspdm_hmac_sha3_512_set_key(void *hmac_sha3_512_ctx, const uint8_t *key,
                                    size_t key_size)
 {
-    return hmac_md_set_key(EVP_sha3_512(), hmac_sha3_512_ctx, key, key_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-512", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_set_key(md, hmac_sha3_512_ctx, key, key_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -452,6 +480,11 @@ bool libspdm_hmac_sha3_512_all(const void *data, size_t data_size,
                                const uint8_t *key, size_t key_size,
                                uint8_t *hmac_value)
 {
-    return hmac_md_all(EVP_sha3_512(), data, data_size, key, key_size,
-                       hmac_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-512", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_all(md, data, data_size, key, key_size, hmac_value);
+    EVP_MD_free(md);
+    return result;
 }

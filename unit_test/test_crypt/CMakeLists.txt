@@ -69,3 +69,18 @@ else()
             spdm_crypt_ext_lib
         )
 endif()
+
+# Windows DLL path fix for OpenSSL shared library
+if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND NOT TOOLCHAIN STREQUAL "NONE")
+    if(CRYPTO STREQUAL "openssl")
+        # Copy OpenSSL DLL to test directory for runtime linking
+        if(TARGET openssllib)
+            add_custom_command(TARGET test_crypt POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                $<TARGET_FILE:openssllib>
+                $<TARGET_FILE_DIR:test_crypt>
+                COMMENT "Copying OpenSSL DLL to test directory"
+            )
+        endif()
+    endif()
+endif()

@@ -9,9 +9,66 @@
  **/
 
 #include "internal_crypt_lib.h"
+#include "key_context.h"
 #include <openssl/x509.h>
 #include <openssl/evp.h>
 #include <openssl/decoder.h>
+
+/**
+ * Helper function to retrieve public key from DER data using BIO.
+ *
+ * @param[in]  der_data       Pointer to the DER-encoded key data.
+ * @param[in]  der_size       Size of the DER key data in bytes.
+ * @param[out] pkey           Pointer to receive the EVP_PKEY.
+ *
+ * @retval  true   Public key was retrieved successfully.
+ * @retval  false  Failed to retrieve public key.
+ **/
+static bool get_public_key_from_der_bio(const uint8_t *der_data, size_t der_size, EVP_PKEY **pkey)
+{
+    BIO *der_bio;
+    bool result = false;
+
+    der_bio = BIO_new(BIO_s_mem());
+    if (der_bio == NULL) {
+        return false;
+    }
+
+    if (BIO_write(der_bio, der_data, (int)der_size) <= 0) {
+        goto done;
+    }
+
+    *pkey = d2i_PUBKEY_bio(der_bio, NULL);
+    if (*pkey != NULL) {
+        result = true;
+    }
+
+done:
+    BIO_free(der_bio);
+    return result;
+}
+
+/**
+ * Helper function to allocate and initialize a key context wrapper.
+ *
+ * @param[in]  pkey           EVP_PKEY to wrap.
+ * @param[out] context        Pointer to receive the allocated context.
+ *
+ * @retval  true   Context was allocated successfully.
+ * @retval  false  Failed to allocate context.
+ **/
+static bool allocate_key_context(EVP_PKEY *pkey, void **context)
+{
+    libspdm_key_context *ctx;
+
+    ctx = (libspdm_key_context *)malloc(sizeof(libspdm_key_context));
+    if (ctx == NULL) {
+        return false;
+    }
+    ctx->evp_pkey = pkey;
+    *context = ctx;
+    return true;
+}
 
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
 /**
@@ -37,42 +94,31 @@ bool libspdm_rsa_get_public_key_from_der(const uint8_t *der_data,
                                          size_t der_size,
                                          void **rsa_context)
 {
-    bool status;
-    BIO *der_bio;
+    EVP_PKEY *pkey = NULL;
 
     /* Check input parameters.*/
-
     if (der_data == NULL || rsa_context == NULL || der_size > INT_MAX) {
         return false;
     }
 
-    status = false;
-
-    /* Read DER data.*/
-
-    der_bio = BIO_new(BIO_s_mem());
-    if (der_bio == NULL) {
-        return status;
+    /* Read DER data using BIO */
+    if (!get_public_key_from_der_bio(der_data, der_size, &pkey)) {
+        return false;
     }
 
-    if (BIO_write(der_bio, der_data, (int)der_size) <= 0) {
-        goto done;
+    /* Verify key type */
+    if (EVP_PKEY_base_id(pkey) != EVP_PKEY_RSA) {
+        EVP_PKEY_free(pkey);
+        return false;
     }
 
-    /* Retrieve RSA Public key from DER data.*/
-
-    *rsa_context = d2i_RSA_PUBKEY_bio(der_bio, NULL);
-    if (*rsa_context != NULL) {
-        status = true;
+    /* Allocate wrapper structure */
+    if (!allocate_key_context(pkey, rsa_context)) {
+        EVP_PKEY_free(pkey);
+        return false;
     }
 
-done:
-
-    /* Release Resources.*/
-
-    BIO_free(der_bio);
-
-    return status;
+    return true;
 }
 #endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
@@ -124,19 +170,26 @@ bool libspdm_ec_get_public_key_from_der(const uint8_t *der_data,
         goto done;
     }
 
+    /* Verify key type */
     if (EVP_PKEY_get_base_id(pkey) != EVP_PKEY_EC) {
-        EVP_PKEY_free(pkey);
+        goto done;
+    }
+
+    /* Allocate wrapper structure */
+    if (!allocate_key_context(pkey, ec_context)) {
         goto done;
     }
 
     status = true;
-    *ec_context = pkey;
+    pkey = NULL; /* ownership moved */
 
 done:
-
     /* Release Resources.*/
-
     OSSL_DECODER_CTX_free(dctx);
+
+    if (pkey != NULL) {
+        EVP_PKEY_free(pkey);
+    }
 
     return status;
 }
@@ -166,51 +219,33 @@ bool libspdm_ecd_get_public_key_from_der(const uint8_t *der_data,
                                          size_t der_size,
                                          void **ecd_context)
 {
-    bool status;
-    BIO *der_bio;
-    EVP_PKEY *pkey;
+    EVP_PKEY *pkey = NULL;
     int32_t type;
 
     /* Check input parameters.*/
-
     if (der_data == NULL || ecd_context == NULL || der_size > INT_MAX) {
         return false;
     }
 
-    status = false;
-
-    /* Read DER data.*/
-
-    der_bio = BIO_new(BIO_s_mem());
-    if (der_bio == NULL) {
-        return status;
+    /* Read DER data using BIO */
+    if (!get_public_key_from_der_bio(der_data, der_size, &pkey)) {
+        return false;
     }
 
-    if (BIO_write(der_bio, der_data, (int)der_size) <= 0) {
-        goto done;
-    }
-
-
-    /* Retrieve Ed Public key from DER data.*/
-
-    pkey = d2i_PUBKEY_bio(der_bio, NULL);
-    if (pkey == NULL) {
-        goto done;
-    }
+    /* Verify key type */
     type = EVP_PKEY_id(pkey);
     if ((type != EVP_PKEY_ED25519) && (type != EVP_PKEY_ED448)) {
-        goto done;
+        EVP_PKEY_free(pkey);
+        return false;
     }
-    *ecd_context = pkey;
-    status = true;
 
-done:
+    /* Allocate wrapper structure */
+    if (!allocate_key_context(pkey, ecd_context)) {
+        EVP_PKEY_free(pkey);
+        return false;
+    }
 
-    /* Release Resources.*/
-
-    BIO_free(der_bio);
-
-    return status;
+    return true;
 }
 #endif /* (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) */
 
@@ -238,50 +273,30 @@ bool libspdm_sm2_get_public_key_from_der(const uint8_t *der_data,
                                          size_t der_size,
                                          void **sm2_context)
 {
-    bool status;
-    BIO *der_bio;
-    EVP_PKEY *pkey;
-    int result;
+    EVP_PKEY *pkey = NULL;
 
     /* Check input parameters.*/
-
     if (der_data == NULL || sm2_context == NULL || der_size > INT_MAX) {
         return false;
     }
 
-    status = false;
-
-    /* Read DER data.*/
-
-    der_bio = BIO_new(BIO_s_mem());
-    if (der_bio == NULL) {
-        return status;
+    /* Read DER data using BIO */
+    if (!get_public_key_from_der_bio(der_data, der_size, &pkey)) {
+        return false;
     }
 
-    if (BIO_write(der_bio, der_data, (int)der_size) <= 0) {
-        goto done;
+    /* Verify key type */
+    if (EVP_PKEY_is_a(pkey, "SM2") == 0) {
+        EVP_PKEY_free(pkey);
+        return false;
     }
 
-    /* Retrieve sm2 Public key from DER data.*/
-
-    pkey = d2i_PUBKEY_bio(der_bio, NULL);
-    if (pkey == NULL) {
-        goto done;
-    }
-    result = EVP_PKEY_is_a(pkey,"SM2");
-    if (result == 0) {
-        goto done;
+    /* Allocate wrapper structure */
+    if (!allocate_key_context(pkey, sm2_context)) {
+        EVP_PKEY_free(pkey);
+        return false;
     }
 
-    *sm2_context = pkey;
-    status = true;
-
-done:
-
-    /* Release Resources.*/
-
-    BIO_free(der_bio);
-
-    return status;
+    return true;
 }
 #endif /* LIBSPDM_SM2_DSA_SUPPORT */

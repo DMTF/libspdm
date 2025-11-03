@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #include "test_crypt.h"
@@ -581,7 +581,7 @@ cleanup:
     }
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
     if (x509_ca_cert != NULL) {
-        free(x509_ca_cert);
+        libspdm_x509_free(x509_ca_cert);
     }
 #endif
     return status;

@@ -12,11 +12,11 @@
  **/
 
 #include "internal_crypt_lib.h"
+#include "key_context.h"
 
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
 
 #include <openssl/evp.h>
-#include <crypto/evp.h>
 
 /**
  * Allocates and Initializes one Edwards-Curve context for subsequent use
@@ -35,20 +35,21 @@ void *libspdm_ecd_new_by_nid(size_t nid)
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
     int32_t result;
-    int32_t openssl_pkey_type;
+    const char *key_type_name;
+    libspdm_key_context *ecd_context;
 
     switch (nid) {
     case LIBSPDM_CRYPTO_NID_EDDSA_ED25519:
-        openssl_pkey_type = EVP_PKEY_ED25519;
+        key_type_name = "ED25519";
         break;
     case LIBSPDM_CRYPTO_NID_EDDSA_ED448:
-        openssl_pkey_type = EVP_PKEY_ED448;
+        key_type_name = "ED448";
         break;
     default:
         return NULL;
     }
 
-    pkey_ctx = EVP_PKEY_CTX_new_id(openssl_pkey_type, NULL);
+    pkey_ctx = EVP_PKEY_CTX_new_from_name(NULL, key_type_name, NULL);
     if (pkey_ctx == NULL) {
         return NULL;
     }
@@ -65,7 +66,14 @@ void *libspdm_ecd_new_by_nid(size_t nid)
     }
     EVP_PKEY_CTX_free(pkey_ctx);
 
-    return (void *)pkey;
+    /* Allocate key context wrapper */
+    ecd_context = (libspdm_key_context *)malloc(sizeof(libspdm_key_context));
+    if (ecd_context == NULL) {
+        EVP_PKEY_free(pkey);
+        return NULL;
+    }
+    ecd_context->evp_pkey = pkey;
+    return ecd_context;
 }
 
 /**
@@ -76,7 +84,17 @@ void *libspdm_ecd_new_by_nid(size_t nid)
  **/
 void libspdm_ecd_free(void *ecd_context)
 {
-    EVP_PKEY_free((EVP_PKEY *)ecd_context);
+    libspdm_key_context *key_ctx;
+
+    if (ecd_context == NULL) {
+        return;
+    }
+
+    key_ctx = (libspdm_key_context *)ecd_context;
+    if (key_ctx->evp_pkey != NULL) {
+        EVP_PKEY_free(key_ctx->evp_pkey);
+    }
+    free(key_ctx);
 }
 
 /**
@@ -96,6 +114,7 @@ void libspdm_ecd_free(void *ecd_context)
 bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
                              size_t public_key_size)
 {
+    libspdm_key_context *key_ctx;
     uint32_t final_pub_key_size;
     EVP_PKEY *evp_key;
     EVP_PKEY *new_evp_key;
@@ -104,7 +123,11 @@ bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
         return false;
     }
 
-    evp_key = (EVP_PKEY *)ecd_context;
+    key_ctx = (libspdm_key_context *)ecd_context;
+    evp_key = key_ctx->evp_pkey;
+    if (evp_key == NULL) {
+        return false;
+    }
 
     switch (EVP_PKEY_id(evp_key)) {
     case EVP_PKEY_ED25519:
@@ -128,12 +151,10 @@ bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
         return false;
     }
 
-    if (evp_pkey_copy_downgraded(&evp_key, new_evp_key) != 1) {
-        EVP_PKEY_free(new_evp_key);
-        return false;
-    }
+    /* Replace the old key with the new one */
+    EVP_PKEY_free(evp_key);
+    key_ctx->evp_pkey = new_evp_key;
 
-    EVP_PKEY_free(new_evp_key);
     return true;
 }
 
@@ -154,6 +175,7 @@ bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
 bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_key,
                              size_t private_key_size)
 {
+    libspdm_key_context *key_ctx;
     uint32_t final_pri_key_size;
     EVP_PKEY *evp_key;
     EVP_PKEY *new_evp_key;
@@ -162,7 +184,11 @@ bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_key,
         return false;
     }
 
-    evp_key = (EVP_PKEY *)ecd_context;
+    key_ctx = (libspdm_key_context *)ecd_context;
+    evp_key = key_ctx->evp_pkey;
+    if (evp_key == NULL) {
+        return false;
+    }
 
     switch (EVP_PKEY_id(evp_key)) {
     case EVP_PKEY_ED25519:
@@ -185,12 +211,10 @@ bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_key,
         return false;
     }
 
-    if (evp_pkey_copy_downgraded(&evp_key, new_evp_key) != 1) {
-        EVP_PKEY_free(new_evp_key);
-        return false;
-    }
+    /* Replace the old key with the new one */
+    EVP_PKEY_free(evp_key);
+    key_ctx->evp_pkey = new_evp_key;
 
-    EVP_PKEY_free(new_evp_key);
     return true;
 }
 
@@ -212,6 +236,7 @@ bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_key,
 bool libspdm_ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
                              size_t *public_key_size)
 {
+    libspdm_key_context *key_ctx;
     EVP_PKEY *pkey;
     int32_t result;
     uint32_t final_pub_key_size;
@@ -221,7 +246,11 @@ bool libspdm_ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
         return false;
     }
 
-    pkey = (EVP_PKEY *)ecd_context;
+    key_ctx = (libspdm_key_context *)ecd_context;
+    pkey = key_ctx->evp_pkey;
+    if (pkey == NULL) {
+        return false;
+    }
     switch (EVP_PKEY_id(pkey)) {
     case EVP_PKEY_ED25519:
         final_pub_key_size = 32;
@@ -330,6 +359,7 @@ bool libspdm_eddsa_sign(const void *ecd_context, size_t hash_nid,
                         const uint8_t *message, size_t size, uint8_t *signature,
                         size_t *sig_size)
 {
+    libspdm_key_context *key_ctx;
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;
     size_t half_size;
@@ -350,7 +380,11 @@ bool libspdm_eddsa_sign(const void *ecd_context, size_t hash_nid,
         return false;
     }
 
-    pkey = (EVP_PKEY *)ecd_context;
+    key_ctx = (libspdm_key_context *)ecd_context;
+    pkey = key_ctx->evp_pkey;
+    if (pkey == NULL) {
+        return false;
+    }
     switch (EVP_PKEY_id(pkey)) {
     case EVP_PKEY_ED25519:
         half_size = 32;
@@ -442,6 +476,7 @@ bool libspdm_eddsa_verify(const void *ecd_context, size_t hash_nid,
                           const uint8_t *message, size_t size,
                           const uint8_t *signature, size_t sig_size)
 {
+    libspdm_key_context *key_ctx;
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;
     size_t half_size;
@@ -462,7 +497,11 @@ bool libspdm_eddsa_verify(const void *ecd_context, size_t hash_nid,
         return false;
     }
 
-    pkey = (EVP_PKEY *)ecd_context;
+    key_ctx = (libspdm_key_context *)ecd_context;
+    pkey = key_ctx->evp_pkey;
+    if (pkey == NULL) {
+        return false;
+    }
     switch (EVP_PKEY_id(pkey)) {
     case EVP_PKEY_ED25519:
         half_size = 32;

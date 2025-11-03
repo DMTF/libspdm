@@ -21,10 +21,18 @@
 #include "crt_support.h"
 
 #include <openssl/opensslv.h>
+#include <openssl/evp.h>
 
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
-#define OBJ_get0_data(o) ((o)->data)
-#define OBJ_length(o) ((o)->length)
+#if OPENSSL_VERSION_NUMBER < 0x30200000L
+
+#ifndef EVP_PKEY_PRIVATE_KEY
+#define EVP_PKEY_PRIVATE_KEY EVP_PKEY_KEYPAIR
+#endif
+
+#ifndef OSSL_SIGNATURE_PARAM_CONTEXT_STRING
+#define OSSL_SIGNATURE_PARAM_CONTEXT_STRING "context-string"
+#endif
+
 #endif
 
 #endif

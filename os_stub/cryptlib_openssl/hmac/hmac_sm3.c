@@ -63,7 +63,13 @@ void libspdm_hmac_sm3_256_free(void *hmac_sm3_256_ctx)
 bool libspdm_hmac_sm3_256_set_key(void *hmac_sm3_256_ctx, const uint8_t *key,
                                   size_t key_size)
 {
-    return hmac_md_set_key(EVP_sm3(), hmac_sm3_256_ctx, key, key_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SM3", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_set_key(md, hmac_sm3_256_ctx, key, key_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -158,6 +164,11 @@ bool libspdm_hmac_sm3_256_all(const void *data, size_t data_size,
                               const uint8_t *key, size_t key_size,
                               uint8_t *hmac_value)
 {
-    return hmac_md_all(EVP_sm3(), data, data_size, key, key_size,
-                       hmac_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SM3", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hmac_md_all(md, data, data_size, key, key_size, hmac_value);
+    EVP_MD_free(md);
+    return result;
 }
