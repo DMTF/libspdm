@@ -17,7 +17,7 @@
 #include <openssl/bn.h>
 #include <openssl/pem.h>
 #include <openssl/bio.h>
-#include <crypto/evp.h>
+#include <openssl/evp.h>
 
 #if LIBSPDM_ML_DSA_SUPPORT
 

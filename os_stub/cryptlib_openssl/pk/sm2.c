@@ -8,11 +8,19 @@
  * Shang-Mi2 Asymmetric Wrapper Implementation.
  **/
 
+/* Suppress deprecated warnings for SM2 implementation
+ * These will be replaced with modern APIs incrementally
+ * Warning suppression is handled globally in CMakeLists.txt
+ */
+
 #include "internal_crypt_lib.h"
 #include <openssl/evp.h>
 #include <openssl/ec.h>
 #include <openssl/bn.h>
 #include <openssl/objects.h>
+#include <openssl/core_names.h>
+#include <openssl/param_build.h>
+#include "key_context.h"
 
 /**
  * Allocates and Initializes one Shang-Mi2 context for subsequent use.
@@ -82,7 +90,14 @@ void *libspdm_sm2_dsa_new_by_nid(size_t nid)
         return NULL;
     }
 
-    return (void *)pkey;
+    /* Allocate wrapper structure */
+    libspdm_key_context *sm2_ctx = (libspdm_key_context *)malloc(sizeof(libspdm_key_context));
+    if (sm2_ctx == NULL) {
+        EVP_PKEY_free(pkey);
+        return NULL;
+    }
+    sm2_ctx->evp_pkey = pkey;
+    return (void *)sm2_ctx;
 }
 
 /**
@@ -93,7 +108,17 @@ void *libspdm_sm2_dsa_new_by_nid(size_t nid)
  **/
 void libspdm_sm2_dsa_free(void *sm2_context)
 {
-    EVP_PKEY_free((EVP_PKEY *)sm2_context);
+    libspdm_key_context *sm2_ctx;
+
+    if (sm2_context == NULL) {
+        return;
+    }
+
+    sm2_ctx = (libspdm_key_context *)sm2_context;
+    if (sm2_ctx->evp_pkey != NULL) {
+        EVP_PKEY_free(sm2_ctx->evp_pkey);
+    }
+    free(sm2_ctx);
 }
 
 /**
@@ -113,80 +138,58 @@ bool libspdm_sm2_dsa_set_pub_key(void *sm2_context, const uint8_t *public_key,
                                  size_t public_key_size)
 {
     EVP_PKEY *pkey;
-    EC_KEY *ec_key;
-    const EC_GROUP *ec_group;
-    bool ret_val;
-    BIGNUM *bn_x;
-    BIGNUM *bn_y;
-    EC_POINT *ec_point;
-    int32_t openssl_nid;
-    size_t half_size;
+    EVP_PKEY_CTX *pctx = NULL;
+    uint8_t oct_key[65];
+    size_t half_size = 32;
+    bool ret_val = false;
 
     if (sm2_context == NULL || public_key == NULL) {
         return false;
     }
 
-    pkey = (EVP_PKEY *)sm2_context;
-    if (EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
+    pkey = ((libspdm_key_context *)sm2_context)->evp_pkey;
+    if (pkey == NULL || EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
         return false;
     }
-    ec_key = (void *)EVP_PKEY_get0_EC_KEY(pkey);
 
-    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-    switch (openssl_nid) {
-    case NID_sm2:
-        half_size = 32;
-        break;
-    default:
-        return false;
-    }
     if (public_key_size != half_size * 2) {
         return false;
     }
 
-    ec_group = EC_KEY_get0_group(ec_key);
-    ec_point = NULL;
-
-    bn_x = BN_bin2bn(public_key, (uint32_t)half_size, NULL);
-    bn_y = BN_bin2bn(public_key + half_size, (uint32_t)half_size, NULL);
-    if (bn_x == NULL || bn_y == NULL) {
-        ret_val = false;
-        goto done;
-    }
-    ec_point = EC_POINT_new(ec_group);
-    if (ec_point == NULL) {
-        ret_val = false;
-        goto done;
-    }
-
-    ret_val = (bool)EC_POINT_set_affine_coordinates(ec_group, ec_point,
-                                                    bn_x, bn_y, NULL);
-    if (!ret_val) {
-        goto done;
-    }
-
-    ret_val = (bool)EC_KEY_set_public_key(ec_key, ec_point);
-    if (!ret_val) {
-        goto done;
-    }
-
-    ret_val = EVP_PKEY_set1_EC_KEY(pkey, ec_key);
-    if (!ret_val) {
+    /* Build uncompressed octet: 0x04 || X || Y */
+    if (public_key_size + 1 > sizeof(oct_key)) {
         return false;
     }
+    oct_key[0] = 0x04;
+    libspdm_copy_mem(oct_key + 1, sizeof(oct_key) - 1, public_key, public_key_size);
 
-    ret_val = true;
+    if (EVP_PKEY_set1_encoded_public_key(pkey, oct_key, public_key_size + 1) > 0) {
+        pctx = EVP_PKEY_CTX_new_from_pkey(NULL, pkey, NULL);
+        if (pctx != NULL) {
+            if (EVP_PKEY_public_check_quick(pctx) > 0) {
+                ret_val = true;
+            }
+            EVP_PKEY_CTX_free(pctx);
+            if (ret_val) {
+                return true;
+            }
+        }
+    }
 
-done:
-    if (bn_x != NULL) {
-        BN_free(bn_x);
+    /* Try alternative: EVP_PKEY_set_octet_string_param */
+    if (EVP_PKEY_settable_params(pkey) != NULL) {
+        if (EVP_PKEY_set_octet_string_param(pkey, OSSL_PKEY_PARAM_PUB_KEY,
+                                            oct_key, public_key_size + 1) > 0) {
+            pctx = EVP_PKEY_CTX_new_from_pkey(NULL, pkey, NULL);
+            if (pctx != NULL) {
+                if (EVP_PKEY_public_check_quick(pctx) > 0) {
+                    ret_val = true;
+                }
+                EVP_PKEY_CTX_free(pctx);
+            }
+        }
     }
-    if (bn_y != NULL) {
-        BN_free(bn_y);
-    }
-    if (ec_point != NULL) {
-        EC_POINT_free(ec_point);
-    }
+
     return ret_val;
 }
 
@@ -208,16 +211,9 @@ bool libspdm_sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
                                  size_t *public_key_size)
 {
     EVP_PKEY *pkey;
-    EC_KEY *ec_key;
-    const EC_GROUP *ec_group;
-    bool ret_val;
-    const EC_POINT *ec_point;
-    BIGNUM *bn_x;
-    BIGNUM *bn_y;
-    int32_t openssl_nid;
-    size_t half_size;
-    int x_size;
-    int y_size;
+    uint8_t buffer[65];
+    size_t len = 0;
+    size_t half_size = 32;
 
     if (sm2_context == NULL || public_key_size == NULL) {
         return false;
@@ -227,68 +223,36 @@ bool libspdm_sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
         return false;
     }
 
-    pkey = (EVP_PKEY *)sm2_context;
-    if (EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
-        return false;
-    }
-    ec_key = (void *)EVP_PKEY_get0_EC_KEY(pkey);
-
-    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-    switch (openssl_nid) {
-    case NID_sm2:
-        half_size = 32;
-        break;
-    default:
-        return false;
-    }
-    if (*public_key_size < half_size * 2) {
-        *public_key_size = half_size * 2;
-        return false;
-    }
-    *public_key_size = half_size * 2;
-
-    ec_group = EC_KEY_get0_group(ec_key);
-    ec_point = EC_KEY_get0_public_key(ec_key);
-    if (ec_point == NULL) {
+    pkey = ((libspdm_key_context *)sm2_context)->evp_pkey;
+    if (pkey == NULL || EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
         return false;
     }
 
-    bn_x = BN_new();
-    bn_y = BN_new();
-    if (bn_x == NULL || bn_y == NULL) {
-        ret_val = false;
-        goto done;
+    if (EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_PUB_KEY,
+                                        buffer, sizeof(buffer), &len) <= 0) {
+        return false;
     }
 
-    ret_val = (bool)EC_POINT_get_affine_coordinates(ec_group, ec_point,
-                                                    bn_x, bn_y, NULL);
-    if (!ret_val) {
-        goto done;
+    /* EVP_PKEY includes an extra leading byte only for the compression format.
+     * Since only the uncompressed format is supported, this byte (always 0x04)
+     * can be safely ignored to maintain compatibility. */
+    if (len < 1 || len - 1 != half_size * 2) {
+        return false;
     }
 
-    x_size = BN_num_bytes(bn_x);
-    y_size = BN_num_bytes(bn_y);
-    if (x_size <= 0 || y_size <= 0) {
-        ret_val = false;
-        goto done;
+    if (*public_key_size < len - 1) {
+        *public_key_size = len - 1;
+        return false;
     }
-    LIBSPDM_ASSERT((size_t)x_size <= half_size && (size_t)y_size <= half_size);
 
+    *public_key_size = len - 1;
     if (public_key != NULL) {
-        libspdm_zero_mem(public_key, *public_key_size);
-        BN_bn2bin(bn_x, &public_key[0 + half_size - x_size]);
-        BN_bn2bin(bn_y, &public_key[half_size + half_size - y_size]);
+        /* buffer[0] = 0x04 indicates the uncompressed format (EVP_PKEY uses this as a format ID).
+         * Only the raw key bytes (excluding this prefix) should be copied into public_key. */
+        libspdm_copy_mem(public_key, *public_key_size, buffer + 1, *public_key_size);
     }
-    ret_val = true;
 
-done:
-    if (bn_x != NULL) {
-        BN_free(bn_x);
-    }
-    if (bn_y != NULL) {
-        BN_free(bn_y);
-    }
-    return ret_val;
+    return true;
 }
 
 /**
@@ -307,25 +271,32 @@ done:
 bool libspdm_sm2_dsa_check_key(const void *sm2_context)
 {
     EVP_PKEY *pkey;
-    EC_KEY *ec_key;
-    bool ret_val;
+    EVP_PKEY_CTX *pctx = NULL;
+    int check_result;
 
     if (sm2_context == NULL) {
         return false;
     }
 
-    pkey = (EVP_PKEY *)sm2_context;
-    if (EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
-        return false;
-    }
-    ec_key = (void *)EVP_PKEY_get0_EC_KEY(pkey);
-
-    ret_val = (bool)EC_KEY_check_key(ec_key);
-    if (!ret_val) {
+    pkey = ((libspdm_key_context *)sm2_context)->evp_pkey;
+    if (pkey == NULL || EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
         return false;
     }
 
-    return true;
+    pctx = EVP_PKEY_CTX_new_from_pkey(NULL, pkey, NULL);
+    if (pctx == NULL) {
+        return false;
+    }
+
+    check_result = EVP_PKEY_pairwise_check(pctx);
+    if (check_result > 0) {
+        EVP_PKEY_CTX_free(pctx);
+        return true;
+    }
+    check_result = EVP_PKEY_public_check(pctx);
+    EVP_PKEY_CTX_free(pctx);
+
+    return (check_result > 0);
 }
 
 /**
@@ -358,17 +329,14 @@ bool libspdm_sm2_dsa_check_key(const void *sm2_context)
 bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public_data,
                                   size_t *public_size)
 {
+    libspdm_key_context *sm2_ctx;
     EVP_PKEY *pkey;
-    EC_KEY *ec_key;
-    const EC_GROUP *ec_group;
-    bool ret_val;
-    const EC_POINT *ec_point;
-    BIGNUM *bn_x;
-    BIGNUM *bn_y;
-    int32_t openssl_nid;
-    size_t half_size;
-    int x_size;
-    int y_size;
+    EVP_PKEY_CTX *key_ctx = NULL;
+    EVP_PKEY *new_pkey = NULL;
+    bool ret_val = false;
+    size_t half_size = 32;
+    uint8_t pub_key_buffer[65];
+    size_t pub_key_len = 0;
 
     if (sm2_context == NULL || public_size == NULL) {
         return false;
@@ -378,76 +346,66 @@ bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public_data,
         return false;
     }
 
-    pkey = (EVP_PKEY *)sm2_context;
-    if (EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
-        return false;
-    }
-    ec_key = (void *)EVP_PKEY_get0_EC_KEY(pkey);
-
-    ret_val = (bool)EC_KEY_generate_key(ec_key);
-    if (!ret_val) {
+    sm2_ctx = (libspdm_key_context *)sm2_context;
+    pkey = ((libspdm_key_context *)sm2_context)->evp_pkey;
+    if (pkey == NULL || EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
         return false;
     }
 
-    ret_val = EVP_PKEY_set1_EC_KEY(pkey, ec_key);
-    if (!ret_val) {
+    /* Create key generation context from existing pkey */
+    key_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pkey, NULL);
+    if (key_ctx == NULL) {
         return false;
     }
 
-    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-    switch (openssl_nid) {
-    case NID_sm2:
-        half_size = 32;
-        break;
-    default:
-        return false;
-    }
-    if (*public_size < half_size * 2) {
-        *public_size = half_size * 2;
-        return false;
-    }
-    *public_size = half_size * 2;
-
-    ec_group = EC_KEY_get0_group(ec_key);
-    ec_point = EC_KEY_get0_public_key(ec_key);
-    if (ec_point == NULL) {
-        return false;
+    if (EVP_PKEY_keygen_init(key_ctx) <= 0) {
+        goto cleanup;
     }
 
-    bn_x = BN_new();
-    bn_y = BN_new();
-    if (bn_x == NULL || bn_y == NULL) {
+    if (EVP_PKEY_generate(key_ctx, &new_pkey) <= 0) {
+        goto cleanup;
+    }
+
+    /* Replace the old pkey with the new generated one */
+    EVP_PKEY_free(sm2_ctx->evp_pkey);
+    sm2_ctx->evp_pkey = new_pkey;
+    new_pkey = NULL;
+    pkey = sm2_ctx->evp_pkey;
+
+    /* Extract public key for output */
+    if (EVP_PKEY_get_octet_string_param(pkey, OSSL_PKEY_PARAM_PUB_KEY,
+                                        pub_key_buffer, sizeof(pub_key_buffer),
+                                        &pub_key_len) <= 0) {
+        goto cleanup;
+    }
+
+    /* EVP_PKEY includes an extra leading byte for the point compression format.
+     * Since only the uncompressed format is supported, this byte (always 0x04)
+     * can be safely ignored to maintain API compatibility. */
+    if (pub_key_len < 1 || pub_key_len - 1 != half_size * 2) {
+        goto cleanup;
+    }
+
+    if (*public_size < pub_key_len - 1) {
+        *public_size = pub_key_len - 1;
         ret_val = false;
-        goto done;
+        goto cleanup;
     }
 
-    ret_val = (bool)EC_POINT_get_affine_coordinates(ec_group, ec_point,
-                                                    bn_x, bn_y, NULL);
-    if (!ret_val) {
-        goto done;
-    }
-
-    x_size = BN_num_bytes(bn_x);
-    y_size = BN_num_bytes(bn_y);
-    if (x_size <= 0 || y_size <= 0) {
-        ret_val = false;
-        goto done;
-    }
-    LIBSPDM_ASSERT((size_t)x_size <= half_size && (size_t)y_size <= half_size);
-
+    *public_size = pub_key_len - 1;
     if (public_data != NULL) {
-        libspdm_zero_mem(public_data, *public_size);
-        BN_bn2bin(bn_x, &public_data[0 + half_size - x_size]);
-        BN_bn2bin(bn_y, &public_data[half_size + half_size - y_size]);
+        /* pub_key_buffer[0] = 0x04 indicates the uncompressed format (EVP_PKEY uses this as a format ID).
+         * Only the raw key bytes (excluding this prefix) should be copied into public_data. */
+        libspdm_copy_mem(public_data, *public_size, pub_key_buffer + 1, *public_size);
     }
     ret_val = true;
 
-done:
-    if (bn_x != NULL) {
-        BN_free(bn_x);
+cleanup:
+    if (key_ctx != NULL) {
+        EVP_PKEY_CTX_free(key_ctx);
     }
-    if (bn_y != NULL) {
-        BN_free(bn_y);
+    if (new_pkey != NULL) {
+        EVP_PKEY_free(new_pkey);
     }
     return ret_val;
 }
@@ -746,14 +704,11 @@ bool libspdm_sm2_dsa_sign(const void *sm2_context, size_t hash_nid,
         return false;
     }
 
-    pkey = (EVP_PKEY *)sm2_context;
-    switch (EVP_PKEY_id(pkey)) {
-    case EVP_PKEY_SM2:
-        half_size = 32;
-        break;
-    default:
+    pkey = ((libspdm_key_context *)sm2_context)->evp_pkey;
+    if (pkey == NULL || EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
         return false;
     }
+    half_size = 32;
 
     if (*sig_size < (size_t)(half_size * 2)) {
         *sig_size = half_size * 2;
@@ -774,7 +729,7 @@ bool libspdm_sm2_dsa_sign(const void *sm2_context, size_t hash_nid,
     if (ctx == NULL) {
         return false;
     }
-    pkey_ctx = EVP_PKEY_CTX_new(pkey, NULL);
+    pkey_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pkey, NULL);
     if (pkey_ctx == NULL) {
         EVP_MD_CTX_free(ctx);
         return false;
@@ -792,7 +747,12 @@ bool libspdm_sm2_dsa_sign(const void *sm2_context, size_t hash_nid,
 
     EVP_MD_CTX_set_pkey_ctx(ctx, pkey_ctx);
 
-    result = EVP_DigestSignInit(ctx, NULL, EVP_sm3(), NULL, pkey);
+    {
+        OSSL_PARAM params[2];
+        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)"SM3", 0);
+        params[1] = OSSL_PARAM_construct_end();
+        result = EVP_DigestSignInit_ex(ctx, NULL, "SM3", NULL, NULL, pkey, params);
+    }
     if (result != 1) {
         EVP_MD_CTX_free(ctx);
         EVP_PKEY_CTX_free(pkey_ctx);
@@ -861,19 +821,19 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
         return false;
     }
 
-    pkey = (EVP_PKEY *)sm2_context;
+    pkey = ((libspdm_key_context *)sm2_context)->evp_pkey;
+    if (pkey == NULL) {
+        return false;
+    }
     nid = EVP_PKEY_id(pkey);
     if (nid == EVP_PKEY_KEYMGMT) {
         nid = OBJ_sn2nid(EVP_PKEY_get0_type_name(pkey));
     }
 
-    switch (nid) {
-    case EVP_PKEY_SM2:
-        half_size = 32;
-        break;
-    default:
+    if (nid != EVP_PKEY_SM2) {
         return false;
     }
+    half_size = 32;
 
     if (sig_size != (size_t)(half_size * 2)) {
         return false;
@@ -895,7 +855,7 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
     if (ctx == NULL) {
         return false;
     }
-    pkey_ctx = EVP_PKEY_CTX_new(pkey, NULL);
+    pkey_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pkey, NULL);
     if (pkey_ctx == NULL) {
         EVP_MD_CTX_free(ctx);
         return false;
@@ -912,7 +872,12 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
     }
     EVP_MD_CTX_set_pkey_ctx(ctx, pkey_ctx);
 
-    result = EVP_DigestVerifyInit(ctx, NULL, EVP_sm3(), NULL, pkey);
+    {
+        OSSL_PARAM params[2];
+        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)"SM3", 0);
+        params[1] = OSSL_PARAM_construct_end();
+        result = EVP_DigestVerifyInit_ex(ctx, NULL, "SM3", NULL, NULL, pkey, params);
+    }
     if (result != 1) {
         EVP_MD_CTX_free(ctx);
         EVP_PKEY_CTX_free(pkey_ctx);

@@ -1191,17 +1191,12 @@ else()
             )
         elseif(CRYPTO STREQUAL "openssl")
             set(CRYPTO_DEPS "-lssl -lcrypto")
-            if((TOOLCHAIN STREQUAL "NONE") AND (ENABLE_BINARY_BUILD STREQUAL "0"))
-                target_link_libraries(${LIB_NAME}_crypto
-                    PUBLIC openssllib
-                    PUBLIC cryptlib_openssl
-                )
-            else()
-                target_link_libraries(${LIB_NAME}_crypto
-                    PUBLIC ssl
-                    PUBLIC crypto
-                )
-            endif()
+            # Always link to the OpenSSL library built from source (openssllib target)
+            # openssllib will be STATIC when TOOLCHAIN=NONE, SHARED otherwise
+            target_link_libraries(${LIB_NAME}_crypto
+                PUBLIC openssllib
+                PUBLIC cryptlib_openssl
+            )
         endif()
 
         target_link_libraries(${LIB_NAME}
