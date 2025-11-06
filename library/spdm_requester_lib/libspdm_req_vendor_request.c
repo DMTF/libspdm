@@ -167,6 +167,7 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
         libspdm_release_sender_buffer (spdm_context);
         return LIBSPDM_STATUS_SEND_FAIL;
     }
+    libspdm_zero_mem(message, message_size);
     libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
 
@@ -296,6 +297,14 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
 
     status = LIBSPDM_STATUS_SUCCESS;
 done:
+    libspdm_zero_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context));
+    spdm_context->last_spdm_request_size = 0;
+    /*
+     * reciver buffer "message" contains crypted message
+     * "spdm_response" contains the plain-text VDM message
+     */
+    libspdm_zero_mem(spdm_response, spdm_response_size);
     libspdm_release_receiver_buffer (spdm_context); /* this will free up response-message, need to find workaround */
     return status;
 }
