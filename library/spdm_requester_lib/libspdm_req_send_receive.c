@@ -95,6 +95,10 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
     status = context->transport_encode_message(
         context, session_id, is_app_message, true, request_size,
         request, &message_size, (void **)&message);
+    if (session_id != NULL) {
+        /* clean up secure message which was copied to scratch buffer */
+        libspdm_zero_mem(request, request_size);
+    }
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message status - %xu\n", status));
         if ((session_id != NULL) &&
@@ -597,6 +601,7 @@ libspdm_return_t libspdm_handle_large_request(
              && send_info->chunk_bytes_transferred < send_info->large_message_size);
 
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        libspdm_zero_mem(send_info->large_message, send_info->large_message_capacity);
         send_info->chunk_in_use = false;
         send_info->chunk_handle++; /* Implicit wrap-around*/
         send_info->chunk_seq_no = 0;
@@ -755,6 +760,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
 
         /* This response may either be an actual response or ERROR_LARGE_RESPONSE,
          * the latter which should be handled in the large response handler. */
+        libspdm_zero_mem(send_info->large_message, send_info->large_message_capacity);
         send_info->chunk_in_use = false;
         send_info->chunk_handle++; /* Implicit wrap-around*/
         send_info->chunk_seq_no = 0;
