@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project("libspdm" C)
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION.md CMAKE_INPUT_PROJECT_VERSION)
 string(REPLACE " " "_" CMAKE_PROJECT_VERSION ${CMAKE_INPUT_PROJECT_VERSION})
+string(REGEX REPLACE "[ ]*[A-Za-z]+[ ]*[A-Za-z ]+" "" PROJECT_VERSION ${CMAKE_INPUT_PROJECT_VERSION})
 
 #
 # Build Configuration Macro Definition
@@ -1173,6 +1174,14 @@ else()
             $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
         )
 
+	set_target_properties(
+           ${LIB_NAME}
+	   ${LIB_NAME}_platform
+	   ${LIB_NAME}_crypto
+	   PROPERTIES
+	   VERSION ${PROJECT_VERSION}
+	)
+
         if(CRYPTO STREQUAL "mbedtls")
             set(CRYPTO_DEPS "-lmbedtls -lmbedx509 -lmbedcrypto")
             target_link_libraries(${LIB_NAME}_crypto
@@ -1182,7 +1191,7 @@ else()
             )
         elseif(CRYPTO STREQUAL "openssl")
             set(CRYPTO_DEPS "-lssl -lcrypto")
-            if(TOOLCHAIN STREQUAL "NONE")
+            if((TOOLCHAIN STREQUAL "NONE") AND (ENABLE_BINARY_BUILD STREQUAL "0"))
                 target_link_libraries(${LIB_NAME}_crypto
                     PUBLIC openssllib
                     PUBLIC cryptlib_openssl
