@@ -49,6 +49,11 @@ For SPDM 1.2 and later, the byte buffer is
 {VCA, GET_MEASUREMENTS(0), MEASUREMENTS(0), GET_MEASUREMENTS(1), MEASUREMENTS(1), ..., GET_MEASUREMENTS(N), MEASUREMENTS(N)}
 ```
 
+For SPDM 1.0 and 1.1 the above indices correspond to the value of `GET_MEASUREMENTS.Param2`. For
+SPDM 1.2 and later, this mapping may not hold, as the Responder can introduce gaps between populated
+measurement indices. For SPDM 1.2 and later, this document does not describe how a Requester
+determines which measurement indices are populated.
+
 The `GET_MEASUREMENTS(0)` request has the following properties:
 * `SignatureRequested` is not set.
 * `Param2 = 0x00`
@@ -57,12 +62,13 @@ The value of `N` is equal to the value of `MEASUREMENTS(0).Param1`.
 
 The `GET_MEASUREMENTS(1)` to `GET_MEASUREMENTS(N - 1)` requests have the following properties:
 * `SignatureRequested` is not set.
-* `Param2` starts with a value of `0x01` and its value increments by `1` with each successive
-  `GET_MEASUREMENTS` request. This is repeated until the number of `MEASUREMENT` responses in this
-  step is equal to `N - 1`. The last measurement index of this step is denoted as `I`.
+* The value of `Param2` increases strictly monotonically with each `GET_MEASUREMENT` request.
+    * For SPDM 1.0 and 1.1, `Param2` starts with a value of `1` and increments by `1` until its
+      value is equal to `N - 1`.
 
 The `GET_MEASUREMENTS(N)` request has the following properties:
 * If the Responder supports signature generation (`MEAS_CAP = 10b`) then `SignatureRequested` is
   set, else it is not set.
-* `Param2` starts with a value of `I + 1` and its value increments by `1` until `MEASUREMENT(N)`
-  is returned.
+* `Param2` is
+    * For SPDM 1.0 and 1.1, equal to `N`.
+    * For SPDM 1.2 and later, greater than `GET_MEASUREMENTS(N - 1).Param2`.
