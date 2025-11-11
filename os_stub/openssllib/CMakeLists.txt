@@ -840,6 +840,22 @@ target_sources(openssllib
         openssl_gen/der_wrap_gen.c
         openssl_gen/params_idx.c
         rand_pool.c
-        ossl_store.c
         timer_wrapper.c
 )
+
+if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+    target_sources(openssllib PRIVATE
+        ossl_store.c
+    )
+else()
+    target_sources(openssllib PRIVATE
+        openssl/crypto/store/store_err.c
+        openssl/crypto/store/store_init.c
+        openssl/crypto/store/store_lib.c
+        openssl/crypto/store/store_register.c
+        openssl/crypto/store/store_result.c
+        openssl/crypto/store/store_strings.c
+        openssl/providers/implementations/storemgmt/file_store.c
+        openssl/providers/implementations/storemgmt/file_store_any2obj.c
+    )
+endif()

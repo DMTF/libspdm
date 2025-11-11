@@ -240,7 +240,10 @@ typedef char *LIBSPDM_VA_LIST;
 /* Basic types mapping*/
 
 typedef size_t u_int;
-#if defined(__GNUC__) && !defined(__MINGW64__)
+#if defined(__APPLE__)
+#include <machine/types.h>
+typedef __darwin_time_t time_t;
+#elif defined(__GNUC__) && !defined(__MINGW64__)
 typedef size_t time_t; /* time_t is 4 bytes for 32bit machine and 8 bytes for 64bit machine */
 #endif
 typedef uint8_t __uint8_t;
@@ -248,7 +251,16 @@ typedef uint8_t sa_family_t;
 typedef uint8_t u_char;
 typedef uint32_t uid_t;
 typedef uint32_t gid_t;
+
+#if defined(__APPLE__)
+typedef __darwin_off_t off_t;
+#else
 typedef long off_t;
+#endif
+
+typedef unsigned int _dev_t;
+
+typedef unsigned short _ino_t;
 
 /* file operations are not required for EFI building,
  * so FILE is mapped to void * to pass build*/
