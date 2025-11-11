@@ -49,8 +49,8 @@ For SPDM 1.2 and later, the byte buffer is
 {VCA, GET_MEASUREMENTS(0), MEASUREMENTS(0), GET_MEASUREMENTS(1), MEASUREMENTS(1), ..., GET_MEASUREMENTS(N), MEASUREMENTS(N)}
 ```
 
-For SPDM 1.0 and 1.1 the above indices correspond to the value of `GET_MEASUREMENTS.Param2`. For
-SPDM 1.2 and later, this mapping may not hold, as the Responder can introduce gaps between populated
+For SPDM 1.0 and 1.1, the above indices correspond to the value of `GET_MEASUREMENTS.Param2`. For
+SPDM 1.2 and later, this mapping may not hold as the Responder can introduce gaps between populated
 measurement indices. For SPDM 1.2 and later, this document does not describe how a Requester
 determines which measurement indices are populated.
 
