@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -53,12 +53,7 @@ static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     size_t transport_header_size;
 
     /* -=[Set State Phase]=- */
-    libspdm_reset_message_a(spdm_context);
-    libspdm_reset_message_d(spdm_context);
-    libspdm_reset_message_b(spdm_context);
-    libspdm_reset_message_c(spdm_context);
     libspdm_reset_context(spdm_context);
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_VERSION);
 
     /* -=[Construct Request Phase]=- */
     transport_header_size = spdm_context->local_context.capability.transport_header_size;
