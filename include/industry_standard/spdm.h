@@ -1049,9 +1049,9 @@ typedef struct {
  * limited by the length field size which is 2 bytes */
 #define SPDM_MAX_VENDOR_DEFINED_DATA_LEN 0xFFFF
 #define SPDM_MAX_VENDOR_DEFINED_DATA_LEN_14 0xFFFFFFFF
-/* Maximum size of a vendor defined vendor id length
- * limited by the length field size which is 1 byte */
-#define SPDM_MAX_VENDOR_ID_LENGTH 255
+/* Maximum size, in bytes, of the SVH VendorID field.
+ * This value comes from the maximum size of a CBOR-encoded tag number. */
+#define SPDM_MAX_VENDOR_ID_LENGTH 9
 
 /* SPDM VENDOR_DEFINED request */
 typedef struct {
