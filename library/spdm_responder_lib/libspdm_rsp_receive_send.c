@@ -279,6 +279,13 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
             LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
     }
 
+    /*
+     * decoded_message may contain padding zeros due to transport layer alignment requirements.
+     * trim the decoded_message size to the maximum data_transfer_size.
+     */
+    decoded_message_size = LIBSPDM_MIN(decoded_message_size,
+                                       context->local_context.capability.data_transfer_size);
+
     context->last_spdm_request_size = decoded_message_size;
     libspdm_copy_mem (context->last_spdm_request,
                       libspdm_get_scratch_buffer_last_spdm_request_capacity(context),
