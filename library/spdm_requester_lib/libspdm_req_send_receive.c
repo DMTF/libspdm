@@ -235,6 +235,12 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
         reset_key_update = true;
     }
 
+    /*
+     * decoded_message may contain padding zeros due to transport layer alignment requirements.
+     * trim the decoded_message size to the maximum data_transfer_size.
+     */
+    *response_size = LIBSPDM_MIN(*response_size, context->local_context.capability.data_transfer_size);
+
     if (session_id != NULL) {
         if (message_session_id == NULL) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
