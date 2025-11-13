@@ -252,7 +252,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
       &resp_standard_id, &resp_vendor_id_len, resp_vendor_id, &resp_size, resp_data);
    ```
 
-   6.2, Use the transport layer application message.
+   6.2, Use the transport layer application message. (This API does not handle SPDM chunking)
    ```C
    libspdm_send_receive_data (spdm_context, &session_id, TRUE, &request, request_size, &response, &response_size);
    ```

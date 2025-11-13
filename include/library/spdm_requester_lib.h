@@ -658,6 +658,7 @@ libspdm_return_t libspdm_receive_data(void *spdm_context, const uint32_t *sessio
  * Send and receive an SPDM or APP message.
  *
  * The SPDM message can be a normal message or a secured message in SPDM session.
+ * This API does not handle SPDM chunking.
  *
  * The APP message is encoded to a secured message directly in SPDM session.
  * The APP message format is defined by the transport layer.
