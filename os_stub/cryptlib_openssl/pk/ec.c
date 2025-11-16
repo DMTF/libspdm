@@ -681,6 +681,13 @@ bool libspdm_ecdsa_sign(void *ec_context, size_t hash_nid,
         return false;
     }
 
+    char buffer[4096];
+    BIO *bio = BIO_new(BIO_s_mem());
+    EVP_PKEY_print_public(bio, evp_pkey, 4, NULL);
+    int len = BIO_read(bio, (void*) buffer, sizeof(buffer));
+    buffer[len] = '\0';
+    printf("SIGN PUBLIC KEY: %s\n", buffer);
+
     half_size = evp_pkey_get_half_size(evp_pkey);
     if (*sig_size < (size_t)(half_size * 2)) {
         *sig_size = half_size * 2;
@@ -827,6 +834,13 @@ bool libspdm_ecdsa_verify(void *ec_context, size_t hash_nid,
     if (EVP_PKEY_get_base_id(evp_pkey) != EVP_PKEY_EC) {
         return false;
     }
+
+    char buffer[4096];
+    BIO *bio = BIO_new(BIO_s_mem());
+    EVP_PKEY_print_public(bio, evp_pkey, 4, NULL);
+    int len = BIO_read(bio, (void*) buffer, sizeof(buffer));
+    buffer[len] = '\0';
+    printf("VERIFY PUBLIC KEY: %s\n", buffer);
 
     half_size = evp_pkey_get_half_size(evp_pkey);
     if (sig_size != (size_t)(half_size * 2)) {
