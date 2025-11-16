@@ -34,6 +34,26 @@
 static const uint8_t m_libspdm_oid_ext_key_usage[] = OID_EXT_KEY_USAGE;
 static const uint8_t m_libspdm_oid_basic_constraints[] = OID_BASIC_CONSTRAINTS;
 
+static void dump_hex(const char* id, const unsigned char *buf, long buflen)
+{
+    char buffer[4096];
+    const unsigned char *p = buf;
+    X509 *cert = d2i_X509(NULL, &p, buflen);
+    if (!cert) {
+        printf("Not an X.509 cert inside this ASN.1 object.\n");
+        return;
+    }
+
+    /* Print certificate */
+    BIO *bio = BIO_new(BIO_s_mem());
+    X509_print(bio, cert);
+    int s = BIO_read(bio, (void*) buffer, sizeof(buffer));
+    buffer[s] = '\0';
+    printf("%s CERT: %s\n", id, buffer);
+    X509_free(cert);
+}
+
+// 
 /**
  * Construct a X509 object from DER-encoded certificate data.
  *
@@ -2082,6 +2102,8 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
 
         /* Verify current_cert with preceding cert;*/
 
+        dump_hex("CURRENT", current_cert, current_cert_len);
+        dump_hex("PRECEDING", preceding_cert, preceding_cert_len);
         verify_flag =
             libspdm_x509_verify_cert(current_cert, current_cert_len,
                                      preceding_cert, preceding_cert_len);
