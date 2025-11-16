@@ -42,7 +42,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
             $<TARGET_OBJECTS:spdm_secured_message_lib>
             $<TARGET_OBJECTS:spdm_transport_test_lib>
             $<TARGET_OBJECTS:platform_lib_null>
-            $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
+            $<TARGET_OBJECTS:spdm_device_secret_lib_${DEVICE}>
     )
 else()
     target_link_libraries(test_spdm_responder_measurement_extension_log
@@ -60,6 +60,6 @@ else()
             spdm_secured_message_lib
             spdm_transport_test_lib
             platform_lib_null
-            spdm_device_secret_lib_sample
+            spdm_device_secret_lib_${DEVICE}
     )
 endif()
