@@ -48,3 +48,10 @@ target_sources(cryptlib_openssl
 target_compile_options(cryptlib_openssl PRIVATE ${OPENSSL_FLAGS})
 
 target_link_libraries(cryptlib_openssl PUBLIC openssllib memlib)
+
+if (${DEVICE} STREQUAL "tpm")
+  target_sources(cryptlib_openssl PRIVATE
+        tpm/tpm.c
+  )
+  target_link_libraries(cryptlib_openssl PUBLIC tss2-esys tss2-tctildr tss2-rc)
+endif()

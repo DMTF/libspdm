@@ -2036,7 +2036,6 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
 
 
         /* Verify current_cert with preceding cert;*/
-
         verify_flag =
             libspdm_x509_verify_cert(current_cert, current_cert_len,
                                      preceding_cert, preceding_cert_len);
@@ -2458,6 +2457,7 @@ bool libspdm_gen_x509_csr_with_pqc(
     X509_NAME *x509_name;
     EVP_PKEY *private_key;
     EVP_PKEY *public_key;
+    bool owned_keys = false;
     EVP_MD *md;
     uint8_t *csr_p;
     STACK_OF(X509_EXTENSION) *exts;
@@ -2536,11 +2536,13 @@ bool libspdm_gen_x509_csr_with_pqc(
             EVP_PKEY_free(private_key);
             EVP_PKEY_free(public_key);
 
-            private_key = EVP_PKEY_dup(ec_pkey);
-            public_key = EVP_PKEY_dup(ec_pkey);
+            /* Can't DUP hardware backed keys */
+            private_key = ec_pkey;
+            public_key = ec_pkey;
             if (private_key == NULL || public_key == NULL) {
                 goto free_all;
             }
+            owned_keys = true;
             break;
         }
         case LIBSPDM_CRYPTO_NID_SM2_DSA_P256: {
@@ -2763,8 +2765,10 @@ free_all:
         EVP_MD_free((EVP_MD *)md);
     }
     X509_REQ_free(x509_req);
-    EVP_PKEY_free(private_key);
-    EVP_PKEY_free(public_key);
+    if (!owned_keys) {
+        EVP_PKEY_free(private_key);
+        EVP_PKEY_free(public_key);
+    }
 
     return (ret != 0);
 }
