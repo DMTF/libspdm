@@ -5,6 +5,7 @@
  **/
 
 #include "internal/libspdm_crypt_lib.h"
+#include <openssl/x509.h>
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
 
@@ -179,6 +180,25 @@
 typedef bool (*libspdm_asym_get_public_key_from_x509_func)(const uint8_t *cert,
                                                            size_t cert_size,
                                                            void **context);
+
+static void dump_hex(const char* id, const unsigned char *buf, long buflen)
+{
+    char buffer[4096];
+    const unsigned char *p = buf;
+    X509 *cert = d2i_X509(NULL, &p, buflen);
+    if (!cert) {
+        printf("Not an X.509 cert inside this ASN.1 object.\n");
+        return;
+    }
+
+    /* Print certificate */
+    BIO *bio = BIO_new(BIO_s_mem());
+    X509_print(bio, cert);
+    int s = BIO_read(bio, (void*) buffer, sizeof(buffer));
+    buffer[s] = '\0';
+    printf("%s CERT: %s\n", id, buffer);
+    X509_free(cert);
+}
 
 /**
  * Return asymmetric GET_PUBLIC_KEY_FROM_X509 function, based upon the negotiated asymmetric algorithm.
@@ -2143,6 +2163,8 @@ bool libspdm_verify_cert_chain_data_with_pqc(
         return false;
     }
 
+    dump_hex("ROOT", root_cert_buffer, root_cert_buffer_size);
+
     if (!libspdm_x509_verify_cert_chain(root_cert_buffer, root_cert_buffer_size,
                                         cert_chain_data, cert_chain_data_size)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
@@ -2157,6 +2179,8 @@ bool libspdm_verify_cert_chain_data_with_pqc(
                        "!!! VerifyCertificateChainData - FAIL (get leaf certificate failed)!!!\n"));
         return false;
     }
+
+    dump_hex("LEAF", leaf_cert_buffer, leaf_cert_buffer_size);
 
     if (!libspdm_x509_certificate_check_with_pqc(leaf_cert_buffer, leaf_cert_buffer_size,
                                                  base_asym_algo, pqc_asym_algo, base_hash_algo,
