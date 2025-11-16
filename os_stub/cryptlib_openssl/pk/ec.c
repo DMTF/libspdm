@@ -205,7 +205,7 @@ bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
         goto cleanup_ctx;
     }
 
-    if (evp_pkey_copy_downgraded(&evp_pkey, new_evp_pkey) == 1) {
+    if (EVP_PKEY_set1_EC_KEY(evp_pkey, EVP_PKEY_get1_EC_KEY(new_evp_pkey)) == 1) {
         result = true;
     }
     EVP_PKEY_free(new_evp_pkey);
