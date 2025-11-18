@@ -1823,6 +1823,9 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)
     uint8_t subject_name[LIBSPDM_MAX_NAME_SIZE];
     size_t subject_name_len;
     bool result;
+    uint8_t cert_basic_constraints[LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN];
+    size_t cert_basic_constraints_len;
+    const uint8_t basic_constraints_true_case[] = BASIC_CONSTRAINTS_STRING_TRUE_CASE;
 
     if (cert == NULL || cert_size == 0) {
         return false;
@@ -1846,6 +1849,30 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)
         return false;
     }
     if (!libspdm_consttime_is_mem_equal(issuer_name, subject_name, issuer_name_len)) {
+        return false;
+    }
+
+    /* 3. cA must be present in Basic Constraints */
+    cert_basic_constraints_len = LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN;
+    result = libspdm_x509_get_extended_basic_constraints(cert, cert_size,
+                                                         cert_basic_constraints, &cert_basic_constraints_len);
+    if (!result || cert_basic_constraints_len == 0) {
+        return false;
+    }
+    if (cert_basic_constraints_len >= sizeof(basic_constraints_true_case)) {
+        if (cert_basic_constraints[0] != basic_constraints_true_case[0]) {
+            return false;
+        }
+        if (!libspdm_consttime_is_mem_equal(&cert_basic_constraints[2],
+                                            &basic_constraints_true_case[2],
+                                            sizeof(basic_constraints_true_case) - 2)) {
+            return false;
+        }
+    }
+
+    /* 4. certificate must be self-signed */
+    result = libspdm_x509_verify_cert(cert, cert_size, cert, cert_size);
+    if (!result) {
         return false;
     }
 
