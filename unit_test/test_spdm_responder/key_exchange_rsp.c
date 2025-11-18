@@ -136,7 +136,7 @@ static void rsp_key_exchange_rsp_case1(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request1.random_data);
@@ -1469,7 +1469,7 @@ static void rsp_key_exchange_rsp_case17(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.algorithm.other_params_support =
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     libspdm_session_info_init(spdm_context,
                               spdm_context->session_info,
@@ -1575,7 +1575,7 @@ static void rsp_key_exchange_rsp_case18(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request9.random_data);
@@ -1665,7 +1665,7 @@ static void rsp_key_exchange_rsp_case19(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request8.random_data);
@@ -1785,7 +1785,7 @@ static void rsp_key_exchange_rsp_case20(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     libspdm_session_info_init(spdm_context,
                               spdm_context->session_info,
@@ -1882,7 +1882,7 @@ static void rsp_key_exchange_rsp_case21(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.algorithm.other_params_support =
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
     spdm_context->connection_info.multi_key_conn_rsp = true;
 
     libspdm_session_info_init(spdm_context,
@@ -1979,7 +1979,7 @@ static void rsp_key_exchange_rsp_case22(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.algorithm.other_params_support =
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
     spdm_context->connection_info.multi_key_conn_rsp = false;
 
     libspdm_session_info_init(spdm_context, spdm_context->session_info, INVALID_SESSION_ID,
@@ -2080,7 +2080,7 @@ static void rsp_key_exchange_rsp_case23(void **state)
     spdm_context->local_context.mut_auth_requested = 0;
     spdm_context->local_context.mandatory_mut_auth = true;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request1.random_data);
@@ -2162,7 +2162,7 @@ static void rsp_key_exchange_rsp_case24(void **state)
     spdm_context->local_context.mut_auth_requested = 0;
     spdm_context->local_context.mandatory_mut_auth = true;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request10.random_data);

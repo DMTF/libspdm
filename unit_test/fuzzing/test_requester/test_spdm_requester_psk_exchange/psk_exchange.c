@@ -203,8 +203,8 @@ void libspdm_test_requester_psk_exchange_case1(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->local_context.secured_message_version.spdm_version[0] =
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
@@ -266,8 +266,8 @@ void libspdm_test_requester_psk_exchange_case2(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->local_context.secured_message_version.spdm_version[0] =
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
@@ -331,8 +331,8 @@ void libspdm_test_requester_psk_exchange_case3(void **State)
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->local_context.secured_message_version.spdm_version[0] =
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
@@ -394,8 +394,8 @@ void libspdm_test_requester_psk_exchange_ex_case1(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->local_context.secured_message_version.spdm_version[0] =
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,

@@ -31,8 +31,8 @@ void libspdm_test_process_opaque_data_case1(void **State)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->local_context.secured_message_version.spdm_version[0] =
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     libspdm_process_opaque_data_supported_version_data(
@@ -58,8 +58,8 @@ void libspdm_test_process_opaque_data_case2(void **State)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->local_context.secured_message_version.spdm_version[0] =
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     libspdm_process_opaque_data_supported_version_data(

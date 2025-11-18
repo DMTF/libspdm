@@ -44,6 +44,11 @@ typedef struct {
 } libspdm_device_version_t;
 
 typedef struct {
+    uint8_t secured_message_version_count;
+    spdm_version_number_t secured_message_version[SECURED_SPDM_MAX_VERSION_COUNT];
+} libspdm_secured_message_version_t;
+
+typedef struct {
     uint8_t ct_exponent;
     uint64_t rtt;
     uint32_t st1;
@@ -90,7 +95,7 @@ typedef struct {
     libspdm_device_version_t version;
     libspdm_device_capability_t capability;
     libspdm_device_algorithm_t algorithm;
-    libspdm_device_version_t secured_message_version;
+    libspdm_secured_message_version_t secured_message_version;
 
     /* My Certificate */
     const void *local_cert_chain_provision[SPDM_MAX_SLOT_COUNT];
