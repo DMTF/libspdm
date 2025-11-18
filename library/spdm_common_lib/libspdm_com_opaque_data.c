@@ -17,7 +17,7 @@ size_t libspdm_get_opaque_data_version_selection_data_size(const libspdm_context
 {
     size_t size;
 
-    if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
+    if (spdm_context->local_context.secured_message_version.secured_message_version_count == 0) {
         return 0;
     }
 
@@ -45,7 +45,7 @@ size_t libspdm_get_opaque_data_supported_version_data_size(libspdm_context_t *sp
 {
     size_t size;
 
-    if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
+    if (spdm_context->local_context.secured_message_version.secured_message_version_count == 0) {
         return 0;
     }
 
@@ -54,13 +54,13 @@ size_t libspdm_get_opaque_data_supported_version_data_size(libspdm_context_t *sp
                sizeof(secured_message_opaque_element_table_header_t) +
                sizeof(secured_message_opaque_element_supported_version_t) +
                sizeof(spdm_version_number_t) *
-               spdm_context->local_context.secured_message_version.spdm_version_count;
+               spdm_context->local_context.secured_message_version.secured_message_version_count;
     } else {
         size = sizeof(secured_message_general_opaque_data_table_header_t) +
                sizeof(secured_message_opaque_element_table_header_t) +
                sizeof(secured_message_opaque_element_supported_version_t) +
                sizeof(spdm_version_number_t) *
-               spdm_context->local_context.secured_message_version.spdm_version_count;
+               spdm_context->local_context.secured_message_version.secured_message_version_count;
     }
     /* Add Padding*/
     return (size + 3) & ~3;

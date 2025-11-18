@@ -207,13 +207,13 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         LIBSPDM_ASSERT (data_size <=
                         sizeof(spdm_version_number_t) * SECURED_SPDM_MAX_VERSION_COUNT);
         if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
-            context->local_context.secured_message_version.spdm_version_count =
+            context->local_context.secured_message_version.secured_message_version_count =
                 (uint8_t)(data_size / sizeof(spdm_version_number_t));
-            libspdm_copy_mem(context->local_context.secured_message_version.spdm_version,
-                             sizeof(context->local_context.secured_message_version.spdm_version),
+            libspdm_copy_mem(context->local_context.secured_message_version.secured_message_version,
+                             sizeof(context->local_context.secured_message_version.secured_message_version),
                              data,
-                             context->local_context.secured_message_version.spdm_version_count *
-                             sizeof(spdm_version_number_t));
+                             context->local_context.secured_message_version.
+                             secured_message_version_count * sizeof(spdm_version_number_t));
         } else {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
@@ -3189,13 +3189,13 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
                                                      SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.version.spdm_version[4] = SPDM_MESSAGE_VERSION_14 <<
                                                      SPDM_VERSION_NUMBER_SHIFT_BIT;
-    context->local_context.secured_message_version.spdm_version_count =
+    context->local_context.secured_message_version.secured_message_version_count =
         SECURED_SPDM_MAX_VERSION_COUNT;
-    context->local_context.secured_message_version.spdm_version[0] =
+    context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    context->local_context.secured_message_version.spdm_version[1] =
+    context->local_context.secured_message_version.secured_message_version[1] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    context->local_context.secured_message_version.spdm_version[2] =
+    context->local_context.secured_message_version.secured_message_version[2] =
         SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.capability.st1 = SPDM_ST1_VALUE_US;
 

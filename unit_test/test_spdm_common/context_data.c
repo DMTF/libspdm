@@ -125,8 +125,7 @@ libspdm_build_multi_element_opaque_data_supported_version_test(libspdm_context_t
     void *end;
     uint8_t element_index;
 
-    if (spdm_context->local_context.secured_message_version
-        .spdm_version_count == 0) {
+    if (spdm_context->local_context.secured_message_version.secured_message_version_count == 0) {
         *data_out_size = 0;
         return LIBSPDM_STATUS_SUCCESS;
     }
@@ -134,7 +133,7 @@ libspdm_build_multi_element_opaque_data_supported_version_test(libspdm_context_t
     final_data_size =
         libspdm_get_multi_element_opaque_data_supported_version_data_size(
             spdm_context,
-            spdm_context->local_context.secured_message_version.spdm_version_count,
+            spdm_context->local_context.secured_message_version.secured_message_version_count,
             element_num);
     if (*data_out_size < final_data_size) {
         *data_out_size = final_data_size;
@@ -166,7 +165,7 @@ libspdm_build_multi_element_opaque_data_supported_version_test(libspdm_context_t
         opaque_element_table_header->opaque_element_data_len =
             sizeof(secured_message_opaque_element_supported_version_t) +
             sizeof(spdm_version_number_t) *
-            spdm_context->local_context.secured_message_version.spdm_version_count;
+            spdm_context->local_context.secured_message_version.secured_message_version_count;
 
         opaque_element_support_version =
             (void *)(opaque_element_table_header + 1);
@@ -175,14 +174,14 @@ libspdm_build_multi_element_opaque_data_supported_version_test(libspdm_context_t
         opaque_element_support_version->sm_data_id =
             SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION;
         opaque_element_support_version->version_count =
-            spdm_context->local_context.secured_message_version.spdm_version_count;
+            spdm_context->local_context.secured_message_version.secured_message_version_count;
 
         versions_list = (void *)(opaque_element_support_version + 1);
 
         libspdm_copy_mem(versions_list,
                          *data_out_size - ((uint8_t*)versions_list - (uint8_t*)data_out),
-                         spdm_context->local_context.secured_message_version.spdm_version,
-                         spdm_context->local_context.secured_message_version.spdm_version_count *
+                         spdm_context->local_context.secured_message_version.secured_message_version,
+                         spdm_context->local_context.secured_message_version.secured_message_version_count *
                          sizeof(spdm_version_number_t));
 
         /*move to next element*/
@@ -192,7 +191,7 @@ libspdm_build_multi_element_opaque_data_supported_version_test(libspdm_context_t
                     (uint8_t *)opaque_element_table_header +
                     libspdm_get_multi_element_opaque_data_supported_version_data_size(
                         spdm_context,
-                        spdm_context->local_context.secured_message_version.spdm_version_count,
+                        spdm_context->local_context.secured_message_version.secured_message_version_count,
                         1) -
                     sizeof(spdm_general_opaque_data_table_header_t));
         } else {
@@ -201,14 +200,14 @@ libspdm_build_multi_element_opaque_data_supported_version_test(libspdm_context_t
                     (uint8_t *)opaque_element_table_header +
                     libspdm_get_multi_element_opaque_data_supported_version_data_size(
                         spdm_context,
-                        spdm_context->local_context.secured_message_version.spdm_version_count,
+                        spdm_context->local_context.secured_message_version.secured_message_version_count,
                         1) -
                     sizeof(secured_message_general_opaque_data_table_header_t));
         }
 
         /* Zero Padding. *data_out_size does not need to be changed, because data is 0 padded */
         end = versions_list +
-              spdm_context->local_context.secured_message_version.spdm_version_count;
+              spdm_context->local_context.secured_message_version.secured_message_version_count;
         libspdm_zero_mem(end, (size_t)data_out + final_data_size - (size_t)end);
     }
 
@@ -230,7 +229,7 @@ size_t libspdm_get_multi_element_opaque_data_version_selection_data_size(
     size_t size;
     uint8_t element_index;
 
-    if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
+    if (spdm_context->local_context.secured_message_version.secured_message_version_count == 0) {
         return 0;
     }
 
@@ -272,7 +271,7 @@ static libspdm_return_t libspdm_build_opaque_data_version_selection_data_test(
     uint8_t element_index;
     size_t current_element_len;
 
-    if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
+    if (spdm_context->local_context.secured_message_version.secured_message_version_count == 0) {
         *data_out_size = 0;
         return LIBSPDM_STATUS_SUCCESS;
     }
@@ -952,13 +951,13 @@ void libspdm_test_process_opaque_data_supported_version_data_case10(void **state
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     element_num = 2;
     opaque_data_size =
         libspdm_get_multi_element_opaque_data_supported_version_data_size(
             spdm_context,
-            spdm_context->local_context.secured_message_version.spdm_version_count,
+            spdm_context->local_context.secured_message_version.secured_message_version_count,
             element_num);
 
     uint8_t *opaque_data_ptr;
@@ -993,14 +992,14 @@ void libspdm_test_process_opaque_data_supported_version_data_case11(void **state
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     /*make element id wrong*/
     element_num = SPDM_REGISTRY_ID_MAX + 2;
     opaque_data_size =
         libspdm_get_multi_element_opaque_data_supported_version_data_size(
             spdm_context,
-            spdm_context->local_context.secured_message_version.spdm_version_count,
+            spdm_context->local_context.secured_message_version.secured_message_version_count,
             element_num);
 
     uint8_t *opaque_data_ptr;
@@ -1035,13 +1034,13 @@ void libspdm_test_process_opaque_data_supported_version_data_case12(void **state
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     element_num = 2;
     opaque_data_size =
         libspdm_get_multi_element_opaque_data_supported_version_data_size(
             spdm_context,
-            spdm_context->local_context.secured_message_version.spdm_version_count,
+            spdm_context->local_context.secured_message_version.secured_message_version_count,
             element_num);
 
     uint8_t *opaque_data_ptr;
@@ -1076,14 +1075,14 @@ void libspdm_test_process_opaque_data_supported_version_data_case13(void **state
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     /*make element id wrong*/
     element_num = SPDM_REGISTRY_ID_MAX + 2;
     opaque_data_size =
         libspdm_get_multi_element_opaque_data_supported_version_data_size(
             spdm_context,
-            spdm_context->local_context.secured_message_version.spdm_version_count,
+            spdm_context->local_context.secured_message_version.secured_message_version_count,
             element_num);
 
     uint8_t *opaque_data_ptr;
@@ -1119,8 +1118,8 @@ void libspdm_test_process_opaque_data_selection_version_data_case14(void **state
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->local_context.secured_message_version.spdm_version[0] =
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     element_num = 2;
@@ -1165,8 +1164,8 @@ void libspdm_test_process_opaque_data_selection_version_data_case15(void **state
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->local_context.secured_message_version.spdm_version[0] =
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     /*make element id wrong*/
@@ -1210,8 +1209,8 @@ void libspdm_test_process_opaque_data_selection_version_data_case16(void **state
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->local_context.secured_message_version.spdm_version[0] =
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     element_num = 2;
@@ -1251,8 +1250,8 @@ void libspdm_test_process_opaque_data_selection_version_data_case17(void **state
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
-    spdm_context->local_context.secured_message_version.spdm_version[0] =
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     /*make element id wrong*/
@@ -1635,7 +1634,7 @@ static void libspdm_test_process_opaque_data_case22(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     libspdm_set_mem ((uint8_t *)&opaque_data, sizeof(opaque_data), 0xFF);
     opaque_data.opaque_header.total_elements = SPDM_REGISTRY_ID_MAX + 2;
