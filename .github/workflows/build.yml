@@ -70,6 +70,8 @@ jobs:
             toolchain: ARM_GNU
           - os: macos-latest
             toolchain: LIBFUZZER
+          - os: macos-latest
+            arch: x64
           - os: windows-latest
             toolchain: GCC
             arch: ia32
@@ -96,7 +98,11 @@ jobs:
             toolchain: VS2019
           - arch: aarch64
             toolchain: LIBFUZZER
-          - arch: aarch64
+          - os: windows-latest
+            arch: aarch64
+            toolchain: CLANG
+          - os: ubuntu-latest
+            arch: aarch64
             toolchain: CLANG
           - os: windows-latest
             toolchain: ARM_GNU
