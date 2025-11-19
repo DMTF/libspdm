@@ -3259,9 +3259,10 @@ void libspdm_reset_context(void *spdm_context)
 
     context = spdm_context;
 
-    /*Clear all info about last connection*/
+    /* Clear all information about previous connection. Local context information is preserved. */
 
-    /*need clear session info to free context before algo is zeroed.*/
+    /* Need to clear session information and message transcripts before negotiated algorithm
+     * information is cleared. */
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++)
     {
         libspdm_session_info_init(context,
@@ -3270,6 +3271,16 @@ void libspdm_reset_context(void *spdm_context)
                                   0,
                                   false);
     }
+
+    libspdm_reset_message_a(spdm_context);
+    libspdm_reset_message_d(spdm_context);
+    libspdm_reset_message_b(spdm_context);
+    libspdm_reset_message_c(spdm_context);
+    libspdm_reset_message_mut_b(spdm_context);
+    libspdm_reset_message_mut_c(spdm_context);
+    libspdm_reset_message_m(spdm_context, NULL);
+    libspdm_reset_message_e(spdm_context, NULL);
+    libspdm_reset_message_encap_e(spdm_context, NULL);
 
     context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     libspdm_zero_mem(&context->connection_info.version, sizeof(spdm_version_number_t));
