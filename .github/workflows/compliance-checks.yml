@@ -23,6 +23,16 @@ jobs:
           then exit 1
           fi
 
+  # Do not allow merge commits in pull request
+  reject-merge-commits:
+    name: Reject Merge Commits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: motlin/forbid-merge-commits-action@v1.0.6
+        with:
+            fail-on-merge-commits: true
+
   uncrustify:
     name: Style Compliance
     runs-on: ubuntu-latest
