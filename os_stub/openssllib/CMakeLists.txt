@@ -577,6 +577,12 @@ target_sources(openssllib
         openssl/crypto/sparse_array.c
         openssl/crypto/stack/stack.c
         openssl/crypto/store/store_meth.c
+        openssl/crypto/store/store_err.c
+        openssl/crypto/store/store_init.c
+        openssl/crypto/store/store_lib.c
+        openssl/crypto/store/store_register.c
+        openssl/crypto/store/store_result.c
+        openssl/crypto/store/store_strings.c
         openssl/crypto/time.c
         openssl/crypto/threads_lib.c
         openssl/crypto/threads_none.c
@@ -826,6 +832,8 @@ target_sources(openssllib
         openssl/providers/implementations/signature/sm2_sig.c
         openssl/providers/implementations/skeymgmt/aes_skmgmt.c
         openssl/providers/implementations/skeymgmt/generic.c
+        openssl/providers/implementations/storemgmt/file_store.c
+        openssl/providers/implementations/storemgmt/file_store_any2obj.c
 
         openssl/ssl/record/methods/ssl3_cbc.c
         openssl/ssl/record/methods/tls_pad.c
@@ -840,6 +848,5 @@ target_sources(openssllib
         openssl_gen/der_wrap_gen.c
         openssl_gen/params_idx.c
         rand_pool.c
-        ossl_store.c
         timer_wrapper.c
 )

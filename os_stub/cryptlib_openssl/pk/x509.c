@@ -2104,6 +2104,26 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
     return verify_flag;
 }
 
+static void dump_hex(const unsigned char *buf, long buflen)
+{
+    char buffer[4096];
+    const unsigned char *p = buf;
+    X509 *cert = d2i_X509(NULL, &p, buflen);
+    if (!cert) {
+        printf("Not an X.509 cert inside this ASN.1 object.\n");
+        return;
+    }
+
+    // Print certificate
+    BIO *bio = BIO_new(BIO_s_mem());
+    X509_print(bio, cert);
+    int s = BIO_read(bio, (void*) buffer, sizeof(buffer));
+    buffer[s] = '\0';
+    printf("ROOT CERT: %s\n", buffer);
+    X509_free(cert);
+}
+
+
 /**
  * Get one X509 certificate from cert_chain.
  *
@@ -2172,6 +2192,7 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
         if (current_index == cert_index) {
             *cert = current_cert;
             *cert_length = current_cert_len;
+            dump_hex((const unsigned char*) *cert, (long) *cert_length);
             return true;
         }
 
