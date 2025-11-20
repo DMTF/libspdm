@@ -1806,16 +1806,6 @@ bool libspdm_x509_set_cert_certificate_check_ex(const uint8_t *cert, size_t cert
         is_requester, cert_model);
 }
 
-/**
- * Return certificate is root cert or not.
- * Certificate is considered as a root certificate if the subjectname equal issuername.
- *
- * @param[in]  cert            Pointer to the DER-encoded certificate data.
- * @param[in]  cert_size        The size of certificate data in bytes.
- *
- * @retval  true   Certificate is self-signed.
- * @retval  false  Certificate is not self-signed.
- **/
 bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)
 {
     uint8_t issuer_name[LIBSPDM_MAX_NAME_SIZE];
