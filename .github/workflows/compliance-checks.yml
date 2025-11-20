@@ -47,10 +47,10 @@ jobs:
         # Run an uncrustify check. If the check indicates problems, then apply the fixes and show the diff.
         run: |
           set +e
-          ./script/format_nix.sh --check
+          ./.github/script/style_checker.sh --check
           if [ $? -ne 0 ]; then
             set -e
-            ./script/format_nix.sh
+            ./.github/script/style_checker.sh
             git diff
             exit 1
           fi
