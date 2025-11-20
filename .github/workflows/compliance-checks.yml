@@ -25,6 +25,7 @@ jobs:
 
   # Do not allow merge commits in pull request
   reject-merge-commits:
+    if: ${{ github.event_name == 'pull_request' }}
     name: Reject Merge Commits
     runs-on: ubuntu-latest
     steps:
