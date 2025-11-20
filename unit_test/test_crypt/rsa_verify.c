@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -324,9 +324,16 @@ bool libspdm_validate_crypt_rsa(void)
         }
         free_pool(KeyBuffer);
     }
+    libspdm_rsa_free(rsa);
 
     /* Generate RSA key Components with default RSA public exponent*/
     libspdm_my_print("Generate RSA key Components with default RSA public exponent... ");
+
+    rsa = libspdm_rsa_new();
+    if (rsa == NULL) {
+        libspdm_my_print("[Fail]");
+        return false;
+    }
 
     status = libspdm_rsa_generate_key(rsa, LIBSPDM_RSA_MODULUS_LENGTH, NULL, 0);
     if (!status) {
