@@ -1047,14 +1047,18 @@ bool libspdm_x509_set_cert_certificate_check_with_pqc(
     bool is_requester, uint8_t cert_model);
 
 /**
- * Return certificate is root cert or not.
- * Certificate is considered as a root certificate if the subjectname equal issuername.
+ * Return whether given certificate is a root certificate or not.
+ *
+ * A certificate is considered a root certificate if
+ *      - Subject is equal to Issuer
+ *      - It is self-signed
+ *      - cA is present and its value is true
  *
  * @param[in]  cert       Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size  The size of certificate data in bytes.
  *
- * @retval  true   Certificate is self-signed.
- * @retval  false  Certificate is not self-signed.
+ * @retval  true   Certificate is a root certificate.
+ * @retval  false  Certificate is not a root certificate.
  **/
 bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size);
 
