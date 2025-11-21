@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -68,6 +68,9 @@ libspdm_return_t libspdm_get_response_respond_if_ready(libspdm_context_t *spdm_c
                                spdm_context->cache_spdm_request_size,
                                spdm_context->cache_spdm_request,
                                response_size, response);
+
+    libspdm_zero_mem(spdm_context->cache_spdm_request, spdm_context->cache_spdm_request_size);
+    spdm_context->cache_spdm_request_size = 0;
 
     return status;
 }
