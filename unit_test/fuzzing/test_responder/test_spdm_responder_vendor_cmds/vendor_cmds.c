@@ -15,16 +15,6 @@ size_t libspdm_get_max_buffer_size(void)
     return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
-libspdm_return_t libspdm_vendor_get_id_func_test(
-    void *spdm_context,
-    const uint32_t *session_id,
-    uint16_t *resp_standard_id,
-    uint8_t *resp_vendor_id_len,
-    void *resp_vendor_id)
-{
-    return LIBSPDM_STATUS_SUCCESS;
-}
-
 libspdm_return_t libspdm_vendor_response_func_test(
     void *spdm_context,
     const uint32_t *session_id,
@@ -33,9 +23,29 @@ libspdm_return_t libspdm_vendor_response_func_test(
     const void *req_vendor_id,
     uint32_t req_size,
     const void *req_data,
+    uint16_t *resp_standard_id,
+    uint8_t *resp_vendor_id_len,
+    void *resp_vendor_id,
     uint32_t *resp_size,
     void *resp_data)
 {
+    /* Validate required parameters */
+    if (resp_standard_id == NULL || resp_vendor_id_len == NULL || resp_vendor_id == NULL ||
+        resp_size == NULL || resp_data == NULL)
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+
+    /* Set response IDs */
+    *resp_standard_id = 6;
+    if (*resp_vendor_id_len >= 2) {
+        *resp_vendor_id_len = 2;
+        ((uint8_t*)resp_vendor_id)[0] = 0xAA;
+        ((uint8_t*)resp_vendor_id)[1] = 0xAA;
+    } else {
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    }
+
+    /* Set response payload */
+    *resp_size = 0;
     return LIBSPDM_STATUS_SUCCESS;
 }
 
@@ -59,8 +69,6 @@ void libspdm_test_responder_vendor_cmds_case1(void **State)
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.is_requester = true;
 
-    libspdm_register_vendor_get_id_callback_func(spdm_context,
-                                                 libspdm_vendor_get_id_func_test);
     libspdm_register_vendor_callback_func(spdm_context,
                                           libspdm_vendor_response_func_test);
 

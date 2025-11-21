@@ -946,37 +946,25 @@ bool libspdm_get_fips_mode(void);
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 
 /**
- * Vendor Response Get Vendor ID Callback Function Pointer.
- * Required to be able to compose the Vendor Defined Response correctly
+ * Vendor Response Callback Function Pointer
+ *
+ * The library invokes this callback once. The integrator should:
+ * - Set resp_standard_id, resp_vendor_id_len, resp_vendor_id
+ * - Fill resp_data and set *resp_size based on the request parameters
  *
  * @param  spdm_context        A pointer to the SPDM context.
- * @param  session_id          If non-NULL then message is within a secure session.
- *                             If NULL then message is outside a secure session.
- * @param  resp_standard_id    Registry or Standards body used for response
- * @param  resp_vendor_id_len  Length in bytes of the vendor id field for the response
- * @param  resp_vendor_id      Vendor ID assigned by the Registry or Standards Body. Little-endian format
- **/
-typedef libspdm_return_t (*libspdm_vendor_get_id_callback_func)(
-    void *spdm_context,
-    const uint32_t *session_id,
-    uint16_t *resp_standard_id,
-    uint8_t *resp_vendor_id_len,
-    void *resp_vendor_id);
-
-/**
- * Vendor Response Callback Function Pointer.
- *
- * @param  spdm_context       A pointer to the SPDM context.
- * @param  session_id         If non-NULL then message is within a secure session.
- *                            If NULL then message is outside a secure session.
- * @param  req_standard_id    Registry or Standards body used for request
- * @param  req_vendor_id_len  Length in bytes of the vendor id field for the request
- * @param  req_vendor_id      Vendor ID assigned by the Registry or Standards Body. Little-endian format
- * @param  req_size           Length of the request
- * @param  req_data           The vendor defined request
- * @param  resp_size          Length of the response
- * @param  resp_data          The vendor defined response
- **/
+ * @param  session_id          If non-NULL then message is within a secure session; otherwise NULL.
+ * @param  req_standard_id     Registry or Standards body used for request (from request header).
+ * @param  req_vendor_id_len   Length in bytes of the vendor id field for the request.
+ * @param  req_vendor_id       Request vendor ID (little-endian where applicable).
+ * @param  req_size            Length of the request.
+ * @param  req_data            Pointer to the request payload.
+ * @param  resp_standard_id    Registry/standards body used for response (header field).
+ * @param  resp_vendor_id_len  On input, capacity of resp_vendor_id; on output, bytes written.
+ * @param  resp_vendor_id      Buffer to receive response vendor ID.
+ * @param  resp_size           On input, capacity of resp_data; on output, bytes written.
+ * @param  resp_data           Buffer to receive the response payload.
+ */
 typedef libspdm_return_t (*libspdm_vendor_response_callback_func)(
     void *spdm_context,
     const uint32_t *session_id,
@@ -985,6 +973,9 @@ typedef libspdm_return_t (*libspdm_vendor_response_callback_func)(
     const void *req_vendor_id,
     uint32_t req_size,
     const void *req_data,
+    uint16_t *resp_standard_id,
+    uint8_t *resp_vendor_id_len,
+    void *resp_vendor_id,
     uint32_t *resp_size,
     void *resp_data);
 

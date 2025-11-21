@@ -453,42 +453,33 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
     libspdm_register_get_response_func (spdm_context, libspdm_get_response);
     ```
-    3.2 This callbacks handle SPDM Vendor Defined Commands
-    ```C
-    libspdm_return_t libspdm_vendor_get_id_func(
-      void *spdm_context,
-      uint16_t *resp_standard_id,
-      uint8_t *resp_vendor_id_len,
-      void *resp_vendor_id)
-    {
-      // return responder vendor id
-      ...
+   3.2 This callback handles SPDM Vendor Defined Commands
+   ```C
+   libspdm_return_t libspdm_vendor_response_func(
+     void *spdm_context,
+     const uint32_t *session_id,
+     uint16_t req_standard_id,
+     uint8_t req_vendor_id_len,
+     const void *req_vendor_id,
+     uint32_t req_size,
+     const void *req_data,
+     uint16_t *resp_standard_id,
+     uint8_t *resp_vendor_id_len,
+     void *resp_vendor_id,
+     uint32_t *resp_size,
+     void *resp_data)
+   {
+     // set response Vendor/Standard IDs
+     *resp_standard_id = /* your standard id */;
+     *resp_vendor_id_len = /* your vendor id length */;
+     // write Vendor ID bytes into resp_vendor_id[0..*resp_vendor_id_len-1]
 
-      return LIBSPDM_STATUS_SUCCESS;
-    }
+     // write payload to resp_data and set *resp_size to payload size
+     return LIBSPDM_STATUS_SUCCESS;
+   }
 
-    vendor_response_get_id
-    libspdm_return_t libspdm_vendor_response_func(
-      void *spdm_context,
-      uint16_t req_standard_id,
-      uint8_t req_vendor_id_len,
-      const void *req_vendor_id,
-      uint16_t req_size,
-      const void *req_data,
-      uint16_t *resp_size,
-      void *resp_data)
-      {
-      // process request and create response
-      ...
-      // populate response header and payload
-      ...
-
-      return LIBSPDM_STATUS_SUCCESS;
-    }
-
-    libspdm_register_vendor_get_id_callback_func(spdm_context, libspdm_vendor_get_id_func);
-    libspdm_register_vendor_callback_func(spdm_context, libspdm_vendor_response_func);
-    ```
+   libspdm_register_vendor_callback_func(spdm_context, libspdm_vendor_response_func);
+   ```
 
 4. Free the memory of contexts within the SPDM context when all flow is over.
    This function does not free the SPDM context itself.

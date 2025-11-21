@@ -22,20 +22,6 @@ typedef struct {
     /* uint8_t                vendor_defined_payload[payload_length];*/
 } my_spdm_vendor_defined_request_msg_t;
 
-libspdm_return_t my_test_get_vendor_id_func(
-    void *spdm_context,
-    const uint32_t *session_id,
-    uint16_t *resp_standard_id,
-    uint8_t *resp_vendor_id_len,
-    void *resp_vendor_id)
-{
-    *resp_standard_id = 6;
-    *resp_vendor_id_len = 2;
-    ((uint8_t*)resp_vendor_id)[0] = 0xAA;
-    ((uint8_t*)resp_vendor_id)[1] = 0xAA;
-
-    return LIBSPDM_STATUS_SUCCESS;
-}
 
 libspdm_return_t my_test_get_response_func(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
@@ -55,10 +41,20 @@ libspdm_return_t my_test_get_response_func2(
     const void *req_vendor_id,
     uint32_t req_size,
     const void *req_data,
+    uint16_t *resp_standard_id,
+    uint8_t *resp_vendor_id_len,
+    void *resp_vendor_id,
     uint32_t *resp_size,
     void *resp_data)
 {
-    /* response message size is greater than the sending transmit buffer size of responder */
+    if (resp_size == NULL) {
+        *resp_standard_id = 6;
+        *resp_vendor_id_len = 2;
+        ((uint8_t*)resp_vendor_id)[0] = 0xAA;
+        ((uint8_t*)resp_vendor_id)[1] = 0xAA;
+        return LIBSPDM_STATUS_SUCCESS;
+    }
+
     *resp_size = CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE + 1;
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -340,7 +336,6 @@ void libspdm_test_responder_receive_send_rsp_case3(void** state)
     libspdm_zero_mem(response, response_size);
 
     /* Make response message size greater than the sending transmit buffer size of responder */
-    libspdm_register_vendor_get_id_callback_func(spdm_context, my_test_get_vendor_id_func);
     libspdm_register_vendor_callback_func(spdm_context, my_test_get_response_func2);
 
     status = libspdm_build_response(spdm_context, NULL, false,
