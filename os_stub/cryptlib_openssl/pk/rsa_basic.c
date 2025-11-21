@@ -18,12 +18,52 @@
 
 #include "internal_crypt_lib.h"
 
+#include <string.h>
 #include <openssl/bn.h>
 #include <openssl/rsa.h>
 #include <openssl/objects.h>
 #include <openssl/evp.h>
+#include <openssl/core_names.h>
+#include <openssl/param_build.h>
+#include "key_context.h"
 
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
+
+#if LIBSPDM_RSA_PSS_SUPPORT
+/**
+ * Helper function to set RSA PSS padding parameters on a context.
+ *
+ * @param[in]  pctx        EVP_PKEY_CTX to configure
+ * @param[in]  evp_md      EVP_MD to use for signature and MGF1
+ * @param[in]  salt_len    Salt length for PSS (0 for FIPS, RSA_PSS_SALTLEN_DIGEST for digest length)
+ *
+ * @retval  true   Parameters set successfully.
+ * @retval  false  Failed to set parameters.
+ **/
+static bool libspdm_rsa_pss_set_params(EVP_PKEY_CTX *pctx, const EVP_MD *evp_md, int salt_len)
+{
+    int rc;
+
+    rc = EVP_PKEY_CTX_set_rsa_padding(pctx, RSA_PKCS1_PSS_PADDING);
+    if (rc != 1) {
+        return false;
+    }
+    rc = EVP_PKEY_CTX_set_signature_md(pctx, evp_md);
+    if (rc != 1) {
+        return false;
+    }
+    rc = EVP_PKEY_CTX_set_rsa_mgf1_md(pctx, evp_md);
+    if (rc != 1) {
+        return false;
+    }
+    rc = EVP_PKEY_CTX_set_rsa_pss_saltlen(pctx, salt_len);
+    if (rc != 1) {
+        return false;
+    }
+    return true;
+}
+#endif /* LIBSPDM_RSA_PSS_SUPPORT */
+
 /**
  * Allocates and initializes one RSA context for subsequent use.
  *
@@ -33,10 +73,15 @@
  **/
 void *libspdm_rsa_new(void)
 {
+    libspdm_key_context *ctx;
 
-    /* Allocates & Initializes RSA context by OpenSSL RSA_new()*/
-
-    return (void *)RSA_new();
+    ctx = (libspdm_key_context *)allocate_pool(sizeof(libspdm_key_context));
+    if (ctx == NULL) {
+        return NULL;
+    }
+    libspdm_zero_mem(ctx, sizeof(*ctx));
+    ctx->evp_pkey = NULL;
+    return (void *)ctx;
 }
 
 /**
@@ -47,10 +92,14 @@ void *libspdm_rsa_new(void)
  **/
 void libspdm_rsa_free(void *rsa_context)
 {
+    libspdm_key_context *ctx;
 
-    /* Free OpenSSL RSA context*/
-
-    RSA_free((RSA *)rsa_context);
+    if (rsa_context == NULL) {
+        return;
+    }
+    ctx = (libspdm_key_context *)rsa_context;
+    EVP_PKEY_free(ctx->evp_pkey);
+    free_pool(ctx);
 }
 
 /**
@@ -78,7 +127,7 @@ void libspdm_rsa_free(void *rsa_context)
 bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
                          const uint8_t *big_number, size_t bn_size)
 {
-    RSA *rsa_key;
+    libspdm_key_context *ctx;
     bool status;
     BIGNUM *bn_n, *bn_n_tmp;
     BIGNUM *bn_e, *bn_e_tmp;
@@ -88,14 +137,27 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
     BIGNUM *bn_dp, *bn_dp_tmp;
     BIGNUM *bn_dq, *bn_dq_tmp;
     BIGNUM *bn_q_inv, *bn_q_inv_tmp;
+    OSSL_PARAM_BLD *bld;
+    OSSL_PARAM *params;
+    EVP_PKEY_CTX *pkctx;
+    EVP_PKEY *new_pkey;
+    int is_public_only;
+    size_t i;
 
-
-    /* Check input parameters.*/
-
+    /* Check input parameters. */
     if (rsa_context == NULL || bn_size > INT_MAX) {
         return false;
     }
 
+    ctx = (libspdm_key_context *)rsa_context;
+
+    /* Handle clear operation (big_number == NULL or bn_size == 0) */
+    if (big_number == NULL || bn_size == 0) {
+        /* Clear operation: free the EVP_PKEY */
+        EVP_PKEY_free(ctx->evp_pkey);
+        ctx->evp_pkey = NULL;
+        return true;
+    }
     bn_n = NULL;
     bn_e = NULL;
     bn_d = NULL;
@@ -104,7 +166,6 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
     bn_dp = NULL;
     bn_dq = NULL;
     bn_q_inv = NULL;
-
     bn_n_tmp = NULL;
     bn_e_tmp = NULL;
     bn_d_tmp = NULL;
@@ -114,27 +175,23 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
     bn_dq_tmp = NULL;
     bn_q_inv_tmp = NULL;
 
-
-    /* Retrieve the components from RSA object.*/
-
-    rsa_key = (RSA *)rsa_context;
-    RSA_get0_key(rsa_key, (const BIGNUM **)&bn_n, (const BIGNUM **)&bn_e,
-                 (const BIGNUM **)&bn_d);
-    RSA_get0_factors(rsa_key, (const BIGNUM **)&bn_p,
-                     (const BIGNUM **)&bn_q);
-    RSA_get0_crt_params(rsa_key, (const BIGNUM **)&bn_dp,
-                        (const BIGNUM **)&bn_dq,
-                        (const BIGNUM **)&bn_q_inv);
-
+    /* Retrieve the components from EVP_PKEY object. */
+    if (ctx->evp_pkey != NULL) {
+        EVP_PKEY_get_bn_param(ctx->evp_pkey, OSSL_PKEY_PARAM_RSA_N, &bn_n);
+        EVP_PKEY_get_bn_param(ctx->evp_pkey, OSSL_PKEY_PARAM_RSA_E, &bn_e);
+        EVP_PKEY_get_bn_param(ctx->evp_pkey, OSSL_PKEY_PARAM_RSA_D, &bn_d);
+        EVP_PKEY_get_bn_param(ctx->evp_pkey, OSSL_PKEY_PARAM_RSA_FACTOR1, &bn_p);
+        EVP_PKEY_get_bn_param(ctx->evp_pkey, OSSL_PKEY_PARAM_RSA_FACTOR2, &bn_q);
+        EVP_PKEY_get_bn_param(ctx->evp_pkey, OSSL_PKEY_PARAM_RSA_EXPONENT1, &bn_dp);
+        EVP_PKEY_get_bn_param(ctx->evp_pkey, OSSL_PKEY_PARAM_RSA_EXPONENT2, &bn_dq);
+        EVP_PKEY_get_bn_param(ctx->evp_pkey, OSSL_PKEY_PARAM_RSA_COEFFICIENT1, &bn_q_inv);
+    }
 
     /* Set RSA key Components by converting octet string to OpenSSL BN representation.
      * NOTE: For RSA public key (used in signature verification), only public components
-     *       (N, e) are needed.*/
-
+     *       (N, e) are needed. */
     switch (key_tag) {
-
-    /* RSA public Modulus (N), public Exponent (e) and Private Exponent (d)*/
-
+    /* RSA public Modulus (N), public Exponent (e) and Private Exponent (d) */
     case LIBSPDM_RSA_KEY_N:
     case LIBSPDM_RSA_KEY_E:
     case LIBSPDM_RSA_KEY_D:
@@ -150,7 +207,6 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
             bn_d = BN_new();
             bn_d_tmp = bn_d;
         }
-
         if ((bn_n == NULL) || (bn_e == NULL) || (bn_d == NULL)) {
             status = false;
             goto err;
@@ -163,17 +219,9 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
         } else {
             bn_d = BN_bin2bn(big_number, (uint32_t)bn_size, bn_d);
         }
-        if (RSA_set0_key(rsa_key, BN_dup(bn_n), BN_dup(bn_e),
-                         BN_dup(bn_d)) == 0) {
-            status = false;
-            goto err;
-        }
-
         break;
 
-
-    /* RSA Secret prime Factor of Modulus (p and q)*/
-
+    /* RSA Secret prime Factor of Modulus (p and q) */
     case LIBSPDM_RSA_KEY_P:
     case LIBSPDM_RSA_KEY_Q:
         if (bn_p == NULL) {
@@ -194,18 +242,10 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
         } else {
             bn_q = BN_bin2bn(big_number, (uint32_t)bn_size, bn_q);
         }
-        if (RSA_set0_factors(rsa_key, BN_dup(bn_p), BN_dup(bn_q)) ==
-            0) {
-            status = false;
-            goto err;
-        }
-
         break;
 
-
     /* p's CRT Exponent (== d mod (p - 1)),  q's CRT Exponent (== d mod (q - 1)),
-     * and CRT Coefficient (== 1/q mod p)*/
-
+     * and CRT Coefficient (== 1/q mod p) */
     case LIBSPDM_RSA_KEY_DP:
     case LIBSPDM_RSA_KEY_DQ:
     case LIBSPDM_RSA_KEY_Q_INV:
@@ -231,15 +271,8 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
         } else if (key_tag == LIBSPDM_RSA_KEY_DQ) {
             bn_dq = BN_bin2bn(big_number, (uint32_t)bn_size, bn_dq);
         } else {
-            bn_q_inv = BN_bin2bn(big_number, (uint32_t)bn_size,
-                                 bn_q_inv);
+            bn_q_inv = BN_bin2bn(big_number, (uint32_t)bn_size, bn_q_inv);
         }
-        if (RSA_set0_crt_params(rsa_key, BN_dup(bn_dp), BN_dup(bn_dq),
-                                BN_dup(bn_q_inv)) == 0) {
-            status = false;
-            goto err;
-        }
-
         break;
 
     default:
@@ -247,6 +280,90 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
         goto err;
     }
 
+    /* Build OSSL_PARAM array from all components */
+    bld = OSSL_PARAM_BLD_new();
+    if (bld == NULL) {
+        status = false;
+        goto err;
+    }
+
+    /* Push all components to builder */
+    if (bn_n != NULL) {
+        OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_N, bn_n);
+    }
+    if (bn_e != NULL) {
+        OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_E, bn_e);
+    }
+    if (bn_d != NULL) {
+        OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_D, bn_d);
+    }
+    if (bn_p != NULL) {
+        OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_FACTOR1, bn_p);
+    }
+    if (bn_q != NULL) {
+        OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_FACTOR2, bn_q);
+    }
+    if (bn_dp != NULL) {
+        OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_EXPONENT1, bn_dp);
+    }
+    if (bn_dq != NULL) {
+        OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_EXPONENT2, bn_dq);
+    }
+    if (bn_q_inv != NULL) {
+        OSSL_PARAM_BLD_push_BN(bld, OSSL_PKEY_PARAM_RSA_COEFFICIENT1, bn_q_inv);
+    }
+
+    /* Convert to params */
+    params = OSSL_PARAM_BLD_to_param(bld);
+    OSSL_PARAM_BLD_free(bld);
+    if (params == NULL) {
+        status = false;
+        goto err;
+    }
+
+    /* Build new EVP_PKEY from parameters */
+    pkctx = EVP_PKEY_CTX_new_from_name(NULL, "RSA", NULL);
+    if (pkctx == NULL) {
+        OSSL_PARAM_free(params);
+        status = false;
+        goto err;
+    }
+    if (EVP_PKEY_fromdata_init(pkctx) != 1) {
+        EVP_PKEY_CTX_free(pkctx);
+        OSSL_PARAM_free(params);
+        status = false;
+        goto err;
+    }
+
+    /* Determine if we have private key components */
+    is_public_only = true;
+    for (i = 0; params[i].key != NULL; i++) {
+        if (strcmp(params[i].key, OSSL_PKEY_PARAM_RSA_D) == 0 ||
+            strcmp(params[i].key, OSSL_PKEY_PARAM_RSA_FACTOR1) == 0 ||
+            strcmp(params[i].key, OSSL_PKEY_PARAM_RSA_FACTOR2) == 0) {
+            is_public_only = false;
+            break;
+        }
+    }
+
+    new_pkey = NULL;
+    if (!is_public_only) {
+        (void)EVP_PKEY_fromdata(pkctx, &new_pkey, EVP_PKEY_KEYPAIR, params);
+    }
+    if (new_pkey == NULL) {
+        (void)EVP_PKEY_fromdata(pkctx, &new_pkey, EVP_PKEY_PUBLIC_KEY, params);
+    }
+
+    EVP_PKEY_CTX_free(pkctx);
+    OSSL_PARAM_free(params);
+
+    if (new_pkey == NULL) {
+        status = false;
+        goto err;
+    }
+
+    EVP_PKEY_free(ctx->evp_pkey);
+    ctx->evp_pkey = new_pkey;
     status = true;
 
 err:
@@ -258,7 +375,6 @@ err:
     BN_free(bn_dp_tmp);
     BN_free(bn_dq_tmp);
     BN_free(bn_q_inv_tmp);
-
     return status;
 }
 #endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
@@ -289,9 +405,11 @@ bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, size_t hash_nid,
                                        size_t hash_size, const uint8_t *signature,
                                        size_t sig_size)
 {
-    int32_t digest_type;
-    uint8_t *sig_buf;
-
+    EVP_MD *evp_md = NULL;
+    EVP_PKEY_CTX *pctx = NULL;
+    int rc;
+    bool result = false;
+    libspdm_key_context *ctx = (libspdm_key_context *)rsa_context;
 
     /* Check input parameters.*/
 
@@ -303,57 +421,102 @@ bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, size_t hash_nid,
         return false;
     }
 
+    if (ctx == NULL || ctx->evp_pkey == NULL) {
+        return false;
+    }
+
     switch (hash_nid) {
     case LIBSPDM_CRYPTO_NID_SHA256:
-        digest_type = NID_sha256;
         if (hash_size != LIBSPDM_SHA256_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA256", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA384:
-        digest_type = NID_sha384;
         if (hash_size != LIBSPDM_SHA384_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA384", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA512:
-        digest_type = NID_sha512;
         if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA512", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA3_256:
-        digest_type = NID_sha3_256;
         if (hash_size != LIBSPDM_SHA3_256_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA3-256", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA3_384:
-        digest_type = NID_sha3_384;
         if (hash_size != LIBSPDM_SHA3_384_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA3-384", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA3_512:
-        digest_type = NID_sha3_512;
         if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA3-512", NULL);
         break;
 
     default:
         return false;
     }
 
-    sig_buf = (uint8_t *)signature;
-    return (bool)RSA_verify(digest_type, message_hash, (uint32_t)hash_size,
-                            sig_buf, (uint32_t)sig_size,
-                            (RSA *)rsa_context);
+    if (evp_md == NULL) {
+        return false;
+    }
+
+    pctx = EVP_PKEY_CTX_new_from_pkey(NULL, ctx->evp_pkey, NULL);
+    if (pctx == NULL) {
+        EVP_MD_free(evp_md);
+        return false;
+    }
+
+    {
+        OSSL_PARAM params[2];
+        const char *md_name = EVP_MD_get0_name(evp_md);
+        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)md_name, 0);
+        params[1] = OSSL_PARAM_construct_end();
+
+        rc = EVP_PKEY_verify_init_ex(pctx, params);
+        if (rc != 1) {
+            EVP_MD_free(evp_md);
+            EVP_PKEY_CTX_free(pctx);
+            return false;
+        }
+    }
+
+    rc = EVP_PKEY_CTX_set_rsa_padding(pctx, RSA_PKCS1_PADDING);
+    if (rc != 1) {
+        EVP_MD_free(evp_md);
+        EVP_PKEY_CTX_free(pctx);
+        return false;
+    }
+    rc = EVP_PKEY_CTX_set_signature_md(pctx, (const EVP_MD *)evp_md);
+    if (rc != 1) {
+        EVP_MD_free(evp_md);
+        EVP_PKEY_CTX_free(pctx);
+        return false;
+    }
+
+    rc = EVP_PKEY_verify(pctx, signature, sig_size, message_hash, hash_size);
+    if (rc == 1) {
+        result = true;
+    }
+
+    EVP_MD_free(evp_md);
+    EVP_PKEY_CTX_free(pctx);
+    return result;
 }
 #endif /* LIBSPDM_RSA_SSA_SUPPORT */
 
@@ -384,11 +547,11 @@ bool libspdm_rsa_pss_verify(void *rsa_context, size_t hash_nid,
                             const uint8_t *message_hash, size_t hash_size,
                             const uint8_t *signature, size_t sig_size)
 {
-    RSA *rsa;
-    bool result;
-    int32_t size;
-    const EVP_MD *evp_md;
-    void *buffer;
+    EVP_MD *evp_md = NULL;
+    EVP_PKEY_CTX *pctx = NULL;
+    int rc;
+    bool result = false;
+    libspdm_key_context *ctx = (libspdm_key_context *)rsa_context;
 
     if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
         return false;
@@ -398,50 +561,51 @@ bool libspdm_rsa_pss_verify(void *rsa_context, size_t hash_nid,
         return false;
     }
 
-    rsa = rsa_context;
-    size = RSA_size(rsa);
-    if (sig_size != (size_t)size) {
+    if (ctx == NULL || ctx->evp_pkey == NULL) {
         return false;
     }
 
     switch (hash_nid) {
     case LIBSPDM_CRYPTO_NID_SHA256:
-        evp_md = EVP_sha256();
         if (hash_size != LIBSPDM_SHA256_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA256", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA384:
-        evp_md = EVP_sha384();
         if (hash_size != LIBSPDM_SHA384_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA384", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA512:
-        evp_md = EVP_sha512();
         if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA512", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA3_256:
-        evp_md = EVP_sha3_256();
         if (hash_size != LIBSPDM_SHA3_256_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA3-256", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA3_384:
-        evp_md = EVP_sha3_384();
         if (hash_size != LIBSPDM_SHA3_384_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA3-384", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA3_512:
-        evp_md = EVP_sha3_512();
+        if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
+            return false;
+        }
+        evp_md = EVP_MD_fetch(NULL, "SHA3-512", NULL);
         if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
             return false;
         }
@@ -451,22 +615,43 @@ bool libspdm_rsa_pss_verify(void *rsa_context, size_t hash_nid,
         return false;
     }
 
-    buffer = allocate_pool(size);
-    if (buffer == NULL) {
+    if (evp_md == NULL) {
         return false;
     }
 
-    size = RSA_public_decrypt(size, signature, buffer, rsa, RSA_NO_PADDING);
-    if (size <= 0) {
-        free_pool(buffer);
+    pctx = EVP_PKEY_CTX_new_from_pkey(NULL, ctx->evp_pkey, NULL);
+    if (pctx == NULL) {
+        EVP_MD_free(evp_md);
         return false;
     }
-    LIBSPDM_ASSERT(sig_size == (size_t)size);
 
-    result = (bool)RSA_verify_PKCS1_PSS(rsa, message_hash, evp_md,
-                                        buffer, RSA_PSS_SALTLEN_DIGEST);
-    free_pool(buffer);
+    {
+        OSSL_PARAM params[2];
+        const char *md_name = EVP_MD_get0_name(evp_md);
+        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)md_name, 0);
+        params[1] = OSSL_PARAM_construct_end();
 
+        rc = EVP_PKEY_verify_init_ex(pctx, params);
+        if (rc != 1) {
+            EVP_MD_free(evp_md);
+            EVP_PKEY_CTX_free(pctx);
+            return false;
+        }
+    }
+
+    if (!libspdm_rsa_pss_set_params(pctx, evp_md, RSA_PSS_SALTLEN_DIGEST)) {
+        EVP_MD_free(evp_md);
+        EVP_PKEY_CTX_free(pctx);
+        return false;
+    }
+
+    rc = EVP_PKEY_verify(pctx, signature, sig_size, message_hash, hash_size);
+    if (rc == 1) {
+        result = true;
+    }
+
+    EVP_MD_free(evp_md);
+    EVP_PKEY_CTX_free(pctx);
     return result;
 }
 
@@ -497,11 +682,11 @@ bool libspdm_rsa_pss_verify_fips(void *rsa_context, size_t hash_nid,
                                  const uint8_t *message_hash, size_t hash_size,
                                  const uint8_t *signature, size_t sig_size)
 {
-    RSA *rsa;
-    bool result;
-    int32_t size;
-    const EVP_MD *evp_md;
-    void *buffer;
+    EVP_MD *evp_md = NULL;
+    EVP_PKEY_CTX *pctx = NULL;
+    int rc;
+    bool result = false;
+    libspdm_key_context *ctx = (libspdm_key_context *)rsa_context;
 
     if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
         return false;
@@ -511,76 +696,98 @@ bool libspdm_rsa_pss_verify_fips(void *rsa_context, size_t hash_nid,
         return false;
     }
 
-    rsa = rsa_context;
-    size = RSA_size(rsa);
-    if (sig_size != (size_t)size) {
+    if (ctx == NULL || ctx->evp_pkey == NULL) {
         return false;
     }
 
     switch (hash_nid) {
     case LIBSPDM_CRYPTO_NID_SHA256:
-        evp_md = EVP_sha256();
         if (hash_size != LIBSPDM_SHA256_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA256", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA384:
-        evp_md = EVP_sha384();
         if (hash_size != LIBSPDM_SHA384_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA384", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA512:
-        evp_md = EVP_sha512();
         if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA512", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA3_256:
-        evp_md = EVP_sha3_256();
         if (hash_size != LIBSPDM_SHA3_256_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA3-256", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA3_384:
-        evp_md = EVP_sha3_384();
         if (hash_size != LIBSPDM_SHA3_384_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA3-384", NULL);
         break;
 
     case LIBSPDM_CRYPTO_NID_SHA3_512:
-        evp_md = EVP_sha3_512();
         if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
             return false;
         }
+        evp_md = EVP_MD_fetch(NULL, "SHA3-512", NULL);
         break;
 
     default:
         return false;
     }
 
-    buffer = allocate_pool(size);
-    if (buffer == NULL) {
+    if (evp_md == NULL) {
         return false;
     }
 
-    size = RSA_public_decrypt(size, signature, buffer, rsa, RSA_NO_PADDING);
-    if (size <= 0) {
-        free_pool(buffer);
+    if (ctx == NULL || ctx->evp_pkey == NULL) {
         return false;
     }
-    LIBSPDM_ASSERT(sig_size == (size_t)size);
 
-    /*salt len is 0*/
-    result = (bool)RSA_verify_PKCS1_PSS(rsa, message_hash, evp_md,
-                                        buffer, 0);
-    free_pool(buffer);
+    pctx = EVP_PKEY_CTX_new_from_pkey(NULL, ctx->evp_pkey, NULL);
+    if (pctx == NULL) {
+        return false;
+    }
 
+    {
+        OSSL_PARAM params[2];
+        const char *md_name = EVP_MD_get0_name(evp_md);
+        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)md_name, 0);
+        params[1] = OSSL_PARAM_construct_end();
+
+        rc = EVP_PKEY_verify_init_ex(pctx, params);
+        if (rc != 1) {
+            EVP_MD_free(evp_md);
+            EVP_PKEY_CTX_free(pctx);
+            return false;
+        }
+    }
+
+    /* salt len is 0 for FIPS test */
+    if (!libspdm_rsa_pss_set_params(pctx, evp_md, 0)) {
+        EVP_MD_free(evp_md);
+        EVP_PKEY_CTX_free(pctx);
+        return false;
+    }
+
+    rc = EVP_PKEY_verify(pctx, signature, sig_size, message_hash, hash_size);
+    if (rc == 1) {
+        result = true;
+    }
+
+    EVP_MD_free(evp_md);
+    EVP_PKEY_CTX_free(pctx);
     return result;
 }
 #endif /*LIBSPDM_FIPS_MODE*/

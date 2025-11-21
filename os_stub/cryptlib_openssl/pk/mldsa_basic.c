@@ -6,12 +6,10 @@
 
 #include "internal_crypt_lib.h"
 
-#include <openssl/bn.h>
-#include <openssl/objects.h>
+#include <string.h>
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
-#include <crypto/evp.h>
-#include <crypto/ml_dsa.h>
+#include "key_context.h"
 
 #if LIBSPDM_ML_DSA_SUPPORT
 
@@ -39,10 +37,11 @@ size_t libspdm_mldsa_type_name_to_nid(const char *type_name)
  **/
 void *libspdm_mldsa_new(size_t nid)
 {
-    EVP_PKEY_CTX *pkey_ctx;
-    EVP_PKEY *pkey;
-    char *sigalg_name;
+    EVP_PKEY_CTX *pkey_ctx = NULL;
+    EVP_PKEY *pkey = NULL;
+    const char *sigalg_name;
     int ret;
+    libspdm_key_context *ctx = NULL;
 
     switch (nid) {
     case LIBSPDM_CRYPTO_NID_ML_DSA_44:
@@ -77,7 +76,13 @@ void *libspdm_mldsa_new(size_t nid)
     }
     EVP_PKEY_CTX_free(pkey_ctx);
 
-    return (void *)pkey;
+    ctx = (libspdm_key_context *)malloc(sizeof(libspdm_key_context));
+    if (ctx == NULL) {
+        EVP_PKEY_free(pkey);
+        return NULL;
+    }
+    ctx->evp_pkey = pkey;
+    return (void *)ctx;
 }
 
 /**
@@ -87,7 +92,12 @@ void *libspdm_mldsa_new(size_t nid)
  **/
 void libspdm_mldsa_free(void *dsa_context)
 {
-    EVP_PKEY_free((EVP_PKEY *)dsa_context);
+    if (dsa_context == NULL) {
+        return;
+    }
+    libspdm_key_context *ctx = (libspdm_key_context *)dsa_context;
+    EVP_PKEY_free(ctx->evp_pkey);
+    free(ctx);
 }
 
 
@@ -103,15 +113,18 @@ void libspdm_mldsa_free(void *dsa_context)
 bool libspdm_mldsa_get_pubkey(void *dsa_context, uint8_t *key_data, size_t *key_size)
 {
     uint32_t final_pub_key_size;
-    EVP_PKEY *evp_key;
     int ret;
+    if (dsa_context == NULL || key_size == NULL || key_data == NULL) {
+        return false;
+    }
+
+    libspdm_key_context *ctx = (libspdm_key_context *)dsa_context;
 
     if ((dsa_context == NULL) || (key_data == NULL)) {
         return false;
     }
 
-    evp_key = (EVP_PKEY *)dsa_context;
-    switch (libspdm_mldsa_type_name_to_nid(EVP_PKEY_get0_type_name(evp_key))) {
+    switch (libspdm_mldsa_type_name_to_nid(EVP_PKEY_get0_type_name(ctx->evp_pkey))) {
     case LIBSPDM_CRYPTO_NID_ML_DSA_44:
         final_pub_key_size = 1312;
         break;
@@ -131,7 +144,7 @@ bool libspdm_mldsa_get_pubkey(void *dsa_context, uint8_t *key_data, size_t *key_
     }
     *key_size = final_pub_key_size;
     libspdm_zero_mem(key_data, *key_size);
-    ret = EVP_PKEY_get_raw_public_key(evp_key, key_data, key_size);
+    ret = EVP_PKEY_get_raw_public_key(ctx->evp_pkey, key_data, key_size);
     if (ret == 0) {
         return false;
     }
@@ -152,15 +165,17 @@ bool libspdm_mldsa_get_pubkey(void *dsa_context, uint8_t *key_data, size_t *key_
 bool libspdm_mldsa_set_pubkey(void *dsa_context, const uint8_t *key_data, size_t key_size)
 {
     uint32_t final_pub_key_size;
-    EVP_PKEY *evp_key;
     EVP_PKEY *new_evp_key;
+    const char *key_type;
+    bool result = false;
 
     if ((dsa_context == NULL) || (key_data == NULL)) {
         return false;
     }
 
-    evp_key = (EVP_PKEY *)dsa_context;
-    switch (libspdm_mldsa_type_name_to_nid(EVP_PKEY_get0_type_name(evp_key))) {
+    libspdm_key_context *ctx = (libspdm_key_context *)dsa_context;
+    key_type = EVP_PKEY_get0_type_name(ctx->evp_pkey);
+    switch (libspdm_mldsa_type_name_to_nid(key_type)) {
     case LIBSPDM_CRYPTO_NID_ML_DSA_44:
         final_pub_key_size = 1312;
         break;
@@ -178,23 +193,17 @@ bool libspdm_mldsa_set_pubkey(void *dsa_context, const uint8_t *key_data, size_t
         return false;
     }
 
-    new_evp_key = EVP_PKEY_new_raw_public_key_ex(NULL, EVP_PKEY_get0_type_name(evp_key), NULL,
-                                                 key_data, key_size);
+    /* Create a new EVP_PKEY with the provided public key */
+    new_evp_key = EVP_PKEY_new_raw_public_key_ex(NULL, key_type, NULL, key_data, key_size);
     if (new_evp_key == NULL) {
         return false;
     }
 
-    /* ML-DSA does not allow key mutation.
-     * To make evp_keymgmt_util_copy() work, we need to clear key */
-    ossl_ml_dsa_key_reset(evp_key->keydata);
-
-    if (evp_keymgmt_util_copy(evp_key, new_evp_key, OSSL_KEYMGMT_SELECT_PUBLIC_KEY) != 1) {
-        EVP_PKEY_free(new_evp_key);
-        return false;
-    }
-
-    EVP_PKEY_free(new_evp_key);
-    return true;
+    /* Replace the existing key with the new one */
+    EVP_PKEY_free(ctx->evp_pkey);
+    ctx->evp_pkey = new_evp_key;
+    result = true;
+    return result;
 }
 
 /**
@@ -216,7 +225,7 @@ bool libspdm_mldsa_verify(void *dsa_context,
                           const uint8_t *message, size_t message_size,
                           const uint8_t *signature, size_t sig_size)
 {
-    EVP_PKEY *pkey;
+    libspdm_key_context *ctxobj;
     EVP_MD_CTX *ctx;
     size_t final_sig_size;
     int32_t result;
@@ -230,8 +239,8 @@ bool libspdm_mldsa_verify(void *dsa_context,
         return false;
     }
 
-    pkey = (EVP_PKEY *)dsa_context;
-    switch (libspdm_mldsa_type_name_to_nid(EVP_PKEY_get0_type_name(pkey))) {
+    ctxobj = (libspdm_key_context *)dsa_context;
+    switch (libspdm_mldsa_type_name_to_nid(EVP_PKEY_get0_type_name(ctxobj->evp_pkey))) {
     case LIBSPDM_CRYPTO_NID_ML_DSA_44:
         final_sig_size = 2420;
         break;
@@ -257,9 +266,11 @@ bool libspdm_mldsa_verify(void *dsa_context,
         return false;
     }
     if (context_size == 0) {
-        result = EVP_DigestVerifyInit(ctx, NULL, NULL, NULL, pkey);
+        OSSL_PARAM params_default[1];
+        params_default[0] = OSSL_PARAM_construct_end();
+        result = EVP_DigestVerifyInit_ex(ctx, NULL, NULL, NULL, NULL, ctxobj->evp_pkey, params_default);
     } else {
-        result = EVP_DigestVerifyInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params);
+        result = EVP_DigestVerifyInit_ex(ctx, NULL, NULL, NULL, NULL, ctxobj->evp_pkey, params);
     }
     if (result != 1) {
         EVP_MD_CTX_free(ctx);

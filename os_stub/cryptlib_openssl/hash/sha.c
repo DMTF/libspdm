@@ -52,7 +52,7 @@ bool hash_md_init(const EVP_MD *md, void *md_ctx)
     if (md_ctx == NULL) {
         return false;
     }
-    if (EVP_DigestInit(md_ctx, md) != 1) {
+    if (EVP_DigestInit_ex(md_ctx, md, NULL) != 1) {
         return false;
     }
     return true;
@@ -141,7 +141,7 @@ bool hash_md_final(void *md_ctx, void *hash_value)
         return false;
     }
 
-    if (EVP_DigestFinal(md_ctx, hash_value, NULL) != 1) {
+    if (EVP_DigestFinal_ex(md_ctx, hash_value, NULL) != 1) {
         return false;
     }
     return true;
@@ -218,7 +218,13 @@ void libspdm_sha256_free(void *sha256_ctx)
  **/
 bool libspdm_sha256_init(void *sha256_context)
 {
-    return hash_md_init (EVP_sha256(), sha256_context);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA256", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_init(md, sha256_context);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -310,7 +316,13 @@ bool libspdm_sha256_final(void *sha256_context, uint8_t *hash_value)
 bool libspdm_sha256_hash_all(const void *data, size_t data_size,
                              uint8_t *hash_value)
 {
-    return hash_md_hash_all (EVP_sha256(), data, data_size, hash_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA256", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_hash_all(md, data, data_size, hash_value);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -350,7 +362,13 @@ void libspdm_sha384_free(void *sha384_ctx)
  **/
 bool libspdm_sha384_init(void *sha384_context)
 {
-    return hash_md_init (EVP_sha384(), sha384_context);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA384", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_init(md, sha384_context);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -444,7 +462,13 @@ bool libspdm_sha384_final(void *sha384_context, uint8_t *hash_value)
 bool libspdm_sha384_hash_all(const void *data, size_t data_size,
                              uint8_t *hash_value)
 {
-    return hash_md_hash_all (EVP_sha384(), data, data_size, hash_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA384", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_hash_all(md, data, data_size, hash_value);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -484,7 +508,13 @@ void libspdm_sha512_free(void *sha512_ctx)
  **/
 bool libspdm_sha512_init(void *sha512_context)
 {
-    return hash_md_init (EVP_sha512(), sha512_context);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA512", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_init(md, sha512_context);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -578,5 +608,11 @@ bool libspdm_sha512_final(void *sha512_context, uint8_t *hash_value)
 bool libspdm_sha512_hash_all(const void *data, size_t data_size,
                              uint8_t *hash_value)
 {
-    return hash_md_hash_all (EVP_sha512(), data, data_size, hash_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA512", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_hash_all(md, data, data_size, hash_value);
+    EVP_MD_free(md);
+    return result;
 }

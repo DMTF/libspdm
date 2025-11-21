@@ -57,7 +57,13 @@ void libspdm_sm3_256_free(void *sm3_256_ctx)
  **/
 bool libspdm_sm3_256_init(void *sm3_context)
 {
-    return hash_md_init (EVP_sm3(), sm3_context);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SM3", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_init(md, sm3_context);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -150,5 +156,11 @@ bool libspdm_sm3_256_final(void *sm3_context, uint8_t *hash_value)
 bool libspdm_sm3_256_hash_all(const void *data, size_t data_size,
                               uint8_t *hash_value)
 {
-    return hash_md_hash_all (EVP_sm3(), data, data_size, hash_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SM3", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_hash_all(md, data, data_size, hash_value);
+    EVP_MD_free(md);
+    return result;
 }

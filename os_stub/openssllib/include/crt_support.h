@@ -40,33 +40,6 @@
 #define BUFSIZ 8192
 #endif
 
-
-/* OpenSSL relies on explicit configuration for word size in crypto/bn,
- * but we want it to be automatically inferred from the target. So we
- * bypass what's in <openssl/opensslconf.h> for OPENSSL_SYS_UEFI, and
- * define our own here.*/
-
-#ifdef CONFIG_HEADER_BN_H
-#error CONFIG_HEADER_BN_H already defined
-#endif
-
-#define CONFIG_HEADER_BN_H
-
-#if defined(LIBSPDM_CPU_X64) || defined(LIBSPDM_CPU_AARCH64) || defined(LIBSPDM_CPU_RISCV64) || defined(LIBSPDM_CPU_LOONGARCH64)
-
-/* With GCC we would normally use SIXTY_FOUR_BIT_LONG, but MSVC needs
- * SIXTY_FOUR_BIT, because 'long' is 32-bit and only 'long long' is
- * 64-bit. Since using 'long long' works fine on GCC too, just do that.*/
-
-#define SIXTY_FOUR_BIT
-#elif defined(LIBSPDM_CPU_IA32) || defined(LIBSPDM_CPU_ARM) || defined(LIBSPDM_CPU_EBC) || \
-    defined(LIBSPDM_CPU_RISCV32) || defined(LIBSPDM_CPU_ARC)
-#define THIRTY_TWO_BIT
-#else
-#error Unknown target architecture
-#endif
-
-
 /* Map all va_xxxx elements to VA_xxx defined in MdePkg/include/base.h*/
 
 /**
@@ -291,7 +264,10 @@ struct sockaddr {
 
 /* Global variables*/
 
+#if !defined(__MINGW32__) && !defined(__MINGW64__)
+/* errno is already defined in MinGW via <errno.h>, skip declaration to avoid dllimport warning */
 extern int errno;
+#endif
 extern FILE *stderr;
 
 

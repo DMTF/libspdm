@@ -52,19 +52,6 @@ bool libspdm_mldsa_get_private_key_from_pem(const uint8_t *pem_data,
         return false;
     }
 
-    /* Add possible block-cipher descriptor for PEM data decryption.
-     * NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
-
-    if (EVP_add_cipher(EVP_aes_128_cbc()) == 0) {
-        return false;
-    }
-    if (EVP_add_cipher(EVP_aes_192_cbc()) == 0) {
-        return false;
-    }
-    if (EVP_add_cipher(EVP_aes_256_cbc()) == 0) {
-        return false;
-    }
-
     status = false;
 
     /* Read encrypted PEM data.*/
@@ -143,19 +130,6 @@ bool libspdm_slhdsa_get_private_key_from_pem(const uint8_t *pem_data,
     /* Check input parameters.*/
 
     if (pem_data == NULL || dsa_context == NULL || pem_size > INT_MAX) {
-        return false;
-    }
-
-    /* Add possible block-cipher descriptor for PEM data decryption.
-     * NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
-
-    if (EVP_add_cipher(EVP_aes_128_cbc()) == 0) {
-        return false;
-    }
-    if (EVP_add_cipher(EVP_aes_192_cbc()) == 0) {
-        return false;
-    }
-    if (EVP_add_cipher(EVP_aes_256_cbc()) == 0) {
         return false;
     }
 

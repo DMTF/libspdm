@@ -9,11 +9,10 @@ target_include_directories(cryptlib_openssl
         ${LIBSPDM_DIR}/os_stub/include
         ${LIBSPDM_DIR}/os_stub/cryptlib_openssl
         ${LIBSPDM_DIR}/os_stub/openssllib/include
-        ${LIBSPDM_DIR}/os_stub/openssllib/openssl_gen
-        ${LIBSPDM_DIR}/os_stub/openssllib/openssl/include
-        ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/include
-        ${LIBSPDM_DIR}/os_stub/openssllib/openssl
 )
+
+# Ensure OpenSSL is built before cryptlib_openssl
+add_dependencies(cryptlib_openssl openssllib)
 
 target_sources(cryptlib_openssl
     PRIVATE
@@ -52,20 +51,4 @@ target_sources(cryptlib_openssl
 
 target_compile_options(cryptlib_openssl PRIVATE ${OPENSSL_FLAGS})
 
-if(ARCH STREQUAL "x64")
-    target_compile_options(cryptlib_openssl PRIVATE -DLIBSPDM_CPU_X64)
-elseif(ARCH STREQUAL "ia32")
-    target_compile_options(cryptlib_openssl PRIVATE -DLIBSPDM_CPU_IA32)
-elseif(ARCH STREQUAL "aarch64")
-    target_compile_options(cryptlib_openssl PRIVATE -DLIBSPDM_CPU_AARCH64)
-elseif(ARCH STREQUAL "riscv32")
-    target_compile_options(cryptlib_openssl PRIVATE -DLIBSPDM_CPU_RISCV32)
-elseif(ARCH STREQUAL "riscv64")
-    target_compile_options(cryptlib_openssl PRIVATE -DLIBSPDM_CPU_RISCV64)
-elseif((ARCH STREQUAL "arm") OR (ARCH STREQUAL "aarch64"))
-    target_compile_options(cryptlib_openssl PRIVATE -DLIBSPDM_CPU_ARM)
-elseif(ARCH STREQUAL "loongarch64")
-    target_compile_options(cryptlib_openssl PRIVATE -DLIBSPDM_CPU_LOONGARCH64)
-else()
-    message(FATAL_ERROR "Unknown ARCH")
-endif()
+target_link_libraries(cryptlib_openssl PUBLIC openssllib memlib)

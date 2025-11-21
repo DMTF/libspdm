@@ -12,8 +12,26 @@
  **/
 
 #include "internal_crypt_lib.h"
-#include <openssl/aes.h>
 #include <openssl/evp.h>
+
+/**
+ * Get AES-GCM cipher name by key size
+ * @param key_size Key size in bytes (16, 24, or 32)
+ * @return Cipher name string or NULL if invalid key size
+ */
+static const char *get_aes_gcm_cipher_name(size_t key_size)
+{
+    switch (key_size) {
+    case 16:
+        return "AES-128-GCM";
+    case 24:
+        return "AES-192-GCM";
+    case 32:
+        return "AES-256-GCM";
+    default:
+        return NULL;
+    }
+}
 
 /**
  * Performs AEAD AES-GCM authenticated encryption on a data buffer and additional authenticated data (AAD).
@@ -47,9 +65,10 @@ bool libspdm_aead_aes_gcm_encrypt(const uint8_t *key, size_t key_size,
                                   uint8_t *data_out, size_t *data_out_size)
 {
     EVP_CIPHER_CTX *ctx;
-    const EVP_CIPHER *cipher;
+    EVP_CIPHER *cipher;
     size_t temp_out_size;
     bool ret_value;
+    const char *cipher_name;
 
     if (data_in_size > INT_MAX) {
         return false;
@@ -60,32 +79,33 @@ bool libspdm_aead_aes_gcm_encrypt(const uint8_t *key, size_t key_size,
     if (iv_size != 12) {
         return false;
     }
-    switch (key_size) {
-    case 16:
-        cipher = EVP_aes_128_gcm();
-        break;
-    case 24:
-        cipher = EVP_aes_192_gcm();
-        break;
-    case 32:
-        cipher = EVP_aes_256_gcm();
-        break;
-    default:
+
+    cipher_name = get_aes_gcm_cipher_name(key_size);
+    if (cipher_name == NULL) {
         return false;
     }
+
+    cipher = EVP_CIPHER_fetch(NULL, cipher_name, NULL);
+    if (cipher == NULL) {
+        return false;
+    }
+
     if ((tag_size != 12) && (tag_size != 13) && (tag_size != 14) &&
         (tag_size != 15) && (tag_size != 16)) {
+        EVP_CIPHER_free(cipher);
         return false;
     }
     if (data_out_size != NULL) {
         if ((*data_out_size > INT_MAX) ||
             (*data_out_size < data_in_size)) {
+            EVP_CIPHER_free(cipher);
             return false;
         }
     }
 
     ctx = EVP_CIPHER_CTX_new();
     if (ctx == NULL) {
+        EVP_CIPHER_free(cipher);
         return false;
     }
 
@@ -129,6 +149,7 @@ bool libspdm_aead_aes_gcm_encrypt(const uint8_t *key, size_t key_size,
 
 done:
     EVP_CIPHER_CTX_free(ctx);
+    EVP_CIPHER_free(cipher);
     if (!ret_value) {
         return ret_value;
     }
@@ -173,9 +194,10 @@ bool libspdm_aead_aes_gcm_decrypt(const uint8_t *key, size_t key_size,
                                   uint8_t *data_out, size_t *data_out_size)
 {
     EVP_CIPHER_CTX *ctx;
-    const EVP_CIPHER *cipher;
+    EVP_CIPHER *cipher;
     size_t temp_out_size;
     bool ret_value;
+    const char *cipher_name;
 
     if (data_in_size > INT_MAX) {
         return false;
@@ -186,32 +208,33 @@ bool libspdm_aead_aes_gcm_decrypt(const uint8_t *key, size_t key_size,
     if (iv_size != 12) {
         return false;
     }
-    switch (key_size) {
-    case 16:
-        cipher = EVP_aes_128_gcm();
-        break;
-    case 24:
-        cipher = EVP_aes_192_gcm();
-        break;
-    case 32:
-        cipher = EVP_aes_256_gcm();
-        break;
-    default:
+
+    cipher_name = get_aes_gcm_cipher_name(key_size);
+    if (cipher_name == NULL) {
         return false;
     }
+
+    cipher = EVP_CIPHER_fetch(NULL, cipher_name, NULL);
+    if (cipher == NULL) {
+        return false;
+    }
+
     if ((tag_size != 12) && (tag_size != 13) && (tag_size != 14) &&
         (tag_size != 15) && (tag_size != 16)) {
+        EVP_CIPHER_free(cipher);
         return false;
     }
     if (data_out_size != NULL) {
         if ((*data_out_size > INT_MAX) ||
             (*data_out_size < data_in_size)) {
+            EVP_CIPHER_free(cipher);
             return false;
         }
     }
 
     ctx = EVP_CIPHER_CTX_new();
     if (ctx == NULL) {
+        EVP_CIPHER_free(cipher);
         return false;
     }
 
@@ -255,6 +278,7 @@ bool libspdm_aead_aes_gcm_decrypt(const uint8_t *key, size_t key_size,
 
 done:
     EVP_CIPHER_CTX_free(ctx);
+    EVP_CIPHER_free(cipher);
     if (!ret_value) {
         return ret_value;
     }

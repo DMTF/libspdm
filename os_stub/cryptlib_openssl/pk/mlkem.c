@@ -5,13 +5,10 @@
  **/
 
 #include "internal_crypt_lib.h"
+#include "key_context.h"
 
-#include <openssl/bn.h>
-#include <openssl/objects.h>
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
-#include <crypto/evp.h>
-#include <crypto/ml_kem.h>
 
 #if LIBSPDM_ML_KEM_SUPPORT
 
@@ -77,7 +74,14 @@ void *libspdm_mlkem_new_by_name(size_t nid)
     }
     EVP_PKEY_CTX_free(pkey_ctx);
 
-    return (void *)pkey;
+    /* Allocate key context wrapper */
+    libspdm_key_context *kem_context = (libspdm_key_context *)malloc(sizeof(libspdm_key_context));
+    if (kem_context == NULL) {
+        EVP_PKEY_free(pkey);
+        return NULL;
+    }
+    kem_context->evp_pkey = pkey;
+    return kem_context;
 }
 
 /**
@@ -87,7 +91,17 @@ void *libspdm_mlkem_new_by_name(size_t nid)
  **/
 void libspdm_mlkem_free(void *kem_context)
 {
-    EVP_PKEY_free((EVP_PKEY *)kem_context);
+    libspdm_key_context *key_ctx;
+
+    if (kem_context == NULL) {
+        return;
+    }
+
+    key_ctx = (libspdm_key_context *)kem_context;
+    if (key_ctx->evp_pkey != NULL) {
+        EVP_PKEY_free(key_ctx->evp_pkey);
+    }
+    free(key_ctx);
 }
 
 /**
@@ -106,13 +120,28 @@ void libspdm_mlkem_free(void *kem_context)
  **/
 bool libspdm_mlkem_generate_key(void *kem_context, uint8_t *encap_key, size_t *encap_key_size)
 {
+    libspdm_key_context *key_ctx;
     EVP_PKEY *pkey;
     int ret;
     uint32_t final_encap_key_size;
+    const char *type_name;
 
-    pkey = (EVP_PKEY *)kem_context;
+    if (kem_context == NULL) {
+        return false;
+    }
 
-    switch (libspdm_mlkem_type_name_to_nid(EVP_PKEY_get0_type_name(pkey))) {
+    key_ctx = (libspdm_key_context *)kem_context;
+    pkey = key_ctx->evp_pkey;
+    if (pkey == NULL) {
+        return false;
+    }
+
+    type_name = EVP_PKEY_get0_type_name(pkey);
+    if (type_name == NULL) {
+        return false;
+    }
+
+    switch (libspdm_mlkem_type_name_to_nid(type_name)) {
     case LIBSPDM_CRYPTO_NID_ML_KEM_512:
         final_encap_key_size = 800;
         break;
@@ -129,13 +158,15 @@ bool libspdm_mlkem_generate_key(void *kem_context, uint8_t *encap_key, size_t *e
         *encap_key_size = final_encap_key_size;
         return false;
     }
-    *encap_key_size = final_encap_key_size;
-    libspdm_zero_mem(encap_key, *encap_key_size);
-    ret = EVP_PKEY_get_raw_public_key(pkey, encap_key, encap_key_size);
+
+    /* Use raw public key get API */
+    size_t out_len = *encap_key_size;
+    ret = EVP_PKEY_get_raw_public_key(pkey, encap_key, &out_len);
     if (ret == 0) {
         return false;
     }
 
+    *encap_key_size = out_len;
     return true;
 }
 
@@ -145,10 +176,12 @@ bool libspdm_mlkem_generate_key(void *kem_context, uint8_t *encap_key, size_t *e
  * @param[in, out]  kem_context           Pointer to the KEM context.
  * @param[in]       peer_encap_key        Pointer to the peer's public key.
  * @param[in]       peer_encap_key_size   size of peer's public key in bytes.
- * @param[out]      key                   Pointer to the buffer to receive generated key.
- * @param[in, out]  key_size              On input, the size of key buffer in bytes.
- *                                        On output, the size of data returned in key buffer in
- *                                        bytes.
+ * @param[out]      cipher_text           Pointer to the buffer to receive generated cipher text.
+ * @param[in, out]  cipher_text_size      On input, the size of cipher_text buffer in bytes.
+ *                                        On output, the size of data returned in cipher_text buffer in bytes.
+ * @param[out]      shared_secret         Pointer to the buffer to receive generated shared secret.
+ * @param[in, out]  shared_secret_size    On input, the size of shared_secret buffer in bytes.
+ *                                        On output, the size of data returned in shared_secret buffer in bytes.
  *
  * @retval true   KEM exchanged key generation succeeded.
  * @retval false  KEM exchanged key generation failed.
@@ -160,17 +193,32 @@ bool libspdm_mlkem_encapsulate(void *kem_context, const uint8_t *peer_encap_key,
                                size_t *cipher_text_size, uint8_t *shared_secret,
                                size_t *shared_secret_size)
 {
+    libspdm_key_context *key_ctx;
     EVP_PKEY_CTX *pkey_ctx;
+    EVP_PKEY *peer_pkey;
     EVP_PKEY *pkey;
-    EVP_PKEY *new_pkey;
+    const char *type_name;
     int ret;
     uint32_t final_encap_key_size;
     uint32_t final_cipher_text_size;
     uint32_t final_shared_secret_size;
 
-    pkey = (EVP_PKEY *)kem_context;
+    if (kem_context == NULL) {
+        return false;
+    }
 
-    switch (libspdm_mlkem_type_name_to_nid(EVP_PKEY_get0_type_name(pkey))) {
+    key_ctx = (libspdm_key_context *)kem_context;
+    pkey = key_ctx->evp_pkey;
+    if (pkey == NULL) {
+        return false;
+    }
+
+    type_name = EVP_PKEY_get0_type_name(pkey);
+    if (type_name == NULL) {
+        return false;
+    }
+
+    switch (libspdm_mlkem_type_name_to_nid(type_name)) {
     case LIBSPDM_CRYPTO_NID_ML_KEM_512:
         final_encap_key_size = 800;
         final_cipher_text_size = 768;
@@ -194,46 +242,47 @@ bool libspdm_mlkem_encapsulate(void *kem_context, const uint8_t *peer_encap_key,
         *shared_secret_size = final_shared_secret_size;
         return false;
     }
-    *shared_secret_size = final_shared_secret_size;
-    libspdm_zero_mem(shared_secret, *shared_secret_size);
     if (*cipher_text_size < final_cipher_text_size) {
         *cipher_text_size = final_cipher_text_size;
         return false;
     }
-    *cipher_text_size = final_cipher_text_size;
-    libspdm_zero_mem(cipher_text, *cipher_text_size);
 
-    new_pkey = EVP_PKEY_new_raw_public_key_ex(NULL, EVP_PKEY_get0_type_name(pkey), NULL,
-                                              peer_encap_key, peer_encap_key_size);
-    if (new_pkey == NULL) {
+    /* Create peer public key */
+    peer_pkey = EVP_PKEY_new_raw_public_key_ex(NULL, type_name, NULL,
+                                               peer_encap_key, peer_encap_key_size);
+    if (peer_pkey == NULL) {
         return false;
     }
 
-    /* ML-KEM does not allow key mutation.
-     * To make evp_keymgmt_util_copy() work, we need to clear key */
-    ossl_ml_kem_key_reset(pkey->keydata);
-
-    if (evp_keymgmt_util_copy(pkey, new_pkey, OSSL_KEYMGMT_SELECT_PUBLIC_KEY) != 1) {
-        EVP_PKEY_free(new_pkey);
-        return false;
-    }
-    EVP_PKEY_free(new_pkey);
-
-    pkey_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pkey, NULL);
+    /* Perform encapsulation using peer public key */
+    pkey_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, peer_pkey, NULL);
     if (pkey_ctx == NULL) {
+        EVP_PKEY_free(peer_pkey);
         return false;
     }
+
     ret = EVP_PKEY_encapsulate_init(pkey_ctx, NULL);
     if (ret != 1) {
+        EVP_PKEY_free(peer_pkey);
         EVP_PKEY_CTX_free(pkey_ctx);
         return false;
     }
-    ret = EVP_PKEY_encapsulate(pkey_ctx, cipher_text, cipher_text_size,
-                               shared_secret, shared_secret_size);
+
+    size_t actual_cipher_text_size = *cipher_text_size;
+    size_t actual_shared_secret_size = *shared_secret_size;
+
+    ret = EVP_PKEY_encapsulate(pkey_ctx, cipher_text, &actual_cipher_text_size,
+                               shared_secret, &actual_shared_secret_size);
     if (ret != 1) {
+        EVP_PKEY_free(peer_pkey);
         EVP_PKEY_CTX_free(pkey_ctx);
         return false;
     }
+
+    *cipher_text_size = actual_cipher_text_size;
+    *shared_secret_size = actual_shared_secret_size;
+
+    EVP_PKEY_free(peer_pkey);
     EVP_PKEY_CTX_free(pkey_ctx);
 
     return true;
@@ -243,31 +292,46 @@ bool libspdm_mlkem_encapsulate(void *kem_context, const uint8_t *peer_encap_key,
  * Computes exchanged common key.
  *
  * @param[in, out]  kem_context           Pointer to the KEM context.
- * @param[in]       peer_encap_key        Pointer to the peer's public key.
- * @param[in]       peer_encap_key_size   size of peer's public key in bytes.
- * @param[out]      key                   Pointer to the buffer to receive generated key.
- * @param[in, out]  key_size              On input, the size of key buffer in bytes.
- *                                        On output, the size of data returned in key buffer in
+ * @param[in]       peer_cipher_text      Pointer to the peer's cipher text.
+ * @param[in]       peer_cipher_text_size size of peer's cipher text in bytes.
+ * @param[out]      shared_secret         Pointer to the buffer to receive generated shared secret.
+ * @param[in, out]  shared_secret_size    On input, the size of shared_secret buffer in bytes.
+ *                                        On output, the size of data returned in shared_secret buffer in
  *                                        bytes.
  *
  * @retval true   KEM exchanged key generation succeeded.
  * @retval false  KEM exchanged key generation failed.
- * @retval false  key_size is not large enough.
+ * @retval false  shared_secret_size is not large enough.
  * @retval false  This interface is not supported.
  **/
 bool libspdm_mlkem_decapsulate(void *kem_context, const uint8_t *peer_cipher_text,
                                size_t peer_cipher_text_size, uint8_t *shared_secret,
                                size_t *shared_secret_size)
 {
+    libspdm_key_context *key_ctx;
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
+    const char *type_name;
     int ret;
     uint32_t final_cipher_text_size;
     uint32_t final_shared_secret_size;
 
-    pkey = (EVP_PKEY *)kem_context;
+    if (kem_context == NULL) {
+        return false;
+    }
 
-    switch (libspdm_mlkem_type_name_to_nid(EVP_PKEY_get0_type_name(pkey))) {
+    key_ctx = (libspdm_key_context *)kem_context;
+    pkey = key_ctx->evp_pkey;
+    if (pkey == NULL) {
+        return false;
+    }
+
+    type_name = EVP_PKEY_get0_type_name(pkey);
+    if (type_name == NULL) {
+        return false;
+    }
+
+    switch (libspdm_mlkem_type_name_to_nid(type_name)) {
     case LIBSPDM_CRYPTO_NID_ML_KEM_512:
         final_cipher_text_size = 768;
         break;
@@ -288,8 +352,6 @@ bool libspdm_mlkem_decapsulate(void *kem_context, const uint8_t *peer_cipher_tex
         *shared_secret_size = final_shared_secret_size;
         return false;
     }
-    *shared_secret_size = final_shared_secret_size;
-    libspdm_zero_mem(shared_secret, *shared_secret_size);
 
     pkey_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pkey, NULL);
     if (pkey_ctx == NULL) {
@@ -300,30 +362,35 @@ bool libspdm_mlkem_decapsulate(void *kem_context, const uint8_t *peer_cipher_tex
         EVP_PKEY_CTX_free(pkey_ctx);
         return false;
     }
-    ret = EVP_PKEY_decapsulate(pkey_ctx, shared_secret, shared_secret_size,
+
+    size_t actual_shared_secret_size = *shared_secret_size;
+    ret = EVP_PKEY_decapsulate(pkey_ctx, shared_secret, &actual_shared_secret_size,
                                peer_cipher_text, peer_cipher_text_size);
     if (ret != 1) {
         EVP_PKEY_CTX_free(pkey_ctx);
         return false;
     }
+
+    *shared_secret_size = actual_shared_secret_size;
     EVP_PKEY_CTX_free(pkey_ctx);
 
     return true;
 }
 
-#ifdef LIBSPDM_FIPS_MODE
+#if LIBSPDM_FIPS_MODE
 /**
- * Computes exchanged common key. This API can be used for FIPS test.
+ * Encapsulate an ML-KEM public key and generate a shared secret.
+ * This is an extended version that allows passing in entropy for deterministic testing.
  *
- * @param[in, out]  kem_context           Pointer to the KEM context.
- * @param[in]       peer_encap_key        Pointer to the peer's public key.
- * @param[in]       peer_encap_key_size   size of peer's public key in bytes.
- * @param[out]      cipher_text           Pointer to the buffer to receive cipher text.
- * @param[in, out]  cipher_text_size      On input, the size of cipher text buffer in bytes.
- *                                        On output, the size of data returned in cipher text buffer in bytes.
- * @param[out]      shared_secret         Pointer to the buffer to receive generated shared secret.
- * @param[in, out]  shared_secret_size    On input, the size of shared secret buffer in bytes.
- *                                        On output, the size of data returned in shared secret buffer in bytes.
+ * @param[in]       kem_context           Pointer to the KEM context.
+ * @param[in]       peer_encap_key        Pointer to peer's encapsulation public key.
+ * @param[in]       peer_encap_key_size   Size of peer's encapsulation public key in bytes.
+ * @param[out]      cipher_text           Pointer to the buffer to receive cipher_text.
+ * @param[in, out]  cipher_text_size      On input, size of cipher_text buffer in bytes.
+ *                                        On output, size of data returned in cipher_text buffer in bytes.
+ * @param[out]      shared_secret         Pointer to the buffer to receive shared_secret.
+ * @param[in, out]  shared_secret_size    On input, size of shared_secret buffer in bytes.
+ *                                        On output, size of data returned in shared_secret buffer in bytes.
  * @param[in]       entropy               Pointer to the buffer to receive entropy.
  * @param[in]       entropy_size          size of entropy buffer in bytes.
  *
@@ -340,15 +407,25 @@ bool libspdm_mlkem_encapsulate_ex(void *kem_context, const uint8_t *peer_encap_k
                                   size_t *shared_secret_size, uint8_t *entropy,
                                   size_t entropy_size)
 {
-    EVP_PKEY_CTX *pkey_ctx;
+    libspdm_key_context *key_ctx;
+    EVP_PKEY_CTX *pkey_ctx = NULL;
     EVP_PKEY *pkey;
-    EVP_PKEY *new_pkey;
+    EVP_PKEY *peer_pkey = NULL;
     int ret;
     uint32_t final_encap_key_size;
     uint32_t final_cipher_text_size;
     uint32_t final_shared_secret_size;
+    bool result = false;
 
-    pkey = (EVP_PKEY *)kem_context;
+    if (kem_context == NULL) {
+        return false;
+    }
+
+    key_ctx = (libspdm_key_context *)kem_context;
+    pkey = key_ctx->evp_pkey;
+    if (pkey == NULL) {
+        return false;
+    }
 
     switch (libspdm_mlkem_type_name_to_nid(EVP_PKEY_get0_type_name(pkey))) {
     case LIBSPDM_CRYPTO_NID_ML_KEM_512:
@@ -387,25 +464,17 @@ bool libspdm_mlkem_encapsulate_ex(void *kem_context, const uint8_t *peer_encap_k
         return false;
     }
 
-    new_pkey = EVP_PKEY_new_raw_public_key_ex(NULL, EVP_PKEY_get0_type_name(pkey), NULL,
-                                              peer_encap_key, peer_encap_key_size);
-    if (new_pkey == NULL) {
-        return false;
+    /* Create peer public key from raw key data */
+    peer_pkey = EVP_PKEY_new_raw_public_key_ex(NULL, EVP_PKEY_get0_type_name(pkey), NULL,
+                                               peer_encap_key, peer_encap_key_size);
+    if (peer_pkey == NULL) {
+        goto cleanup;
     }
 
-    /* ML-KEM does not allow key mutation.
-     * To make evp_keymgmt_util_copy() work, we need to clear key */
-    ossl_ml_kem_key_reset(pkey->keydata);
-
-    if (evp_keymgmt_util_copy(pkey, new_pkey, OSSL_KEYMGMT_SELECT_PUBLIC_KEY) != 1) {
-        EVP_PKEY_free(new_pkey);
-        return false;
-    }
-    EVP_PKEY_free(new_pkey);
-
-    pkey_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, pkey, NULL);
+    /* Create encapsulation context using peer's public key */
+    pkey_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, peer_pkey, NULL);
     if (pkey_ctx == NULL) {
-        return false;
+        goto cleanup;
     }
 
     /* FIPS-203, modify randomness during encapsulation */
@@ -419,41 +488,55 @@ bool libspdm_mlkem_encapsulate_ex(void *kem_context, const uint8_t *peer_encap_k
         ret = EVP_PKEY_encapsulate_init(pkey_ctx, NULL);
     }
     if (ret != 1) {
-        EVP_PKEY_CTX_free(pkey_ctx);
-        return false;
+        goto cleanup;
     }
     ret = EVP_PKEY_encapsulate(pkey_ctx, cipher_text, cipher_text_size,
                                shared_secret, shared_secret_size);
     if (ret != 1) {
-        EVP_PKEY_CTX_free(pkey_ctx);
-        return false;
+        goto cleanup;
     }
-    EVP_PKEY_CTX_free(pkey_ctx);
 
-    return true;
+    result = true;
+
+cleanup:
+    EVP_PKEY_CTX_free(pkey_ctx);
+    EVP_PKEY_free(peer_pkey);
+    return result;
 }
 
 /**
  * Sets the key component into the established KEM context.
  *
- * @param[in, out]  dsa_context  Pointer to KEM context being set.
+ * Since EVP_PKEY is immutable in OpenSSL public API, this function creates
+ * a new private key and replaces the old one in the context.
+ *
+ * @param[in, out]  kem_context  Pointer to KEM context being set.
  * @param[in]       key_data     Pointer to octet integer buffer.
  * @param[in]       key_size     Size of big number buffer in bytes.
  *
  * @retval  true   KEM key component was set successfully.
+ * @retval  false  Key setting failed.
  **/
 bool libspdm_mlkem_set_privkey(void *kem_context, const uint8_t *key_data, size_t key_size)
 {
+    libspdm_key_context *key_ctx;
     uint32_t final_pri_key_size;
-    EVP_PKEY *evp_key;
-    EVP_PKEY *new_evp_key;
+    EVP_PKEY *old_pkey;
+    EVP_PKEY *new_pkey;
+    const char *key_type;
 
     if ((kem_context == NULL) || (key_data == NULL)) {
         return false;
     }
 
-    evp_key = (EVP_PKEY *)kem_context;
-    switch (libspdm_mlkem_type_name_to_nid(EVP_PKEY_get0_type_name(evp_key))) {
+    key_ctx = (libspdm_key_context *)kem_context;
+    old_pkey = key_ctx->evp_pkey;
+    if (old_pkey == NULL) {
+        return false;
+    }
+
+    key_type = EVP_PKEY_get0_type_name(old_pkey);
+    switch (libspdm_mlkem_type_name_to_nid(key_type)) {
     case LIBSPDM_CRYPTO_NID_ML_KEM_512:
         final_pri_key_size = 1632;
         break;
@@ -471,22 +554,16 @@ bool libspdm_mlkem_set_privkey(void *kem_context, const uint8_t *key_data, size_
         return false;
     }
 
-    new_evp_key = EVP_PKEY_new_raw_private_key_ex(NULL, EVP_PKEY_get0_type_name(evp_key), NULL,
-                                                  key_data, key_size);
-    if (new_evp_key == NULL) {
+    /* Create new private key from raw key data */
+    new_pkey = EVP_PKEY_new_raw_private_key_ex(NULL, key_type, NULL, key_data, key_size);
+    if (new_pkey == NULL) {
         return false;
     }
 
-    /* ML-KEM does not allow key mutation.
-     * To make evp_keymgmt_util_copy() work, we need to clear key */
-    ossl_ml_kem_key_reset(evp_key->keydata);
+    /* Replace old key with new key */
+    EVP_PKEY_free(old_pkey);
+    key_ctx->evp_pkey = new_pkey;
 
-    if (evp_keymgmt_util_copy(evp_key, new_evp_key, OSSL_KEYMGMT_SELECT_PRIVATE_KEY) != 1) {
-        EVP_PKEY_free(new_evp_key);
-        return false;
-    }
-
-    EVP_PKEY_free(new_evp_key);
     return true;
 }
 #endif /* LIBSPDM_FIPS_MODE */

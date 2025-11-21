@@ -48,9 +48,15 @@ bool libspdm_hkdf_sha3_256_extract_and_expand(const uint8_t *key, size_t key_siz
                                               const uint8_t *info, size_t info_size,
                                               uint8_t *out, size_t out_size)
 {
-    return hkdf_md_extract_and_expand(EVP_sha3_256(), key, key_size, salt,
-                                      salt_size, info, info_size, out,
-                                      out_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-256", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hkdf_md_extract_and_expand(md, key, key_size, salt,
+                                             salt_size, info, info_size, out,
+                                             out_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -71,8 +77,14 @@ bool libspdm_hkdf_sha3_256_extract(const uint8_t *key, size_t key_size,
                                    const uint8_t *salt, size_t salt_size,
                                    uint8_t *prk_out, size_t prk_out_size)
 {
-    return hkdf_md_extract(EVP_sha3_256(), key, key_size, salt, salt_size,
-                           prk_out, prk_out_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-256", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hkdf_md_extract(md, key, key_size, salt, salt_size,
+                                  prk_out, prk_out_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -93,8 +105,14 @@ bool libspdm_hkdf_sha3_256_expand(const uint8_t *prk, size_t prk_size,
                                   const uint8_t *info, size_t info_size,
                                   uint8_t *out, size_t out_size)
 {
-    return hkdf_md_expand(EVP_sha3_256(), prk, prk_size, info, info_size, out,
-                          out_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-256", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hkdf_md_expand(md, prk, prk_size, info, info_size, out,
+                                 out_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -118,9 +136,15 @@ bool libspdm_hkdf_sha3_384_extract_and_expand(const uint8_t *key, size_t key_siz
                                               const uint8_t *info, size_t info_size,
                                               uint8_t *out, size_t out_size)
 {
-    return hkdf_md_extract_and_expand(EVP_sha3_384(), key, key_size, salt,
-                                      salt_size, info, info_size, out,
-                                      out_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-384", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hkdf_md_extract_and_expand(md, key, key_size, salt,
+                                             salt_size, info, info_size, out,
+                                             out_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -141,8 +165,14 @@ bool libspdm_hkdf_sha3_384_extract(const uint8_t *key, size_t key_size,
                                    const uint8_t *salt, size_t salt_size,
                                    uint8_t *prk_out, size_t prk_out_size)
 {
-    return hkdf_md_extract(EVP_sha3_384(), key, key_size, salt, salt_size,
-                           prk_out, prk_out_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-384", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hkdf_md_extract(md, key, key_size, salt, salt_size,
+                                  prk_out, prk_out_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -163,8 +193,14 @@ bool libspdm_hkdf_sha3_384_expand(const uint8_t *prk, size_t prk_size,
                                   const uint8_t *info, size_t info_size,
                                   uint8_t *out, size_t out_size)
 {
-    return hkdf_md_expand(EVP_sha3_384(), prk, prk_size, info, info_size, out,
-                          out_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-384", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hkdf_md_expand(md, prk, prk_size, info, info_size, out,
+                                 out_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -188,9 +224,15 @@ bool libspdm_hkdf_sha3_512_extract_and_expand(const uint8_t *key, size_t key_siz
                                               const uint8_t *info, size_t info_size,
                                               uint8_t *out, size_t out_size)
 {
-    return hkdf_md_extract_and_expand(EVP_sha3_512(), key, key_size, salt,
-                                      salt_size, info, info_size, out,
-                                      out_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-512", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hkdf_md_extract_and_expand(md, key, key_size, salt,
+                                             salt_size, info, info_size, out,
+                                             out_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -211,8 +253,14 @@ bool libspdm_hkdf_sha3_512_extract(const uint8_t *key, size_t key_size,
                                    const uint8_t *salt, size_t salt_size,
                                    uint8_t *prk_out, size_t prk_out_size)
 {
-    return hkdf_md_extract(EVP_sha3_512(), key, key_size, salt, salt_size,
-                           prk_out, prk_out_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-512", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hkdf_md_extract(md, key, key_size, salt, salt_size,
+                                  prk_out, prk_out_size);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -233,6 +281,12 @@ bool libspdm_hkdf_sha3_512_expand(const uint8_t *prk, size_t prk_size,
                                   const uint8_t *info, size_t info_size,
                                   uint8_t *out, size_t out_size)
 {
-    return hkdf_md_expand(EVP_sha3_512(), prk, prk_size, info, info_size, out,
-                          out_size);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-512", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hkdf_md_expand(md, prk, prk_size, info, info_size, out,
+                                 out_size);
+    EVP_MD_free(md);
+    return result;
 }

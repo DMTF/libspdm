@@ -57,7 +57,13 @@ void libspdm_sha3_256_free(void *sha3_256_ctx)
  **/
 bool libspdm_sha3_256_init(void *sha3_256_context)
 {
-    return hash_md_init (EVP_sha3_256(), sha3_256_context);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-256", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_init(md, sha3_256_context);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -151,7 +157,13 @@ bool libspdm_sha3_256_final(void *sha3_256_context, uint8_t *hash_value)
 bool libspdm_sha3_256_hash_all(const void *data, size_t data_size,
                                uint8_t *hash_value)
 {
-    return hash_md_hash_all (EVP_sha3_256(), data, data_size, hash_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-256", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_hash_all(md, data, data_size, hash_value);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -191,7 +203,13 @@ void libspdm_sha3_384_free(void *sha3_384_ctx)
  **/
 bool libspdm_sha3_384_init(void *sha3_384_context)
 {
-    return hash_md_init (EVP_sha3_384(), sha3_384_context);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-384", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_init(md, sha3_384_context);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -285,7 +303,13 @@ bool libspdm_sha3_384_final(void *sha3_384_context, uint8_t *hash_value)
 bool libspdm_sha3_384_hash_all(const void *data, size_t data_size,
                                uint8_t *hash_value)
 {
-    return hash_md_hash_all (EVP_sha3_384(), data, data_size, hash_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-384", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_hash_all(md, data, data_size, hash_value);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -325,7 +349,13 @@ void libspdm_sha3_512_free(void *sha3_512_ctx)
  **/
 bool libspdm_sha3_512_init(void *sha3_512_context)
 {
-    return hash_md_init (EVP_sha3_512(), sha3_512_context);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-512", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_init(md, sha3_512_context);
+    EVP_MD_free(md);
+    return result;
 }
 
 /**
@@ -419,5 +449,11 @@ bool libspdm_sha3_512_final(void *sha3_512_context, uint8_t *hash_value)
 bool libspdm_sha3_512_hash_all(const void *data, size_t data_size,
                                uint8_t *hash_value)
 {
-    return hash_md_hash_all (EVP_sha3_512(), data, data_size, hash_value);
+    EVP_MD *md = EVP_MD_fetch(NULL, "SHA3-512", NULL);
+    if (md == NULL) {
+        return false;
+    }
+    bool result = hash_md_hash_all(md, data, data_size, hash_value);
+    EVP_MD_free(md);
+    return result;
 }

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -56,7 +56,7 @@ bool libspdm_validate_crypt_hmac(void)
     status = libspdm_hmac_sha256_set_key(hmac_ctx, m_libspdm_hmac_sha256_key, 20);
     if (!status) {
         libspdm_my_print("[Fail]");
-        free_pool(hmac_ctx);
+        libspdm_hmac_sha256_free(hmac_ctx);
         return false;
     }
 
@@ -64,7 +64,7 @@ bool libspdm_validate_crypt_hmac(void)
     status = libspdm_hmac_sha256_update(hmac_ctx, m_libspdm_hmac_data, 8);
     if (!status) {
         libspdm_my_print("[Fail]");
-        free_pool(hmac_ctx);
+        libspdm_hmac_sha256_free(hmac_ctx);
         return false;
     }
 
@@ -72,11 +72,11 @@ bool libspdm_validate_crypt_hmac(void)
     status = libspdm_hmac_sha256_final(hmac_ctx, digest);
     if (!status) {
         libspdm_my_print("[Fail]");
-        free_pool(hmac_ctx);
+        libspdm_hmac_sha256_free(hmac_ctx);
         return false;
     }
 
-    free_pool(hmac_ctx);
+    libspdm_hmac_sha256_free(hmac_ctx);
 
     libspdm_my_print("Check value... ");
     if (memcmp(digest, m_libspdm_hmac_sha256_digest, LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
@@ -101,7 +101,7 @@ bool libspdm_validate_crypt_hmac(void)
     status = libspdm_hmac_sha3_256_set_key(hmac_ctx, m_libspdm_hmac_sha256_key, 20);
     if (!status) {
         libspdm_my_print("[Fail]");
-        free_pool(hmac_ctx);
+        libspdm_hmac_sha3_256_free(hmac_ctx);
         return false;
     }
 
@@ -109,7 +109,7 @@ bool libspdm_validate_crypt_hmac(void)
     status = libspdm_hmac_sha3_256_update(hmac_ctx, m_libspdm_hmac_data, 8);
     if (!status) {
         libspdm_my_print("[Fail]");
-        free_pool(hmac_ctx);
+        libspdm_hmac_sha3_256_free(hmac_ctx);
         return false;
     }
 
@@ -117,11 +117,11 @@ bool libspdm_validate_crypt_hmac(void)
     status = libspdm_hmac_sha3_256_final(hmac_ctx, digest);
     if (!status) {
         libspdm_my_print("[Fail]");
-        free_pool(hmac_ctx);
+        libspdm_hmac_sha3_256_free(hmac_ctx);
         return false;
     }
 
-    free_pool(hmac_ctx);
+    libspdm_hmac_sha3_256_free(hmac_ctx);
     libspdm_my_print("[Pass]\n");
     #endif /* LIBSPDM_SHA3_256_SUPPORT */
 
@@ -139,7 +139,7 @@ bool libspdm_validate_crypt_hmac(void)
     status = libspdm_hmac_sm3_256_set_key(hmac_ctx, m_libspdm_hmac_sha256_key, 20);
     if (!status) {
         libspdm_my_print("[Fail]");
-        free_pool(hmac_ctx);
+        libspdm_hmac_sm3_256_free(hmac_ctx);
         return false;
     }
 
@@ -147,7 +147,7 @@ bool libspdm_validate_crypt_hmac(void)
     status = libspdm_hmac_sm3_256_update(hmac_ctx, m_libspdm_hmac_data, 8);
     if (!status) {
         libspdm_my_print("[Fail]");
-        free_pool(hmac_ctx);
+        libspdm_hmac_sm3_256_free(hmac_ctx);
         return false;
     }
 
@@ -155,11 +155,11 @@ bool libspdm_validate_crypt_hmac(void)
     status = libspdm_hmac_sm3_256_final(hmac_ctx, digest);
     if (!status) {
         libspdm_my_print("[Fail]");
-        free_pool(hmac_ctx);
+        libspdm_hmac_sm3_256_free(hmac_ctx);
         return false;
     }
 
-    free_pool(hmac_ctx);
+    libspdm_hmac_sm3_256_free(hmac_ctx);
     libspdm_my_print("[Pass]\n");
     #endif /* LIBSPDM_SM3_256_SUPPORT */
 
