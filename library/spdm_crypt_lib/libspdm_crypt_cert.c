@@ -89,7 +89,7 @@
 #endif
 
 /**
- * MLDSA OID: https://datatracker.ietf.org/doc/draft-ietf-lamps-dilithium-certificates
+ * MLDSA OID: RFC9881
  * MLDSA44 OID: 2.16.840.1.101.3.4.3.17
  * MLDSA65 OID: 2.16.840.1.101.3.4.3.18
  * MLDSA87 OID: 2.16.840.1.101.3.4.3.19

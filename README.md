@@ -62,7 +62,7 @@
    Currently supported PQC algorithms: Signature:ML-DSA/SLH-DSA, KeyEncapsulation:ML-KEM.
    NOTE: NIST algorithms and Shang-Mi (SM) algorithms should not be mixed together.
 
-   ML-DSA OID is defined in [IETF Algorithm Identifiers for ML-DSA (Draft)](https://datatracker.ietf.org/doc/draft-ietf-lamps-dilithium-certificates).
+   ML-DSA OID is defined in [RFC9881](https://datatracker.ietf.org/doc/rfc9881/).
    SLH-DSA OID is defined in [IETF Algorithm Identifiers for SLH-DSA (Draft)](https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-slhdsa).
 
    The endianness is defined in [crypto_endianness](https://github.com/DMTF/libspdm/blob/main/doc/crypto_endianness.md).

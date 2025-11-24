@@ -1674,7 +1674,7 @@ typedef struct {
  * The ed448 public key info len is 7.
  *
  * Below is added in 1.4.
- * https://datatracker.ietf.org/doc/draft-ietf-lamps-dilithium-certificates
+ * RFC9881
  * The PQC mldsa public key info len is 13.
  * https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-slhdsa
  * The PQC slhdsa public key info len is 13.
