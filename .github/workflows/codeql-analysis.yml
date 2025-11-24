@@ -49,7 +49,7 @@ jobs:
           - "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1"
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
