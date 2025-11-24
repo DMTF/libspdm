@@ -82,7 +82,7 @@ The bundle_responder.certchain_alias.der is the entire cert_chain in the alias_c
 
 0. Sample DER / PEM public key and private key.
 
-The example is from https://datatracker.ietf.org/doc/draft-ietf-lamps-dilithium-certificates
+The example is from RFC9881
 
 They are under:
 ```
@@ -108,7 +108,7 @@ openssl asn1parse -in pubkey.der -inform DER -i -dump
 1. Generate DER / PEM public certificate with OpenSSL 3.5.
 
 OID definition:
-https://datatracker.ietf.org/doc/draft-ietf-lamps-dilithium-certificates
+RFC9881
 https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-slhdsa
 
 ```

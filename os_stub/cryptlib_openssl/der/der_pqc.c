@@ -40,7 +40,7 @@ uint8_t m_mldsa87_oid_size = sizeof(m_mldsa87_oid);
  * The public key is ASN.1 DER-encoded as RFC7250 describes,
  * namely, the SubjectPublicKeyInfo structure of a X.509 certificate.
  *
- * OID is defined in https://datatracker.ietf.org/doc/draft-ietf-lamps-dilithium-certificates
+ * OID is defined in RFC9881
  *
  * @param[in]  der_data     Pointer to the DER-encoded public key data.
  * @param[in]  der_size     Size of the DER-encoded public key data in bytes.
@@ -212,7 +212,7 @@ uint8_t m_slhdsa_shake_256f_oid_size = sizeof(m_slhdsa_shake_256f_oid);
  * The public key is ASN.1 DER-encoded as RFC7250 describes,
  * namely, the SubjectPublicKeyInfo structure of a X.509 certificate.
  *
- * OID is defined in https://datatracker.ietf.org/doc/draft-ietf-lamps-dilithium-certificates
+ * OID is defined in RFC9881
  *
  * @param[in]  der_data     Pointer to the DER-encoded public key data.
  * @param[in]  der_size     Size of the DER-encoded public key data in bytes.
