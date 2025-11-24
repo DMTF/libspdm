@@ -47,6 +47,7 @@ target_sources(cryptlib_openssl
         pk/x509_pqc.c
         rand/rand.c
         sys_call/crt_wrapper_host.c
+        tpm/tpm.c
 )
 
 target_compile_options(cryptlib_openssl PRIVATE ${OPENSSL_FLAGS})
