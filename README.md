@@ -169,6 +169,12 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 
 2) [CMake](https://cmake.org/) (Version [3.17.2](https://github.com/Kitware/CMake/releases/tag/v3.17.2) is known to work. Newer versions may fail).
 
+3) [Perl](https://www.perl.org/) (Version 5.10.0 or higher)
+   - Required for building OpenSSL from source (OpenSSL's `Configure` script is written in Perl).
+   - [Strawberry Perl](https://strawberryperl.com/) or [ActivePerl](https://www.activestate.com/products/perl/) is recommended for Windows.
+   - For MinGW/MSYS2 builds, Perl is included in the MSYS2 environment.
+   - Use `perl -v` to check the installed Perl version.
+
 ### Build Tools for Linux
 
 1) Compiler for IA32/X64 (Choose one)
@@ -183,6 +189,15 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
 2) [CMake](https://cmake.org/).
+
+3) [Perl](https://www.perl.org/) (Version 5.10.0 or higher)
+   - Required for building OpenSSL from source (OpenSSL's `Configure` script is written in Perl).
+   - Perl is typically pre-installed on most Linux distributions.
+   - If not available, install via:
+     - Debian/Ubuntu: `sudo apt-get install perl`
+     - RHEL/CentOS: `sudo yum install perl`
+     - Fedora: `sudo dnf install perl`
+   - Use `perl -v` to check the installed Perl version.
 
 ### Cryptography Library
 
