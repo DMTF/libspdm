@@ -508,7 +508,18 @@ bool libspdm_validate_svh_vendor_id_len(uint16_t id, uint8_t vendor_id_len)
     case SPDM_REGISTRY_ID_HDBASET:
         return ((vendor_id_len == 0) || (vendor_id_len == 4));
     case SPDM_REGISTRY_ID_IANA_CBOR:
-        return true;
+        switch (vendor_id_len) {
+        /* A CBOR-encoded tag number is either a simple one byte identifier, or a one byte
+         * identifier followed by a one, two, four, or eight byte unsigned integer. */
+        case 1:
+        case 2:
+        case 3:
+        case 5:
+        case 9:
+            return true;
+        default:
+            return false;
+        }
     case SPDM_REGISTRY_ID_DMTF_DSP:
         return (vendor_id_len == 2);
     default:
