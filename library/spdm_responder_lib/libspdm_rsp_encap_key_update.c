@@ -36,8 +36,7 @@ libspdm_return_t libspdm_get_encap_request_key_update(libspdm_context_t *spdm_co
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
     session_id = spdm_context->last_spdm_request_session_id;
-    session_info =
-        libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
@@ -58,18 +57,16 @@ libspdm_return_t libspdm_get_encap_request_key_update(libspdm_context_t *spdm_co
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   spdm_request->header.request_response_code);
 
-    if (spdm_context->encap_context.last_encap_request_header
-        .request_response_code != SPDM_KEY_UPDATE) {
-        spdm_request->header.param1 =
-            SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+    if (spdm_context->encap_context.last_encap_request_header.request_response_code !=
+        SPDM_KEY_UPDATE) {
+        spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
         spdm_request->header.param2 = 0;
         if (!libspdm_get_random_number(sizeof(spdm_request->header.param2),
                                        &spdm_request->header.param2)) {
             return LIBSPDM_STATUS_LOW_ENTROPY;
         }
     } else {
-        spdm_request->header.param1 =
-            SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+        spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
         spdm_request->header.param2 = 1;
         if (!libspdm_get_random_number(sizeof(spdm_request->header.param2),
                                        &spdm_request->header.param2)) {
@@ -78,8 +75,7 @@ libspdm_return_t libspdm_get_encap_request_key_update(libspdm_context_t *spdm_co
 
         /* Create new key*/
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "libspdm_create_update_session_data_key[%x] Responder\n",
-                       session_id));
+                       "libspdm_create_update_session_data_key[%x] Responder\n", session_id));
         result = libspdm_create_update_session_data_key(
             session_info->secured_message_context,
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
@@ -91,11 +87,9 @@ libspdm_return_t libspdm_get_encap_request_key_update(libspdm_context_t *spdm_co
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "libspdm_activate_update_session_data_key[%x] Responder new\n",
-                       session_id));
+                       "libspdm_activate_update_session_data_key[%x] Responder new\n", session_id));
         result = libspdm_activate_update_session_data_key(
-            session_info->secured_message_context,
-            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
+            session_info->secured_message_context, LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
         if (!result) {
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
@@ -107,8 +101,7 @@ libspdm_return_t libspdm_get_encap_request_key_update(libspdm_context_t *spdm_co
     libspdm_copy_mem(&spdm_context->encap_context.last_encap_request_header,
                      sizeof(spdm_context->encap_context.last_encap_request_header),
                      &spdm_request->header, sizeof(spdm_message_header_t));
-    spdm_context->encap_context.last_encap_request_size =
-        *encap_request_size;
+    spdm_context->encap_context.last_encap_request_size = *encap_request_size;
 
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -128,8 +121,7 @@ libspdm_return_t libspdm_process_encap_response_key_update(
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
     session_id = spdm_context->last_spdm_request_session_id;
-    session_info =
-        libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
@@ -139,8 +131,7 @@ libspdm_return_t libspdm_process_encap_response_key_update(
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    spdm_request =
-        (void *)&spdm_context->encap_context.last_encap_request_header;
+    spdm_request = (void *)&spdm_context->encap_context.last_encap_request_header;
 
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
@@ -159,25 +150,19 @@ libspdm_return_t libspdm_process_encap_response_key_update(
     /* this message can only be in secured session
      * thus don't need to consider transport layer padding, just check its exact size */
     if ((spdm_response_size != sizeof(spdm_key_update_response_t)) ||
-        (spdm_response->header.request_response_code !=
-         SPDM_KEY_UPDATE_ACK) ||
+        (spdm_response->header.request_response_code != SPDM_KEY_UPDATE_ACK) ||
         (spdm_response->header.param1 != spdm_request->header.param1) ||
         (spdm_response->header.param2 != spdm_request->header.param2)) {
-        if (spdm_request->header.param1 !=
-            SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_key_update[%x] failed\n",
-                           session_id));
+        if (spdm_request->header.param1 != SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_key_update[%x] failed\n", session_id));
         } else {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] failed\n",
-                           session_id));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] failed\n", session_id));
         }
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
 
-    if (spdm_request->header.param1 !=
-        SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_key_update[%x] success\n",
-                       session_id));
+    if (spdm_request->header.param1 != SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_key_update[%x] success\n", session_id));
         *need_continue = true;
     } else {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] Success\n", session_id));
