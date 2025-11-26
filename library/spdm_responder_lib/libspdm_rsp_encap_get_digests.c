@@ -113,9 +113,9 @@ libspdm_return_t libspdm_process_encap_response_digest(
         }
     }
 
-    digest_size = libspdm_get_hash_size(
-        spdm_context->connection_info.algorithm.base_hash_algo);
+    digest_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     digest_count = 0;
+
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (spdm_response->header.param2 & (1 << index)) {
             digest_count++;

@@ -44,8 +44,7 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_CHALLENGE;
     spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
-    spdm_request->header.param2 =
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH;
+    spdm_request->header.param2 = SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH;
     if (!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
         return LIBSPDM_STATUS_LOW_ENTROPY;
     }
@@ -64,10 +63,8 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
                                                   spdm_request->header.request_response_code);
 
 
-    /* Cache data*/
-
-    status = libspdm_append_message_mut_c(spdm_context, spdm_request,
-                                          spdm_request_size);
+    /* Cache data */
+    status = libspdm_append_message_mut_c(spdm_context, spdm_request, spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
@@ -108,8 +105,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_encap_error_response_main(
-            spdm_context,
-            spdm_response->header.param1);
+            spdm_context, spdm_response->header.param1);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }
@@ -157,10 +153,8 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     }
     measurement_summary_hash_size = 0;
 
-    if (spdm_response_size <= sizeof(spdm_challenge_auth_response_t) +
-        hash_size + SPDM_NONCE_SIZE +
-        measurement_summary_hash_size +
-        sizeof(uint16_t)) {
+    if (spdm_response_size <= (sizeof(spdm_challenge_auth_response_t) + hash_size +
+        SPDM_NONCE_SIZE + measurement_summary_hash_size + sizeof(uint16_t))) {
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
@@ -263,8 +257,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         return LIBSPDM_STATUS_VERIF_FAIL;
     }
 
-    libspdm_set_connection_state(spdm_context,
-                                 LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
+    libspdm_set_connection_state(spdm_context, LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
 
     *need_continue = false;
 
