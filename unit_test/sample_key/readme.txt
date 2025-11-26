@@ -1,5 +1,5 @@
 ==== Note ====
-Please use auto_gen_cert.sh to gen all cert in sample_key, then the raw_data_key_gen.py need run to generate sync raw data key.
+Please use auto_gen_cert.sh to gen all cert in sample_key, then the raw_data_key_gen.py and raw_data_key_gen_pqc.py need run to generate sync raw data key.
 Note: the rsa3072_Expiration have 1 day valid time.
 
 ==== RSA ====
@@ -184,12 +184,12 @@ cd ..
 
 2. Raw public key and private key generation:
 
-User can use `gen_pqc_key` program to generate raw private and public binary key from the generated end_requester.key.der and end_responder.key.der.
+User can use `raw_data_key_gen_pqc.py` program to generate raw private and public binary key from the generated end_requester.key.der and end_responder.key.der.
 ```
 cd libspdm/build
 make
 cd bin
-gen_pqc_key
+python raw_data_key_gen_pqc.py
 cd ..
 ```
 
