@@ -3365,6 +3365,9 @@ void libspdm_deinit_context(void *spdm_context)
     libspdm_reset_message_c(context);
     libspdm_reset_message_mut_b(context);
     libspdm_reset_message_mut_c(context);
+    libspdm_reset_message_m(spdm_context, NULL);
+    libspdm_reset_message_e(spdm_context, NULL);
+    libspdm_reset_message_encap_e(spdm_context, NULL);
     for (session_id = 0; session_id < LIBSPDM_MAX_SESSION_COUNT; session_id++) {
         session_info = &context->session_info[session_id];
         libspdm_reset_message_m(context, session_info);
