@@ -209,5 +209,3 @@ mldsa87/end_responder.key.priv.raw
 mldsa87/end_responder.key.pub.der
 ```
 
-If the end_requester.key.der and end_responder.key.der are not generated, user can use `gen_pqc_key` program to generate raw binary key for ML-DSA-44, ML-DSA-65, ML-DSA-87.
-
