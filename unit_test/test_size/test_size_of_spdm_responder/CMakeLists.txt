@@ -25,8 +25,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(CMAKE_EXE_LINKER_FLAGS "/DLL /ENTRY:ModuleEntryPoint /NOLOGO /SUBSYSTEM:EFI_BOOT_SERVICE_DRIVER /NODEFAULTLIB /IGNORE:4086 /MAP /OPT:REF")
 endif()
 
-
-add_library(test_size_of_spdm_responder STATIC "")
+add_executable(test_size_of_spdm_responder)
 
 target_include_directories(test_size_of_spdm_responder
     PRIVATE
