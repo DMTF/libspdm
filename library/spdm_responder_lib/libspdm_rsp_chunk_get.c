@@ -208,6 +208,7 @@ libspdm_return_t libspdm_get_response_chunk_get(
 
     LIBSPDM_ASSERT(get_info->chunk_bytes_transferred <= get_info->large_message_size);
     if (get_info->chunk_bytes_transferred == get_info->large_message_size) {
+        libspdm_zero_mem(get_info->large_message, get_info->large_message_capacity);
         get_info->chunk_in_use = false;
         get_info->chunk_handle++; /* implicit wrap - around to 0. */
         get_info->chunk_seq_no = 0;
