@@ -22,6 +22,7 @@ libspdm_test_context_t m_libspdm_responder_challenge_test_context = {
 };
 
 extern size_t libspdm_secret_lib_challenge_opaque_data_size;
+extern bool g_start_basic_mut_auth;
 
 void libspdm_test_responder_challenge_case1(void **State)
 {
@@ -175,12 +176,13 @@ void libspdm_test_responder_challenge_case4(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
-    spdm_context->local_context.basic_mut_auth_requested = 1;
+    g_start_basic_mut_auth = true;
     response_size = sizeof(response);
     libspdm_reset_message_c(spdm_context);
     libspdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                         spdm_test_context->test_buffer, &response_size, response);
     free(data);
+    g_start_basic_mut_auth = false;
 }
 
 void libspdm_test_responder_challenge_case5(void **State)
@@ -259,12 +261,13 @@ void libspdm_test_responder_challenge_case6(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
-    spdm_context->local_context.basic_mut_auth_requested = 1;
     response_size = sizeof(response);
     libspdm_reset_message_c(spdm_context);
+    g_start_basic_mut_auth = true;
     libspdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                         spdm_test_context->test_buffer, &response_size, response);
     free(data);
+    g_start_basic_mut_auth = false;
 }
 
 void libspdm_test_responder_challenge_case7(void **State)

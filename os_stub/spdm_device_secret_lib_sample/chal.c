@@ -22,6 +22,7 @@
 size_t libspdm_secret_lib_challenge_opaque_data_size;
 bool g_check_challenge_request_context = false;
 uint64_t g_challenge_request_context;
+bool g_start_basic_mut_auth = false;
 
 bool libspdm_challenge_opaque_data(
     void *spdm_context,
@@ -88,4 +89,16 @@ bool libspdm_encap_challenge_opaque_data(
 
     return true;
 }
+
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+bool libspdm_challenge_start_mut_auth(
+    void *spdm_context,
+    spdm_version_number_t spdm_version,
+    uint8_t slot_id,
+    size_t request_context_size,
+    const void *request_context)
+{
+    return g_start_basic_mut_auth;
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */

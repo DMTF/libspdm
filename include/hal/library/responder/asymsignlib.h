@@ -19,10 +19,10 @@
  * @param  spdm_context  A pointer to the SPDM context.
  * @param  spdm_version  Indicates the negotiated version.
  *
- * @param  slot_id          The number of slot for the certificate chain.
+ * @param  slot_id               Slot ID of the CHALLENGE request.
  * @param  request_context_size  The size, in bytes, of request_context.
  * @param  request_context       If spdm_version is greater than 1.2, then it is a pointer to the
- *                               Context field in the request message, else it is NULL and ignore
+ *                               Context field in the request message, else it is NULL and ignore.
  *
  * @param opaque_data
  * A pointer to a destination buffer whose size, in bytes, is opaque_data_size. The opaque data is
@@ -40,7 +40,30 @@ extern bool libspdm_challenge_opaque_data(
     const void *request_context,
     void *opaque_data,
     size_t *opaque_data_size);
-#endif/*LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
+
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+/**
+ * Queries whether basic mutual authentication should be initiated or not.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  spdm_version  Indicates the negotiated version.
+ *
+ * @param  slot_id               Slot ID of the CHALLENGE request.
+ * @param  request_context_size  The size, in bytes, of request_context.
+ * @param  request_context       If spdm_version is greater than 1.2, then it is a pointer to the
+ *                               Context field in the request message, else it is NULL and ignore.
+ *
+ * @retval true   Initiate the basic mutual authentication flow.
+ * @retval false  Do not initiate the basic mutual authentication flow.
+ */
+extern bool libspdm_challenge_start_mut_auth(
+    void *spdm_context,
+    spdm_version_number_t spdm_version,
+    uint8_t slot_id,
+    size_t request_context_size,
+    const void *request_context);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
 
 /**
  * Sign an SPDM message data.
