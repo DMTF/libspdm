@@ -77,9 +77,7 @@ bool libspdm_challenge_opaque_data(
 {
     return false;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 bool libspdm_encap_challenge_opaque_data(
     void *spdm_context,
     spdm_version_number_t spdm_version,
@@ -91,6 +89,18 @@ bool libspdm_encap_challenge_opaque_data(
 {
     return false;
 }
+
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+bool libspdm_challenge_start_mut_auth(
+    void *spdm_context,
+    spdm_version_number_t spdm_version,
+    uint8_t slot_id,
+    size_t request_context_size,
+    const void *request_context)
+{
+    return false;
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP

@@ -164,6 +164,8 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
     auth_attribute = (uint8_t)(slot_id & 0xF);
+
+    #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         if (libspdm_is_capabilities_flag_supported(
                 spdm_context, false,
@@ -178,22 +180,19 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
              libspdm_is_capabilities_flag_supported(
                  spdm_context, false,
                  SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0))) {
-            if (spdm_context->local_context.basic_mut_auth_requested) {
-                auth_attribute =
-                    (uint8_t)(auth_attribute |
-                              SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ);
+            if (libspdm_challenge_start_mut_auth(spdm_context,
+                                                 spdm_context->connection_info.version,
+                                                 slot_id,
+                                                 request_context_size,
+                                                 request_context)) {
+                auth_attribute |= SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ;
+                libspdm_init_basic_mut_auth_encap_state(spdm_context);
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                              "Basic mutual authentication is a deprecated feature.\n"));
             }
         }
-        if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
-            libspdm_init_basic_mut_auth_encap_state(spdm_context);
-#else
-            auth_attribute =
-                (uint8_t)(auth_attribute &
-                          ~SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ);
-#endif
-        }
     }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
     spdm_response->header.param1 = auth_attribute;
 

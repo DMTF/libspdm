@@ -670,32 +670,6 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         context->local_context.local_public_key_provision_size = data_size;
         context->local_context.local_public_key_provision = data;
         break;
-    case LIBSPDM_DATA_BASIC_MUT_AUTH_REQUESTED:
-        if (data_size != sizeof(bool)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        mut_auth_requested = *(const uint8_t *)data;
-        if (((mut_auth_requested != 0) && (mut_auth_requested != 1))) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        context->local_context.basic_mut_auth_requested = mut_auth_requested;
-        context->encap_context.request_id = 0;
-        slot_id = parameter->additional_data[0];
-        if ((slot_id >= SPDM_MAX_SLOT_COUNT) && (slot_id != 0xFF)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        context->encap_context.req_slot_id = slot_id;
-
-        #if LIBSPDM_DEBUG_PRINT_ENABLE
-        if (mut_auth_requested) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "Basic mutual authentication is a deprecated feature.\n"));
-        }
-        #endif /* LIBSPDM_DEBUG_PRINT_ENABLE */
-        break;
     case LIBSPDM_DATA_MUT_AUTH_REQUESTED:
         if (data_size != sizeof(uint8_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
