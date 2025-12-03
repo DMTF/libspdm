@@ -112,7 +112,6 @@ static void rsp_psk_finish_rsp_case1(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -217,7 +216,6 @@ static void rsp_psk_finish_rsp_case2(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -325,7 +323,6 @@ static void rsp_psk_finish_rsp_case3(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -437,7 +434,6 @@ static void rsp_psk_finish_rsp_case4(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -552,7 +548,6 @@ static void rsp_psk_finish_rsp_case5(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -673,7 +668,6 @@ static void rsp_psk_finish_rsp_case6(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -777,7 +771,6 @@ static void rsp_psk_finish_rsp_case7(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -906,7 +899,6 @@ static void rsp_psk_finish_rsp_case8(void **state)
         data_size1;
 
     spdm_context->transcript.message_a.buffer_size = 0;
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -1017,7 +1009,6 @@ static void rsp_psk_finish_rsp_case9(void **state)
         data_size1;
 
     spdm_context->transcript.message_a.buffer_size = 0;
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -1125,7 +1116,6 @@ static void rsp_psk_finish_rsp_case10(void **state)
         data_size1;
 
     spdm_context->transcript.message_a.buffer_size = 0;
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -1226,7 +1216,6 @@ static void rsp_psk_finish_rsp_case11(void **state)
         data_size1;
 
     spdm_context->transcript.message_a.buffer_size = 0;
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -1331,7 +1320,6 @@ static void rsp_psk_finish_rsp_case12(void **state)
         data_size1;
 
     spdm_context->transcript.message_a.buffer_size = 0;
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -1443,7 +1431,6 @@ static void rsp_psk_finish_rsp_case13(void **state)
         data_size1;
 
     spdm_context->transcript.message_a.buffer_size = 0;
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -1546,7 +1533,6 @@ static void rsp_psk_finish_rsp_case14(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -1650,7 +1636,6 @@ static void rsp_psk_finish_rsp_case15(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;

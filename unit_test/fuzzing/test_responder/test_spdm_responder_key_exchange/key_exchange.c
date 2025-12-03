@@ -12,6 +12,8 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
+extern uint8_t g_key_exchange_start_mut_auth;
+
 uint8_t m_cert_chain_buffer[SPDM_MAX_CERTIFICATE_CHAIN_SIZE];
 
 size_t libspdm_get_max_buffer_size(void)
@@ -79,7 +81,6 @@ void libspdm_test_responder_key_exchange_case1(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     ptr = spdm_test_key_exchange_request->exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
@@ -149,7 +150,6 @@ void libspdm_test_responder_key_exchange_case2(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
     ptr = spdm_test_key_exchange_request->exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
     dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
@@ -213,7 +213,6 @@ void libspdm_test_responder_key_exchange_case3(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     response_size = sizeof(response);
 
@@ -281,7 +280,7 @@ void libspdm_test_responder_key_exchange_case4(void **State)
                                        sizeof(m_cert_chain_buffer));
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 1;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
 
     ptr = spdm_test_key_exchange_request->exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
@@ -304,6 +303,8 @@ void libspdm_test_responder_key_exchange_case4(void **State)
     if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
         libspdm_reset_message_k(spdm_context, spdm_context->session_info);
     }
+
+    g_key_exchange_start_mut_auth = 0;
     free(data);
 }
 #endif
@@ -357,7 +358,6 @@ void libspdm_test_responder_key_exchange_case5(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     ptr = spdm_test_key_exchange_request->exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
@@ -426,7 +426,6 @@ void libspdm_test_responder_key_exchange_case6(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     ptr = spdm_test_key_exchange_request->exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
@@ -494,7 +493,6 @@ void libspdm_test_responder_key_exchange_case7(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     ptr = spdm_test_key_exchange_request->exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
@@ -584,7 +582,6 @@ void libspdm_test_responder_key_exchange_case8(void **State)
     spdm_context->local_context.peer_public_key_provision = data2;
     spdm_context->local_context.peer_public_key_provision_size = data_size2;
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     ptr = spdm_test_key_exchange_request->exchange_data;
     dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);

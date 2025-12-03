@@ -8,6 +8,8 @@
 #include "internal/libspdm_responder_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
+extern uint8_t g_key_exchange_start_mut_auth;
+
 #pragma pack(1)
 
 typedef struct {
@@ -141,7 +143,6 @@ void rsp_finish_rsp_case1(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -264,7 +265,6 @@ void rsp_finish_rsp_case3(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -382,7 +382,6 @@ void rsp_finish_rsp_case4(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -503,7 +502,6 @@ void rsp_finish_rsp_case5(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -630,7 +628,6 @@ void rsp_finish_rsp_case6(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -740,7 +737,6 @@ void rsp_finish_rsp_case7(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -884,7 +880,7 @@ void rsp_finish_rsp_case8(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 1;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data2,
                                                     &data_size2, NULL, NULL);
@@ -978,6 +974,8 @@ void rsp_finish_rsp_case8(void **state)
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_FINISH_RSP);
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
@@ -1045,7 +1043,6 @@ void rsp_finish_rsp_case9(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -1162,7 +1159,6 @@ void rsp_finish_rsp_case10(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -1273,7 +1269,6 @@ void rsp_finish_rsp_case11(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -1372,7 +1367,6 @@ void rsp_finish_rsp_case12(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -1486,7 +1480,6 @@ void rsp_finish_rsp_case14(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -1610,7 +1603,7 @@ void rsp_finish_rsp_case15(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 1;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data2,
                                                     &data_size2, NULL, NULL);
@@ -1695,6 +1688,8 @@ void rsp_finish_rsp_case15(void **state)
     assert_int_equal(spdm_response->header.param1,
                      SPDM_ERROR_CODE_DECRYPT_ERROR);
     assert_int_equal(spdm_response->header.param2, 0);
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
@@ -1769,7 +1764,7 @@ void rsp_finish_rsp_case16(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 1;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data2,
                                                     &data_size2, NULL, NULL);
@@ -1853,6 +1848,8 @@ void rsp_finish_rsp_case16(void **state)
     assert_int_equal(spdm_response->header.param1,
                      SPDM_ERROR_CODE_DECRYPT_ERROR);
     assert_int_equal(spdm_response->header.param2, 0);
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
@@ -1909,7 +1906,6 @@ void rsp_finish_rsp_case17(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -2032,7 +2028,7 @@ void rsp_finish_rsp_case18(void **state)
     libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data1, &data_size1);
     spdm_context->local_context.local_public_key_provision = data1;
     spdm_context->local_context.local_public_key_provision_size = data_size1;
-    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_key(m_libspdm_use_req_asym_algo, &data2, &data_size2);
     spdm_context->local_context.peer_public_key_provision = data2;
     spdm_context->local_context.peer_public_key_provision_size = data_size2;
@@ -2109,6 +2105,8 @@ void rsp_finish_rsp_case18(void **state)
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_FINISH_RSP);
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
@@ -2181,7 +2179,7 @@ void rsp_finish_rsp_case19(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data2,
                                                     &data_size2, NULL, NULL);
@@ -2278,6 +2276,8 @@ void rsp_finish_rsp_case19(void **state)
     assert_int_equal(spdm_response->header.param1,
                      SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 }
@@ -2349,8 +2349,7 @@ void rsp_finish_rsp_case20(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested =
-        SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data2,
                                                     &data_size2, NULL, NULL);
@@ -2448,6 +2447,8 @@ void rsp_finish_rsp_case20(void **state)
     assert_int_equal(spdm_response->header.param1,
                      SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 }
@@ -2513,7 +2514,6 @@ void rsp_finish_rsp_case21(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -2636,7 +2636,7 @@ void rsp_finish_rsp_case22(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data2,
                                                     &data_size2, NULL, NULL);
@@ -2731,6 +2731,8 @@ void rsp_finish_rsp_case22(void **state)
                      SPDM_FINISH_RSP);
     assert_int_equal(response_size,
                      sizeof(spdm_finish_response_t) + hmac_size);
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
@@ -2804,7 +2806,7 @@ void rsp_finish_rsp_case23(void** state)
         LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data2,
                                                     &data_size2, NULL, NULL);
@@ -2899,6 +2901,8 @@ void rsp_finish_rsp_case23(void** state)
     /* Expecting failure on little-endian signature */
     assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 }
@@ -2972,7 +2976,7 @@ void rsp_finish_rsp_case24(void** state)
         LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data2,
                                                     &data_size2, NULL, NULL);
@@ -3067,6 +3071,8 @@ void rsp_finish_rsp_case24(void** state)
     /* Expecting pass on big-endian signature */
     assert_int_equal(spdm_response->header.request_response_code, SPDM_FINISH_RSP);
     assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
@@ -3141,7 +3147,7 @@ void rsp_finish_rsp_case25(void** state)
         LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data2,
                                                     &data_size2, NULL, NULL);
@@ -3234,6 +3240,8 @@ void rsp_finish_rsp_case25(void** state)
     spdm_response = (void*)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_FINISH_RSP);
     assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
@@ -3308,7 +3316,7 @@ void rsp_finish_rsp_case26(void** state)
         LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data2,
                                                     &data_size2, NULL, NULL);
@@ -3407,6 +3415,8 @@ void rsp_finish_rsp_case26(void** state)
     spdm_response = (void*)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_FINISH_RSP);
     assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
@@ -3480,7 +3490,7 @@ void rsp_finish_rsp_case27(void** state)
         LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data2,
                                                     &data_size2, NULL, NULL);
@@ -3579,6 +3589,8 @@ void rsp_finish_rsp_case27(void** state)
     spdm_response = (void*)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 }
@@ -3652,7 +3664,7 @@ void rsp_finish_rsp_case28(void** state)
         LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data2,
                                                     &data_size2, NULL, NULL);
@@ -3751,6 +3763,8 @@ void rsp_finish_rsp_case28(void** state)
     spdm_response = (void*)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_FINISH_RSP);
     assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
+
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
     free(data2);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
@@ -3818,7 +3832,6 @@ void rsp_finish_rsp_case29(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     /* The requester and responder have not set HANDSHAKE_IN_THE_CLEAR*/
     spdm_context->connection_info.capability.flags &=
@@ -3939,7 +3952,6 @@ void rsp_finish_rsp_case30(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     /* The requester and responder have not set HANDSHAKE_IN_THE_CLEAR*/
     spdm_context->connection_info.capability.flags &=

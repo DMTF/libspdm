@@ -117,6 +117,23 @@ bool libspdm_measurement_extension_log_collection(
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP */
 
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP)
+extern uint8_t libspdm_key_exchange_start_mut_auth(
+    void *spdm_context,
+    uint32_t session_id,
+    spdm_version_number_t spdm_version,
+    uint8_t slot_id,
+    uint8_t *req_slot_id,
+    uint8_t session_policy,
+    size_t opaque_data_length,
+    const void *opaque_data,
+    bool *mandatory_mut_auth
+)
+{
+    return false;
+}
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) */
+
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
 bool libspdm_requester_data_sign(
     void *spdm_context,

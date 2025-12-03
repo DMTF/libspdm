@@ -65,7 +65,6 @@ void libspdm_test_responder_heartbeat_case1(void **State)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -183,7 +182,6 @@ void libspdm_test_responder_heartbeat_case4(void **State)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
