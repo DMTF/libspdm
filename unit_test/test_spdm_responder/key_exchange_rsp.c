@@ -88,6 +88,9 @@ libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request10 = {
 };
 size_t m_libspdm_key_exchange_request10_size = sizeof(m_libspdm_key_exchange_request10);
 
+extern uint8_t g_key_exchange_start_mut_auth;
+extern bool g_mandatory_mut_auth;
+
 extern bool g_event_all_subscribe;
 extern bool g_event_all_unsubscribe;
 
@@ -134,7 +137,6 @@ static void rsp_key_exchange_rsp_case1(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
@@ -223,7 +225,6 @@ static void rsp_key_exchange_rsp_case2(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request2.random_data);
@@ -307,7 +308,6 @@ static void rsp_key_exchange_rsp_case3(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request1.random_data);
@@ -392,7 +392,6 @@ static void rsp_key_exchange_rsp_case4(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request1.random_data);
@@ -480,7 +479,6 @@ static void rsp_key_exchange_rsp_case5(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request1.random_data);
@@ -572,7 +570,6 @@ static void rsp_key_exchange_rsp_case6(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request1.random_data);
@@ -655,7 +652,6 @@ static void rsp_key_exchange_rsp_case7(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
         spdm_context->transcript.message_m.max_buffer_size;
@@ -771,7 +767,6 @@ static void rsp_key_exchange_rsp_case8(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request3.random_data);
@@ -889,7 +884,6 @@ static void rsp_key_exchange_rsp_case9(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request4.random_data);
@@ -1005,7 +999,6 @@ static void rsp_key_exchange_rsp_case10(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request5.random_data);
@@ -1099,7 +1092,6 @@ static void rsp_key_exchange_rsp_case11(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request3.random_data);
@@ -1194,7 +1186,6 @@ static void rsp_key_exchange_rsp_case14(void **state)
     spdm_context->local_context.peer_public_key_provision_size = data_size2;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request7.random_data);
@@ -1285,7 +1276,6 @@ static void rsp_key_exchange_rsp_case15(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request1.random_data);
@@ -1384,7 +1374,6 @@ static void rsp_key_exchange_rsp_case16(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
     m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
@@ -1482,7 +1471,6 @@ static void rsp_key_exchange_rsp_case17(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request8.random_data);
     m_libspdm_key_exchange_request8.req_session_id = 0xFFFF;
@@ -1573,7 +1561,6 @@ static void rsp_key_exchange_rsp_case18(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
@@ -1663,7 +1650,6 @@ static void rsp_key_exchange_rsp_case19(void **state)
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
@@ -1798,7 +1784,6 @@ static void rsp_key_exchange_rsp_case20(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request8.random_data);
@@ -1896,7 +1881,6 @@ static void rsp_key_exchange_rsp_case21(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     /* If set, the SlotID fields in KEY_EXCHANGE and KEY_EXCHANGE_RSP can specify this certificate slot. If not set,
      * the SlotID fields in KEY_EXCHANGE and KEY_EXCHANGE_RSP shall not specify this certificate slot */
@@ -1991,7 +1975,6 @@ static void rsp_key_exchange_rsp_case22(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request10.random_data);
     m_libspdm_key_exchange_request10.req_session_id = 0xFFFF;
@@ -2077,8 +2060,8 @@ static void rsp_key_exchange_rsp_case23(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
-    spdm_context->local_context.mandatory_mut_auth = true;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    g_mandatory_mut_auth = true;
 
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
@@ -2112,6 +2095,9 @@ static void rsp_key_exchange_rsp_case23(void **state)
     assert_int_equal(spdm_response->header.param1,
                      SPDM_ERROR_CODE_UNSPECIFIED);
     assert_int_equal(spdm_response->header.param2, 0);
+
+    g_key_exchange_start_mut_auth = 0;
+    g_mandatory_mut_auth = false;
     free(data1);
 }
 
@@ -2159,8 +2145,8 @@ static void rsp_key_exchange_rsp_case24(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
-    spdm_context->local_context.mandatory_mut_auth = true;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    g_mandatory_mut_auth = true;
 
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
@@ -2194,6 +2180,9 @@ static void rsp_key_exchange_rsp_case24(void **state)
     assert_int_equal(spdm_response->header.param1,
                      SPDM_ERROR_CODE_INVALID_POLICY);
     assert_int_equal(spdm_response->header.param2, 0);
+
+    g_mandatory_mut_auth = false;
+    g_key_exchange_start_mut_auth = 0;
     free(data1);
 }
 

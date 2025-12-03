@@ -79,7 +79,6 @@ void libspdm_test_responder_psk_finish_rsp_case1(void **State)
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -152,7 +151,6 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -242,7 +240,6 @@ void libspdm_test_responder_psk_finish_rsp_case3(void **State)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;

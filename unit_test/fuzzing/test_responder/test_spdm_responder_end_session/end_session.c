@@ -64,7 +64,6 @@ void libspdm_test_responder_end_session(void **State)
         data_size;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;

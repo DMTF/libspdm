@@ -16,6 +16,7 @@ target_sources(spdm_device_secret_lib_sample
         csr.c
         endpointinfo.c
         event.c
+        key_ex.c
         key_pair.c
         meas.c
         psk.c

@@ -18,6 +18,7 @@
 #include "hal/library/responder/asymsignlib.h"
 #include "hal/library/responder/csrlib.h"
 #include "hal/library/responder/measlib.h"
+#include "hal/library/responder/keyexlib.h"
 #include "hal/library/responder/key_pair_info.h"
 #include "hal/library/responder/psklib.h"
 #include "hal/library/responder/setcertlib.h"
@@ -121,8 +122,6 @@ typedef struct {
 
     /* Responder policy*/
     bool basic_mut_auth_requested;
-    uint8_t mut_auth_requested;
-    bool mandatory_mut_auth;
     uint8_t heartbeat_period;
 
     /*The device role*/
