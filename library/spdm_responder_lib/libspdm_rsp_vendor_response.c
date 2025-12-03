@@ -8,9 +8,6 @@
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 
-/* expected number of bytes for VENDOR MESSAGE HEADERS */
-#define SPDM_VENDOR_DEFINED_FIXED_HEADER_LEN 7
-
 libspdm_return_t libspdm_register_vendor_get_id_callback_func(void *spdm_context,
                                                               libspdm_vendor_get_id_callback_func resp_callback)
 {
@@ -190,8 +187,6 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     }
 
     LIBSPDM_ASSERT(*response_size >= header_length);
-    LIBSPDM_ASSERT(
-        sizeof(spdm_vendor_defined_response_msg_t) == SPDM_VENDOR_DEFINED_FIXED_HEADER_LEN);
     response_capacity = *response_size - header_length;
     libspdm_zero_mem(response, header_length);
     spdm_response = response;
@@ -271,9 +266,6 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
         libspdm_write_uint16((uint8_t *)(resp_data - sizeof(uint16_t)), (uint16_t)resp_size);
         *response_size = (uint16_t)resp_size + (size_t)header_length;
     }
-
-    LIBSPDM_ASSERT(sizeof(spdm_vendor_defined_request_msg_t) ==
-                   SPDM_VENDOR_DEFINED_FIXED_HEADER_LEN);
 
     return status;
 }
