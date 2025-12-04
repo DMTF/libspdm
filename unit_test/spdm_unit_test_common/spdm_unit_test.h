@@ -120,6 +120,14 @@ typedef struct {
 #define LIBSPDM_MAX_SPDM_MSG_SIZE 0x1200
 #endif
 
+/* Partial certificates can be retrieved from a Requester or Responder and through multiple messages
+ * the complete certificate chain can be constructed. This value specifies the maximum size,
+ * in bytes, of a partial certificate that can be sent or received.
+ */
+#ifndef LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
+#define LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN 1024
+#endif
+
 extern uint8_t m_libspdm_use_measurement_spec;
 extern uint8_t m_libspdm_use_mel_spec;
 extern uint32_t m_libspdm_use_measurement_hash_algo;

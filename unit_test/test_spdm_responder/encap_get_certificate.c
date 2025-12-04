@@ -304,6 +304,7 @@ static void rsp_encap_get_certificate_case4(void **state)
     uint16_t remainder_length;
     static size_t calling_index = 0;
     size_t spdm_response_size;
+    uint32_t original_max_spdm_msg_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -312,6 +313,12 @@ static void rsp_encap_get_certificate_case4(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+
+    /* Set max_spdm_msg_size to small value to force responder to send portion_length
+     * greater than request length */
+    original_max_spdm_msg_size = spdm_context->local_context.capability.max_spdm_msg_size;
+    spdm_context->local_context.capability.max_spdm_msg_size =
+        LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + sizeof(spdm_certificate_response_t);
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -374,6 +381,7 @@ static void rsp_encap_get_certificate_case4(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 
     spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->local_context.capability.max_spdm_msg_size = original_max_spdm_msg_size;
     free(data);
 }
 

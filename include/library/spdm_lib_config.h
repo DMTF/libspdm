@@ -202,13 +202,6 @@
 #define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
 #endif
 
-/* Partial certificates can be retrieved from a Requester or Responder and through multiple messages
- * the complete certificate chain can be constructed. This value specifies the maximum size,
- * in bytes, of a partial certificate that can be sent or received.
- */
-#ifndef LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
-#define LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN 1024
-#endif
 
 /* Partial measurement extension log (MEL) can be retrieved from a Responder and through multiple
  * messages the complete MEL can be constructed. This value specifies the maximum size, in bytes, of

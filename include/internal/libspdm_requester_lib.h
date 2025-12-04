@@ -185,7 +185,7 @@ libspdm_return_t libspdm_negotiate_algorithms(libspdm_context_t *spdm_context);
  * @param  session_id       Indicates if it is a secured message protected via SPDM session.
  *                          If session_id is NULL, it is a normal message.
  * @param  slot_id          The number of slot for the certificate chain.
- * @param  length           LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
+ * @param  length           The size of cert chain block.
  * @param  cert_chain_size  On input, indicate the size in bytes of the destination buffer to store the digest buffer.
  *                          On output, indicate the size in bytes of the certificate chain.
  * @param  cert_chain       A pointer to a destination buffer to store the certificate chain.

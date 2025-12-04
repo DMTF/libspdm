@@ -18,6 +18,7 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
     uint32_t req_msg_offset;
     bool use_large_cert_chain;
     uint32_t req_msg_header_size;
+    uint32_t rsp_msg_header_size;
 
     spdm_context->encap_context.last_encap_request_size = 0;
 
@@ -44,8 +45,10 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
 
     if (use_large_cert_chain) {
         req_msg_header_size = sizeof(spdm_get_certificate_large_request_t);
+        rsp_msg_header_size = sizeof(spdm_certificate_large_response_t);
     } else {
         req_msg_header_size = sizeof(spdm_get_certificate_request_t);
+        rsp_msg_header_size = sizeof(spdm_certificate_response_t);
     }
 
     LIBSPDM_ASSERT(*encap_request_size >= req_msg_header_size);
@@ -58,7 +61,12 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
     spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
     spdm_request->header.param2 = 0;
     req_msg_offset = (uint32_t)spdm_context->mut_auth_cert_chain_buffer_size;
-    req_msg_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+
+    /* certificate response is encapsulate in deliver encapsulated response msg */
+    req_msg_length = spdm_context->local_context.capability.max_spdm_msg_size -
+                     sizeof(spdm_deliver_encapsulated_response_request_t) -
+                     rsp_msg_header_size;
+
     if (use_large_cert_chain) {
         spdm_request->header.param1 |= SPDM_GET_CERTIFICATE_REQUEST_LARGE_CERT_CHAIN;
         spdm_request->offset = 0;
@@ -66,6 +74,7 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
         spdm_request->large_offset = req_msg_offset;
         spdm_request->large_length = req_msg_length;
     } else {
+        req_msg_length = LIBSPDM_MIN(req_msg_length, SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
         spdm_request->offset = (uint16_t)req_msg_offset;
         spdm_request->length = (uint16_t)req_msg_length;
     }
@@ -108,6 +117,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
     bool use_large_cert_chain;
     uint32_t rsp_msg_header_size;
     uint32_t max_cert_chain_size;
+    uint32_t req_msg_length;
 
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
@@ -151,6 +161,15 @@ libspdm_return_t libspdm_process_encap_response_certificate(
         rsp_msg_header_size = sizeof(spdm_certificate_response_t);
     }
 
+    /* certificate response is encapsulate in deliver encapsulated response msg */
+    req_msg_length = spdm_context->local_context.capability.max_spdm_msg_size -
+                     sizeof(spdm_deliver_encapsulated_response_request_t) -
+                     rsp_msg_header_size;
+
+    if (!use_large_cert_chain) {
+        req_msg_length = LIBSPDM_MIN(req_msg_length, SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
+    }
+
     if (encap_response_size < rsp_msg_header_size) {
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
@@ -162,7 +181,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
         rsp_msg_remainder_length = spdm_response->remainder_length;
     }
 
-    if ((rsp_msg_portion_length > LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN) ||
+    if ((rsp_msg_portion_length > req_msg_length) ||
         (rsp_msg_portion_length == 0)) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
