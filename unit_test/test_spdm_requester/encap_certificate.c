@@ -155,15 +155,16 @@ static void req_encap_certificate_case3(void **state)
     {
         TEST_DEBUG_PRINT("i:%d test_lengths[i]:%u\n", i, test_lengths[i]);
         m_spdm_get_certificate_request3.length = test_lengths[i];
-        /* Expected received length is limited by LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
-         * (implementation specific?)*/
-        expected_chunk_size = LIBSPDM_MIN(m_spdm_get_certificate_request3.length,
-                                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+        /* Expected received length is limited by the response_size*/
+        response_size = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + sizeof(spdm_certificate_response_t);
+        expected_chunk_size =
+            (uint16_t) LIBSPDM_MIN(response_size - sizeof(spdm_certificate_response_t),
+                                   SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
+        expected_chunk_size = LIBSPDM_MIN(expected_chunk_size, m_spdm_get_certificate_request3.length);
 
         /* resetting an internal buffer to avoid overflow and prevent tests to
          * succeed*/
         libspdm_reset_message_mut_b(spdm_context);
-        response_size = sizeof(response);
         m_spdm_get_certificate_request3_size =
             sizeof(m_spdm_get_certificate_request3);
         status = libspdm_get_encap_response_certificate(

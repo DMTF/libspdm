@@ -150,6 +150,7 @@ libspdm_return_t libspdm_get_certificate_ex(void *spdm_context,
  *                            If session_id is NULL, it is a normal message.
  * @param  slot_id            The number of slot for the certificate chain.
  * @param  length             The length of the certificate chain block to retrieve.
+ *                            If length is 0, the default maximum block size will be used.
  * @param  cert_chain_size    On input, indicate the size in bytes of the destination buffer to store the digest buffer.
  *                            On output, indicate the size in bytes of the certificate chain.
  * @param  cert_chain         A pointer to a destination buffer to store the certificate chain.
