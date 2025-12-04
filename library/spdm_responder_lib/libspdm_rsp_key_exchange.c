@@ -442,10 +442,12 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
         LIBSPDM_ASSERT(spdm_context->local_context.capability.flags &
                        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP);
         if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
+            libspdm_free_session_id(spdm_context, session_id);
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_POLICY, 0,
                                                    response_size, response);
         } else {
+            libspdm_free_session_id(spdm_context, session_id);
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                    response_size, response);
