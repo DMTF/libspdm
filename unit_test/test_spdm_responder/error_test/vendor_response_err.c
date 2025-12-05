@@ -38,31 +38,6 @@ static void set_standard_state(libspdm_context_t *spdm_context)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 }
 
-static libspdm_return_t libspdm_vendor_get_id_func_err_test(
-    void *spdm_context,
-    const uint32_t *session_id,
-    uint16_t *resp_standard_id,
-    uint8_t *resp_vendor_id_len,
-    void *resp_vendor_id)
-{
-    if (resp_standard_id == NULL ||
-        resp_vendor_id_len == NULL ||
-        resp_vendor_id == NULL)
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
-
-    /* vendor id length in bytes */
-    if (*resp_vendor_id_len < 2)
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
-
-    *resp_standard_id = 6;
-    /* vendor id length in bytes */
-    *resp_vendor_id_len = 2;
-    ((uint8_t*)resp_vendor_id)[0] = 0xAA;
-    ((uint8_t*)resp_vendor_id)[1] = 0xAA;
-
-    return LIBSPDM_STATUS_SUCCESS;
-}
-
 static libspdm_return_t libspdm_vendor_response_func_err_test(
     void *spdm_context,
     const uint32_t *session_id,
@@ -83,8 +58,6 @@ static libspdm_return_t libspdm_vendor_response_func_err_test(
 
     if (resp_size == NULL || *resp_size == 0)
         return LIBSPDM_STATUS_INVALID_PARAMETER;
-
-    /* TBD make an error here, like response len 65000, but different this time. */
 
     printf("Got request 0x%x, sent response 0x%x\n",
            ((const uint8_t*)req_data)[0], ((uint8_t*)resp_data)[0]);
@@ -174,7 +147,6 @@ static void libspdm_test_responder_vendor_cmds_err_case2(void **state)
     set_standard_state(spdm_context);
 
     status = libspdm_register_vendor_callback_func(spdm_context, NULL);
-    status = libspdm_register_vendor_get_id_callback_func(spdm_context, NULL);
 
     request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
     request.header.request_response_code = SPDM_VENDOR_DEFINED_REQUEST;
@@ -197,7 +169,7 @@ static void libspdm_test_responder_vendor_cmds_err_case2(void **state)
     response_size = sizeof(response_buffer);
 
     status = libspdm_get_vendor_defined_response(spdm_context, sizeof(request),
-                                                 &request, &response_size, &response_buffer);
+                                                 request_buffer, &response_size, response_buffer);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -241,9 +213,6 @@ static void libspdm_test_responder_vendor_cmds_err_case3(void **state)
     spdm_context->local_context.capability.flags = 0; /* responder not support large payload */
     spdm_context->local_context.is_requester = false;
 
-    status = libspdm_register_vendor_get_id_callback_func(spdm_context,
-                                                          libspdm_vendor_get_id_func_err_test);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     status = libspdm_register_vendor_callback_func(spdm_context,
                                                    libspdm_vendor_response_func_err_test);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -313,9 +282,6 @@ static void libspdm_test_responder_vendor_cmds_err_case4(void **state)
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.is_requester = false;
 
-    status = libspdm_register_vendor_get_id_callback_func(spdm_context,
-                                                          libspdm_vendor_get_id_func_err_test);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     status = libspdm_register_vendor_callback_func(spdm_context,
                                                    libspdm_vendor_response_func_err_test);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -382,9 +348,6 @@ static void libspdm_test_responder_vendor_cmds_err_case5(void **state)
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.is_requester = false;
 
-    status = libspdm_register_vendor_get_id_callback_func(spdm_context,
-                                                          libspdm_vendor_get_id_func_err_test);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     status = libspdm_register_vendor_callback_func(spdm_context,
                                                    libspdm_vendor_response_func_err_test);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -451,9 +414,6 @@ static void libspdm_test_responder_vendor_cmds_err_case6(void **state)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP;
     spdm_context->local_context.is_requester = false;
 
-    status = libspdm_register_vendor_get_id_callback_func(spdm_context,
-                                                          libspdm_vendor_get_id_func_err_test);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     status = libspdm_register_vendor_callback_func(spdm_context,
                                                    libspdm_vendor_response_func_err_test);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -523,9 +483,6 @@ static void libspdm_test_responder_vendor_cmds_err_case7(void **state)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP;
     spdm_context->local_context.is_requester = false;
 
-    status = libspdm_register_vendor_get_id_callback_func(spdm_context,
-                                                          libspdm_vendor_get_id_func_err_test);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     status = libspdm_register_vendor_callback_func(spdm_context,
                                                    libspdm_vendor_response_func_err_test);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);

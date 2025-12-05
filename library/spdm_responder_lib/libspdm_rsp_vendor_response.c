@@ -8,15 +8,6 @@
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 
-libspdm_return_t libspdm_register_vendor_get_id_callback_func(void *spdm_context,
-                                                              libspdm_vendor_get_id_callback_func resp_callback)
-{
-
-    libspdm_context_t *context = (libspdm_context_t *)spdm_context;
-    context->vendor_response_get_id = resp_callback;
-    return LIBSPDM_STATUS_SUCCESS;
-}
-
 libspdm_return_t libspdm_register_vendor_callback_func(void *spdm_context,
                                                        libspdm_vendor_response_callback_func resp_callback)
 {
@@ -76,9 +67,8 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
         session_id = &session_info->session_id;
     }
 
-    /* Check if caller is using the old Vendor Defined API. */
-    if ((spdm_context->vendor_response_callback == NULL ||
-         spdm_context->vendor_response_get_id == NULL)) {
+    /* Check if vendor callback is registered. */
+    if (spdm_context->vendor_response_callback == NULL) {
         if (spdm_context->get_response_func != NULL) {
             return ((libspdm_get_response_func)spdm_context->get_response_func)(
                 spdm_context,
@@ -216,9 +206,13 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
      *      Len2 bytes Response Payload
      */
 
-    /* replace capacity with size */
-    spdm_response->len = SPDM_MAX_VENDOR_ID_LENGTH;
-    resp_data = ((uint8_t *)response) + sizeof(spdm_vendor_defined_response_msg_t);
+    /* Set up pointers for the callback */
+    spdm_response->standard_id = spdm_request->standard_id;
+    spdm_response->len = spdm_request->len;
+    libspdm_copy_mem(((uint8_t *)response) + sizeof(spdm_vendor_defined_response_msg_t),
+                     spdm_request->len,
+                     req_vendor_id,
+                     spdm_request->len);
 
     if (use_large_payload) {
         req_data = ((const uint8_t *)request) +
@@ -232,31 +226,29 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
                    sizeof(uint16_t);
     }
 
-    status = spdm_context->vendor_response_get_id(
-        spdm_context,
-        session_id,
-        &spdm_response->standard_id,
-        &spdm_response->len,
-        resp_data);
-
-    /* move pointer and adjust buffer size */
+    /* move pointer */
+    resp_data = ((uint8_t *)response) + header_length;
+    /* adjust buffer size */
     if (use_large_payload) {
-        resp_data += spdm_response->len + sizeof(uint16_t) + sizeof(uint32_t);
-        response_capacity -= spdm_response->len + sizeof(uint16_t) + sizeof(uint32_t);
         resp_size = (uint32_t)response_capacity;
     } else {
-        resp_data += spdm_response->len + sizeof(uint16_t);
-        response_capacity -= spdm_response->len + sizeof(uint16_t);
         resp_size = (uint16_t)response_capacity;
     }
 
-    status = spdm_context->vendor_response_callback(spdm_context,
-                                                    session_id,
-                                                    spdm_request->standard_id,
-                                                    spdm_request->len,
-                                                    req_vendor_id, req_size, req_data,
-                                                    &resp_size,
-                                                    resp_data);
+    status = spdm_context->vendor_response_callback(
+        spdm_context,
+        session_id,
+        spdm_request->standard_id,
+        spdm_request->len,
+        req_vendor_id,
+        req_size,
+        req_data,
+        &resp_size,
+        resp_data);
+
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
 
     /* store back the response payload size */
     if (use_large_payload) {

@@ -285,26 +285,12 @@ void libspdm_register_cert_chain_buffer(
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 
 /**
- * This function registers the callback function for getting the Vendor ID for a VENDOR_DEFINED_RESPONSE to the device.
+ * Register the request-aware vendor-defined response callback.
  *
  * This is useful for creating unique responses to devices.
  *
  * @param  spdm_context     A pointer to the SPDM context.
- * @param  resp_callback_func   Response callback function
- *
- * @retval LIBSPDM_STATUS_SUCCESS Success
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
- **/
-libspdm_return_t libspdm_register_vendor_get_id_callback_func(void *spdm_context,
-                                                              libspdm_vendor_get_id_callback_func resp_callback);
-
-/**
- * This function registers the callback function for doing a VENDOR_DEFINED_RESPONSE to the device.
- *
- * This is useful for creating unique responses to devices.
- *
- * @param  spdm_context     A pointer to the SPDM context.
- * @param  resp_callback_func   Response callback function
+ * @param  resp_callback    Response callback function
  *
  * @retval LIBSPDM_STATUS_SUCCESS Success
  * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
