@@ -367,13 +367,15 @@ static void rsp_certificate_case7(void **state)
     for (int i = 0; i < sizeof(test_lengths) / sizeof(test_lengths[0]); i++) {
         TEST_LIBSPDM_DEBUG_PRINT("i:%d test_lengths[i]:%u\n", i, test_lengths[i]);
         m_libspdm_get_certificate_request3.length = test_lengths[i];
-        /* Expected received length is limited by LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN (implementation specific?)*/
+        /* Expected received length is limited by the response_size*/
+        response_size = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + sizeof(spdm_certificate_response_t);
+        expected_chunk_size =
+            (uint16_t) LIBSPDM_MIN(response_size - sizeof(spdm_certificate_response_t),
+                                   SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
         expected_chunk_size = LIBSPDM_MIN(m_libspdm_get_certificate_request3.length,
                                           LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
-
         /* resetting an internal buffer to avoid overflow and prevent tests to succeed*/
         libspdm_reset_message_b(spdm_context);
-        response_size = sizeof(response);
         status = libspdm_get_response_certificate(
             spdm_context, m_libspdm_get_certificate_request3_size,
             &m_libspdm_get_certificate_request3, &response_size,
@@ -564,7 +566,7 @@ static void rsp_certificate_case9(void **state)
 
             /* resetting an internal buffer to avoid overflow and prevent tests to succeed*/
             libspdm_reset_message_b(spdm_context);
-            response_size = sizeof(response);
+            response_size = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + sizeof(spdm_certificate_response_t);
             status = libspdm_get_response_certificate(
                 spdm_context,
                 m_libspdm_get_certificate_request3_size,
@@ -591,9 +593,12 @@ static void rsp_certificate_case9(void **state)
                                                      data_size -
                                                      m_libspdm_get_certificate_request3
                                                      .offset));
+
+                /* Expected received length is limited by the response_size*/
                 expected_chunk_size =
                     LIBSPDM_MIN(expected_chunk_size,
-                                LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+                                (uint16_t)(response_size - sizeof(spdm_certificate_response_t)));
+
                 /* Expected certificate length left*/
                 expected_remainder = (uint16_t)(
                     data_size -

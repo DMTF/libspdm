@@ -27,6 +27,7 @@ libspdm_return_t libspdm_get_encap_response_certificate(void *spdm_context,
     uint32_t req_msg_header_size;
     uint32_t rsp_msg_header_size;
     size_t cert_chain_size;
+    uint32_t max_cert_chain_block_size;
 
     context = spdm_context;
     spdm_request = request;
@@ -120,8 +121,17 @@ libspdm_return_t libspdm_get_encap_response_certificate(void *spdm_context,
         }
     }
 
-    if (length > LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN) {
-        length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+    if (!libspdm_is_capabilities_flag_supported(spdm_context, true,
+                                                SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
+                                                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
+        max_cert_chain_block_size = (uint32_t) (*response_size - rsp_msg_header_size);
+        if (!use_large_cert_chain){
+            max_cert_chain_block_size = LIBSPDM_MIN(max_cert_chain_block_size, SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
+        }
+
+        if (length > max_cert_chain_block_size) {
+            length = max_cert_chain_block_size;
+        }
     }
 
     if (offset >= cert_chain_size) {

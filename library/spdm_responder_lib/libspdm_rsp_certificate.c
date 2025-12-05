@@ -27,6 +27,7 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     uint32_t req_msg_header_size;
     uint32_t rsp_msg_header_size;
     size_t cert_chain_size;
+    uint32_t max_cert_chain_block_size;
 
     spdm_request = request;
 
@@ -162,10 +163,16 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     if (!libspdm_is_capabilities_flag_supported(spdm_context, false,
                                                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
                                                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
-        if (length > LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN) {
-            length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+        max_cert_chain_block_size = (uint32_t) (*response_size - rsp_msg_header_size);
+        if (!use_large_cert_chain){
+            max_cert_chain_block_size = LIBSPDM_MIN(max_cert_chain_block_size, SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
+        }
+
+        if (length > max_cert_chain_block_size) {
+            length = max_cert_chain_block_size;
         }
     }
+
     if ((size_t)(offset + length) > cert_chain_size) {
         length = (uint32_t)(cert_chain_size - offset);
     }
