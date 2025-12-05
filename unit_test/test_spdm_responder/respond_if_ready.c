@@ -625,8 +625,6 @@ static void rsp_respond_if_ready_case5(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
-    spdm_context->local_context.mut_auth_requested = 0;
-
     m_libspdm_key_exchange_request.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request.reserved = 0;
     ptr = m_libspdm_key_exchange_request.random_data;
@@ -749,8 +747,6 @@ static void rsp_respond_if_ready_case6(void **state) {
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->connection_info.local_used_cert_chain_buffer = data;
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size;
-
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -979,8 +975,6 @@ static void rsp_respond_if_ready_case8(void **state) {
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->connection_info.local_used_cert_chain_buffer = data;
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size;
-
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;

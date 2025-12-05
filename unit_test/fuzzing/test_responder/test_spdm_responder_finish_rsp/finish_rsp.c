@@ -12,6 +12,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 static libspdm_th_managed_buffer_t th_curr;
+extern uint8_t g_key_exchange_start_mut_auth;
 
 size_t libspdm_get_max_buffer_size(void)
 {
@@ -98,7 +99,6 @@ void libspdm_test_responder_finish_case1(void **State)
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -319,7 +319,6 @@ void libspdm_test_responder_finish_case7(void **State)
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -402,7 +401,7 @@ void libspdm_test_responder_finish_case8(void **State)
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
 
     libspdm_reset_message_a(spdm_context);
-    spdm_context->local_context.mut_auth_requested = 1;
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo,
                                                     &data2,
@@ -504,6 +503,7 @@ void libspdm_test_responder_finish_case8(void **State)
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
+    g_key_exchange_start_mut_auth = 0;
 }
 
 void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)

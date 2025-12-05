@@ -193,8 +193,8 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     uint32_t measurement_summary_hash_size;
     uint32_t signature_size;
     uint32_t hmac_size;
-    const uint8_t *cptr;
     uint8_t *ptr;
+    const uint8_t *req_opaque_data;
     uint16_t opaque_data_length;
     bool result;
     uint8_t slot_id;
@@ -209,6 +209,11 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     size_t opaque_key_exchange_rsp_size;
     uint8_t th1_hash_data[LIBSPDM_MAX_HASH_SIZE];
     spdm_version_number_t secured_message_version;
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+    uint8_t req_slot_id;
+    uint8_t mut_auth_requested;
+    bool mandatory_mut_auth;
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
     spdm_request = request;
 
@@ -384,21 +389,24 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                    sizeof(uint16_t) + opaque_data_length;
 
     if (opaque_data_length != 0) {
-        cptr = (const uint8_t *)request + sizeof(spdm_key_exchange_request_t) +
+        req_opaque_data = (const uint8_t *)request + sizeof(spdm_key_exchange_request_t) +
                req_key_exchange_size + sizeof(uint16_t);
-        result = libspdm_process_general_opaque_data_check(spdm_context, opaque_data_length, cptr);
+        result = libspdm_process_general_opaque_data_check(spdm_context, opaque_data_length,
+                                                           req_opaque_data);
         if (!result) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
         }
         status = libspdm_process_opaque_data_supported_version_data(
-            spdm_context, opaque_data_length, cptr, &secured_message_version);
+            spdm_context, opaque_data_length, req_opaque_data, &secured_message_version);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
         }
+    } else {
+        req_opaque_data = NULL;
     }
 
     opaque_key_exchange_rsp_size =
@@ -462,48 +470,63 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
 
     spdm_response->rsp_session_id = rsp_session_id;
     spdm_response->mut_auth_requested = 0;
+    spdm_response->req_slot_id_param = 0;
 
+    #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     if (libspdm_is_capabilities_flag_supported(
-            spdm_context, false,
-            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
-        spdm_response->mut_auth_requested =
-            spdm_context->local_context.mut_auth_requested;
-    } else if (spdm_context->local_context.mandatory_mut_auth) {
-        LIBSPDM_ASSERT(spdm_context->local_context.capability.flags &
-                       SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP);
-        if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
-            libspdm_free_session_id(spdm_context, session_id);
-            return libspdm_generate_error_response(spdm_context,
-                                                   SPDM_ERROR_CODE_INVALID_POLICY, 0,
-                                                   response_size, response);
-        } else {
-            libspdm_free_session_id(spdm_context, session_id);
-            return libspdm_generate_error_response(spdm_context,
-                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
-                                                   response_size, response);
-        }
-    }
+        spdm_context, false, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
+        req_slot_id = 0;
 
-    if (spdm_response->mut_auth_requested != 0) {
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
-        spdm_context->connection_info.peer_used_cert_chain_slot_id =
-            spdm_context->encap_context.req_slot_id;
-        libspdm_init_mut_auth_encap_state(spdm_context, spdm_response->mut_auth_requested);
-        if (spdm_response->mut_auth_requested == SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) {
-            /* no need to libspdm_init_mut_auth_encap_state() because of no ENCAP message */
-            spdm_response->req_slot_id_param = spdm_context->encap_context.req_slot_id & 0xF;
-        } else {
-            /* req_slot_id is always 0 if ENCAP message is needed */
-            spdm_response->req_slot_id_param = 0;
+        mut_auth_requested =
+            libspdm_key_exchange_start_mut_auth(spdm_context,
+                                                session_id,
+                                                spdm_context->connection_info.version,
+                                                slot_id,
+                                                &req_slot_id,
+                                                spdm_request->session_policy,
+                                                opaque_data_length,
+                                                req_opaque_data,
+                                                &mandatory_mut_auth);
+        if (mut_auth_requested != 0) {
+            const bool req_mut_auth_cap = libspdm_is_capabilities_flag_supported(
+                spdm_context, false, SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP, 0);
+            const bool req_encap_cap = libspdm_is_capabilities_flag_supported(
+                spdm_context, false, SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP, 0);
+            const bool need_encap =
+                (mut_auth_requested ==
+                 SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) ||
+                (mut_auth_requested ==
+                 SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS);
+
+            /* If Integrator requires mutual authentication but Requester does not support mutual
+             * authentication, or Integrator requires the encapsulated mutual authentication flow
+             * and Requester does not support encapsulated messages, then return an error to
+             * Requester. */
+            if (mandatory_mut_auth && (!req_mut_auth_cap || (need_encap && !req_encap_cap))) {
+                if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
+                    libspdm_free_session_id(spdm_context, session_id);
+                    return libspdm_generate_error_response(spdm_context,
+                                                           SPDM_ERROR_CODE_INVALID_POLICY, 0,
+                                                           response_size, response);
+                } else {
+                    libspdm_free_session_id(spdm_context, session_id);
+                    return libspdm_generate_error_response(spdm_context,
+                                                           SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                           response_size, response);
+                }
+            }
+
+            if (!need_encap) {
+                spdm_response->mut_auth_requested = mut_auth_requested;
+                spdm_response->req_slot_id_param = req_slot_id;
+            } else if (need_encap && req_encap_cap) {
+                spdm_response->mut_auth_requested = mut_auth_requested;
+                spdm_context->connection_info.peer_used_cert_chain_slot_id = req_slot_id;
+                libspdm_init_mut_auth_encap_state(spdm_context, mut_auth_requested);
+            }
         }
-#else
-        spdm_response->mut_auth_requested = 0;
-        spdm_response->req_slot_id_param = 0;
-#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
-    } else {
-        spdm_response->req_slot_id_param = 0;
     }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
     if (!libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_response->random_data)) {
         libspdm_free_session_id(spdm_context, session_id);

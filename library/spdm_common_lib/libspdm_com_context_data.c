@@ -687,22 +687,12 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
               SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS))) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->local_context.mut_auth_requested = mut_auth_requested;
         context->encap_context.request_id = 0;
         slot_id = parameter->additional_data[0];
         if ((slot_id >= SPDM_MAX_SLOT_COUNT) && (slot_id != 0xFF)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         context->encap_context.req_slot_id = slot_id;
-        break;
-    case LIBSPDM_DATA_MANDATORY_MUT_AUTH:
-        if (data_size != sizeof(bool)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        context->local_context.mandatory_mut_auth = *(const bool *)data;
         break;
     case LIBSPDM_DATA_HEARTBEAT_PERIOD:
         if (data_size != sizeof(uint8_t)) {
