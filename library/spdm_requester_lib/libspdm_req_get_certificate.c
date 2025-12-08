@@ -501,27 +501,14 @@ done:
     return status;
 }
 
-static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_context,
-                                                    const uint32_t *session_id,
-                                                    uint8_t slot_id,
-                                                    uint16_t length,
-                                                    size_t *cert_chain_size,
-                                                    void *cert_chain,
-                                                    const void **trust_anchor,
-                                                    size_t *trust_anchor_size)
-{
-    return libspdm_try_get_large_certificate(spdm_context, session_id, slot_id, length,
-                                             cert_chain_size, cert_chain,
-                                             trust_anchor, trust_anchor_size);
-}
-
 libspdm_return_t libspdm_get_certificate(void *spdm_context, const uint32_t *session_id,
                                          uint8_t slot_id,
                                          size_t *cert_chain_size,
                                          void *cert_chain)
 {
-    return libspdm_get_certificate_choose_length(spdm_context, session_id, slot_id,
-                                                 0, cert_chain_size, cert_chain);
+    return libspdm_get_certificate_choose_length_ex(spdm_context, session_id, slot_id,
+                                                    0, cert_chain_size, cert_chain,
+                                                    NULL, NULL);
 }
 
 libspdm_return_t libspdm_get_certificate_ex(void *spdm_context, const uint32_t *session_id,
@@ -534,35 +521,6 @@ libspdm_return_t libspdm_get_certificate_ex(void *spdm_context, const uint32_t *
     return libspdm_get_certificate_choose_length_ex(spdm_context, session_id, slot_id,
                                                     0, cert_chain_size, cert_chain,
                                                     trust_anchor, trust_anchor_size);
-}
-
-libspdm_return_t libspdm_get_certificate_choose_length(void *spdm_context,
-                                                       const uint32_t *session_id,
-                                                       uint8_t slot_id,
-                                                       uint16_t length,
-                                                       size_t *cert_chain_size,
-                                                       void *cert_chain)
-{
-    libspdm_context_t *context;
-    size_t retry;
-    uint64_t retry_delay_time;
-    libspdm_return_t status;
-
-    context = spdm_context;
-    context->crypto_request = true;
-    retry = context->retry_times;
-    retry_delay_time = context->retry_delay_time;
-    do {
-        status = libspdm_try_get_certificate(context, session_id, slot_id, length,
-                                             cert_chain_size, cert_chain, NULL, NULL);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
-            return status;
-        }
-
-        libspdm_sleep(retry_delay_time);
-    } while (retry-- != 0);
-
-    return status;
 }
 
 libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,

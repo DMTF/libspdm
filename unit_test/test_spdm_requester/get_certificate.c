@@ -3250,8 +3250,9 @@ static void req_get_certificate_case14(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate_choose_length(
-        spdm_context, NULL, 0, get_cert_length, &cert_chain_size, cert_chain);
+    status = libspdm_get_certificate_choose_length_ex(
+        spdm_context, NULL, 0, get_cert_length,
+        &cert_chain_size, cert_chain, NULL, NULL);
     /* It may fail because the spdm does not support too many messages.
      * assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);*/
     if (status == LIBSPDM_STATUS_SUCCESS) {
