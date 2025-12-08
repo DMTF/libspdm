@@ -993,6 +993,14 @@ int BIO_meth_set_destroy(BIO_METHOD *biom, int (*destroy) (BIO *));
 int BIO_meth_set_callback_ctrl(BIO_METHOD *biom,
                                long (*callback_ctrl) (BIO *, int,
                                                       BIO_info_cb *));
+
+/*
+ * Support OpenSSL versions below 3.5.
+ */
+# ifndef OSSL_DEPRECATEDIN_3_5
+#  define OSSL_DEPRECATEDIN_3_5
+# endif
+
 # ifndef OPENSSL_NO_DEPRECATED_3_5
 OSSL_DEPRECATEDIN_3_5 int (*BIO_meth_get_write(const BIO_METHOD *biom)) (BIO *, const char *,
                                                                          int);

@@ -892,6 +892,18 @@ ASN1_BIT_STRING *X509_get0_pubkey_bitstr(const X509 *x);
 
 #define X509_REQ_VERSION_1 0
 
+/*
+ * Define OSSL_FUTURE_CONST if it isn't defind, this can be removed
+ * once OSSL_FUTURE_CONST is removed in OpenSSL.
+ */
+#ifndef OSSL_FUTURE_CONST
+# if OPENSSL_VERSION_MAJOR >= 4
+#  define OSSL_FUTURE_CONST const
+# else
+#  define OSSL_FUTURE_CONST
+# endif
+#endif
+
 long X509_REQ_get_version(const X509_REQ *req);
 int X509_REQ_set_version(X509_REQ *x, long version);
 X509_NAME *X509_REQ_get_subject_name(const X509_REQ *req);
