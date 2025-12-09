@@ -59,9 +59,6 @@ void libspdm_test_responder_end_session(void **State)
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
-        data_size;
 
     libspdm_reset_message_a(spdm_context);
 

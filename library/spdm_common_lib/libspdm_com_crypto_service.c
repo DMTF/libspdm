@@ -115,19 +115,20 @@ bool libspdm_get_peer_cert_chain_data(void *spdm_context,
  * @retval true  Local used certificate chain buffer including spdm_cert_chain_t header is returned.
  * @retval false Local used certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
-bool libspdm_get_local_cert_chain_buffer(void *spdm_context,
+void libspdm_get_local_cert_chain_buffer(void *spdm_context,
+                                         uint8_t slot_id,
                                          const void **cert_chain_buffer,
                                          size_t *cert_chain_buffer_size)
 {
     libspdm_context_t *context;
 
     context = spdm_context;
-    if (context->connection_info.local_used_cert_chain_buffer_size != 0) {
-        *cert_chain_buffer = context->connection_info.local_used_cert_chain_buffer;
-        *cert_chain_buffer_size = context->connection_info.local_used_cert_chain_buffer_size;
-        return true;
-    }
-    return false;
+
+    LIBSPDM_ASSERT(context->local_context.local_cert_chain_provision[slot_id] != NULL);
+    LIBSPDM_ASSERT(context->local_context.local_cert_chain_provision_size != 0);
+
+    *cert_chain_buffer = context->local_context.local_cert_chain_provision[slot_id];
+    *cert_chain_buffer_size = context->local_context.local_cert_chain_provision_size[slot_id];
 }
 
 /**
@@ -141,25 +142,22 @@ bool libspdm_get_local_cert_chain_buffer(void *spdm_context,
  * @retval false Local used certificate chain data without spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_local_cert_chain_data(void *spdm_context,
+                                       uint8_t slot_id,
                                        const void **cert_chain_data,
                                        size_t *cert_chain_data_size)
 {
     libspdm_context_t *context;
-    bool result;
     size_t hash_size;
 
     context = spdm_context;
 
-    result = libspdm_get_local_cert_chain_buffer(context, cert_chain_data,
-                                                 cert_chain_data_size);
-    if (!result) {
-        return false;
-    }
+    libspdm_get_local_cert_chain_buffer(context, slot_id, cert_chain_data, cert_chain_data_size);
 
     hash_size = libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
 
     *cert_chain_data = (const uint8_t *)*cert_chain_data + sizeof(spdm_cert_chain_t) + hash_size;
     *cert_chain_data_size = *cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+
     return true;
 }
 

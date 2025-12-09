@@ -745,14 +745,13 @@ static void rsp_respond_if_ready_case6(void **state) {
                                                      NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init (spdm_context, session_info, session_id,
                                SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size (m_libspdm_use_hash_algo);
     libspdm_set_mem (dummy_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_request_finished_key (session_info->secured_message_context,
@@ -860,8 +859,6 @@ static void rsp_respond_if_ready_case7(void **state) {
                                                      NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size;
 
     m_libspdm_psk_exchange_request.psk_hint_length =
         (uint16_t)sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
@@ -949,7 +946,7 @@ static void rsp_respond_if_ready_case8(void **state) {
     spdm_test_context->case_id = 0x8;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
-    /*state for the the original request (FINISH)*/
+    /*state for the the original request (PSK_FINISH)*/
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
@@ -973,8 +970,6 @@ static void rsp_respond_if_ready_case8(void **state) {
                                                      NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;

@@ -156,9 +156,6 @@ static void rsp_psk_exchange_rsp_case1(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
-        data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -246,9 +243,6 @@ static void rsp_psk_exchange_rsp_case2(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
-        data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -327,9 +321,6 @@ static void rsp_psk_exchange_rsp_case3(void **state)
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
@@ -410,9 +401,6 @@ static void rsp_psk_exchange_rsp_case4(void **state)
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
@@ -496,9 +484,6 @@ static void rsp_psk_exchange_rsp_case5(void **state)
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
@@ -587,9 +572,6 @@ static void rsp_psk_exchange_rsp_case6(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
-        data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -667,9 +649,6 @@ static void rsp_psk_exchange_rsp_case7(void **state)
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
@@ -771,8 +750,6 @@ static void rsp_psk_exchange_rsp_case8(void **state)
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -863,8 +840,6 @@ static void rsp_psk_exchange_rsp_case9(void **state)
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -963,9 +938,6 @@ static void rsp_psk_exchange_rsp_case10(void **state)
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
@@ -1088,9 +1060,6 @@ static void rsp_psk_exchange_rsp_case11(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
-        data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1207,9 +1176,6 @@ static void rsp_psk_exchange_rsp_case12(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
-        data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1307,9 +1273,6 @@ static void rsp_psk_exchange_rsp_case13(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
-        data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1396,9 +1359,6 @@ static void rsp_psk_exchange_rsp_case14(void **state)
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
@@ -1487,9 +1447,6 @@ static void rsp_psk_exchange_rsp_case15(void **state)
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
@@ -1582,9 +1539,6 @@ static void rsp_psk_exchange_rsp_case16(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
-        data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1670,9 +1624,6 @@ static void rsp_psk_exchange_rsp_case17(void **state)
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
 
     libspdm_reset_message_a(spdm_context);

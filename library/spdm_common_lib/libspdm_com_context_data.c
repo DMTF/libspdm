@@ -1999,19 +1999,19 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
                                          hash_size);
                     }
                 } else {
-                    slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
+                    slot_id = spdm_session_info->local_used_cert_chain_slot_id;
                     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
                     if (slot_id == 0xFF) {
                         result = libspdm_get_local_public_key_buffer(
                             spdm_context, (const void **)&cert_chain_buffer,
                             &cert_chain_buffer_size);
+                        if (!result) {
+                            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+                        }
                     } else {
-                        result = libspdm_get_local_cert_chain_buffer(
-                            spdm_context, (const void **)&cert_chain_buffer,
+                        libspdm_get_local_cert_chain_buffer(
+                            spdm_context, slot_id, (const void **)&cert_chain_buffer,
                             &cert_chain_buffer_size);
-                    }
-                    if (!result) {
-                        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
                     }
 
                     result = libspdm_hash_all(
@@ -2145,21 +2145,22 @@ libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
 
             if (!spdm_session_info->use_psk && (spdm_session_info->mut_auth_requested != 0)) {
                 if (is_requester) {
-                    slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
+                    slot_id = spdm_session_info->local_used_cert_chain_slot_id;
                     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
                     if (slot_id == 0xFF) {
                         result = libspdm_get_local_public_key_buffer(
                             spdm_context,
                             (const void **)&mut_cert_chain_buffer,
                             &mut_cert_chain_buffer_size);
+                        if (!result) {
+                            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+                        }
                     } else {
-                        result = libspdm_get_local_cert_chain_buffer(
+                        libspdm_get_local_cert_chain_buffer(
                             spdm_context,
+                            slot_id,
                             (const void **)&mut_cert_chain_buffer,
                             &mut_cert_chain_buffer_size);
-                    }
-                    if (!result) {
-                        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
                     }
 
                     result = libspdm_hash_all(
@@ -3253,8 +3254,6 @@ void libspdm_reset_context(void *spdm_context)
     libspdm_zero_mem(&context->connection_info.algorithm, sizeof(libspdm_device_algorithm_t));
     libspdm_zero_mem(&context->last_spdm_error, sizeof(libspdm_error_struct_t));
     libspdm_zero_mem(&context->encap_context, sizeof(libspdm_encap_context_t));
-    context->connection_info.local_used_cert_chain_buffer_size = 0;
-    context->connection_info.local_used_cert_chain_buffer = NULL;
     context->connection_info.multi_key_conn_req = false;
     context->connection_info.multi_key_conn_rsp = false;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
