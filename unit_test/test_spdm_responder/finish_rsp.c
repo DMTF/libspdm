@@ -2035,7 +2035,6 @@ void rsp_finish_rsp_case18(void **state)
 
     spdm_context->encap_context.req_slot_id = 0xFF;
     spdm_context->connection_info.peer_used_cert_chain_slot_id = 0xFF;
-    spdm_context->connection_info.local_used_cert_chain_slot_id = 0xFF;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -2053,6 +2052,7 @@ void rsp_finish_rsp_case18(void **state)
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     session_info->mut_auth_requested = 1;
+    session_info->local_used_cert_chain_slot_id = 0xFF;
 
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
