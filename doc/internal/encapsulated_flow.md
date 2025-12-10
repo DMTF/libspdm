@@ -1,4 +1,4 @@
-# Encapsulated Flows and API Patterns for Responder
+# Encapsulated Flows and API Patterns
 
 Since its introduction in SPDM 1.1 to support mutual authentication, the encapsulated flow has
 expanded in subsequent versions of the specification into multiple flows with different
@@ -22,6 +22,14 @@ Requester during mutual authentication, determining which events to subscribe to
 parameters when calling `GET_ENDPOINT_INFO`. This document describes these decision points, forms
 requirements around them, and outlines an API pattern to support them.
 
+## Encapsulated Flow Initiation
+
+The encapsulated flow can be explicitly initiated by the Responder via mutual authentication. In
+this document this is termed as being Responder-initiated. The Requester-initiated encapsulated flow
+begins with the Requester sending `GET_ENCAPSULATED_REQUEST` to the Responder outside of mutual
+authentication. Reasons for the Requester to initiate the encapsulated flow include periodicity, or
+the Responder may possess an out-of-band (non-SPDM) mechanism to the Requester.
+
 ## Encapsulated Flow Independence
 
 It shall be possible, where applicable, for the Integrator to specify an individual secure session
@@ -43,6 +51,8 @@ Integrator may
   proceed with mutual authentication.
 - Specify whether to issue `GET_DIGESTS` and/or `GET_CERTIFICATE` or not.
 - Specify the Requester's certificate slot.
+    - For session-based mutual authentication the certificate slot is specified either in
+      `KEY_EXCHANGE_RSP` or `ENCAPSULATED_RESPONSE_ACK`.
 - Evaluate `CHALLENGE.OpaqueData` or `FINISH.OpaqueData` to determine whether or not to accept
   authentication of the Requester.
 
@@ -65,10 +75,55 @@ the Integrator may unsubscribe from all events.
 
 Integrator may specify `SubCode`, `SlotID`, or `SignatureRequested`.
 
+## Message Enforcement
+
+Encapsulated requests are limited by message type and connection or session state. These limits are
+enforced by both the Requester and Responder.
+
+### Basic Mutual Authentication
+
+If the Responder signals for mutual authentication in its `CHALLENGE_AUTH` response then the next
+request from the Requester must be `GET_ENCAPSULATED_REQUEST`. After that the encapsulated requests
+from the Responder are limited to `GET_DIGESTS`, `GET_CERTIFICATE`, and `CHALLENGE`. The Responder
+can terminate the flow by sending the encapsulated `CHALLENGE` request, clearing
+`ENCAPSULATED_RESPONSE_ACK.Param2`, or sending an `ERROR` response.
+
+### Session-based Mutual Authentication
+
+If the Responder signals for mutual authentication in its `KEY_EXCHANGE_RSP` then the next request
+from the Requester depends on the value of `MutAuthRequested`. If
+- Bit 0 is set then the next request must be `FINISH` and there is no encapsulated flow.
+- Bit 1 is set then the next request must be `GET_ENCAPSULATED_REQUEST`.
+- Bit 2 is set then the next request must be `DELIVER_ENCAPSULATED_RESPONSE` with
+  `EncapsulatedResponse` delivering the Requester's `DIGESTS` response.
+
+Within the encapsulated flow the encapsulated requests are limited to `GET_DIGESTS` and
+`GET_CERTIFICATE`. The Responder can terminate the flow by clearing
+`ENCAPSULATED_RESPONSE_ACK.Param2` or sending an `ERROR` response.
+
+### Requester-initiated Encapsulated Flow
+
+The Requester-initiated encapsulated flow begins with the Requester sending
+`GET_ENCAPSULATED_REQUEST`. If outside of a session then the following encapsulated requests are
+legal.
+- `GET_CERTIFICATE`
+- `GET_DIGESTS`
+- `GET_ENDPOINT_INFO`
+
+Within a session the above encapsulated requests are all legal, with the addition of the following
+encapsulated requests.
+- `GET_SUPPORTED_EVENT_TYPES`
+- `SUBSCRIBE_EVENT_TYPES`
+- `SEND_EVENT`
+- `KEY_UPDATE`
+- `END_SESSION`
+
+The Responder can terminate the flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2` or sending an
+`ERROR` response.
+
 ## Basic Design and State Management
 
 For encapsulated requests that originate from the Integrator the basic flow is
-
 1. If possible, Integrator signals to the Requester that it should send `GET_ENCAPSULATED_REQUEST`,
    possibly for a specific session or outside of a session.
 2. libspdm waits for the Requester to send `GET_ENCAPSULATED_REQUEST` in the appropriate channel.
@@ -82,11 +137,14 @@ For encapsulated requests that originate from the Integrator the basic flow is
 
 Example encapsulated state management handler:
 ```C
-/* libspdm receives a GET_ENCAPSULATED_REQUEST message and calls into libspdm_encap_state_handler */
+/* libspdm receives a GET_ENCAPSULATED_REQUEST or DELIVER_ENCAPSULATED_RESPONSE message and calls
+ * into libspdm_encap_state_handler. */
 
-libspdm_return_t libspdm_encap_state_handler (void *spdm_context, uint32_t *session_id, ...)
+libspdm_return_t libspdm_encap_state_handler (void *spdm_context,
+                                              uint32_t *session_id,
+                                              libspdm_encap_flow_type_t encap_flow_type, ...)
 {
-    /* Integrator can use a pointer in libspdm_session_info or larger spdm_context to access
+    /* Integrator can use a pointer in libspdm_session_info or non-session spdm_context to access
      * Integrator-defined state related to the encapsulated flow. */
 
     switch (state) {
