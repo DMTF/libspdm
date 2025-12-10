@@ -32,7 +32,7 @@ bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
     LIBSPDM_ASSERT(hmac_size == hash_size);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
+    slot_id = session_info->local_used_cert_chain_slot_id;
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
     if (slot_id == 0xFF) {
         result = libspdm_get_local_public_key_buffer(
@@ -136,7 +136,7 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
 #endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
+    slot_id = session_info->local_used_cert_chain_slot_id;
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
     if (slot_id == 0xFF) {
         result = libspdm_get_local_public_key_buffer(
@@ -323,7 +323,7 @@ bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
+    slot_id = session_info->local_used_cert_chain_slot_id;
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
     if (slot_id == 0xFF) {
         result = libspdm_get_local_public_key_buffer(

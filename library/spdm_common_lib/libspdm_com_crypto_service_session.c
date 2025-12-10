@@ -471,7 +471,7 @@ bool libspdm_calculate_th1_hash(libspdm_context_t *spdm_context,
                     &cert_chain_buffer_size);
             }
         } else {
-            slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
+            slot_id = session_info->local_used_cert_chain_slot_id;
             LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
             if (slot_id == 0xFF) {
                 result = libspdm_get_local_public_key_buffer(
@@ -563,7 +563,7 @@ bool libspdm_calculate_th2_hash(libspdm_context_t *spdm_context,
                     &cert_chain_buffer_size);
             }
         } else {
-            slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
+            slot_id = session_info->local_used_cert_chain_slot_id;
             LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
             if (slot_id == 0xFF) {
                 result = libspdm_get_local_public_key_buffer(
@@ -580,7 +580,7 @@ bool libspdm_calculate_th2_hash(libspdm_context_t *spdm_context,
         }
         if (session_info->mut_auth_requested != 0) {
             if (is_requester) {
-                slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
+                slot_id = session_info->local_used_cert_chain_slot_id;
                 LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
                 if (slot_id == 0xFF) {
                     result = libspdm_get_local_public_key_buffer(

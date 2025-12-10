@@ -477,6 +477,8 @@ typedef struct {
     /* Register for the last KEY_UPDATE token and operation (responder only)*/
     spdm_key_update_request_t last_key_update_request;
     void *secured_message_context;
+    /* Only present in session info as it is currently only used within a secure session. */
+    uint8_t local_used_cert_chain_slot_id;
 } libspdm_session_info_t;
 
 #define LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT 3

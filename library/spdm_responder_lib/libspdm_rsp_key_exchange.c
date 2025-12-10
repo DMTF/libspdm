@@ -29,7 +29,7 @@ bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
+    slot_id = session_info->local_used_cert_chain_slot_id;
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
     if (slot_id == 0xFF) {
         result = libspdm_get_local_public_key_buffer(
@@ -337,7 +337,6 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             }
         }
     }
-    spdm_context->connection_info.local_used_cert_chain_slot_id = slot_id;
 
     if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
         signature_size = libspdm_get_pqc_asym_signature_size(
@@ -458,6 +457,8 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             spdm_context, SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED, 0,
             response_size, response);
     }
+
+    session_info->local_used_cert_chain_slot_id = slot_id;
 
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false,
