@@ -11,9 +11,6 @@ target_include_directories(cryptlib_openssl
         ${LIBSPDM_DIR}/os_stub/openssllib/include
 )
 
-# Ensure OpenSSL is built before cryptlib_openssl
-add_dependencies(cryptlib_openssl openssllib)
-
 target_sources(cryptlib_openssl
     PRIVATE
         cipher/aead_aes_gcm.c
@@ -46,7 +43,6 @@ target_sources(cryptlib_openssl
         pk/x509.c
         pk/x509_pqc.c
         rand/rand.c
-        sys_call/crt_wrapper_host.c
 )
 
 target_compile_options(cryptlib_openssl PRIVATE ${OPENSSL_FLAGS})

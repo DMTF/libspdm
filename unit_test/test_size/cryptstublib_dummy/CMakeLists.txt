@@ -11,7 +11,6 @@ target_include_directories(cryptstublib_dummy
 target_sources(cryptstublib_dummy
     PRIVATE
         rand_dummy.c
-        timeclock_dummy.c
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
