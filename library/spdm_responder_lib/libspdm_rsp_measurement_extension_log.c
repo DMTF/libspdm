@@ -17,6 +17,7 @@ libspdm_return_t libspdm_get_response_measurement_extension_log(libspdm_context_
     spdm_measurement_extension_log_response_t *spdm_response;
     uint32_t offset;
     uint32_t length;
+    uint32_t max_mel_block_length;
     size_t remainder_length;
     size_t response_capacity;
     libspdm_session_info_t *session_info;
@@ -101,8 +102,11 @@ libspdm_return_t libspdm_get_response_measurement_extension_log(libspdm_context_
     if (!libspdm_is_capabilities_flag_supported(spdm_context, false,
                                                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
                                                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
-        if (length > LIBSPDM_MAX_MEL_BLOCK_LEN) {
-            length = LIBSPDM_MAX_MEL_BLOCK_LEN;
+        max_mel_block_length = LIBSPDM_MIN(SPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE,
+                                           spdm_context->local_context.capability.sender_data_transfer_size -
+                                           sizeof(spdm_measurement_extension_log_response_t));
+        if (length > max_mel_block_length) {
+            length = max_mel_block_length;
         }
     }
 

@@ -988,6 +988,7 @@ static void req_get_measurement_extension_log_case8(void **state)
     libspdm_context_t *spdm_context;
     size_t spdm_mel_size;
     uint8_t spdm_mel[LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE];
+    uint32_t original_max_spdm_msg_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1008,6 +1009,10 @@ static void req_get_measurement_extension_log_case8(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->local_context.algorithm.measurement_spec =
         SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+    original_max_spdm_msg_size = spdm_context->local_context.capability.max_spdm_msg_size;
+    spdm_context->local_context.capability.max_spdm_msg_size =
+        LIBSPDM_MAX_MEL_BLOCK_LEN +
+        sizeof(spdm_measurement_extension_log_response_t);
 
     libspdm_reset_message_b(spdm_context);
     spdm_mel_size = sizeof(spdm_mel);
@@ -1019,6 +1024,7 @@ static void req_get_measurement_extension_log_case8(void **state)
                                                    &spdm_mel_size, spdm_mel);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    spdm_context->local_context.capability.max_spdm_msg_size = original_max_spdm_msg_size;
 }
 
 /**
