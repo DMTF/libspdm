@@ -6,7 +6,7 @@ target_include_directories(test_spdm_sample
     PRIVATE
         ${LIBSPDM_DIR}/include
         ${LIBSPDM_DIR}/unit_test/include
-        ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
+        ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_${DEVICE}
         ${LIBSPDM_DIR}/os_stub/spdm_cert_verify_callback_sample
         ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
         ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
@@ -54,7 +54,7 @@ else()
             rnglib
             malloclib
             cmockalib
-            spdm_device_secret_lib_sample
+            spdm_device_secret_lib_${DEVICE}
             spdm_cert_verify_callback_sample
             spdm_crypt_ext_lib
             spdm_common_lib
