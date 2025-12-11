@@ -583,11 +583,11 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (slot_id >= SPDM_MAX_SLOT_COUNT) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        if (data_size > LIBSPDM_MAX_CERT_CHAIN_SIZE) {
-            return LIBSPDM_STATUS_BUFFER_FULL;
-        }
         context->connection_info.peer_used_cert_chain_slot_id = slot_id;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        if (data_size > LIBSPDM_MAX_CERT_CHAIN_SIZE) {
+            return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+        }
         context->connection_info.peer_used_cert_chain[slot_id].buffer_size = data_size;
         libspdm_copy_mem(context->connection_info.peer_used_cert_chain[slot_id].buffer,
                          sizeof(context->connection_info.peer_used_cert_chain[slot_id].buffer),
