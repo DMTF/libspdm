@@ -128,6 +128,14 @@ typedef struct {
 #define LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN 1024
 #endif
 
+/* Partial measurement extension log (MEL) can be retrieved from a Responder and through multiple
+ * messages the complete MEL can be constructed. This value specifies the maximum size, in bytes, of
+ * a partial MEL that can be sent or received.
+ */
+#ifndef LIBSPDM_MAX_MEL_BLOCK_LEN
+#define LIBSPDM_MAX_MEL_BLOCK_LEN 1024
+#endif
+
 extern uint8_t m_libspdm_use_measurement_spec;
 extern uint8_t m_libspdm_use_mel_spec;
 extern uint32_t m_libspdm_use_measurement_hash_algo;
