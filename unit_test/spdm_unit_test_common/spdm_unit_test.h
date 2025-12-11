@@ -30,6 +30,7 @@
  * because unit test uses it own way to track transcript. */
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT == 0
 
+#define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
 #define LIBSPDM_MAX_ENDPOINT_INFO_LENGTH 1024
 
 #define LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE (40 + \

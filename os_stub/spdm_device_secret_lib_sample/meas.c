@@ -658,6 +658,10 @@ bool libspdm_measurement_opaque_data(
     return true;
 }
 
+#ifndef LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE
+#define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
+#endif
+
 bool libspdm_generate_measurement_summary_hash(
     void *spdm_context,
     spdm_version_number_t spdm_version, uint32_t base_hash_algo,
