@@ -215,14 +215,39 @@
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 
+/* This value specifies the maximum size, in bytes, of a certificate chain that can be stored in a
+ * libspdm context. */
+#ifndef LIBSPDM_MAX_CERT_CHAIN_SIZE
+/* MLDSA - 0x8000, SLHDSA - 0x28000 */
+#if ((LIBSPDM_SLH_DSA_SHA2_128S_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHA2_128F_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHA2_192S_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHA2_192F_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHA2_256S_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT))
+#define LIBSPDM_MAX_CERT_CHAIN_SIZE 0x28000
+#elif ((LIBSPDM_ML_DSA_44_SUPPORT) || \
+    (LIBSPDM_ML_DSA_65_SUPPORT) || \
+    (LIBSPDM_ML_DSA_87_SUPPORT))
+#define LIBSPDM_MAX_CERT_CHAIN_SIZE 0x8000
+#else
+#define LIBSPDM_MAX_CERT_CHAIN_SIZE 0x1000
+#endif
+#endif /* LIBSPDM_MAX_CERT_CHAIN_SIZE */
+
 /* This value specifies the maximum size, in bytes, of the MEASUREMENTS.MeasurementRecord field. */
 #ifndef LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE
 #define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
 #endif
 
 /* This value specifies the maximum size, in bytes, of a endpoint info that can be stored in a
- * libspdm context.
- */
+ * libspdm context. */
 #ifndef LIBSPDM_MAX_ENDPOINT_INFO_LENGTH
 #define LIBSPDM_MAX_ENDPOINT_INFO_LENGTH 1024
 #endif
@@ -409,39 +434,10 @@
 #define LIBSPDM_ML_KEM_1024_SUPPORT 1
 #endif
 
-/* This value specifies the maximum size, in bytes, of a certificate chain that can be stored in a
- * libspdm context.
- */
-#ifndef LIBSPDM_MAX_CERT_CHAIN_SIZE
-/* MLDSA - 0x8000, SLHDSA - 0x28000 */
-#if ((LIBSPDM_SLH_DSA_SHA2_128S_SUPPORT) || \
-    (LIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT) || \
-    (LIBSPDM_SLH_DSA_SHA2_128F_SUPPORT) || \
-    (LIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT) || \
-    (LIBSPDM_SLH_DSA_SHA2_192S_SUPPORT) || \
-    (LIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT) || \
-    (LIBSPDM_SLH_DSA_SHA2_192F_SUPPORT) || \
-    (LIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT) || \
-    (LIBSPDM_SLH_DSA_SHA2_256S_SUPPORT) || \
-    (LIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT) || \
-    (LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT) || \
-    (LIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT))
-#define LIBSPDM_MAX_CERT_CHAIN_SIZE 0x28000
-#elif ((LIBSPDM_ML_DSA_44_SUPPORT) || \
-    (LIBSPDM_ML_DSA_65_SUPPORT) || \
-    (LIBSPDM_ML_DSA_87_SUPPORT))
-#define LIBSPDM_MAX_CERT_CHAIN_SIZE 0x8000
-#else
-#define LIBSPDM_MAX_CERT_CHAIN_SIZE 0x1000
-#endif
-#endif
-
 /* If 1 then endpoint supports parsing X.509 certificate chains. */
 #ifndef LIBSPDM_CERT_PARSE_SUPPORT
 #define LIBSPDM_CERT_PARSE_SUPPORT 1
 #endif
-
-
 
 /*
  * MinDataTransferSize = 42

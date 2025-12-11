@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -86,6 +86,30 @@
                                      LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_CAPACITY + \
                                      LIBSPDM_SCRATCH_BUFFER_LAST_SPDM_REQUEST_CAPACITY + \
                                      LIBSPDM_SCRATCH_BUFFER_CACHE_SPDM_REQUEST_CAPACITY)
+
+#ifndef LIBSPDM_MAX_CERT_CHAIN_SIZE
+/* MLDSA - 0x8000, SLHDSA - 0x28000 */
+#if ((LIBSPDM_SLH_DSA_SHA2_128S_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHA2_128F_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHA2_192S_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHA2_192F_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHA2_256S_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT) || \
+    (LIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT))
+#define LIBSPDM_MAX_CERT_CHAIN_SIZE 0x28000
+#elif ((LIBSPDM_ML_DSA_44_SUPPORT) || \
+    (LIBSPDM_ML_DSA_65_SUPPORT) || \
+    (LIBSPDM_ML_DSA_87_SUPPORT))
+#define LIBSPDM_MAX_CERT_CHAIN_SIZE 0x8000
+#else
+#define LIBSPDM_MAX_CERT_CHAIN_SIZE 0x1000
+#endif
+#endif /* LIBSPDM_MAX_CERT_CHAIN_SIZE */
 
 libspdm_return_t do_authentication_via_spdm(void *spdm_context);
 
