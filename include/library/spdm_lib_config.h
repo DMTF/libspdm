@@ -198,11 +198,6 @@
 #define LIBSPDM_MAX_SESSION_COUNT 4
 #endif
 
-#ifndef LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE
-#define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
-#endif
-
-
 /* Partial measurement extension log (MEL) can be retrieved from a Responder and through multiple
  * messages the complete MEL can be constructed. This value specifies the maximum size, in bytes, of
  * a partial MEL that can be sent or received.
@@ -227,6 +222,11 @@
 #endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+
+/* This value specifies the maximum size, in bytes, of the MEASUREMENTS.MeasurementRecord field. */
+#ifndef LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE
+#define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
+#endif
 
 /* This value specifies the maximum size, in bytes, of a endpoint info that can be stored in a
  * libspdm context.

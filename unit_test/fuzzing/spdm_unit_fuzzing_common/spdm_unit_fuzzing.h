@@ -28,6 +28,8 @@
  * because unit test uses it own way to track transcript. */
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT == 0
 
+#define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
+
 #define LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE (40 + \
                                            (LIBSPDM_MAX_HASH_SIZE + 4) * SPDM_MAX_SLOT_COUNT + \
                                            LIBSPDM_MAX_CERT_CHAIN_SIZE)
