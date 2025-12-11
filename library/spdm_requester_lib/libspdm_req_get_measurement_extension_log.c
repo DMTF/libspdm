@@ -8,15 +8,6 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
 
-#pragma pack(1)
-typedef struct {
-    spdm_message_header_t header;
-    uint32_t portion_length;
-    uint32_t remainder_length;
-    uint8_t measure_exten_log[LIBSPDM_MAX_MEL_BLOCK_LEN];
-} libspdm_measurement_extension_log_response_max_t;
-#pragma pack()
-
 /**
  * This function sends GET_MEASUREMENT_EXTENSION_LOG and receives MEASUREMENT_EXTENSION_LOG.
  *
@@ -24,7 +15,6 @@ typedef struct {
  * @param  session_id                 Indicates if it is a secured message protected via SPDM session.
  *                                    If session_id is NULL, it is a normal message.
  *                                    If session_id is not NULL, it is a secured message.
- * @param  length                     The len of get MEL in every time.
  * @param  mel_size                   On input, indicate the size in bytes of the destination buffer to store.
  *                                    On output, indicate the size in bytes of the MEL.
  * @param  measure_exten_log          A pointer to a destination buffer to store the MEL.
@@ -32,15 +22,16 @@ typedef struct {
  **/
 static libspdm_return_t libspdm_try_get_measurement_extension_log(libspdm_context_t *spdm_context,
                                                                   const uint32_t *session_id,
-                                                                  uint32_t length,
                                                                   size_t *mel_size,
                                                                   void *measure_exten_log)
 {
     libspdm_return_t status;
     spdm_get_measurement_extension_log_request_t *spdm_request;
     size_t spdm_request_size;
-    libspdm_measurement_extension_log_response_max_t *spdm_response;
+    spdm_measurement_extension_log_response_t *spdm_response;
     size_t spdm_response_size;
+    uint8_t *mel_block;
+    uint32_t length;
     uint32_t total_responder_mel_buffer_length;
     size_t mel_capacity;
     size_t mel_size_internal;
@@ -92,6 +83,10 @@ static libspdm_return_t libspdm_try_get_measurement_extension_log(libspdm_contex
     total_responder_mel_buffer_length = 0;
     mel_capacity = *mel_size;
     mel_size_internal = 0;
+
+    length = LIBSPDM_MIN(SPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE,
+                         spdm_context->local_context.capability.max_spdm_msg_size -
+                         sizeof(spdm_measurement_extension_log_response_t));
 
     transport_header_size = spdm_context->local_context.capability.transport_header_size;
 
@@ -227,11 +222,12 @@ static libspdm_return_t libspdm_try_get_measurement_extension_log(libspdm_contex
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "MEL (offset 0x%x, size 0x%x):\n",
                        spdm_request->offset, spdm_response->portion_length));
-        LIBSPDM_INTERNAL_DUMP_HEX(spdm_response->measure_exten_log, spdm_response->portion_length);
+        mel_block = (uint8_t *)(spdm_response + 1);
+        LIBSPDM_INTERNAL_DUMP_HEX(mel_block, spdm_response->portion_length);
 
         libspdm_copy_mem((uint8_t *)measure_exten_log + mel_size_internal,
                          mel_capacity - mel_size_internal,
-                         spdm_response->measure_exten_log,
+                         mel_block,
                          spdm_response->portion_length);
 
         mel_size_internal += spdm_response->portion_length;
@@ -260,17 +256,6 @@ libspdm_return_t libspdm_get_measurement_extension_log(void *spdm_context,
                                                        size_t *mel_size,
                                                        void *measure_exten_log)
 {
-    return libspdm_get_measurement_extension_log_choose_length(spdm_context, session_id,
-                                                               LIBSPDM_MAX_MEL_BLOCK_LEN,
-                                                               mel_size, measure_exten_log);
-}
-
-libspdm_return_t libspdm_get_measurement_extension_log_choose_length(void *spdm_context,
-                                                                     const uint32_t *session_id,
-                                                                     uint32_t length,
-                                                                     size_t *mel_size,
-                                                                     void *measure_exten_log)
-{
     libspdm_context_t *context;
     size_t retry;
     uint64_t retry_delay_time;
@@ -282,7 +267,6 @@ libspdm_return_t libspdm_get_measurement_extension_log_choose_length(void *spdm_
     retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_get_measurement_extension_log(context, session_id,
-                                                           length,
                                                            mel_size, measure_exten_log);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
