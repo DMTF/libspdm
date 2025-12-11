@@ -198,10 +198,6 @@
 #define LIBSPDM_MAX_SESSION_COUNT 4
 #endif
 
-#ifndef LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE
-#define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
-#endif
-
 /* To ensure integrity in communication between the Requester and the Responder libspdm calculates
  * cryptographic digests and signatures over multiple requests and responses. This value specifies
  * whether libspdm will use a running calculation over the transcript, where requests and responses
@@ -218,6 +214,11 @@
 #endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+
+/* This value specifies the maximum size, in bytes, of the MEASUREMENTS.MeasurementRecord field. */
+#ifndef LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE
+#define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
+#endif
 
 /* This value specifies the maximum size, in bytes, of a endpoint info that can be stored in a
  * libspdm context.
