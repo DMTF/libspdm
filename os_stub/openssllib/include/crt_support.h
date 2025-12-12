@@ -214,7 +214,7 @@ typedef char *LIBSPDM_VA_LIST;
 
 typedef size_t u_int;
 #if defined(__GNUC__) && !defined(__MINGW64__)
-typedef size_t time_t; /* time_t is 4 bytes for 32bit machine and 8 bytes for 64bit machine */
+typedef long long time_t; /* time_t is 8 bytes for 32bit machine and 64bit machine */
 #endif
 typedef uint8_t __uint8_t;
 typedef uint8_t sa_family_t;
