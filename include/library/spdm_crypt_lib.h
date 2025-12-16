@@ -1135,28 +1135,10 @@ bool libspdm_verify_cert_chain_data(
  * This function verifies the integrity of certificate chain buffer including
  * spdm_cert_chain_t header.
  *
+ * @param  spdm_version            One of SPDM_MESSAGE_VERSION_* macros.
  * @param  base_hash_algo          SPDM base_hash_algo
  * @param  base_asym_algo          SPDM base_asym_algo
- * @param  cert_chain_buffer       The certificate chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
- * @param  is_requester_cert       Is the function verifying requester or responder cert.
- * @param  is_device_cert_model    If true, the cert chain is DeviceCert model.
- *                                 If false, the cert chain is AliasCert model.
- *
- * @retval true   Certificate chain buffer integrity verification pass.
- * @retval false  Certificate chain buffer integrity verification fail.
- **/
-bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t base_asym_algo,
-                                             const void *cert_chain_buffer,
-                                             size_t cert_chain_buffer_size,
-                                             bool is_requester_cert, bool is_device_cert_model);
-
-/**
- * This function verifies the integrity of certificate chain buffer including
- * spdm_cert_chain_t header. It is used for SPDM 1.3.
- *
- * @param  base_hash_algo          SPDM base_hash_algo
- * @param  base_asym_algo          SPDM base_asym_algo
+ * @param  pqc_asym_algo           SPDM pqc_asym_algo
  * @param  cert_chain_buffer       The certificate chain buffer including spdm_cert_chain_t header.
  * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
  * @param  is_requester_cert       Is the function verifying requester or responder cert.
@@ -1165,12 +1147,8 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
  * @retval true   Certificate chain buffer integrity verification pass.
  * @retval false  Certificate chain buffer integrity verification fail.
  **/
-bool libspdm_verify_certificate_chain_buffer_ex(uint32_t base_hash_algo, uint32_t base_asym_algo,
-                                                const void *cert_chain_buffer,
-                                                size_t cert_chain_buffer_size,
-                                                bool is_requester_cert, uint8_t cert_model);
-
-bool libspdm_verify_certificate_chain_buffer_with_pqc(
+bool libspdm_verify_certificate_chain_buffer(
+    uint8_t spdm_version,
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     const void *cert_chain_buffer,
     size_t cert_chain_buffer_size,

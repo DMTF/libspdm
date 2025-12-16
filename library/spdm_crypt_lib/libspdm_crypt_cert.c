@@ -2114,10 +2114,12 @@ bool libspdm_verify_cert_chain_data(
 
 /**
  * This function verifies the integrity of certificate chain buffer including
- * spdm_cert_chain_t header. It is used for SPDM 1.3.
+ * spdm_cert_chain_t header.
  *
+ * @param  spdm_version            One of SPDM_MESSAGE_VERSION_* macros.
  * @param  base_hash_algo          SPDM base_hash_algo
  * @param  base_asym_algo          SPDM base_asym_algo
+ * @param  pqc_asym_algo           SPDM pqc_asym_algo
  * @param  cert_chain_buffer       The certificate chain buffer including spdm_cert_chain_t header.
  * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
  * @param  is_requester_cert       Is the function verifying requester or responder cert.
@@ -2126,7 +2128,8 @@ bool libspdm_verify_cert_chain_data(
  * @retval true   Certificate chain buffer integrity verification pass.
  * @retval false  Certificate chain buffer integrity verification fail.
  **/
-bool libspdm_verify_certificate_chain_buffer_with_pqc(
+bool libspdm_verify_certificate_chain_buffer(
+    uint8_t spdm_version,
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     const void *cert_chain_buffer,
     size_t cert_chain_buffer_size,
@@ -2210,109 +2213,6 @@ bool libspdm_verify_certificate_chain_buffer_with_pqc(
     if (!libspdm_x509_certificate_check_with_pqc(leaf_cert_buffer, leaf_cert_buffer_size,
                                                  base_asym_algo, pqc_asym_algo, base_hash_algo,
                                                  is_requester_cert, cert_model)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "!!! VerifyCertificateChainBuffer - FAIL (leaf certificate check failed)!!!\n"));
-        return false;
-    }
-
-    return true;
-}
-
-bool libspdm_verify_certificate_chain_buffer_ex(uint32_t base_hash_algo, uint32_t base_asym_algo,
-                                                const void *cert_chain_buffer,
-                                                size_t cert_chain_buffer_size,
-                                                bool is_requester_cert, uint8_t cert_model)
-{
-    return libspdm_verify_certificate_chain_buffer_with_pqc (
-        base_hash_algo, base_asym_algo, 0,
-        cert_chain_buffer, cert_chain_buffer_size,
-        is_requester_cert, cert_model);
-}
-
-bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t base_asym_algo,
-                                             const void *cert_chain_buffer,
-                                             size_t cert_chain_buffer_size,
-                                             bool is_requester_cert,
-                                             bool is_device_cert_model)
-{
-    const uint8_t *cert_chain_data;
-    size_t cert_chain_data_size;
-    const uint8_t *first_cert_buffer;
-    size_t first_cert_buffer_size;
-    size_t hash_size;
-    uint8_t calc_root_cert_hash[LIBSPDM_MAX_HASH_SIZE];
-    const uint8_t *leaf_cert_buffer;
-    size_t leaf_cert_buffer_size;
-    bool result;
-    const spdm_cert_chain_t *cert_chain_header;
-
-    hash_size = libspdm_get_hash_size(base_hash_algo);
-
-    if (cert_chain_buffer_size <= sizeof(spdm_cert_chain_t) + hash_size) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "!!! VerifyCertificateChainBuffer - FAIL (buffer too small) !!!\n"));
-        return false;
-    }
-
-    cert_chain_header = cert_chain_buffer;
-    if (cert_chain_header->length != cert_chain_buffer_size) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "!!! VerifyCertificateChainBuffer - FAIL (cert_chain->length mismatch) !!!\n"));
-        return false;
-    }
-
-    cert_chain_data = (const uint8_t *)cert_chain_buffer + sizeof(spdm_cert_chain_t) + hash_size;
-    cert_chain_data_size = cert_chain_buffer_size - sizeof(spdm_cert_chain_t) - hash_size;
-    if (!libspdm_x509_get_cert_from_cert_chain(
-            cert_chain_data, cert_chain_data_size, 0, &first_cert_buffer,
-            &first_cert_buffer_size)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "!!! VerifyCertificateChainBuffer - FAIL (get root certificate failed)!!!\n"));
-        return false;
-    }
-
-    if (libspdm_is_root_certificate(first_cert_buffer, first_cert_buffer_size)) {
-        result = libspdm_hash_all(base_hash_algo, first_cert_buffer, first_cert_buffer_size,
-                                  calc_root_cert_hash);
-        if (!result) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "!!! VerifyCertificateChainBuffer - FAIL (hash calculation fail) !!!\n"));
-            return false;
-        }
-        if (!libspdm_consttime_is_mem_equal((const uint8_t *)cert_chain_buffer +
-                                            sizeof(spdm_cert_chain_t),
-                                            calc_root_cert_hash, hash_size)) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "!!! VerifyCertificateChainBuffer - FAIL (cert root hash mismatch) !!!\n"));
-            return false;
-        }
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "!!! VerifyCertificateChainBuffer - PASS (cert root hash match) !!!\n"));
-    }
-
-    /*If the number of certificates in the certificate chain is more than 1,
-     * other certificates need to be verified.*/
-    if (cert_chain_data_size > first_cert_buffer_size) {
-        if (!libspdm_x509_verify_cert_chain(first_cert_buffer, first_cert_buffer_size,
-                                            cert_chain_data + first_cert_buffer_size,
-                                            cert_chain_data_size - first_cert_buffer_size)) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "!!! VerifyCertificateChainBuffer - FAIL (cert chain verify failed)!!!\n"));
-            return false;
-        }
-    }
-
-    if (!libspdm_x509_get_cert_from_cert_chain(
-            cert_chain_data, cert_chain_data_size, -1,
-            &leaf_cert_buffer, &leaf_cert_buffer_size)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "!!! VerifyCertificateChainBuffer - FAIL (get leaf certificate failed)!!!\n"));
-        return false;
-    }
-
-    if (!libspdm_x509_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
-                                        base_asym_algo, base_hash_algo,
-                                        is_requester_cert, is_device_cert_model)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainBuffer - FAIL (leaf certificate check failed)!!!\n"));
         return false;
