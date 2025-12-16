@@ -1660,53 +1660,13 @@ cleanup:
 }
 
 /**
- * Certificate Check for SPDM leaf cert when get_cert command
+ * Certificate Check for SPDM leaf cert when get_cert command.
  *
+ * @param[in]  spdm_version          One of SPDM_MESSAGE_VERSION_* macros.
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
- * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
- * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
- *                                   If false, the local endpoint uses the AliasCert model.
- *
- * @retval  true   Success.
- * @retval  false  Certificate is not valid
- **/
-bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
-                                    uint32_t base_asym_algo,
-                                    uint32_t base_hash_algo,
-                                    bool is_requester,
-                                    bool is_device_cert_model)
-{
-    bool status;
-    uint8_t cert_model;
-
-    if (is_device_cert_model) {
-        cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
-    } else {
-        cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
-    }
-
-    status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo, 0,
-                                                   base_hash_algo, is_requester,
-                                                   cert_model, false);
-    if (!status) {
-        return false;
-    }
-
-    /* verify basic constraints: the leaf cert always is ca:false in get_cert*/
-    status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size, false);
-    return status;
-}
-
-
-/**
- * Certificate Check for SPDM leaf cert when get_cert command. It is used for SPDM 1.3.
- *
- * @param[in]  cert                  Pointer to the DER-encoded certificate data.
- * @param[in]  cert_size             The size of certificate data in bytes.
- * @param[in]  base_asym_algo        SPDM base_asym_algo
+ * @param[in]  pqc_asym_algo         SPDM pqc_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
  * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
  * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
@@ -1714,13 +1674,14 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
  * @retval  true   Success.
  * @retval  false  Certificate is not valid
  **/
-bool libspdm_x509_certificate_check_with_pqc(const uint8_t *cert, size_t cert_size,
-                                             uint32_t base_asym_algo, uint32_t pqc_asym_algo,
-                                             uint32_t base_hash_algo,
-                                             bool is_requester,
-                                             uint8_t cert_model)
+bool libspdm_x509_certificate_check(
+    uint8_t spdm_version,
+    const uint8_t *cert, size_t cert_size,
+    uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+    bool is_requester, uint8_t cert_model)
 {
     bool status;
+    bool need_basic_constraints;
 
     status = libspdm_x509_common_certificate_check(
         cert, cert_size, base_asym_algo, pqc_asym_algo,
@@ -1730,22 +1691,16 @@ bool libspdm_x509_certificate_check_with_pqc(const uint8_t *cert, size_t cert_si
         return false;
     }
 
-    /* verify basic constraints: the leaf cert always is ca:false in get_cert
-     * basic_constraints is mandatory in SPDM 1.3*/
-    status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size, true);
+    if (spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        /* verify basic constraints: the leaf cert always is ca:false in get_cert
+         * basic_constraints is mandatory in SPDM 1.3*/
+        need_basic_constraints = true;
+    } else {
+        /* verify basic constraints: the leaf cert always is ca:false in get_cert*/
+        need_basic_constraints = false;
+    }
+    status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size, need_basic_constraints);
     return status;
-}
-
-bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
-                                       uint32_t base_asym_algo,
-                                       uint32_t base_hash_algo,
-                                       bool is_requester,
-                                       uint8_t cert_model)
-{
-    return libspdm_x509_certificate_check_with_pqc (
-        cert, cert_size,
-        base_asym_algo, 0, base_hash_algo,
-        is_requester, cert_model);
 }
 
 bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_size,
@@ -2067,9 +2022,6 @@ bool libspdm_verify_cert_chain_data(
     size_t root_cert_buffer_size;
     const uint8_t *leaf_cert_buffer;
     size_t leaf_cert_buffer_size;
-    bool is_device_cert_model;
-
-    is_device_cert_model = (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
 
     if (cert_chain_data_size >
         SPDM_MAX_CERTIFICATE_CHAIN_SIZE - (sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE)) {
@@ -2101,9 +2053,10 @@ bool libspdm_verify_cert_chain_data(
         return false;
     }
 
-    if (!libspdm_x509_certificate_check_with_pqc(leaf_cert_buffer, leaf_cert_buffer_size,
-                                                 base_asym_algo, pqc_asym_algo, base_hash_algo,
-                                                 is_requester_cert, is_device_cert_model)) {
+    if (!libspdm_x509_certificate_check(spdm_version,
+                                        leaf_cert_buffer, leaf_cert_buffer_size,
+                                        base_asym_algo, pqc_asym_algo, base_hash_algo,
+                                        is_requester_cert, cert_model)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainData - FAIL (leaf certificate check failed)!!!\n"));
         return false;
@@ -2210,9 +2163,10 @@ bool libspdm_verify_certificate_chain_buffer(
         return false;
     }
 
-    if (!libspdm_x509_certificate_check_with_pqc(leaf_cert_buffer, leaf_cert_buffer_size,
-                                                 base_asym_algo, pqc_asym_algo, base_hash_algo,
-                                                 is_requester_cert, cert_model)) {
+    if (!libspdm_x509_certificate_check(spdm_version,
+                                        leaf_cert_buffer, leaf_cert_buffer_size,
+                                        base_asym_algo, pqc_asym_algo, base_hash_algo,
+                                        is_requester_cert, cert_model)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainBuffer - FAIL (leaf certificate check failed)!!!\n"));
         return false;
