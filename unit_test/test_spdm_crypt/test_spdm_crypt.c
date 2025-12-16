@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -521,7 +521,7 @@ void libspdm_test_crypt_spdm_x509_set_cert_certificate_check_ex(void **state)
 
 }
 
-void libspdm_test_crypt_spdm_verify_cert_chain_data_ex(void **state)
+void libspdm_test_crypt_spdm_verify_cert_chain_data(void **state)
 {
     bool status;
     uint8_t *file_buffer;
@@ -532,25 +532,34 @@ void libspdm_test_crypt_spdm_verify_cert_chain_data_ex(void **state)
                                          (void **)&file_buffer, &file_buffer_size);
         assert_true(status);
 
-        status = libspdm_verify_cert_chain_data_ex(file_buffer, file_buffer_size,
-                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
-                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
-                                                   true,
-                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        status = libspdm_verify_cert_chain_data(
+            SPDM_MESSAGE_VERSION_13,
+            file_buffer, file_buffer_size,
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+            0,
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+            true,
+            SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
         assert_true(status);
 
-        status = libspdm_verify_cert_chain_data_ex(file_buffer, file_buffer_size + 1,
-                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
-                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
-                                                   true,
-                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        status = libspdm_verify_cert_chain_data(
+            SPDM_MESSAGE_VERSION_13,
+            file_buffer, file_buffer_size + 1,
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+            0,
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+            true,
+            SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
         assert_false(status);
 
-        status = libspdm_verify_cert_chain_data_ex(file_buffer, file_buffer_size,
-                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
-                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
-                                                   true,
-                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+        status = libspdm_verify_cert_chain_data(
+            SPDM_MESSAGE_VERSION_13,
+            file_buffer, file_buffer_size,
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+            0,
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+            true,
+            SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
         assert_true(status);
         free(file_buffer);
     }
@@ -558,25 +567,34 @@ void libspdm_test_crypt_spdm_verify_cert_chain_data_ex(void **state)
         status = libspdm_read_input_file("ecp256/bundle_responder.certchain.der",
                                          (void **)&file_buffer, &file_buffer_size);
         assert_true(status);
-        status = libspdm_verify_cert_chain_data_ex(file_buffer, file_buffer_size,
-                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
-                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
-                                                   false,
-                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        status = libspdm_verify_cert_chain_data(
+            SPDM_MESSAGE_VERSION_13,
+            file_buffer, file_buffer_size,
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+            0,
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+            false,
+            SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
         assert_true(status);
 
-        status = libspdm_verify_cert_chain_data_ex(file_buffer, file_buffer_size + 1,
-                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
-                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
-                                                   false,
-                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        status = libspdm_verify_cert_chain_data(
+            SPDM_MESSAGE_VERSION_13,
+            file_buffer, file_buffer_size + 1,
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+            0,
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+            false,
+            SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
         assert_false(status);
 
-        status = libspdm_verify_cert_chain_data_ex(file_buffer, file_buffer_size,
-                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
-                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
-                                                   false,
-                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+        status = libspdm_verify_cert_chain_data(
+            SPDM_MESSAGE_VERSION_13,
+            file_buffer, file_buffer_size,
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+            0,
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+            false,
+            SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
         assert_false(status);
         free(file_buffer);
     }
@@ -1275,7 +1293,7 @@ int libspdm_crypt_lib_test_main(void)
 
         cmocka_unit_test(libspdm_test_crypt_spdm_x509_set_cert_certificate_check_ex),
 
-        cmocka_unit_test(libspdm_test_crypt_spdm_verify_cert_chain_data_ex),
+        cmocka_unit_test(libspdm_test_crypt_spdm_verify_cert_chain_data),
 
         cmocka_unit_test(libspdm_test_crypt_spdm_verify_certificate_chain_buffer_ex),
 

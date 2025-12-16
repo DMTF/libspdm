@@ -433,12 +433,12 @@ bool libspdm_read_pqc_responder_public_certificate_chain(
     size_t root_cert_len;
     size_t digest_size;
     bool is_requester_cert;
-    bool is_device_cert_model;
+    uint8_t cert_model;
 
     is_requester_cert = false;
 
-    /*default is true*/
-    is_device_cert_model = true;
+    /*default is device cert*/
+    cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
 
     *data = NULL;
     *size = 0;
@@ -518,9 +518,11 @@ bool libspdm_read_pqc_responder_public_certificate_chain(
     }
     cert_chain->length = (uint32_t)cert_chain_size;
 
-    res = libspdm_verify_cert_chain_data_with_pqc(file_data, file_size,
-                                                  0, pqc_asym_algo, base_hash_algo,
-                                                  is_requester_cert, is_device_cert_model);
+    res = libspdm_verify_cert_chain_data(
+        SPDM_MESSAGE_VERSION_14,
+        file_data, file_size,
+        0, pqc_asym_algo, base_hash_algo,
+        is_requester_cert, cert_model);
     if (!res) {
         free(file_data);
         free(cert_chain);
@@ -900,12 +902,12 @@ bool libspdm_read_pqc_responder_public_certificate_chain_per_slot(
     size_t root_cert_len;
     size_t digest_size;
     bool is_requester_cert;
-    bool is_device_cert_model;
+    uint8_t cert_model;
 
     is_requester_cert = false;
 
-    /*default is true*/
-    is_device_cert_model = true;
+    /*default is device cert*/
+    cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
 
     *data = NULL;
     *size = 0;
@@ -1038,9 +1040,11 @@ bool libspdm_read_pqc_responder_public_certificate_chain_per_slot(
     }
     cert_chain->length = (uint32_t)cert_chain_size;
 
-    res = libspdm_verify_cert_chain_data_with_pqc(file_data, file_size,
-                                                  0, pqc_asym_algo, base_hash_algo,
-                                                  is_requester_cert, is_device_cert_model);
+    res = libspdm_verify_cert_chain_data(
+        SPDM_MESSAGE_VERSION_14,
+        file_data, file_size,
+        0, pqc_asym_algo, base_hash_algo,
+        is_requester_cert, cert_model);
     if (!res) {
         free(file_data);
         free(cert_chain);
@@ -1097,12 +1101,12 @@ bool libspdm_read_pqc_requester_public_certificate_chain(
     size_t root_cert_len;
     size_t digest_size;
     bool is_requester_cert;
-    bool is_device_cert_model;
+    uint8_t cert_model;
 
     is_requester_cert = false;
 
-    /*default is true*/
-    is_device_cert_model = true;
+    /*default is device cert*/
+    cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
 
     *data = NULL;
     *size = 0;
@@ -1182,9 +1186,11 @@ bool libspdm_read_pqc_requester_public_certificate_chain(
     }
     cert_chain->length = (uint32_t)cert_chain_size;
 
-    res = libspdm_verify_cert_chain_data_with_pqc(file_data, file_size,
-                                                  0, req_pqc_asym_alg, base_hash_algo,
-                                                  is_requester_cert, is_device_cert_model);
+    res = libspdm_verify_cert_chain_data(
+        SPDM_MESSAGE_VERSION_14,
+        file_data, file_size,
+        0, req_pqc_asym_alg, base_hash_algo,
+        is_requester_cert, cert_model);
     if (!res) {
         free(file_data);
         free(cert_chain);
