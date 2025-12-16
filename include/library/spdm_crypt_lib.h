@@ -982,11 +982,9 @@ bool libspdm_x509_certificate_check(
     bool is_requester, uint8_t cert_model);
 
 /**
- * Certificate Check for SPDM leaf cert when set_cert. It is used for SPDM 1.2.
+ * Certificate Check for SPDM leaf cert when set_cert.
  *
- * This function differs from libspdm_x509_set_cert_certificate_check_ex in that in SPDM 1.2 the
- * BasicConstraints CA field is optional while in SPDM 1.3 and later it is mandatory.
- *
+ * @param[in]  spdm_version          One of SPDM_MESSAGE_VERSION_* macros.
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
@@ -998,31 +996,8 @@ bool libspdm_x509_certificate_check(
  * @retval  true   Success.
  * @retval  false  Certificate is not valid.
  **/
-bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_size,
-                                             uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                             bool is_requester, bool is_device_cert_model);
-
-/**
- * Certificate Check for SPDM leaf cert when set_cert. It is used for SPDM 1.3 and later.
- *
- * This function differs from libspdm_x509_set_cert_certificate_check in that in SPDM 1.2 the
- * BasicConstraints CA field is optional while in SPDM 1.3 and later it is mandatory.
- *
- * @param[in]  cert                  Pointer to the DER-encoded certificate data.
- * @param[in]  cert_size             The size of certificate data in bytes.
- * @param[in]  base_asym_algo        SPDM base_asym_algo
- * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
- * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
- *
- * @retval  true   Success.
- * @retval  false  Certificate is not valid.
- **/
-bool libspdm_x509_set_cert_certificate_check_ex(const uint8_t *cert, size_t cert_size,
-                                                uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                                bool is_requester, uint8_t cert_model);
-
-bool libspdm_x509_set_cert_certificate_check_with_pqc(
+bool libspdm_x509_set_cert_certificate_check(
+    uint8_t spdm_version,
     const uint8_t *cert, size_t cert_size,
     uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
     bool is_requester, uint8_t cert_model);

@@ -1703,38 +1703,29 @@ bool libspdm_x509_certificate_check(
     return status;
 }
 
-bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_size,
-                                             uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                             bool is_requester, bool is_device_cert_model)
-{
-    bool status;
-    uint8_t cert_model;
-
-    if (is_device_cert_model) {
-        cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
-    } else {
-        cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
-    }
-
-    status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo, 0,
-                                                   base_hash_algo, is_requester,
-                                                   cert_model, true);
-    if (!status) {
-        return false;
-    }
-
-    /* verify basic constraints: need check with is_device_cert_model*/
-    status = libspdm_verify_set_cert_leaf_cert_basic_constraints(
-        cert, cert_size, cert_model, false);
-    return status;
-}
-
-bool libspdm_x509_set_cert_certificate_check_with_pqc(
+/**
+ * Certificate Check for SPDM leaf cert when set_cert.
+ *
+ * @param[in]  spdm_version          One of SPDM_MESSAGE_VERSION_* macros.
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ * @param[in]  base_asym_algo        SPDM base_asym_algo
+ * @param[in]  base_hash_algo        SPDM base_hash_algo
+ * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
+ * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
+ *                                   If false, the local endpoint uses the AliasCert model.
+ *
+ * @retval  true   Success.
+ * @retval  false  Certificate is not valid.
+ **/
+bool libspdm_x509_set_cert_certificate_check(
+    uint8_t spdm_version,
     const uint8_t *cert, size_t cert_size,
     uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
     bool is_requester, uint8_t cert_model)
 {
     bool status;
+    bool need_basic_constraints;
 
     status = libspdm_x509_common_certificate_check(
         cert, cert_size, base_asym_algo, pqc_asym_algo,
@@ -1745,20 +1736,15 @@ bool libspdm_x509_set_cert_certificate_check_with_pqc(
     }
 
     /* verify basic constraints: need check with is_device_cert_model*/
+    if (spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        need_basic_constraints = true;
+    } else {
+        need_basic_constraints = false;
+    }
     status = libspdm_verify_set_cert_leaf_cert_basic_constraints(
-        cert, cert_size, cert_model, true);
+        cert, cert_size, cert_model, need_basic_constraints);
 
     return status;
-}
-
-bool libspdm_x509_set_cert_certificate_check_ex(const uint8_t *cert, size_t cert_size,
-                                                uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                                bool is_requester, uint8_t cert_model)
-{
-    return libspdm_x509_set_cert_certificate_check_with_pqc (
-        cert, cert_size,
-        base_asym_algo, 0, base_hash_algo,
-        is_requester, cert_model);
 }
 
 bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)

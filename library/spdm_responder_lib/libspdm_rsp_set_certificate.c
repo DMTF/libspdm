@@ -41,23 +41,13 @@ static bool libspdm_set_cert_verify_certchain(
         return false;
     }
 
-    if (spdm_version == SPDM_MESSAGE_VERSION_12) {
-        const bool is_device_cert_model =
-            (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
-
-        /*verify leaf cert*/
-        if (!libspdm_x509_set_cert_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
-                                                     base_asym_algo, base_hash_algo,
-                                                     false, is_device_cert_model)) {
-            return false;
-        }
-    } else {
-        if (!libspdm_x509_set_cert_certificate_check_with_pqc(
-                leaf_cert_buffer, leaf_cert_buffer_size,
-                base_asym_algo, pqc_asym_algo, base_hash_algo,
-                false, cert_model)) {
-            return false;
-        }
+    /*verify leaf cert*/
+    if (!libspdm_x509_set_cert_certificate_check(
+            spdm_version,
+            leaf_cert_buffer, leaf_cert_buffer_size,
+            base_asym_algo, pqc_asym_algo, base_hash_algo,
+            false, cert_model)) {
+         return false;
     }
 
     return true;
