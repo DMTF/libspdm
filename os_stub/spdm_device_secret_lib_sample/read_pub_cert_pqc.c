@@ -581,12 +581,12 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert_till_dev_cer
     size_t leaf_cert_len;
     size_t digest_size;
     bool is_requester_cert;
-    bool is_device_cert_model;
+    uint8_t cert_model;
 
     is_requester_cert = false;
 
-    /*default is false*/
-    is_device_cert_model = false;
+    /*default is alias cert*/
+    cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
 
     *data = NULL;
     *size = 0;
@@ -675,9 +675,11 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert_till_dev_cer
         return res;
     }
 
-    res = libspdm_x509_set_cert_certificate_check_with_pqc(leaf_cert, leaf_cert_len,
-                                                           0, pqc_asym_algo, base_hash_algo,
-                                                           is_requester_cert, is_device_cert_model);
+    res = libspdm_x509_set_cert_certificate_check(
+        SPDM_MESSAGE_VERSION_14,
+        leaf_cert, leaf_cert_len,
+        0, pqc_asym_algo, base_hash_algo,
+        is_requester_cert, cert_model);
     if (!res) {
         free(file_data);
         free(cert_chain);
