@@ -601,7 +601,7 @@ void libspdm_test_crypt_spdm_verify_cert_chain_data(void **state)
 }
 
 
-void libspdm_test_crypt_spdm_verify_certificate_chain_buffer_ex(void **state)
+void libspdm_test_crypt_spdm_verify_certificate_chain_buffer(void **state)
 {
     bool status;
     void *data;
@@ -614,25 +614,31 @@ void libspdm_test_crypt_spdm_verify_certificate_chain_buffer_ex(void **state)
             &data,&data_size,
             NULL, NULL);
 
-        status = libspdm_verify_certificate_chain_buffer_ex(
+        status = libspdm_verify_certificate_chain_buffer(
+            SPDM_MESSAGE_VERSION_13,
             SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+            0,
             data,data_size,
             true,
             SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
         assert_true(status);
 
-        status = libspdm_verify_certificate_chain_buffer_ex(
+        status = libspdm_verify_certificate_chain_buffer(
+            SPDM_MESSAGE_VERSION_13,
             SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+            0,
             data,data_size + 1,
             true,
             SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
         assert_false(status);
 
-        status = libspdm_verify_certificate_chain_buffer_ex(
+        status = libspdm_verify_certificate_chain_buffer(
+            SPDM_MESSAGE_VERSION_13,
             SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+            0,
             data,data_size,
             true,
             SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
@@ -647,25 +653,31 @@ void libspdm_test_crypt_spdm_verify_certificate_chain_buffer_ex(void **state)
             &data,&data_size,
             NULL, NULL);
 
-        status = libspdm_verify_certificate_chain_buffer_ex(
+        status = libspdm_verify_certificate_chain_buffer(
+            SPDM_MESSAGE_VERSION_13,
             SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+            0,
             data,data_size,
             false,
             SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
         assert_true(status);
 
-        status = libspdm_verify_certificate_chain_buffer_ex(
+        status = libspdm_verify_certificate_chain_buffer(
+            SPDM_MESSAGE_VERSION_13,
             SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+            0,
             data,data_size + 1,
             false,
             SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
         assert_false(status);
 
-        status = libspdm_verify_certificate_chain_buffer_ex(
+        status = libspdm_verify_certificate_chain_buffer(
+            SPDM_MESSAGE_VERSION_13,
             SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+            0,
             data,data_size,
             false,
             SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
@@ -1295,7 +1307,7 @@ int libspdm_crypt_lib_test_main(void)
 
         cmocka_unit_test(libspdm_test_crypt_spdm_verify_cert_chain_data),
 
-        cmocka_unit_test(libspdm_test_crypt_spdm_verify_certificate_chain_buffer_ex),
+        cmocka_unit_test(libspdm_test_crypt_spdm_verify_certificate_chain_buffer),
 
         cmocka_unit_test(libspdm_test_crypt_asym_verify),
 

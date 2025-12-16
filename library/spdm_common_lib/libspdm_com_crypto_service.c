@@ -782,14 +782,16 @@ bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_con
     }
 
     if (is_requester) {
-        result = libspdm_verify_certificate_chain_buffer_with_pqc(
+        result = libspdm_verify_certificate_chain_buffer(
+            libspdm_get_connection_version(spdm_context),
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.pqc_asym_algo,
             cert_chain_buffer, cert_chain_buffer_size,
             false, cert_model);
     } else {
-        result = libspdm_verify_certificate_chain_buffer_with_pqc(
+        result = libspdm_verify_certificate_chain_buffer(
+            libspdm_get_connection_version(spdm_context),
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.req_pqc_asym_alg,
