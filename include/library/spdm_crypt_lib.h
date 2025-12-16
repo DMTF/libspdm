@@ -1113,33 +1113,11 @@ bool libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_si
 /**
  * This function verifies the integrity of certificate chain data without spdm_cert_chain_t header.
  *
+ * @param  spdm_version          One of SPDM_MESSAGE_VERSION_* macros.
  * @param  cert_chain_data       The certificate chain data without spdm_cert_chain_t header.
  * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
  * @param  base_asym_algo        SPDM base_asym_algo
- * @param  base_hash_algo        SPDM base_hash_algo
- * @param  is_requester_cert     Is the function verifying requester or responder cert.
- * @param  is_device_cert_model  If true, the cert chain is DeviceCert model.
- *                               If false, the cert chain is AliasCert model.
- *
- * @retval true  Certificate chain data integrity verification pass.
- * @retval false Certificate chain data integrity verification fail.
- **/
-bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_data_size,
-                                    uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                    bool is_requester_cert, bool is_device_cert_model);
-
-bool libspdm_verify_cert_chain_data_with_pqc(
-    uint8_t *cert_chain_data, size_t cert_chain_data_size,
-    uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
-    bool is_requester_cert, bool is_device_cert_model);
-
-/**
- * This function verifies the integrity of certificate chain data without spdm_cert_chain_t header.
- * It is used for SPDM 1.3.
- *
- * @param  cert_chain_data       The certificate chain data without spdm_cert_chain_t header.
- * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
- * @param  base_asym_algo        SPDM base_asym_algo
+ * @param  pqc_asym_algo         SPDM pqc_asym_algo
  * @param  base_hash_algo        SPDM base_hash_algo
  * @param  is_requester_cert     Is the function verifying requester or responder cert.
  * @param  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
@@ -1147,9 +1125,11 @@ bool libspdm_verify_cert_chain_data_with_pqc(
  * @retval true  Certificate chain data integrity verification pass.
  * @retval false Certificate chain data integrity verification fail.
  **/
-bool libspdm_verify_cert_chain_data_ex(uint8_t *cert_chain_data, size_t cert_chain_data_size,
-                                       uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                       bool is_requester_cert, uint8_t cert_model);
+bool libspdm_verify_cert_chain_data(
+    uint8_t spdm_version,
+    uint8_t *cert_chain_data, size_t cert_chain_data_size,
+    uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+    bool is_requester_cert, uint8_t cert_model);
 
 /**
  * This function verifies the integrity of certificate chain buffer including
