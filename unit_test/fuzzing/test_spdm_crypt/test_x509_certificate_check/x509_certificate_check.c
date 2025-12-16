@@ -20,11 +20,13 @@ void libspdm_test_x509_certificate_check(void **State)
     spdm_test_context = *State;
 
     libspdm_x509_certificate_check(
+        SPDM_MESSAGE_VERSION_12,
         (uint8_t *)spdm_test_context->test_buffer,
         spdm_test_context->test_buffer_size,
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+        0,
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
-        true, true);
+        true, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
 }
 
 libspdm_test_context_t m_spdm_x509_certificate_check_test_context = {
