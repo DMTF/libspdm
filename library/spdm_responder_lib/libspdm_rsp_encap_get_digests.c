@@ -202,16 +202,14 @@ libspdm_return_t libspdm_process_encap_response_digest(
     } else {
         spdm_context->connection_info.peer_supported_slot_mask = spdm_response->header.param2;
     }
-    libspdm_copy_mem(
-        spdm_context->connection_info.peer_total_digest_buffer,
-        sizeof(spdm_context->connection_info.peer_total_digest_buffer),
-        spdm_response + 1, digest_size * digest_count);
+
     libspdm_zero_mem(spdm_context->connection_info.peer_key_pair_id,
                      sizeof(spdm_context->connection_info.peer_key_pair_id));
     libspdm_zero_mem(spdm_context->connection_info.peer_cert_info,
                      sizeof(spdm_context->connection_info.peer_cert_info));
     libspdm_zero_mem(spdm_context->connection_info.peer_key_usage_bit_mask,
                      sizeof(spdm_context->connection_info.peer_key_usage_bit_mask));
+
     if ((spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
         spdm_context->connection_info.multi_key_conn_req) {
         slot_index = 0;

@@ -140,7 +140,6 @@ typedef struct {
     /* Peer digests buffer */
     uint8_t peer_provisioned_slot_mask;
     uint8_t peer_supported_slot_mask;
-    uint8_t peer_total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     spdm_key_pair_id_t peer_key_pair_id[SPDM_MAX_SLOT_COUNT];
     spdm_certificate_info_t peer_cert_info[SPDM_MAX_SLOT_COUNT];

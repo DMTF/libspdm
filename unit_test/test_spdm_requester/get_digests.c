@@ -1246,14 +1246,6 @@ static void req_get_digests_case2(void **state)
     assert_int_equal(data_return_size, sizeof(uint8_t));
     assert_int_equal(slot_mask, 0x01);
 
-    data_return_size = sizeof(total_digest_buffer);
-    status = libspdm_get_data(spdm_context, LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER,
-                              &parameter, total_digest_buffer, &data_return_size);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(data_return_size, libspdm_get_hash_size(m_libspdm_use_hash_algo));
-    assert_memory_equal (total_digest_buffer, my_total_digest_buffer,
-                         sizeof(my_total_digest_buffer));
-
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(
         spdm_context->transcript.message_b.buffer_size,
@@ -1555,13 +1547,6 @@ static void req_get_digests_case24(void **state)
     assert_int_equal(data_return_size, sizeof(uint8_t));
     assert_int_equal(slot_mask, 0x01);
 
-    data_return_size = sizeof(total_digest_buffer);
-    status = libspdm_get_data(spdm_context, LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER,
-                              &parameter, total_digest_buffer, &data_return_size);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(data_return_size, libspdm_get_hash_size(m_libspdm_use_hash_algo));
-    assert_memory_equal (total_digest_buffer, my_total_digest_buffer,
-                         sizeof(my_total_digest_buffer));
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(
         spdm_context->transcript.message_b.buffer_size,
@@ -1608,13 +1593,7 @@ static void req_get_digests_case24(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(data_return_size, sizeof(uint8_t));
     assert_int_equal(slot_mask, 0x01);
-    data_return_size = sizeof(total_digest_buffer);
-    status = libspdm_get_data(spdm_context, LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER,
-                              &parameter, total_digest_buffer, &data_return_size);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(data_return_size, libspdm_get_hash_size(m_libspdm_use_hash_algo));
-    assert_memory_equal (total_digest_buffer, my_total_digest_buffer,
-                         sizeof(my_total_digest_buffer));
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(
         spdm_context->transcript.message_b.buffer_size,
@@ -1708,14 +1687,6 @@ static void req_get_digests_case25(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(data_return_size, sizeof(uint8_t));
     assert_int_equal(slot_mask, 0x80);
-
-    data_return_size = sizeof(total_digest_buffer);
-    status = libspdm_get_data(spdm_context, LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER,
-                              &parameter, total_digest_buffer, &data_return_size);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(data_return_size, libspdm_get_hash_size(m_libspdm_use_hash_algo));
-    assert_memory_equal (total_digest_buffer, my_total_digest_buffer,
-                         sizeof(my_total_digest_buffer));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
