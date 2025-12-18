@@ -228,7 +228,7 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
         LIBSPDM_INTERNAL_DUMP_HEX(signature, signature_size);
 
         result = libspdm_verify_endpoint_info_signature(
-            spdm_context, session_info, false, signature, signature_size);
+            spdm_context, session_info, false, slot_id, signature, signature_size);
         if (!result) {
             return LIBSPDM_STATUS_VERIF_FAIL;
         }

@@ -39,71 +39,39 @@ uint8_t libspdm_slot_id_to_key_pair_id (
     return context->local_context.local_key_pair_id[slot_id];
 }
 
-/**
- * This function returns peer certificate chain buffer including spdm_cert_chain_t header.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  cert_chain_buffer              Certificate chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
- *
- * @retval true  Peer certificate chain buffer including spdm_cert_chain_t header is returned.
- * @retval false Peer certificate chain buffer including spdm_cert_chain_t header is not found.
- **/
-bool libspdm_get_peer_cert_chain_buffer(void *spdm_context,
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+void libspdm_get_peer_cert_chain_buffer(void *spdm_context,
+                                        uint8_t slot_id,
                                         const void **cert_chain_buffer,
                                         size_t *cert_chain_buffer_size)
 {
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+
     libspdm_context_t *context;
-    uint8_t slot_id;
 
     context = spdm_context;
-    slot_id = context->connection_info.peer_used_cert_chain_slot_id;
+
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
-    if (context->connection_info.peer_used_cert_chain[slot_id].buffer_size != 0) {
-        *cert_chain_buffer = context->connection_info.peer_used_cert_chain[slot_id].buffer;
-        *cert_chain_buffer_size = context->connection_info
-                                  .peer_used_cert_chain[slot_id].buffer_size;
-        return true;
-    }
-#endif
-    return false;
+
+    *cert_chain_buffer = context->connection_info.peer_used_cert_chain[slot_id].buffer;
+    *cert_chain_buffer_size = context->connection_info.peer_used_cert_chain[slot_id].buffer_size;
 }
 
-/**
- * This function returns peer certificate chain data without spdm_cert_chain_t header.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  cert_chain_data                Certificate chain data without spdm_cert_chain_t header.
- * @param  cert_chain_data_size            size in bytes of the certificate chain data.
- *
- * @retval true  Peer certificate chain data without spdm_cert_chain_t header is returned.
- * @retval false Peer certificate chain data without spdm_cert_chain_t header is not found.
- **/
-bool libspdm_get_peer_cert_chain_data(void *spdm_context,
+void libspdm_get_peer_cert_chain_data(void *spdm_context,
+                                      uint8_t slot_id,
                                       const void **cert_chain_data,
                                       size_t *cert_chain_data_size)
 {
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_context_t *context;
     size_t hash_size;
-    bool result;
 
     context = spdm_context;
     hash_size = libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
 
-    result = libspdm_get_peer_cert_chain_buffer(context, cert_chain_data,
-                                                cert_chain_data_size);
-    if (result) {
-        *cert_chain_data =
-            (const uint8_t *)*cert_chain_data + sizeof(spdm_cert_chain_t) + hash_size;
-        *cert_chain_data_size =
-            *cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
-        return true;
-    }
-#endif
-    return false;
+    libspdm_get_peer_cert_chain_buffer(context, slot_id, cert_chain_data, cert_chain_data_size);
+    *cert_chain_data = (const uint8_t *)*cert_chain_data + sizeof(spdm_cert_chain_t) + hash_size;
+    *cert_chain_data_size = *cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
 }
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
 /**
  * This function returns local used certificate chain buffer including spdm_cert_chain_t header.
@@ -1038,6 +1006,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
  * @retval false hash verification fail.
  **/
 bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
+                                           uint8_t slot_id,
                                            const void *certificate_chain_hash,
                                            size_t certificate_chain_hash_size)
 {
@@ -1047,17 +1016,11 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
     const uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
     bool result;
-#else
-    uint8_t slot_id;
-#endif
 
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    result = libspdm_get_peer_cert_chain_buffer(spdm_context,
-                                                (const void **)&cert_chain_buffer,
-                                                &cert_chain_buffer_size);
-    if (!result) {
-        return false;
-    }
+    libspdm_get_peer_cert_chain_buffer(spdm_context,
+                                       slot_id,
+                                       (const void **)&cert_chain_buffer,
+                                       &cert_chain_buffer_size);
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
@@ -1080,9 +1043,6 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
         return false;
     }
 #else
-    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
-    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
-
     LIBSPDM_ASSERT(
         spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size != 0);
 
@@ -1160,12 +1120,12 @@ bool libspdm_verify_public_key_hash(libspdm_context_t *spdm_context,
  **/
 bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
                                              bool is_requester,
+                                             uint8_t slot_id,
                                              const void *sign_data,
                                              size_t sign_data_size)
 {
     bool result;
     void *context;
-    uint8_t slot_id;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_m1m2_managed_buffer_t m1m2;
     uint8_t *m1m2_buffer;
@@ -1197,9 +1157,6 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
     if (!result) {
         return false;
     }
-
-    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
-    LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
 
     if (slot_id == 0xFF) {
         if (is_requester) {
@@ -1236,11 +1193,8 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
         }
     } else {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-        result = libspdm_get_peer_cert_chain_data(
-            spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
-        if (!result) {
-            return false;
-        }
+        libspdm_get_peer_cert_chain_data(
+            spdm_context, slot_id, (const void **)&cert_chain_data, &cert_chain_data_size);
 
         /* Get leaf cert from cert chain*/
         result = libspdm_x509_get_cert_from_cert_chain(
@@ -1543,12 +1497,12 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
 bool libspdm_verify_endpoint_info_signature(libspdm_context_t *spdm_context,
                                             libspdm_session_info_t *session_info,
                                             bool is_requester,
+                                            uint8_t slot_id,
                                             const void *sign_data,
                                             size_t sign_data_size)
 {
     bool result;
     void *context;
-    uint8_t slot_id;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_il1il2_managed_buffer_t il1il2;
     uint8_t *il1il2_buffer;
@@ -1579,9 +1533,6 @@ bool libspdm_verify_endpoint_info_signature(libspdm_context_t *spdm_context,
     if (!result) {
         return false;
     }
-
-    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
-    LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xF));
 
     if (slot_id == 0xF) {
         if (is_requester) {
@@ -1620,11 +1571,8 @@ bool libspdm_verify_endpoint_info_signature(libspdm_context_t *spdm_context,
         }
     } else {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-        result = libspdm_get_peer_cert_chain_data(
-            spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
-        if (!result) {
-            return false;
-        }
+        libspdm_get_peer_cert_chain_data(
+            spdm_context, slot_id, (const void **)&cert_chain_data, &cert_chain_data_size);
 
         /* Get leaf cert from cert chain*/
         result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,

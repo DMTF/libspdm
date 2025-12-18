@@ -889,13 +889,13 @@ void rsp_finish_rsp_case8(void **state)
         data_size2,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id,
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0;
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
@@ -2005,7 +2005,6 @@ void rsp_finish_rsp_case18(void **state)
     spdm_context->local_context.peer_public_key_provision_size = data_size2;
 
     spdm_context->encap_context.req_slot_id = 0xFF;
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0xFF;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -2024,6 +2023,7 @@ void rsp_finish_rsp_case18(void **state)
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     session_info->mut_auth_requested = 1;
     session_info->local_used_cert_chain_slot_id = 0xFF;
+    session_info->peer_used_cert_chain_slot_id = 0xFF;
 
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
@@ -2171,13 +2171,13 @@ void rsp_finish_rsp_case19(void **state)
         data_size2,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id,
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0;
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
@@ -2339,13 +2339,13 @@ void rsp_finish_rsp_case20(void **state)
         data_size2,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id,
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0;
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
@@ -2622,13 +2622,13 @@ void rsp_finish_rsp_case22(void **state)
         data_size2,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id,
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0;
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
@@ -2790,13 +2790,13 @@ void rsp_finish_rsp_case23(void** state)
         data_size2,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id,
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0;
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
@@ -2958,13 +2958,13 @@ void rsp_finish_rsp_case24(void** state)
         data_size2,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id,
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0;
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
@@ -3127,13 +3127,13 @@ void rsp_finish_rsp_case25(void** state)
         data_size2,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id,
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0;
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
@@ -3294,13 +3294,13 @@ void rsp_finish_rsp_case26(void** state)
         data_size2,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id,
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0;
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
@@ -3466,13 +3466,13 @@ void rsp_finish_rsp_case27(void** state)
         data_size2,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id,
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0;
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
@@ -3638,13 +3638,13 @@ void rsp_finish_rsp_case28(void** state)
         data_size2,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id,
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0;
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));

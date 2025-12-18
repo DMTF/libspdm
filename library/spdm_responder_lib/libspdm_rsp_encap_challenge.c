@@ -172,7 +172,9 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     if (spdm_context->connection_info.peer_used_cert_chain_slot_id == 0xFF) {
         result = libspdm_verify_public_key_hash(spdm_context, cert_chain_hash, hash_size);
     } else {
-        result = libspdm_verify_certificate_chain_hash(spdm_context, cert_chain_hash, hash_size);
+        result = libspdm_verify_certificate_chain_hash(
+            spdm_context, spdm_context->connection_info.peer_used_cert_chain_slot_id,
+            cert_chain_hash, hash_size);
     }
     if (!result) {
         return LIBSPDM_STATUS_INVALID_CERT;
@@ -256,7 +258,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap signature (0x%zx):\n", signature_size));
     LIBSPDM_INTERNAL_DUMP_HEX(signature, signature_size);
     result = libspdm_verify_challenge_auth_signature(
-        spdm_context, false, signature, signature_size);
+        spdm_context, false, spdm_context->encap_context.req_slot_id, signature, signature_size);
     if (!result) {
         return LIBSPDM_STATUS_VERIF_FAIL;
     }

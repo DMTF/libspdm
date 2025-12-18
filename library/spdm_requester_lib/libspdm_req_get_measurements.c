@@ -64,11 +64,8 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
         }
     } else {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-        result = libspdm_get_peer_cert_chain_data(
-            spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
-        if (!result) {
-            return false;
-        }
+        libspdm_get_peer_cert_chain_data(
+            spdm_context, slot_id, (const void **)&cert_chain_data, &cert_chain_data_size);
 
         /* Get leaf cert from cert chain*/
         result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
