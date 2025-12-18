@@ -180,7 +180,8 @@ static void rsp_endpoint_info_case1(void **state)
 
     signature = (void *)((uint8_t *)spdm_response + response_size - signature_size);
     result = libspdm_verify_endpoint_info_signature(
-        spdm_context, session_info, true, signature, signature_size);
+        spdm_context, session_info, true, m_libspdm_get_endpoint_info_request1.header.param2,
+        signature, signature_size);
     assert_true(result);
 }
 
@@ -277,7 +278,8 @@ static void rsp_endpoint_info_case2(void **state)
 
     signature = (void *)((uint8_t *)spdm_response + response_size - signature_size);
     result = libspdm_verify_endpoint_info_signature(
-        spdm_context, session_info, true, signature, signature_size);
+        spdm_context, session_info, true, m_libspdm_get_endpoint_info_request2.header.param2,
+        signature, signature_size);
     assert_true(result);
 }
 
@@ -401,7 +403,8 @@ static void rsp_endpoint_info_case3(void **state)
 
     signature = (void *)((uint8_t *)spdm_response + response_size - signature_size);
     result = libspdm_verify_endpoint_info_signature(
-        spdm_context, session_info, true, signature, signature_size);
+        spdm_context, session_info, true, m_libspdm_get_endpoint_info_request3.header.param2,
+        signature, signature_size);
     assert_true(result);
 }
 
@@ -592,7 +595,8 @@ static void rsp_endpoint_info_case5(void **state)
 
     signature = (void *)((uint8_t *)spdm_response + response_size - signature_size);
     result = libspdm_verify_endpoint_info_signature(
-        spdm_context, session_info, true, signature, signature_size);
+        spdm_context, session_info, true, m_libspdm_get_endpoint_info_request1.header.param2,
+        signature, signature_size);
     assert_true(result);
 }
 

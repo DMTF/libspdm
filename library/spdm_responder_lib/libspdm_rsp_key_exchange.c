@@ -522,7 +522,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                 spdm_response->req_slot_id_param = req_slot_id;
             } else if (need_encap && req_encap_cap) {
                 spdm_response->mut_auth_requested = mut_auth_requested;
-                spdm_context->connection_info.peer_used_cert_chain_slot_id = req_slot_id;
+                session_info->peer_used_cert_chain_slot_id = req_slot_id;
                 libspdm_init_mut_auth_encap_state(spdm_context, mut_auth_requested);
             }
         }

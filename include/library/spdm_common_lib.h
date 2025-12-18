@@ -845,6 +845,7 @@ void *libspdm_get_secured_message_context_via_session_id(void *spdm_context, uin
  **/
 void *libspdm_get_secured_message_context_via_session_info(void *spdm_session_info);
 
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /**
  * This function returns peer certificate chain buffer including spdm_cert_chain_t header.
  *
@@ -855,7 +856,8 @@ void *libspdm_get_secured_message_context_via_session_info(void *spdm_session_in
  * @retval true  Peer certificate chain buffer including spdm_cert_chain_t header is returned.
  * @retval false Peer certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
-bool libspdm_get_peer_cert_chain_buffer(void *spdm_context,
+void libspdm_get_peer_cert_chain_buffer(void *spdm_context,
+                                        uint8_t slot_id,
                                         const void **cert_chain_buffer,
                                         size_t *cert_chain_buffer_size);
 
@@ -869,9 +871,11 @@ bool libspdm_get_peer_cert_chain_buffer(void *spdm_context,
  * @retval true  Peer certificate chain data without spdm_cert_chain_t header is returned.
  * @retval false Peer certificate chain data without spdm_cert_chain_t header is not found.
  **/
-bool libspdm_get_peer_cert_chain_data(void *spdm_context,
+void libspdm_get_peer_cert_chain_data(void *spdm_context,
+                                      uint8_t slot_id,
                                       const void **cert_chain_data,
                                       size_t *cert_chain_data_size);
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
 /**
  * This function returns local used certificate chain buffer including spdm_cert_chain_t header.

@@ -474,6 +474,7 @@ typedef struct {
     void *secured_message_context;
     /* Only present in session info as it is currently only used within a secure session. */
     uint8_t local_used_cert_chain_slot_id;
+    uint8_t peer_used_cert_chain_slot_id;
 } libspdm_session_info_t;
 
 #define LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT 3
@@ -1036,6 +1037,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
  * @retval false hash verification fail.
  **/
 bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
+                                           uint8_t slot_id,
                                            const void *certificate_chain_hash,
                                            size_t certificate_chain_hash_size);
 
@@ -1066,6 +1068,7 @@ bool libspdm_verify_public_key_hash(libspdm_context_t *spdm_context,
  **/
 bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
                                              bool is_requester,
+                                             uint8_t slot_id,
                                              const void *sign_data,
                                              size_t sign_data_size);
 
@@ -1115,6 +1118,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
 bool libspdm_verify_endpoint_info_signature(libspdm_context_t *spdm_context,
                                             libspdm_session_info_t *session_info,
                                             bool is_requester,
+                                            uint8_t slot_id,
                                             const void *sign_data,
                                             size_t sign_data_size);
 

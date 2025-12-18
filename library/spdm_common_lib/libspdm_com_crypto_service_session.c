@@ -459,16 +459,17 @@ bool libspdm_calculate_th1_hash(libspdm_context_t *spdm_context,
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     if (!session_info->use_psk) {
         if (is_requester) {
-            slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+            slot_id = session_info->peer_used_cert_chain_slot_id;
             LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
             if (slot_id == 0xFF) {
                 result = libspdm_get_peer_public_key_buffer(
                     spdm_context, (const void **)&cert_chain_buffer,
                     &cert_chain_buffer_size);
             } else {
-                result = libspdm_get_peer_cert_chain_buffer(
-                    spdm_context, (const void **)&cert_chain_buffer,
+                libspdm_get_peer_cert_chain_buffer(
+                    spdm_context, slot_id, (const void **)&cert_chain_buffer,
                     &cert_chain_buffer_size);
+                result = true;
             }
         } else {
             slot_id = session_info->local_used_cert_chain_slot_id;
@@ -552,16 +553,17 @@ bool libspdm_calculate_th2_hash(libspdm_context_t *spdm_context,
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     if (!session_info->use_psk) {
         if (is_requester) {
-            slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+            slot_id = session_info->peer_used_cert_chain_slot_id;
             LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
             if (slot_id == 0xFF) {
                 result = libspdm_get_peer_public_key_buffer(
                     spdm_context, (const void **)&cert_chain_buffer,
                     &cert_chain_buffer_size);
             } else {
-                result = libspdm_get_peer_cert_chain_buffer(
-                    spdm_context, (const void **)&cert_chain_buffer,
+                libspdm_get_peer_cert_chain_buffer(
+                    spdm_context, slot_id, (const void **)&cert_chain_buffer,
                     &cert_chain_buffer_size);
+                result = true;
             }
         } else {
             slot_id = session_info->local_used_cert_chain_slot_id;
@@ -595,16 +597,17 @@ bool libspdm_calculate_th2_hash(libspdm_context_t *spdm_context,
                     result = true;
                 }
             } else {
-                slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+                slot_id = session_info->peer_used_cert_chain_slot_id;
                 LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
                 if (slot_id == 0xFF) {
                     result = libspdm_get_peer_public_key_buffer(
                         spdm_context, (const void **)&mut_cert_chain_buffer,
                         &mut_cert_chain_buffer_size);
                 } else {
-                    result = libspdm_get_peer_cert_chain_buffer(
-                        spdm_context, (const void **)&mut_cert_chain_buffer,
+                    libspdm_get_peer_cert_chain_buffer(
+                        spdm_context, slot_id, (const void **)&mut_cert_chain_buffer,
                         &mut_cert_chain_buffer_size);
+                    result = true;
                 }
             }
             if (!result) {

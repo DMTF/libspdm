@@ -250,7 +250,8 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     if (slot_id == 0xFF) {
         result = libspdm_verify_public_key_hash(spdm_context, cert_chain_hash, hash_size);
     } else {
-        result = libspdm_verify_certificate_chain_hash(spdm_context, cert_chain_hash, hash_size);
+        result = libspdm_verify_certificate_chain_hash(spdm_context, slot_id, cert_chain_hash,
+                                                       hash_size);
     }
     if (!result) {
         status = LIBSPDM_STATUS_VERIF_FAIL;
@@ -359,7 +360,8 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     signature = ptr;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature (0x%zx):\n", signature_size));
     LIBSPDM_INTERNAL_DUMP_HEX(signature, signature_size);
-    result = libspdm_verify_challenge_auth_signature(spdm_context, true, signature, signature_size);
+    result = libspdm_verify_challenge_auth_signature(spdm_context, true, slot_id,
+                                                     signature, signature_size);
     if (!result) {
         libspdm_reset_message_c(spdm_context);
         status = LIBSPDM_STATUS_VERIF_FAIL;

@@ -49,17 +49,17 @@ bool libspdm_verify_finish_rsp_hmac(libspdm_context_t *spdm_context,
     LIBSPDM_ASSERT(hash_size == hmac_data_size);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    slot_id = session_info->peer_used_cert_chain_slot_id;
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
     if (slot_id == 0xFF) {
         result = libspdm_get_peer_public_key_buffer(
             spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
     } else {
-        result = libspdm_get_peer_cert_chain_buffer(
-            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
-    }
-    if (!result) {
-        return false;
+        libspdm_get_peer_cert_chain_buffer(
+            spdm_context, slot_id, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
     }
 
     if (session_info->mut_auth_requested != 0) {
@@ -146,17 +146,17 @@ bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    slot_id = session_info->peer_used_cert_chain_slot_id;
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
     if (slot_id == 0xFF) {
         result = libspdm_get_peer_public_key_buffer(
             spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
     } else {
-        result = libspdm_get_peer_cert_chain_buffer(
-            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
-    }
-    if (!result) {
-        return false;
+        libspdm_get_peer_cert_chain_buffer(
+            spdm_context, slot_id, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
     }
 
     if (session_info->mut_auth_requested != 0) {
@@ -165,14 +165,13 @@ bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
         if (slot_id == 0xFF) {
             result = libspdm_get_local_public_key_buffer(
                 spdm_context, (const void **)&mut_cert_chain_buffer, &mut_cert_chain_buffer_size);
+            if (!result) {
+                return false;
+            }
         } else {
             libspdm_get_local_cert_chain_buffer(
                 spdm_context, slot_id, (const void **)&mut_cert_chain_buffer,
                 &mut_cert_chain_buffer_size);
-            result = true;
-        }
-        if (!result) {
-            return false;
         }
     } else {
         mut_cert_chain_buffer = NULL;
@@ -260,12 +259,12 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
     if (slot_id == 0xFF) {
         result = libspdm_get_peer_public_key_buffer(
             spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
     } else {
-        result = libspdm_get_peer_cert_chain_buffer(
-            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
-    }
-    if (!result) {
-        return false;
+        libspdm_get_peer_cert_chain_buffer(
+            spdm_context, slot_id, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
     }
 
     slot_id = session_info->local_used_cert_chain_slot_id;
@@ -273,14 +272,13 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
     if (slot_id == 0xFF) {
         result = libspdm_get_local_public_key_buffer(
             spdm_context, (const void **)&mut_cert_chain_buffer, &mut_cert_chain_buffer_size);
+        if (!result) {
+           return false;
+        }
     } else {
         libspdm_get_local_cert_chain_buffer(
             spdm_context, slot_id, (const void **)&mut_cert_chain_buffer,
             &mut_cert_chain_buffer_size);
-        result = true;
-    }
-    if (!result) {
-        return false;
     }
 
     result = libspdm_calculate_th_for_finish(

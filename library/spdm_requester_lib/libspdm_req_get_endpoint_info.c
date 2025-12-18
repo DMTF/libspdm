@@ -271,7 +271,7 @@ static libspdm_return_t libspdm_try_get_endpoint_info(libspdm_context_t *spdm_co
         LIBSPDM_INTERNAL_DUMP_HEX(signature, signature_size);
 
         result = libspdm_verify_endpoint_info_signature(
-            spdm_context, session_info, true, signature, signature_size);
+            spdm_context, session_info, true, slot_id, signature, signature_size);
         if (!result) {
             status = LIBSPDM_STATUS_VERIF_FAIL;
             goto receive_done;

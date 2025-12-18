@@ -3788,12 +3788,11 @@ static void req_finish_case23(void **state)
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_libspdm_use_aead_algo;
 
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0xFF;
-
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id,
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0xFF;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_set_mem(m_libspdm_dummy_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_response_finished_key(
