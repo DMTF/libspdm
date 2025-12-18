@@ -825,10 +825,7 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
     void *target_data;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
-    size_t digest_size;
-    size_t digest_count;
     uint8_t slot_id;
-    size_t index;
 
     if (spdm_context == NULL || data == NULL || data_size == NULL ||
         data_type >= LIBSPDM_DATA_MAX) {
@@ -1043,20 +1040,6 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         }
         target_data_size = sizeof(uint8_t);
         target_data = &context->connection_info.peer_supported_slot_mask;
-        break;
-    case LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER:
-        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        digest_count = 0;
-        for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
-            if (context->connection_info.peer_provisioned_slot_mask & (1 << index)) {
-                digest_count++;
-            }
-        }
-        digest_size = libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
-        target_data_size = digest_size * digest_count;
-        target_data = context->connection_info.peer_total_digest_buffer;
         break;
     case LIBSPDM_DATA_PEER_KEY_PAIR_ID:
         if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {

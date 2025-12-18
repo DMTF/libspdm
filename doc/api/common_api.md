@@ -350,9 +350,6 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
       `DIGESTS` response. It is a bitmask that indicates if a certificate chain slot is populated,
       where the least significant bit corresponds to slot 0 and the most significant bit corresponds
       to slot 7.
-- `LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER`
-    - Returns a pointer to the stored hashes of certificate chains in the `spdm_context` from the
-      most recent `DIGESTS` response. It also returns the size, in bytes, of the buffer.
 - `LIBSPDM_DATA_SESSION_SECURED_MESSAGE_VERSION`
     - For a given session ID, returns the negotiated secured message version.
 - `LIBSPDM_DATA_SESSION_USE_PSK`
