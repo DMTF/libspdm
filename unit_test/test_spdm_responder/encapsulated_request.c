@@ -9,35 +9,34 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 
-spdm_get_encapsulated_request_request_t m_libspdm_encapsulated_request_t1 = {
+static spdm_get_encapsulated_request_request_t m_libspdm_encapsulated_request_t1 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_GET_ENCAPSULATED_REQUEST, 0, 0}
 };
-size_t m_libspdm_encapsulated_request_t1_size = sizeof(m_libspdm_encapsulated_request_t1);
+static size_t m_libspdm_encapsulated_request_t1_size = sizeof(m_libspdm_encapsulated_request_t1);
 
-spdm_get_encapsulated_request_request_t m_libspdm_encapsulated_request_t2 = {
+static spdm_get_encapsulated_request_request_t m_libspdm_encapsulated_request_t2 = {
     {SPDM_MESSAGE_VERSION_13, SPDM_GET_ENCAPSULATED_REQUEST, 0, 0}
 };
-size_t m_libspdm_encapsulated_request_t2_size = sizeof(m_libspdm_encapsulated_request_t2);
+static size_t m_libspdm_encapsulated_request_t2_size = sizeof(m_libspdm_encapsulated_request_t2);
 
-spdm_deliver_encapsulated_response_request_t m_libspdm_m_deliver_encapsulated_response_request_t1 =
+static spdm_deliver_encapsulated_response_request_t m_libspdm_m_deliver_encapsulated_response_request_t1 =
 {
     {SPDM_MESSAGE_VERSION_11, SPDM_DELIVER_ENCAPSULATED_RESPONSE, 0, 0}
 };
-size_t m_libspdm_m_deliver_encapsulated_response_request_t1_size =
+static size_t m_libspdm_m_deliver_encapsulated_response_request_t1_size =
     sizeof(m_libspdm_m_deliver_encapsulated_response_request_t1);
 
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 
-spdm_deliver_encapsulated_response_request_t m_libspdm_m_deliver_encapsulated_response_request_t2 =
+static spdm_deliver_encapsulated_response_request_t m_libspdm_m_deliver_encapsulated_response_request_t2 =
 {
     {SPDM_MESSAGE_VERSION_12, SPDM_DELIVER_ENCAPSULATED_RESPONSE, 0xFF, 0}
 };
-size_t m_libspdm_m_deliver_encapsulated_response_request_t2_size =
+static size_t m_libspdm_m_deliver_encapsulated_response_request_t2_size =
     sizeof(m_libspdm_m_deliver_encapsulated_response_request_t2);
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
-
-void libspdm_test_get_response_encapsulated_request_case1(void **State)
+static void rsp_encapsulated_request_case1(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -98,7 +97,7 @@ void libspdm_test_get_response_encapsulated_request_case1(void **State)
     free(data);
 }
 
-void libspdm_test_get_response_encapsulated_request_case2(void **State)
+static void rsp_encapsulated_request_case2(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -157,7 +156,7 @@ void libspdm_test_get_response_encapsulated_request_case2(void **State)
     free(data);
 }
 
-void libspdm_test_get_response_encapsulated_request_case3(void **State)
+static void rsp_encapsulated_request_case3(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -202,7 +201,7 @@ void libspdm_test_get_response_encapsulated_request_case3(void **State)
     assert_int_equal(spdm_response_requester->header.param2, 0);
 }
 
-void libspdm_test_get_response_encapsulated_request_case4(void **State)
+static void rsp_encapsulated_request_case4(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -246,8 +245,9 @@ void libspdm_test_get_response_encapsulated_request_case4(void **State)
     assert_int_equal(spdm_response_requester->header.param2, 0);
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
+
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
-void libspdm_test_get_response_encapsulated_request_case5(void **State)
+static void rsp_encapsulated_request_case5(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -306,10 +306,9 @@ void libspdm_test_get_response_encapsulated_request_case5(void **State)
     assert_int_equal(spdm_response_requester->header.param2, 0);
     free(data);
 }
-
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT) */
 
-void libspdm_test_get_response_encapsulated_request_case6(void **State)
+static void rsp_encapsulated_request_case6(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -384,7 +383,7 @@ void libspdm_test_get_response_encapsulated_request_case6(void **State)
     free(data);
 }
 
-void libspdm_test_get_response_encapsulated_request_case7(void **State)
+static void rsp_encapsulated_request_case7(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -430,7 +429,7 @@ void libspdm_test_get_response_encapsulated_request_case7(void **State)
 }
 
 #if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
-libspdm_return_t get_endpoint_info_callback_encap_response (
+static libspdm_return_t get_endpoint_info_callback_encap_response (
     void *spdm_context,
     uint8_t subcode,
     uint8_t param2,
@@ -443,7 +442,7 @@ libspdm_return_t get_endpoint_info_callback_encap_response (
     return LIBSPDM_STATUS_UNSUPPORTED_CAP;
 }
 
-void libspdm_test_get_response_encapsulated_request_case8(void **State)
+static void rsp_encapsulated_request_case8(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -542,7 +541,7 @@ void libspdm_test_get_response_encapsulated_request_case8(void **State)
 }
 #endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
-void libspdm_test_get_response_encapsulated_response_ack_case1(void **State)
+static void rsp_encapsulated_response_ack_case1(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -627,7 +626,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case1(void **State)
     free(data);
 }
 
-void libspdm_test_get_response_encapsulated_response_ack_case2(void **State)
+static void rsp_encapsulated_response_ack_case2(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -720,7 +719,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case2(void **State)
     free(data);
 }
 
-void libspdm_test_get_response_encapsulated_response_ack_case3(void **State)
+static void rsp_encapsulated_response_ack_case3(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -809,7 +808,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case3(void **State)
     free(data);
 }
 
-void libspdm_test_get_response_encapsulated_response_ack_case4(void **State)
+static void rsp_encapsulated_response_ack_case4(void **State)
 {
     libspdm_return_t status;
     spdm_encapsulated_request_response_t *spdm_response_requester;
@@ -844,7 +843,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case4(void **State)
     assert_int_equal(spdm_response_requester->header.param2, 0);
 }
 
-void libspdm_test_get_response_encapsulated_response_ack_case5(void **State)
+static void rsp_encapsulated_response_ack_case5(void **State)
 {
     libspdm_return_t status;
     spdm_encapsulated_request_response_t *spdm_response_requester;
@@ -878,7 +877,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case5(void **State)
     assert_int_equal(spdm_response_requester->header.param2, 0);
 }
 
-void libspdm_test_get_response_encapsulated_response_ack_case6(void **State)
+static void rsp_encapsulated_response_ack_case6(void **State)
 {
     libspdm_return_t status;
     spdm_encapsulated_request_response_t *spdm_response_requester;
@@ -924,7 +923,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case6(void **State)
     assert_int_equal(spdm_response_requester->header.param2, 0);
 }
 
-void libspdm_test_get_response_encapsulated_response_ack_case7(void **State)
+static void rsp_encapsulated_response_ack_case7(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1024,7 +1023,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case7(void **State)
     free(data);
 }
 
-void libspdm_test_get_response_encapsulated_response_ack_case8(void **State)
+static void rsp_encapsulated_response_ack_case8(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1127,7 +1126,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case8(void **State)
  * Expected behavior: the Responder shall not encapsulate another request by setting Param2 in ENCAPSULATED_RESPONSE_ACK
  * to a value of zero.
  **/
-void libspdm_test_get_response_encapsulated_response_ack_case9(void **State)
+static void rsp_encapsulated_response_ack_case9(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1207,54 +1206,54 @@ void libspdm_test_get_response_encapsulated_response_ack_case9(void **State)
                      m_libspdm_m_deliver_encapsulated_response_request_t2.header.param1);
 }
 
-int libspdm_rsp_encapsulated_response_test(void)
+int libspdm_rsp_encapsulated_request_test(void)
 {
     const struct CMUnitTest test_cases[] = {
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
         /*Success Case request_op_code_sequence: SPDM_GET_DIGESTS*/
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case1),
+        cmocka_unit_test(rsp_encapsulated_request_case1),
         /*Success Case current_request_op_code: SPDM_GET_CERTIFICATE */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case2),
+        cmocka_unit_test(rsp_encapsulated_request_case2),
         /*response_state : LIBSPDM_RESPONSE_STATE_NORMAL with UnexpectedRequest error. */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case3),
+        cmocka_unit_test(rsp_encapsulated_request_case3),
         /*response_state : LIBSPDM_RESPONSE_STATE_NEED_RESYNC */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case4),
+        cmocka_unit_test(rsp_encapsulated_request_case4),
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
         /*Success Case current_request_op_code: SPDM_CHALLENGE */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case5),
+        cmocka_unit_test(rsp_encapsulated_request_case5),
 #endif
         /* Success Case current_request_op_code: SPDM_KEY_UPDATE */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case6),
+        cmocka_unit_test(rsp_encapsulated_request_case6),
         /*response_state : LIBSPDM_RESPONSE_STATE_NORMAL with NoPendingRequests error. */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case7),
+        cmocka_unit_test(rsp_encapsulated_request_case7),
 #if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
         /* Success Case current_request_op_code: SPDM_GET_ENDPOINT_INFO */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case8),
+        cmocka_unit_test(rsp_encapsulated_request_case8),
 #endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
         /*Success Case current_request_op_code: SPDM_GET_DIGESTS*/
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case1),
+        cmocka_unit_test(rsp_encapsulated_response_ack_case1),
         /*Success Case current_request_op_code: SPDM_GET_CERTIFICATE*/
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case2),
+        cmocka_unit_test(rsp_encapsulated_response_ack_case2),
 #endif
         /* Success Case current_request_op_code: SPDM_KEY_UPDATE */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case3),
+        cmocka_unit_test(rsp_encapsulated_response_ack_case3),
         /* current_request_op_code: NULL */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case4),
+        cmocka_unit_test(rsp_encapsulated_response_ack_case4),
         /*response_state : LIBSPDM_RESPONSE_STATE_NORMAL */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case5),
+        cmocka_unit_test(rsp_encapsulated_response_ack_case5),
         /*response_state : LIBSPDM_RESPONSE_STATE_NEED_RESYNC */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case6),
+        cmocka_unit_test(rsp_encapsulated_response_ack_case6),
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
         /*spdm_request->header.param1 != spdm_context->encap_context.request_id */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case7),
+        cmocka_unit_test(rsp_encapsulated_response_ack_case7),
         /*Success Case  When version is greater than V1.2 */
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case8),
+        cmocka_unit_test(rsp_encapsulated_response_ack_case8),
 #endif
         /*When the Requester delivers an encapsulated ERROR message with a ResponseNotReady error code*/
-        cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case9),
+        cmocka_unit_test(rsp_encapsulated_response_ack_case9),
     };
 
     libspdm_test_context_t test_context = {

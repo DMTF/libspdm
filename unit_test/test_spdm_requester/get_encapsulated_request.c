@@ -13,10 +13,8 @@ static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 static uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
 static uint8_t temp_buff[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
-libspdm_return_t libspdm_requester_encap_request_test_send_message(void *spdm_context,
-                                                                   size_t request_size,
-                                                                   const void *request,
-                                                                   uint64_t timeout)
+static libspdm_return_t send_message(
+    void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
 
@@ -101,9 +99,8 @@ libspdm_return_t libspdm_requester_encap_request_test_send_message(void *spdm_co
     }
 }
 
-libspdm_return_t libspdm_requester_encap_request_test_receive_message(
-    void *spdm_context, size_t *response_size,
-    void **response, uint64_t timeout)
+static libspdm_return_t receive_message(
+    void *spdm_context, size_t *response_size, void **response, uint64_t timeout)
 {
 
     libspdm_test_context_t *spdm_test_context;
@@ -752,7 +749,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
 }
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
-static void req_encap_request_case1(void **State)
+static void req_get_encapsulated_request_case1(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -806,7 +803,7 @@ static void req_encap_request_case1(void **State)
     free(data);
 }
 
-static void req_encap_request_case2(void **State)
+static void req_get_encapsulated_request_case2(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -859,11 +856,11 @@ static void req_encap_request_case2(void **State)
     free(data);
 }
 
-static void req_encap_request_case3(void **State)
+static void req_get_encapsulated_request_case3(void **State)
 {
 }
 
-static void req_encap_request_case4(void **State)
+static void req_get_encapsulated_request_case4(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -916,7 +913,7 @@ static void req_encap_request_case4(void **State)
     free(data);
 }
 
-static void req_encap_request_case5(void **State)
+static void req_get_encapsulated_request_case5(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -969,11 +966,11 @@ static void req_encap_request_case5(void **State)
     free(data);
 }
 
-static void req_encap_request_case6(void **State)
+static void req_get_encapsulated_request_case6(void **State)
 {
 }
 
-static void req_encap_request_case7(void **State)
+static void req_get_encapsulated_request_case7(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1026,7 +1023,7 @@ static void req_encap_request_case7(void **State)
     free(data);
 }
 
-static void req_encap_request_case8(void **State)
+static void req_get_encapsulated_request_case8(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1085,7 +1082,7 @@ static void req_encap_request_case8(void **State)
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP) */
 
 #if ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP))
-static void req_encap_request_case9(void **State)
+static void req_get_encapsulated_request_case9(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1149,7 +1146,7 @@ static void req_encap_request_case9(void **State)
  * Test 10: GET_ENCAPSULATED_REQUEST request message is encapsulated in ENCAPSULATED_REQUEST response message.
  * Expected Behavior: the Requester should respond with ErrorCode=UnexpectedRequest.
  **/
-static void req_encap_request_case10(void **State)
+static void req_get_encapsulated_request_case10(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1177,7 +1174,7 @@ static void req_encap_request_case10(void **State)
  * Expected Behavior: return LIBSPDM_STATUS_SUCCESS as Responder did not have a pending request for
  *                    the Requester.
  **/
-static void req_encap_request_case11(void **State)
+static void req_get_encapsulated_request_case11(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1205,7 +1202,7 @@ static void req_encap_request_case11(void **State)
  * Expected Behavior: return LIBSPDM_STATUS_SUCCESS as Responder did not have a pending request for
  *                    the Requester.
  **/
-static void req_encap_request_case12(void **State)
+static void req_get_encapsulated_request_case12(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1228,7 +1225,7 @@ static void req_encap_request_case12(void **State)
 }
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
-static void req_encap_request_case13(void **State)
+static void req_get_encapsulated_request_case13(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1281,7 +1278,7 @@ static void req_encap_request_case13(void **State)
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
 
-static void req_encap_request_case14(void **State)
+static void req_get_encapsulated_request_case14(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1338,7 +1335,7 @@ static void req_encap_request_case14(void **State)
     free(data);
 }
 
-static void req_encap_request_case15(void **State)
+static void req_get_encapsulated_request_case15(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1395,48 +1392,47 @@ static void req_encap_request_case15(void **State)
     free(data);
 }
 
-int libspdm_req_encap_request_test(void)
+int libspdm_req_get_encapsulated_request_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
-        cmocka_unit_test(req_encap_request_case1),
+        cmocka_unit_test(req_get_encapsulated_request_case1),
         /* Success Case ,func :libspdm_get_encap_response_digest*/
-        cmocka_unit_test(req_encap_request_case2),
-        cmocka_unit_test(req_encap_request_case3),
+        cmocka_unit_test(req_get_encapsulated_request_case2),
+        cmocka_unit_test(req_get_encapsulated_request_case3),
         /* Error response:Receive message only SPDM ENCAPSULATED_REQUEST response*/
-        cmocka_unit_test(req_encap_request_case4),
+        cmocka_unit_test(req_get_encapsulated_request_case4),
         /* Error response: spdm_encapsulated_response_ack_response == NULL*/
-        cmocka_unit_test(req_encap_request_case5),
-        cmocka_unit_test(req_encap_request_case6),
+        cmocka_unit_test(req_get_encapsulated_request_case5),
+        cmocka_unit_test(req_get_encapsulated_request_case6),
         /* response: param2 == SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER*/
-        cmocka_unit_test(req_encap_request_case7),
+        cmocka_unit_test(req_get_encapsulated_request_case7),
         /*Success Case ,func :libspdm_get_encap_response_certificate */
-        cmocka_unit_test(req_encap_request_case8),
+        cmocka_unit_test(req_get_encapsulated_request_case8),
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (..) */
 
         /*Success Case ,func :libspdm_get_encap_response_key_update */
-        cmocka_unit_test(req_encap_request_case9),
+        cmocka_unit_test(req_get_encapsulated_request_case9),
         /*Error response: GET_ENCAPSULATED_REQUEST message is encapsulated */
-        cmocka_unit_test(req_encap_request_case10),
-        cmocka_unit_test(req_encap_request_case11),
-        cmocka_unit_test(req_encap_request_case12),
+        cmocka_unit_test(req_get_encapsulated_request_case10),
+        cmocka_unit_test(req_get_encapsulated_request_case11),
+        cmocka_unit_test(req_get_encapsulated_request_case12),
 #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
         /*Success Case ,func :libspdm_get_encap_response_endpoint_info */
-        cmocka_unit_test(req_encap_request_case13),
+        cmocka_unit_test(req_get_encapsulated_request_case13),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
         /* Error response: send SPDM_GET_ENCAPSULATED_REQUEST and receive request resync */
-        cmocka_unit_test(req_encap_request_case14),
+        cmocka_unit_test(req_get_encapsulated_request_case14),
         /* Error response: send SPDM_DELIVER_ENCAPSULATED_RESPONSE and receive request resync */
-        cmocka_unit_test(req_encap_request_case15),
-
+        cmocka_unit_test(req_get_encapsulated_request_case15),
     };
 
     libspdm_test_context_t test_context = {
         LIBSPDM_TEST_CONTEXT_VERSION,
         true,
-        libspdm_requester_encap_request_test_send_message,
-        libspdm_requester_encap_request_test_receive_message,
+        send_message,
+        receive_message,
     };
 
     libspdm_setup_test_context(&test_context);

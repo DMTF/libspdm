@@ -40,7 +40,7 @@ target_sources(test_spdm_requester
         encap_event_ack.c
         encap_endpoint_info.c
         encap_key_update_ack.c
-        encap_request.c
+        get_encapsulated_request.c
         encap_supported_event_types.c
         encap_subscribe_event_types_ack.c
         set_certificate.c
