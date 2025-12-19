@@ -4349,8 +4349,7 @@ static void req_get_certificate_case30(void **state)
     size_t root_cert_size;
     libspdm_data_parameter_t parameter;
 
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     uint8_t set_data_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint32_t set_data_buffer_hash_size;
 #endif

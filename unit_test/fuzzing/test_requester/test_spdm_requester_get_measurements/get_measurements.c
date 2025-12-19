@@ -220,8 +220,7 @@ void libspdm_test_requester_get_measurement_case1(void **State)
                             &number_of_block,
                             &measurement_record_length, measurement_record);
     free(data);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
@@ -294,8 +293,7 @@ void libspdm_test_requester_get_measurement_case2(void **State)
                                opaque_data, &opaque_data_size);
     free(data);
     libspdm_reset_message_m(spdm_context, NULL);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
@@ -379,8 +377,7 @@ void libspdm_test_requester_get_measurement_case3(void **State)
                             measurement_record);
     free(data);
     libspdm_reset_message_m(spdm_context, spdm_context->session_info);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
@@ -449,8 +446,7 @@ void libspdm_test_requester_get_measurement_case4(void **State)
                             measurement_record);
     free(data);
     libspdm_reset_message_m(spdm_context, NULL);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
@@ -524,8 +520,7 @@ void libspdm_test_requester_get_measurement_case5(void **State)
                                opaque_data, &opaque_data_size);
     free(data);
     libspdm_reset_message_m(spdm_context, NULL);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
