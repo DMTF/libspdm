@@ -156,14 +156,13 @@
 #define ALGO_SLHDSA_SHAKE_256F_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x1F}
 #endif
 
-/*leaf cert basic_constraints false case1: CA: false and CA object is excluded */
-#define BASIC_CONSTRAINTS_STRING_FALSE_CASE1 {0x30, 0x00}
+/* Leaf certificate basic constraints with cA field set to false. According to RFC5280, false is the
+ * default value, and according to DER encoding a sequence item with a default value must not be
+ * encoded. */
+#define BASIC_CONSTRAINTS_CA_FALSE {0x30, 0x00}
 
-/*leaf cert basic_constraints false case2: CA: false */
-#define BASIC_CONSTRAINTS_STRING_FALSE_CASE2 {0x30, 0x03, 0x01, 0x01, 0x00}
-
-/*leaf cert basic_constraints true case: CA: true */
-#define BASIC_CONSTRAINTS_STRING_TRUE_CASE {0x30, 0x03, 0x01, 0x01, 0xFF}
+/* Leaf certificate basic constraints with cA field set to true. */
+#define BASIC_CONSTRAINTS_CA_TRUE {0x30, 0x03, 0x01, 0x01, 0xFF}
 
 /**
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate.
@@ -1129,8 +1128,7 @@ static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size
     uint8_t cert_basic_constraints[LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN];
     size_t len;
 
-    uint8_t basic_constraints_false_case1[] = BASIC_CONSTRAINTS_STRING_FALSE_CASE1;
-    uint8_t basic_constraints_false_case2[] = BASIC_CONSTRAINTS_STRING_FALSE_CASE2;
+    uint8_t basic_constraints_false_case[] = BASIC_CONSTRAINTS_CA_FALSE;
 
     len = LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN;
 
@@ -1147,17 +1145,10 @@ static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size
         }
     }
 
-    if ((len == sizeof(basic_constraints_false_case1)) &&
+    if ((len == sizeof(basic_constraints_false_case)) &&
         (libspdm_consttime_is_mem_equal(cert_basic_constraints,
-                                        basic_constraints_false_case1,
-                                        sizeof(basic_constraints_false_case1)))) {
-        return true;
-    }
-
-    if ((len == sizeof(basic_constraints_false_case2)) &&
-        (libspdm_consttime_is_mem_equal(cert_basic_constraints,
-                                        basic_constraints_false_case2,
-                                        sizeof(basic_constraints_false_case2)))) {
+                                        basic_constraints_false_case,
+                                        sizeof(basic_constraints_false_case)))) {
         return true;
     }
 
@@ -1193,9 +1184,8 @@ static bool libspdm_verify_set_cert_leaf_cert_basic_constraints(
     uint8_t cert_basic_constraints[LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN];
     size_t len;
 
-    const uint8_t basic_constraints_false_case1[] = BASIC_CONSTRAINTS_STRING_FALSE_CASE1;
-    const uint8_t basic_constraints_false_case2[] = BASIC_CONSTRAINTS_STRING_FALSE_CASE2;
-    const uint8_t basic_constraints_true_case[] = BASIC_CONSTRAINTS_STRING_TRUE_CASE;
+    const uint8_t basic_constraints_false_case[] = BASIC_CONSTRAINTS_CA_FALSE;
+    const uint8_t basic_constraints_true_case[] = BASIC_CONSTRAINTS_CA_TRUE;
 
     len = LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN;
 
@@ -1210,17 +1200,10 @@ static bool libspdm_verify_set_cert_leaf_cert_basic_constraints(
     if ((cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT) ||
         (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
         if (need_basic_constraints || (len != 0)) {
-            if ((len == sizeof(basic_constraints_false_case1)) &&
+            if ((len == sizeof(basic_constraints_false_case)) &&
                 (libspdm_consttime_is_mem_equal(cert_basic_constraints,
-                                                basic_constraints_false_case1,
-                                                sizeof(basic_constraints_false_case1)))) {
-                return true;
-            }
-
-            if ((len == sizeof(basic_constraints_false_case2)) &&
-                (libspdm_consttime_is_mem_equal(cert_basic_constraints,
-                                                basic_constraints_false_case2,
-                                                sizeof(basic_constraints_false_case2)))) {
+                                                basic_constraints_false_case,
+                                                sizeof(basic_constraints_false_case)))) {
                 return true;
             }
         }
@@ -1756,7 +1739,7 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)
     bool result;
     uint8_t cert_basic_constraints[LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN];
     size_t cert_basic_constraints_len;
-    const uint8_t basic_constraints_true_case[] = BASIC_CONSTRAINTS_STRING_TRUE_CASE;
+    const uint8_t basic_constraints_true_case[] = BASIC_CONSTRAINTS_CA_TRUE;
 
     if (cert == NULL || cert_size == 0) {
         return false;
