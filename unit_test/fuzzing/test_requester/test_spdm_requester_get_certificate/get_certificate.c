@@ -125,8 +125,7 @@ void libspdm_test_requester_get_certificate_case1(void **State)
     libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     free(data);
     libspdm_reset_message_b(spdm_context);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     if (spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key != NULL) {
         libspdm_asym_free(
             spdm_context->connection_info.algorithm.base_asym_algo,
@@ -185,8 +184,7 @@ void libspdm_test_requester_get_certificate_case2(void **State)
     libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     free(data);
     libspdm_reset_message_b(spdm_context);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     if (spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key != NULL) {
         libspdm_asym_free(
             spdm_context->connection_info.algorithm.base_asym_algo,
@@ -247,8 +245,7 @@ void libspdm_test_requester_get_certificate_case3(void **State)
     libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     free(data);
     libspdm_reset_message_b(spdm_context);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     if (spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key != NULL) {
         libspdm_asym_free(
             spdm_context->connection_info.algorithm.base_asym_algo,
@@ -307,8 +304,7 @@ void libspdm_test_requester_get_certificate_ex_case1(void **State)
 
     free(data);
     libspdm_reset_message_b(spdm_context);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     if (spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key != NULL) {
         libspdm_asym_free(
             spdm_context->connection_info.algorithm.base_asym_algo,
@@ -403,8 +399,7 @@ void libspdm_test_requester_get_certificate_in_session_case1(void **State)
 
     free(data);
     libspdm_reset_message_b(spdm_context);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     if (spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key != NULL) {
         libspdm_asym_free(
             spdm_context->connection_info.algorithm.base_asym_algo,
