@@ -666,6 +666,7 @@ bool libspdm_verify_key_exchange_rsp_signature(
  **/
 bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
                                           libspdm_session_info_t *session_info,
+                                          uint8_t slot_id,
                                           const void *sign_data,
                                           size_t sign_data_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/

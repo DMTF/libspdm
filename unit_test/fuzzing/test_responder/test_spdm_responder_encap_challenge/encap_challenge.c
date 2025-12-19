@@ -86,7 +86,7 @@ void libspdm_test_responder_encap_challenge_case1(void **State)
         data, data_size,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
+    spdm_context->encap_context.req_slot_id = 0;
 
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->local_context.local_cert_chain_provision[0] = data;

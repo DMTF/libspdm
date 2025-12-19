@@ -455,7 +455,6 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
         }
     }
 
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_size =
         cert_chain_size_internal;

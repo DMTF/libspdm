@@ -10,12 +10,12 @@
 
 bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
                                           libspdm_session_info_t *session_info,
+                                          uint8_t slot_id,
                                           const void *sign_data,
                                           size_t sign_data_size)
 {
     bool result;
     void *context;
-    uint8_t slot_id;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_l1l2_managed_buffer_t l1l2;
     uint8_t *l1l2_buffer;
@@ -29,6 +29,8 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     size_t l1l2_hash_size;
 #endif
 
+LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xF));
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_calculate_l1l2(spdm_context, session_info, &l1l2);
     l1l2_buffer = libspdm_get_managed_buffer(&l1l2);
@@ -37,13 +39,11 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     l1l2_hash_size = sizeof(l1l2_hash);
     result = libspdm_calculate_l1l2_hash(spdm_context, session_info, &l1l2_hash_size, l1l2_hash);
 #endif
+
     libspdm_reset_message_m(spdm_context, session_info);
     if (!result) {
         return false;
     }
-
-    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
-    LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xF));
 
     if (slot_id == 0xF) {
         if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
@@ -257,7 +257,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_MEASUREMENTS);
 
     /* -=[Construct Request Phase]=- */
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id_param;
     transport_header_size = spdm_context->local_context.capability.transport_header_size;
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -536,7 +535,7 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
         LIBSPDM_INTERNAL_DUMP_HEX(signature, signature_size);
 
         result = libspdm_verify_measurement_signature(
-            spdm_context, session_info, signature, signature_size);
+            spdm_context, session_info, slot_id_param, signature, signature_size);
         if (!result) {
             status = LIBSPDM_STATUS_VERIF_FAIL;
             goto receive_done;
