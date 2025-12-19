@@ -1940,7 +1940,7 @@ static void rsp_measurements_case29(void** state)
 
     result = libspdm_verify_measurement_signature(
         spdm_context, session_info, signature, signature_size);
-    assert_true(result == false);
+    assert_false(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
@@ -2065,7 +2065,7 @@ static void rsp_measurements_case30(void** state)
 
     result = libspdm_verify_measurement_signature(
         spdm_context, session_info, signature, signature_size);
-    assert_true(result == true);
+    assert_true(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
@@ -2190,7 +2190,7 @@ static void rsp_measurements_case31(void** state)
 
     result = libspdm_verify_measurement_signature(
         spdm_context, session_info, signature, signature_size);
-    assert_true(result == true);
+    assert_true(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
@@ -2320,7 +2320,7 @@ static void rsp_measurements_case32(void** state)
 
     result = libspdm_verify_measurement_signature(
         spdm_context, session_info, signature, signature_size);
-    assert_true(result == true);
+    assert_true(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
@@ -2450,7 +2450,7 @@ static void rsp_measurements_case33(void** state)
 
     result = libspdm_verify_measurement_signature(
         spdm_context, session_info, signature, signature_size);
-    assert_true(result == false);
+    assert_false(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
@@ -2580,7 +2580,7 @@ static void rsp_measurements_case34(void** state)
 
     result = libspdm_verify_measurement_signature(
         spdm_context, session_info, signature, signature_size);
-    assert_true(result == true);
+    assert_true(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
