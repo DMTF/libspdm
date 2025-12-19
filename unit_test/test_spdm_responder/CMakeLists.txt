@@ -39,7 +39,7 @@ target_sources(test_spdm_responder
         encap_get_endpoint_info.c
         encap_key_update.c
         encap_challenge.c
-        encap_response.c
+        encapsulated_request.c
         encap_send_event.c
         event_ack.c
         supported_event_types.c
