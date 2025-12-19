@@ -330,7 +330,7 @@ static void req_encap_endpoint_info_case3(void **state)
     libspdm_read_requester_public_key(m_libspdm_use_req_asym_algo, &data, &data_size);
     spdm_context->local_context.local_public_key_provision = data;
     spdm_context->local_context.local_public_key_provision_size = data_size;
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0xF;
+    spdm_context->encap_context.req_slot_id = 0xF;
     spdm_context->local_context.peer_public_key_provision = data;
     spdm_context->local_context.peer_public_key_provision_size = data_size;
 

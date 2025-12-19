@@ -518,7 +518,7 @@ static void rsp_measurements_case7(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     result = libspdm_verify_measurement_signature(
-        spdm_context, session_info, signature, signature_size);
+        spdm_context, session_info, 0, signature, signature_size);
     assert_true(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1939,7 +1939,7 @@ static void rsp_measurements_case29(void** state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     result = libspdm_verify_measurement_signature(
-        spdm_context, session_info, signature, signature_size);
+        spdm_context, session_info, 0, signature, signature_size);
     assert_false(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2064,7 +2064,7 @@ static void rsp_measurements_case30(void** state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     result = libspdm_verify_measurement_signature(
-        spdm_context, session_info, signature, signature_size);
+        spdm_context, session_info, 0, signature, signature_size);
     assert_true(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2189,7 +2189,7 @@ static void rsp_measurements_case31(void** state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     result = libspdm_verify_measurement_signature(
-        spdm_context, session_info, signature, signature_size);
+        spdm_context, session_info, 0, signature, signature_size);
     assert_true(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2319,7 +2319,7 @@ static void rsp_measurements_case32(void** state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     result = libspdm_verify_measurement_signature(
-        spdm_context, session_info, signature, signature_size);
+        spdm_context, session_info, 0, signature, signature_size);
     assert_true(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2449,7 +2449,7 @@ static void rsp_measurements_case33(void** state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     result = libspdm_verify_measurement_signature(
-        spdm_context, session_info, signature, signature_size);
+        spdm_context, session_info, 0, signature, signature_size);
     assert_false(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2579,7 +2579,7 @@ static void rsp_measurements_case34(void** state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     result = libspdm_verify_measurement_signature(
-        spdm_context, session_info, signature, signature_size);
+        spdm_context, session_info, 0, signature, signature_size);
     assert_true(result);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT

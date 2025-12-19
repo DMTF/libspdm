@@ -879,7 +879,7 @@ void libspdm_test_responder_endpoint_info_err_case13(void **state)
         spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
         spdm_context->local_context.local_cert_chain_provision[i] = data;
     }
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 1;
+
     spdm_context->connection_info.multi_key_conn_rsp = true;
     /* no initialization for spdm_context->local_context.local_key_usage_bit_mask */
     spdm_context->local_context.local_key_usage_bit_mask[1] = 0;

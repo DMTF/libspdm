@@ -148,7 +148,6 @@ typedef struct {
 
     /* Peer CertificateChain */
     libspdm_peer_used_cert_chain_t peer_used_cert_chain[SPDM_MAX_SLOT_COUNT];
-    uint8_t peer_used_cert_chain_slot_id;
 
     /* Specifies whether the cached negotiated state should be invalidated. (responder only)
      * This is a "sticky" bit wherein if it is set to 1 then it cannot be set to 0. */

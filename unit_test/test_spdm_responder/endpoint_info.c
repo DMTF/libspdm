@@ -229,7 +229,6 @@ static void rsp_endpoint_info_case2(void **state)
     libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data, &data_size);
     spdm_context->local_context.local_public_key_provision = data;
     spdm_context->local_context.local_public_key_provision_size = data_size;
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0xF;
     spdm_context->local_context.peer_public_key_provision = data;
     spdm_context->local_context.peer_public_key_provision_size = data_size;
 
@@ -333,7 +332,7 @@ static void rsp_endpoint_info_case3(void **state)
         spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
         spdm_context->local_context.local_cert_chain_provision[i] = data;
     }
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = 1;
+
     spdm_context->connection_info.multi_key_conn_rsp = true;
     spdm_context->local_context.local_key_usage_bit_mask[1] =
         SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE;

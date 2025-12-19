@@ -174,7 +174,6 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
     }
 
     slot_id = spdm_context->encap_context.req_slot_id & SPDM_GET_ENDPOINT_INFO_REQUEST_SLOT_ID_MASK;
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id;
 
     /* request signature if requester support */
     if (libspdm_is_capabilities_flag_supported(
