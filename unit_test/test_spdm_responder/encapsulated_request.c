@@ -41,6 +41,7 @@ static void rsp_encapsulated_request_case1(void **State)
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *spdm_response_requester;
+    spdm_get_digest_request_t *spdm_get_digests_request;
     libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t data_size;
@@ -53,19 +54,17 @@ static void rsp_encapsulated_request_case1(void **State)
 
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->encap_context.request_op_code_count =
         LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
     spdm_context->encap_context.current_request_op_code = 0;
     spdm_context->encap_context.request_op_code_sequence[0] = SPDM_GET_DIGESTS;
     spdm_context->encap_context.request_id = 0;
 
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -89,11 +88,19 @@ static void rsp_encapsulated_request_case1(void **State)
     assert_int_equal(response_size,
                      sizeof(spdm_encapsulated_request_response_t) + sizeof(spdm_digest_response_t));
     spdm_response_requester = (void *)response;
+
+    assert_int_equal(spdm_response_requester->header.spdm_version, SPDM_MESSAGE_VERSION_11);
     assert_int_equal(spdm_response_requester->header.request_response_code,
                      SPDM_ENCAPSULATED_REQUEST);
-    assert_int_equal(spdm_response_requester->header.param1,
-                     0x1);
+    assert_int_equal(spdm_response_requester->header.param1, 0x1);
     assert_int_equal(spdm_response_requester->header.param2, 0);
+
+    spdm_get_digests_request = (spdm_get_digest_request_t *)(spdm_response_requester + 1);
+    assert_int_equal(spdm_get_digests_request->header.spdm_version, SPDM_MESSAGE_VERSION_11);
+    assert_int_equal(spdm_get_digests_request->header.request_response_code, SPDM_GET_DIGESTS);
+    assert_int_equal(spdm_get_digests_request->header.param1, 0);
+    assert_int_equal(spdm_get_digests_request->header.param2, 0);
+
     free(data);
 }
 
@@ -102,6 +109,7 @@ static void rsp_encapsulated_request_case2(void **State)
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *spdm_response_requester;
+    spdm_get_certificate_request_t *spdm_get_certificate_request;
     libspdm_context_t *spdm_context;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t data_size;
@@ -113,7 +121,6 @@ static void rsp_encapsulated_request_case2(void **State)
     spdm_test_context->case_id = 0x2;
 
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
     spdm_context->encap_context.request_op_code_count =
         LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
@@ -123,6 +130,7 @@ static void rsp_encapsulated_request_case2(void **State)
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -148,11 +156,25 @@ static void rsp_encapsulated_request_case2(void **State)
                      sizeof(spdm_encapsulated_request_response_t) +
                      sizeof(spdm_certificate_response_t));
     spdm_response_requester = (void *)response;
+    assert_int_equal(spdm_response_requester->header.spdm_version, SPDM_MESSAGE_VERSION_11);
     assert_int_equal(spdm_response_requester->header.request_response_code,
                      SPDM_ENCAPSULATED_REQUEST);
-    assert_int_equal(spdm_response_requester->header.param1,
-                     0x1);
+    assert_int_equal(spdm_response_requester->header.param1, 0x1);
     assert_int_equal(spdm_response_requester->header.param2, 0);
+
+    spdm_get_certificate_request = (spdm_get_certificate_request_t *)(spdm_response_requester + 1);
+    assert_int_equal(spdm_get_certificate_request->header.spdm_version, SPDM_MESSAGE_VERSION_11);
+    assert_int_equal(spdm_get_certificate_request->header.request_response_code,
+                     SPDM_GET_CERTIFICATE);
+    assert_int_equal(spdm_get_certificate_request->header.param1, 0);
+    assert_int_equal(spdm_get_certificate_request->header.param2, 0);
+    assert_int_equal(spdm_get_certificate_request->offset, 0);
+
+    const size_t length = spdm_context->local_context.capability.max_spdm_msg_size -
+                          sizeof(spdm_deliver_encapsulated_response_request_t) -
+                          sizeof(spdm_get_certificate_request_t);
+
+    assert_int_equal(spdm_get_certificate_request->length, length);
     free(data);
 }
 
@@ -160,7 +182,7 @@ static void rsp_encapsulated_request_case3(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
-    spdm_encapsulated_request_response_t *spdm_response_requester;
+    spdm_error_response_t *spdm_response_requester;
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
@@ -183,6 +205,8 @@ static void rsp_encapsulated_request_case3(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_local_certificate_chain);
     libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain), (uint8_t)(0xFF));
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     response_size = sizeof(response);
     status = libspdm_get_response_encapsulated_request(spdm_context,
@@ -194,10 +218,9 @@ static void rsp_encapsulated_request_case3(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response_requester = (void *)response;
-    assert_int_equal(spdm_response_requester->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response_requester->header.param1,
-                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_response_requester->header.spdm_version, SPDM_MESSAGE_VERSION_11);
+    assert_int_equal(spdm_response_requester->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response_requester->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
     assert_int_equal(spdm_response_requester->header.param2, 0);
 }
 
@@ -205,7 +228,7 @@ static void rsp_encapsulated_request_case4(void **State)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
-    spdm_encapsulated_request_response_t *spdm_response_requester;
+    spdm_error_response_t *spdm_response_requester;
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
@@ -228,6 +251,8 @@ static void rsp_encapsulated_request_case4(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_local_certificate_chain);
     libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain), (uint8_t)(0xFF));
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     response_size = sizeof(response);
     status = libspdm_get_response_encapsulated_request(spdm_context,
@@ -238,10 +263,9 @@ static void rsp_encapsulated_request_case4(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response_requester = (void *)response;
-    assert_int_equal(spdm_response_requester->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response_requester->header.param1,
-                     SPDM_ERROR_CODE_REQUEST_RESYNCH);
+    assert_int_equal(spdm_response_requester->header.spdm_version, SPDM_MESSAGE_VERSION_11);
+    assert_int_equal(spdm_response_requester->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response_requester->header.param1, SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response_requester->header.param2, 0);
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
@@ -299,10 +323,10 @@ static void rsp_encapsulated_request_case5(void **State)
                      sizeof(spdm_encapsulated_request_response_t) +
                      sizeof(spdm_challenge_request_t));
     spdm_response_requester = (void *)response;
+    assert_int_equal(spdm_response_requester->header.spdm_version, SPDM_MESSAGE_VERSION_11);
     assert_int_equal(spdm_response_requester->header.request_response_code,
                      SPDM_ENCAPSULATED_REQUEST);
-    assert_int_equal(spdm_response_requester->header.param1,
-                     0x1);
+    assert_int_equal(spdm_response_requester->header.param1, 0x1);
     assert_int_equal(spdm_response_requester->header.param2, 0);
     free(data);
 }
@@ -534,8 +558,7 @@ static void rsp_encapsulated_request_case8(void **State)
     spdm_response_requester = (void *)response;
     assert_int_equal(spdm_response_requester->header.request_response_code,
                      SPDM_ENCAPSULATED_REQUEST);
-    assert_int_equal(spdm_response_requester->header.param1,
-                     0x1);
+    assert_int_equal(spdm_response_requester->header.param1, 0x1);
     assert_int_equal(spdm_response_requester->header.param2, 0);
     free(data);
 }
@@ -688,10 +711,8 @@ static void rsp_encapsulated_response_ack_case2(void **State)
         &libspdm_local_certificate_chain_size, NULL, NULL);
 
     portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
-    remainder_length =
-        (uint16_t)(libspdm_local_certificate_chain_size -
-                   LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
-                   (calling_index + 1));
+    remainder_length = (uint16_t)(libspdm_local_certificate_chain_size -
+                       (LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * (calling_index + 1)));
 
     spdm_response_requester_certificate->header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response_requester_certificate->header.request_response_code = SPDM_CERTIFICATE;
@@ -791,10 +812,8 @@ static void rsp_encapsulated_response_ack_case3(void **State)
         (void *)(temp_buf + sizeof(spdm_deliver_encapsulated_response_request_t));
 
     spdm_response_requester_key_update->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    spdm_response_requester_key_update->header.request_response_code =
-        SPDM_KEY_UPDATE_ACK;
-    spdm_response_requester_key_update->header.param1 =
-        SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+    spdm_response_requester_key_update->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+    spdm_response_requester_key_update->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
     spdm_response_requester_key_update->header.param2 = 0;
 
     response_size = sizeof(response);
@@ -836,10 +855,8 @@ static void rsp_encapsulated_response_ack_case4(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response_requester = (void *)response;
-    assert_int_equal(spdm_response_requester->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response_requester->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response_requester->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response_requester->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response_requester->header.param2, 0);
 }
 
@@ -870,10 +887,8 @@ static void rsp_encapsulated_response_ack_case5(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response_requester = (void *)response;
-    assert_int_equal(spdm_response_requester->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response_requester->header.param1,
-                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_response_requester->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response_requester->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
     assert_int_equal(spdm_response_requester->header.param2, 0);
 }
 
@@ -916,10 +931,8 @@ static void rsp_encapsulated_response_ack_case6(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response_requester = (void *)response;
-    assert_int_equal(spdm_response_requester->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response_requester->header.param1,
-                     SPDM_ERROR_CODE_REQUEST_RESYNCH);
+    assert_int_equal(spdm_response_requester->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response_requester->header.param1, SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response_requester->header.param2, 0);
 }
 
@@ -985,10 +998,8 @@ static void rsp_encapsulated_response_ack_case7(void **State)
         &libspdm_local_certificate_chain_size, NULL, NULL);
 
     portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
-    remainder_length =
-        (uint16_t)(libspdm_local_certificate_chain_size -
-                   LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
-                   (calling_index + 1));
+    remainder_length = (uint16_t)(libspdm_local_certificate_chain_size -
+                       (LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * (calling_index + 1)));
 
     spdm_response_requester_certificate->header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response_requester_certificate->header.request_response_code = SPDM_CERTIFICATE;
@@ -1015,10 +1026,8 @@ static void rsp_encapsulated_response_ack_case7(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response_requester = (void *)response;
-    assert_int_equal(spdm_response_requester->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response_requester->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response_requester->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response_requester->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response_requester->header.param2, 0);
     free(data);
 }
@@ -1108,10 +1117,8 @@ static void rsp_encapsulated_response_ack_case8(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_encapsulated_response_ack_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.spdm_version,
-                     SPDM_MESSAGE_VERSION_12);
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ENCAPSULATED_RESPONSE_ACK);
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ENCAPSULATED_RESPONSE_ACK);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->header.param2,
                      SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT);
@@ -1173,13 +1180,11 @@ static void rsp_encapsulated_response_ack_case9(void **State)
         (void *)(temp_buf + sizeof(spdm_deliver_encapsulated_response_request_t));
     EncapsulatedResponse->header.spdm_version = SPDM_MESSAGE_VERSION_12;
     EncapsulatedResponse->header.request_response_code = SPDM_ERROR;
-    EncapsulatedResponse->header.param1 =
-        SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+    EncapsulatedResponse->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
     EncapsulatedResponse->header.param2 = 0;
     EncapsulatedResponse->extend_error_data.rd_exponent = 1;
     EncapsulatedResponse->extend_error_data.rd_tm = 1;
-    EncapsulatedResponse->extend_error_data.request_code =
-        SPDM_GET_DIGESTS;
+    EncapsulatedResponse->extend_error_data.request_code = SPDM_GET_DIGESTS;
     EncapsulatedResponse->extend_error_data.token = 0;
 
     libspdm_copy_mem(spdm_request + 1,
@@ -1195,8 +1200,7 @@ static void rsp_encapsulated_response_ack_case9(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_encapsulated_response_ack_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.spdm_version,
-                     SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_ENCAPSULATED_RESPONSE_ACK);
     assert_int_equal(spdm_response->header.param1, 0);

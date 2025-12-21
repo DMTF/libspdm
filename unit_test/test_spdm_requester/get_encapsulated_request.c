@@ -59,7 +59,7 @@ static libspdm_return_t send_message(
             sub_index = 0;
             message_session_id = NULL;
             is_message_app_message = false;
-            spdm_deliver_encapsulated_response_request = (void*) send_temp_buf;
+            spdm_deliver_encapsulated_response_request = (void *)send_temp_buf;
             decode_message_size = sizeof(spdm_deliver_encapsulated_response_request_t) +
                                   sizeof(spdm_error_response_t);
             status = libspdm_transport_test_decode_message(spdm_context, &message_session_id,
@@ -68,19 +68,14 @@ static libspdm_return_t send_message(
                                                            &decode_message_size,
                                                            (void **)&spdm_deliver_encapsulated_response_request);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %xu\n",
-                               status));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %xu\n", status));
             }
-            spdm_response = (void*) (spdm_deliver_encapsulated_response_request + 1);
-            if (spdm_response->header.request_response_code != SPDM_ERROR) {
-                return LIBSPDM_STATUS_SEND_FAIL;
-            }
-            if (spdm_response->header.param1 != SPDM_ERROR_CODE_UNEXPECTED_REQUEST) { /* Here check ErrorCode should be UnexpectedRequestd */
-                return LIBSPDM_STATUS_SEND_FAIL;
-            }
-            if (spdm_response->header.param2 != 0) {
-                return LIBSPDM_STATUS_SEND_FAIL;
-            }
+            spdm_response = (void *)(spdm_deliver_encapsulated_response_request + 1);
+
+            assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_11);
+            assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+            assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+            assert_int_equal(spdm_response->header.param2, 0);
         }
         return LIBSPDM_STATUS_SUCCESS;
     }
@@ -120,8 +115,7 @@ static libspdm_return_t receive_message(
     {
         spdm_digest_response_t *spdm_response;
 
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_digest_response_t) +
@@ -129,7 +123,7 @@ static libspdm_return_t receive_message(
                             sizeof(spdm_encapsulated_request_response_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
-            libspdm_encapsulated_request_response = (void*) temp_buf_ptr;
+            libspdm_encapsulated_request_response = (void *)temp_buf_ptr;
             libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             libspdm_encapsulated_request_response->header.request_response_code =
                 SPDM_ENCAPSULATED_REQUEST;
@@ -152,12 +146,12 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 |= (0x01 << 0);
             sub_index++;
         } else if (sub_index == 1) {
-            /*When the version is SPDM_MESSAGE_VERSION_12, use the following code*/
+            /* When the version is SPDM_MESSAGE_VERSION_12, use the following code. */
             spdm_message_header_t *spdm_encapsulated_response_ack_response;
             temp_buf_size = sizeof(spdm_message_header_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
-            spdm_encapsulated_response_ack_response = (void*) temp_buf_ptr;
+            spdm_encapsulated_response_ack_response = (void *)temp_buf_ptr;
             spdm_encapsulated_response_ack_response->spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_encapsulated_response_ack_response->request_response_code =
                 SPDM_ENCAPSULATED_RESPONSE_ACK;
@@ -178,8 +172,7 @@ static libspdm_return_t receive_message(
     {
         spdm_digest_response_t *spdm_response;
 
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_digest_response_t) +
@@ -194,8 +187,7 @@ static libspdm_return_t receive_message(
             libspdm_encapsulated_request_response->header.param1 = 0;
             libspdm_encapsulated_request_response->header.param2 = 0;
 
-            spdm_response =
-                (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
+            spdm_response = (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_DIGESTS;
             spdm_response->header.param1 = 0;
@@ -210,7 +202,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 |= (0x01 << 0);
             sub_index++;
         } else if (sub_index == 1) {
-            /*When the version is SPDM_MESSAGE_VERSION_12, use the following code*/
+            /* When the version is SPDM_MESSAGE_VERSION_12, use the following code. */
             spdm_encapsulated_response_ack_response_t *spdm_encapsulated_response_ack_response;
             temp_buf_size = sizeof(spdm_encapsulated_response_ack_response_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
@@ -236,8 +228,7 @@ static libspdm_return_t receive_message(
     {
         spdm_digest_response_t *spdm_response;
 
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         temp_buf_size = sizeof(spdm_encapsulated_request_response_t);
         libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
@@ -257,8 +248,7 @@ static libspdm_return_t receive_message(
     {
         spdm_digest_response_t *spdm_response;
 
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_digest_response_t) +
@@ -273,8 +263,7 @@ static libspdm_return_t receive_message(
             libspdm_encapsulated_request_response->header.param1 = 0;
             libspdm_encapsulated_request_response->header.param2 = 0;
 
-            spdm_response =
-                (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
+            spdm_response = (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_DIGESTS;
             spdm_response->header.param1 = 0;
@@ -311,26 +300,23 @@ static libspdm_return_t receive_message(
     {
         spdm_digest_response_t *spdm_response;
 
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         if (sub_index == 0) {
-            temp_buf_size =
-                sizeof(spdm_digest_response_t) +
-                libspdm_get_hash_size(m_libspdm_use_hash_algo) +
-                sizeof(spdm_encapsulated_request_response_t);
+            temp_buf_size = sizeof(spdm_digest_response_t) +
+                            libspdm_get_hash_size(m_libspdm_use_hash_algo) +
+                            sizeof(spdm_encapsulated_request_response_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
 
-            libspdm_encapsulated_request_response = (void*) temp_buf_ptr;
+            libspdm_encapsulated_request_response = (void *)temp_buf_ptr;
             libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             libspdm_encapsulated_request_response->header.request_response_code =
                 SPDM_ENCAPSULATED_REQUEST;
             libspdm_encapsulated_request_response->header.param1 = 0;
             libspdm_encapsulated_request_response->header.param2 = 0;
 
-            spdm_response =
-                (void*) (temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
+            spdm_response = (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_DIGESTS;
             spdm_response->header.param1 = 0;
@@ -339,7 +325,7 @@ static libspdm_return_t receive_message(
                             sizeof(m_libspdm_local_certificate_chain),
                             (uint8_t) (0xFF));
 
-            digest = (void*) (spdm_response + 1);
+            digest = (void *)(spdm_response + 1);
             libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                              sizeof(m_libspdm_local_certificate_chain), &digest[0]);
             spdm_response->header.param2 |= (0x01 << 0);
@@ -349,7 +335,7 @@ static libspdm_return_t receive_message(
             temp_buf_size = sizeof(spdm_encapsulated_response_ack_response_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
-            spdm_encapsulated_response_ack_response = (void*) temp_buf_ptr;
+            spdm_encapsulated_response_ack_response = (void *)temp_buf_ptr;
             spdm_encapsulated_response_ack_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_encapsulated_response_ack_response->header.request_response_code =
                 SPDM_ENCAPSULATED_RESPONSE_ACK;
@@ -369,8 +355,7 @@ static libspdm_return_t receive_message(
     {
         spdm_digest_response_t *spdm_response;
 
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_digest_response_t) +
@@ -385,8 +370,7 @@ static libspdm_return_t receive_message(
             libspdm_encapsulated_request_response->header.param1 = 0;
             libspdm_encapsulated_request_response->header.param2 = 0;
 
-            spdm_response =
-                (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
+            spdm_response = (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_DIGESTS;
             spdm_response->header.param1 = 0;
@@ -426,8 +410,7 @@ static libspdm_return_t receive_message(
     {
         spdm_get_certificate_request_t *spdm_response;
 
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_get_certificate_request_t) +
@@ -441,8 +424,7 @@ static libspdm_return_t receive_message(
             libspdm_encapsulated_request_response->header.param1 = 0;
             libspdm_encapsulated_request_response->header.param2 = 0;
 
-            spdm_response =
-                (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
+            spdm_response = (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_CERTIFICATE;
             spdm_response->header.param1 = 0;
@@ -451,7 +433,7 @@ static libspdm_return_t receive_message(
             spdm_response->length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
             sub_index++;
         } else if (sub_index == 1) {
-            /*When the version is SPDM_MESSAGE_VERSION_12, use the following code*/
+            /* When the version is SPDM_MESSAGE_VERSION_12, use the following code. */
             spdm_message_header_t *spdm_encapsulated_response_ack_response;
             temp_buf_size = sizeof(spdm_message_header_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
@@ -478,8 +460,7 @@ static libspdm_return_t receive_message(
     {
         spdm_key_update_request_t *spdm_response;
 
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_key_update_request_t) +
@@ -493,8 +474,7 @@ static libspdm_return_t receive_message(
             libspdm_encapsulated_request_response->header.param1 = 0;
             libspdm_encapsulated_request_response->header.param2 = 0;
 
-            spdm_response =
-                (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
+            spdm_response = (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE;
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
@@ -502,7 +482,7 @@ static libspdm_return_t receive_message(
 
             sub_index++;
         } else if (sub_index == 1) {
-            /*When the version is SPDM_MESSAGE_VERSION_12, use the following code*/
+            /* When the version is SPDM_MESSAGE_VERSION_12, use the following code. */
             spdm_message_header_t *spdm_encapsulated_response_ack_response;
             temp_buf_size = sizeof(spdm_message_header_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
@@ -546,8 +526,10 @@ static libspdm_return_t receive_message(
             /* The following is EncapsulatedRequest Field of the above ENCAPSULATED_REQUEST response message*/
             spdm_response =
                 (void *)(temp_buf_ptr + sizeof(spdm_get_encapsulated_request_request_t));
+
+            /* Here invalid: GET_ENCAPSULATED_REQUEST is encapsulated. */
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code = SPDM_GET_ENCAPSULATED_REQUEST;  /* Here invalid: GET_ENCAPSULATED_REQUEST is encapsulated */
+            spdm_response->header.request_response_code = SPDM_GET_ENCAPSULATED_REQUEST;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
 
@@ -618,8 +600,7 @@ static libspdm_return_t receive_message(
         spdm_get_endpoint_info_request_t *spdm_response;
         uint8_t *spdm_nonce;
 
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_encapsulated_request_response_t) +
@@ -633,8 +614,7 @@ static libspdm_return_t receive_message(
             libspdm_encapsulated_request_response->header.param1 = 0;
             libspdm_encapsulated_request_response->header.param2 = 0;
 
-            spdm_response =
-                (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
+            spdm_response = (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
             spdm_response->header.request_response_code = SPDM_GET_ENDPOINT_INFO;
             spdm_response->header.param1 =
@@ -693,8 +673,7 @@ static libspdm_return_t receive_message(
     {
         spdm_digest_response_t *spdm_response;
 
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_digest_response_t) +
@@ -702,15 +681,14 @@ static libspdm_return_t receive_message(
                             sizeof(spdm_encapsulated_request_response_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
-            libspdm_encapsulated_request_response = (void*) temp_buf_ptr;
+            libspdm_encapsulated_request_response = (void *)temp_buf_ptr;
             libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             libspdm_encapsulated_request_response->header.request_response_code =
                 SPDM_ENCAPSULATED_REQUEST;
             libspdm_encapsulated_request_response->header.param1 = 0;
             libspdm_encapsulated_request_response->header.param2 = 0;
 
-            spdm_response = (void *)(temp_buf_ptr
-                                     + sizeof(spdm_encapsulated_request_response_t));
+            spdm_response = (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_DIGESTS;
             spdm_response->header.param1 = 0;
@@ -769,6 +747,9 @@ static void req_get_encapsulated_request_case1(void **State)
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
@@ -776,8 +757,7 @@ static void req_get_encapsulated_request_case1(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
 
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
@@ -790,8 +770,7 @@ static void req_get_encapsulated_request_case1(void **State)
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -823,14 +802,17 @@ static void req_get_encapsulated_request_case2(void **State)
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
+
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
@@ -843,8 +825,7 @@ static void req_get_encapsulated_request_case2(void **State)
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -881,13 +862,15 @@ static void req_get_encapsulated_request_case4(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
@@ -900,8 +883,7 @@ static void req_get_encapsulated_request_case4(void **State)
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -934,13 +916,15 @@ static void req_get_encapsulated_request_case5(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
@@ -953,8 +937,7 @@ static void req_get_encapsulated_request_case5(void **State)
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -991,13 +974,15 @@ static void req_get_encapsulated_request_case7(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
@@ -1010,8 +995,7 @@ static void req_get_encapsulated_request_case7(void **State)
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -1044,14 +1028,16 @@ static void req_get_encapsulated_request_case8(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
@@ -1067,8 +1053,7 @@ static void req_get_encapsulated_request_case8(void **State)
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -1103,16 +1088,18 @@ static void req_get_encapsulated_request_case9(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
@@ -1128,8 +1115,7 @@ static void req_get_encapsulated_request_case9(void **State)
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -1143,7 +1129,8 @@ static void req_get_encapsulated_request_case9(void **State)
 #endif /* ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) */
 
 /**
- * Test 10: GET_ENCAPSULATED_REQUEST request message is encapsulated in ENCAPSULATED_REQUEST response message.
+ * Test 10: GET_ENCAPSULATED_REQUEST request message is encapsulated in ENCAPSULATED_REQUEST
+ *          response message.
  * Expected Behavior: the Requester should respond with ErrorCode=UnexpectedRequest.
  **/
 static void req_get_encapsulated_request_case10(void **State)
@@ -1243,12 +1230,14 @@ static void req_get_encapsulated_request_case13(void **State)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
-    spdm_context->local_context.capability.flags = 0;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
+
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data,
                                                     &data_size,
@@ -1263,8 +1252,7 @@ static void req_get_encapsulated_request_case13(void **State)
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -1299,15 +1287,18 @@ static void req_get_encapsulated_request_case14(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+        spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     spdm_context->local_context.local_cert_chain_provision[0] = NULL;
     spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
@@ -1320,8 +1311,7 @@ static void req_get_encapsulated_request_case14(void **State)
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -1356,15 +1346,18 @@ static void req_get_encapsulated_request_case15(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
     spdm_context->local_context.local_cert_chain_provision[0] = NULL;
     spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
@@ -1377,8 +1370,7 @@ static void req_get_encapsulated_request_case15(void **State)
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
