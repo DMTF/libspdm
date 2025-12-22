@@ -9,10 +9,33 @@
  **/
 
 #include "internal_crypt_lib.h"
+#include "key_context.h"
 #include <openssl/pem.h>
 #include <openssl/evp.h>
 
 int PasswordCallback(char *buf, const int size, const int flag, const void *key);
+
+/**
+ * Helper function to allocate and initialize a key context wrapper.
+ *
+ * @param[in]  pkey           EVP_PKEY to wrap.
+ * @param[out] context        Pointer to receive the allocated context.
+ *
+ * @retval  true   Context was allocated successfully.
+ * @retval  false  Failed to allocate context.
+ **/
+static bool allocate_key_context(EVP_PKEY *pkey, void **context)
+{
+    libspdm_key_context *ctx;
+
+    ctx = (libspdm_key_context *)malloc(sizeof(libspdm_key_context));
+    if (ctx == NULL) {
+        return false;
+    }
+    ctx->evp_pkey = pkey;
+    *context = ctx;
+    return true;
+}
 
 #if LIBSPDM_ML_DSA_SUPPORT
 
@@ -82,7 +105,11 @@ bool libspdm_mldsa_get_private_key_from_pem(const uint8_t *pem_data,
         goto done;
     }
 
-    *dsa_context = pkey;
+    /* Allocate wrapper structure */
+    if (!allocate_key_context(pkey, dsa_context)) {
+        EVP_PKEY_free(pkey);
+        goto done;
+    }
     status = true;
 
 done:
@@ -172,7 +199,11 @@ bool libspdm_slhdsa_get_private_key_from_pem(const uint8_t *pem_data,
         goto done;
     }
 
-    *dsa_context = pkey;
+    /* Allocate wrapper structure */
+    if (!allocate_key_context(pkey, dsa_context)) {
+        EVP_PKEY_free(pkey);
+        goto done;
+    }
     status = true;
 
 done:
