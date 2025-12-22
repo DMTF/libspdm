@@ -373,7 +373,7 @@ static void rsp_certificate_case7(void **state)
             (uint16_t) LIBSPDM_MIN(response_size - sizeof(spdm_certificate_response_t),
                                    SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
         expected_chunk_size = LIBSPDM_MIN(m_libspdm_get_certificate_request3.length,
-                                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+                                          expected_chunk_size);
         /* resetting an internal buffer to avoid overflow and prevent tests to succeed*/
         libspdm_reset_message_b(spdm_context);
         status = libspdm_get_response_certificate(
