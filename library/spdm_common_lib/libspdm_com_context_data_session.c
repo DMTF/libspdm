@@ -89,6 +89,13 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
 
     libspdm_zero_mem (&(session_info->last_key_update_request), sizeof(spdm_key_update_request_t));
     libspdm_zero_mem(session_info, offsetof(libspdm_session_info_t, secured_message_context));
+    /* The fields below follow secured_message_context, so they are not covered by the zeroing
+     * above and would otherwise retain values from a previous use of this session slot. */
+    session_info->local_used_cert_chain_slot_id = 0;
+    session_info->peer_used_cert_chain_slot_id = 0;
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+    libspdm_zero_mem(&session_info->encap_context, sizeof(libspdm_encap_context_t));
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
     libspdm_secured_message_init_context(session_info->secured_message_context);
     session_info->session_id = session_id;
     session_info->use_psk = use_psk;
@@ -171,6 +178,69 @@ void *libspdm_get_session_info_via_session_id(void *spdm_context, uint32_t sessi
                    "libspdm_get_session_info_via_session_id - not found session_id\n"));
     return NULL;
 }
+
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+libspdm_encap_context_t *libspdm_get_encap_context(libspdm_context_t *spdm_context,
+                                                   const uint32_t *session_id)
+{
+    libspdm_session_info_t *session_info;
+
+    if (session_id == NULL) {
+        return &spdm_context->encap_context;
+    }
+
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, *session_id);
+    if (session_info == NULL) {
+        return NULL;
+    }
+
+    return &session_info->encap_context;
+}
+
+const uint32_t *libspdm_get_encap_session_id_via_last_request(libspdm_context_t *spdm_context)
+{
+    if (spdm_context->last_spdm_request_session_id_valid) {
+        return &spdm_context->last_spdm_request_session_id;
+    }
+
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+    /* When both endpoints have set HANDSHAKE_IN_THE_CLEAR_CAP the session-based mutual
+     * authentication flow is conducted outside of a session. The flow is still tracked in the
+     * session's encapsulated context, so resolve it from the session that is handshaking. The
+     * flow type is checked so that this does not capture a Requester-initiated flow that legitimately
+     * runs outside of a session. */
+    if ((spdm_context->latest_session_id != INVALID_SESSION_ID) &&
+        libspdm_is_capabilities_flag_supported(
+            spdm_context, false,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
+        libspdm_session_info_t *session_info;
+
+        session_info = libspdm_get_session_info_via_session_id(spdm_context,
+                                                               spdm_context->latest_session_id);
+        if ((session_info != NULL) &&
+            (session_info->encap_context.flow_type == LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH)) {
+            return &spdm_context->latest_session_id;
+        }
+    }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+
+    return NULL;
+}
+
+libspdm_encap_context_t *libspdm_get_encap_context_via_last_request(libspdm_context_t *spdm_context)
+{
+    libspdm_encap_context_t *encap_context;
+
+    encap_context = libspdm_get_encap_context(
+        spdm_context, libspdm_get_encap_session_id_via_last_request(spdm_context));
+
+    /* The session that the request arrived on is necessarily valid. */
+    LIBSPDM_ASSERT(encap_context != NULL);
+
+    return encap_context;
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
 void *libspdm_get_secured_message_context_via_session_id(void *spdm_context, uint32_t session_id)
 {

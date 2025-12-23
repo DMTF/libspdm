@@ -8,14 +8,25 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 
-libspdm_return_t libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
-                                                      size_t *encap_request_size,
-                                                      void *encap_request)
+libspdm_return_t libspdm_get_encap_request_get_digests(void *context,
+                                                       const uint32_t *session_id,
+                                                       size_t *encap_request_size,
+                                                       void *encap_request)
 {
+    libspdm_encap_context_t *encap_context;
     spdm_get_digest_request_t *spdm_request;
     libspdm_return_t status;
+    libspdm_context_t *spdm_context;
 
-    spdm_context->encap_context.last_encap_request_size = 0;
+    spdm_context = context;
+
+    encap_context = libspdm_get_encap_context(spdm_context, session_id);
+    if (encap_context == NULL) {
+        /* session_id does not refer to an existing session. */
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+    }
+
+    encap_context->last_encap_request_size = 0;
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -32,9 +43,6 @@ libspdm_return_t libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_co
 
     spdm_request = encap_request;
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                                  spdm_request->header.request_response_code);
-
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_GET_DIGESTS;
     spdm_request->header.param1 = 0;
@@ -45,10 +53,10 @@ libspdm_return_t libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_co
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
 
-    libspdm_copy_mem(&spdm_context->encap_context.last_encap_request_header,
-                     sizeof(spdm_context->encap_context.last_encap_request_header),
+    libspdm_copy_mem(&encap_context->last_encap_request_header,
+                     sizeof(encap_context->last_encap_request_header),
                      &spdm_request->header, sizeof(spdm_message_header_t));
-    spdm_context->encap_context.last_encap_request_size = *encap_request_size;
+    encap_context->last_encap_request_size = *encap_request_size;
 
     return LIBSPDM_STATUS_SUCCESS;
 }

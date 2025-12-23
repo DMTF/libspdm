@@ -96,6 +96,10 @@ extern bool g_generate_key_exchange_opaque_data;
 extern bool g_event_all_subscribe;
 extern bool g_event_all_unsubscribe;
 
+/* Every test in this file shares one SPDM context, the request structures above, and the
+ * responder behavior flags above. cmocka abandons a failing test through longjmp, so a test that
+ * restores that state at its end leaves it set when it fails, and it leaks into the tests that
+ * follow. Restore it before each test instead. */
 static int rsp_key_exchange_rsp_setup(void **state)
 {
     libspdm_key_exchange_request_mine_t *const requests[] = {
@@ -2675,6 +2679,218 @@ static void rsp_key_exchange_rsp_case29(void **state)
 
     free(data1);
 }
+
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+/**
+ * Test 30: the Integrator requests session-based mutual authentication with
+ * MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST (bit 1) and the Requester supports both mutual
+ * authentication and encapsulated messages.
+ * Expected behavior: the Responder returns KEY_EXCHANGE_RSP carrying MutAuthRequested and places
+ * the session in the session-based mutual authentication encapsulated flow.
+ **/
+static void rsp_key_exchange_rsp_case30(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_key_exchange_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t dhe_key_size;
+    void *dhe_context;
+    size_t opaque_key_exchange_req_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1E;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    /* CERT_CAP rather than PUB_KEY_ID_CAP, so that an encapsulated flow to retrieve the
+     * Requester's certificate chain is meaningful. */
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        return;
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+
+    libspdm_reset_message_a(spdm_context);
+    g_key_exchange_start_mut_auth =
+        SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
+    g_mandatory_mut_auth = false;
+
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
+    m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
+    m_libspdm_key_exchange_request1.reserved = 0;
+    ptr = m_libspdm_key_exchange_request1.exchange_data;
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
+                                  false);
+    libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    ptr += dhe_key_size;
+    libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
+    ptr += sizeof(uint16_t);
+    libspdm_build_opaque_data_supported_version_data(
+        spdm_context, &opaque_key_exchange_req_size, ptr);
+    ptr += opaque_key_exchange_req_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_key_exchange(
+        spdm_context, m_libspdm_key_exchange_request1_size,
+        &m_libspdm_key_exchange_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
+    assert_int_equal(spdm_response->mut_auth_requested,
+                     SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST);
+
+    /* The session, not the connection, carries the flow for session-based mutual authentication. */
+    session_info = libspdm_get_session_info_via_session_id(spdm_context,
+                                                           spdm_context->latest_session_id);
+    assert_non_null(session_info);
+    assert_int_equal(session_info->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH);
+    assert_int_equal(session_info->encap_context.request_id, 0);
+    assert_int_equal(session_info->encap_context.last_encap_request_size, 0);
+
+    free(data1);
+}
+
+/**
+ * Test 31: the Integrator requests session-based mutual authentication with
+ * MUT_AUTH_REQUESTED_WITH_GET_DIGESTS (bit 2), the optimized flow in which the encapsulated
+ * GET_DIGESTS accompanies KEY_EXCHANGE_RSP rather than following it.
+ * Expected behavior: as for bit 1, but the session's encapsulated context also records GET_DIGESTS
+ * as the outstanding request, so that the first DELIVER_ENCAPSULATED_RESPONSE is treated as its
+ * reply.
+ **/
+static void rsp_key_exchange_rsp_case31(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_key_exchange_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t dhe_key_size;
+    void *dhe_context;
+    size_t opaque_key_exchange_req_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1F;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        return;
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+
+    libspdm_reset_message_a(spdm_context);
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS;
+    g_mandatory_mut_auth = false;
+
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
+    m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
+    m_libspdm_key_exchange_request1.reserved = 0;
+    ptr = m_libspdm_key_exchange_request1.exchange_data;
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
+                                  false);
+    libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    ptr += dhe_key_size;
+    libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
+    ptr += sizeof(uint16_t);
+    libspdm_build_opaque_data_supported_version_data(
+        spdm_context, &opaque_key_exchange_req_size, ptr);
+    ptr += opaque_key_exchange_req_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_key_exchange(
+        spdm_context, m_libspdm_key_exchange_request1_size,
+        &m_libspdm_key_exchange_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
+    assert_int_equal(spdm_response->mut_auth_requested,
+                     SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS);
+
+    session_info = libspdm_get_session_info_via_session_id(spdm_context,
+                                                           spdm_context->latest_session_id);
+    assert_non_null(session_info);
+    assert_int_equal(session_info->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH);
+    assert_int_equal(session_info->encap_context.request_id, 0);
+    assert_int_equal(session_info->encap_context.last_encap_request_size, 0);
+    /* The Responder never sends this request on the wire, but it must behave as though it had. */
+    assert_int_equal(session_info->encap_context.last_encap_request_header.request_response_code,
+                     SPDM_GET_DIGESTS);
+
+    free(data1);
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
 int libspdm_rsp_key_exchange_rsp_test(void)
@@ -2737,6 +2953,12 @@ int libspdm_rsp_key_exchange_rsp_test(void)
         cmocka_unit_test_setup(rsp_key_exchange_rsp_case28, rsp_key_exchange_rsp_setup),
         /* SlotIDParam values that go with each MutAuthRequested value */
         cmocka_unit_test_setup(rsp_key_exchange_rsp_case29, rsp_key_exchange_rsp_setup),
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+        /* Session-based mutual authentication that uses the encapsulated flow */
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case30, rsp_key_exchange_rsp_setup),
+        /* The same, in the optimized flow where GET_DIGESTS accompanies KEY_EXCHANGE_RSP */
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case31, rsp_key_exchange_rsp_setup),
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
         #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
     };
 

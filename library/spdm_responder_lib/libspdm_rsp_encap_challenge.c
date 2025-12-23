@@ -9,15 +9,29 @@
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
     (LIBSPDM_SEND_CHALLENGE_SUPPORT)
 
-libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_context,
+libspdm_return_t libspdm_get_encap_request_challenge(void *context,
+                                                     uint8_t req_slot_id,
+                                                     const void *requester_context,
                                                      size_t *encap_request_size,
                                                      void *encap_request)
 {
+    libspdm_encap_context_t *encap_context;
+    libspdm_context_t *spdm_context;
     spdm_challenge_request_t *spdm_request;
     size_t spdm_request_size;
     libspdm_return_t status;
 
-    spdm_context->encap_context.last_encap_request_size = 0;
+    spdm_context = context;
+
+    if ((req_slot_id >= SPDM_MAX_SLOT_COUNT) && (req_slot_id != 0xFF)) {
+        /* 0xFF designates the Requester's provisioned public key. Any other slot indexes per-slot
+         * state of SPDM_MAX_SLOT_COUNT entries, which CHALLENGE_AUTH is verified against. */
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    }
+
+    encap_context = libspdm_get_encap_context_via_last_request(spdm_context);
+
+    encap_context->last_encap_request_size = 0;
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -43,7 +57,7 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
 
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_CHALLENGE;
-    spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
+    spdm_request->header.param1 = req_slot_id;
     spdm_request->header.param2 = SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH;
     if (!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
         return LIBSPDM_STATUS_LOW_ENTROPY;
@@ -52,16 +66,19 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
     LIBSPDM_INTERNAL_DUMP_DATA(spdm_request->nonce, SPDM_NONCE_SIZE);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        /* Record the RequesterContext, as the CHALLENGE_AUTH response is checked against it. */
+        if (requester_context == NULL) {
+            libspdm_zero_mem(encap_context->req_context, SPDM_REQ_CONTEXT_SIZE);
+        } else {
+            libspdm_copy_mem(encap_context->req_context, SPDM_REQ_CONTEXT_SIZE,
+                             requester_context, SPDM_REQ_CONTEXT_SIZE);
+        }
         libspdm_copy_mem(spdm_request + 1, SPDM_REQ_CONTEXT_SIZE,
-                         spdm_context->encap_context.req_context, SPDM_REQ_CONTEXT_SIZE);
+                         encap_context->req_context, SPDM_REQ_CONTEXT_SIZE);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap RequesterContext - "));
         LIBSPDM_INTERNAL_DUMP_DATA((uint8_t *)(spdm_request + 1), SPDM_REQ_CONTEXT_SIZE);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
-
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                                  spdm_request->header.request_response_code);
-
 
     /* Cache data */
     status = libspdm_append_message_mut_c(spdm_context, spdm_request, spdm_request_size);
@@ -69,10 +86,13 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
 
-    libspdm_copy_mem(&spdm_context->encap_context.last_encap_request_header,
-                     sizeof(spdm_context->encap_context.last_encap_request_header),
+    /* Record the slot that was requested so that the CHALLENGE_AUTH response can be verified
+     * against it. */
+    encap_context->req_slot_id = req_slot_id;
+    libspdm_copy_mem(&encap_context->last_encap_request_header,
+                     sizeof(encap_context->last_encap_request_header),
                      &spdm_request->header, sizeof(spdm_message_header_t));
-    spdm_context->encap_context.last_encap_request_size = spdm_request_size;
+    encap_context->last_encap_request_size = spdm_request_size;
 
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -81,6 +101,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue)
 {
+    libspdm_encap_context_t *encap_context;
     bool result;
     const spdm_challenge_auth_response_t *spdm_response;
     size_t spdm_response_size;
@@ -121,7 +142,9 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     }
 
     auth_attribute = spdm_response->header.param1;
-    if (spdm_context->encap_context.req_slot_id == 0xFF) {
+    encap_context = libspdm_get_encap_context_via_last_request(spdm_context);
+
+    if (encap_context->req_slot_id == 0xFF) {
         if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) != 0xF) {
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
@@ -130,11 +153,10 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         }
     } else {
         if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) !=
-            spdm_context->encap_context.req_slot_id) {
+            encap_context->req_slot_id) {
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
-        if ((spdm_response->header.param2 &
-             (1 << spdm_context->encap_context.req_slot_id)) == 0) {
+        if ((spdm_response->header.param2 & (1 << encap_context->req_slot_id)) == 0) {
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
     }
@@ -166,11 +188,11 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap cert_chain_hash (0x%zx) - ", hash_size));
     LIBSPDM_INTERNAL_DUMP_DATA(cert_chain_hash, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-    if (spdm_context->encap_context.req_slot_id == 0xFF) {
+    if (encap_context->req_slot_id == 0xFF) {
         result = libspdm_verify_public_key_hash(spdm_context, cert_chain_hash, hash_size);
     } else {
         result = libspdm_verify_certificate_chain_hash(
-            spdm_context, spdm_context->encap_context.req_slot_id,
+            spdm_context, encap_context->req_slot_id,
             cert_chain_hash, hash_size);
     }
     if (!result) {
@@ -235,7 +257,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     ptr += opaque_length;
 
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
-        if (!libspdm_consttime_is_mem_equal(spdm_context->encap_context.req_context, ptr,
+        if (!libspdm_consttime_is_mem_equal(encap_context->req_context, ptr,
                                             SPDM_REQ_CONTEXT_SIZE)) {
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
@@ -255,7 +277,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap signature (0x%zx):\n", signature_size));
     LIBSPDM_INTERNAL_DUMP_HEX(signature, signature_size);
     result = libspdm_verify_challenge_auth_signature(
-        spdm_context, false, spdm_context->encap_context.req_slot_id, signature, signature_size);
+        spdm_context, false, encap_context->req_slot_id, signature, signature_size);
     if (!result) {
         return LIBSPDM_STATUS_VERIF_FAIL;
     }

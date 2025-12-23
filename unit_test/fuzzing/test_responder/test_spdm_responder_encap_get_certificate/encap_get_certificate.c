@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -74,14 +74,15 @@ void libspdm_test_responder_encap_get_certificate_case1(void **State)
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     libspdm_reset_message_b(spdm_context);
 
-    libspdm_register_cert_chain_buffer(spdm_context, m_cert_chain_buffer,
-                                       sizeof(m_cert_chain_buffer));
+    spdm_context->encap_context.payload_buffer = m_cert_chain_buffer;
+    spdm_context->encap_context.payload_buffer_max_size = sizeof(m_cert_chain_buffer);
+    spdm_context->encap_context.payload_buffer_size = 0;
 
     libspdm_copy_mem(m_cert_chain_buffer, sizeof(m_cert_chain_buffer), data, data_size);
-    spdm_context->mut_auth_cert_chain_buffer_size = data_size;
+    spdm_context->encap_context.payload_buffer_size = data_size;
 
     uint16_t cert_chain_total_len =
-        (uint16_t)spdm_context->mut_auth_cert_chain_buffer_size +
+        (uint16_t)spdm_context->encap_context.payload_buffer_size +
         spdm_response->portion_length + spdm_response->remainder_length;
     spdm_context->encap_context.cert_chain_total_len = cert_chain_total_len;
 
@@ -144,14 +145,15 @@ void libspdm_test_responder_encap_get_certificate_case2(void **State)
         data_size = LIBSPDM_MAX_CERT_CHAIN_SIZE - spdm_response->portion_length;
     }
 #endif
-    libspdm_register_cert_chain_buffer(spdm_context, m_cert_chain_buffer,
-                                       sizeof(m_cert_chain_buffer));
+    spdm_context->encap_context.payload_buffer = m_cert_chain_buffer;
+    spdm_context->encap_context.payload_buffer_max_size = sizeof(m_cert_chain_buffer);
+    spdm_context->encap_context.payload_buffer_size = 0;
 
     libspdm_copy_mem(m_cert_chain_buffer, sizeof(m_cert_chain_buffer), data, data_size);
-    spdm_context->mut_auth_cert_chain_buffer_size = data_size;
+    spdm_context->encap_context.payload_buffer_size = data_size;
 
     uint16_t cert_chain_total_len =
-        (uint16_t)spdm_context->mut_auth_cert_chain_buffer_size +
+        (uint16_t)spdm_context->encap_context.payload_buffer_size +
         spdm_response->portion_length + spdm_response->remainder_length;
     spdm_context->encap_context.cert_chain_total_len = cert_chain_total_len;
 
@@ -215,14 +217,15 @@ void libspdm_test_responder_encap_get_certificate_case3(void **State)
         data_size = LIBSPDM_MAX_CERT_CHAIN_SIZE - spdm_response->portion_length;
     }
 #endif
-    libspdm_register_cert_chain_buffer(spdm_context, m_cert_chain_buffer,
-                                       sizeof(m_cert_chain_buffer));
+    spdm_context->encap_context.payload_buffer = m_cert_chain_buffer;
+    spdm_context->encap_context.payload_buffer_max_size = sizeof(m_cert_chain_buffer);
+    spdm_context->encap_context.payload_buffer_size = 0;
 
     libspdm_copy_mem(m_cert_chain_buffer, sizeof(m_cert_chain_buffer), data, data_size);
-    spdm_context->mut_auth_cert_chain_buffer_size = data_size;
+    spdm_context->encap_context.payload_buffer_size = data_size;
 
     uint16_t cert_chain_total_len =
-        (uint16_t)spdm_context->mut_auth_cert_chain_buffer_size +
+        (uint16_t)spdm_context->encap_context.payload_buffer_size +
         spdm_response->portion_length + spdm_response->remainder_length;
     spdm_context->encap_context.cert_chain_total_len = cert_chain_total_len;
 
@@ -272,8 +275,9 @@ void libspdm_test_get_encap_request_get_certificate_case2(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_b(spdm_context);
 
-    libspdm_get_encap_request_get_certificate(spdm_context, &encap_request_size,
-                                              spdm_request);
+    libspdm_get_encap_request_get_certificate(
+        spdm_context, NULL, 0, sizeof(m_cert_chain_buffer), m_cert_chain_buffer,
+        &encap_request_size, spdm_request);
     libspdm_reset_message_mut_b(spdm_context);
     free(spdm_request);
     free(data);

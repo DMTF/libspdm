@@ -13,19 +13,6 @@
 
 static uint8_t m_endpoint_info_buffer_receive[LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE];
 
-libspdm_return_t get_endpoint_info_callback_in_err (
-    void *spdm_context,
-    uint8_t subcode,
-    uint8_t param2,
-    uint8_t request_attributes,
-    uint32_t endpoint_info_size,
-    const void *endpoint_info)
-{
-    /* should never reach here */
-    LIBSPDM_ASSERT (0);
-    return LIBSPDM_STATUS_UNSUPPORTED_CAP;
-}
-
 /**
  * Test 1: Error case, get an error response
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
@@ -54,7 +41,11 @@ static void rsp_encap_get_endpoint_info_err_case1(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
-    spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
+    /* No payload buffer is provided. Every case below must fail before the endpoint information
+     * is delivered, so reaching delivery would return a status that no case expects. */
+    spdm_context->encap_context.payload_buffer = NULL;
+    spdm_context->encap_context.payload_buffer_max_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
 
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_req_asym_algo, &data,
@@ -85,6 +76,7 @@ static void rsp_encap_get_endpoint_info_err_case1(void **state)
 #endif
     }
     spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->encap_context.req_attributes = 0;
 
     response_size = sizeof(spdm_error_response_t);
 
@@ -149,7 +141,11 @@ static void rsp_encap_get_endpoint_info_err_case2(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
-    spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
+    /* No payload buffer is provided. Every case below must fail before the endpoint information
+     * is delivered, so reaching delivery would return a status that no case expects. */
+    spdm_context->encap_context.payload_buffer = NULL;
+    spdm_context->encap_context.payload_buffer_max_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
 
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_req_asym_algo, &data,
@@ -180,6 +176,8 @@ static void rsp_encap_get_endpoint_info_err_case2(void **state)
 #endif
     }
     spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->encap_context.req_attributes =
+        SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED;
 
     endpoint_info_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
     libspdm_generate_device_endpoint_info(
@@ -314,7 +312,11 @@ static void rsp_encap_get_endpoint_info_err_case3(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
-    spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
+    /* No payload buffer is provided. Every case below must fail before the endpoint information
+     * is delivered, so reaching delivery would return a status that no case expects. */
+    spdm_context->encap_context.payload_buffer = NULL;
+    spdm_context->encap_context.payload_buffer_max_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
 
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_req_asym_algo, &data,
@@ -345,7 +347,8 @@ static void rsp_encap_get_endpoint_info_err_case3(void **state)
 #endif
     }
     spdm_context->encap_context.req_slot_id = 0;
-
+    spdm_context->encap_context.req_attributes =
+        SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED;
     endpoint_info_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
     libspdm_generate_device_endpoint_info(
         spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
@@ -406,7 +409,11 @@ static void rsp_encap_get_endpoint_info_err_case4(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_NO_SIG; /* no signature */
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
-    spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
+    /* No payload buffer is provided. Every case below must fail before the endpoint information
+     * is delivered, so reaching delivery would return a status that no case expects. */
+    spdm_context->encap_context.payload_buffer = NULL;
+    spdm_context->encap_context.payload_buffer_max_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
 
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_req_asym_algo, &data,
@@ -437,6 +444,7 @@ static void rsp_encap_get_endpoint_info_err_case4(void **state)
 #endif
     }
     spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->encap_context.req_attributes = 0;
 
     endpoint_info_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
     libspdm_generate_device_endpoint_info(
@@ -507,9 +515,14 @@ static void rsp_encap_get_endpoint_info_err_case5(void **state)
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_NO_SIG; /* no signature */
-    spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
+    /* No payload buffer is provided. Every case below must fail before the endpoint information
+     * is delivered, so reaching delivery would return a status that no case expects. */
+    spdm_context->encap_context.payload_buffer = NULL;
+    spdm_context->encap_context.payload_buffer_max_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
 
     spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->encap_context.req_attributes = 0;
 
     endpoint_info_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
     libspdm_generate_device_endpoint_info(
@@ -555,6 +568,282 @@ static void rsp_encap_get_endpoint_info_err_case5(void **state)
 }
 
 
+/**
+ * Test 6: Error case, a signature is requested from a Requester that advertises EP_INFO_CAP_NO_SIG
+ * only.
+ * Expected Behavior: get a LIBSPDM_STATUS_UNSUPPORTED_CAP return code, as the Requester cannot sign
+ * ENDPOINT_INFO and would reject the request with ERROR(UnsupportedRequest). Nothing is written
+ * into the request buffer, its size is unchanged, no endpoint information is reported, and
+ * GET_ENDPOINT_INFO is not recorded as the outstanding encapsulated request.
+ **/
+static void rsp_encap_get_endpoint_info_err_case6(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t ep_info[LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE];
+    uint8_t encap_request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t untouched[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t encap_request_size;
+    size_t payload_size;
+
+    spdm_test_context = *state;
+    spdm_test_context->case_id = 0x6;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_NO_SIG;
+    spdm_context->last_spdm_request_session_id_valid = false;
+    spdm_context->encap_context.payload_buffer_size = 0;
+    libspdm_zero_mem(&spdm_context->encap_context.last_encap_request_header,
+                     sizeof(spdm_context->encap_context.last_encap_request_header));
+
+    libspdm_set_mem(encap_request, sizeof(encap_request), (uint8_t)0xA5);
+    libspdm_set_mem(untouched, sizeof(untouched), (uint8_t)0xA5);
+    encap_request_size = sizeof(encap_request);
+    status = libspdm_get_encap_request_get_endpoint_info(
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER, 0,
+        SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
+        sizeof(ep_info), ep_info, &encap_request_size, encap_request);
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+
+    assert_int_equal(encap_request_size, sizeof(encap_request));
+    assert_memory_equal(encap_request, untouched, sizeof(encap_request));
+    assert_int_equal(spdm_context->encap_context.last_encap_request_header.request_response_code,
+                     0);
+    payload_size = 0xFFFF;
+    status = libspdm_get_encap_payload_size(spdm_context, NULL, &payload_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(payload_size, 0);
+}
+
+/**
+ * Test 7: Error case, the Requester advertises neither EP_INFO_CAP_NO_SIG nor EP_INFO_CAP_SIG.
+ * Expected Behavior: get a LIBSPDM_STATUS_UNSUPPORTED_CAP return code even without a signature
+ * requested. Nothing is written into the request buffer, its size is unchanged, and
+ * GET_ENDPOINT_INFO is not recorded as the outstanding encapsulated request.
+ **/
+static void rsp_encap_get_endpoint_info_err_case7(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t ep_info[LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE];
+    uint8_t encap_request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t untouched[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t encap_request_size;
+
+    spdm_test_context = *state;
+    spdm_test_context->case_id = 0x7;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->last_spdm_request_session_id_valid = false;
+    libspdm_zero_mem(&spdm_context->encap_context.last_encap_request_header,
+                     sizeof(spdm_context->encap_context.last_encap_request_header));
+
+    libspdm_set_mem(encap_request, sizeof(encap_request), (uint8_t)0xA5);
+    libspdm_set_mem(untouched, sizeof(untouched), (uint8_t)0xA5);
+    encap_request_size = sizeof(encap_request);
+    status = libspdm_get_encap_request_get_endpoint_info(
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER, 0, 0,
+        sizeof(ep_info), ep_info, &encap_request_size, encap_request);
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+
+    assert_int_equal(encap_request_size, sizeof(encap_request));
+    assert_memory_equal(encap_request, untouched, sizeof(encap_request));
+    assert_int_equal(spdm_context->encap_context.last_encap_request_header.request_response_code,
+                     0);
+}
+
+/**
+ * Test 8: Error case, the connection is SPDM 1.2, which has no GET_ENDPOINT_INFO, although the
+ * Requester's capability flags claim EP_INFO_CAP_SIG.
+ * Expected Behavior: get a LIBSPDM_STATUS_UNSUPPORTED_CAP return code. Nothing is written into the
+ * request buffer, its size is unchanged, and GET_ENDPOINT_INFO is not recorded as the outstanding
+ * encapsulated request.
+ **/
+static void rsp_encap_get_endpoint_info_err_case8(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t ep_info[LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE];
+    uint8_t encap_request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t untouched[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t encap_request_size;
+
+    spdm_test_context = *state;
+    spdm_test_context->case_id = 0x8;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
+    spdm_context->last_spdm_request_session_id_valid = false;
+    libspdm_zero_mem(&spdm_context->encap_context.last_encap_request_header,
+                     sizeof(spdm_context->encap_context.last_encap_request_header));
+
+    libspdm_set_mem(encap_request, sizeof(encap_request), (uint8_t)0xA5);
+    libspdm_set_mem(untouched, sizeof(untouched), (uint8_t)0xA5);
+    encap_request_size = sizeof(encap_request);
+    status = libspdm_get_encap_request_get_endpoint_info(
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER, 0,
+        SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
+        sizeof(ep_info), ep_info, &encap_request_size, encap_request);
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+
+    assert_int_equal(encap_request_size, sizeof(encap_request));
+    assert_memory_equal(encap_request, untouched, sizeof(encap_request));
+    assert_int_equal(spdm_context->encap_context.last_encap_request_header.request_response_code,
+                     0);
+}
+
+/**
+ * Test 9: Error case, the request is for a session that exists but whose handshake has not
+ * completed.
+ * Expected Behavior: get a LIBSPDM_STATUS_INVALID_STATE_LOCAL return code. Nothing is written into
+ * the request buffer, its size is unchanged, and GET_ENDPOINT_INFO is not recorded as the session's
+ * outstanding encapsulated request.
+ **/
+static void rsp_encap_get_endpoint_info_err_case9(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    uint8_t ep_info[LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE];
+    uint8_t encap_request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t untouched[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t encap_request_size;
+    uint32_t session_id;
+
+    spdm_test_context = *state;
+    spdm_test_context->case_id = 0x9;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+
+    session_id = 0xFFFFFFFF;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+
+    libspdm_set_mem(encap_request, sizeof(encap_request), (uint8_t)0xA5);
+    libspdm_set_mem(untouched, sizeof(untouched), (uint8_t)0xA5);
+    encap_request_size = sizeof(encap_request);
+    status = libspdm_get_encap_request_get_endpoint_info(
+        spdm_context, &session_id, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        0, SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
+        sizeof(ep_info), ep_info, &encap_request_size, encap_request);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
+
+    assert_int_equal(encap_request_size, sizeof(encap_request));
+    assert_memory_equal(encap_request, untouched, sizeof(encap_request));
+    assert_int_equal(session_info->encap_context.last_encap_request_header.request_response_code,
+                     0);
+}
+/**
+ * Test 10: Error case, the Requester returns more endpoint information than the Integrator's
+ * buffer can hold.
+ * Expected Behavior: get a LIBSPDM_STATUS_BUFFER_TOO_SMALL return code, and nothing is reported as
+ * retrieved.
+ **/
+static void rsp_encap_get_endpoint_info_err_case10(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_endpoint_info_response_t *spdm_response;
+    uint8_t ep_info[LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_SENDER_BUFFER_SIZE];
+    bool need_continue;
+    uint8_t *ptr;
+    size_t response_size;
+    size_t payload_size;
+    uint32_t endpoint_info_size;
+
+    spdm_test_context = *state;
+    spdm_test_context->case_id = 0xA;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_NO_SIG;
+    spdm_context->last_spdm_request_session_id_valid = false;
+
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->encap_context.req_attributes = 0;
+    endpoint_info_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
+    libspdm_generate_device_endpoint_info(
+        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
+        &endpoint_info_size, m_endpoint_info_buffer_receive);
+
+    /* One byte short of what the Requester returns. */
+    spdm_context->encap_context.payload_buffer = ep_info;
+    spdm_context->encap_context.payload_buffer_max_size = endpoint_info_size - 1;
+    spdm_context->encap_context.payload_buffer_size = 0;
+
+    response_size = sizeof(spdm_endpoint_info_response_t) + sizeof(uint32_t) + endpoint_info_size;
+
+    spdm_response = (void *)temp_buf;
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    spdm_response->header.request_response_code = SPDM_ENDPOINT_INFO;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.param2 = spdm_context->encap_context.req_slot_id &
+                                   SPDM_ENDPOINT_INFO_RESPONSE_SLOT_ID_MASK;
+    spdm_response->reserved = 0;
+
+    ptr = (void *)(spdm_response + 1);
+    libspdm_write_uint32(ptr, endpoint_info_size); /* ep_info_len */
+    ptr += sizeof(uint32_t);
+
+    libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
+    ptr += endpoint_info_size;
+
+    status = libspdm_process_encap_response_endpoint_info(spdm_context, response_size,
+                                                          spdm_response, &need_continue);
+    assert_int_equal(status, LIBSPDM_STATUS_BUFFER_TOO_SMALL);
+
+    status = libspdm_get_encap_payload_size(spdm_context, NULL, &payload_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(payload_size, 0);
+
+    spdm_context->encap_context.payload_buffer = NULL;
+    spdm_context->encap_context.payload_buffer_max_size = 0;
+}
+
+
 int libspdm_rsp_encap_get_endpoint_info_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -568,6 +857,16 @@ int libspdm_rsp_encap_get_endpoint_info_error_test(void)
         cmocka_unit_test(rsp_encap_get_endpoint_info_err_case4),
         /* Request no signature and get incorrect response */
         cmocka_unit_test(rsp_encap_get_endpoint_info_err_case5),
+        /* A signature is requested from a Requester that cannot sign */
+        cmocka_unit_test(rsp_encap_get_endpoint_info_err_case6),
+        /* The Requester does not support GET_ENDPOINT_INFO at all */
+        cmocka_unit_test(rsp_encap_get_endpoint_info_err_case7),
+        /* The connection predates GET_ENDPOINT_INFO */
+        cmocka_unit_test(rsp_encap_get_endpoint_info_err_case8),
+        /* The session's handshake has not completed */
+        cmocka_unit_test(rsp_encap_get_endpoint_info_err_case9),
+        /* More endpoint information is returned than the buffer can hold */
+        cmocka_unit_test(rsp_encap_get_endpoint_info_err_case10),
     };
 
     libspdm_test_context_t test_context = {

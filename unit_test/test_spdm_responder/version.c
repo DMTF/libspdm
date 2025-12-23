@@ -386,16 +386,21 @@ static void rsp_version_case9(void **state)
     spdm_context->transcript.message_a.max_buffer_size = max_buffer_size;
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 /**
- * Test 10: receiving GET_VERSION while the responder is processing an encapsulated exchange.
- * Expected behavior: the responder clears PROCESSING_ENCAP, returns VERSION, and restarts
- * negotiation from AFTER_VERSION.
+ * Test 10: receiving a correct GET_VERSION from the requester while encapsulated flows are in
+ * progress both outside of a session and within a session, each of them interrupted by an
+ * encapsulated ERROR(ResponseNotReady) that the responder has yet to follow up on.
+ * Expected behavior: the responder produces a valid VERSION response and restarts negotiation
+ * from AFTER_VERSION, and the GET_VERSION ends every encapsulated flow and discards every pending
+ * ResponseNotReady, so that no flow of the previous connection can be resumed in the new one.
  **/
 static void rsp_version_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_version_response_t *spdm_response;
@@ -403,8 +408,36 @@ static void rsp_version_case10(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xA;
-    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+
+    /* A Requester-initiated flow outside of a session, interrupted by ResponseNotReady. */
+    spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_REQ_INITIATED;
+    spdm_context->encap_context.request_id = 2;
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    spdm_context->encap_context.response_not_ready = true;
+    spdm_context->encap_context.response_not_ready_flow_type = LIBSPDM_ENCAP_FLOW_REQ_INITIATED;
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
+
+    /* A session-based mutual authentication flow within a session, likewise interrupted. */
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, 0xFFFFFFFF,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    libspdm_secured_message_set_session_state(session_info->secured_message_context,
+                                              LIBSPDM_SESSION_STATE_ESTABLISHED);
+    session_info->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH;
+    session_info->encap_context.request_id = 1;
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    session_info->encap_context.response_not_ready = true;
+    session_info->encap_context.response_not_ready_flow_type = LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH;
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
     response_size = sizeof(response);
     status = libspdm_get_response_version(spdm_context,
@@ -412,14 +445,29 @@ static void rsp_version_case10(void **state)
                                           &m_libspdm_get_version_request1,
                                           &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_version_response_t) +
-                     LIBSPDM_DEFAULT_SPDM_VERSION_ENTRY_COUNT * sizeof(spdm_version_number_t));
+    assert_int_equal(response_size,
+                     sizeof(spdm_version_response_t) +
+                     LIBSPDM_DEFAULT_SPDM_VERSION_ENTRY_COUNT *
+                     sizeof(spdm_version_number_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_VERSION);
+
+    /* Version negotiation restarts from the beginning. */
     assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NORMAL);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_AFTER_VERSION);
+
+    /* No flow survives GET_VERSION, and no interrupted flow can be resumed after it. */
+    assert_int_equal(spdm_context->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
+    assert_int_equal(session_info->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    assert_false(spdm_context->encap_context.response_not_ready);
+    assert_false(session_info->encap_context.response_not_ready);
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
+    /* The session that the flow belonged to is gone as well. */
+    assert_int_equal(session_info->session_id, INVALID_SESSION_ID);
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
 int libspdm_rsp_version_test(void)
 {
@@ -441,8 +489,10 @@ int libspdm_rsp_version_test(void)
         cmocka_unit_test(rsp_version_case8),
         /* transcript.message_a cannot fit VERSION */
         cmocka_unit_test(rsp_version_case9),
-        /* GET_VERSION clears PROCESSING_ENCAP and restarts version negotiation */
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+        /* GET_VERSION ends every encapsulated flow and restarts version negotiation */
         cmocka_unit_test(rsp_version_case10),
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
     };
 
     libspdm_test_context_t test_context = {

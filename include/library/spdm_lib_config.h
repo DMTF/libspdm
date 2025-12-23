@@ -124,12 +124,19 @@
  *        request.
  *      - For a Responder, it cannot send a RESPOND_IF_READY ERROR response and does not support
  *        RESPOND_IF_READY.
+ *      - For a Responder in an encapsulated flow, if the Requester delivers an encapsulated
+ *        ResponseNotReady ERROR then the flow ends, as with any other encapsulated ErrorCode.
  * When LIBSPDM_RESPOND_IF_READY_SUPPORT is 1 then
  *      - For a Requester, if the Responder sends a ResponseNotReady ERROR response then libspdm
  *        waits an amount of time, as specified by the RDTExponent parameter, before sending
  *        RESPOND_IF_READY.
  *      - For a Responder, if its response state is NOT_READY then it will send a ResponseNotReady
  *        ERROR response to the Requester, and will accept a subsequent RESPOND_IF_READY request.
+ *      - For a Responder in an encapsulated flow, if the Requester delivers an encapsulated
+ *        ResponseNotReady ERROR then libspdm retains the outstanding request and reissues it
+ *        as an encapsulated RESPOND_IF_READY when the Requester next sends
+ *        GET_ENCAPSULATED_REQUEST. The encapsulated flow handler is not called to reissue the
+ *        request.
  */
 #ifndef LIBSPDM_RESPOND_IF_READY_SUPPORT
 #define LIBSPDM_RESPOND_IF_READY_SUPPORT 1
