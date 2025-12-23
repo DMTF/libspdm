@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -145,7 +145,7 @@ void libspdm_test_get_encap_request_challenge_case2(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_c(spdm_context);
 
-    libspdm_get_encap_request_challenge(spdm_context, &encap_request_size, spdm_request);
+    libspdm_get_encap_request_challenge(spdm_context, 0, NULL, &encap_request_size, spdm_request);
     libspdm_reset_message_mut_c(spdm_context);
     free(spdm_request);
     free(data);

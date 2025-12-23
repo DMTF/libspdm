@@ -8,12 +8,15 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 
-libspdm_return_t libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
-                                                      size_t *encap_request_size,
-                                                      void *encap_request)
+libspdm_return_t libspdm_get_encap_request_get_digests(void *context,
+                                                       size_t *encap_request_size,
+                                                       void *encap_request)
 {
     spdm_get_digest_request_t *spdm_request;
     libspdm_return_t status;
+    libspdm_context_t *spdm_context;
+
+    spdm_context = context;
 
     spdm_context->encap_context.last_encap_request_size = 0;
 
