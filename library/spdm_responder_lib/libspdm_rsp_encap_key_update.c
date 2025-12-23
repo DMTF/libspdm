@@ -9,17 +9,34 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 
-libspdm_return_t libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
+libspdm_return_t libspdm_get_encap_request_key_update(void *context,
+                                                      uint32_t session_id,
+                                                      uint8_t operation,
                                                       size_t *encap_request_size,
                                                       void *encap_request)
 {
+    libspdm_encap_context_t *encap_context;
+    libspdm_context_t *spdm_context;
     spdm_key_update_request_t *spdm_request;
-    uint32_t session_id;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     bool result;
 
-    spdm_context->encap_context.last_encap_request_size = 0;
+    /* UpdateAllKeys is currently not legal in the encapsulated flow. */
+    if ((operation != SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY) &&
+        (operation != SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY)) {
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    }
+
+    spdm_context = context;
+
+    encap_context = libspdm_get_encap_context(spdm_context, &session_id);
+    if (encap_context == NULL) {
+        /* session_id does not refer to an existing session. */
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+    }
+
+    encap_context->last_encap_request_size = 0;
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -32,10 +49,6 @@ libspdm_return_t libspdm_get_encap_request_key_update(libspdm_context_t *spdm_co
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    if (!spdm_context->last_spdm_request_session_id_valid) {
-        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
-    }
-    session_id = spdm_context->last_spdm_request_session_id;
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -54,11 +67,7 @@ libspdm_return_t libspdm_get_encap_request_key_update(libspdm_context_t *spdm_co
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_KEY_UPDATE;
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                                  spdm_request->header.request_response_code);
-
-    if (spdm_context->encap_context.last_encap_request_header.request_response_code !=
-        SPDM_KEY_UPDATE) {
+    if (operation == SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY) {
         spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
         spdm_request->header.param2 = 0;
         if (!libspdm_get_random_number(sizeof(spdm_request->header.param2),
@@ -98,10 +107,10 @@ libspdm_return_t libspdm_get_encap_request_key_update(libspdm_context_t *spdm_co
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
     }
 
-    libspdm_copy_mem(&spdm_context->encap_context.last_encap_request_header,
-                     sizeof(spdm_context->encap_context.last_encap_request_header),
+    libspdm_copy_mem(&encap_context->last_encap_request_header,
+                     sizeof(encap_context->last_encap_request_header),
                      &spdm_request->header, sizeof(spdm_message_header_t));
-    spdm_context->encap_context.last_encap_request_size = *encap_request_size;
+    encap_context->last_encap_request_size = *encap_request_size;
 
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -110,6 +119,7 @@ libspdm_return_t libspdm_process_encap_response_key_update(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue)
 {
+    libspdm_encap_context_t *encap_context;
     spdm_key_update_request_t *spdm_request;
     const spdm_key_update_response_t *spdm_response;
     size_t spdm_response_size;
@@ -131,7 +141,9 @@ libspdm_return_t libspdm_process_encap_response_key_update(
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    spdm_request = (void *)&spdm_context->encap_context.last_encap_request_header;
+    encap_context = libspdm_get_encap_context_via_last_request(spdm_context);
+
+    spdm_request = (void *)&encap_context->last_encap_request_header;
 
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
@@ -172,4 +184,4 @@ libspdm_return_t libspdm_process_encap_response_key_update(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */

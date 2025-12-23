@@ -80,6 +80,7 @@ int libspdm_rsp_encap_challenge_test(void);
 #endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 int libspdm_rsp_encapsulated_request_test(void);
+int libspdm_rsp_encapsulated_request_error_test(void);
 int libspdm_rsp_encap_key_update_test(void);
 #if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
 int libspdm_rsp_encap_get_endpoint_info_test(void);
@@ -253,6 +254,9 @@ int main(void)
     #endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
     #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
     if (libspdm_rsp_encapsulated_request_test() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_rsp_encapsulated_request_error_test() != 0) {
         return_value = 1;
     }
     if (libspdm_rsp_encap_key_update_test() != 0) {

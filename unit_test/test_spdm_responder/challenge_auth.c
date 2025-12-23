@@ -11,6 +11,7 @@
 
 extern uint64_t g_challenge_request_context;
 extern bool g_check_challenge_request_context;
+extern bool g_start_basic_mut_auth;
 
 spdm_challenge_request_t m_libspdm_challenge_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0,
@@ -1206,6 +1207,90 @@ static void rsp_challenge_auth_case19(void **state)
     assert_int_equal (spdm_response->header.param2, 0);
     free(data1);
 }
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_SEND_CHALLENGE_SUPPORT)
+/**
+ * Test 20: the Integrator elects to start basic mutual authentication, so
+ * libspdm_challenge_start_mut_auth returns true during CHALLENGE processing.
+ * Expected behavior: the Responder sets BasicMutAuthReq in CHALLENGE_AUTH and places the
+ * connection in the basic mutual authentication encapsulated flow.
+ **/
+static void rsp_challenge_auth_case20(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_challenge_auth_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x14;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    /* Basic mutual authentication additionally requires the Requester to advertise MUT_AUTH_CAP,
+     * CHAL_CAP, and a means for the Responder to obtain its public key. */
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        return;
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
+    libspdm_reset_message_c(spdm_context);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
+
+    /* Seed the encapsulated context with values that the initializer must clear, so that its
+     * effect is distinguishable from a context that was already zero. */
+    spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_NONE;
+    spdm_context->encap_context.request_id = 0xAA;
+    spdm_context->encap_context.last_encap_request_size = 1;
+
+    g_start_basic_mut_auth = true;
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_challenge_request1.nonce);
+    status = libspdm_get_response_challenge_auth(
+        spdm_context, m_libspdm_challenge_request1_size,
+        &m_libspdm_challenge_request1, &response_size, response);
+    g_start_basic_mut_auth = false;
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
+    assert_int_equal(spdm_response->header.param1 &
+                     SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ,
+                     SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ);
+    assert_int_equal(spdm_context->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH);
+    assert_int_equal(spdm_context->encap_context.request_id, 0);
+    assert_int_equal(spdm_context->encap_context.last_encap_request_size, 0);
+    free(data1);
+}
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
 
 int libspdm_rsp_challenge_auth_test(void)
 {
@@ -1241,6 +1326,11 @@ int libspdm_rsp_challenge_auth_test(void)
         cmocka_unit_test(rsp_challenge_auth_case18),
         /* The key usage bit mask is not set, failed Case*/
         cmocka_unit_test(rsp_challenge_auth_case19),
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+        (LIBSPDM_SEND_CHALLENGE_SUPPORT)
+        /* The Integrator starts basic mutual authentication from CHALLENGE_AUTH */
+        cmocka_unit_test(rsp_challenge_auth_case20),
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
 
     };
 

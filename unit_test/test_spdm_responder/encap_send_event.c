@@ -73,7 +73,7 @@ static void rsp_encap_send_event_case1(void **state)
 
     g_event_count = 1;
 
-    status = libspdm_get_encap_request_send_event(spdm_context, &request_buffer_size,
+    status = libspdm_get_encap_request_send_event(spdm_context, m_session_id, &request_buffer_size,
                                                   m_send_buffer);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -114,7 +114,7 @@ static void rsp_encap_send_event_case2(void **state)
     g_event_count = 1;
     g_events_list_size = actual_events_bytes;
 
-    status = libspdm_get_encap_request_send_event(spdm_context, &request_buffer_size,
+    status = libspdm_get_encap_request_send_event(spdm_context, m_session_id, &request_buffer_size,
                                                   m_send_buffer);
 
     g_events_list_size = 0;
@@ -157,12 +157,53 @@ static void rsp_encap_send_event_case3(void **state)
     assert_false(need_continue);
 }
 
+/**
+ * Test 4: the Responder records SEND_EVENT as the outstanding encapsulated request.
+ * Expected Behavior: last_encap_request_header names SEND_EVENT and last_encap_request_size is the
+ * size of the request that was built, so that the encapsulated EVENT_ACK is dispatched to the
+ * event acknowledgement processing function rather than being treated as unsolicited.
+ **/
+static void rsp_encap_send_event_case4(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    size_t request_buffer_size = sizeof(m_send_buffer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x04;
+
+    set_standard_state(spdm_context);
+    session_info = &spdm_context->session_info[0];
+
+    /* The flow begins with nothing outstanding, as libspdm_get_response_encapsulated_request
+     * leaves it. */
+    session_info->encap_context.last_encap_request_size = 0;
+    libspdm_zero_mem(&session_info->encap_context.last_encap_request_header,
+                     sizeof(session_info->encap_context.last_encap_request_header));
+
+    g_event_count = 1;
+
+    status = libspdm_get_encap_request_send_event(spdm_context, m_session_id, &request_buffer_size,
+                                                  m_send_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(session_info->encap_context.last_encap_request_header.request_response_code,
+                     SPDM_SEND_EVENT);
+    assert_int_equal(session_info->encap_context.last_encap_request_header.spdm_version,
+                     SPDM_MESSAGE_VERSION_13);
+    assert_int_equal(session_info->encap_context.last_encap_request_size, request_buffer_size);
+}
+
 int libspdm_rsp_encap_send_event_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(rsp_encap_send_event_case1),
         cmocka_unit_test(rsp_encap_send_event_case2),
         cmocka_unit_test(rsp_encap_send_event_case3),
+        cmocka_unit_test(rsp_encap_send_event_case4),
     };
 
     libspdm_test_context_t test_context = {

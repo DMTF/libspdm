@@ -577,6 +577,8 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context, si
                                                    response_size, response);
         }
 
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+        /* Both of the mut_auth_requested values checked below require the encapsulated flow. */
         if (libspdm_is_capabilities_flag_supported(
                 spdm_context, false,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
@@ -585,12 +587,13 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context, si
                   SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) ||
                  (session_info->mut_auth_requested ==
                   SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS)) &&
-                (req_slot_id != spdm_context->encap_context.req_slot_id)) {
+                (req_slot_id != session_info->encap_context.mut_auth_req_slot_id)) {
                 return libspdm_generate_error_response(spdm_context,
                                                        SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                        response_size, response);
             }
         }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
     }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
