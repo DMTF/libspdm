@@ -8,10 +8,55 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 
-libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
+libspdm_return_t libspdm_get_encap_request_get_certificate(void *context,
+                                                           const uint32_t *session_id,
+                                                           uint8_t req_slot_id,
+                                                           size_t cert_chain_size,
+                                                           void *cert_chain,
                                                            size_t *encap_request_size,
                                                            void *encap_request)
 {
+    libspdm_context_t *spdm_context;
+    libspdm_encap_context_t *encap_context;
+
+    spdm_context = context;
+
+    if ((cert_chain == NULL) || (cert_chain_size == 0)) {
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    }
+
+    if (req_slot_id >= SPDM_MAX_SLOT_COUNT) {
+        /* The slot indexes per-slot state of SPDM_MAX_SLOT_COUNT entries, in which the
+         * Requester's certificate chain is recorded once retrieved. GET_CERTIFICATE has no slot
+         * value that designates a provisioned public key. */
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    }
+
+    encap_context = libspdm_get_encap_context(spdm_context, session_id);
+    if (encap_context == NULL) {
+        /* session_id does not refer to an existing session. */
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+    }
+
+    /* This starts a fresh retrieval of the Requester's certificate chain. libspdm issues the
+     * remaining requests itself, accumulating into this buffer. */
+    encap_context->payload_buffer = cert_chain;
+    encap_context->payload_buffer_max_size = cert_chain_size;
+    encap_context->payload_buffer_size = 0;
+
+    return libspdm_get_encap_request_get_certificate_continue(
+        spdm_context, session_id, req_slot_id, encap_request_size, encap_request);
+}
+
+libspdm_return_t libspdm_get_encap_request_get_certificate_continue(
+    libspdm_context_t *context,
+    const uint32_t *session_id,
+    uint8_t req_slot_id,
+    size_t *encap_request_size,
+    void *encap_request)
+{
+    libspdm_encap_context_t *encap_context;
+    libspdm_context_t *spdm_context;
     spdm_get_certificate_large_request_t *spdm_request;
     libspdm_return_t status;
     uint32_t req_msg_length;
@@ -20,7 +65,15 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
     uint32_t req_msg_header_size;
     uint32_t rsp_msg_header_size;
 
-    spdm_context->encap_context.last_encap_request_size = 0;
+    spdm_context = context;
+
+    encap_context = libspdm_get_encap_context(spdm_context, session_id);
+    if (encap_context == NULL) {
+        /* session_id does not refer to an existing session. */
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+    }
+
+    encap_context->last_encap_request_size = 0;
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -37,10 +90,10 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_LARGE_RESP_CAP, 0)) {
         use_large_cert_chain = true;
-        spdm_context->encap_context.use_large_cert_chain = true;
+        encap_context->use_large_cert_chain = true;
     } else {
         use_large_cert_chain = false;
-        spdm_context->encap_context.use_large_cert_chain = false;
+        encap_context->use_large_cert_chain = false;
     }
 
     if (use_large_cert_chain) {
@@ -58,9 +111,9 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
 
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_GET_CERTIFICATE;
-    spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
+    spdm_request->header.param1 = req_slot_id;
     spdm_request->header.param2 = 0;
-    req_msg_offset = (uint32_t)spdm_context->mut_auth_cert_chain_buffer_size;
+    req_msg_offset = (uint32_t)encap_context->payload_buffer_size;
 
     /* certificate response is encapsulate in deliver encapsulated response msg */
     req_msg_length = spdm_context->local_context.capability.max_spdm_msg_size -
@@ -81,19 +134,17 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
                    req_msg_offset, req_msg_length));
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                                  spdm_request->header.request_response_code);
-
     /* Cache data*/
     status = libspdm_append_message_mut_b(spdm_context, spdm_request, *encap_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
 
-    libspdm_copy_mem(&spdm_context->encap_context.last_encap_request_header,
-                     sizeof(spdm_context->encap_context.last_encap_request_header),
+    encap_context->req_slot_id = req_slot_id;
+    libspdm_copy_mem(&encap_context->last_encap_request_header,
+                     sizeof(encap_context->last_encap_request_header),
                      &spdm_request->header, sizeof(spdm_message_header_t));
-    spdm_context->encap_context.last_encap_request_size = *encap_request_size;
+    encap_context->last_encap_request_size = *encap_request_size;
 
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -102,6 +153,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue)
 {
+    libspdm_encap_context_t *encap_context;
     const spdm_certificate_large_response_t *spdm_response;
     size_t spdm_response_size;
     bool result;
@@ -122,10 +174,6 @@ libspdm_return_t libspdm_process_encap_response_certificate(
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
 
-    cert_chain_buffer = (uint8_t *)spdm_context->mut_auth_cert_chain_buffer;
-    cert_chain_buffer_size = spdm_context->mut_auth_cert_chain_buffer_size;
-    cert_chain_buffer_max_size = spdm_context->mut_auth_cert_chain_buffer_max_size;
-
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
@@ -140,7 +188,13 @@ libspdm_return_t libspdm_process_encap_response_certificate(
     } else if (spdm_response->header.request_response_code != SPDM_CERTIFICATE) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
-    use_large_cert_chain = spdm_context->encap_context.use_large_cert_chain;
+    encap_context = libspdm_get_encap_context_via_last_request(spdm_context);
+
+    cert_chain_buffer = (uint8_t *)encap_context->payload_buffer;
+    cert_chain_buffer_size = encap_context->payload_buffer_size;
+    cert_chain_buffer_max_size = encap_context->payload_buffer_max_size;
+
+    use_large_cert_chain = encap_context->use_large_cert_chain;
     if (use_large_cert_chain) {
         if ((spdm_response->header.param1 & SPDM_CERTIFICATE_RESPONSE_LARGE_CERT_CHAIN) == 0) {
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
@@ -194,13 +248,12 @@ libspdm_return_t libspdm_process_encap_response_certificate(
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (request_offset == 0) {
-        spdm_context->encap_context.cert_chain_total_len = rsp_msg_portion_length +
-                                                           rsp_msg_remainder_length;
-    } else if (spdm_context->encap_context.cert_chain_total_len !=
+        encap_context->cert_chain_total_len = rsp_msg_portion_length + rsp_msg_remainder_length;
+    } else if (encap_context->cert_chain_total_len !=
                request_offset + rsp_msg_portion_length + rsp_msg_remainder_length) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
-    slot_id = spdm_context->encap_context.req_slot_id;
+    slot_id = encap_context->req_slot_id;
     if ((spdm_response->header.param1 & SPDM_CERTIFICATE_RESPONSE_SLOT_ID_MASK) != slot_id) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
@@ -262,7 +315,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
                      rsp_msg_portion_length);
 
     cert_chain_buffer_size += rsp_msg_portion_length;
-    spdm_context->mut_auth_cert_chain_buffer_size = cert_chain_buffer_size;
+    encap_context->payload_buffer_size = cert_chain_buffer_size;
 
     if (rsp_msg_remainder_length != 0) {
         *need_continue = true;
@@ -274,7 +327,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
 
     if (spdm_context->local_context.verify_peer_spdm_cert_chain != NULL) {
         result = spdm_context->local_context.verify_peer_spdm_cert_chain (
-            spdm_context, spdm_context->encap_context.req_slot_id,
+            spdm_context, encap_context->req_slot_id,
             cert_chain_buffer_size, cert_chain_buffer, NULL, NULL);
         if (!result) {
             return LIBSPDM_STATUS_VERIF_FAIL;
@@ -294,7 +347,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
         }
     }
 
-    slot_id = spdm_context->encap_context.req_slot_id;
+    slot_id = encap_context->req_slot_id;
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT

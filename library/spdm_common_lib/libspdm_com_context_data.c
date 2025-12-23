@@ -138,6 +138,9 @@ static bool need_session_info_for_data(libspdm_data_type_t data_type)
     case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_RSP_DIR:
     case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_REQ_DIR:
     case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN:
+#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP)
+    case LIBSPDM_DATA_SESSION_ENCAP_REQ_SLOT_ID:
+#endif
         return true;
     default:
         return false;
@@ -153,7 +156,6 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
     uint32_t data32;
     libspdm_session_info_t *session_info;
     uint8_t slot_id;
-    uint8_t mut_auth_requested;
     uint8_t root_cert_index;
     uint16_t data16;
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && LIBSPDM_CERT_PARSE_SUPPORT
@@ -497,6 +499,9 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(libspdm_response_state_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        if (libspdm_read_uint32((const uint8_t *)data) >= LIBSPDM_RESPONSE_STATE_MAX) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         context->response_state = libspdm_read_uint32((const uint8_t *)data);
         break;
     case LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT:
@@ -637,30 +642,6 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         context->local_context.local_public_key_provision_size = data_size;
         context->local_context.local_public_key_provision = data;
         break;
-    case LIBSPDM_DATA_MUT_AUTH_REQUESTED:
-        if (data_size != sizeof(uint8_t)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        mut_auth_requested = *(const uint8_t *)data;
-        if (((mut_auth_requested != 0) &&
-             (mut_auth_requested !=
-              SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) &&
-             (mut_auth_requested !=
-              SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) &&
-             (mut_auth_requested !=
-              SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS))) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        context->encap_context.request_id = 0;
-        slot_id = parameter->additional_data[0];
-        if ((slot_id >= SPDM_MAX_SLOT_COUNT) && (slot_id != 0xFF)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        context->encap_context.req_slot_id = slot_id;
-        break;
     case LIBSPDM_DATA_HEARTBEAT_PERIOD:
         if (data_size != sizeof(uint8_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -781,6 +762,25 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->connection_info.multi_key_conn_rsp = *(const bool *)data;
         break;
+#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP)
+    case LIBSPDM_DATA_SESSION_ENCAP_REQ_SLOT_ID:
+        if (data_size != sizeof(uint8_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (*(const uint8_t *)data >= SPDM_MAX_SLOT_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        /* The slot is only meaningful while session-based mutual authentication is in progress. */
+        if (session_info->encap_context.flow_type != LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+        /* The encapsulated context conveys the slot to the Requester in the final
+         * ENCAPSULATED_RESPONSE_ACK, and the session's peer slot is what FINISH verification
+         * reads. The two must agree, as the Requester signs FINISH with the designated slot. */
+        session_info->encap_context.mut_auth_req_slot_id = *(const uint8_t *)data;
+        session_info->peer_used_cert_chain_slot_id = *(const uint8_t *)data;
+        break;
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) */
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
@@ -2909,8 +2909,6 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
         SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.capability.st1 = SPDM_ST1_VALUE_US;
 
-    context->mut_auth_cert_chain_buffer_size = 0;
-
     /* DSP0277 1.3 AEAD limit: max_spdm_session_sequence_number is the single source of truth for
      * the AEAD limit. The default 0xFFFFFFFFFFFFFFFF encodes the spec-default exponent of 64. */
     context->max_spdm_session_sequence_number = LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER;
@@ -3041,7 +3039,9 @@ void libspdm_reset_context(void *spdm_context)
                      sizeof(libspdm_device_capability_t));
     libspdm_zero_mem(&context->connection_info.algorithm, sizeof(libspdm_device_algorithm_t));
     libspdm_zero_mem(&context->last_spdm_error, sizeof(libspdm_error_struct_t));
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
     libspdm_zero_mem(&context->encap_context, sizeof(libspdm_encap_context_t));
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
     context->connection_info.multi_key_conn_req = false;
     context->connection_info.multi_key_conn_rsp = false;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
@@ -3053,7 +3053,9 @@ void libspdm_reset_context(void *spdm_context)
     context->last_spdm_request_session_id = INVALID_SESSION_ID;
     context->last_spdm_request_session_id_valid = false;
     context->last_spdm_request_size = 0;
-    context->mut_auth_cert_chain_buffer_size = 0;
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+    context->encap_context.payload_buffer_size = 0;
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
     context->current_dhe_session_count = 0;
     context->current_psk_session_count = 0;
 }

@@ -389,10 +389,8 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, &parameter, my_public_cert_chains, my_public_cert_chains_size);
    ```
 
-   1.5, if mutual authentication (Requester verification) through certificates is required, provide a buffer to store the Requester's certificate chain and deploy the peer public root certificate based upon need.
+   1.5, if mutual authentication (Requester verification) through certificates is required, deploy the peer public root certificate based upon need. The buffer that stores the Requester's certificate chain is given to `libspdm_get_encap_request_get_certificate` when the encapsulated request is issued. See [Encapsulated Flow User Guide](https://github.com/DMTF/libspdm/blob/main/doc/encapsulated_flow_user_guide.md).
    ```C
-   libspdm_register_cert_chain_buffer(spdm_context, cert_chain_buffer, cert_chain_buffer_max_size);
-
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert, peer_root_cert_size);
    ```
@@ -472,6 +470,13 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
    libspdm_register_vendor_callback_func(spdm_context, libspdm_vendor_response_func);
    ```
+   3.3 This callback drives the Responder's encapsulated flows, in which the Responder sends
+   SPDM request messages to the Requester.
+   ```C
+   libspdm_register_encap_flow_handler(spdm_context, encap_flow_handler);
+   ```
+   The [encapsulated flow user guide](https://github.com/DMTF/libspdm/blob/main/doc/encapsulated_flow_user_guide.md) describes the
+   handler and the flows it drives.
 
 4. Free the memory of contexts within the SPDM context when all flow is over.
    This function does not free the SPDM context itself.

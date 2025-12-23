@@ -52,6 +52,7 @@ static void rsp_encap_key_update_case1(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
+    libspdm_session_info_t *session_info;
     bool need_continue;
 
     spdm_test_context = *state;
@@ -62,13 +63,15 @@ static void rsp_encap_key_update_case1(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    assert_non_null(session_info);
 
-    spdm_context->encap_context.last_encap_request_header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    spdm_context->encap_context.last_encap_request_header.request_response_code =
+    session_info->encap_context.last_encap_request_header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    session_info->encap_context.last_encap_request_header.request_response_code =
         SPDM_KEY_UPDATE_ACK;
-    spdm_context->encap_context.last_encap_request_header.param1 =
+    session_info->encap_context.last_encap_request_header.param1 =
         SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
-    spdm_context->encap_context.last_encap_request_header.param2 = 0;
+    session_info->encap_context.last_encap_request_header.param2 = 0;
 
     spdm_key_update_response_t spdm_response;
     size_t spdm_response_size = sizeof(spdm_key_update_response_t);
@@ -96,6 +99,7 @@ static void rsp_encap_key_update_case2(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
+    libspdm_session_info_t *session_info;
     bool need_continue;
 
     spdm_test_context = *state;
@@ -106,13 +110,15 @@ static void rsp_encap_key_update_case2(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    assert_non_null(session_info);
 
-    spdm_context->encap_context.last_encap_request_header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    spdm_context->encap_context.last_encap_request_header.request_response_code =
+    session_info->encap_context.last_encap_request_header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    session_info->encap_context.last_encap_request_header.request_response_code =
         SPDM_KEY_UPDATE_ACK;
-    spdm_context->encap_context.last_encap_request_header.param1 =
+    session_info->encap_context.last_encap_request_header.param1 =
         SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
-    spdm_context->encap_context.last_encap_request_header.param2 = 0;
+    session_info->encap_context.last_encap_request_header.param2 = 0;
 
     spdm_key_update_response_t spdm_response;
     size_t spdm_response_size = sizeof(spdm_key_update_response_t);
@@ -209,6 +215,7 @@ static void rsp_encap_key_update_case5(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
+    libspdm_session_info_t *session_info;
     bool need_continue;
 
     spdm_test_context = *state;
@@ -219,12 +226,14 @@ static void rsp_encap_key_update_case5(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    assert_non_null(session_info);
 
-    spdm_context->encap_context.last_encap_request_header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    spdm_context->encap_context.last_encap_request_header.request_response_code =
+    session_info->encap_context.last_encap_request_header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    session_info->encap_context.last_encap_request_header.request_response_code =
         SPDM_KEY_UPDATE_ACK;
-    spdm_context->encap_context.last_encap_request_header.param1 = SPDM_ERROR_CODE_DECRYPT_ERROR;
-    spdm_context->encap_context.last_encap_request_header.param2 = 0;
+    session_info->encap_context.last_encap_request_header.param1 = SPDM_ERROR_CODE_DECRYPT_ERROR;
+    session_info->encap_context.last_encap_request_header.param2 = 0;
 
     spdm_key_update_response_t spdm_response;
     size_t spdm_response_size = sizeof(spdm_key_update_response_t);

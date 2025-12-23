@@ -1870,8 +1870,6 @@ static void rsp_finish_rsp_case18(void **state)
     spdm_context->local_context.peer_public_key_provision = data2;
     spdm_context->local_context.peer_public_key_provision_size = data_size2;
 
-    spdm_context->encap_context.req_slot_id = 0xFF;
-
     libspdm_reset_message_a(spdm_context);
 
     session_id = 0xFFFFFFFF;
@@ -2101,6 +2099,7 @@ static void rsp_finish_rsp_case19(void **state)
     free(data2);
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 /**
  * Test 20: receiving a invalid FINISH request message, enable mutual authentication with using the encapsulated request flow,
  * that is KEY_EXCHANGE_RSP.MutAuthRequested equals 0x02.
@@ -2258,6 +2257,7 @@ static void rsp_finish_rsp_case20(void **state)
     free(data1);
     free(data2);
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
 /**
  * Test 21: receiving a valid FINISH request message, due to disable mutual authentication,
@@ -3845,6 +3845,361 @@ static void rsp_finish_rsp_case31(void **state)
     free(data1);
 }
 
+#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP)
+/* Record cert_chain as the Requester's certificate chain in the given slot, as retrieving it
+ * through the encapsulated GET_CERTIFICATE flow would. */
+static bool record_peer_cert_chain(libspdm_context_t *spdm_context, uint8_t slot_id,
+                                   void *cert_chain, size_t cert_chain_size)
+{
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer),
+                     cert_chain, cert_chain_size);
+    spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_size = cert_chain_size;
+
+    return true;
+#else
+    if (!libspdm_hash_all(
+            spdm_context->connection_info.algorithm.base_hash_algo, cert_chain, cert_chain_size,
+            spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash)) {
+        return false;
+    }
+    spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+
+    return libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        cert_chain, cert_chain_size,
+        &spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key);
+#endif
+}
+
+/**
+ * Test 32: receiving a valid FINISH after session-based mutual authentication through the
+ * encapsulated request flow, in which the Integrator designated Requester certificate slot 3
+ * with LIBSPDM_DATA_SESSION_ENCAP_REQ_SLOT_ID rather than the slot 0 that KEY_EXCHANGE_RSP had
+ * to carry. Slot 0 holds a chain with a different key, so verification against the wrong slot
+ * cannot succeed by accident.
+ * Expected behavior: FINISH.Param2 is 3 and the signature is made with slot 3's key, as the final
+ * ENCAPSULATED_RESPONSE_ACK told the Requester to do, and the responder accepts it and produces a
+ * valid FINISH_RSP.
+ **/
+static void rsp_finish_rsp_case32(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_finish_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    void *data2;
+    size_t data_size2;
+    void *data3;
+    size_t data_size3;
+    uint8_t *ptr;
+    uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
+    libspdm_session_info_t *session_info;
+    libspdm_data_parameter_t parameter;
+    uint32_t session_id;
+    uint32_t hash_size;
+    uint32_t hmac_size;
+    size_t req_asym_signature_size;
+    uint8_t slot_id;
+    bool result;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x20;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        assert_true(false);
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    libspdm_reset_message_a(spdm_context);
+
+    /* The Requester's certificate chain, whose key signs FINISH, was retrieved from slot 3. Slot 0
+     * holds a chain of the same algorithm but with a different key. */
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data2,
+                                                         &data_size2, NULL, NULL)) {
+        assert_true(false);
+    }
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data3,
+                                                         &data_size3, NULL, NULL)) {
+        assert_true(false);
+    }
+    result = record_peer_cert_chain(spdm_context, 3, data2, data_size2);
+    assert_true(result);
+    result = record_peer_cert_chain(spdm_context, 0, data3, data_size3);
+    assert_true(result);
+
+    /* The session as KEY_EXCHANGE_RSP leaves it: the encapsulated flows require SlotIDParam to be
+     * 0, so both the peer slot and the slot to be designated start at 0. */
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0;
+    session_info->local_used_cert_chain_slot_id = 0;
+    session_info->mut_auth_requested =
+        SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
+    session_info->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH;
+    session_info->encap_context.mut_auth_req_slot_id = 0;
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_secured_message_set_request_finished_key(
+        session_info->secured_message_context, m_dummy_buffer, hash_size);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context, LIBSPDM_SESSION_STATE_HANDSHAKING);
+
+    /* Having retrieved the chain, the Integrator designates slot 3, and the flow then ends with the
+     * final ENCAPSULATED_RESPONSE_ACK conveying that slot. */
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_SESSION;
+    libspdm_write_uint32(parameter.additional_data, session_id);
+    slot_id = 3;
+    status = libspdm_set_data(spdm_context, LIBSPDM_DATA_SESSION_ENCAP_REQ_SLOT_ID, &parameter,
+                              &slot_id, sizeof(slot_id));
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(session_info->encap_context.mut_auth_req_slot_id, 3);
+    assert_int_equal(session_info->peer_used_cert_chain_slot_id, 3);
+    session_info->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_NONE;
+
+    /* FINISH with Param2 of 3, signed with slot 3's key over a transcript that includes slot 3's
+     * chain. */
+    hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    req_asym_signature_size = libspdm_get_req_asym_signature_size(m_libspdm_use_req_asym_algo);
+    ptr = m_libspdm_finish_request7.signature;
+    libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
+    libspdm_hash_all(m_libspdm_use_hash_algo, data1, data_size1, cert_buffer_hash);
+    libspdm_hash_all(m_libspdm_use_hash_algo, data2, data_size2, req_cert_buffer_hash);
+    /* transcript.message_a size is 0*/
+    libspdm_append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+    /* session_transcript.message_k is 0*/
+    libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
+    libspdm_append_managed_buffer(&th_curr, (uint8_t *)&m_libspdm_finish_request7,
+                                  sizeof(spdm_finish_request_t));
+    libspdm_requester_data_sign(
+        spdm_context,
+        m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            0, SPDM_FINISH,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
+            false, libspdm_get_managed_buffer(&th_curr),
+            libspdm_get_managed_buffer_size(&th_curr),
+            ptr, &req_asym_signature_size);
+    libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
+    ptr += req_asym_signature_size;
+    libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
+    libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                     libspdm_get_managed_buffer_size(&th_curr), hash_data);
+    libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
+                     request_finished_key, hash_size, ptr);
+    m_libspdm_finish_request7_size = sizeof(spdm_finish_request_t) +
+                                     req_asym_signature_size + hmac_size;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_libspdm_finish_request7_size,
+                                         &m_libspdm_finish_request7,
+                                         &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_FINISH_RSP);
+    assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
+
+    free(data1);
+    free(data2);
+    free(data3);
+}
+
+/**
+ * Test 33: the same as test 32, but the Requester signs FINISH with the key of slot 0 rather than
+ * of the designated slot 3, while still claiming slot 3 in FINISH.Param2. Slot 0 holds the chain
+ * that KEY_EXCHANGE_RSP could not help but name, so this is what verifying against the slot from
+ * KEY_EXCHANGE_RSP instead of the designated slot would wrongly accept.
+ * Expected behavior: the responder verifies against slot 3, the signature does not match, and it
+ * generates an ERROR_RESPONSE with code SPDM_ERROR_CODE_DECRYPT_ERROR.
+ **/
+static void rsp_finish_rsp_case33(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    void *data2;
+    size_t data_size2;
+    void *data3;
+    size_t data_size3;
+    uint8_t *ptr;
+    uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
+    libspdm_session_info_t *session_info;
+    libspdm_data_parameter_t parameter;
+    uint32_t session_id;
+    uint32_t hash_size;
+    uint32_t hmac_size;
+    size_t req_asym_signature_size;
+    uint8_t slot_id;
+    bool result;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x21;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        assert_true(false);
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    libspdm_reset_message_a(spdm_context);
+
+    /* The chain whose key signs FINISH sits in slot 0. Slot 3, which will be designated, holds a
+     * chain of the same algorithm but with a different key. */
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data2,
+                                                         &data_size2, NULL, NULL)) {
+        assert_true(false);
+    }
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data3,
+                                                         &data_size3, NULL, NULL)) {
+        assert_true(false);
+    }
+    result = record_peer_cert_chain(spdm_context, 0, data2, data_size2);
+    assert_true(result);
+    result = record_peer_cert_chain(spdm_context, 3, data3, data_size3);
+    assert_true(result);
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->peer_used_cert_chain_slot_id = 0;
+    session_info->local_used_cert_chain_slot_id = 0;
+    session_info->mut_auth_requested =
+        SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
+    session_info->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH;
+    session_info->encap_context.mut_auth_req_slot_id = 0;
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_secured_message_set_request_finished_key(
+        session_info->secured_message_context, m_dummy_buffer, hash_size);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context, LIBSPDM_SESSION_STATE_HANDSHAKING);
+
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_SESSION;
+    libspdm_write_uint32(parameter.additional_data, session_id);
+    slot_id = 3;
+    status = libspdm_set_data(spdm_context, LIBSPDM_DATA_SESSION_ENCAP_REQ_SLOT_ID, &parameter,
+                              &slot_id, sizeof(slot_id));
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    session_info->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_NONE;
+
+    /* FINISH with Param2 of 3, but signed with slot 0's key over a transcript that includes
+     * slot 0's chain. */
+    hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    req_asym_signature_size = libspdm_get_req_asym_signature_size(m_libspdm_use_req_asym_algo);
+    ptr = m_libspdm_finish_request7.signature;
+    libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
+    libspdm_hash_all(m_libspdm_use_hash_algo, data1, data_size1, cert_buffer_hash);
+    libspdm_hash_all(m_libspdm_use_hash_algo, data2, data_size2, req_cert_buffer_hash);
+    /* transcript.message_a size is 0*/
+    libspdm_append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+    /* session_transcript.message_k is 0*/
+    libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
+    libspdm_append_managed_buffer(&th_curr, (uint8_t *)&m_libspdm_finish_request7,
+                                  sizeof(spdm_finish_request_t));
+    libspdm_requester_data_sign(
+        spdm_context,
+        m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            0, SPDM_FINISH,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
+            false, libspdm_get_managed_buffer(&th_curr),
+            libspdm_get_managed_buffer_size(&th_curr),
+            ptr, &req_asym_signature_size);
+    libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
+    ptr += req_asym_signature_size;
+    libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
+    libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                     libspdm_get_managed_buffer_size(&th_curr), hash_data);
+    libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
+                     request_finished_key, hash_size, ptr);
+    m_libspdm_finish_request7_size = sizeof(spdm_finish_request_t) +
+                                     req_asym_signature_size + hmac_size;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_libspdm_finish_request7_size,
+                                         &m_libspdm_finish_request7,
+                                         &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_DECRYPT_ERROR);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    free(data1);
+    free(data2);
+    free(data3);
+}
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) */
+
 int libspdm_rsp_finish_rsp_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -3885,7 +4240,9 @@ int libspdm_rsp_finish_rsp_test(void)
         cmocka_unit_test(rsp_finish_rsp_case18),
         /* Invalid SlotID in FINISH request message when mutual authentication */
         cmocka_unit_test_setup(rsp_finish_rsp_case19, libspdm_unit_test_group_setup),
+        #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
         cmocka_unit_test_setup(rsp_finish_rsp_case20, libspdm_unit_test_group_setup),
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
         /* If FINISH.Param1 != 0x01, then FINISH.Param2 is reserved, shall be ignored when read */
         cmocka_unit_test_setup(rsp_finish_rsp_case21, libspdm_unit_test_group_setup),
         /* If KEY_EXCHANGE_RSP.MutAuthRequested equals neither 0x02 nor 0x04, FINISH.Param2 no need match ENCAPSULATED_RESPONSE_ACK.EncapsulatedRequest */
@@ -3908,6 +4265,12 @@ int libspdm_rsp_finish_rsp_test(void)
         cmocka_unit_test(rsp_finish_rsp_case30),
         /* SPDM 1.4, the Responder using integrator defined opaque data */
         cmocka_unit_test(rsp_finish_rsp_case31),
+        #if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP)
+        /* FINISH is verified against the slot designated in the final ENCAPSULATED_RESPONSE_ACK */
+        cmocka_unit_test_setup(rsp_finish_rsp_case32, libspdm_unit_test_group_setup),
+        /* FINISH signed with the key of a slot other than the designated one */
+        cmocka_unit_test_setup(rsp_finish_rsp_case33, libspdm_unit_test_group_setup),
+        #endif /* (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (..) */
     };
 
     libspdm_test_context_t test_context = {
