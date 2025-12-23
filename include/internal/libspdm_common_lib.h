@@ -467,6 +467,30 @@ typedef struct {
 } libspdm_session_transcript_t;
 
 typedef struct {
+    uint8_t request_id;
+    uint8_t req_slot_id;
+    uint8_t mut_auth_req_slot_id;
+    spdm_message_header_t last_encap_request_header;
+    size_t last_encap_request_size;
+    uint8_t req_context[SPDM_REQ_CONTEXT_SIZE];
+    uint8_t req_attributes;
+    uint32_t cert_chain_total_len;
+    /* The Integrator's buffer for the payload that the outstanding encapsulated request
+    * retrieves, such as a certificate chain or endpoint information. Only one encapsulated
+    * request is outstanding at a time, so a single buffer serves every payload type. */
+    void *payload_buffer;
+    size_t payload_buffer_size;
+    size_t payload_buffer_max_size;
+    bool use_large_cert_chain;
+    libspdm_encap_flow_type_t flow_type;
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    bool response_not_ready;
+    libspdm_encap_flow_type_t response_not_ready_flow_type;
+    spdm_error_data_response_not_ready_t response_not_ready_data;
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
+} libspdm_encap_context_t;
+
+typedef struct {
     uint32_t session_id;
     bool use_psk;
     uint8_t mut_auth_requested;
@@ -480,24 +504,10 @@ typedef struct {
     /* Only present in session info as it is currently only used within a secure session. */
     uint8_t local_used_cert_chain_slot_id;
     uint8_t peer_used_cert_chain_slot_id;
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+    libspdm_encap_context_t encap_context;
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 } libspdm_session_info_t;
-
-#define LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT 3
-typedef struct {
-    /* Valid OpCode: GET_DIGEST/GET_CERTIFICATE/CHALLENGE/KEY_UPDATE/GET_ENDPOINT_INFO/SEND_EVENT
-     * The last one is 0x00, as a terminator. */
-    uint8_t request_op_code_sequence[LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT + 1];
-    uint8_t request_op_code_count;
-    uint8_t current_request_op_code;
-    uint8_t request_id;
-    uint8_t req_slot_id;
-    spdm_message_header_t last_encap_request_header;
-    size_t last_encap_request_size;
-    uint32_t cert_chain_total_len;
-    uint8_t req_context[SPDM_REQ_CONTEXT_SIZE];
-    uint32_t session_id;
-    bool use_large_cert_chain;
-} libspdm_encap_context_t;
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 typedef struct {
@@ -596,7 +606,9 @@ typedef struct {
 
     /* Register GetEncapResponse function (requester only) */
     void *get_encap_response_func;
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
     libspdm_encap_context_t encap_context;
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
     /* Register spdm_session_state_callback function (responder only)
     * Register can know the state after StartSession / EndSession. */
@@ -610,18 +622,15 @@ typedef struct {
      * Register can know when session keys are updated during KEY_UPDATE operations. */
     void *spdm_key_update_callback;
 
+    /* Callback function so that Integrator can specify encapsulated requests (responder only) */
+    void *encap_flow_handler_callback;
+
     libspdm_local_context_t local_context;
 
     libspdm_connection_info_t connection_info;
     libspdm_transcript_t transcript;
 
     libspdm_session_info_t session_info[LIBSPDM_MAX_SESSION_COUNT];
-
-    /* Buffer that the Responder uses to store the Requester's certificate chain for
-     * mutual authentication. */
-    void *mut_auth_cert_chain_buffer;
-    size_t mut_auth_cert_chain_buffer_size;
-    size_t mut_auth_cert_chain_buffer_max_size;
 
     /* Cache latest session ID for HANDSHAKE_IN_THE_CLEAR */
     uint32_t latest_session_id;
@@ -695,10 +704,6 @@ typedef struct {
     libspdm_process_event_func process_event;
 #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
 
-#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT)
-    libspdm_get_endpoint_info_callback_func get_endpoint_info_callback;
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT) */
-
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     libspdm_meas_log_reset_callback_func spdm_meas_log_reset_callback;
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
@@ -707,6 +712,52 @@ typedef struct {
 #define LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT (sizeof(libspdm_context_t))
 #define LIBSPDM_CONTEXT_SIZE_ALL (LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT + \
                                   LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE * LIBSPDM_MAX_SESSION_COUNT)
+
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+/**
+ * Return the encapsulated context for the given session.
+ *
+ * Each secure session has its own encapsulated context, and there is one additional context for
+ * encapsulated flows that occur outside of a session.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  session_id    If NULL then the context outside of a session is returned. Otherwise the
+ *                       context for the given session is returned.
+ *
+ * @return The encapsulated context, or NULL if session_id does not identify a valid session.
+ **/
+libspdm_encap_context_t *libspdm_get_encap_context(libspdm_context_t *spdm_context,
+                                                   const uint32_t *session_id);
+
+/**
+ * Return the session that the encapsulated flow on the current channel belongs to.
+ *
+ * This is normally the session that the message currently being processed arrived on. When both
+ * endpoints have set HANDSHAKE_IN_THE_CLEAR_CAP the session-based mutual authentication flow is
+ * conducted outside of a session, but it still belongs to the session that KEY_EXCHANGE_RSP
+ * established, so that session is returned instead.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ *
+ * @return The session ID, or NULL if the flow is not associated with a session.
+ **/
+const uint32_t *libspdm_get_encap_session_id_via_last_request(libspdm_context_t *spdm_context);
+
+/**
+ * Return the encapsulated context for the channel that the message currently being processed
+ * arrived on.
+ *
+ * If the message arrived within a session then that session's encapsulated context is returned,
+ * otherwise the context outside of a session is returned. See
+ * libspdm_get_encap_session_id_via_last_request for the handshake-in-the-clear exception.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ *
+ * @return The encapsulated context.
+ **/
+libspdm_encap_context_t *libspdm_get_encap_context_via_last_request(
+    libspdm_context_t *spdm_context);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
 #if LIBSPDM_DEBUG_PRINT_ENABLE
 /**

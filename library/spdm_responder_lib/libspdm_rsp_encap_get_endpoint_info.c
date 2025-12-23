@@ -8,29 +8,50 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT)
 
-libspdm_return_t libspdm_register_get_endpoint_info_callback_func(
-    void *spdm_context, libspdm_get_endpoint_info_callback_func get_endpoint_info_callback)
-{
-    libspdm_context_t *context = (libspdm_context_t *)spdm_context;
-    context->get_endpoint_info_callback = get_endpoint_info_callback;
-    return LIBSPDM_STATUS_SUCCESS;
-}
-
 libspdm_return_t libspdm_get_encap_request_get_endpoint_info(
-    libspdm_context_t *spdm_context,
+    void *context,
+    const uint32_t *session_id,
+    uint8_t sub_code,
+    uint8_t slot_id,
+    uint8_t request_attributes,
+    size_t ep_info_size,
+    void *ep_info,
     size_t *encap_request_size,
     void *encap_request)
 {
+    libspdm_encap_context_t *encap_context;
+    libspdm_context_t *spdm_context;
     libspdm_return_t status;
     spdm_get_endpoint_info_request_t *spdm_request;
-    uint32_t session_id;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     uint8_t *spdm_nonce;
 
-    LIBSPDM_ASSERT(spdm_context->get_endpoint_info_callback != NULL);
+    spdm_context = context;
 
-    spdm_context->encap_context.last_encap_request_size = 0;
+    if ((ep_info == NULL) || (ep_info_size == 0)) {
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    }
+
+    if ((slot_id >= SPDM_MAX_SLOT_COUNT) && (slot_id != 0xF)) {
+        /* SlotID is a four-bit field in which 0xF designates the Requester's provisioned public
+         * key. Any other slot indexes per-slot state of SPDM_MAX_SLOT_COUNT entries, which
+         * ENDPOINT_INFO is verified against. */
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    }
+
+    encap_context = libspdm_get_encap_context(spdm_context, session_id);
+    if (encap_context == NULL) {
+        /* session_id does not refer to an existing session. */
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+    }
+
+    encap_context->last_encap_request_size = 0;
+
+    /* The endpoint information is written here once the ENDPOINT_INFO response is verified. */
+    encap_context->payload_buffer = ep_info;
+    encap_context->payload_buffer_max_size = ep_info_size;
+    encap_context->payload_buffer_size = 0;
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_13) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -42,9 +63,18 @@ libspdm_return_t libspdm_get_encap_request_get_endpoint_info(
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    if (spdm_context->last_spdm_request_session_id_valid) {
-        session_id = spdm_context->last_spdm_request_session_id;
-        session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    if (((request_attributes &
+          SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED) != 0) &&
+        !libspdm_is_capabilities_flag_supported(
+            spdm_context, false,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG, 0)) {
+        /* The Requester cannot sign ENDPOINT_INFO, and would reject the request with
+         * ERROR(UnsupportedRequest), so do not send it. */
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
+    if (session_id != NULL) {
+        session_info = libspdm_get_session_info_via_session_id(spdm_context, *session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
@@ -59,21 +89,17 @@ libspdm_return_t libspdm_get_encap_request_get_endpoint_info(
 
     LIBSPDM_ASSERT(*encap_request_size >= sizeof(spdm_get_endpoint_info_request_t));
 
-    spdm_request = encap_request;
+    /* Store slot_id in context so process_encap_response can retrieve it. */
+    encap_context->req_slot_id = slot_id;
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                                  spdm_request->header.request_response_code);
+    spdm_request = encap_request;
 
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_GET_ENDPOINT_INFO;
-    spdm_request->header.param1 = SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER;
-    spdm_request->header.param2 =
-        spdm_context->encap_context.req_slot_id & SPDM_GET_ENDPOINT_INFO_REQUEST_SLOT_ID_MASK;
+    spdm_request->header.param1 = sub_code;
+    spdm_request->header.param2 = slot_id & SPDM_GET_ENDPOINT_INFO_REQUEST_SLOT_ID_MASK;
 
-    /* request signature if requester support */
-    if (libspdm_is_capabilities_flag_supported(
-            spdm_context, false,
-            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG, 0)) {
+    if (request_attributes & SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED) {
         LIBSPDM_ASSERT(
             *encap_request_size >= sizeof(spdm_get_endpoint_info_request_t) + SPDM_NONCE_SIZE);
         *encap_request_size = sizeof(spdm_get_endpoint_info_request_t) + SPDM_NONCE_SIZE;
@@ -91,6 +117,8 @@ libspdm_return_t libspdm_get_encap_request_get_endpoint_info(
         LIBSPDM_INTERNAL_DUMP_DATA(spdm_nonce, SPDM_NONCE_SIZE);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
+        libspdm_reset_message_encap_e(spdm_context, session_info);
+
         status = libspdm_append_message_encap_e(spdm_context, session_info,
                                                 spdm_request, *encap_request_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -103,11 +131,14 @@ libspdm_return_t libspdm_get_encap_request_get_endpoint_info(
         libspdm_write_uint24(spdm_request->reserved, 0);
     }
 
-    libspdm_copy_mem(&spdm_context->encap_context.last_encap_request_header,
-                     sizeof(spdm_context->encap_context.last_encap_request_header),
+    /* Store the RequestAttributes that were sent, as last_encap_request_header only retains the
+     * message header and process_encap_response must honour what was requested. */
+    encap_context->req_attributes = spdm_request->request_attributes;
+
+    libspdm_copy_mem(&encap_context->last_encap_request_header,
+                     sizeof(encap_context->last_encap_request_header),
                      &spdm_request->header, sizeof(spdm_message_header_t));
-    spdm_context->encap_context.last_encap_request_size =
-        *encap_request_size;
+    encap_context->last_encap_request_size = *encap_request_size;
 
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -116,8 +147,8 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue)
 {
+    libspdm_encap_context_t *encap_context;
     libspdm_return_t status;
-    spdm_get_endpoint_info_request_t *spdm_request;
     const spdm_endpoint_info_response_t *spdm_response;
     size_t spdm_response_size;
     uint32_t session_id;
@@ -131,8 +162,6 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
     uint8_t slot_id;
     bool result;
     uint8_t request_attributes;
-
-    LIBSPDM_ASSERT(spdm_context->get_endpoint_info_callback != NULL);
 
     if (spdm_context->last_spdm_request_session_id_valid) {
         session_id = spdm_context->last_spdm_request_session_id;
@@ -149,8 +178,7 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
         session_info = NULL;
     }
 
-    spdm_request =
-        (void *)&spdm_context->encap_context.last_encap_request_header;
+    encap_context = libspdm_get_encap_context_via_last_request(spdm_context);
 
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
@@ -172,12 +200,13 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
-    slot_id = spdm_context->encap_context.req_slot_id & SPDM_GET_ENDPOINT_INFO_REQUEST_SLOT_ID_MASK;
+    slot_id = encap_context->req_slot_id & SPDM_GET_ENDPOINT_INFO_REQUEST_SLOT_ID_MASK;
 
-    /* request signature if requester support */
-    if (libspdm_is_capabilities_flag_supported(
-            spdm_context, false,
-            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG, 0)) {
+    /* The Integrator decides whether a signature is requested, so the response is processed
+     * according to the RequestAttributes that were sent. */
+    request_attributes = encap_context->req_attributes;
+
+    if ((request_attributes & SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED) != 0) {
         if (spdm_context->connection_info.algorithm.req_pqc_asym_alg != 0) {
             signature_size = libspdm_get_req_pqc_asym_signature_size(
                 spdm_context->connection_info.algorithm.req_pqc_asym_alg);
@@ -185,8 +214,6 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
             signature_size = libspdm_get_req_asym_signature_size(
                 spdm_context->connection_info.algorithm.req_base_asym_alg);
         }
-        request_attributes = SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED;
-
         if ((spdm_response->header.param2 & SPDM_ENDPOINT_INFO_RESPONSE_SLOT_ID_MASK) != slot_id) {
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
@@ -233,8 +260,6 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
 
         libspdm_reset_message_encap_e(spdm_context, session_info);
     } else {
-        request_attributes = 0;
-
         /* responder's slot_id should be 0 */
         if ((spdm_response->header.param2 & SPDM_ENDPOINT_INFO_RESPONSE_SLOT_ID_MASK) != 0) {
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
@@ -256,13 +281,17 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
 
     *need_continue = false;
 
-    status = spdm_context->get_endpoint_info_callback(
-        spdm_context, spdm_request->header.param1, spdm_request->header.param2,
-        request_attributes, ep_info_data_len, ep_info_data);
-
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        return status;
+    if (ep_info_data_len > encap_context->payload_buffer_max_size) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "endpoint info buffer too small\n"));
+        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
     }
+
+    if (ep_info_data_len != 0) {
+        libspdm_copy_mem(encap_context->payload_buffer,
+                         encap_context->payload_buffer_max_size,
+                         ep_info_data, ep_info_data_len);
+    }
+    encap_context->payload_buffer_size = ep_info_data_len;
 
     return LIBSPDM_STATUS_SUCCESS;
 }

@@ -276,19 +276,6 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
     - Specifies the Responder's `HeartbeatPeriod` in units of seconds. This value is communicated to
       the Requester in the `KEY_EXCHANGE_RSP` and `PSK_EXCHANGE_RSP` messages. The actual timeout
       limit is twice the `HeartbeatPeriod`.
-- `LIBSPDM_DATA_MUT_AUTH_REQUESTED`
-    - Specifies whether the Responder requires session-based mutual authentication with the
-      Requester via asymmetric key exchange. Its value can be one of
-        - `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED`
-            - Used when the Responder is in possession of the Requester's public key and does not
-              want to issue encapsulated requests to get a certificate chain from the Requester.
-        - `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST`
-            - Used when the Responder wants to issue `GET_CERTIFICATE` encapsulated requests to the
-              Requester to retrieve certificate chains.
-        - `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS`
-            - Similar to `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST` except
-              the Responder embeds a `GET_DIGESTS` request in its response to the Requester. This
-              may improve performance.
 - `LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER`
     - Specifies the number of messages that can encrypted or decrypted before an error is returned
       to the Integrator. The sequence number used to track these messages is 64 bits and the
@@ -404,3 +391,14 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
     - `LIBSPDM_DATA_LOCATION_LOCAL`
         - The SPDM secured message version(s) of the local endpoint.
         - Can contain multiple entries.
+- `LIBSPDM_DATA_SESSION_ENCAP_REQ_SLOT_ID`
+    - For a given session ID, the slot of the Requester's certificate chain to be used for
+      session-based mutual authentication. libspdm conveys it in the final
+      `ENCAPSULATED_RESPONSE_ACK` of the encapsulated flow, and verifies the `FINISH` request
+      against it.
+    - It defaults to the slot that `libspdm_key_exchange_start_mut_auth` returned, so this is only
+      needed when the Responder decides on a different slot after examining the Requester's
+      `DIGESTS` or `CERTIFICATE`.
+    - `LIBSPDM_DATA_LOCATION_SESSION`
+        - Shall be set from `libspdm_encap_flow_handler_func` while that session's
+          `encap_flow_type` is `LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH`.

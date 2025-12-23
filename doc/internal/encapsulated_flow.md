@@ -25,7 +25,7 @@ requirements around them, and outlines an API pattern to support them.
 ## Encapsulated Flow Initiation
 
 The encapsulated flow can be explicitly initiated by the Responder via mutual authentication. The
-Requester-initiated encapsulated flow begins with the Requester sending `GET_ENCAPSULATED_REQUEST`
+general encapsulated flow begins with the Requester sending `GET_ENCAPSULATED_REQUEST`
 to the Responder outside of mutual authentication. Reasons for the Requester to initiate the
 encapsulated flow include periodicity, or the Responder may possess an out-of-band (non-SPDM)
 mechanism to the Requester.
@@ -122,9 +122,9 @@ All messages must be sent within the same session, unless both endpoints have se
 have set `HANDSHAKE_IN_THE_CLEAR_CAP` then, when the encapsulated handler is called by libspdm
 during the handshake phase, the inferred `session_id` is passed to the Integrator.
 
-### Requester-initiated Encapsulated Flow
+### General Encapsulated Flow
 
-The Requester-initiated encapsulated flow begins with the Requester sending
+The general encapsulated flow begins with the Requester sending
 `GET_ENCAPSULATED_REQUEST`. If outside of a session then the following encapsulated requests are
 legal:
 - `GET_DIGESTS`
