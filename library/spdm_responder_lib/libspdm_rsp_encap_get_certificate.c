@@ -9,6 +9,7 @@
 #if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 
 libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
+                                                           uint8_t req_slot_id,
                                                            size_t *encap_request_size,
                                                            void *encap_request)
 {
@@ -58,7 +59,7 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
 
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_GET_CERTIFICATE;
-    spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
+    spdm_request->header.param1 = req_slot_id;
     spdm_request->header.param2 = 0;
     req_msg_offset = (uint32_t)spdm_context->mut_auth_cert_chain_buffer_size;
 
@@ -90,6 +91,7 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
 
+    spdm_context->encap_context.req_slot_id = req_slot_id;
     libspdm_copy_mem(&spdm_context->encap_context.last_encap_request_header,
                      sizeof(spdm_context->encap_context.last_encap_request_header),
                      &spdm_request->header, sizeof(spdm_message_header_t));

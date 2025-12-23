@@ -244,6 +244,23 @@ typedef enum {
     LIBSPDM_RESPONSE_STATE_MAX
 } libspdm_response_state_t;
 
+typedef enum {
+    /* Endpoint is not in an encapsulated flow. */
+    LIBSPDM_ENCAP_FLOW_NONE,
+
+    /* Endpoint is in the basic mutual authentication encapsulated flow.
+     * This state is triggered by the Responder via its CHALLENGE_AUTH response. */
+    LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH,
+
+    /* Endpoint is in the session-based mutual authentication encapsulated flow.
+     * This state is is triggered by the Responder via its KEY_EXCHANGE_RSP response. */
+    LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH,
+
+    /* Endpoint is in a requester-initiated encapsulated flow.
+     * This state is triggered by the Requester when it sends GET_ENCAPSULATED_REQUEST. */
+    LIBSPDM_ENCAP_FLOW_REQ_INITIATED
+} libspdm_encap_flow_type_t;
+
 /* These macros apply only if the negotiated SPDM version is 1.0 or 1.1.
  * The default verification mode is big endian only. */
 #define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY 0
