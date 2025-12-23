@@ -7,6 +7,15 @@
 #include "internal/libspdm_responder_lib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+
+libspdm_return_t libspdm_register_meas_log_reset_callback(
+    void *spdm_context, libspdm_meas_log_reset_callback_func spdm_meas_log_reset_callback)
+{
+    libspdm_context_t *context = (libspdm_context_t *)spdm_context;
+    context->spdm_meas_log_reset_callback = spdm_meas_log_reset_callback;
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
 bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
                                             libspdm_session_info_t *session_info,
                                             uint8_t slot_id,

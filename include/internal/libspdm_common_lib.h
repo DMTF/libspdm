@@ -685,6 +685,10 @@ typedef struct {
 #if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT)
     libspdm_get_endpoint_info_callback_func get_endpoint_info_callback;
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT) */
+
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+    libspdm_meas_log_reset_callback_func spdm_meas_log_reset_callback;
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 } libspdm_context_t;
 
 #define LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT (sizeof(libspdm_context_t))

@@ -1366,6 +1366,12 @@ void libspdm_reset_message_m(libspdm_context_t *spdm_context, void *session_info
         }
     }
 #endif
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+    if (spdm_context->spdm_meas_log_reset_callback != NULL) {
+        spdm_context->spdm_meas_log_reset_callback(
+            spdm_context, spdm_session_info == NULL ? NULL : &spdm_session_info->session_id);
+    }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 }
 
 /**
