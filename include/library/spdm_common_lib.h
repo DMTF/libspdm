@@ -1036,6 +1036,21 @@ typedef libspdm_return_t (*libspdm_get_endpoint_info_callback_func)(
     const void *endpoint_info);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP && LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+/**
+ * A Callback function to notify integrator measurement log is reset.
+ * This is used to support the "Content changed" field in the MEASUREMENTS response.
+ *
+ * @param spdm_context       A pointer to the SPDM context.
+ * @param session_id         A pointer to the session ID.
+ *                           If non-NULL then message is within a secure session.
+ *                           If NULL then message is outside a secure session.
+ **/
+typedef void (*libspdm_meas_log_reset_callback_func)(
+    void *spdm_context,
+    const uint32_t *session_id);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
+
 #ifdef __cplusplus
 }
 #endif

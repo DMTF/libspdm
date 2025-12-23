@@ -315,6 +315,21 @@ libspdm_return_t libspdm_register_get_endpoint_info_callback_func(
     void *spdm_context, libspdm_get_endpoint_info_callback_func get_endpoint_info_callback);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP && LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+/**
+ * This function registers the callback function for notify
+ * integrator L1L2 is reset.
+ *
+ * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  spdm_meas_log_reset_callback     L1L2 reset callback function
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS Success
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
+ */
+libspdm_return_t libspdm_register_meas_log_reset_callback(
+    void *spdm_context, libspdm_meas_log_reset_callback_func spdm_meas_log_reset_callback);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
+
 /**
  * This function allows the consumer to terminate a session.
  * For example, it can be used when watchdog fires.
