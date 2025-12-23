@@ -166,3 +166,10 @@ libspdm_return_t libspdm_encap_state_handler (void *spdm_context,
     }
 }
 ```
+
+### Multiple Message Handling
+
+When multiple encapsulated `GET_CERTIFICATE` requests are issued to retrieve a single certificate
+chain, then libspdm handles the multiple `ENCAPSULATED_RESPONSE` and `DELIVER_ENCAPSULATED_RESPONSE`
+messages. Once the entire certificate chain has been retrieved then libspdm calls
+`libspdm_encap_state_handler`.
