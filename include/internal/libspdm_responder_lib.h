@@ -473,23 +473,6 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
 
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 /**
- * Get the SPDM encapsulated GET_DIGESTS request.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  encap_request_size             size in bytes of the encapsulated request data.
- *                                     On input, it means the size in bytes of encapsulated request data buffer.
- *                                     On output, it means the size in bytes of copied encapsulated request data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired encapsulated request data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  encap_request                 A pointer to the encapsulated request data.
- *
- * @retval RETURN_SUCCESS               The encapsulated request is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- **/
-libspdm_return_t libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
-                                                      size_t *encap_request_size,
-                                                      void *encap_request);
-
-/**
  * Process the SPDM encapsulated DIGESTS response.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
@@ -504,24 +487,6 @@ libspdm_return_t libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_co
 libspdm_return_t libspdm_process_encap_response_digest(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
-
-
-/**
- * Get the SPDM encapsulated GET_CERTIFICATE request.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  encap_request_size             size in bytes of the encapsulated request data.
- *                                     On input, it means the size in bytes of encapsulated request data buffer.
- *                                     On output, it means the size in bytes of copied encapsulated request data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired encapsulated request data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  encap_request                 A pointer to the encapsulated request data.
- *
- * @retval RETURN_SUCCESS               The encapsulated request is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- **/
-libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
-                                                           size_t *encap_request_size,
-                                                           void *encap_request);
 
 /**
  * Process the SPDM encapsulated CERTIFICATE response.
@@ -541,23 +506,6 @@ libspdm_return_t libspdm_process_encap_response_certificate(
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
-/**
- * Get the SPDM encapsulated CHALLENGE request.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  encap_request_size             size in bytes of the encapsulated request data.
- *                                     On input, it means the size in bytes of encapsulated request data buffer.
- *                                     On output, it means the size in bytes of copied encapsulated request data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired encapsulated request data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  encap_request                 A pointer to the encapsulated request data.
- *
- * @retval RETURN_SUCCESS               The encapsulated request is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- **/
-libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_context,
-                                                     size_t *encap_request_size,
-                                                     void *encap_request);
-
 /**
  * Process the SPDM encapsulated CHALLENGE_AUTH response.
  *
