@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -685,6 +685,33 @@ libspdm_return_t libspdm_send_receive_data(void *spdm_context,
                                            bool is_app_message,
                                            const void *request, size_t request_size,
                                            void *response, size_t *response_size);
+
+/**
+ * Send and receive an SPDM message.
+ *
+ * The SPDM message can be a normal message or a secured message in SPDM session.
+ * This API handles SPDM chunking.
+ *
+ *
+ * @param  spdm_context    A pointer to the SPDM context.
+ * @param  session_id      Indicates if it is a secured message protected via SPDM session.
+ *                         If session_id is NULL, it is a normal message.
+ *                         If session_id is NOT NULL, it is a secured message.
+ * @param  request         A pointer to the request data.
+ * @param  request_size    Size in bytes of the request data.
+ * @param  response        A pointer to the response data.
+ *                         The request and response message buffers can be the same buffer.
+ * @param  response_size   Size in bytes of the response data.
+ *                         On input, it means the size in bytes of response data buffer.
+ *                         On output, it means the size in bytes of copied response data buffer if
+ *                         LIBSPDM_STATUS_SUCCESS is returned, and means the size in bytes of
+ *                         desired response data buffer if LIBSPDM_STATUS_BUFFER_TOO_SMALL is
+ *                         returned.
+ **/
+libspdm_return_t libspdm_send_receive_spdm_data(void *spdm_context,
+                                                const uint32_t *session_id,
+                                                const void *request, size_t request_size,
+                                                void *response, size_t *response_size);
 
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 /**

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -457,4 +457,107 @@ libspdm_return_t libspdm_send_receive_data(void *spdm_context, const uint32_t *s
     }
 
     return libspdm_receive_data(spdm_context, session_id, is_app_message, response, response_size);
+}
+
+
+libspdm_return_t libspdm_send_spdm_data(void *spdm_context, const uint32_t *session_id,
+                                        const void *request, size_t request_size)
+{
+    libspdm_return_t status;
+    libspdm_context_t *context;
+    spdm_message_header_t *spdm_request;
+    size_t spdm_request_size;
+    uint8_t *message;
+    size_t message_size;
+    size_t transport_header_size;
+
+    context = spdm_context;
+    transport_header_size = context->local_context.capability.transport_header_size;
+
+    status = libspdm_acquire_sender_buffer(context, &message_size, (void **)&message);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+    LIBSPDM_ASSERT (message_size >= transport_header_size +
+                    context->local_context.capability.transport_tail_size);
+    spdm_request = (void *)(message + transport_header_size);
+    spdm_request_size = message_size - transport_header_size -
+                        context->local_context.capability.transport_tail_size;
+
+    LIBSPDM_ASSERT (spdm_request_size >= request_size);
+    libspdm_copy_mem (spdm_request, spdm_request_size, request, request_size);
+    spdm_request_size = request_size;
+
+    status = libspdm_send_spdm_request(context, session_id,
+                                       spdm_request_size, spdm_request);
+
+    libspdm_release_sender_buffer(context);
+
+    return status;
+}
+
+libspdm_return_t libspdm_receive_spdm_data(void *spdm_context, const uint32_t *session_id,
+                                           void *response, size_t *response_size)
+{
+    libspdm_return_t status;
+    libspdm_context_t *context;
+    spdm_error_response_t *spdm_response;
+    size_t spdm_response_size;
+    uint8_t *message;
+    size_t message_size;
+
+    context = spdm_context;
+
+    status = libspdm_acquire_receiver_buffer(context, &message_size, (void **)&message);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+
+    spdm_response = (void *)(message);
+    spdm_response_size = message_size;
+
+    status = libspdm_receive_spdm_response(context, session_id,
+                                           &spdm_response_size, (void **)&spdm_response);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        libspdm_release_receiver_buffer (context);
+        return status;
+    }
+
+    if (spdm_response->header.request_response_code == SPDM_ERROR) {
+        if ((spdm_response->header.param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) &&
+            (session_id != NULL)) {
+            libspdm_free_session_id(context, *session_id);
+            libspdm_release_receiver_buffer (context);
+            return LIBSPDM_STATUS_SESSION_MSG_ERROR;
+        }
+    }
+
+    if (*response_size >= spdm_response_size) {
+        libspdm_copy_mem (response, *response_size, spdm_response, spdm_response_size);
+        *response_size = spdm_response_size;
+    } else {
+        *response_size = spdm_response_size;
+        libspdm_release_receiver_buffer (context);
+        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+    }
+
+    libspdm_release_receiver_buffer(context);
+
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+
+libspdm_return_t libspdm_send_receive_spdm_data(void *spdm_context, const uint32_t *session_id,
+                                                const void *request, size_t request_size,
+                                                void *response, size_t *response_size)
+{
+    libspdm_return_t status;
+
+    status = libspdm_send_spdm_data(spdm_context, session_id, request, request_size);
+
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+
+    return libspdm_receive_spdm_data(spdm_context, session_id, response, response_size);
 }
