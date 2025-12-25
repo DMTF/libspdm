@@ -10,6 +10,27 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
+void spdm_meas_log_reset_callback (
+    void *spdm_context,
+    const uint32_t *session_id)
+{
+    libspdm_context_t *context = spdm_context;
+    if (session_id == NULL) {
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        assert_int_equal(context->transcript.message_m.buffer_size, 0);
+#else
+        assert_null(context->transcript.digest_context_l1l2);
+#endif
+    } else {
+        libspdm_session_info_t* session_info = &context->session_info[0];
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
+#else
+        assert_null(session_info->session_transcript.digest_context_l1l2);
+#endif
+    }
+}
+
 spdm_get_measurements_request_t m_libspdm_get_measurements_request1 = {
     { SPDM_MESSAGE_VERSION_10, SPDM_GET_MEASUREMENTS, 0,
       SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS },
@@ -147,6 +168,7 @@ static void rsp_measurements_case1(void **state)
         m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
+    spdm_context->spdm_meas_log_reset_callback = spdm_meas_log_reset_callback;
     libspdm_reset_message_m(spdm_context, NULL);
 
     libspdm_secret_lib_meas_opaque_data_size = 0;
