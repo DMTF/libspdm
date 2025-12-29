@@ -85,8 +85,9 @@ enforced by both the Requester and Responder.
 If the Responder signals for mutual authentication in its `CHALLENGE_AUTH` response then the next
 request from the Requester must be `GET_ENCAPSULATED_REQUEST`. After that the encapsulated requests
 from the Responder are limited to `GET_DIGESTS`, `GET_CERTIFICATE`, and `CHALLENGE`. The Responder
-can terminate the flow by sending the encapsulated `CHALLENGE` request, clearing
-`ENCAPSULATED_RESPONSE_ACK.Param2`, or sending an `ERROR` response.
+can terminate the flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2` or sending an `ERROR`
+response. Once the encapsulated `CHALLENGE_AUTH` response is returned to the Responder, then it
+must terminate the encapsulated flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2`.
 
 ### Session-based Mutual Authentication
 
