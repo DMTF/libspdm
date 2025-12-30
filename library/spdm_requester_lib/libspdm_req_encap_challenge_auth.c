@@ -78,16 +78,14 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
 
     slot_id = spdm_request->header.param1;
 
-    if ((slot_id != 0xFF) &&
-        (slot_id >= SPDM_MAX_SLOT_COUNT)) {
+    if ((slot_id != 0xFF) && (slot_id >= SPDM_MAX_SLOT_COUNT)) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);
     }
 
     if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
-        context->connection_info.multi_key_conn_req &&
-        (slot_id != 0xFF)) {
+        context->connection_info.multi_key_conn_req && (slot_id != 0xFF)) {
         if ((context->local_context.local_key_usage_bit_mask[slot_id] &
              SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE) == 0) {
             return libspdm_generate_encap_error_response(
@@ -106,8 +104,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
         signature_size = libspdm_get_req_asym_signature_size(
             context->connection_info.algorithm.req_base_asym_alg);
     }
-    hash_size = libspdm_get_hash_size(
-        context->connection_info.algorithm.base_hash_algo);
+    hash_size = libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
 
     /* Requester does not support measurements,
      * hence the size of MeasurementSummaryHash is always 0. */
@@ -170,9 +167,8 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     opaque_data_size = *response_size - (sizeof(spdm_challenge_auth_response_t) + hash_size +
                                          SPDM_NONCE_SIZE + measurement_summary_hash_size +
                                          sizeof(uint16_t) + signature_size);
-    opaque_data =
-        (uint8_t*)response + sizeof(spdm_challenge_auth_response_t) + hash_size + SPDM_NONCE_SIZE +
-        measurement_summary_hash_size + sizeof(uint16_t);
+    opaque_data = (uint8_t *)response + sizeof(spdm_challenge_auth_response_t) + hash_size +
+                  SPDM_NONCE_SIZE + measurement_summary_hash_size + sizeof(uint16_t);
 
     result = libspdm_encap_challenge_opaque_data(
         spdm_context,
@@ -213,10 +209,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
 
     *response_size = spdm_response_size;
 
-    /* Calc Sign*/
-
-    status = libspdm_append_message_mut_c(context, spdm_request,
-                                          spdm_request_size);
+    status = libspdm_append_message_mut_c(context, spdm_request, spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -231,14 +224,12 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
             context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
             response_size, response);
     }
-    result =
-        libspdm_generate_challenge_auth_signature(context, true, slot_id, ptr);
+    result = libspdm_generate_challenge_auth_signature(context, true, slot_id, ptr);
     if (!result) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_UNSPECIFIED,
             0, response_size, response);
     }
-    ptr += signature_size;
 
     return LIBSPDM_STATUS_SUCCESS;
 }
