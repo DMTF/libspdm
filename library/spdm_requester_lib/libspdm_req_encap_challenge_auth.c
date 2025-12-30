@@ -143,8 +143,10 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     }
     ptr += hash_size;
 
-    if(!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
-        return LIBSPDM_STATUS_LOW_ENTROPY;
+    if (!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
+        return libspdm_generate_encap_error_response(
+            context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
+            response_size, response);
     }
     ptr += SPDM_NONCE_SIZE;
 
