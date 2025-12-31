@@ -62,7 +62,7 @@ For `KEY_UPDATE` Integrator may specify `UpdateKey` or `UpdateAllKeys`. Presumab
 automatically follow that up with `VerifyNewKey`.
 
 For `END_SESSION` there is nothing for the Integrator to specify, as the Negotiated State Clearing
-Indicator does not apply the Requester as it does not have `CACHE_CAP`.
+Indicator does not apply to the Requester as it does not have `CACHE_CAP`.
 
 ### Events
 
