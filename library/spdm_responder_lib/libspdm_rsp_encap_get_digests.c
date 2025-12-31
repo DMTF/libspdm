@@ -40,11 +40,7 @@ libspdm_return_t libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_co
     spdm_request->header.param1 = 0;
     spdm_request->header.param2 = 0;
 
-
-    /* Cache data*/
-
-    status = libspdm_append_message_mut_b(spdm_context, spdm_request,
-                                          *encap_request_size);
+    status = libspdm_append_message_mut_b(spdm_context, spdm_request, *encap_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
@@ -52,8 +48,7 @@ libspdm_return_t libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_co
     libspdm_copy_mem(&spdm_context->encap_context.last_encap_request_header,
                      sizeof(spdm_context->encap_context.last_encap_request_header),
                      &spdm_request->header, sizeof(spdm_message_header_t));
-    spdm_context->encap_context.last_encap_request_size =
-        *encap_request_size;
+    spdm_context->encap_context.last_encap_request_size = *encap_request_size;
 
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -89,13 +84,11 @@ libspdm_return_t libspdm_process_encap_response_digest(
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_encap_error_response_main(
-            spdm_context,
-            spdm_response->header.param1);
+            spdm_context, spdm_response->header.param1);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }
-    } else if (spdm_response->header.request_response_code !=
-               SPDM_DIGESTS) {
+    } else if (spdm_response->header.request_response_code != SPDM_DIGESTS) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (spdm_response_size < sizeof(spdm_digest_response_t)) {
@@ -138,10 +131,7 @@ libspdm_return_t libspdm_process_encap_response_digest(
     spdm_response_size =
         sizeof(spdm_digest_response_t) + digest_count * (digest_size + additional_size);
 
-    /* Cache data*/
-
-    status = libspdm_append_message_mut_b(spdm_context, spdm_response,
-                                          spdm_response_size);
+    status = libspdm_append_message_mut_b(spdm_context, spdm_response, spdm_response_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
