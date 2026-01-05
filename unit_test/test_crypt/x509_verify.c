@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #include "test_crypt.h"
@@ -516,25 +516,33 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     asym_nid = libspdm_get_aysm_nid_from_file_name(Path, len);
 
     switch (asym_nid) {
+    #if LIBSPDM_RSA_SSA_SUPPORT
     case LIBSPDM_CRYPTO_NID_RSASSA2048:
     case LIBSPDM_CRYPTO_NID_RSASSA3072:
         status = libspdm_rsa_get_private_key_from_pem(
             test_private_key, test_private_key_len, NULL, &context);
         break;
+    #endif /* LIBSPDM_RSA_SSA_SUPPORT */
+    #if LIBSPDM_ECDSA_SUPPORT
     case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256:
     case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384:
         status = libspdm_ec_get_private_key_from_pem(
             test_private_key, test_private_key_len, NULL, &context);
         break;
+    #endif /* LIBSPDM_ECDSA_SUPPORT */
+    #if LIBSPDM_SM2_DSA_SUPPORT
     case LIBSPDM_CRYPTO_NID_SM2_DSA_P256:
         status = libspdm_sm2_get_private_key_from_pem(
             test_private_key, test_private_key_len, NULL, &context);
         break;
+    #endif /* LIBSPDM_SM2_DSA_SUPPORT */
+    #if LIBSPDM_EDDSA_SUPPORT
     case LIBSPDM_CRYPTO_NID_EDDSA_ED25519:
     case LIBSPDM_CRYPTO_NID_EDDSA_ED448:
         status = libspdm_ecd_get_private_key_from_pem(
             test_private_key, test_private_key_len, NULL, &context);
         break;
+    #endif /* LIBSPDM_EDDSA_SUPPORT */
     default:
         libspdm_my_print("\n  - Get Private Key - [Fail]");
         status = false;
