@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -14,6 +14,8 @@
 #include <openssl/evp.h>
 
 int PasswordCallback(char *buf, const int size, const int flag, const void *key);
+
+#if (LIBSPDM_ML_DSA_SUPPORT) || (LIBSPDM_SLH_DSA_SUPPORT)
 
 /**
  * Helper function to allocate and initialize a key context wrapper.
@@ -36,6 +38,7 @@ static bool allocate_key_context(EVP_PKEY *pkey, void **context)
     *context = ctx;
     return true;
 }
+#endif /* (LIBSPDM_ML_DSA_SUPPORT) || (LIBSPDM_SLH_DSA_SUPPORT) */
 
 #if LIBSPDM_ML_DSA_SUPPORT
 
