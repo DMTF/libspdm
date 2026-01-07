@@ -6,58 +6,6 @@
 
 #include "internal/libspdm_secured_message_lib.h"
 
-/**
- * This function concatenates binary data, which is used as info in HKDF expand later.
- *
- * @param  label        An ascii string label for the libspdm_bin_concat.
- * @param  label_size   The size in bytes of the ASCII string label, not including NULL terminator.
- * @param  context      A pre-defined hash value as the context for the libspdm_bin_concat.
- * @param  length       16 bits length for the libspdm_bin_concat.
- * @param  hash_size    The size in bytes of the context hash.
- * @param  out_bin      The buffer to store the output binary.
- * @param  out_bin_size The size in bytes for the out_bin.
- **/
-void libspdm_bin_concat(spdm_version_number_t spdm_version,
-                        const char *label, size_t label_size,
-                        const uint8_t *context, uint16_t length,
-                        size_t hash_size, uint8_t *out_bin,
-                        size_t *out_bin_size)
-{
-    size_t final_size;
-
-    /* The correct version characters (1.1 or 1.2) will replace the x.x. */
-    #define LIBSPDM_BIN_CONCAT_LABEL "spdmx.x "
-
-    final_size = sizeof(uint16_t) + sizeof(LIBSPDM_BIN_CONCAT_LABEL) - 1 + label_size;
-    if (context != NULL) {
-        final_size += hash_size;
-    }
-
-    LIBSPDM_ASSERT(*out_bin_size >= final_size);
-
-    *out_bin_size = final_size;
-
-    libspdm_copy_mem(out_bin, *out_bin_size, &length, sizeof(uint16_t));
-    libspdm_copy_mem(out_bin + sizeof(uint16_t), *out_bin_size - sizeof(uint16_t),
-                     LIBSPDM_BIN_CONCAT_LABEL, sizeof(LIBSPDM_BIN_CONCAT_LABEL) - 1);
-
-    /* Patch the version. */
-    out_bin[6] = (char)('0' + ((spdm_version >> 12) & 0xF));
-    out_bin[8] = (char)('0' + ((spdm_version >> 8) & 0xF));
-    libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(LIBSPDM_BIN_CONCAT_LABEL) - 1,
-                     *out_bin_size - (sizeof(uint16_t) + sizeof(LIBSPDM_BIN_CONCAT_LABEL) - 1),
-                     label, label_size);
-
-    if (context != NULL) {
-        libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(LIBSPDM_BIN_CONCAT_LABEL) -
-                         1 + label_size,
-                         *out_bin_size - (sizeof(uint16_t) + sizeof(LIBSPDM_BIN_CONCAT_LABEL) -
-                                          1 + label_size), context, hash_size);
-    }
-
-    #undef LIBSPDM_BIN_CONCAT_LABEL
-}
-
 static bool libspdm_generate_aead_key_and_iv(
     libspdm_secured_message_context_t *secured_message_context,
     const uint8_t *major_secret, uint8_t *key, uint8_t *iv)
@@ -151,17 +99,42 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
 {
     bool status;
     size_t hash_size;
-    uint8_t bin_str1[128];
-    size_t bin_str1_size;
-    uint8_t bin_str2[128];
-    size_t bin_str2_size;
     libspdm_secured_message_context_t *secured_message_context;
-    uint8_t salt0[LIBSPDM_MAX_HASH_SIZE];
+    size_t handshake_secret_size;
+    size_t request_handshake_secret_size;
+    size_t response_handshake_secret_size;
 
     secured_message_context = spdm_secured_message_context;
 
     hash_size = secured_message_context->hash_size;
+    handshake_secret_size = hash_size;
+    request_handshake_secret_size = hash_size;
+    response_handshake_secret_size = hash_size;
 
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
+    if (secured_message_context->use_psk) {
+        status = libspdm_generate_handshake_key (
+            secured_message_context->version,
+            NULL,
+            0,
+            false,
+            secured_message_context->psk_hint,
+            secured_message_context->psk_hint_size,
+            secured_message_context->use_psk,
+            secured_message_context->base_hash_algo,
+            th1_hash_data,
+            secured_message_context->master_secret.handshake_secret,
+            &handshake_secret_size,
+            secured_message_context->handshake_secret.request_handshake_secret,
+            &request_handshake_secret_size,
+            secured_message_context->handshake_secret.response_handshake_secret,
+            &response_handshake_secret_size);
+
+        if (!status) {
+            return status;
+        }
+    }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
     if (!(secured_message_context->use_psk)) {
         if (secured_message_context->kem_alg != 0) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "[KEM Secret]: "));
@@ -172,108 +145,40 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             secured_message_context->master_secret.shared_secret,
             secured_message_context->shared_key_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-        libspdm_zero_mem(salt0, sizeof(salt0));
-        status = libspdm_hkdf_extract(
-            secured_message_context->base_hash_algo,
+
+        status = libspdm_generate_handshake_key (
+            secured_message_context->version,
             secured_message_context->master_secret.shared_secret,
             secured_message_context->shared_key_size,
-            salt0, hash_size,
-            secured_message_context->master_secret.handshake_secret, hash_size);
-        if (!status) {
-            return false;
-        }
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "handshake_secret (0x%zx) - ", hash_size));
-        LIBSPDM_INTERNAL_DUMP_DATA(
+            false,
+            NULL,
+            0,
+            secured_message_context->use_psk,
+            secured_message_context->base_hash_algo,
+            th1_hash_data,
             secured_message_context->master_secret.handshake_secret,
-            hash_size);
+            &handshake_secret_size,
+            secured_message_context->handshake_secret.request_handshake_secret,
+            &request_handshake_secret_size,
+            secured_message_context->handshake_secret.response_handshake_secret,
+            &response_handshake_secret_size);
+
+        if (!status) {
+            return status;
+        }
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "handshake_secret (0x%zx) - ", hash_size));
+        LIBSPDM_INTERNAL_DUMP_DATA(secured_message_context->master_secret.handshake_secret, hash_size);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request_handshake_secret (0x%zx) - ", hash_size));
+        LIBSPDM_INTERNAL_DUMP_DATA(secured_message_context->handshake_secret.request_handshake_secret, hash_size);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "response_handshake_secret (0x%zx) - ", hash_size));
+        LIBSPDM_INTERNAL_DUMP_DATA(secured_message_context->handshake_secret.response_handshake_secret, hash_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
-
-    bin_str1_size = sizeof(bin_str1);
-    libspdm_bin_concat(secured_message_context->version,
-                       SPDM_BIN_STR_1_LABEL, sizeof(SPDM_BIN_STR_1_LABEL) - 1,
-                       th1_hash_data, (uint16_t)hash_size, hash_size,
-                       bin_str1, &bin_str1_size);
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str1 (0x%zx):\n", bin_str1_size));
-    LIBSPDM_INTERNAL_DUMP_HEX(bin_str1, bin_str1_size);
-
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
-    if (secured_message_context->use_psk) {
-        status = libspdm_psk_handshake_secret_hkdf_expand(
-            secured_message_context->version,
-            secured_message_context->base_hash_algo,
-            secured_message_context->psk_hint,
-            secured_message_context->psk_hint_size, bin_str1,
-            bin_str1_size,
-            secured_message_context->handshake_secret.request_handshake_secret,
-            hash_size);
-
-        if (!status) {
-            return false;
-        }
-    }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
-    if (!(secured_message_context->use_psk)) {
-        status = libspdm_hkdf_expand(
-            secured_message_context->base_hash_algo,
-            secured_message_context->master_secret.handshake_secret,
-            hash_size, bin_str1, bin_str1_size,
-            secured_message_context->handshake_secret.request_handshake_secret,
-            hash_size);
-
-        if (!status) {
-            return false;
-        }
-    }
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request_handshake_secret (0x%zx) - ", hash_size));
-    LIBSPDM_INTERNAL_DUMP_DATA(secured_message_context->handshake_secret
-                               .request_handshake_secret,
-                               hash_size);
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-    bin_str2_size = sizeof(bin_str2);
-    libspdm_bin_concat(secured_message_context->version,
-                       SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
-                       th1_hash_data, (uint16_t)hash_size, hash_size,
-                       bin_str2, &bin_str2_size);
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str2 (0x%zx):\n", bin_str2_size));
-    LIBSPDM_INTERNAL_DUMP_HEX(bin_str2, bin_str2_size);
-
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
-    if (secured_message_context->use_psk) {
-        status = libspdm_psk_handshake_secret_hkdf_expand(
-            secured_message_context->version,
-            secured_message_context->base_hash_algo,
-            secured_message_context->psk_hint,
-            secured_message_context->psk_hint_size, bin_str2,
-            bin_str2_size,
-            secured_message_context->handshake_secret.response_handshake_secret,
-            hash_size);
-
-        if (!status) {
-            return false;
-        }
-    }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
-    if (!(secured_message_context->use_psk)) {
-        status = libspdm_hkdf_expand(
-            secured_message_context->base_hash_algo,
-            secured_message_context->master_secret.handshake_secret,
-            hash_size, bin_str2, bin_str2_size,
-            secured_message_context->handshake_secret.response_handshake_secret,
-            hash_size);
-
-        if (!status) {
-            return false;
-        }
-    }
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "response_handshake_secret (0x%zx) - ", hash_size));
-    LIBSPDM_INTERNAL_DUMP_DATA(secured_message_context->handshake_secret.response_handshake_secret,
-                               hash_size);
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     status = libspdm_generate_finished_key(
         secured_message_context,
@@ -324,188 +229,85 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
 {
     bool status;
     size_t hash_size;
-    uint8_t salt1[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t bin_str0[128];
-    size_t bin_str0_size;
-    uint8_t bin_str3[128];
-    size_t bin_str3_size;
-    uint8_t bin_str4[128];
-    size_t bin_str4_size;
-    uint8_t bin_str8[128];
-    size_t bin_str8_size;
+    size_t master_secret_size;
+    size_t request_data_secret_size;
+    size_t response_data_secret_size;
+    size_t export_master_secret_size;
+
     libspdm_secured_message_context_t *secured_message_context;
-    uint8_t zero_filled_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     secured_message_context = spdm_secured_message_context;
 
     hash_size = secured_message_context->hash_size;
+    master_secret_size = hash_size;
+    request_data_secret_size = hash_size;
+    response_data_secret_size = hash_size;
+    export_master_secret_size = hash_size;
 
-    if (!(secured_message_context->use_psk)) {
-        bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(secured_message_context->version,
-                           SPDM_BIN_STR_0_LABEL,
-                           sizeof(SPDM_BIN_STR_0_LABEL) - 1, NULL,
-                           (uint16_t)hash_size, hash_size, bin_str0,
-                           &bin_str0_size);
-
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str0 (0x%zx):\n", bin_str0_size));
-        LIBSPDM_INTERNAL_DUMP_HEX(bin_str0, bin_str0_size);
-
-        status = libspdm_hkdf_expand(
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
+    if (secured_message_context->use_psk) {
+        status = libspdm_generate_data_key(
+            secured_message_context->version,
+            NULL,
+            0,
+            secured_message_context->psk_hint,
+            secured_message_context->psk_hint_size,
+            secured_message_context->use_psk,
             secured_message_context->base_hash_algo,
+            th2_hash_data,
+            secured_message_context->master_secret.master_secret,
+            &master_secret_size,
+            secured_message_context->application_secret.request_data_secret,
+            &request_data_secret_size,
+            secured_message_context->application_secret.response_data_secret,
+            &response_data_secret_size,
+            secured_message_context->export_master_secret,
+            &export_master_secret_size);
+
+        if (!status) {
+            return status;
+        }
+    }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
+    if (!(secured_message_context->use_psk)) {
+        status = libspdm_generate_data_key(
+            secured_message_context->version,
             secured_message_context->master_secret.handshake_secret,
-            hash_size, bin_str0, bin_str0_size, salt1, hash_size);
-        if (!status) {
-            return false;
-        }
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "salt1 (0x%zx) - ", hash_size));
-        LIBSPDM_INTERNAL_DUMP_DATA(salt1, hash_size);
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-
-        libspdm_zero_mem(zero_filled_buffer, sizeof(zero_filled_buffer));
-        status = libspdm_hkdf_extract(
+            hash_size,
+            NULL,
+            0,
+            secured_message_context->use_psk,
             secured_message_context->base_hash_algo,
-            zero_filled_buffer, hash_size, salt1, hash_size,
-            secured_message_context->master_secret.master_secret, hash_size);
+            th2_hash_data,
+            secured_message_context->master_secret.master_secret,
+            &master_secret_size,
+            secured_message_context->application_secret.request_data_secret,
+            &request_data_secret_size,
+            secured_message_context->application_secret.response_data_secret,
+            &response_data_secret_size,
+            secured_message_context->export_master_secret,
+            &export_master_secret_size);
+
         if (!status) {
-            goto cleanup;
+            return status;
         }
+
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "master_secret (0x%zx) - ", hash_size));
-        LIBSPDM_INTERNAL_DUMP_DATA(
-            secured_message_context->master_secret.master_secret,
-            hash_size);
+        LIBSPDM_INTERNAL_DUMP_DATA(secured_message_context->master_secret.master_secret, hash_size);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request_data_secret (0x%zx) - ", hash_size));
+        LIBSPDM_INTERNAL_DUMP_DATA(secured_message_context->application_secret.request_data_secret, hash_size);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "response_data_secret (0x%zx) - ", hash_size));
+        LIBSPDM_INTERNAL_DUMP_DATA(secured_message_context->application_secret.response_data_secret, hash_size);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "export_master_secret (0x%zx) - ", hash_size));
+        LIBSPDM_INTERNAL_DUMP_DATA(secured_message_context->export_master_secret, hash_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
-
-    bin_str3_size = sizeof(bin_str3);
-    libspdm_bin_concat(secured_message_context->version,
-                       SPDM_BIN_STR_3_LABEL, sizeof(SPDM_BIN_STR_3_LABEL) - 1,
-                       th2_hash_data, (uint16_t)hash_size, hash_size,
-                       bin_str3, &bin_str3_size);
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str3 (0x%zx):\n", bin_str3_size));
-    LIBSPDM_INTERNAL_DUMP_HEX(bin_str3, bin_str3_size);
-
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
-    if (secured_message_context->use_psk) {
-        status = libspdm_psk_master_secret_hkdf_expand(
-            secured_message_context->version,
-            secured_message_context->base_hash_algo,
-            secured_message_context->psk_hint,
-            secured_message_context->psk_hint_size, bin_str3,
-            bin_str3_size,
-            secured_message_context->application_secret.request_data_secret,
-            hash_size);
-
-        if (!status) {
-            goto cleanup;
-        }
-    }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
-    if (!(secured_message_context->use_psk)) {
-        status = libspdm_hkdf_expand(
-            secured_message_context->base_hash_algo,
-            secured_message_context->master_secret.master_secret,
-            hash_size, bin_str3, bin_str3_size,
-            secured_message_context->application_secret.request_data_secret,
-            hash_size);
-
-        if (!status) {
-            goto cleanup;
-        }
-    }
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request_data_secret (0x%zx) - ", hash_size));
-    LIBSPDM_INTERNAL_DUMP_DATA(
-        secured_message_context->application_secret.request_data_secret,
-        hash_size);
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-    bin_str4_size = sizeof(bin_str4);
-    libspdm_bin_concat(secured_message_context->version,
-                       SPDM_BIN_STR_4_LABEL, sizeof(SPDM_BIN_STR_4_LABEL) - 1,
-                       th2_hash_data, (uint16_t)hash_size, hash_size,
-                       bin_str4, &bin_str4_size);
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str4 (0x%zx):\n", bin_str4_size));
-    LIBSPDM_INTERNAL_DUMP_HEX(bin_str4, bin_str4_size);
-
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
-    if (secured_message_context->use_psk) {
-        status = libspdm_psk_master_secret_hkdf_expand(
-            secured_message_context->version,
-            secured_message_context->base_hash_algo,
-            secured_message_context->psk_hint,
-            secured_message_context->psk_hint_size, bin_str4,
-            bin_str4_size,
-            secured_message_context->application_secret.response_data_secret,
-            hash_size);
-
-        if (!status) {
-            goto cleanup;
-        }
-    }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
-    if (!(secured_message_context->use_psk)) {
-        status = libspdm_hkdf_expand(
-            secured_message_context->base_hash_algo,
-            secured_message_context->master_secret.master_secret,
-            hash_size, bin_str4, bin_str4_size,
-            secured_message_context->application_secret.response_data_secret,
-            hash_size);
-
-        if (!status) {
-            goto cleanup;
-        }
-    }
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "response_data_secret (0x%zx) - ", hash_size));
-    LIBSPDM_INTERNAL_DUMP_DATA(
-        secured_message_context->application_secret.response_data_secret,
-        hash_size);
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-
-    bin_str8_size = sizeof(bin_str8);
-    libspdm_bin_concat(secured_message_context->version,
-                       SPDM_BIN_STR_8_LABEL, sizeof(SPDM_BIN_STR_8_LABEL) - 1,
-                       th2_hash_data, (uint16_t)hash_size, hash_size,
-                       bin_str8, &bin_str8_size);
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str8 (0x%zx):\n", bin_str8_size));
-    LIBSPDM_INTERNAL_DUMP_HEX(bin_str8, bin_str8_size);
-
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
-    if (secured_message_context->use_psk) {
-        status = libspdm_psk_master_secret_hkdf_expand(
-            secured_message_context->version,
-            secured_message_context->base_hash_algo,
-            secured_message_context->psk_hint,
-            secured_message_context->psk_hint_size, bin_str8,
-            bin_str8_size,
-            secured_message_context->export_master_secret,
-            hash_size);
-
-        if (!status) {
-            goto cleanup;
-        }
-    }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
-    if (!(secured_message_context->use_psk)) {
-        status = libspdm_hkdf_expand(
-            secured_message_context->base_hash_algo,
-            secured_message_context->master_secret.master_secret,
-            hash_size, bin_str8, bin_str8_size,
-            secured_message_context->export_master_secret,
-            hash_size);
-
-        if (!status) {
-            goto cleanup;
-        }
-    }
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "export_master_secret (0x%zx) - ", hash_size));
-    LIBSPDM_INTERNAL_DUMP_DATA(
-        secured_message_context->export_master_secret, hash_size);
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     status = libspdm_generate_aead_key_and_iv(
         secured_message_context,
@@ -513,7 +315,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
         secured_message_context->application_secret.request_data_encryption_key,
         secured_message_context->application_secret.request_data_salt);
     if (!status) {
-        goto cleanup;
+        return status;
     }
     secured_message_context->application_secret.request_data_sequence_number = 0;
 
@@ -523,14 +325,11 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
         secured_message_context->application_secret.response_data_encryption_key,
         secured_message_context->application_secret.response_data_salt);
     if (!status) {
-        goto cleanup;
+        return status;
     }
     secured_message_context->application_secret.response_data_sequence_number = 0;
 
-cleanup:
-    /*zero salt1 for security*/
-    libspdm_zero_mem(salt1, hash_size);
-    return status;
+    return true;
 }
 
 bool libspdm_create_update_session_data_key(void *spdm_secured_message_context,
