@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2025 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -50,6 +50,8 @@ bool libspdm_fips_run_selftest(void *fips_selftest_context)
     libspdm_fips_selftest_mldsa(context);
 
     libspdm_fips_selftest_slhdsa(context);
+
+    libspdm_fips_selftest_key_schedule(context);
 
     return (context->tested_algo == context->self_test_result);
 }
