@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2025 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -26,6 +26,7 @@
 #define LIBSPDM_FIPS_SELF_TEST_ML_KEM        0x00020000
 #define LIBSPDM_FIPS_SELF_TEST_ML_DSA        0x00040000
 #define LIBSPDM_FIPS_SELF_TEST_SLH_DSA       0x00080000
+#define LIBSPDM_FIPS_SELF_TEST_KEY_SCHEDULE  0x00100000
 
 #if LIBSPDM_SLH_DSA_SUPPORT
 #define LIBSPDM_FIPS_REQUIRED_BUFFER_SIZE 7856 /* SLH_DSA_SHA2_128S_SIG_SIZE */
@@ -130,5 +131,10 @@ bool libspdm_fips_selftest_mldsa(void *fips_selftest_context);
  * SLH-DSA self_test
  **/
 bool libspdm_fips_selftest_slhdsa(void *fips_selftest_context);
+
+/**
+ * SPDM KDF self_test
+ */
+bool libspdm_fips_selftest_key_schedule(void *fips_selftest_context);
 
 #endif/*LIBSPDM_FIPS_MODE*/

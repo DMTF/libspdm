@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -152,23 +152,6 @@ void libspdm_clear_handshake_secret(void *spdm_secured_message_context);
  * @param spdm_secured_message_context  A pointer to the SPDM secured message context.
  **/
 void libspdm_clear_master_secret(void *spdm_secured_message_context);
-
-/**
- * This function concatenates binary data, which is used as info in HKDF expand later.
- *
- * @param  label        An ascii string label for the libspdm_bin_concat.
- * @param  label_size   The size in bytes of the ASCII string label, not including NULL terminator.
- * @param  context      A pre-defined hash value as the context for the libspdm_bin_concat.
- * @param  length       16 bits length for the libspdm_bin_concat.
- * @param  hash_size    The size in bytes of the context hash.
- * @param  out_bin      The buffer to store the output binary.
- * @param  out_bin_size The size in bytes for the out_bin.
- **/
-void libspdm_bin_concat(spdm_version_number_t spdm_version,
-                        const char *label, size_t label_size,
-                        const uint8_t *context, uint16_t length,
-                        size_t hash_size, uint8_t *out_bin,
-                        size_t *out_bin_size);
 
 typedef enum {
     LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,

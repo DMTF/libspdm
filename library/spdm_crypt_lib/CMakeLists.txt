@@ -20,6 +20,7 @@ target_sources(spdm_crypt_lib
         libspdm_crypt_rng.c
         libspdm_crypt_pqc_asym.c
         libspdm_crypt_pqc_kem.c
+        libspdm_crypt_key_schedule.c
         fips/libspdm_selftest.c
         fips/libspdm_selftest_hmac.c
         fips/libspdm_selftest_aes_gcm.c
@@ -38,4 +39,5 @@ target_sources(spdm_crypt_lib
         fips/libspdm_selftest_mldsa_vec.c
         fips/libspdm_selftest_slhdsa.c
         fips/libspdm_selftest_slhdsa_vec.c
+        fips/libspdm_selftest_key_schedule.c
 )
