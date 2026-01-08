@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -500,36 +500,13 @@ done:
     return status;
 }
 
-libspdm_return_t libspdm_get_certificate(void *spdm_context, const uint32_t *session_id,
-                                         uint8_t slot_id,
-                                         size_t *cert_chain_size,
-                                         void *cert_chain)
-{
-    return libspdm_get_certificate_choose_length_ex(spdm_context, session_id, slot_id,
-                                                    0, cert_chain_size, cert_chain,
-                                                    NULL, NULL);
-}
-
 libspdm_return_t libspdm_get_certificate_ex(void *spdm_context, const uint32_t *session_id,
                                             uint8_t slot_id,
+                                            uint32_t length,
                                             size_t *cert_chain_size,
                                             void *cert_chain,
                                             const void **trust_anchor,
                                             size_t *trust_anchor_size)
-{
-    return libspdm_get_certificate_choose_length_ex(spdm_context, session_id, slot_id,
-                                                    0, cert_chain_size, cert_chain,
-                                                    trust_anchor, trust_anchor_size);
-}
-
-libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
-                                                          const uint32_t *session_id,
-                                                          uint8_t slot_id,
-                                                          uint32_t length,
-                                                          size_t *cert_chain_size,
-                                                          void *cert_chain,
-                                                          const void **trust_anchor,
-                                                          size_t *trust_anchor_size)
 {
     libspdm_context_t *context;
     size_t retry;
@@ -552,6 +529,16 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
     } while (retry-- != 0);
 
     return status;
+}
+
+libspdm_return_t libspdm_get_certificate(void *spdm_context, const uint32_t *session_id,
+                                         uint8_t slot_id,
+                                         size_t *cert_chain_size,
+                                         void *cert_chain)
+{
+    return libspdm_get_certificate_ex(spdm_context, session_id, slot_id, 0,
+                                      cert_chain_size, cert_chain,
+                                      NULL, NULL);
 }
 
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
