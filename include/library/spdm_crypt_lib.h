@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1580,6 +1580,99 @@ bool libspdm_kem_decapsulate(uint32_t kem_alg, void *context,
                              size_t peer_cipher_text_size,
                              uint8_t *shared_secret,
                              size_t *shared_secret_size);
+
+/**
+ * This function concatenates binary data, which is used as info in HKDF expand later.
+ *
+ * @param  label        An ascii string label for the libspdm_bin_concat.
+ * @param  label_size   The size in bytes of the ASCII string label, not including NULL terminator.
+ * @param  context      A pre-defined hash value as the context for the libspdm_bin_concat.
+ * @param  length       16 bits length for the libspdm_bin_concat.
+ * @param  hash_size    The size in bytes of the context hash.
+ * @param  out_bin      The buffer to store the output binary.
+ * @param  out_bin_size The size in bytes for the out_bin.
+ **/
+void libspdm_bin_concat(spdm_version_number_t spdm_version,
+                        const char *label, size_t label_size,
+                        const uint8_t *context, uint16_t length,
+                        size_t hash_size, uint8_t *out_bin,
+                        size_t *out_bin_size);
+
+/**
+ * This function generates SPDM HandshakeKey.
+ *
+ * @param spdm_version                   The SPDM version number.
+ * @param shared_secret                  Pointer to the input shared secret used for key derivation.
+ * @param shared_secret_size             Size of the input shared secret in bytes.
+ * @param shared_secret_use_psk          Indicates whether to use PSK as shared secret for key generation.
+ * @param psk_hint                       Pointer to the PSK hint used for PSK key derivation.
+ * @param psk_hint_size                  Size of the PSK hint in bytes.
+ * @param use_psk_hint                   Indicates whether to use PSK hint for PSK key generation.
+ * @param base_hash_algo                 The base hash algorithm identifier to use for key derivation.
+ * @param th1_hash_data                  Pointer to the TH1 hash data used in the key derivation process.
+ * @param handshake_secret               Pointer to the buffer that will receive the generated handshake secret.
+ * @param handshake_secret_size          On input, the size of the handshake_secret buffer.
+ *                                       On output, the actual size of the generated handshake secret.
+ * @param request_handshake_secret       Pointer to the buffer that will receive the generated request handshake secret.
+ * @param request_handshake_secret_size  On input, the size of the request_handshake_secret buffer.
+ *                                       On output, the actual size of the generated handshake secret.
+ * @param response_handshake_secret      Pointer to the buffer that will receive the generated response handshake secret.
+ * @param response_handshake_secret_size On input, the size of the response_handshake_secret buffer.
+ *                                       On output, the actual size of the generated handshake secret.
+ *
+ * @retval true   Handshake keys were generated successfully.
+ * @retval false  An error occurred during key generation.
+ */
+bool libspdm_generate_handshake_key (
+    spdm_version_number_t spdm_version,
+    const uint8_t *shared_secret, size_t shared_secret_size,
+    bool shared_secret_use_psk,
+    const uint8_t *psk_hint, size_t psk_hint_size,
+    bool use_psk_hint,
+    uint32_t base_hash_algo,
+    const uint8_t *th1_hash_data,
+    uint8_t *handshake_secret, size_t *handshake_secret_size,
+    uint8_t *request_handshake_secret, size_t *request_handshake_secret_size,
+    uint8_t *response_handshake_secret, size_t *response_handshake_secret_size);
+
+/**
+ * This function generates SPDM DataKey.
+ *
+ * @param spdm_version                   The SPDM version number.
+ * @param handshake_secret               Pointer to the input handshake secret used for key derivation.
+ * @param handshake_secret_size          Size of the input handshake secret in bytes.
+ * @param psk_hint                       Pointer to the PSK hint used for PSK key derivation.
+ * @param psk_hint_size                  Size of the PSK hint in bytes.
+ * @param use_psk_hint                   Indicates whether to use PSK hint for PSK key generation.
+ * @param base_hash_algo                 The base hash algorithm identifier to use for key derivation.
+ * @param th2_hash_data                  Pointer to the TH2 hash data used in the key derivation process.
+ * @param master_secret                  Pointer to the buffer that will receive the generated master secret.
+ * @param master_secret_size             On input, the size of the master_secret buffer.
+ *                                       On output, the actual size of the generated master secret.
+ * @param request_data_secret            Pointer to the buffer that will receive the generated request data secret.
+ * @param request_data_secret_size       On input, the size of the request_data_secret buffer.
+ *                                       On output, the actual size of the generated data secret.
+ * @param response_data_secret           Pointer to the buffer that will receive the generated response data secret.
+ * @param response_data_secret_size      On input, the size of the response_data_secret buffer.
+ *                                       On output, the actual size of the generated data secret.
+ * @param export_master_secret           Pointer to the buffer that will receive the generated export master secret.
+ * @param export_master_secret_size      On input, the size of the export_master_secret buffer.
+ *                                       On output, the actual size of the generated export master secret.
+ *
+ * @retval true   Handshake keys were generated successfully.
+ * @retval false  An error occurred during key generation.
+ */
+bool libspdm_generate_data_key (
+    spdm_version_number_t spdm_version,
+    const uint8_t *handshake_secret, size_t handshake_secret_size,
+    const uint8_t *psk_hint, size_t psk_hint_size,
+    bool use_psk_hint,
+    uint32_t base_hash_algo,
+    const uint8_t *th2_hash_data,
+    uint8_t *master_secret, size_t *master_secret_size,
+    uint8_t *request_data_secret, size_t *request_data_secret_size,
+    uint8_t *response_data_secret, size_t *response_data_secret_size,
+    uint8_t *export_master_secret, size_t *export_master_secret_size);
 
 #if LIBSPDM_FIPS_MODE
 /*run all of the self-tests and returns the results.*/
