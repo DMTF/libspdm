@@ -102,7 +102,7 @@ libspdm will perform the following checks over the leaf certificate.
 <br/><br/>
 
 ---
-### libspdm_get_certificate_choose_length_ex
+### libspdm_get_certificate_ex
 ---
 
 ### Description
@@ -120,7 +120,7 @@ Indicates if it is a secured message (non-NULL) or an unsecured message (NULL).
 The certificate chain slot number.
 
 **length**<br/>
-The length of the certificate chain block to be retrieved.
+The length of the certificate chain block to be retrieved. If `length` is 0, libspdm uses the default maximum block size.
 
 **cert_chain_size**<br/>
 On input, indicates the size, in bytes, of the buffer in which the certificate chain will be stored.
@@ -144,7 +144,7 @@ chain has been retrieved libspdm will validate the chain and its leaf certificat
 1. Sends the `GET_CERTIFICATE` request to the device for the specified slot.
 2. Retrieves the certificate chain in blocks of the specified size (`length`).
 3. Verifies the integrity of the certificate chain from the root certificate to the leaf certificate, following the structure:
-   - root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+    - root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
 4. If a peer root certificate hash is deployed, validates the root certificate digest against the deployed root hash.
 <br/><br/>
 

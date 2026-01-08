@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -3250,7 +3250,7 @@ static void req_get_certificate_case14(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate_choose_length_ex(
+    status = libspdm_get_certificate_ex(
         spdm_context, NULL, 0, get_cert_length,
         &cert_chain_size, cert_chain, NULL, NULL);
     /* It may fail because the spdm does not support too many messages.
@@ -4126,7 +4126,7 @@ static void req_get_certificate_case26(void **state)
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate_ex(spdm_context, &session_id,
-                                        0, &cert_chain_size,
+                                        0, 0, &cert_chain_size,
                                         cert_chain, NULL, 0);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
