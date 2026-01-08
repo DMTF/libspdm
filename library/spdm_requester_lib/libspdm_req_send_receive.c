@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -323,7 +323,7 @@ error:
 }
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-libspdm_return_t libspdm_handle_large_request(
+static libspdm_return_t libspdm_handle_large_request(
     libspdm_context_t *spdm_context,
     const uint32_t *session_id,
     size_t request_size, void *request)

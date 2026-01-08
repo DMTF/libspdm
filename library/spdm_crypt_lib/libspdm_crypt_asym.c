@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -778,7 +778,7 @@ static bool libspdm_rsa_pss_verify_wrap (void *context, size_t hash_nid,
 #endif
 
 #if LIBSPDM_ECDSA_SUPPORT
-bool libspdm_ecdsa_verify_wrap (void *context, size_t hash_nid,
+static bool libspdm_ecdsa_verify_wrap (void *context, size_t hash_nid,
                                 const uint8_t *param, size_t param_size,
                                 const uint8_t *message,
                                 size_t message_size,
@@ -790,7 +790,7 @@ bool libspdm_ecdsa_verify_wrap (void *context, size_t hash_nid,
 #endif
 
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
-bool libspdm_eddsa_verify_wrap (void *context, size_t hash_nid,
+static bool libspdm_eddsa_verify_wrap (void *context, size_t hash_nid,
                                 const uint8_t *param, size_t param_size,
                                 const uint8_t *message,
                                 size_t message_size,
@@ -803,7 +803,7 @@ bool libspdm_eddsa_verify_wrap (void *context, size_t hash_nid,
 #endif
 
 #if LIBSPDM_SM2_DSA_SUPPORT
-bool libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
+static bool libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
                                   const uint8_t *param, size_t param_size,
                                   const uint8_t *message,
                                   size_t message_size,
@@ -1393,7 +1393,7 @@ bool libspdm_req_asym_get_public_key_from_der(uint16_t req_base_asym_alg,
                                                      context);
 }
 
-bool libspdm_req_asym_func_need_hash(uint16_t req_base_asym_alg)
+static bool libspdm_req_asym_func_need_hash(uint16_t req_base_asym_alg)
 {
     return libspdm_asym_func_need_hash(req_base_asym_alg);
 }

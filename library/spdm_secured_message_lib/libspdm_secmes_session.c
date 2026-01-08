@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -58,7 +58,7 @@ void libspdm_bin_concat(spdm_version_number_t spdm_version,
     #undef LIBSPDM_BIN_CONCAT_LABEL
 }
 
-bool libspdm_generate_aead_key_and_iv(
+static bool libspdm_generate_aead_key_and_iv(
     libspdm_secured_message_context_t *secured_message_context,
     const uint8_t *major_secret, uint8_t *key, uint8_t *iv)
 {
@@ -114,7 +114,7 @@ bool libspdm_generate_aead_key_and_iv(
     return true;
 }
 
-bool libspdm_generate_finished_key(
+static bool libspdm_generate_finished_key(
     libspdm_secured_message_context_t *secured_message_context,
     const uint8_t *handshake_secret, uint8_t *finished_key)
 {
