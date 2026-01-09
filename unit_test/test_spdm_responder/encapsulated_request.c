@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -712,7 +712,7 @@ static void rsp_encapsulated_response_ack_case2(void **State)
 
     portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     remainder_length = (uint16_t)(libspdm_local_certificate_chain_size -
-                       (LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * (calling_index + 1)));
+                                  (LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * (calling_index + 1)));
 
     spdm_response_requester_certificate->header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response_requester_certificate->header.request_response_code = SPDM_CERTIFICATE;
@@ -999,7 +999,7 @@ static void rsp_encapsulated_response_ack_case7(void **State)
 
     portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     remainder_length = (uint16_t)(libspdm_local_certificate_chain_size -
-                       (LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * (calling_index + 1)));
+                                  (LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * (calling_index + 1)));
 
     spdm_response_requester_certificate->header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response_requester_certificate->header.request_response_code = SPDM_CERTIFICATE;

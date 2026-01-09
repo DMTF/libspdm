@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -25,7 +25,7 @@
  *
  * @param  session_policy  Policy for the session. A bitmask whose values are
  *                         SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_*.
-
+ *
  * @param  opaque_data_length  Size, in bytes, of opaque_data.
  * @param  opaque_data         The KEY_EXCHANGE OpaqueData field. Its value is NULL if value of
  *                             opaque_data_length is 0.
@@ -49,8 +49,7 @@ extern uint8_t libspdm_key_exchange_start_mut_auth(
     uint8_t session_policy,
     size_t opaque_data_length,
     const void *opaque_data,
-    bool *mandatory_mut_auth
-);
+    bool *mandatory_mut_auth);
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) */
 
 #endif /* RESPONDER_KEYEXLIB_H */

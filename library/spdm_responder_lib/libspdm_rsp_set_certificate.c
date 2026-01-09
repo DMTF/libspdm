@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -47,7 +47,7 @@ static bool libspdm_set_cert_verify_certchain(
             leaf_cert_buffer, leaf_cert_buffer_size,
             base_asym_algo, pqc_asym_algo, base_hash_algo,
             false, cert_model)) {
-         return false;
+        return false;
     }
 
     return true;

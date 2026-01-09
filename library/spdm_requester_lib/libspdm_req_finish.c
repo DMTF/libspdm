@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -273,7 +273,7 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
         result = libspdm_get_local_public_key_buffer(
             spdm_context, (const void **)&mut_cert_chain_buffer, &mut_cert_chain_buffer_size);
         if (!result) {
-           return false;
+            return false;
         }
     } else {
         libspdm_get_local_cert_chain_buffer(

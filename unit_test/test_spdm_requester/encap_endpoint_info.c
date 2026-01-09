@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -171,7 +171,6 @@ static void req_encap_endpoint_info_case1(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     signature = (void *)((uint8_t *)spdm_response + response_size - signature_size);
-        printf ("I made it!\n");
     result = libspdm_verify_endpoint_info_signature(
         spdm_context, session_info, false, m_libspdm_get_endpoint_info_request1.header.param2,
         signature, signature_size);

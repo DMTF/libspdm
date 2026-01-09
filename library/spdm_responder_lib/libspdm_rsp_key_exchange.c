@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -35,7 +35,7 @@ bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
         result = libspdm_get_local_public_key_buffer(
             spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
         if (!result) {
-           return false;
+            return false;
         }
     } else {
         libspdm_get_local_cert_chain_buffer(
@@ -389,7 +389,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
 
     if (opaque_data_length != 0) {
         req_opaque_data = (const uint8_t *)request + sizeof(spdm_key_exchange_request_t) +
-               req_key_exchange_size + sizeof(uint16_t);
+                          req_key_exchange_size + sizeof(uint16_t);
         result = libspdm_process_general_opaque_data_check(spdm_context, opaque_data_length,
                                                            req_opaque_data);
         if (!result) {
@@ -475,7 +475,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
 
     #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     if (libspdm_is_capabilities_flag_supported(
-        spdm_context, false, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
+            spdm_context, false, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
         req_slot_id = 0;
 
         mut_auth_requested =

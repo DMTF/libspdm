@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2025 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -124,9 +124,11 @@ static void rsp_vendor_defined_response_case1(void **state)
     libspdm_set_mem(request_ptr, VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE, 0xAA);
 
     /* requires correctly encoded spdm vendor request message */
-    status = libspdm_get_vendor_defined_response(spdm_context,
-                                                 sizeof(spdm_vendor_defined_request_msg_t) + request.vendor_id_len + sizeof(uint16_t) + VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE,
-                                                 request_buffer, &response_len, response_buffer);
+    status = libspdm_get_vendor_defined_response(
+        spdm_context,
+        sizeof(spdm_vendor_defined_request_msg_t) + request.vendor_id_len + sizeof(uint16_t) +
+        VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE,
+        request_buffer, &response_len, response_buffer);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 

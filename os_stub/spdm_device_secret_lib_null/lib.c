@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -127,8 +127,7 @@ extern uint8_t libspdm_key_exchange_start_mut_auth(
     uint8_t session_policy,
     size_t opaque_data_length,
     const void *opaque_data,
-    bool *mandatory_mut_auth
-)
+    bool *mandatory_mut_auth)
 {
     return false;
 }

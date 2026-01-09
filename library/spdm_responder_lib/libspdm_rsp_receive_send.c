@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -873,7 +873,7 @@ done:
         libspdm_zero_mem (my_response, my_response_size);
     }
     libspdm_zero_mem (context->last_spdm_request,
-                        libspdm_get_scratch_buffer_last_spdm_request_capacity(context));
+                      libspdm_get_scratch_buffer_last_spdm_request_capacity(context));
     context->last_spdm_request_size = 0;
     context->last_spdm_request_session_id_valid = false;
     return status;

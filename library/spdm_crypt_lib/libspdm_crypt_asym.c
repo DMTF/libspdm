@@ -779,11 +779,11 @@ static bool libspdm_rsa_pss_verify_wrap (void *context, size_t hash_nid,
 
 #if LIBSPDM_ECDSA_SUPPORT
 static bool libspdm_ecdsa_verify_wrap (void *context, size_t hash_nid,
-                                const uint8_t *param, size_t param_size,
-                                const uint8_t *message,
-                                size_t message_size,
-                                const uint8_t *signature,
-                                size_t sig_size)
+                                       const uint8_t *param, size_t param_size,
+                                       const uint8_t *message,
+                                       size_t message_size,
+                                       const uint8_t *signature,
+                                       size_t sig_size)
 {
     return libspdm_ecdsa_verify (context, hash_nid, message, message_size, signature, sig_size);
 }
@@ -791,11 +791,11 @@ static bool libspdm_ecdsa_verify_wrap (void *context, size_t hash_nid,
 
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
 static bool libspdm_eddsa_verify_wrap (void *context, size_t hash_nid,
-                                const uint8_t *param, size_t param_size,
-                                const uint8_t *message,
-                                size_t message_size,
-                                const uint8_t *signature,
-                                size_t sig_size)
+                                       const uint8_t *param, size_t param_size,
+                                       const uint8_t *message,
+                                       size_t message_size,
+                                       const uint8_t *signature,
+                                       size_t sig_size)
 {
     return libspdm_eddsa_verify (context, hash_nid, param, param_size,
                                  message, message_size, signature, sig_size);
@@ -804,11 +804,11 @@ static bool libspdm_eddsa_verify_wrap (void *context, size_t hash_nid,
 
 #if LIBSPDM_SM2_DSA_SUPPORT
 static bool libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
-                                  const uint8_t *param, size_t param_size,
-                                  const uint8_t *message,
-                                  size_t message_size,
-                                  const uint8_t *signature,
-                                  size_t sig_size)
+                                         const uint8_t *param, size_t param_size,
+                                         const uint8_t *message,
+                                         size_t message_size,
+                                         const uint8_t *signature,
+                                         size_t sig_size)
 {
     return libspdm_sm2_dsa_verify (context, hash_nid, param, param_size,
                                    message, message_size, signature, sig_size);

@@ -1793,7 +1793,7 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)
     }
 
     if ((cert_basic_constraints_len < sizeof(basic_constraints_true_case) ||
-        (cert_basic_constraints[0] != basic_constraints_true_case[0]))) {
+         (cert_basic_constraints[0] != basic_constraints_true_case[0]))) {
         return false;
     }
     if (!libspdm_consttime_is_mem_equal(&cert_basic_constraints[2],
