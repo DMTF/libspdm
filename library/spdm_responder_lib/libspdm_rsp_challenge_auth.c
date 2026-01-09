@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -188,7 +188,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
                 auth_attribute |= SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ;
                 libspdm_init_basic_mut_auth_encap_state(spdm_context);
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                              "Basic mutual authentication is a deprecated feature.\n"));
+                               "Basic mutual authentication is a deprecated feature.\n"));
             }
         }
     }

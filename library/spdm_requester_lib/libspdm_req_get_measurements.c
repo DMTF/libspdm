@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -29,7 +29,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     size_t l1l2_hash_size;
 #endif
 
-LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xF));
+    LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xF));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_calculate_l1l2(spdm_context, session_info, &l1l2);
