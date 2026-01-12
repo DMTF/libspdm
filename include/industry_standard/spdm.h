@@ -173,6 +173,7 @@ typedef struct {
 
 /* SPDM GET_CAPABILITIES request param1 flags (1.3) */
 #define SPDM_GET_CAPABILITIES_REQUEST_PARAM1_SUPPORTED_ALGORITHMS 0x01
+#define SPDM_CAPABILITIES_RESPONSE_PARAM1_SUPPORTED_ALGORITHMS    0x01
 
 /* SPDM extended algorithm */
 typedef struct {
