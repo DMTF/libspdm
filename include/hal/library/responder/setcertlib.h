@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -48,6 +48,18 @@ extern bool libspdm_write_certificate_to_nvm(
     size_t cert_chain_size,
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     bool *need_reset, bool *is_busy);
+
+/**
+ * Get the size of storage space for a certificate chain in a specific slot.
+ *
+ * @param[in]  spdm_context  A pointer to the SPDM context.
+ * @param[in]  slot_id       The number of slot for the certificate chain.
+ *
+ * @return size of storage space for the certificate chain.
+ **/
+uint32_t libspdm_get_cert_chain_slot_storage_size(
+    void *spdm_context,
+    uint8_t slot_id);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
 #endif /* RESPONDER_SETCERTLIB_H */

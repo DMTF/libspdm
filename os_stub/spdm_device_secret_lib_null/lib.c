@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -200,6 +200,12 @@ bool libspdm_write_certificate_to_nvm(
     bool *need_reset, bool *is_busy)
 {
     return false;
+}
+
+uint32_t libspdm_get_cert_chain_slot_storage_size(
+    void *spdm_context, uint8_t slot_id)
+{
+    return 0;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
