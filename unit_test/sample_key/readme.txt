@@ -109,7 +109,7 @@ openssl asn1parse -in pubkey.der -inform DER -i -dump
 
 OID definition:
 RFC9881
-https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-slhdsa
+RFC9909
 
 ```
 export PQC_ALGO=mldsa44

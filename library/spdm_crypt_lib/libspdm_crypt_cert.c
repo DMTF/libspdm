@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -105,7 +105,7 @@
 #endif
 
 /**
- * SLHDSA OID: https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-slhdsa
+ * SLHDSA OID: RFC9909
  * SLHDSA_SHA2_128S OID: 2.16.840.1.101.3.4.3.20
  * SLHDSA_SHA2_128F OID: 2.16.840.1.101.3.4.3.21
  * SLHDSA_SHA2_192S OID: 2.16.840.1.101.3.4.3.22

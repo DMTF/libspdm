@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -212,7 +212,7 @@ uint8_t m_slhdsa_shake_256f_oid_size = sizeof(m_slhdsa_shake_256f_oid);
  * The public key is ASN.1 DER-encoded as RFC7250 describes,
  * namely, the SubjectPublicKeyInfo structure of a X.509 certificate.
  *
- * OID is defined in RFC9881
+ * OID is defined in RFC9909
  *
  * @param[in]  der_data     Pointer to the DER-encoded public key data.
  * @param[in]  der_size     Size of the DER-encoded public key data in bytes.

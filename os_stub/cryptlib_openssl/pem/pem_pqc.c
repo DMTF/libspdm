@@ -132,7 +132,7 @@ size_t libspdm_slhdsa_type_name_to_nid(const char *type_name);
 /**
  * Retrieve the DSA Private key from the password-protected PEM key data.
  *
- * OID is defined in RFC9881
+ * OID is defined in RFC9909
  *
  * @param[in]  pem_data     Pointer to the PEM-encoded key data to be retrieved.
  * @param[in]  pem_size     Size of the PEM key data in bytes.

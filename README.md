@@ -63,7 +63,7 @@
    NOTE: NIST algorithms and Shang-Mi (SM) algorithms should not be mixed together.
 
    ML-DSA OID is defined in [RFC9881](https://datatracker.ietf.org/doc/rfc9881/).
-   SLH-DSA OID is defined in [IETF Algorithm Identifiers for SLH-DSA (Draft)](https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-slhdsa).
+   SLH-DSA OID is defined in [RFC9909](https://datatracker.ietf.org/doc/rfc9909/).
 
    The endianness is defined in [crypto_endianness](https://github.com/DMTF/libspdm/blob/main/doc/crypto_endianness.md).
 
