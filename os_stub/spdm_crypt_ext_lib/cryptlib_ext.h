@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -373,7 +373,7 @@ extern bool libspdm_mldsa_get_private_key_from_pem(const uint8_t *pem_data,
 /**
  * Retrieve the DSA Private key from the password-protected PEM key data.
  *
- * OID is defined in https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-slhdsa
+ * OID is defined in RFC9909
  *
  * @param[in]  pem_data     Pointer to the PEM-encoded key data to be retrieved.
  * @param[in]  pem_size     Size of the PEM key data in bytes.

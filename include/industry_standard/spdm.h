@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1676,7 +1676,7 @@ typedef struct {
  * Below is added in 1.4.
  * RFC9881
  * The PQC mldsa public key info len is 13.
- * https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-slhdsa
+ * RFC9909
  * The PQC slhdsa public key info len is 13.
  **/
 #define SPDM_MAX_PUBLIC_KEY_INFO_LEN 65535
