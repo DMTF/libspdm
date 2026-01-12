@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -426,9 +426,10 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
     }
 
     /* Copy algorithms if requested and received */
-    if (supported_algs != NULL &&
+    if (supported_algs != NULL && supported_algs_length != NULL &&
         spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13 &&
-        (spdm_request->header.param1 & SPDM_GET_CAPABILITIES_REQUEST_PARAM1_SUPPORTED_ALGORITHMS)) {
+        (spdm_request->header.param1 & SPDM_GET_CAPABILITIES_REQUEST_PARAM1_SUPPORTED_ALGORITHMS) &&
+        (spdm_response->header.param1 & SPDM_CAPABILITIES_RESPONSE_PARAM1_SUPPORTED_ALGORITHMS)) {
 
         spdm_supported_algorithms_block_t *supported_algorithms =
             (spdm_supported_algorithms_block_t*)((uint8_t*)spdm_response +
@@ -445,6 +446,8 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
             status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
             goto receive_done;
         }
+    } else if (supported_algs_length != NULL) {
+        *supported_algs_length = 0;
     }
 
     /* -=[Update State Phase]=- */

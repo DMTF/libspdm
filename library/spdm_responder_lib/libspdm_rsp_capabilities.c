@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -315,7 +315,8 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_CAPABILITIES;
-    spdm_response->header.param1 = 0;
+    spdm_response->header.param1 = supported_algs_requested ?
+                                   SPDM_CAPABILITIES_RESPONSE_PARAM1_SUPPORTED_ALGORITHMS : 0;
     spdm_response->header.param2 = 0;
     spdm_response->ct_exponent = spdm_context->local_context.capability.ct_exponent;
     spdm_response->flags = response_flags;
