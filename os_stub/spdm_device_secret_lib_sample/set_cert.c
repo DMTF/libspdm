@@ -103,4 +103,10 @@ bool libspdm_write_certificate_to_nvm(
         return true;
     }
 }
+
+uint32_t libspdm_get_cert_chain_slot_storage_size(
+    void *spdm_context, uint8_t slot_id)
+{
+    return SPDM_MAX_CERTIFICATE_CHAIN_SIZE_14;
+}
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */

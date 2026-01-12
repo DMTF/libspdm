@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #include "internal/libspdm_responder_lib.h"
@@ -198,6 +198,13 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     if (use_large_cert_chain) {
         spdm_response->header.param1 |= SPDM_CERTIFICATE_RESPONSE_LARGE_CERT_CHAIN;
     }
+
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
+    if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+        (spdm_request->header.param2 & SPDM_GET_CERTIFICATE_REQUEST_ATTRIBUTES_SLOT_SIZE_REQUESTED)) {
+        remainder_length = libspdm_get_cert_chain_slot_storage_size(spdm_context, slot_id);
+    }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
     if (use_large_cert_chain) {
         spdm_response->portion_length = 0;

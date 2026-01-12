@@ -200,6 +200,12 @@ bool libspdm_write_certificate_to_nvm(
 {
     return false;
 }
+
+uint32_t libspdm_get_cert_chain_slot_storage_size(
+    void *spdm_context, uint8_t slot_id)
+{
+    return 0;
+}
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP

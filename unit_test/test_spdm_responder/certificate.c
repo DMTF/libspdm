@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1289,8 +1289,6 @@ static void rsp_certificate_case18(void **state)
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_certificate_response_t *spdm_response;
-    void *data;
-    size_t data_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1303,12 +1301,6 @@ static void rsp_certificate_case18(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size;
 
     /* When SlotSizeRequested=1b , the Offset and Length fields in the GET_CERTIFICATE request shall be ignored by the Responder */
     m_libspdm_get_certificate_request5.header.param2 =
@@ -1327,8 +1319,18 @@ static void rsp_certificate_case18(void **state)
                      SPDM_CERTIFICATE);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->portion_length,0);
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
+    assert_int_equal(spdm_response->remainder_length, SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
+#else
+    void *data;
+    size_t data_size;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, NULL, NULL);
+
     assert_int_equal(spdm_response->remainder_length, data_size);
     free(data);
+#endif
 }
 
 /**
