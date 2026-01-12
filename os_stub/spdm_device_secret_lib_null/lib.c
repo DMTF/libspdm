@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -11,6 +11,7 @@
 
 #include "hal/library/responder/asymsignlib.h"
 #include "hal/library/responder/csrlib.h"
+#include "hal/library/responder/getcertlib.h"
 #include "hal/library/responder/measlib.h"
 #include "hal/library/responder/key_pair_info.h"
 #include "hal/library/responder/psklib.h"
@@ -185,6 +186,14 @@ bool libspdm_psk_master_secret_hkdf_expand(
     return false;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
+
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+uint32_t libspdm_get_cert_chain_slot_storage_size(
+    void *spdm_context, uint8_t slot_id)
+{
+    return 0;
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 bool libspdm_is_in_trusted_environment(void *spdm_context)
