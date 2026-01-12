@@ -3,7 +3,7 @@
     url = https://github.com/openssl/openssl
 [submodule "os_stub/mbedtlslib/mbedtls"]
     path = os_stub/mbedtlslib/mbedtls
-    url = https://github.com/ARMmbed/mbedtls
+    url = https://github.com/Mbed-TLS/mbedtls
 [submodule "unit_test/cmockalib/cmocka"]
     path = unit_test/cmockalib/cmocka
 	url = https://gitlab.com/cmocka/cmocka.git
