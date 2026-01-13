@@ -450,13 +450,19 @@ libspdm_return_t libspdm_send_receive_data(void *spdm_context, const uint32_t *s
 {
     libspdm_return_t status;
 
-    status = libspdm_send_data(spdm_context, session_id, is_app_message, request, request_size);
+    if (!is_app_message) {
+        return libspdm_send_receive_spdm_data(spdm_context, session_id,
+                                              request, request_size,
+                                              response, response_size);
+    } else {
+        status = libspdm_send_data(spdm_context, session_id, is_app_message, request, request_size);
 
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        return status;
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            return status;
+        }
+
+        return libspdm_receive_data(spdm_context, session_id, is_app_message, response, response_size);
     }
-
-    return libspdm_receive_data(spdm_context, session_id, is_app_message, response, response_size);
 }
 
 
