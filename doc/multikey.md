@@ -74,4 +74,11 @@ If Requester's `MULTI_KEY_CAP` is non-zero then both `ENCAP_CAP` and `CERT_CAP` 
 
 ### Requester Sign / Responder Verify Flow
 
-TBD.
+This flow utilizes encapsulated requests from the Responder. When the Requester sends
+`GET_ENCAPSULATED_REQUEST` then
+
+1. Call `libspdm_get_encap_request_get_digest`.
+2. For each populated certificate chain slot call `libspdm_get_encap_request_get_certificate`.
+3. Use `libspdm_get_data` with `LIBSPDM_DATA_PEER_KEY_USAGE_BIT_MASK` to query the `KeyUsageMask`
+   for each populated certificate slot. Use the `SPDM_KEY_USAGE_BIT_MASK_*` macros to determine the
+   legal messages for that certificate slot and key.

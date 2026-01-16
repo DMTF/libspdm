@@ -150,12 +150,12 @@ libspdm_return_t libspdm_encap_state_handler (void *spdm_context,
 
     switch (state) {
     case a:
-    /* Generate encapsulated request. */
-    return libspdm_encap_get_digest(..., session_id, &slot_mask, digest_buffer);
+    /* Get digests. Information can be retrieved via LIBSPDM_DATA_PEER_* and libspdm_get_data. */
+    return libspdm_encap_get_digest(..., session_id);
 
     case b:
     /* Get certificate chain from certificate slot 5. */
-    return libspdm_encap_get_certificate(..., session_id, 5, &cert_chain_size, cert_chain_buffer);
+    return libspdm_encap_get_certificate(..., session_id, 5);
 
     case c:
     /* Get endpoint information using certificate slot 5. */
