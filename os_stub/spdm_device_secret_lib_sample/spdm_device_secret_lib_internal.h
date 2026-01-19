@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -12,6 +12,7 @@
 #include "spdm_crypt_ext_lib/cryptlib_ext.h"
 #include "hal/library/responder/asymsignlib.h"
 #include "hal/library/responder/csrlib.h"
+#include "hal/library/responder/getcertlib.h"
 #include "hal/library/responder/measlib.h"
 #include "hal/library/responder/key_pair_info.h"
 #include "hal/library/responder/psklib.h"

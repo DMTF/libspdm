@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #include "internal/libspdm_responder_lib.h"
@@ -28,6 +28,7 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     uint32_t rsp_msg_header_size;
     size_t cert_chain_size;
     uint32_t max_cert_chain_block_size;
+    uint32_t slot_storage_size;
 
     spdm_request = request;
 
@@ -197,6 +198,21 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     }
     if (use_large_cert_chain) {
         spdm_response->header.param1 |= SPDM_CERTIFICATE_RESPONSE_LARGE_CERT_CHAIN;
+    }
+
+    if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+        (spdm_request->header.param2 & SPDM_GET_CERTIFICATE_REQUEST_ATTRIBUTES_SLOT_SIZE_REQUESTED)) {
+        slot_storage_size = libspdm_get_cert_chain_slot_storage_size(spdm_context, slot_id);
+        if (use_large_cert_chain) {
+            spdm_response->portion_length = 0;
+            spdm_response->remainder_length = 0;
+            spdm_response->large_portion_length = 0;
+            spdm_response->large_remainder_length = slot_storage_size;
+        } else {
+            spdm_response->portion_length = 0;
+            spdm_response->remainder_length = (uint16_t)slot_storage_size;
+        }
+        return LIBSPDM_STATUS_SUCCESS;
     }
 
     if (use_large_cert_chain) {
