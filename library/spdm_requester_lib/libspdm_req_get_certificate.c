@@ -59,7 +59,9 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
                                                           size_t *cert_chain_size,
                                                           void *cert_chain,
                                                           const void **trust_anchor,
-                                                          size_t *trust_anchor_size)
+                                                          size_t *trust_anchor_size,
+                                                          bool slot_storage_size_requested,
+                                                          uint32_t *slot_storage_size)
 {
     bool result;
     libspdm_return_t status;
@@ -89,9 +91,13 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
 
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
-    LIBSPDM_ASSERT(cert_chain_size != NULL);
-    LIBSPDM_ASSERT(*cert_chain_size > 0);
-    LIBSPDM_ASSERT(cert_chain != NULL);
+    if (slot_storage_size_requested){
+        LIBSPDM_ASSERT(slot_storage_size != NULL);
+    } else {
+        LIBSPDM_ASSERT(cert_chain_size != NULL);
+        LIBSPDM_ASSERT(*cert_chain_size > 0);
+        LIBSPDM_ASSERT(cert_chain != NULL);
+    }
 
     if ((length > SPDM_MAX_CERTIFICATE_CHAIN_SIZE) &&
         (libspdm_get_connection_version (spdm_context) < SPDM_MESSAGE_VERSION_14)) {
@@ -111,6 +117,18 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
         use_large_cert_chain = true;
     } else {
         use_large_cert_chain = false;
+    }
+
+    if (slot_storage_size_requested){
+        if (libspdm_get_connection_version (spdm_context) < SPDM_MESSAGE_VERSION_13) {
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        }
+
+        if (!libspdm_is_capabilities_flag_supported(
+                spdm_context, true, 0,
+                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP)) {
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        }
     }
 
     if (use_large_cert_chain) {
@@ -165,7 +183,9 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
 
     remainder_length = 0;
     total_responder_cert_chain_buffer_length = 0;
-    cert_chain_capacity = *cert_chain_size;
+    if (!slot_storage_size_requested){
+        cert_chain_capacity = *cert_chain_size;
+    }
     cert_chain_size_internal = 0;
 
     transport_header_size = spdm_context->local_context.capability.transport_header_size;
@@ -187,11 +207,17 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
         spdm_request->header.request_response_code = SPDM_GET_CERTIFICATE;
         spdm_request->header.param1 = slot_id;
         spdm_request->header.param2 = 0;
-        req_msg_offset = (uint32_t)cert_chain_size_internal;
-        if (req_msg_offset == 0) {
-            req_msg_length = length;
+        if (slot_storage_size_requested) {
+            spdm_request->header.param2 |= SPDM_GET_CERTIFICATE_REQUEST_ATTRIBUTES_SLOT_SIZE_REQUESTED;
+            req_msg_length = 0;
+            req_msg_offset = 0;
         } else {
-            req_msg_length = LIBSPDM_MIN(length, remainder_length);
+            req_msg_offset = (uint32_t)cert_chain_size_internal;
+            if (req_msg_offset == 0) {
+                req_msg_length = length;
+            } else {
+                req_msg_length = LIBSPDM_MIN(length, remainder_length);
+            }
         }
         if (use_large_cert_chain) {
             spdm_request->header.param1 |= SPDM_GET_CERTIFICATE_REQUEST_LARGE_CERT_CHAIN;
@@ -289,92 +315,100 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
             rsp_msg_remainder_length = spdm_response->remainder_length;
         }
 
-        if ((rsp_msg_portion_length > req_msg_length) ||
-            (rsp_msg_portion_length == 0)) {
-            libspdm_release_receiver_buffer (spdm_context);
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            goto done;
-        }
-        if ((spdm_response->header.param1 & SPDM_CERTIFICATE_RESPONSE_SLOT_ID_MASK) != slot_id) {
-            libspdm_release_receiver_buffer (spdm_context);
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            goto done;
-        }
-        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_info - 0x%02x\n",
-                           spdm_response->header.param2));
-            cert_model = spdm_response->header.param2 &
-                         SPDM_CERTIFICATE_RESPONSE_ATTRIBUTES_CERTIFICATE_INFO_MASK;
-            if (spdm_context->connection_info.multi_key_conn_rsp) {
-                if (cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) {
-                    libspdm_release_receiver_buffer (spdm_context);
-                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-                    goto done;
-                }
-                if ((slot_id == 0) &&
-                    (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
-                    libspdm_release_receiver_buffer (spdm_context);
-                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-                    goto done;
-                }
-                if ((cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) &&
-                    (rsp_msg_portion_length != 0)) {
-                    libspdm_release_receiver_buffer (spdm_context);
-                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-                    goto done;
-                }
-            } else {
-                if (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) {
-                    libspdm_release_receiver_buffer (spdm_context);
-                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-                    goto done;
-                }
-            }
-            if (spdm_context->connection_info.peer_cert_info[slot_id] ==
-                SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) {
-                spdm_context->connection_info.peer_cert_info[slot_id] = cert_model;
-            } else if (spdm_context->connection_info.peer_cert_info[slot_id] != cert_model) {
+        if (slot_storage_size_requested) {
+            if (rsp_msg_portion_length != 0) {
                 libspdm_release_receiver_buffer (spdm_context);
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto done;
             }
-        }
-        if (spdm_response_size < rsp_msg_header_size +
-            rsp_msg_portion_length) {
-            libspdm_release_receiver_buffer (spdm_context);
-            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-            goto done;
-        }
-        if (rsp_msg_portion_length > max_cert_chain_size - req_msg_offset) {
-            libspdm_release_receiver_buffer (spdm_context);
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            goto done;
-        }
-        if (rsp_msg_remainder_length > max_cert_chain_size - req_msg_offset -
-            rsp_msg_portion_length) {
-            libspdm_release_receiver_buffer (spdm_context);
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            goto done;
-        }
-        if (req_msg_offset == 0) {
-            total_responder_cert_chain_buffer_length = rsp_msg_portion_length +
-                                                       rsp_msg_remainder_length;
-            if (total_responder_cert_chain_buffer_length > cert_chain_capacity) {
+        } else {
+            if ((rsp_msg_portion_length > req_msg_length) ||
+                (rsp_msg_portion_length == 0)) {
                 libspdm_release_receiver_buffer (spdm_context);
-                status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto done;
             }
-        } else if (req_msg_offset + rsp_msg_portion_length +
-                   rsp_msg_remainder_length != total_responder_cert_chain_buffer_length) {
-            libspdm_release_receiver_buffer (spdm_context);
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            goto done;
-        }
-        if (chunk_enabled && (req_msg_offset == 0) && (req_msg_length == max_cert_chain_size) &&
-            (rsp_msg_remainder_length != 0)) {
-            libspdm_release_receiver_buffer (spdm_context);
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            goto done;
+            if ((spdm_response->header.param1 & SPDM_CERTIFICATE_RESPONSE_SLOT_ID_MASK) != slot_id) {
+                libspdm_release_receiver_buffer (spdm_context);
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto done;
+            }
+            if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_info - 0x%02x\n",
+                               spdm_response->header.param2));
+                cert_model = spdm_response->header.param2 &
+                             SPDM_CERTIFICATE_RESPONSE_ATTRIBUTES_CERTIFICATE_INFO_MASK;
+                if (spdm_context->connection_info.multi_key_conn_rsp) {
+                    if (cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) {
+                        libspdm_release_receiver_buffer (spdm_context);
+                        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                        goto done;
+                    }
+                    if ((slot_id == 0) &&
+                        (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+                        libspdm_release_receiver_buffer (spdm_context);
+                        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                        goto done;
+                    }
+                    if ((cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) &&
+                        (rsp_msg_portion_length != 0)) {
+                        libspdm_release_receiver_buffer (spdm_context);
+                        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                        goto done;
+                    }
+                } else {
+                    if (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) {
+                        libspdm_release_receiver_buffer (spdm_context);
+                        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                        goto done;
+                    }
+                }
+                if (spdm_context->connection_info.peer_cert_info[slot_id] ==
+                    SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) {
+                    spdm_context->connection_info.peer_cert_info[slot_id] = cert_model;
+                } else if (spdm_context->connection_info.peer_cert_info[slot_id] != cert_model) {
+                    libspdm_release_receiver_buffer (spdm_context);
+                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                    goto done;
+                }
+            }
+            if (spdm_response_size < rsp_msg_header_size +
+                rsp_msg_portion_length) {
+                libspdm_release_receiver_buffer (spdm_context);
+                status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+                goto done;
+            }
+            if (rsp_msg_portion_length > max_cert_chain_size - req_msg_offset) {
+                libspdm_release_receiver_buffer (spdm_context);
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto done;
+            }
+            if (rsp_msg_remainder_length > max_cert_chain_size - req_msg_offset -
+                rsp_msg_portion_length) {
+                libspdm_release_receiver_buffer (spdm_context);
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto done;
+            }
+            if (req_msg_offset == 0) {
+                total_responder_cert_chain_buffer_length = rsp_msg_portion_length +
+                                                           rsp_msg_remainder_length;
+                if (total_responder_cert_chain_buffer_length > cert_chain_capacity) {
+                    libspdm_release_receiver_buffer (spdm_context);
+                    status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+                    goto done;
+                }
+            } else if (req_msg_offset + rsp_msg_portion_length +
+                       rsp_msg_remainder_length != total_responder_cert_chain_buffer_length) {
+                libspdm_release_receiver_buffer (spdm_context);
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto done;
+            }
+            if (chunk_enabled && (req_msg_offset == 0) && (req_msg_length == max_cert_chain_size) &&
+                (rsp_msg_remainder_length != 0)) {
+                libspdm_release_receiver_buffer (spdm_context);
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto done;
+            }
         }
 
         /* -=[Process Response Phase]=- */
@@ -392,6 +426,13 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
                 libspdm_release_receiver_buffer (spdm_context);
                 goto done;
             }
+        }
+
+        if (slot_storage_size_requested) {
+            *slot_storage_size = remainder_length;
+            libspdm_release_receiver_buffer (spdm_context);
+            status = LIBSPDM_STATUS_SUCCESS;
+            goto done;
         }
 
         if (cert_chain_size_internal + rsp_msg_portion_length > cert_chain_capacity) {
@@ -520,7 +561,7 @@ libspdm_return_t libspdm_get_certificate_ex(void *spdm_context, const uint32_t *
     do {
         status = libspdm_try_get_large_certificate(context, session_id, slot_id, length,
                                                    cert_chain_size, cert_chain, trust_anchor,
-                                                   trust_anchor_size);
+                                                   trust_anchor_size, false, NULL);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
@@ -539,6 +580,32 @@ libspdm_return_t libspdm_get_certificate(void *spdm_context, const uint32_t *ses
     return libspdm_get_certificate_ex(spdm_context, session_id, slot_id, 0,
                                       cert_chain_size, cert_chain,
                                       NULL, NULL);
+}
+
+libspdm_return_t libspdm_get_slot_storage_size(void *spdm_context, const uint32_t *session_id,
+                                               uint8_t slot_id, uint32_t *slot_storage_size)
+{
+    libspdm_context_t *context;
+    size_t retry;
+    uint64_t retry_delay_time;
+    libspdm_return_t status;
+
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
+    do {
+        status = libspdm_try_get_large_certificate(context, session_id, slot_id, 0,
+                                                   NULL, NULL, NULL, NULL,
+                                                   true, slot_storage_size);
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
+            return status;
+        }
+
+        libspdm_sleep(retry_delay_time);
+    } while (retry-- != 0);
+
+    return status;
 }
 
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */

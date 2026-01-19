@@ -138,6 +138,17 @@ libspdm_return_t libspdm_get_certificate_ex(void *spdm_context,
                                             void *cert_chain,
                                             const void **trust_anchor,
                                             size_t *trust_anchor_size);
+/**
+ * This function sends GET_CERTIFICATE to get the storage size of the certificate chain slot from the device.
+ *
+ * @param  spdm_context        A pointer to the SPDM context.
+ * @param  session_id          Indicates if it is a secured message protected via SPDM session.
+ *                             If session_id is NULL, it is a normal message.
+ * @param  slot_id             The number of slot for the certificate chain.
+ * @param  slot_storage_size   On output, indicate the slot storage size.
+ */
+libspdm_return_t libspdm_get_slot_storage_size(void *spdm_context, const uint32_t *session_id,
+                                               uint8_t slot_id, uint32_t *slot_storage_size);
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 
 #if LIBSPDM_SEND_CHALLENGE_SUPPORT

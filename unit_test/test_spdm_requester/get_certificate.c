@@ -182,6 +182,8 @@ static libspdm_return_t send_message(
     case 0x1D:
     case 0x1E:
     case 0x1F:
+    case 0x20:
+    case 0x21:
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -2300,6 +2302,50 @@ static libspdm_return_t receive_message(
             m_libspdm_local_certificate_chain = NULL;
             m_libspdm_local_certificate_chain_size = 0;
         }
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x20: {
+        spdm_certificate_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_certificate_response_t);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.request_response_code = SPDM_CERTIFICATE;
+        spdm_response->header.param1 = m_slot_id;
+        spdm_response->header.param2 = m_cert_model;
+        spdm_response->portion_length = 0;
+        spdm_response->remainder_length = SPDM_MAX_CERTIFICATE_CHAIN_SIZE;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x21: {
+        spdm_certificate_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_certificate_response_t);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.request_response_code = SPDM_CERTIFICATE;
+        spdm_response->header.param1 = m_slot_id;
+        spdm_response->header.param2 = m_cert_model;
+        spdm_response->portion_length = SPDM_MAX_CERTIFICATE_CHAIN_SIZE;
+        spdm_response->remainder_length = SPDM_MAX_CERTIFICATE_CHAIN_SIZE;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
     }
         return LIBSPDM_STATUS_SUCCESS;
     default:
@@ -4610,6 +4656,72 @@ static void req_get_certificate_case31(void **state)
     }
 }
 
+
+/**
+ * Test 32: Normal case, request a slot storage size.
+ * Expected Behavior: receives the correct slot storage size
+ **/
+static void req_get_certificate_case32(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t slot_storage_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x20;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
+
+    spdm_context->local_context.is_requester = true;
+    libspdm_reset_message_b(spdm_context);
+
+    status = libspdm_get_slot_storage_size(spdm_context, NULL, 0, &slot_storage_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(slot_storage_size, SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
+}
+
+/**
+ * Test 33: Fail case, request a slot storage size.
+ * Expected Behavior: returns a status of INVALID_MSG_FIELD.
+ **/
+static void req_get_certificate_case33(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t slot_storage_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x21;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
+
+    spdm_context->local_context.is_requester = true;
+    libspdm_reset_message_b(spdm_context);
+
+    status = libspdm_get_slot_storage_size(spdm_context, NULL, 0, &slot_storage_size);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
+
 int libspdm_req_get_certificate_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -4678,6 +4790,10 @@ int libspdm_req_get_certificate_test(void)
         cmocka_unit_test(req_get_certificate_case30),
         /* Fail response: input buffer size too small for holding cert chain */
         cmocka_unit_test(req_get_certificate_case31),
+        /* success get slot storage size */
+        cmocka_unit_test(req_get_certificate_case32),
+        /* Fail response: get slot storage size, portion length not zero */
+        cmocka_unit_test(req_get_certificate_case33),
     };
 
     libspdm_test_context_t test_context = {
