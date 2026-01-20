@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -259,7 +259,6 @@ int main(void)
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
     #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
     if (libspdm_req_encap_supported_event_types_test() != 0) {
         return_value = 1;
@@ -280,6 +279,7 @@ int main(void)
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
     #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
     if (libspdm_req_set_certificate_test() != 0) {
         return_value = 1;
