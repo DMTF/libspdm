@@ -207,6 +207,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     uint16_t rsp_session_id;
     libspdm_return_t status;
     size_t opaque_key_exchange_rsp_size;
+    bool use_default_opaque_data;
     uint8_t th1_hash_data[LIBSPDM_MAX_HASH_SIZE];
     spdm_version_number_t secured_message_version;
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
@@ -405,11 +406,9 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                                                    response_size, response);
         }
     } else {
+        secured_message_version = 0;
         req_opaque_data = NULL;
     }
-
-    opaque_key_exchange_rsp_size =
-        libspdm_get_opaque_data_version_selection_data_size(spdm_context);
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
@@ -419,6 +418,27 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
         hmac_size = 0;
+    }
+
+    /*
+     * Here allows integrator generate own opaque data for Key Exchange Response.
+     * If libspdm_key_exchange_rsp_opaque_data() returns false,
+     * libspdm will generate version selection opaque data.
+     */
+    opaque_key_exchange_rsp_size = *response_size - sizeof(spdm_key_exchange_response_t) -
+                                   rsp_key_exchange_size - measurement_summary_hash_size -
+                                   sizeof(uint16_t) - signature_size - hmac_size;
+
+    use_default_opaque_data = false;
+    result = libspdm_key_exchange_rsp_opaque_data(
+        spdm_context, spdm_request->header.spdm_version,
+        spdm_request->header.param1, slot_id, spdm_request->session_policy,
+        req_opaque_data, opaque_data_length, NULL,
+        &opaque_key_exchange_rsp_size);
+    if (!result) {
+        use_default_opaque_data = true;
+        opaque_key_exchange_rsp_size =
+            libspdm_get_opaque_data_version_selection_data_size(spdm_context);
     }
 
     total_size = sizeof(spdm_key_exchange_response_t) + rsp_key_exchange_size +
@@ -649,8 +669,24 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
 
     libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
     ptr += sizeof(uint16_t);
-    libspdm_build_opaque_data_version_selection_data(
-        spdm_context, secured_message_version, &opaque_key_exchange_rsp_size, ptr);
+
+    if (use_default_opaque_data) {
+        libspdm_build_opaque_data_version_selection_data(
+            spdm_context, secured_message_version, &opaque_key_exchange_rsp_size, ptr);
+    } else {
+        result = libspdm_key_exchange_rsp_opaque_data(
+            spdm_context, spdm_request->header.spdm_version,
+            spdm_request->header.param1, slot_id, spdm_request->session_policy,
+            req_opaque_data, opaque_data_length, ptr,
+            &opaque_key_exchange_rsp_size);
+        if (!result) {
+            libspdm_free_session_id(spdm_context, session_id);
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
+    }
+
     ptr += opaque_key_exchange_rsp_size;
 
     status = libspdm_append_message_k(spdm_context, session_info, false, request, request_size);

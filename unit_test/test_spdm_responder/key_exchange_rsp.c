@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -90,6 +90,8 @@ size_t m_libspdm_key_exchange_request10_size = sizeof(m_libspdm_key_exchange_req
 
 extern uint8_t g_key_exchange_start_mut_auth;
 extern bool g_mandatory_mut_auth;
+extern size_t libspdm_secret_lib_key_exchange_opaque_data_size;
+extern bool g_generate_key_exchange_opaque_data;
 
 extern bool g_event_all_subscribe;
 extern bool g_event_all_unsubscribe;
@@ -2186,6 +2188,108 @@ static void rsp_key_exchange_rsp_case24(void **state)
     free(data1);
 }
 
+/**
+ * Test 25: Successful response to a valid KEY_EXCHANGE request.
+ * Expected Behavior: get a valid KEY_EXCHANGE_RSP message
+ *                    with integrator defined opaque data in the response
+ **/
+static void rsp_key_exchange_rsp_case25(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_key_exchange_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t dhe_key_size;
+    void *dhe_context;
+    size_t opaque_key_exchange_req_size;
+    uint16_t opaque_length;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x19;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.algorithm.other_params_support =
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    g_generate_key_exchange_opaque_data = true;
+    libspdm_secret_lib_key_exchange_opaque_data_size = 8;
+
+    libspdm_session_info_init(spdm_context,
+                              spdm_context->session_info,
+                              0,
+                              INVALID_SESSION_ID, false);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+
+    libspdm_reset_message_a(spdm_context);
+
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request8.random_data);
+    m_libspdm_key_exchange_request8.req_session_id = 0xFFFF;
+    m_libspdm_key_exchange_request8.reserved = 0;
+    m_libspdm_key_exchange_request8.session_policy = 0xFF;
+    ptr = m_libspdm_key_exchange_request8.exchange_data;
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
+                                  false);
+    libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    ptr += dhe_key_size;
+    libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    ptr += sizeof(uint16_t);
+    libspdm_build_opaque_data_supported_version_data(
+        spdm_context, &opaque_key_exchange_req_size, ptr);
+    ptr += opaque_key_exchange_req_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_key_exchange(
+        spdm_context, m_libspdm_key_exchange_request8_size,
+        &m_libspdm_key_exchange_request8, &response_size, response);
+    assert_int_equal(spdm_context->session_info[0].session_policy,
+                     m_libspdm_key_exchange_request8.session_policy);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(
+        libspdm_secured_message_get_session_state(
+            spdm_context->session_info[0].secured_message_context),
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
+    assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
+    ptr = (uint8_t *)(spdm_response + 1);
+    ptr += dhe_key_size;
+    opaque_length = *(uint16_t *)ptr;
+    assert_int_equal(opaque_length, libspdm_secret_lib_key_exchange_opaque_data_size);
+
+    g_generate_key_exchange_opaque_data = false;
+    free(data1);
+}
+
 int libspdm_rsp_key_exchange_rsp_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -2233,6 +2337,8 @@ int libspdm_rsp_key_exchange_rsp_test(void)
         /* The Responder requires mutual authentication, but the Requester does not support it */
         cmocka_unit_test(rsp_key_exchange_rsp_case23),
         cmocka_unit_test(rsp_key_exchange_rsp_case24),
+        /* The Responder using integrator defined opaque data */
+        cmocka_unit_test(rsp_key_exchange_rsp_case25),
     };
 
     libspdm_test_context_t test_context = {

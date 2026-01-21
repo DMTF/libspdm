@@ -44,6 +44,11 @@ uint8_t m_cxl_tsp_2nd_session_psk[CXL_TSP_2ND_SESSION_COUNT][CXL_TSP_2ND_SESSION
 
 uint8_t m_cxl_tsp_current_psk_session_index = 0xFF;
 
+size_t libspdm_secret_lib_psk_exchange_opaque_data_size;
+bool g_generate_psk_exchange_opaque_data = false;
+size_t libspdm_secret_lib_psk_finish_opaque_data_size;
+bool g_generate_psk_finish_opaque_data = false;
+
 bool libspdm_psk_handshake_secret_hkdf_expand(
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
@@ -197,4 +202,61 @@ bool libspdm_psk_master_secret_hkdf_expand(
 
     return result;
 }
+
+bool libspdm_psk_exchange_rsp_opaque_data(
+    void *spdm_context,
+    const void *psk_hint,
+    uint16_t psk_hint_size,
+    spdm_version_number_t spdm_version,
+    uint8_t measurement_hash_type,
+    const void *req_opaque_data,
+    size_t req_opaque_data_size,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    if (g_generate_psk_exchange_opaque_data) {
+        LIBSPDM_ASSERT(libspdm_secret_lib_psk_exchange_opaque_data_size <= *opaque_data_size);
+
+        *opaque_data_size = libspdm_secret_lib_psk_exchange_opaque_data_size;
+
+        if (opaque_data != NULL) {
+            for (size_t index = 0; index < *opaque_data_size; index++)
+            {
+                ((uint8_t *)opaque_data)[index] = (uint8_t)(index + 1);
+            }
+        }
+
+
+        return true;
+    }
+    return false;
+}
+
+bool libspdm_psk_finish_rsp_opaque_data(
+    void *spdm_context,
+    uint32_t session_id,
+    spdm_version_number_t spdm_version,
+    const void *req_opaque_data,
+    size_t req_opaque_data_size,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    if (g_generate_psk_finish_opaque_data) {
+        LIBSPDM_ASSERT(libspdm_secret_lib_psk_finish_opaque_data_size <= *opaque_data_size);
+
+        *opaque_data_size = libspdm_secret_lib_psk_finish_opaque_data_size;
+
+        if (opaque_data != NULL) {
+            for (size_t index = 0; index < *opaque_data_size; index++)
+            {
+                ((uint8_t *)opaque_data)[index] = (uint8_t)(index + 1);
+            }
+        }
+    } else {
+        *opaque_data_size = 0;
+    }
+
+    return true;
+}
+
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -84,7 +84,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     uint32_t session_id;
     uint32_t measurement_summary_hash_size;
     uint32_t hmac_size;
-    const uint8_t *cptr;
+    const uint8_t *req_opaque_data;
     uint8_t *ptr;
     libspdm_session_info_t *session_info;
     size_t total_size;
@@ -92,6 +92,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     uint16_t rsp_session_id;
     libspdm_return_t status;
     size_t opaque_psk_exchange_rsp_size;
+    bool use_default_opaque_data;
     uint8_t th1_hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t th2_hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint32_t algo_size;
@@ -246,18 +247,19 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
                    spdm_request->context_length +
                    spdm_request->opaque_length;
 
+    secured_message_version = 0;
     if (spdm_request->opaque_length != 0) {
-        cptr = (const uint8_t *)request + sizeof(spdm_psk_exchange_request_t) +
-               spdm_request->psk_hint_length + spdm_request->context_length;
+        req_opaque_data = (const uint8_t *)request + sizeof(spdm_psk_exchange_request_t) +
+                          spdm_request->psk_hint_length + spdm_request->context_length;
         result = libspdm_process_general_opaque_data_check(spdm_context,
-                                                           spdm_request->opaque_length, cptr);
+                                                           spdm_request->opaque_length, req_opaque_data);
         if (!result) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
         }
         status = libspdm_process_opaque_data_supported_version_data(
-            spdm_context, spdm_request->opaque_length, cptr, &secured_message_version);
+            spdm_context, spdm_request->opaque_length, req_opaque_data, &secured_message_version);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -265,8 +267,6 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
         }
     }
 
-    opaque_psk_exchange_rsp_size =
-        libspdm_get_opaque_data_version_selection_data_size(spdm_context);
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
@@ -274,6 +274,41 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     } else {
         context_length = 0;
     }
+
+    if (spdm_request->psk_hint_length == 0) {
+        psk_hint_size = 0;
+        psk_hint = NULL;
+    } else if (spdm_request->psk_hint_length <= LIBSPDM_PSK_MAX_HINT_LENGTH ) {
+        psk_hint_size = spdm_request->psk_hint_length;
+        psk_hint = (const uint8_t *)request +
+                   sizeof(spdm_psk_exchange_request_t);
+    } else {
+        return libspdm_generate_error_response(
+            spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+            response_size, response);
+    }
+
+    /*
+     * Here allows integrator generate own opaque data for Key Exchange Response.
+     * If libspdm_psk_exchange_rsp_opaque_data() returns false,
+     * libspdm will generate version selection opaque data.
+     */
+    opaque_psk_exchange_rsp_size = *response_size - sizeof(spdm_psk_exchange_response_t) -
+                                   measurement_summary_hash_size - context_length -
+                                   hmac_size;
+    use_default_opaque_data = false;
+    result = libspdm_psk_exchange_rsp_opaque_data(
+        spdm_context, psk_hint, spdm_request->psk_hint_length,
+        spdm_request->header.spdm_version,
+        spdm_request->header.param1,
+        req_opaque_data, spdm_request->opaque_length, NULL,
+        &opaque_psk_exchange_rsp_size);
+    if (!result) {
+        use_default_opaque_data = true;
+        opaque_psk_exchange_rsp_size =
+            libspdm_get_opaque_data_version_selection_data_size(spdm_context);
+    }
+
     total_size = sizeof(spdm_psk_exchange_response_t) +
                  measurement_summary_hash_size + context_length +
                  opaque_psk_exchange_rsp_size + hmac_size;
@@ -299,18 +334,6 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     if (rsp_session_id == ((INVALID_SESSION_ID & 0xFFFF0000) >> 16)) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED, 0,
-            response_size, response);
-    }
-    if (spdm_request->psk_hint_length == 0) {
-        psk_hint_size = 0;
-        psk_hint = NULL;
-    } else if (spdm_request->psk_hint_length <= LIBSPDM_PSK_MAX_HINT_LENGTH ) {
-        psk_hint_size = spdm_request->psk_hint_length;
-        psk_hint = (const uint8_t *)request +
-                   sizeof(spdm_psk_exchange_request_t);
-    } else {
-        return libspdm_generate_error_response(
-            spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);
     }
     session_id = libspdm_generate_session_id(req_session_id, rsp_session_id);
@@ -370,8 +393,23 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
         ptr += context_length;
     }
 
-    libspdm_build_opaque_data_version_selection_data(
-        spdm_context, secured_message_version, &opaque_psk_exchange_rsp_size, ptr);
+    if (use_default_opaque_data) {
+        libspdm_build_opaque_data_version_selection_data(
+            spdm_context, secured_message_version, &opaque_psk_exchange_rsp_size, ptr);
+    } else {
+        result = libspdm_psk_exchange_rsp_opaque_data(
+            spdm_context, psk_hint, spdm_request->psk_hint_length,
+            spdm_request->header.spdm_version,
+            spdm_request->header.param1,
+            req_opaque_data, spdm_request->opaque_length, ptr,
+            &opaque_psk_exchange_rsp_size);
+        if (!result) {
+            libspdm_free_session_id(spdm_context, session_id);
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
+    }
 
     ptr += opaque_psk_exchange_rsp_size;
 
