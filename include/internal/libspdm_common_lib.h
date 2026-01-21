@@ -1178,6 +1178,18 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
                                           const void **get_element_ptr, size_t *get_element_len);
 
 /**
+ * Process opaque data version selection.
+ *
+ * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response parsing in requester.
+ *
+ * @param  data_in_size  Size in bytes of the data_in.
+ * @param  data_in       A pointer to the buffer to store the opaque data version selection.
+ **/
+libspdm_return_t libspdm_process_opaque_data_version_selection_data(
+    libspdm_context_t *spdm_context, size_t data_in_size, void *data_in,
+    spdm_version_number_t *secured_message_version);
+
+/**
  *  Process general opaque data check
  *
  * @param  data_in_size                  size in bytes of the data_in.
