@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -261,6 +261,18 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_GET_ENCAPSULATED_REQUEST, response_size, response);
     }
+
+    if (request_size < sizeof(spdm_get_encapsulated_request_request_t)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
+                                               response_size, response);
+    }
+
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP) {
         if (spdm_context->response_state == LIBSPDM_RESPONSE_STATE_NORMAL) {
             if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
@@ -296,12 +308,6 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                 response_size, response);
         }
-    }
-
-    if (request_size < sizeof(spdm_get_encapsulated_request_request_t)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
     }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
@@ -365,6 +371,7 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_DELIVER_ENCAPSULATED_RESPONSE, response_size, response);
     }
+
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP) {
         if (spdm_context->response_state == LIBSPDM_RESPONSE_STATE_NORMAL) {
             return libspdm_generate_error_response(
@@ -380,6 +387,11 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     if (request_size <= sizeof(spdm_deliver_encapsulated_response_request_t)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
     }
 
