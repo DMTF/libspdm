@@ -439,8 +439,8 @@ static void rsp_encapsulated_request_case7(void **State)
 
     response_size = sizeof(response);
     status = libspdm_get_response_encapsulated_request(spdm_context,
-                                                       m_libspdm_encapsulated_request_t1_size,
-                                                       &m_libspdm_encapsulated_request_t1,
+                                                       m_libspdm_encapsulated_request_t2_size,
+                                                       &m_libspdm_encapsulated_request_t2,
                                                        &response_size,
                                                        response);
 
