@@ -521,14 +521,14 @@ libspdm_return_t libspdm_get_supported_algorithms(void *spdm_context,
                                                   uint8_t *spdm_version);
 
 /**
- * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH to start an SPDM Session.
+ * This function sends KEY_EXCHANGE or PSK_EXCHANGE to start an SPDM Session.
  *
  * If encapsulated mutual authentication is requested from the responder,
  * this function also perform the encapsulated mutual authentication.
  *
  * @param  spdm_context               A pointer to the SPDM context.
- * @param  use_psk                    False means to use KEY_EXCHANGE/FINISH to start a session.
- *                                    True means to use PSK_EXCHANGE/PSK_FINISH to start a session.
+ * @param  use_psk                    False means to use KEY_EXCHANGE to start a session.
+ *                                    True means to use PSK_EXCHANGE to start a session.
  * @param  psk_hint                   The psk_hint in PSK_EXCHANGE. It is ignored if use_psk is false.
  * @param  psk_hint_size              The size in bytes of psk_hint. It is ignored if use_psk is false.
  * @param  measurement_hash_type      The type of the measurement hash.
@@ -561,25 +561,50 @@ libspdm_return_t libspdm_get_supported_algorithms(void *spdm_context,
  *                                    Opaque data should be less than 1024 bytes.
  *                                    On output, the size of the opaque data.
  **/
-libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
-                                          const void *psk_hint,
-                                          uint16_t psk_hint_size,
-                                          uint8_t measurement_hash_type,
-                                          uint8_t slot_id,
-                                          uint8_t session_policy,
-                                          uint32_t *session_id,
-                                          uint8_t *heartbeat_period,
-                                          void *measurement_hash,
-                                          const void *requester_random_in,
-                                          size_t requester_random_in_size,
-                                          void *requester_random,
-                                          size_t *requester_random_size,
-                                          void *responder_random,
-                                          size_t *responder_random_size,
-                                          const void *requester_opaque_data,
-                                          size_t requester_opaque_data_size,
-                                          void *responder_opaque_data,
-                                          size_t *responder_opaque_data_size);
+libspdm_return_t libspdm_start_session_exchange(void *spdm_context, bool use_psk,
+                                                const void *psk_hint,
+                                                uint16_t psk_hint_size,
+                                                uint8_t measurement_hash_type,
+                                                uint8_t slot_id,
+                                                uint8_t session_policy,
+                                                uint32_t *session_id,
+                                                uint8_t *heartbeat_period,
+                                                void *measurement_hash,
+                                                const void *requester_random_in,
+                                                size_t requester_random_in_size,
+                                                void *requester_random,
+                                                size_t *requester_random_size,
+                                                void *responder_random,
+                                                size_t *responder_random_size,
+                                                const void *requester_opaque_data,
+                                                size_t requester_opaque_data_size,
+                                                void *responder_opaque_data,
+                                                size_t *responder_opaque_data_size);
+
+/**
+ * This function sends FINISH or PSK_FINISH to start an SPDM Session.
+ *
+ * @param  spdm_context               A pointer to the SPDM context.
+ * @param  session_id                 The session ID of the session.
+ * @param  requester_opaque_data      A buffer to hold the requester opaque data, if not NULL.
+ *                                    If not NULL, this function will not generate any opaque data,
+ *                                    including secured message versions.
+ *                                    This parameter is only used for SPDM 1.4 and later
+ * @param  requester_opaque_data_size The size of the opaque data, if requester_opaque_data is not NULL.
+ *                                    This parameter is only used for SPDM 1.4 and later
+ * @param  responder_opaque_data      A buffer to hold the responder opaque data, if not NULL.
+ *                                    This parameter is only used for SPDM 1.4 and later
+ * @param  responder_opaque_data_size On input, the size of the opaque data buffer.
+ *                                    Opaque data should be less than 1024 bytes.
+ *                                    On output, the size of the opaque data.
+ *                                    This parameter is only used for SPDM 1.4 and later
+ */
+libspdm_return_t libspdm_start_session_finish(void *spdm_context,
+                                              uint32_t session_id,
+                                              const void *requester_opaque_data,
+                                              size_t requester_opaque_data_size,
+                                              void *responder_opaque_data,
+                                              size_t *responder_opaque_data_size);
 
 /**
  * This function sends END_SESSION to stop an SPDM Session.
