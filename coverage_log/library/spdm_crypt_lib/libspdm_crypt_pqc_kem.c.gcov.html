@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - library/spdm_crypt_lib/libspdm_crypt_pqc_kem.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">library/spdm_crypt_lib</a> - libspdm_crypt_pqc_kem.c<span style="font-size: 80%;"> (source / <a href="libspdm_crypt_pqc_kem.c.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">4.7&nbsp;%</td>
+            <td class="headerCovTableEntry">85</td>
+            <td class="headerCovTableEntry">4</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-01-25 08:10:29</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">11.1&nbsp;%</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+                  <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : /**</span>
+<span id="L2"><span class="lineNum">       2</span>              :  *  Copyright Notice:</span>
+<span id="L3"><span class="lineNum">       3</span>              :  *  Copyright 2025 DMTF. All rights reserved.</span>
+<span id="L4"><span class="lineNum">       4</span>              :  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md</span>
+<span id="L5"><span class="lineNum">       5</span>              :  **/</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;internal/libspdm_crypt_lib.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : </span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC tlaBgGNC">          15 : uint32_t libspdm_get_kem_encap_key_size(uint32_t kem_alg)</span></span>
+<span id="L10"><span class="lineNum">      10</span>              : {</span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC">          15 :     switch (kem_alg) {</span></span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaUNC tlaBgUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512:</span></span>
+<span id="L13"><span class="lineNum">      13</span>              : #if LIBSPDM_ML_KEM_512_SUPPORT</span>
+<span id="L14"><span class="lineNum">      14</span>              :         return 800;</span>
+<span id="L15"><span class="lineNum">      15</span>              : #else</span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaUNC">           0 :         return 0;</span></span>
+<span id="L17"><span class="lineNum">      17</span>              : #endif</span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768:</span></span>
+<span id="L19"><span class="lineNum">      19</span>              : #if LIBSPDM_ML_KEM_768_SUPPORT</span>
+<span id="L20"><span class="lineNum">      20</span>              :         return 1184;</span>
+<span id="L21"><span class="lineNum">      21</span>              : #else</span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaUNC">           0 :         return 0;</span></span>
+<span id="L23"><span class="lineNum">      23</span>              : #endif</span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024:</span></span>
+<span id="L25"><span class="lineNum">      25</span>              : #if LIBSPDM_ML_KEM_1024_SUPPORT</span>
+<span id="L26"><span class="lineNum">      26</span>              :         return 1568;</span>
+<span id="L27"><span class="lineNum">      27</span>              : #else</span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaUNC">           0 :         return 0;</span></span>
+<span id="L29"><span class="lineNum">      29</span>              : #endif</span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC tlaBgGNC">          15 :     default:</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          15 :         return 0;</span></span>
+<span id="L32"><span class="lineNum">      32</span>              :     }</span>
+<span id="L33"><span class="lineNum">      33</span>              : }</span>
+<span id="L34"><span class="lineNum">      34</span>              : </span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaUNC tlaBgUNC">           0 : uint32_t libspdm_get_kem_cipher_text_size(uint32_t kem_alg)</span></span>
+<span id="L36"><span class="lineNum">      36</span>              : {</span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaUNC">           0 :     switch (kem_alg) {</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512:</span></span>
+<span id="L39"><span class="lineNum">      39</span>              : #if LIBSPDM_ML_KEM_512_SUPPORT</span>
+<span id="L40"><span class="lineNum">      40</span>              :         return 768;</span>
+<span id="L41"><span class="lineNum">      41</span>              : #else</span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaUNC">           0 :         return 0;</span></span>
+<span id="L43"><span class="lineNum">      43</span>              : #endif</span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768:</span></span>
+<span id="L45"><span class="lineNum">      45</span>              : #if LIBSPDM_ML_KEM_768_SUPPORT</span>
+<span id="L46"><span class="lineNum">      46</span>              :         return 1088;</span>
+<span id="L47"><span class="lineNum">      47</span>              : #else</span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaUNC">           0 :         return 0;</span></span>
+<span id="L49"><span class="lineNum">      49</span>              : #endif</span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024:</span></span>
+<span id="L51"><span class="lineNum">      51</span>              : #if LIBSPDM_ML_KEM_1024_SUPPORT</span>
+<span id="L52"><span class="lineNum">      52</span>              :         return 1568;</span>
+<span id="L53"><span class="lineNum">      53</span>              : #else</span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaUNC">           0 :         return 0;</span></span>
+<span id="L55"><span class="lineNum">      55</span>              : #endif</span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaUNC">           0 :     default:</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaUNC">           0 :         return 0;</span></span>
+<span id="L58"><span class="lineNum">      58</span>              :     }</span>
+<span id="L59"><span class="lineNum">      59</span>              : }</span>
+<span id="L60"><span class="lineNum">      60</span>              : </span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaUNC">           0 : uint32_t libspdm_get_kem_shared_secret_size(uint32_t kem_alg)</span></span>
+<span id="L62"><span class="lineNum">      62</span>              : {</span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaUNC">           0 :     switch (kem_alg) {</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512:</span></span>
+<span id="L65"><span class="lineNum">      65</span>              : #if LIBSPDM_ML_KEM_512_SUPPORT</span>
+<span id="L66"><span class="lineNum">      66</span>              :         return 32;</span>
+<span id="L67"><span class="lineNum">      67</span>              : #else</span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaUNC">           0 :         return 0;</span></span>
+<span id="L69"><span class="lineNum">      69</span>              : #endif</span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768:</span></span>
+<span id="L71"><span class="lineNum">      71</span>              : #if LIBSPDM_ML_KEM_768_SUPPORT</span>
+<span id="L72"><span class="lineNum">      72</span>              :         return 32;</span>
+<span id="L73"><span class="lineNum">      73</span>              : #else</span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaUNC">           0 :         return 0;</span></span>
+<span id="L75"><span class="lineNum">      75</span>              : #endif</span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024:</span></span>
+<span id="L77"><span class="lineNum">      77</span>              : #if LIBSPDM_ML_KEM_1024_SUPPORT</span>
+<span id="L78"><span class="lineNum">      78</span>              :         return 32;</span>
+<span id="L79"><span class="lineNum">      79</span>              : #else</span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaUNC">           0 :         return 0;</span></span>
+<span id="L81"><span class="lineNum">      81</span>              : #endif</span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaUNC">           0 :     default:</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaUNC">           0 :         return 0;</span></span>
+<span id="L84"><span class="lineNum">      84</span>              :     }</span>
+<span id="L85"><span class="lineNum">      85</span>              : }</span>
+<span id="L86"><span class="lineNum">      86</span>              : </span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaUNC">           0 : static size_t libspdm_get_kem_nid(uint32_t kem_alg)</span></span>
+<span id="L88"><span class="lineNum">      88</span>              : {</span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaUNC">           0 :     switch (kem_alg) {</span></span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512:</span></span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaUNC">           0 :         return LIBSPDM_CRYPTO_NID_ML_KEM_512;</span></span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768:</span></span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaUNC">           0 :         return LIBSPDM_CRYPTO_NID_ML_KEM_768;</span></span>
+<span id="L94"><span class="lineNum">      94</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024:</span></span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaUNC">           0 :         return LIBSPDM_CRYPTO_NID_ML_KEM_1024;</span></span>
+<span id="L96"><span class="lineNum">      96</span> <span class="tlaUNC">           0 :     default:</span></span>
+<span id="L97"><span class="lineNum">      97</span> <span class="tlaUNC">           0 :         return LIBSPDM_CRYPTO_NID_NULL;</span></span>
+<span id="L98"><span class="lineNum">      98</span>              :     }</span>
+<span id="L99"><span class="lineNum">      99</span>              : }</span>
+<span id="L100"><span class="lineNum">     100</span>              : </span>
+<span id="L101"><span class="lineNum">     101</span> <span class="tlaUNC">           0 : void *libspdm_kem_new(spdm_version_number_t spdm_version,</span></span>
+<span id="L102"><span class="lineNum">     102</span>              :                       uint32_t kem_alg, bool is_initiator)</span>
+<span id="L103"><span class="lineNum">     103</span>              : {</span>
+<span id="L104"><span class="lineNum">     104</span>              :     size_t nid;</span>
+<span id="L105"><span class="lineNum">     105</span>              : </span>
+<span id="L106"><span class="lineNum">     106</span> <span class="tlaUNC">           0 :     nid = libspdm_get_kem_nid(kem_alg);</span></span>
+<span id="L107"><span class="lineNum">     107</span> <span class="tlaUNC">           0 :     if (nid == LIBSPDM_CRYPTO_NID_NULL) {</span></span>
+<span id="L108"><span class="lineNum">     108</span> <span class="tlaUNC">           0 :         return NULL;</span></span>
+<span id="L109"><span class="lineNum">     109</span>              :     }</span>
+<span id="L110"><span class="lineNum">     110</span>              : </span>
+<span id="L111"><span class="lineNum">     111</span> <span class="tlaUNC">           0 :     switch (kem_alg) {</span></span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512:</span></span>
+<span id="L113"><span class="lineNum">     113</span>              :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768:</span>
+<span id="L114"><span class="lineNum">     114</span>              :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024:</span>
+<span id="L115"><span class="lineNum">     115</span>              : #if LIBSPDM_ML_KEM_SUPPORT</span>
+<span id="L116"><span class="lineNum">     116</span>              : #if !LIBSPDM_ML_KEM_512_SUPPORT</span>
+<span id="L117"><span class="lineNum">     117</span>              :         LIBSPDM_ASSERT(kem_alg != SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512);</span>
+<span id="L118"><span class="lineNum">     118</span>              : #endif</span>
+<span id="L119"><span class="lineNum">     119</span>              : #if !LIBSPDM_ML_KEM_768_SUPPORT</span>
+<span id="L120"><span class="lineNum">     120</span>              :         LIBSPDM_ASSERT(kem_alg != SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768);</span>
+<span id="L121"><span class="lineNum">     121</span>              : #endif</span>
+<span id="L122"><span class="lineNum">     122</span>              : #if !LIBSPDM_ML_KEM_1024_SUPPORT</span>
+<span id="L123"><span class="lineNum">     123</span>              :         LIBSPDM_ASSERT(kem_alg != SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024);</span>
+<span id="L124"><span class="lineNum">     124</span>              : #endif</span>
+<span id="L125"><span class="lineNum">     125</span>              :         return libspdm_mlkem_new_by_name(nid);</span>
+<span id="L126"><span class="lineNum">     126</span>              : #else</span>
+<span id="L127"><span class="lineNum">     127</span> <span class="tlaUNC">           0 :         LIBSPDM_ASSERT(false);</span></span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaUNC">           0 :         return NULL;</span></span>
+<span id="L129"><span class="lineNum">     129</span>              : #endif</span>
+<span id="L130"><span class="lineNum">     130</span> <span class="tlaUNC">           0 :     default:</span></span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaUNC">           0 :         LIBSPDM_ASSERT(false);</span></span>
+<span id="L132"><span class="lineNum">     132</span> <span class="tlaUNC">           0 :         return NULL;</span></span>
+<span id="L133"><span class="lineNum">     133</span>              :     }</span>
+<span id="L134"><span class="lineNum">     134</span>              : }</span>
+<span id="L135"><span class="lineNum">     135</span>              : </span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaUNC">           0 : void libspdm_kem_free(uint32_t kem_alg, void *context)</span></span>
+<span id="L137"><span class="lineNum">     137</span>              : {</span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaUNC">           0 :     if (context == NULL) {</span></span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaUNC">           0 :         return;</span></span>
+<span id="L140"><span class="lineNum">     140</span>              :     }</span>
+<span id="L141"><span class="lineNum">     141</span> <span class="tlaUNC">           0 :     switch (kem_alg) {</span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512:</span></span>
+<span id="L143"><span class="lineNum">     143</span>              :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768:</span>
+<span id="L144"><span class="lineNum">     144</span>              :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024:</span>
+<span id="L145"><span class="lineNum">     145</span>              : #if LIBSPDM_ML_KEM_SUPPORT</span>
+<span id="L146"><span class="lineNum">     146</span>              :         libspdm_mlkem_free(context);</span>
+<span id="L147"><span class="lineNum">     147</span>              : #else</span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaUNC">           0 :         LIBSPDM_ASSERT(false);</span></span>
+<span id="L149"><span class="lineNum">     149</span>              : #endif</span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaUNC">           0 :         break;</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaUNC">           0 :     default:</span></span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaUNC">           0 :         LIBSPDM_ASSERT(false);</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaUNC">           0 :         break;</span></span>
+<span id="L154"><span class="lineNum">     154</span>              :     }</span>
+<span id="L155"><span class="lineNum">     155</span>              : }</span>
+<span id="L156"><span class="lineNum">     156</span>              : </span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaUNC">           0 : bool libspdm_kem_generate_key(uint32_t kem_alg, void *context,</span></span>
+<span id="L158"><span class="lineNum">     158</span>              :                               uint8_t *encap_key,</span>
+<span id="L159"><span class="lineNum">     159</span>              :                               size_t *encap_key_size)</span>
+<span id="L160"><span class="lineNum">     160</span>              : {</span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaUNC">           0 :     switch (kem_alg) {</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512:</span></span>
+<span id="L163"><span class="lineNum">     163</span>              :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768:</span>
+<span id="L164"><span class="lineNum">     164</span>              :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024:</span>
+<span id="L165"><span class="lineNum">     165</span>              : #if LIBSPDM_ML_KEM_SUPPORT</span>
+<span id="L166"><span class="lineNum">     166</span>              : #if !LIBSPDM_ML_KEM_512_SUPPORT</span>
+<span id="L167"><span class="lineNum">     167</span>              :         LIBSPDM_ASSERT(kem_alg != SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512);</span>
+<span id="L168"><span class="lineNum">     168</span>              : #endif</span>
+<span id="L169"><span class="lineNum">     169</span>              : #if !LIBSPDM_ML_KEM_768_SUPPORT</span>
+<span id="L170"><span class="lineNum">     170</span>              :         LIBSPDM_ASSERT(kem_alg != SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768);</span>
+<span id="L171"><span class="lineNum">     171</span>              : #endif</span>
+<span id="L172"><span class="lineNum">     172</span>              : #if !LIBSPDM_ML_KEM_1024_SUPPORT</span>
+<span id="L173"><span class="lineNum">     173</span>              :         LIBSPDM_ASSERT(kem_alg != SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024);</span>
+<span id="L174"><span class="lineNum">     174</span>              : #endif</span>
+<span id="L175"><span class="lineNum">     175</span>              :         return libspdm_mlkem_generate_key(context, encap_key, encap_key_size);</span>
+<span id="L176"><span class="lineNum">     176</span>              : #else</span>
+<span id="L177"><span class="lineNum">     177</span> <span class="tlaUNC">           0 :         LIBSPDM_ASSERT(false);</span></span>
+<span id="L178"><span class="lineNum">     178</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L179"><span class="lineNum">     179</span>              : #endif</span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaUNC">           0 :     default:</span></span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaUNC">           0 :         LIBSPDM_ASSERT(false);</span></span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L183"><span class="lineNum">     183</span>              :     }</span>
+<span id="L184"><span class="lineNum">     184</span>              : }</span>
+<span id="L185"><span class="lineNum">     185</span>              : </span>
+<span id="L186"><span class="lineNum">     186</span> <span class="tlaUNC">           0 : bool libspdm_kem_encapsulate(uint32_t kem_alg, void *context,</span></span>
+<span id="L187"><span class="lineNum">     187</span>              :                              const uint8_t *peer_encap_key,</span>
+<span id="L188"><span class="lineNum">     188</span>              :                              size_t peer_encap_key_size,</span>
+<span id="L189"><span class="lineNum">     189</span>              :                              uint8_t *cipher_text,</span>
+<span id="L190"><span class="lineNum">     190</span>              :                              size_t *cipher_text_size,</span>
+<span id="L191"><span class="lineNum">     191</span>              :                              uint8_t *shared_secret,</span>
+<span id="L192"><span class="lineNum">     192</span>              :                              size_t *shared_secret_size)</span>
+<span id="L193"><span class="lineNum">     193</span>              : {</span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaUNC">           0 :     switch (kem_alg) {</span></span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512:</span></span>
+<span id="L196"><span class="lineNum">     196</span>              :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768:</span>
+<span id="L197"><span class="lineNum">     197</span>              :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024:</span>
+<span id="L198"><span class="lineNum">     198</span>              : #if LIBSPDM_ML_KEM_SUPPORT</span>
+<span id="L199"><span class="lineNum">     199</span>              : #if !LIBSPDM_ML_KEM_512_SUPPORT</span>
+<span id="L200"><span class="lineNum">     200</span>              :         LIBSPDM_ASSERT(kem_alg != SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512);</span>
+<span id="L201"><span class="lineNum">     201</span>              : #endif</span>
+<span id="L202"><span class="lineNum">     202</span>              : #if !LIBSPDM_ML_KEM_768_SUPPORT</span>
+<span id="L203"><span class="lineNum">     203</span>              :         LIBSPDM_ASSERT(kem_alg != SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768);</span>
+<span id="L204"><span class="lineNum">     204</span>              : #endif</span>
+<span id="L205"><span class="lineNum">     205</span>              : #if !LIBSPDM_ML_KEM_1024_SUPPORT</span>
+<span id="L206"><span class="lineNum">     206</span>              :         LIBSPDM_ASSERT(kem_alg != SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024);</span>
+<span id="L207"><span class="lineNum">     207</span>              : #endif</span>
+<span id="L208"><span class="lineNum">     208</span>              :         return libspdm_mlkem_encapsulate (context, peer_encap_key, peer_encap_key_size,</span>
+<span id="L209"><span class="lineNum">     209</span>              :                                           cipher_text, cipher_text_size,</span>
+<span id="L210"><span class="lineNum">     210</span>              :                                           shared_secret, shared_secret_size);</span>
+<span id="L211"><span class="lineNum">     211</span>              : #else</span>
+<span id="L212"><span class="lineNum">     212</span> <span class="tlaUNC">           0 :         LIBSPDM_ASSERT(false);</span></span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L214"><span class="lineNum">     214</span>              : #endif</span>
+<span id="L215"><span class="lineNum">     215</span> <span class="tlaUNC">           0 :     default:</span></span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaUNC">           0 :         LIBSPDM_ASSERT(false);</span></span>
+<span id="L217"><span class="lineNum">     217</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L218"><span class="lineNum">     218</span>              :     }</span>
+<span id="L219"><span class="lineNum">     219</span>              : }</span>
+<span id="L220"><span class="lineNum">     220</span>              : </span>
+<span id="L221"><span class="lineNum">     221</span> <span class="tlaUNC">           0 : bool libspdm_kem_decapsulate(uint32_t kem_alg, void *context,</span></span>
+<span id="L222"><span class="lineNum">     222</span>              :                              const uint8_t *peer_cipher_text,</span>
+<span id="L223"><span class="lineNum">     223</span>              :                              size_t peer_cipher_text_size,</span>
+<span id="L224"><span class="lineNum">     224</span>              :                              uint8_t *shared_secret,</span>
+<span id="L225"><span class="lineNum">     225</span>              :                              size_t *shared_secret_size)</span>
+<span id="L226"><span class="lineNum">     226</span>              : {</span>
+<span id="L227"><span class="lineNum">     227</span> <span class="tlaUNC">           0 :     switch (kem_alg) {</span></span>
+<span id="L228"><span class="lineNum">     228</span> <span class="tlaUNC">           0 :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512:</span></span>
+<span id="L229"><span class="lineNum">     229</span>              :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768:</span>
+<span id="L230"><span class="lineNum">     230</span>              :     case SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024:</span>
+<span id="L231"><span class="lineNum">     231</span>              : #if LIBSPDM_ML_KEM_SUPPORT</span>
+<span id="L232"><span class="lineNum">     232</span>              : #if !LIBSPDM_ML_KEM_512_SUPPORT</span>
+<span id="L233"><span class="lineNum">     233</span>              :         LIBSPDM_ASSERT(kem_alg != SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512);</span>
+<span id="L234"><span class="lineNum">     234</span>              : #endif</span>
+<span id="L235"><span class="lineNum">     235</span>              : #if !LIBSPDM_ML_KEM_768_SUPPORT</span>
+<span id="L236"><span class="lineNum">     236</span>              :         LIBSPDM_ASSERT(kem_alg != SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768);</span>
+<span id="L237"><span class="lineNum">     237</span>              : #endif</span>
+<span id="L238"><span class="lineNum">     238</span>              : #if !LIBSPDM_ML_KEM_1024_SUPPORT</span>
+<span id="L239"><span class="lineNum">     239</span>              :         LIBSPDM_ASSERT(kem_alg != SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024);</span>
+<span id="L240"><span class="lineNum">     240</span>              : #endif</span>
+<span id="L241"><span class="lineNum">     241</span>              :         return libspdm_mlkem_decapsulate (context, peer_cipher_text, peer_cipher_text_size,</span>
+<span id="L242"><span class="lineNum">     242</span>              :                                           shared_secret, shared_secret_size);</span>
+<span id="L243"><span class="lineNum">     243</span>              : #else</span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaUNC">           0 :         LIBSPDM_ASSERT(false);</span></span>
+<span id="L245"><span class="lineNum">     245</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L246"><span class="lineNum">     246</span>              : #endif</span>
+<span id="L247"><span class="lineNum">     247</span> <span class="tlaUNC">           0 :     default:</span></span>
+<span id="L248"><span class="lineNum">     248</span> <span class="tlaUNC">           0 :         LIBSPDM_ASSERT(false);</span></span>
+<span id="L249"><span class="lineNum">     249</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L250"><span class="lineNum">     250</span>              :     }</span>
+<span id="L251"><span class="lineNum">     251</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

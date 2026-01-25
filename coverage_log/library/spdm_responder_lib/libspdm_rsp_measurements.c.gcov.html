@@ -1,0 +1,599 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - library/spdm_responder_lib/libspdm_rsp_measurements.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">library/spdm_responder_lib</a> - libspdm_rsp_measurements.c<span style="font-size: 80%;"> (source / <a href="libspdm_rsp_measurements.c.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryMed">83.6&nbsp;%</td>
+            <td class="headerCovTableEntry">207</td>
+            <td class="headerCovTableEntry">173</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-01-25 08:10:29</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">66.7&nbsp;%</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+                  <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : /**</span>
+<span id="L2"><span class="lineNum">       2</span>              :  *  Copyright Notice:</span>
+<span id="L3"><span class="lineNum">       3</span>              :  *  Copyright 2021-2025 DMTF. All rights reserved.</span>
+<span id="L4"><span class="lineNum">       4</span>              :  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md</span>
+<span id="L5"><span class="lineNum">       5</span>              :  **/</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;internal/libspdm_responder_lib.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : </span>
+<span id="L9"><span class="lineNum">       9</span>              : #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP</span>
+<span id="L10"><span class="lineNum">      10</span>              : </span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaUNC tlaBgUNC">           0 : libspdm_return_t libspdm_register_meas_log_reset_callback(</span></span>
+<span id="L12"><span class="lineNum">      12</span>              :     void *spdm_context, libspdm_meas_log_reset_callback_func spdm_meas_log_reset_callback)</span>
+<span id="L13"><span class="lineNum">      13</span>              : {</span>
+<span id="L14"><span class="lineNum">      14</span> <span class="tlaUNC">           0 :     libspdm_context_t *context = (libspdm_context_t *)spdm_context;</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaUNC">           0 :     context-&gt;spdm_meas_log_reset_callback = spdm_meas_log_reset_callback;</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaUNC">           0 :     return LIBSPDM_STATUS_SUCCESS;</span></span>
+<span id="L17"><span class="lineNum">      17</span>              : }</span>
+<span id="L18"><span class="lineNum">      18</span>              : </span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">          16 : bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,</span></span>
+<span id="L20"><span class="lineNum">      20</span>              :                                             libspdm_session_info_t *session_info,</span>
+<span id="L21"><span class="lineNum">      21</span>              :                                             uint8_t slot_id,</span>
+<span id="L22"><span class="lineNum">      22</span>              :                                             uint8_t *signature)</span>
+<span id="L23"><span class="lineNum">      23</span>              : {</span>
+<span id="L24"><span class="lineNum">      24</span>              :     size_t signature_size;</span>
+<span id="L25"><span class="lineNum">      25</span>              :     bool result;</span>
+<span id="L26"><span class="lineNum">      26</span>              : #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT</span>
+<span id="L27"><span class="lineNum">      27</span>              :     libspdm_l1l2_managed_buffer_t l1l2;</span>
+<span id="L28"><span class="lineNum">      28</span>              :     uint8_t *l1l2_buffer;</span>
+<span id="L29"><span class="lineNum">      29</span>              :     size_t l1l2_buffer_size;</span>
+<span id="L30"><span class="lineNum">      30</span>              : #else</span>
+<span id="L31"><span class="lineNum">      31</span>              :     uint8_t l1l2_hash[LIBSPDM_MAX_HASH_SIZE];</span>
+<span id="L32"><span class="lineNum">      32</span>              :     size_t l1l2_hash_size;</span>
+<span id="L33"><span class="lineNum">      33</span>              : #endif</span>
+<span id="L34"><span class="lineNum">      34</span>              : </span>
+<span id="L35"><span class="lineNum">      35</span>              : #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT</span>
+<span id="L36"><span class="lineNum">      36</span>              :     result = libspdm_calculate_l1l2(spdm_context, session_info, &amp;l1l2);</span>
+<span id="L37"><span class="lineNum">      37</span>              : #else</span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          16 :     l1l2_hash_size = sizeof(l1l2_hash);</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          16 :     result = libspdm_calculate_l1l2_hash(spdm_context, session_info, &amp;l1l2_hash_size, l1l2_hash);</span></span>
+<span id="L40"><span class="lineNum">      40</span>              : #endif</span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          16 :     libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">          16 :     if (!result) {</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaUNC tlaBgUNC">           0 :         return false;</span></span>
+<span id="L44"><span class="lineNum">      44</span>              :     }</span>
+<span id="L45"><span class="lineNum">      45</span>              : </span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC tlaBgGNC">          16 :     if (spdm_context-&gt;connection_info.algorithm.pqc_asym_algo != 0) {</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaUNC tlaBgUNC">           0 :         signature_size = libspdm_get_pqc_asym_signature_size(</span></span>
+<span id="L48"><span class="lineNum">      48</span>              :             spdm_context-&gt;connection_info.algorithm.pqc_asym_algo);</span>
+<span id="L49"><span class="lineNum">      49</span>              :     } else {</span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC tlaBgGNC">          16 :         signature_size = libspdm_get_asym_signature_size(</span></span>
+<span id="L51"><span class="lineNum">      51</span>              :             spdm_context-&gt;connection_info.algorithm.base_asym_algo);</span>
+<span id="L52"><span class="lineNum">      52</span>              :     }</span>
+<span id="L53"><span class="lineNum">      53</span>              : #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT</span>
+<span id="L54"><span class="lineNum">      54</span>              :     l1l2_buffer = libspdm_get_managed_buffer(&amp;l1l2);</span>
+<span id="L55"><span class="lineNum">      55</span>              :     l1l2_buffer_size = libspdm_get_managed_buffer_size(&amp;l1l2);</span>
+<span id="L56"><span class="lineNum">      56</span>              : </span>
+<span id="L57"><span class="lineNum">      57</span>              :     result = libspdm_responder_data_sign(</span>
+<span id="L58"><span class="lineNum">      58</span>              :         spdm_context,</span>
+<span id="L59"><span class="lineNum">      59</span>              :         spdm_context-&gt;connection_info.version,</span>
+<span id="L60"><span class="lineNum">      60</span>              :         libspdm_slot_id_to_key_pair_id(spdm_context, slot_id, false),</span>
+<span id="L61"><span class="lineNum">      61</span>              :         SPDM_MEASUREMENTS,</span>
+<span id="L62"><span class="lineNum">      62</span>              :         spdm_context-&gt;connection_info.algorithm.base_asym_algo,</span>
+<span id="L63"><span class="lineNum">      63</span>              :         spdm_context-&gt;connection_info.algorithm.pqc_asym_algo,</span>
+<span id="L64"><span class="lineNum">      64</span>              :         spdm_context-&gt;connection_info.algorithm.base_hash_algo,</span>
+<span id="L65"><span class="lineNum">      65</span>              :         false, l1l2_buffer, l1l2_buffer_size, signature, &amp;signature_size);</span>
+<span id="L66"><span class="lineNum">      66</span>              : #else</span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          32 :     result = libspdm_responder_data_sign(</span></span>
+<span id="L68"><span class="lineNum">      68</span>              :         spdm_context,</span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          16 :         spdm_context-&gt;connection_info.version,</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          16 :         libspdm_slot_id_to_key_pair_id(spdm_context, slot_id, false),</span></span>
+<span id="L71"><span class="lineNum">      71</span>              :         SPDM_MEASUREMENTS,</span>
+<span id="L72"><span class="lineNum">      72</span>              :         spdm_context-&gt;connection_info.algorithm.base_asym_algo,</span>
+<span id="L73"><span class="lineNum">      73</span>              :         spdm_context-&gt;connection_info.algorithm.pqc_asym_algo,</span>
+<span id="L74"><span class="lineNum">      74</span>              :         spdm_context-&gt;connection_info.algorithm.base_hash_algo,</span>
+<span id="L75"><span class="lineNum">      75</span>              :         true, l1l2_hash, l1l2_hash_size, signature, &amp;signature_size);</span>
+<span id="L76"><span class="lineNum">      76</span>              : #endif</span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">          16 :     return result;</span></span>
+<span id="L78"><span class="lineNum">      78</span>              : }</span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">         137 : libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_context,</span></span>
+<span id="L80"><span class="lineNum">      80</span>              :                                                    size_t request_size,</span>
+<span id="L81"><span class="lineNum">      81</span>              :                                                    const void *request,</span>
+<span id="L82"><span class="lineNum">      82</span>              :                                                    size_t *response_size,</span>
+<span id="L83"><span class="lineNum">      83</span>              :                                                    void *response)</span>
+<span id="L84"><span class="lineNum">      84</span>              : {</span>
+<span id="L85"><span class="lineNum">      85</span>              :     const spdm_get_measurements_request_t *spdm_request;</span>
+<span id="L86"><span class="lineNum">      86</span>              :     size_t spdm_request_size;</span>
+<span id="L87"><span class="lineNum">      87</span>              :     spdm_measurements_response_t *spdm_response;</span>
+<span id="L88"><span class="lineNum">      88</span>              :     size_t spdm_response_size;</span>
+<span id="L89"><span class="lineNum">      89</span>              :     libspdm_return_t status;</span>
+<span id="L90"><span class="lineNum">      90</span>              :     size_t signature_size;</span>
+<span id="L91"><span class="lineNum">      91</span>              :     uint8_t slot_id_param;</span>
+<span id="L92"><span class="lineNum">      92</span>              :     uint8_t measurements_index;</span>
+<span id="L93"><span class="lineNum">      93</span>              :     uint8_t measurements_count;</span>
+<span id="L94"><span class="lineNum">      94</span>              :     uint8_t *measurements;</span>
+<span id="L95"><span class="lineNum">      95</span>              :     size_t measurements_size;</span>
+<span id="L96"><span class="lineNum">      96</span>              :     uint8_t *opaque_data;</span>
+<span id="L97"><span class="lineNum">      97</span>              :     size_t opaque_data_size;</span>
+<span id="L98"><span class="lineNum">      98</span>              :     size_t meas_opaque_buffer_size;</span>
+<span id="L99"><span class="lineNum">      99</span>              :     bool ret;</span>
+<span id="L100"><span class="lineNum">     100</span>              :     libspdm_session_info_t *session_info;</span>
+<span id="L101"><span class="lineNum">     101</span>              :     libspdm_session_state_t session_state;</span>
+<span id="L102"><span class="lineNum">     102</span>              :     uint8_t content_changed;</span>
+<span id="L103"><span class="lineNum">     103</span>              :     uint8_t *fill_response_ptr;</span>
+<span id="L104"><span class="lineNum">     104</span>              :     size_t request_context_size;</span>
+<span id="L105"><span class="lineNum">     105</span>              :     const void *request_context;</span>
+<span id="L106"><span class="lineNum">     106</span>              : </span>
+<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">         137 :     spdm_request = request;</span></span>
+<span id="L108"><span class="lineNum">     108</span>              : </span>
+<span id="L109"><span class="lineNum">     109</span>              :     /* -=[Check Parameters Phase]=- */</span>
+<span id="L110"><span class="lineNum">     110</span> <span class="tlaGNC">         137 :     LIBSPDM_ASSERT(spdm_request-&gt;header.request_response_code == SPDM_GET_MEASUREMENTS);</span></span>
+<span id="L111"><span class="lineNum">     111</span>              : </span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">         137 :     if (!spdm_context-&gt;last_spdm_request_session_id_valid) {</span></span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">         136 :         session_info = NULL;</span></span>
+<span id="L114"><span class="lineNum">     114</span>              :     } else {</span>
+<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC">           1 :         session_info = libspdm_get_session_info_via_session_id(</span></span>
+<span id="L116"><span class="lineNum">     116</span>              :             spdm_context,</span>
+<span id="L117"><span class="lineNum">     117</span>              :             spdm_context-&gt;last_spdm_request_session_id);</span>
+<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">           1 :         if (session_info == NULL) {</span></span>
+<span id="L119"><span class="lineNum">     119</span>              :             /* do not reset message_m because it is unclear which context it should be used. */</span>
+<span id="L120"><span class="lineNum">     120</span> <span class="tlaUNC tlaBgUNC">           0 :             return libspdm_generate_error_response(</span></span>
+<span id="L121"><span class="lineNum">     121</span>              :                 spdm_context,</span>
+<span id="L122"><span class="lineNum">     122</span>              :                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,</span>
+<span id="L123"><span class="lineNum">     123</span>              :                 response_size, response);</span>
+<span id="L124"><span class="lineNum">     124</span>              :         }</span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC tlaBgGNC">           1 :         session_state = libspdm_secured_message_get_session_state(</span></span>
+<span id="L126"><span class="lineNum">     126</span>              :             session_info-&gt;secured_message_context);</span>
+<span id="L127"><span class="lineNum">     127</span> <span class="tlaGNC">           1 :         if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {</span></span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaUNC tlaBgUNC">           0 :             libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaUNC">           0 :             return libspdm_generate_error_response(</span></span>
+<span id="L130"><span class="lineNum">     130</span>              :                 spdm_context,</span>
+<span id="L131"><span class="lineNum">     131</span>              :                 SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,</span>
+<span id="L132"><span class="lineNum">     132</span>              :                 response_size, response);</span>
+<span id="L133"><span class="lineNum">     133</span>              :         }</span>
+<span id="L134"><span class="lineNum">     134</span>              :     }</span>
+<span id="L135"><span class="lineNum">     135</span>              : </span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC tlaBgGNC">         137 :     if (spdm_request-&gt;header.spdm_version != libspdm_get_connection_version(spdm_context)) {</span></span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaUNC tlaBgUNC">           0 :         libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaUNC">           0 :         return libspdm_generate_error_response(spdm_context,</span></span>
+<span id="L139"><span class="lineNum">     139</span>              :                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,</span>
+<span id="L140"><span class="lineNum">     140</span>              :                                                response_size, response);</span>
+<span id="L141"><span class="lineNum">     141</span>              :     }</span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC tlaBgGNC">         137 :     if (spdm_context-&gt;response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {</span></span>
+<span id="L143"><span class="lineNum">     143</span>              : #if LIBSPDM_RESPOND_IF_READY_SUPPORT</span>
+<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">           3 :         if (spdm_context-&gt;response_state != LIBSPDM_RESPONSE_STATE_NOT_READY) {</span></span>
+<span id="L145"><span class="lineNum">     145</span>              : #endif</span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">           2 :         libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L147"><span class="lineNum">     147</span>              : #if LIBSPDM_RESPOND_IF_READY_SUPPORT</span>
+<span id="L148"><span class="lineNum">     148</span>              :     }</span>
+<span id="L149"><span class="lineNum">     149</span>              : #endif</span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">           3 :         return libspdm_responder_handle_response_state(</span></span>
+<span id="L151"><span class="lineNum">     151</span>              :             spdm_context,</span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">           3 :             spdm_request-&gt;header.request_response_code,</span></span>
+<span id="L153"><span class="lineNum">     153</span>              :             response_size, response);</span>
+<span id="L154"><span class="lineNum">     154</span>              :     }</span>
+<span id="L155"><span class="lineNum">     155</span>              :     /* check local context here, because meas_cap is reserved for requester.*/</span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">         134 :     if (!libspdm_is_capabilities_flag_supported(</span></span>
+<span id="L157"><span class="lineNum">     157</span>              :             spdm_context, false, 0,</span>
+<span id="L158"><span class="lineNum">     158</span>              :             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {</span>
+<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">           1 :         libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">           1 :         return libspdm_generate_error_response(</span></span>
+<span id="L161"><span class="lineNum">     161</span>              :             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,</span>
+<span id="L162"><span class="lineNum">     162</span>              :             SPDM_GET_MEASUREMENTS, response_size, response);</span>
+<span id="L163"><span class="lineNum">     163</span>              :     }</span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">         133 :     if ((spdm_context-&gt;connection_info.algorithm.measurement_spec == 0) ||</span></span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">         133 :         (spdm_context-&gt;connection_info.algorithm.measurement_hash_algo == 0) ) {</span></span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaUNC tlaBgUNC">           0 :         libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L167"><span class="lineNum">     167</span> <span class="tlaUNC">           0 :         return libspdm_generate_error_response(</span></span>
+<span id="L168"><span class="lineNum">     168</span>              :             spdm_context, SPDM_ERROR_CODE_UNEXPECTED_REQUEST,</span>
+<span id="L169"><span class="lineNum">     169</span>              :             0, response_size, response);</span>
+<span id="L170"><span class="lineNum">     170</span>              :     }</span>
+<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC tlaBgGNC">         133 :     if (spdm_context-&gt;connection_info.connection_state &lt;</span></span>
+<span id="L172"><span class="lineNum">     172</span>              :         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {</span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">           1 :         libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">           1 :         return libspdm_generate_error_response(</span></span>
+<span id="L175"><span class="lineNum">     175</span>              :             spdm_context,</span>
+<span id="L176"><span class="lineNum">     176</span>              :             SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,</span>
+<span id="L177"><span class="lineNum">     177</span>              :             response_size, response);</span>
+<span id="L178"><span class="lineNum">     178</span>              :     }</span>
+<span id="L179"><span class="lineNum">     179</span>              : </span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">         132 :     if ((spdm_request-&gt;header.param1 &amp;</span></span>
+<span id="L181"><span class="lineNum">     181</span>              :          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {</span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">          24 :         if (spdm_request-&gt;header.spdm_version &gt;= SPDM_MESSAGE_VERSION_11) {</span></span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">          13 :             if (request_size &lt; sizeof(spdm_get_measurements_request_t)) {</span></span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">           4 :                 libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">           4 :                 return libspdm_generate_error_response(</span></span>
+<span id="L186"><span class="lineNum">     186</span>              :                     spdm_context,</span>
+<span id="L187"><span class="lineNum">     187</span>              :                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,</span>
+<span id="L188"><span class="lineNum">     188</span>              :                     response_size, response);</span>
+<span id="L189"><span class="lineNum">     189</span>              :             }</span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">           9 :             spdm_request_size = sizeof(spdm_get_measurements_request_t);</span></span>
+<span id="L191"><span class="lineNum">     191</span>              :         } else {</span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">          11 :             if (request_size &lt;</span></span>
+<span id="L193"><span class="lineNum">     193</span>              :                 sizeof(spdm_get_measurements_request_t) -</span>
+<span id="L194"><span class="lineNum">     194</span>              :                 sizeof(spdm_request-&gt;slot_id_param)) {</span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">           1 :                 libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">           1 :                 return libspdm_generate_error_response(</span></span>
+<span id="L197"><span class="lineNum">     197</span>              :                     spdm_context,</span>
+<span id="L198"><span class="lineNum">     198</span>              :                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,</span>
+<span id="L199"><span class="lineNum">     199</span>              :                     response_size, response);</span>
+<span id="L200"><span class="lineNum">     200</span>              :             }</span>
+<span id="L201"><span class="lineNum">     201</span> <span class="tlaGNC">          10 :             spdm_request_size = sizeof(spdm_get_measurements_request_t) -</span></span>
+<span id="L202"><span class="lineNum">     202</span>              :                                 sizeof(spdm_request-&gt;slot_id_param);</span>
+<span id="L203"><span class="lineNum">     203</span>              :         }</span>
+<span id="L204"><span class="lineNum">     204</span>              :     } else {</span>
+<span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">         108 :         if (request_size &lt; sizeof(spdm_message_header_t)) {</span></span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaUNC tlaBgUNC">           0 :             libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L207"><span class="lineNum">     207</span> <span class="tlaUNC">           0 :             return libspdm_generate_error_response(</span></span>
+<span id="L208"><span class="lineNum">     208</span>              :                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,</span>
+<span id="L209"><span class="lineNum">     209</span>              :                 0, response_size, response);</span>
+<span id="L210"><span class="lineNum">     210</span>              :         }</span>
+<span id="L211"><span class="lineNum">     211</span> <span class="tlaGNC tlaBgGNC">         108 :         spdm_request_size = sizeof(spdm_message_header_t);</span></span>
+<span id="L212"><span class="lineNum">     212</span>              :     }</span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">         127 :     if (spdm_request-&gt;header.spdm_version &gt;= SPDM_MESSAGE_VERSION_13) {</span></span>
+<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">           2 :         if (request_size &lt; spdm_request_size + SPDM_REQ_CONTEXT_SIZE) {</span></span>
+<span id="L215"><span class="lineNum">     215</span> <span class="tlaUNC tlaBgUNC">           0 :             libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaUNC">           0 :             return libspdm_generate_error_response(</span></span>
+<span id="L217"><span class="lineNum">     217</span>              :                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,</span>
+<span id="L218"><span class="lineNum">     218</span>              :                 0, response_size, response);</span>
+<span id="L219"><span class="lineNum">     219</span>              :         }</span>
+<span id="L220"><span class="lineNum">     220</span> <span class="tlaGNC tlaBgGNC">           2 :         spdm_request_size += SPDM_REQ_CONTEXT_SIZE;</span></span>
+<span id="L221"><span class="lineNum">     221</span>              :     }</span>
+<span id="L222"><span class="lineNum">     222</span>              : </span>
+<span id="L223"><span class="lineNum">     223</span> <span class="tlaGNC">         127 :     if ((spdm_request-&gt;header.param1 &amp;</span></span>
+<span id="L224"><span class="lineNum">     224</span>              :          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {</span>
+<span id="L225"><span class="lineNum">     225</span> <span class="tlaGNC">          19 :         if (!libspdm_is_capabilities_flag_supported(</span></span>
+<span id="L226"><span class="lineNum">     226</span>              :                 spdm_context, false, 0,</span>
+<span id="L227"><span class="lineNum">     227</span>              :                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG)) {</span>
+<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">           1 :             libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L229"><span class="lineNum">     229</span> <span class="tlaGNC">           1 :             return libspdm_generate_error_response(</span></span>
+<span id="L230"><span class="lineNum">     230</span>              :                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,</span>
+<span id="L231"><span class="lineNum">     231</span>              :                 0, response_size, response);</span>
+<span id="L232"><span class="lineNum">     232</span>              :         }</span>
+<span id="L233"><span class="lineNum">     233</span>              :     }</span>
+<span id="L234"><span class="lineNum">     234</span>              : </span>
+<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">         126 :     if ((spdm_request-&gt;header.param1 &amp;</span></span>
+<span id="L236"><span class="lineNum">     236</span>              :          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {</span>
+<span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">         108 :         signature_size = 0;</span></span>
+<span id="L238"><span class="lineNum">     238</span>              :     } else {</span>
+<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">          18 :         if (spdm_context-&gt;connection_info.algorithm.pqc_asym_algo != 0) {</span></span>
+<span id="L240"><span class="lineNum">     240</span> <span class="tlaUNC tlaBgUNC">           0 :             signature_size = libspdm_get_pqc_asym_signature_size(</span></span>
+<span id="L241"><span class="lineNum">     241</span>              :                 spdm_context-&gt;connection_info.algorithm.pqc_asym_algo);</span>
+<span id="L242"><span class="lineNum">     242</span>              :         } else {</span>
+<span id="L243"><span class="lineNum">     243</span> <span class="tlaGNC tlaBgGNC">          18 :             signature_size = libspdm_get_asym_signature_size(</span></span>
+<span id="L244"><span class="lineNum">     244</span>              :                 spdm_context-&gt;connection_info.algorithm.base_asym_algo);</span>
+<span id="L245"><span class="lineNum">     245</span>              :         }</span>
+<span id="L246"><span class="lineNum">     246</span>              :     }</span>
+<span id="L247"><span class="lineNum">     247</span>              : </span>
+<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">         126 :     if (spdm_request-&gt;header.spdm_version &gt;= SPDM_MESSAGE_VERSION_13) {</span></span>
+<span id="L249"><span class="lineNum">     249</span> <span class="tlaGNC">           2 :         request_context_size = SPDM_REQ_CONTEXT_SIZE;</span></span>
+<span id="L250"><span class="lineNum">     250</span>              : </span>
+<span id="L251"><span class="lineNum">     251</span> <span class="tlaGNC">           2 :         if ((spdm_request-&gt;header.param1 &amp;</span></span>
+<span id="L252"><span class="lineNum">     252</span>              :              SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {</span>
+<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">           1 :             request_context = (const uint8_t *)spdm_request + sizeof(spdm_message_header_t);</span></span>
+<span id="L254"><span class="lineNum">     254</span>              :         } else {</span>
+<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">           1 :             request_context = spdm_request + 1;</span></span>
+<span id="L256"><span class="lineNum">     256</span>              :         }</span>
+<span id="L257"><span class="lineNum">     257</span>              :     } else {</span>
+<span id="L258"><span class="lineNum">     258</span> <span class="tlaGNC">         124 :         request_context_size = 0;</span></span>
+<span id="L259"><span class="lineNum">     259</span> <span class="tlaGNC">         124 :         request_context = NULL;</span></span>
+<span id="L260"><span class="lineNum">     260</span>              :     }</span>
+<span id="L261"><span class="lineNum">     261</span>              : </span>
+<span id="L262"><span class="lineNum">     262</span>              :     /* response_size should be large enough to hold a MEASUREMENTS response without</span>
+<span id="L263"><span class="lineNum">     263</span>              :      * measurements or opaque data. */</span>
+<span id="L264"><span class="lineNum">     264</span> <span class="tlaGNC">         126 :     LIBSPDM_ASSERT(*response_size &gt;= (sizeof(spdm_measurements_response_t) +</span></span>
+<span id="L265"><span class="lineNum">     265</span>              :                                       SPDM_NONCE_SIZE + sizeof(uint16_t) + signature_size));</span>
+<span id="L266"><span class="lineNum">     266</span>              : </span>
+<span id="L267"><span class="lineNum">     267</span> <span class="tlaGNC">         126 :     meas_opaque_buffer_size = *response_size - (sizeof(spdm_measurements_response_t) +</span></span>
+<span id="L268"><span class="lineNum">     268</span>              :                                                 SPDM_NONCE_SIZE + sizeof(uint16_t) +</span>
+<span id="L269"><span class="lineNum">     269</span>              :                                                 signature_size);</span>
+<span id="L270"><span class="lineNum">     270</span>              : </span>
+<span id="L271"><span class="lineNum">     271</span> <span class="tlaGNC">         126 :     libspdm_zero_mem(response, *response_size);</span></span>
+<span id="L272"><span class="lineNum">     272</span>              : </span>
+<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">         126 :     measurements_index = spdm_request-&gt;header.param2;</span></span>
+<span id="L274"><span class="lineNum">     274</span> <span class="tlaGNC">         126 :     measurements_count = 0;</span></span>
+<span id="L275"><span class="lineNum">     275</span> <span class="tlaGNC">         126 :     measurements = (uint8_t*)response + sizeof(spdm_measurements_response_t);</span></span>
+<span id="L276"><span class="lineNum">     276</span> <span class="tlaGNC">         126 :     measurements_size = meas_opaque_buffer_size;</span></span>
+<span id="L277"><span class="lineNum">     277</span>              : </span>
+<span id="L278"><span class="lineNum">     278</span> <span class="tlaGNC">         126 :     status = libspdm_measurement_collection(</span></span>
+<span id="L279"><span class="lineNum">     279</span>              :         spdm_context,</span>
+<span id="L280"><span class="lineNum">     280</span> <span class="tlaGNC">         126 :         spdm_context-&gt;connection_info.version,</span></span>
+<span id="L281"><span class="lineNum">     281</span> <span class="tlaGNC">         126 :         spdm_context-&gt;connection_info.algorithm.measurement_spec,</span></span>
+<span id="L282"><span class="lineNum">     282</span>              :         spdm_context-&gt;connection_info.algorithm.measurement_hash_algo,</span>
+<span id="L283"><span class="lineNum">     283</span>              :         measurements_index,</span>
+<span id="L284"><span class="lineNum">     284</span> <span class="tlaGNC">         126 :         spdm_request-&gt;header.param1,</span></span>
+<span id="L285"><span class="lineNum">     285</span>              :         request_context_size,</span>
+<span id="L286"><span class="lineNum">     286</span>              :         request_context,</span>
+<span id="L287"><span class="lineNum">     287</span>              :         &amp;content_changed,</span>
+<span id="L288"><span class="lineNum">     288</span>              :         &amp;measurements_count,</span>
+<span id="L289"><span class="lineNum">     289</span>              :         measurements,</span>
+<span id="L290"><span class="lineNum">     290</span>              :         &amp;measurements_size);</span>
+<span id="L291"><span class="lineNum">     291</span>              : </span>
+<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">         126 :     if (LIBSPDM_STATUS_IS_ERROR(status)) {</span></span>
+<span id="L293"><span class="lineNum">     293</span> <span class="tlaGNC">           1 :         if (status == LIBSPDM_STATUS_MEAS_INVALID_INDEX) {</span></span>
+<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">           1 :             libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">           1 :             return libspdm_generate_error_response(</span></span>
+<span id="L296"><span class="lineNum">     296</span>              :                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,</span>
+<span id="L297"><span class="lineNum">     297</span>              :                 0, response_size, response);</span>
+<span id="L298"><span class="lineNum">     298</span>              :         } else {</span>
+<span id="L299"><span class="lineNum">     299</span> <span class="tlaUNC tlaBgUNC">           0 :             libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L300"><span class="lineNum">     300</span> <span class="tlaUNC">           0 :             return libspdm_generate_error_response(</span></span>
+<span id="L301"><span class="lineNum">     301</span>              :                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,</span>
+<span id="L302"><span class="lineNum">     302</span>              :                 0, response_size, response);</span>
+<span id="L303"><span class="lineNum">     303</span>              :         }</span>
+<span id="L304"><span class="lineNum">     304</span>              :     }</span>
+<span id="L305"><span class="lineNum">     305</span>              : </span>
+<span id="L306"><span class="lineNum">     306</span> <span class="tlaGNC tlaBgGNC">         125 :     LIBSPDM_ASSERT(measurements_count != 0);</span></span>
+<span id="L307"><span class="lineNum">     307</span> <span class="tlaGNC">         125 :     LIBSPDM_ASSERT((measurements_index == 0) || (measurements_size &gt; 0));</span></span>
+<span id="L308"><span class="lineNum">     308</span> <span class="tlaGNC">         125 :     LIBSPDM_ASSERT(measurements_size &lt;= SPDM_MAX_MEASUREMENT_RECORD_LENGTH);</span></span>
+<span id="L309"><span class="lineNum">     309</span> <span class="tlaGNC">         125 :     LIBSPDM_ASSERT(measurements_size &lt;= meas_opaque_buffer_size);</span></span>
+<span id="L310"><span class="lineNum">     310</span>              : </span>
+<span id="L311"><span class="lineNum">     311</span> <span class="tlaGNC">         125 :     if (measurements_index == 0) {</span></span>
+<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">          11 :         measurements_size = 0;</span></span>
+<span id="L313"><span class="lineNum">     313</span>              :     }</span>
+<span id="L314"><span class="lineNum">     314</span>              : </span>
+<span id="L315"><span class="lineNum">     315</span> <span class="tlaGNC">         125 :     opaque_data =</span></span>
+<span id="L316"><span class="lineNum">     316</span>              :         (uint8_t*)response + sizeof(spdm_measurements_response_t) + measurements_size +</span>
+<span id="L317"><span class="lineNum">     317</span> <span class="tlaGNC">         125 :         SPDM_NONCE_SIZE + sizeof(uint16_t);</span></span>
+<span id="L318"><span class="lineNum">     318</span>              : </span>
+<span id="L319"><span class="lineNum">     319</span> <span class="tlaGNC">         125 :     if ((libspdm_get_connection_version(spdm_context) &gt;= SPDM_MESSAGE_VERSION_12) &amp;&amp;</span></span>
+<span id="L320"><span class="lineNum">     320</span> <span class="tlaGNC">           8 :         ((spdm_context-&gt;connection_info.algorithm.other_params_support &amp;</span></span>
+<span id="L321"><span class="lineNum">     321</span>              :           SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) == SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_NONE)) {</span>
+<span id="L322"><span class="lineNum">     322</span> <span class="tlaGNC">           4 :         opaque_data_size = 0;</span></span>
+<span id="L323"><span class="lineNum">     323</span>              :     } else {</span>
+<span id="L324"><span class="lineNum">     324</span> <span class="tlaGNC">         121 :         opaque_data_size = meas_opaque_buffer_size - measurements_size;</span></span>
+<span id="L325"><span class="lineNum">     325</span>              : </span>
+<span id="L326"><span class="lineNum">     326</span> <span class="tlaGNC">         121 :         ret = libspdm_measurement_opaque_data(</span></span>
+<span id="L327"><span class="lineNum">     327</span>              :             spdm_context,</span>
+<span id="L328"><span class="lineNum">     328</span> <span class="tlaGNC">         121 :             spdm_context-&gt;connection_info.version,</span></span>
+<span id="L329"><span class="lineNum">     329</span> <span class="tlaGNC">         121 :             spdm_context-&gt;connection_info.algorithm.measurement_spec,</span></span>
+<span id="L330"><span class="lineNum">     330</span>              :             spdm_context-&gt;connection_info.algorithm.measurement_hash_algo,</span>
+<span id="L331"><span class="lineNum">     331</span>              :             measurements_index,</span>
+<span id="L332"><span class="lineNum">     332</span> <span class="tlaGNC">         121 :             spdm_request-&gt;header.param1,</span></span>
+<span id="L333"><span class="lineNum">     333</span>              :             request_context_size,</span>
+<span id="L334"><span class="lineNum">     334</span>              :             request_context,</span>
+<span id="L335"><span class="lineNum">     335</span>              :             opaque_data,</span>
+<span id="L336"><span class="lineNum">     336</span>              :             &amp;opaque_data_size);</span>
+<span id="L337"><span class="lineNum">     337</span>              : </span>
+<span id="L338"><span class="lineNum">     338</span> <span class="tlaGNC">         121 :         if (!ret) {</span></span>
+<span id="L339"><span class="lineNum">     339</span> <span class="tlaUNC tlaBgUNC">           0 :             libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L340"><span class="lineNum">     340</span> <span class="tlaUNC">           0 :             return libspdm_generate_error_response(</span></span>
+<span id="L341"><span class="lineNum">     341</span>              :                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,</span>
+<span id="L342"><span class="lineNum">     342</span>              :                 0, response_size, response);</span>
+<span id="L343"><span class="lineNum">     343</span>              :         }</span>
+<span id="L344"><span class="lineNum">     344</span>              :     }</span>
+<span id="L345"><span class="lineNum">     345</span>              : </span>
+<span id="L346"><span class="lineNum">     346</span> <span class="tlaGNC tlaBgGNC">         125 :     LIBSPDM_ASSERT(opaque_data_size &lt;= (meas_opaque_buffer_size - measurements_size));</span></span>
+<span id="L347"><span class="lineNum">     347</span>              : </span>
+<span id="L348"><span class="lineNum">     348</span> <span class="tlaGNC">         125 :     spdm_response_size =</span></span>
+<span id="L349"><span class="lineNum">     349</span>              :         sizeof(spdm_measurements_response_t) + measurements_size + SPDM_NONCE_SIZE +</span>
+<span id="L350"><span class="lineNum">     350</span> <span class="tlaGNC">         125 :         sizeof(uint16_t) + opaque_data_size + signature_size;</span></span>
+<span id="L351"><span class="lineNum">     351</span> <span class="tlaGNC">         125 :     if (spdm_request-&gt;header.spdm_version &gt;= SPDM_MESSAGE_VERSION_13) {</span></span>
+<span id="L352"><span class="lineNum">     352</span> <span class="tlaGNC">           2 :         spdm_response_size += SPDM_REQ_CONTEXT_SIZE;</span></span>
+<span id="L353"><span class="lineNum">     353</span>              :     }</span>
+<span id="L354"><span class="lineNum">     354</span>              : </span>
+<span id="L355"><span class="lineNum">     355</span> <span class="tlaGNC">         125 :     LIBSPDM_ASSERT(*response_size &gt;= spdm_response_size);</span></span>
+<span id="L356"><span class="lineNum">     356</span>              : </span>
+<span id="L357"><span class="lineNum">     357</span> <span class="tlaGNC">         125 :     *response_size = spdm_response_size;</span></span>
+<span id="L358"><span class="lineNum">     358</span> <span class="tlaGNC">         125 :     spdm_response = response;</span></span>
+<span id="L359"><span class="lineNum">     359</span>              : </span>
+<span id="L360"><span class="lineNum">     360</span> <span class="tlaGNC">         125 :     switch (spdm_request-&gt;header.param2) {</span></span>
+<span id="L361"><span class="lineNum">     361</span> <span class="tlaGNC">          11 :     case SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS:</span></span>
+<span id="L362"><span class="lineNum">     362</span> <span class="tlaGNC">          11 :         spdm_response-&gt;header.spdm_version = spdm_request-&gt;header.spdm_version;</span></span>
+<span id="L363"><span class="lineNum">     363</span> <span class="tlaGNC">          11 :         spdm_response-&gt;header.request_response_code = SPDM_MEASUREMENTS;</span></span>
+<span id="L364"><span class="lineNum">     364</span> <span class="tlaGNC">          11 :         spdm_response-&gt;header.param1 = measurements_count;</span></span>
+<span id="L365"><span class="lineNum">     365</span> <span class="tlaGNC">          11 :         spdm_response-&gt;header.param2 = 0;</span></span>
+<span id="L366"><span class="lineNum">     366</span> <span class="tlaGNC">          11 :         spdm_response-&gt;number_of_blocks = 0;</span></span>
+<span id="L367"><span class="lineNum">     367</span> <span class="tlaGNC">          11 :         libspdm_write_uint24(spdm_response-&gt;measurement_record_length, 0);</span></span>
+<span id="L368"><span class="lineNum">     368</span> <span class="tlaGNC">          11 :         break;</span></span>
+<span id="L369"><span class="lineNum">     369</span> <span class="tlaGNC">           5 :     case SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS:</span></span>
+<span id="L370"><span class="lineNum">     370</span> <span class="tlaGNC">          45 :         LIBSPDM_DEBUG_CODE(</span></span>
+<span id="L371"><span class="lineNum">     371</span>              :             uint8_t index;</span>
+<span id="L372"><span class="lineNum">     372</span>              :             size_t debug_measurements_record_size;</span>
+<span id="L373"><span class="lineNum">     373</span>              :             size_t debug_measurements_block_size;</span>
+<span id="L374"><span class="lineNum">     374</span>              :             spdm_measurement_block_dmtf_t *debug_measurement_block;</span>
+<span id="L375"><span class="lineNum">     375</span>              : </span>
+<span id="L376"><span class="lineNum">     376</span>              :             debug_measurements_record_size = 0;</span>
+<span id="L377"><span class="lineNum">     377</span>              :             debug_measurement_block = (void *)measurements;</span>
+<span id="L378"><span class="lineNum">     378</span>              :             for (index = 0; index &lt; measurements_count; index++) {</span>
+<span id="L379"><span class="lineNum">     379</span>              :             debug_measurements_block_size =</span>
+<span id="L380"><span class="lineNum">     380</span>              :                 sizeof(spdm_measurement_block_dmtf_t) +</span>
+<span id="L381"><span class="lineNum">     381</span>              :                 debug_measurement_block-&gt;measurement_block_dmtf_header</span>
+<span id="L382"><span class="lineNum">     382</span>              :                 .dmtf_spec_measurement_value_size;</span>
+<span id="L383"><span class="lineNum">     383</span>              :             debug_measurements_record_size += debug_measurements_block_size;</span>
+<span id="L384"><span class="lineNum">     384</span>              :             debug_measurement_block =</span>
+<span id="L385"><span class="lineNum">     385</span>              :                 (void *)((size_t)debug_measurement_block + debug_measurements_block_size);</span>
+<span id="L386"><span class="lineNum">     386</span>              :         }</span>
+<span id="L387"><span class="lineNum">     387</span>              :             LIBSPDM_ASSERT(debug_measurements_record_size == measurements_size);</span>
+<span id="L388"><span class="lineNum">     388</span>              :             );</span>
+<span id="L389"><span class="lineNum">     389</span>              : </span>
+<span id="L390"><span class="lineNum">     390</span> <span class="tlaGNC">           5 :         spdm_response-&gt;header.spdm_version = spdm_request-&gt;header.spdm_version;</span></span>
+<span id="L391"><span class="lineNum">     391</span> <span class="tlaGNC">           5 :         spdm_response-&gt;header.request_response_code = SPDM_MEASUREMENTS;</span></span>
+<span id="L392"><span class="lineNum">     392</span> <span class="tlaGNC">           5 :         spdm_response-&gt;header.param1 = 0;</span></span>
+<span id="L393"><span class="lineNum">     393</span> <span class="tlaGNC">           5 :         spdm_response-&gt;header.param2 = 0;</span></span>
+<span id="L394"><span class="lineNum">     394</span> <span class="tlaGNC">           5 :         spdm_response-&gt;number_of_blocks = measurements_count;</span></span>
+<span id="L395"><span class="lineNum">     395</span> <span class="tlaGNC">           5 :         libspdm_write_uint24(spdm_response-&gt;measurement_record_length, (uint32_t)measurements_size);</span></span>
+<span id="L396"><span class="lineNum">     396</span> <span class="tlaGNC">           5 :         break;</span></span>
+<span id="L397"><span class="lineNum">     397</span> <span class="tlaGNC">         109 :     default:</span></span>
+<span id="L398"><span class="lineNum">     398</span> <span class="tlaGNC">         109 :         LIBSPDM_ASSERT(measurements_count == 1);</span></span>
+<span id="L399"><span class="lineNum">     399</span>              : </span>
+<span id="L400"><span class="lineNum">     400</span> <span class="tlaGNC">         109 :         spdm_response-&gt;header.spdm_version = spdm_request-&gt;header.spdm_version;</span></span>
+<span id="L401"><span class="lineNum">     401</span> <span class="tlaGNC">         109 :         spdm_response-&gt;header.request_response_code = SPDM_MEASUREMENTS;</span></span>
+<span id="L402"><span class="lineNum">     402</span> <span class="tlaGNC">         109 :         spdm_response-&gt;header.param1 = 0;</span></span>
+<span id="L403"><span class="lineNum">     403</span> <span class="tlaGNC">         109 :         spdm_response-&gt;header.param2 = 0;</span></span>
+<span id="L404"><span class="lineNum">     404</span> <span class="tlaGNC">         109 :         spdm_response-&gt;number_of_blocks = 1;</span></span>
+<span id="L405"><span class="lineNum">     405</span> <span class="tlaGNC">         109 :         libspdm_write_uint24(spdm_response-&gt;measurement_record_length, (uint32_t)measurements_size);</span></span>
+<span id="L406"><span class="lineNum">     406</span> <span class="tlaGNC">         109 :         break;</span></span>
+<span id="L407"><span class="lineNum">     407</span>              :     }</span>
+<span id="L408"><span class="lineNum">     408</span>              : </span>
+<span id="L409"><span class="lineNum">     409</span> <span class="tlaGNC">         125 :     if ((spdm_request-&gt;header.param1 &amp;</span></span>
+<span id="L410"><span class="lineNum">     410</span>              :          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {</span>
+<span id="L411"><span class="lineNum">     411</span> <span class="tlaGNC">          18 :         if (spdm_response-&gt;header.spdm_version &gt;= SPDM_MESSAGE_VERSION_11) {</span></span>
+<span id="L412"><span class="lineNum">     412</span> <span class="tlaGNC">           8 :             slot_id_param = spdm_request-&gt;slot_id_param &amp;</span></span>
+<span id="L413"><span class="lineNum">     413</span>              :                             SPDM_GET_MEASUREMENTS_REQUEST_SLOT_ID_MASK;</span>
+<span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC">           8 :             if ((slot_id_param != 0xF) &amp;&amp; (slot_id_param &gt;= SPDM_MAX_SLOT_COUNT)) {</span></span>
+<span id="L415"><span class="lineNum">     415</span> <span class="tlaGNC">           1 :                 libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L416"><span class="lineNum">     416</span> <span class="tlaGNC">           1 :                 return libspdm_generate_error_response(</span></span>
+<span id="L417"><span class="lineNum">     417</span>              :                     spdm_context,</span>
+<span id="L418"><span class="lineNum">     418</span>              :                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,</span>
+<span id="L419"><span class="lineNum">     419</span>              :                     response_size, response);</span>
+<span id="L420"><span class="lineNum">     420</span>              :             }</span>
+<span id="L421"><span class="lineNum">     421</span> <span class="tlaGNC">           7 :             if (slot_id_param != 0xF) {</span></span>
+<span id="L422"><span class="lineNum">     422</span> <span class="tlaGNC">           6 :                 if (spdm_context-&gt;local_context</span></span>
+<span id="L423"><span class="lineNum">     423</span> <span class="tlaGNC">           6 :                     .local_cert_chain_provision[slot_id_param] == NULL) {</span></span>
+<span id="L424"><span class="lineNum">     424</span> <span class="tlaUNC tlaBgUNC">           0 :                     libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L425"><span class="lineNum">     425</span> <span class="tlaUNC">           0 :                     return libspdm_generate_error_response(</span></span>
+<span id="L426"><span class="lineNum">     426</span>              :                         spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,</span>
+<span id="L427"><span class="lineNum">     427</span>              :                         0, response_size, response);</span>
+<span id="L428"><span class="lineNum">     428</span>              :                 }</span>
+<span id="L429"><span class="lineNum">     429</span>              :             } else {</span>
+<span id="L430"><span class="lineNum">     430</span> <span class="tlaGNC tlaBgGNC">           1 :                 if (spdm_context-&gt;local_context</span></span>
+<span id="L431"><span class="lineNum">     431</span> <span class="tlaGNC">           1 :                     .local_public_key_provision == NULL) {</span></span>
+<span id="L432"><span class="lineNum">     432</span> <span class="tlaUNC tlaBgUNC">           0 :                     libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L433"><span class="lineNum">     433</span> <span class="tlaUNC">           0 :                     return libspdm_generate_error_response(</span></span>
+<span id="L434"><span class="lineNum">     434</span>              :                         spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,</span>
+<span id="L435"><span class="lineNum">     435</span>              :                         0, response_size, response);</span>
+<span id="L436"><span class="lineNum">     436</span>              :                 }</span>
+<span id="L437"><span class="lineNum">     437</span>              :             }</span>
+<span id="L438"><span class="lineNum">     438</span>              : </span>
+<span id="L439"><span class="lineNum">     439</span> <span class="tlaGNC tlaBgGNC">           7 :             if ((spdm_request-&gt;header.spdm_version &gt;= SPDM_MESSAGE_VERSION_13) &amp;&amp;</span></span>
+<span id="L440"><span class="lineNum">     440</span> <span class="tlaGNC">           1 :                 spdm_context-&gt;connection_info.multi_key_conn_rsp &amp;&amp;</span></span>
+<span id="L441"><span class="lineNum">     441</span>              :                 (slot_id_param != 0xF)) {</span>
+<span id="L442"><span class="lineNum">     442</span> <span class="tlaGNC">           1 :                 if ((spdm_context-&gt;local_context.local_key_usage_bit_mask[slot_id_param] &amp;</span></span>
+<span id="L443"><span class="lineNum">     443</span>              :                      SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE) == 0) {</span>
+<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">           1 :                     return libspdm_generate_error_response(</span></span>
+<span id="L445"><span class="lineNum">     445</span>              :                         spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,</span>
+<span id="L446"><span class="lineNum">     446</span>              :                         0, response_size, response);</span>
+<span id="L447"><span class="lineNum">     447</span>              :                 }</span>
+<span id="L448"><span class="lineNum">     448</span>              :             }</span>
+<span id="L449"><span class="lineNum">     449</span>              : </span>
+<span id="L450"><span class="lineNum">     450</span> <span class="tlaGNC">           6 :             spdm_response-&gt;header.param2 = slot_id_param;</span></span>
+<span id="L451"><span class="lineNum">     451</span> <span class="tlaGNC">           6 :             if (spdm_response-&gt;header.spdm_version &gt;= SPDM_MESSAGE_VERSION_12) {</span></span>
+<span id="L452"><span class="lineNum">     452</span> <span class="tlaGNC">           5 :                 spdm_response-&gt;header.param2 = slot_id_param |</span></span>
+<span id="L453"><span class="lineNum">     453</span> <span class="tlaGNC">           5 :                                                (content_changed &amp;</span></span>
+<span id="L454"><span class="lineNum">     454</span>              :                                                 SPDM_MEASUREMENTS_RESPONSE_CONTENT_CHANGE_MASK);</span>
+<span id="L455"><span class="lineNum">     455</span>              :             }</span>
+<span id="L456"><span class="lineNum">     456</span>              :         }</span>
+<span id="L457"><span class="lineNum">     457</span>              :     }</span>
+<span id="L458"><span class="lineNum">     458</span>              : </span>
+<span id="L459"><span class="lineNum">     459</span> <span class="tlaGNC">         123 :     fill_response_ptr =</span></span>
+<span id="L460"><span class="lineNum">     460</span> <span class="tlaGNC">         123 :         (uint8_t*)response + sizeof(spdm_measurements_response_t) + measurements_size;</span></span>
+<span id="L461"><span class="lineNum">     461</span>              : </span>
+<span id="L462"><span class="lineNum">     462</span> <span class="tlaGNC">         123 :     if (!libspdm_get_random_number(SPDM_NONCE_SIZE, fill_response_ptr)) {</span></span>
+<span id="L463"><span class="lineNum">     463</span> <span class="tlaUNC tlaBgUNC">           0 :         libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L464"><span class="lineNum">     464</span> <span class="tlaUNC">           0 :         return libspdm_generate_error_response(spdm_context,</span></span>
+<span id="L465"><span class="lineNum">     465</span>              :                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,</span>
+<span id="L466"><span class="lineNum">     466</span>              :                                                response_size, response);</span>
+<span id="L467"><span class="lineNum">     467</span>              :     }</span>
+<span id="L468"><span class="lineNum">     468</span> <span class="tlaGNC tlaBgGNC">         123 :     fill_response_ptr += SPDM_NONCE_SIZE;</span></span>
+<span id="L469"><span class="lineNum">     469</span>              : </span>
+<span id="L470"><span class="lineNum">     470</span> <span class="tlaGNC">         123 :     libspdm_write_uint16(fill_response_ptr, (uint16_t)opaque_data_size);</span></span>
+<span id="L471"><span class="lineNum">     471</span> <span class="tlaGNC">         123 :     fill_response_ptr += sizeof(uint16_t);</span></span>
+<span id="L472"><span class="lineNum">     472</span>              : </span>
+<span id="L473"><span class="lineNum">     473</span> <span class="tlaGNC">         123 :     fill_response_ptr += opaque_data_size;</span></span>
+<span id="L474"><span class="lineNum">     474</span>              : </span>
+<span id="L475"><span class="lineNum">     475</span> <span class="tlaGNC">         123 :     if (spdm_request-&gt;header.spdm_version &gt;= SPDM_MESSAGE_VERSION_13) {</span></span>
+<span id="L476"><span class="lineNum">     476</span> <span class="tlaGNC">           1 :         libspdm_copy_mem(fill_response_ptr, SPDM_REQ_CONTEXT_SIZE,</span></span>
+<span id="L477"><span class="lineNum">     477</span> <span class="tlaGNC">           1 :                          (const uint8_t *)spdm_request + spdm_request_size - SPDM_REQ_CONTEXT_SIZE,</span></span>
+<span id="L478"><span class="lineNum">     478</span>              :                          SPDM_REQ_CONTEXT_SIZE);</span>
+<span id="L479"><span class="lineNum">     479</span> <span class="tlaGNC">           1 :         fill_response_ptr += SPDM_REQ_CONTEXT_SIZE;</span></span>
+<span id="L480"><span class="lineNum">     480</span>              :     }</span>
+<span id="L481"><span class="lineNum">     481</span>              : </span>
+<span id="L482"><span class="lineNum">     482</span> <span class="tlaGNC">         123 :     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,</span></span>
+<span id="L483"><span class="lineNum">     483</span> <span class="tlaGNC">         123 :                                                   spdm_request-&gt;header.request_response_code);</span></span>
+<span id="L484"><span class="lineNum">     484</span>              : </span>
+<span id="L485"><span class="lineNum">     485</span> <span class="tlaGNC">         123 :     status = libspdm_append_message_m(spdm_context, session_info, spdm_request, spdm_request_size);</span></span>
+<span id="L486"><span class="lineNum">     486</span> <span class="tlaGNC">         123 :     if (LIBSPDM_STATUS_IS_ERROR(status)) {</span></span>
+<span id="L487"><span class="lineNum">     487</span> <span class="tlaUNC tlaBgUNC">           0 :         libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L488"><span class="lineNum">     488</span> <span class="tlaUNC">           0 :         return libspdm_generate_error_response(spdm_context,</span></span>
+<span id="L489"><span class="lineNum">     489</span>              :                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,</span>
+<span id="L490"><span class="lineNum">     490</span>              :                                                response_size, response);</span>
+<span id="L491"><span class="lineNum">     491</span>              :     }</span>
+<span id="L492"><span class="lineNum">     492</span>              : </span>
+<span id="L493"><span class="lineNum">     493</span> <span class="tlaGNC tlaBgGNC">         123 :     status = libspdm_append_message_m(spdm_context, session_info,</span></span>
+<span id="L494"><span class="lineNum">     494</span> <span class="tlaGNC">         123 :                                       spdm_response, *response_size - signature_size);</span></span>
+<span id="L495"><span class="lineNum">     495</span> <span class="tlaGNC">         123 :     if (LIBSPDM_STATUS_IS_ERROR(status)) {</span></span>
+<span id="L496"><span class="lineNum">     496</span> <span class="tlaUNC tlaBgUNC">           0 :         libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L497"><span class="lineNum">     497</span> <span class="tlaUNC">           0 :         return libspdm_generate_error_response(spdm_context,</span></span>
+<span id="L498"><span class="lineNum">     498</span>              :                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,</span>
+<span id="L499"><span class="lineNum">     499</span>              :                                                response_size, response);</span>
+<span id="L500"><span class="lineNum">     500</span>              :     }</span>
+<span id="L501"><span class="lineNum">     501</span>              : </span>
+<span id="L502"><span class="lineNum">     502</span> <span class="tlaGNC tlaBgGNC">         123 :     if ((spdm_request-&gt;header.param1 &amp;</span></span>
+<span id="L503"><span class="lineNum">     503</span>              :          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {</span>
+<span id="L504"><span class="lineNum">     504</span>              : </span>
+<span id="L505"><span class="lineNum">     505</span> <span class="tlaGNC">          16 :         ret = libspdm_generate_measurement_signature(</span></span>
+<span id="L506"><span class="lineNum">     506</span>              :             spdm_context, session_info, slot_id_param, fill_response_ptr);</span>
+<span id="L507"><span class="lineNum">     507</span>              : </span>
+<span id="L508"><span class="lineNum">     508</span> <span class="tlaGNC">          16 :         if (!ret) {</span></span>
+<span id="L509"><span class="lineNum">     509</span> <span class="tlaUNC tlaBgUNC">           0 :             libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L510"><span class="lineNum">     510</span> <span class="tlaUNC">           0 :             return libspdm_generate_error_response(</span></span>
+<span id="L511"><span class="lineNum">     511</span>              :                 spdm_context,</span>
+<span id="L512"><span class="lineNum">     512</span>              :                 SPDM_ERROR_CODE_UNSPECIFIED,</span>
+<span id="L513"><span class="lineNum">     513</span>              :                 0,</span>
+<span id="L514"><span class="lineNum">     514</span>              :                 response_size, response);</span>
+<span id="L515"><span class="lineNum">     515</span>              :         }</span>
+<span id="L516"><span class="lineNum">     516</span>              :         /*reset*/</span>
+<span id="L517"><span class="lineNum">     517</span> <span class="tlaGNC tlaBgGNC">          16 :         libspdm_reset_message_m(spdm_context, session_info);</span></span>
+<span id="L518"><span class="lineNum">     518</span>              :     }</span>
+<span id="L519"><span class="lineNum">     519</span>              : </span>
+<span id="L520"><span class="lineNum">     520</span> <span class="tlaGNC">         123 :     return LIBSPDM_STATUS_SUCCESS;</span></span>
+<span id="L521"><span class="lineNum">     521</span>              : }</span>
+<span id="L522"><span class="lineNum">     522</span>              : </span>
+<span id="L523"><span class="lineNum">     523</span>              : #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

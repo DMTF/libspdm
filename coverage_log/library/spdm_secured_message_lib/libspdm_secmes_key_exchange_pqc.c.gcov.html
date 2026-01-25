@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - library/spdm_secured_message_lib/libspdm_secmes_key_exchange_pqc.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">library/spdm_secured_message_lib</a> - libspdm_secmes_key_exchange_pqc.c<span style="font-size: 80%;"> (source / <a href="libspdm_secmes_key_exchange_pqc.c.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">27</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-01-25 08:10:29</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : /**</span>
+<span id="L2"><span class="lineNum">       2</span>              :  *  Copyright Notice:</span>
+<span id="L3"><span class="lineNum">       3</span>              :  *  Copyright 2025 DMTF. All rights reserved.</span>
+<span id="L4"><span class="lineNum">       4</span>              :  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md</span>
+<span id="L5"><span class="lineNum">       5</span>              :  **/</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;internal/libspdm_secured_message_lib.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : </span>
+<span id="L9"><span class="lineNum">       9</span>              : /**</span>
+<span id="L10"><span class="lineNum">      10</span>              :  * Allocates and Initializes one KEM context for subsequent use,</span>
+<span id="L11"><span class="lineNum">      11</span>              :  * based upon negotiated KEM algorithm.</span>
+<span id="L12"><span class="lineNum">      12</span>              :  *</span>
+<span id="L13"><span class="lineNum">      13</span>              :  * @param  kem_alg                SPDM kem_alg</span>
+<span id="L14"><span class="lineNum">      14</span>              :  * @param  is_initiator                   if the caller is initiator.</span>
+<span id="L15"><span class="lineNum">      15</span>              :  *                                       true: initiator</span>
+<span id="L16"><span class="lineNum">      16</span>              :  *                                       false: not an initiator</span>
+<span id="L17"><span class="lineNum">      17</span>              :  *</span>
+<span id="L18"><span class="lineNum">      18</span>              :  * @return  Pointer to the KEM context that has been initialized.</span>
+<span id="L19"><span class="lineNum">      19</span>              :  **/</span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaUNC tlaBgUNC">           0 : void *libspdm_secured_message_kem_new(spdm_version_number_t spdm_version,</span></span>
+<span id="L21"><span class="lineNum">      21</span>              :                                       uint32_t kem_alg, bool is_initiator)</span>
+<span id="L22"><span class="lineNum">      22</span>              : {</span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaUNC">           0 :     return libspdm_kem_new(spdm_version, kem_alg, is_initiator);</span></span>
+<span id="L24"><span class="lineNum">      24</span>              : }</span>
+<span id="L25"><span class="lineNum">      25</span>              : </span>
+<span id="L26"><span class="lineNum">      26</span>              : /**</span>
+<span id="L27"><span class="lineNum">      27</span>              :  * Release the specified KEM context,</span>
+<span id="L28"><span class="lineNum">      28</span>              :  * based upon negotiated KEM algorithm.</span>
+<span id="L29"><span class="lineNum">      29</span>              :  *</span>
+<span id="L30"><span class="lineNum">      30</span>              :  * @param  kem_alg                SPDM kem_alg</span>
+<span id="L31"><span class="lineNum">      31</span>              :  * @param  kem_context                   Pointer to the KEM context to be released.</span>
+<span id="L32"><span class="lineNum">      32</span>              :  **/</span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaUNC">           0 : void libspdm_secured_message_kem_free(uint32_t kem_alg, void *kem_context)</span></span>
+<span id="L34"><span class="lineNum">      34</span>              : {</span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaUNC">           0 :     libspdm_kem_free(kem_alg, kem_context);</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L37"><span class="lineNum">      37</span>              : </span>
+<span id="L38"><span class="lineNum">      38</span>              : /**</span>
+<span id="L39"><span class="lineNum">      39</span>              :  * Generates KEM public key,</span>
+<span id="L40"><span class="lineNum">      40</span>              :  * based upon negotiated KEM algorithm.</span>
+<span id="L41"><span class="lineNum">      41</span>              :  *</span>
+<span id="L42"><span class="lineNum">      42</span>              :  * @param  kem_alg                SPDM kem_alg</span>
+<span id="L43"><span class="lineNum">      43</span>              :  * @param  kem_context                 Pointer to the KEM context.</span>
+<span id="L44"><span class="lineNum">      44</span>              :  * @param  encap_key                   Pointer to the buffer to receive generated public key.</span>
+<span id="L45"><span class="lineNum">      45</span>              :  * @param  encap_key_size              On input, the size of public_key buffer in bytes.</span>
+<span id="L46"><span class="lineNum">      46</span>              :  *                                     On output, the size of data returned in public_key buffer in bytes.</span>
+<span id="L47"><span class="lineNum">      47</span>              :  *</span>
+<span id="L48"><span class="lineNum">      48</span>              :  * @retval true   KEM public key generation succeeded.</span>
+<span id="L49"><span class="lineNum">      49</span>              :  * @retval false  KEM public key generation failed.</span>
+<span id="L50"><span class="lineNum">      50</span>              :  * @retval false  public_key_size is not large enough.</span>
+<span id="L51"><span class="lineNum">      51</span>              :  **/</span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaUNC">           0 : bool libspdm_secured_message_kem_generate_key(uint32_t kem_alg,</span></span>
+<span id="L53"><span class="lineNum">      53</span>              :                                               void *kem_context,</span>
+<span id="L54"><span class="lineNum">      54</span>              :                                               uint8_t *encap_key,</span>
+<span id="L55"><span class="lineNum">      55</span>              :                                               size_t *encap_key_size)</span>
+<span id="L56"><span class="lineNum">      56</span>              : {</span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaUNC">           0 :     return libspdm_kem_generate_key(kem_alg, kem_context, encap_key, encap_key_size);</span></span>
+<span id="L58"><span class="lineNum">      58</span>              : }</span>
+<span id="L59"><span class="lineNum">      59</span>              : </span>
+<span id="L60"><span class="lineNum">      60</span>              : /**</span>
+<span id="L61"><span class="lineNum">      61</span>              :  * Computes exchanged common key,</span>
+<span id="L62"><span class="lineNum">      62</span>              :  * based upon negotiated KEM algorithm.</span>
+<span id="L63"><span class="lineNum">      63</span>              :  *</span>
+<span id="L64"><span class="lineNum">      64</span>              :  * @param  kem_alg                SPDM kem_alg</span>
+<span id="L65"><span class="lineNum">      65</span>              :  * @param  kem_context                   Pointer to the kem context.</span>
+<span id="L66"><span class="lineNum">      66</span>              :  * @param  peer_encap_key                Pointer to the peer's public key.</span>
+<span id="L67"><span class="lineNum">      67</span>              :  * @param  peer_encap_key_size           Size of peer's public key in bytes.</span>
+<span id="L68"><span class="lineNum">      68</span>              :  * @param  cipher_text                   Pointer to the buffer to receive generated cipher text.</span>
+<span id="L69"><span class="lineNum">      69</span>              :  * @param  cipher_text_size              On input, the size of cipher text buffer in bytes.</span>
+<span id="L70"><span class="lineNum">      70</span>              :  *                                       On output, the size of data returned in cipher_text buffer in bytes.</span>
+<span id="L71"><span class="lineNum">      71</span>              :  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.</span>
+<span id="L72"><span class="lineNum">      72</span>              :  *</span>
+<span id="L73"><span class="lineNum">      73</span>              :  * @retval true   DHE exchanged key generation succeeded.</span>
+<span id="L74"><span class="lineNum">      74</span>              :  * @retval false  DHE exchanged key generation failed.</span>
+<span id="L75"><span class="lineNum">      75</span>              :  * @retval false  key_size is not large enough.</span>
+<span id="L76"><span class="lineNum">      76</span>              :  **/</span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaUNC">           0 : bool libspdm_secured_message_kem_encapsulate(</span></span>
+<span id="L78"><span class="lineNum">      78</span>              :     uint32_t kem_alg, void *kem_context,</span>
+<span id="L79"><span class="lineNum">      79</span>              :     const uint8_t *peer_encap_key, size_t peer_encap_key_size,</span>
+<span id="L80"><span class="lineNum">      80</span>              :     uint8_t *cipher_text, size_t *cipher_text_size,</span>
+<span id="L81"><span class="lineNum">      81</span>              :     void *spdm_secured_message_context)</span>
+<span id="L82"><span class="lineNum">      82</span>              : {</span>
+<span id="L83"><span class="lineNum">      83</span>              :     libspdm_secured_message_context_t *secured_message_context;</span>
+<span id="L84"><span class="lineNum">      84</span>              :     uint8_t final_key[LIBSPDM_MAX_KEM_SS_SIZE];</span>
+<span id="L85"><span class="lineNum">      85</span>              :     size_t final_key_size;</span>
+<span id="L86"><span class="lineNum">      86</span>              :     bool ret;</span>
+<span id="L87"><span class="lineNum">      87</span>              : </span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaUNC">           0 :     secured_message_context = spdm_secured_message_context;</span></span>
+<span id="L89"><span class="lineNum">      89</span>              : </span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaUNC">           0 :     final_key_size = sizeof(final_key);</span></span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaUNC">           0 :     ret = libspdm_kem_encapsulate(kem_alg, kem_context, peer_encap_key,</span></span>
+<span id="L92"><span class="lineNum">      92</span>              :                                   peer_encap_key_size, cipher_text,</span>
+<span id="L93"><span class="lineNum">      93</span>              :                                   cipher_text_size, final_key,</span>
+<span id="L94"><span class="lineNum">      94</span>              :                                   &amp;final_key_size);</span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaUNC">           0 :     if (!ret) {</span></span>
+<span id="L96"><span class="lineNum">      96</span> <span class="tlaUNC">           0 :         return ret;</span></span>
+<span id="L97"><span class="lineNum">      97</span>              :     }</span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaUNC">           0 :     libspdm_copy_mem(secured_message_context-&gt;master_secret.shared_secret,</span></span>
+<span id="L99"><span class="lineNum">      99</span>              :                      sizeof(secured_message_context-&gt;master_secret.shared_secret),</span>
+<span id="L100"><span class="lineNum">     100</span>              :                      final_key, final_key_size);</span>
+<span id="L101"><span class="lineNum">     101</span> <span class="tlaUNC">           0 :     libspdm_zero_mem(final_key, final_key_size);</span></span>
+<span id="L102"><span class="lineNum">     102</span> <span class="tlaUNC">           0 :     secured_message_context-&gt;shared_key_size = final_key_size;</span></span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaUNC">           0 :     return true;</span></span>
+<span id="L104"><span class="lineNum">     104</span>              : }</span>
+<span id="L105"><span class="lineNum">     105</span>              : </span>
+<span id="L106"><span class="lineNum">     106</span>              : /**</span>
+<span id="L107"><span class="lineNum">     107</span>              :  * Computes exchanged common key,</span>
+<span id="L108"><span class="lineNum">     108</span>              :  * based upon negotiated KEM algorithm.</span>
+<span id="L109"><span class="lineNum">     109</span>              :  *</span>
+<span id="L110"><span class="lineNum">     110</span>              :  * @param  kem_alg                SPDM kem_alg</span>
+<span id="L111"><span class="lineNum">     111</span>              :  * @param  kem_context                   Pointer to the kem context.</span>
+<span id="L112"><span class="lineNum">     112</span>              :  * @param  peer_cipher_text              Pointer to the peer's public key.</span>
+<span id="L113"><span class="lineNum">     113</span>              :  * @param  peer_cipher_text_size         Size of peer's public key in bytes.</span>
+<span id="L114"><span class="lineNum">     114</span>              :  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.</span>
+<span id="L115"><span class="lineNum">     115</span>              :  *</span>
+<span id="L116"><span class="lineNum">     116</span>              :  * @retval true   DHE exchanged key generation succeeded.</span>
+<span id="L117"><span class="lineNum">     117</span>              :  * @retval false  DHE exchanged key generation failed.</span>
+<span id="L118"><span class="lineNum">     118</span>              :  * @retval false  key_size is not large enough.</span>
+<span id="L119"><span class="lineNum">     119</span>              :  **/</span>
+<span id="L120"><span class="lineNum">     120</span> <span class="tlaUNC">           0 : bool libspdm_secured_message_kem_decapsulate(</span></span>
+<span id="L121"><span class="lineNum">     121</span>              :     uint32_t kem_alg, void *kem_context,</span>
+<span id="L122"><span class="lineNum">     122</span>              :     const uint8_t *peer_cipher_text, size_t peer_cipher_text_size,</span>
+<span id="L123"><span class="lineNum">     123</span>              :     void *spdm_secured_message_context)</span>
+<span id="L124"><span class="lineNum">     124</span>              : {</span>
+<span id="L125"><span class="lineNum">     125</span>              :     libspdm_secured_message_context_t *secured_message_context;</span>
+<span id="L126"><span class="lineNum">     126</span>              :     uint8_t final_key[LIBSPDM_MAX_KEM_SS_SIZE];</span>
+<span id="L127"><span class="lineNum">     127</span>              :     size_t final_key_size;</span>
+<span id="L128"><span class="lineNum">     128</span>              :     bool ret;</span>
+<span id="L129"><span class="lineNum">     129</span>              : </span>
+<span id="L130"><span class="lineNum">     130</span> <span class="tlaUNC">           0 :     secured_message_context = spdm_secured_message_context;</span></span>
+<span id="L131"><span class="lineNum">     131</span>              : </span>
+<span id="L132"><span class="lineNum">     132</span> <span class="tlaUNC">           0 :     final_key_size = sizeof(final_key);</span></span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaUNC">           0 :     ret = libspdm_kem_decapsulate(kem_alg, kem_context, peer_cipher_text,</span></span>
+<span id="L134"><span class="lineNum">     134</span>              :                                   peer_cipher_text_size, final_key,</span>
+<span id="L135"><span class="lineNum">     135</span>              :                                   &amp;final_key_size);</span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaUNC">           0 :     if (!ret) {</span></span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaUNC">           0 :         return ret;</span></span>
+<span id="L138"><span class="lineNum">     138</span>              :     }</span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaUNC">           0 :     libspdm_copy_mem(secured_message_context-&gt;master_secret.shared_secret,</span></span>
+<span id="L140"><span class="lineNum">     140</span>              :                      sizeof(secured_message_context-&gt;master_secret.shared_secret),</span>
+<span id="L141"><span class="lineNum">     141</span>              :                      final_key, final_key_size);</span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaUNC">           0 :     libspdm_zero_mem(final_key, final_key_size);</span></span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaUNC">           0 :     secured_message_context-&gt;shared_key_size = final_key_size;</span></span>
+<span id="L144"><span class="lineNum">     144</span> <span class="tlaUNC">           0 :     return true;</span></span>
+<span id="L145"><span class="lineNum">     145</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - library/spdm_requester_lib/libspdm_req_encap_error.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">library/spdm_requester_lib</a> - libspdm_req_encap_error.c<span style="font-size: 80%;"> (source / <a href="libspdm_req_encap_error.c.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">45.0&nbsp;%</td>
+            <td class="headerCovTableEntry">20</td>
+            <td class="headerCovTableEntry">9</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-01-25 08:10:29</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+                  <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : /**</span>
+<span id="L2"><span class="lineNum">       2</span>              :  *  Copyright Notice:</span>
+<span id="L3"><span class="lineNum">       3</span>              :  *  Copyright 2021-2022 DMTF. All rights reserved.</span>
+<span id="L4"><span class="lineNum">       4</span>              :  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md</span>
+<span id="L5"><span class="lineNum">       5</span>              :  **/</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;internal/libspdm_requester_lib.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : </span>
+<span id="L9"><span class="lineNum">       9</span>              : #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP</span>
+<span id="L10"><span class="lineNum">      10</span>              : </span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC tlaBgGNC">          47 : libspdm_return_t libspdm_generate_encap_error_response(const void *spdm_context,</span></span>
+<span id="L12"><span class="lineNum">      12</span>              :                                                        uint8_t error_code,</span>
+<span id="L13"><span class="lineNum">      13</span>              :                                                        uint8_t error_data,</span>
+<span id="L14"><span class="lineNum">      14</span>              :                                                        size_t *response_size,</span>
+<span id="L15"><span class="lineNum">      15</span>              :                                                        void *response)</span>
+<span id="L16"><span class="lineNum">      16</span>              : {</span>
+<span id="L17"><span class="lineNum">      17</span>              :     spdm_error_response_t *spdm_response;</span>
+<span id="L18"><span class="lineNum">      18</span>              : </span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          47 :     LIBSPDM_ASSERT(*response_size &gt;= sizeof(spdm_error_response_t));</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">          47 :     *response_size = sizeof(spdm_error_response_t);</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          47 :     spdm_response = response;</span></span>
+<span id="L22"><span class="lineNum">      22</span>              : </span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          47 :     spdm_response-&gt;header.spdm_version = libspdm_get_connection_version (spdm_context);</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          47 :     spdm_response-&gt;header.request_response_code = SPDM_ERROR;</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          47 :     spdm_response-&gt;header.param1 = error_code;</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          47 :     spdm_response-&gt;header.param2 = error_data;</span></span>
+<span id="L27"><span class="lineNum">      27</span>              : </span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          47 :     return LIBSPDM_STATUS_SUCCESS;</span></span>
+<span id="L29"><span class="lineNum">      29</span>              : }</span>
+<span id="L30"><span class="lineNum">      30</span>              : </span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaUNC tlaBgUNC">           0 : libspdm_return_t libspdm_generate_encap_extended_error_response(</span></span>
+<span id="L32"><span class="lineNum">      32</span>              :     const void *spdm_context, uint8_t error_code, uint8_t error_data,</span>
+<span id="L33"><span class="lineNum">      33</span>              :     size_t extended_error_data_size, const uint8_t *extended_error_data,</span>
+<span id="L34"><span class="lineNum">      34</span>              :     size_t *response_size, void *response)</span>
+<span id="L35"><span class="lineNum">      35</span>              : {</span>
+<span id="L36"><span class="lineNum">      36</span>              :     spdm_error_response_t *spdm_response;</span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaUNC">           0 :     LIBSPDM_ASSERT(*response_size &gt;=</span></span>
+<span id="L38"><span class="lineNum">      38</span>              :                    sizeof(spdm_error_response_t) + extended_error_data_size);</span>
+<span id="L39"><span class="lineNum">      39</span>              : </span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaUNC">           0 :     spdm_response = response;</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaUNC">           0 :     spdm_response-&gt;header.spdm_version = libspdm_get_connection_version (spdm_context);</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaUNC">           0 :     spdm_response-&gt;header.request_response_code = SPDM_ERROR;</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaUNC">           0 :     spdm_response-&gt;header.param1 = error_code;</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaUNC">           0 :     spdm_response-&gt;header.param2 = error_data;</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaUNC">           0 :     libspdm_copy_mem(spdm_response + 1, *response_size - (sizeof(spdm_error_response_t)),</span></span>
+<span id="L46"><span class="lineNum">      46</span>              :                      extended_error_data, extended_error_data_size);</span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaUNC">           0 :     *response_size =</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaUNC">           0 :         sizeof(spdm_error_response_t) + extended_error_data_size;</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaUNC">           0 :     return LIBSPDM_STATUS_SUCCESS;</span></span>
+<span id="L50"><span class="lineNum">      50</span>              : }</span>
+<span id="L51"><span class="lineNum">      51</span>              : </span>
+<span id="L52"><span class="lineNum">      52</span>              : #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

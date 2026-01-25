@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - library/spdm_crypt_lib/fips/libspdm_selftest_aes_gcm.c</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">library/spdm_crypt_lib/fips</a> - libspdm_selftest_aes_gcm.c<span style="font-size: 80%;"> (source / <a href="libspdm_selftest_aes_gcm.c.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">57.4&nbsp;%</td>
+            <td class="headerCovTableEntry">54</td>
+            <td class="headerCovTableEntry">31</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-01-25 08:10:29</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+                  <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : /**</span>
+<span id="L2"><span class="lineNum">       2</span>              :  *  Copyright Notice:</span>
+<span id="L3"><span class="lineNum">       3</span>              :  *  Copyright 2023-2025 DMTF. All rights reserved.</span>
+<span id="L4"><span class="lineNum">       4</span>              :  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md</span>
+<span id="L5"><span class="lineNum">       5</span>              :  **/</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;internal/libspdm_crypt_lib.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &quot;internal/libspdm_common_lib.h&quot;</span>
+<span id="L9"><span class="lineNum">       9</span>              : #include &quot;internal/libspdm_fips_lib.h&quot;</span>
+<span id="L10"><span class="lineNum">      10</span>              : </span>
+<span id="L11"><span class="lineNum">      11</span>              : #if LIBSPDM_FIPS_MODE</span>
+<span id="L12"><span class="lineNum">      12</span>              : </span>
+<span id="L13"><span class="lineNum">      13</span>              : /**</span>
+<span id="L14"><span class="lineNum">      14</span>              :  * AES_GCM self_test</span>
+<span id="L15"><span class="lineNum">      15</span>              :  **/</span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">           1 : bool libspdm_fips_selftest_aes_gcm(void *fips_selftest_context)</span></span>
+<span id="L17"><span class="lineNum">      17</span>              : {</span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">           1 :     bool result = true;</span></span>
+<span id="L19"><span class="lineNum">      19</span>              : </span>
+<span id="L20"><span class="lineNum">      20</span>              : #if LIBSPDM_AEAD_GCM_SUPPORT</span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">           1 :     libspdm_fips_selftest_context_t *context = fips_selftest_context;</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">           1 :     LIBSPDM_ASSERT(fips_selftest_context != NULL);</span></span>
+<span id="L23"><span class="lineNum">      23</span>              : </span>
+<span id="L24"><span class="lineNum">      24</span>              :     /* any test fail cause the FIPS fail*/</span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           1 :     if (context-&gt;tested_algo != context-&gt;self_test_result) {</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaUNC tlaBgUNC">           0 :         return false;</span></span>
+<span id="L27"><span class="lineNum">      27</span>              :     }</span>
+<span id="L28"><span class="lineNum">      28</span>              : </span>
+<span id="L29"><span class="lineNum">      29</span>              :     /* check if run before.*/</span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC tlaBgGNC">           1 :     if ((context-&gt;tested_algo &amp; LIBSPDM_FIPS_SELF_TEST_AES_GCM) != 0) {</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaUNC tlaBgUNC">           0 :         return true;</span></span>
+<span id="L32"><span class="lineNum">      32</span>              :     }</span>
+<span id="L33"><span class="lineNum">      33</span>              : </span>
+<span id="L34"><span class="lineNum">      34</span>              :     uint8_t output_ciphertext[1024];</span>
+<span id="L35"><span class="lineNum">      35</span>              :     uint8_t output_plaintext[1024];</span>
+<span id="L36"><span class="lineNum">      36</span>              :     uint8_t output_tag[1024];</span>
+<span id="L37"><span class="lineNum">      37</span>              :     size_t output_ciphertext_size;</span>
+<span id="L38"><span class="lineNum">      38</span>              :     size_t output_plaintext_size;</span>
+<span id="L39"><span class="lineNum">      39</span>              : </span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC tlaBgGNC">           1 :     output_ciphertext_size = sizeof(output_ciphertext);</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">           1 :     output_plaintext_size = sizeof(output_plaintext);</span></span>
+<span id="L42"><span class="lineNum">      42</span>              : </span>
+<span id="L43"><span class="lineNum">      43</span>              :     /*Key to use crypto operation*/</span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">           1 :     const uint8_t key[] = {</span></span>
+<span id="L45"><span class="lineNum">      45</span>              :         0x01, 0xd1, 0xa6, 0x9e, 0x73, 0x7f, 0xf2, 0xea,</span>
+<span id="L46"><span class="lineNum">      46</span>              :         0x53, 0x56, 0x6f, 0xa2, 0xd7, 0xc0, 0x80, 0xd6</span>
+<span id="L47"><span class="lineNum">      47</span>              :     };</span>
+<span id="L48"><span class="lineNum">      48</span>              : </span>
+<span id="L49"><span class="lineNum">      49</span>              :     /*IV to perform the crypto operation upon*/</span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">           1 :     const uint8_t iv[] = {</span></span>
+<span id="L51"><span class="lineNum">      51</span>              :         0x0f, 0x3e, 0xd5, 0x9c, 0xa5, 0xb3, 0x0f, 0xb5,</span>
+<span id="L52"><span class="lineNum">      52</span>              :         0xea, 0x4e, 0x13, 0x60</span>
+<span id="L53"><span class="lineNum">      53</span>              :     };</span>
+<span id="L54"><span class="lineNum">      54</span>              : </span>
+<span id="L55"><span class="lineNum">      55</span>              :     /*Data to perform the crypto operation upon*/</span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">           1 :     const uint8_t input[] = {</span></span>
+<span id="L57"><span class="lineNum">      57</span>              :         0xf6, 0x28, 0xc8, 0x61, 0xe5, 0x97, 0x04, 0xd9,</span>
+<span id="L58"><span class="lineNum">      58</span>              :         0xba, 0xc8, 0x00, 0xc0, 0x4c, 0x1a, 0x2d, 0x7e,</span>
+<span id="L59"><span class="lineNum">      59</span>              :         0x6c, 0x44, 0x61, 0x3f, 0xa4, 0x64, 0xb0, 0xe1,</span>
+<span id="L60"><span class="lineNum">      60</span>              :         0x17, 0x3d, 0x8d, 0xba, 0xc0, 0x14, 0x72, 0xd3,</span>
+<span id="L61"><span class="lineNum">      61</span>              :         0xc6, 0x8a, 0x5e, 0xb4, 0xf3, 0x16, 0x7f, 0xd0,</span>
+<span id="L62"><span class="lineNum">      62</span>              :         0x21, 0x29, 0x76, 0x85, 0x86, 0x4d, 0x78, 0x86,</span>
+<span id="L63"><span class="lineNum">      63</span>              :         0x14, 0x98, 0x32, 0x5e, 0xa6, 0xda, 0x6f, 0xce,</span>
+<span id="L64"><span class="lineNum">      64</span>              :         0x98, 0x2c, 0xe9, 0x6e, 0xaa, 0x77, 0x18, 0xb8,</span>
+<span id="L65"><span class="lineNum">      65</span>              :         0x89, 0xb7, 0x2d, 0x13, 0xc5, 0x61, 0xb3, 0xaf,</span>
+<span id="L66"><span class="lineNum">      66</span>              :         0xe7, 0x13, 0xa7, 0x38, 0x45, 0xd4, 0x4c, 0x4a,</span>
+<span id="L67"><span class="lineNum">      67</span>              :         0xc6, 0xdc, 0xe5, 0x29, 0x6c, 0xd5, 0xd9, 0xc6,</span>
+<span id="L68"><span class="lineNum">      68</span>              :         0xde, 0xe2, 0x5d, 0x78, 0xfd, 0xa7, 0x3a, 0x45,</span>
+<span id="L69"><span class="lineNum">      69</span>              :         0x7e, 0xdf, 0x00, 0xd0, 0x6a, 0xb0, 0xe8, 0x3a,</span>
+<span id="L70"><span class="lineNum">      70</span>              :         0x86, 0x48, 0xa7, 0xaf, 0x7e, 0x6f, 0x33, 0xb2</span>
+<span id="L71"><span class="lineNum">      71</span>              :     };</span>
+<span id="L72"><span class="lineNum">      72</span>              : </span>
+<span id="L73"><span class="lineNum">      73</span>              :     /*Additional auth data*/</span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">           1 :     const uint8_t aad[] = {</span></span>
+<span id="L75"><span class="lineNum">      75</span>              :         0x66, 0x2a, 0x0a, 0x62, 0xe2, 0xb5, 0xa5, 0xa9,</span>
+<span id="L76"><span class="lineNum">      76</span>              :         0xae, 0x46, 0x19, 0x16, 0x46, 0xf5, 0x26, 0xd8,</span>
+<span id="L77"><span class="lineNum">      77</span>              :         0x8b, 0xf1, 0xac, 0xe1, 0x11, 0xee, 0xcf, 0x66,</span>
+<span id="L78"><span class="lineNum">      78</span>              :         0x8c, 0x3b, 0xde, 0x57, 0x42, 0x2b, 0xa8, 0x02,</span>
+<span id="L79"><span class="lineNum">      79</span>              :         0xc4, 0x60, 0x24, 0xb3, 0xa3, 0x84, 0xb5, 0x52,</span>
+<span id="L80"><span class="lineNum">      80</span>              :         0x12, 0x98, 0xfe, 0x1e</span>
+<span id="L81"><span class="lineNum">      81</span>              :     };</span>
+<span id="L82"><span class="lineNum">      82</span>              : </span>
+<span id="L83"><span class="lineNum">      83</span>              :     /*Expected ciphertext*/</span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">           1 :     const uint8_t expected_ciphertext[] = {</span></span>
+<span id="L85"><span class="lineNum">      85</span>              :         0x2d, 0x4a, 0x0b, 0x34, 0x20, 0xcd, 0x7a, 0xe7,</span>
+<span id="L86"><span class="lineNum">      86</span>              :         0x91, 0x1e, 0x5a, 0x53, 0x5e, 0x2b, 0x7b, 0x8e,</span>
+<span id="L87"><span class="lineNum">      87</span>              :         0x42, 0x37, 0xf0, 0xeb, 0x5a, 0x84, 0xc5, 0xea,</span>
+<span id="L88"><span class="lineNum">      88</span>              :         0x95, 0xd3, 0xe7, 0xe2, 0xb4, 0xb8, 0x88, 0xe0,</span>
+<span id="L89"><span class="lineNum">      89</span>              :         0x4f, 0x28, 0xe3, 0x41, 0x7f, 0x05, 0x8d, 0x7c,</span>
+<span id="L90"><span class="lineNum">      90</span>              :         0x4d, 0xae, 0x05, 0x92, 0xfc, 0x27, 0xfc, 0x67,</span>
+<span id="L91"><span class="lineNum">      91</span>              :         0x94, 0x9f, 0x24, 0xa5, 0x5e, 0x70, 0xd9, 0xa7,</span>
+<span id="L92"><span class="lineNum">      92</span>              :         0xb3, 0xd2, 0x78, 0xf0, 0xcd, 0x75, 0x4e, 0x43,</span>
+<span id="L93"><span class="lineNum">      93</span>              :         0xe8, 0xad, 0xd4, 0x54, 0x57, 0xf8, 0x67, 0x1d,</span>
+<span id="L94"><span class="lineNum">      94</span>              :         0x31, 0xbf, 0x45, 0xef, 0x1f, 0xaf, 0xec, 0x3b,</span>
+<span id="L95"><span class="lineNum">      95</span>              :         0x4b, 0x3c, 0x90, 0x65, 0x83, 0x32, 0x6c, 0x9b,</span>
+<span id="L96"><span class="lineNum">      96</span>              :         0x5c, 0xc2, 0x30, 0xc4, 0x5a, 0x6e, 0xec, 0x74,</span>
+<span id="L97"><span class="lineNum">      97</span>              :         0xe3, 0x51, 0x11, 0xb5, 0x51, 0x04, 0xc5, 0xc0,</span>
+<span id="L98"><span class="lineNum">      98</span>              :         0x68, 0x50, 0xc4, 0xb8, 0xd1, 0x9a, 0x8e, 0x37</span>
+<span id="L99"><span class="lineNum">      99</span>              :     };</span>
+<span id="L100"><span class="lineNum">     100</span>              : </span>
+<span id="L101"><span class="lineNum">     101</span>              :     /*Expected Auth Tag*/</span>
+<span id="L102"><span class="lineNum">     102</span> <span class="tlaGNC">           1 :     const uint8_t expected_tag[] = {</span></span>
+<span id="L103"><span class="lineNum">     103</span>              :         0xc1, 0x37, 0xee, 0x11, 0x32, 0xf3, 0x75, 0x0a,</span>
+<span id="L104"><span class="lineNum">     104</span>              :         0xd6, 0x57, 0x78, 0x77, 0x40, 0x05, 0x91, 0x41</span>
+<span id="L105"><span class="lineNum">     105</span>              :     };</span>
+<span id="L106"><span class="lineNum">     106</span>              : </span>
+<span id="L107"><span class="lineNum">     107</span>              :     /*KAT test*/</span>
+<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">           1 :     libspdm_zero_mem(output_ciphertext, sizeof(output_ciphertext));</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">           1 :     libspdm_zero_mem(output_tag, sizeof(output_tag));</span></span>
+<span id="L110"><span class="lineNum">     110</span> <span class="tlaGNC">           1 :     result = libspdm_aead_aes_gcm_encrypt(key, sizeof(key), iv, sizeof(iv), aad, sizeof(aad),</span></span>
+<span id="L111"><span class="lineNum">     111</span>              :                                           input, sizeof(input), output_tag, sizeof(expected_tag),</span>
+<span id="L112"><span class="lineNum">     112</span>              :                                           output_ciphertext, &amp;output_ciphertext_size);</span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">           1 :     if (!result) {</span></span>
+<span id="L114"><span class="lineNum">     114</span> <span class="tlaUNC tlaBgUNC">           0 :         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, &quot;aes_gcm encrypt failed \n&quot;));</span></span>
+<span id="L115"><span class="lineNum">     115</span> <span class="tlaUNC">           0 :         goto update;</span></span>
+<span id="L116"><span class="lineNum">     116</span>              :     }</span>
+<span id="L117"><span class="lineNum">     117</span>              : </span>
+<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC tlaBgGNC">           1 :     if (output_ciphertext_size != sizeof(expected_ciphertext)) {</span></span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaUNC tlaBgUNC">           0 :         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, &quot;aes_gcm KAT failed \n&quot;));</span></span>
+<span id="L120"><span class="lineNum">     120</span> <span class="tlaUNC">           0 :         result = false;</span></span>
+<span id="L121"><span class="lineNum">     121</span> <span class="tlaUNC">           0 :         goto update;</span></span>
+<span id="L122"><span class="lineNum">     122</span>              :     }</span>
+<span id="L123"><span class="lineNum">     123</span>              : </span>
+<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC tlaBgGNC">           1 :     if (!libspdm_consttime_is_mem_equal(output_ciphertext, expected_ciphertext,</span></span>
+<span id="L125"><span class="lineNum">     125</span>              :                                         sizeof(expected_ciphertext))) {</span>
+<span id="L126"><span class="lineNum">     126</span> <span class="tlaUNC tlaBgUNC">           0 :         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, &quot;aes_gcm KAT failed \n&quot;));</span></span>
+<span id="L127"><span class="lineNum">     127</span> <span class="tlaUNC">           0 :         result = false;</span></span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaUNC">           0 :         goto update;</span></span>
+<span id="L129"><span class="lineNum">     129</span>              :     }</span>
+<span id="L130"><span class="lineNum">     130</span>              : </span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC tlaBgGNC">           1 :     if (!libspdm_consttime_is_mem_equal(output_tag, expected_tag, sizeof(expected_tag))) {</span></span>
+<span id="L132"><span class="lineNum">     132</span> <span class="tlaUNC tlaBgUNC">           0 :         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, &quot;aes_gcm KAT failed \n&quot;));</span></span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaUNC">           0 :         result = false;</span></span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaUNC">           0 :         goto update;</span></span>
+<span id="L135"><span class="lineNum">     135</span>              :     }</span>
+<span id="L136"><span class="lineNum">     136</span>              : </span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC tlaBgGNC">           1 :     libspdm_zero_mem(output_plaintext, sizeof(output_plaintext));</span></span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">           1 :     result = libspdm_aead_aes_gcm_decrypt(key, sizeof(key), iv, sizeof(iv), aad, sizeof(aad),</span></span>
+<span id="L139"><span class="lineNum">     139</span>              :                                           expected_ciphertext, sizeof(expected_ciphertext),</span>
+<span id="L140"><span class="lineNum">     140</span>              :                                           expected_tag, sizeof(expected_tag),</span>
+<span id="L141"><span class="lineNum">     141</span>              :                                           output_plaintext, &amp;output_plaintext_size);</span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">           1 :     if (!result) {</span></span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaUNC tlaBgUNC">           0 :         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, &quot;aes_gcm decrypt failed \n&quot;));</span></span>
+<span id="L144"><span class="lineNum">     144</span> <span class="tlaUNC">           0 :         result = false;</span></span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaUNC">           0 :         goto update;</span></span>
+<span id="L146"><span class="lineNum">     146</span>              :     }</span>
+<span id="L147"><span class="lineNum">     147</span>              : </span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC tlaBgGNC">           1 :     if (output_plaintext_size != sizeof(input)) {</span></span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaUNC tlaBgUNC">           0 :         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, &quot;aes_gcm selftest failed \n&quot;));</span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaUNC">           0 :         result = false;</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaUNC">           0 :         goto update;</span></span>
+<span id="L152"><span class="lineNum">     152</span>              :     }</span>
+<span id="L153"><span class="lineNum">     153</span>              : </span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC tlaBgGNC">           1 :     if (!libspdm_consttime_is_mem_equal(output_plaintext, input, sizeof(input))) {</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaUNC tlaBgUNC">           0 :         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, &quot;aes_gcm selftest failed \n&quot;));</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaUNC">           0 :         result = false;</span></span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaUNC">           0 :         goto update;</span></span>
+<span id="L158"><span class="lineNum">     158</span>              :     }</span>
+<span id="L159"><span class="lineNum">     159</span>              : </span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC tlaBgGNC">           1 : update:</span></span>
+<span id="L161"><span class="lineNum">     161</span>              :     /* mark it as tested*/</span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">           1 :     context-&gt;tested_algo |= LIBSPDM_FIPS_SELF_TEST_AES_GCM;</span></span>
+<span id="L163"><span class="lineNum">     163</span>              : </span>
+<span id="L164"><span class="lineNum">     164</span>              :     /* record test result*/</span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">           1 :     if (result) {</span></span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">           1 :         context-&gt;self_test_result |= LIBSPDM_FIPS_SELF_TEST_AES_GCM;</span></span>
+<span id="L167"><span class="lineNum">     167</span>              :     } else {</span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaUNC tlaBgUNC">           0 :         context-&gt;self_test_result &amp;= ~LIBSPDM_FIPS_SELF_TEST_AES_GCM;</span></span>
+<span id="L169"><span class="lineNum">     169</span>              :     }</span>
+<span id="L170"><span class="lineNum">     170</span>              : </span>
+<span id="L171"><span class="lineNum">     171</span>              : #endif/*LIBSPDM_AEAD_GCM_SUPPORT*/</span>
+<span id="L172"><span class="lineNum">     172</span>              : </span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC tlaBgGNC">           1 :     return result;</span></span>
+<span id="L174"><span class="lineNum">     174</span>              : }</span>
+<span id="L175"><span class="lineNum">     175</span>              : </span>
+<span id="L176"><span class="lineNum">     176</span>              : #endif</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

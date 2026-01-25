@@ -1,0 +1,301 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - library/spdm_responder_lib/libspdm_rsp_chunk_get.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">library/spdm_responder_lib</a> - libspdm_rsp_chunk_get.c<span style="font-size: 80%;"> (source / <a href="libspdm_rsp_chunk_get.c.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">95.1&nbsp;%</td>
+            <td class="headerCovTableEntry">82</td>
+            <td class="headerCovTableEntry">78</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-01-25 08:10:29</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+                  <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : /**</span>
+<span id="L2"><span class="lineNum">       2</span>              :  *  Copyright Notice:</span>
+<span id="L3"><span class="lineNum">       3</span>              :  *  Copyright 2021-2025 DMTF. All rights reserved.</span>
+<span id="L4"><span class="lineNum">       4</span>              :  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md</span>
+<span id="L5"><span class="lineNum">       5</span>              :  **/</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;internal/libspdm_responder_lib.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : </span>
+<span id="L9"><span class="lineNum">       9</span>              : #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP</span>
+<span id="L10"><span class="lineNum">      10</span>              : </span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC tlaBgGNC">          18 : libspdm_return_t libspdm_get_response_chunk_get(</span></span>
+<span id="L12"><span class="lineNum">      12</span>              :     libspdm_context_t *spdm_context,</span>
+<span id="L13"><span class="lineNum">      13</span>              :     size_t request_size,</span>
+<span id="L14"><span class="lineNum">      14</span>              :     const void* request,</span>
+<span id="L15"><span class="lineNum">      15</span>              :     size_t* response_size,</span>
+<span id="L16"><span class="lineNum">      16</span>              :     void* response)</span>
+<span id="L17"><span class="lineNum">      17</span>              : {</span>
+<span id="L18"><span class="lineNum">      18</span>              :     libspdm_chunk_info_t* get_info;</span>
+<span id="L19"><span class="lineNum">      19</span>              :     uint32_t min_data_transfer_size;</span>
+<span id="L20"><span class="lineNum">      20</span>              :     uint64_t max_chunk_data_transfer_size;</span>
+<span id="L21"><span class="lineNum">      21</span>              : </span>
+<span id="L22"><span class="lineNum">      22</span>              :     const spdm_chunk_get_request_t* spdm_request;</span>
+<span id="L23"><span class="lineNum">      23</span>              :     const spdm_chunk_get_request_14_t* spdm_request_14;</span>
+<span id="L24"><span class="lineNum">      24</span>              :     spdm_chunk_response_response_t* spdm_response;</span>
+<span id="L25"><span class="lineNum">      25</span>              :     spdm_chunk_response_response_14_t* spdm_response_14;</span>
+<span id="L26"><span class="lineNum">      26</span>              :     uint32_t chunk_seq_no;</span>
+<span id="L27"><span class="lineNum">      27</span>              : </span>
+<span id="L28"><span class="lineNum">      28</span>              :     uint8_t* spdm_chunk;</span>
+<span id="L29"><span class="lineNum">      29</span>              : </span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">          18 :     spdm_request = (const spdm_chunk_get_request_t*) request;</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          18 :     spdm_response = (spdm_chunk_response_response_t*) response;</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          18 :     get_info = &amp;spdm_context-&gt;chunk_context.get;</span></span>
+<span id="L33"><span class="lineNum">      33</span>              : </span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          18 :     if (libspdm_get_connection_version(spdm_context) &lt; SPDM_MESSAGE_VERSION_12) {</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaUNC tlaBgUNC">           0 :         return libspdm_generate_error_response(spdm_context,</span></span>
+<span id="L36"><span class="lineNum">      36</span>              :                                                SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,</span>
+<span id="L37"><span class="lineNum">      37</span>              :                                                SPDM_CHUNK_GET,</span>
+<span id="L38"><span class="lineNum">      38</span>              :                                                response_size, response);</span>
+<span id="L39"><span class="lineNum">      39</span>              :     }</span>
+<span id="L40"><span class="lineNum">      40</span>              : </span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC tlaBgGNC">          18 :     if (!libspdm_is_capabilities_flag_supported(</span></span>
+<span id="L42"><span class="lineNum">      42</span>              :             spdm_context, false, SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,</span>
+<span id="L43"><span class="lineNum">      43</span>              :             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {</span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">           1 :         return libspdm_generate_error_response(</span></span>
+<span id="L45"><span class="lineNum">      45</span>              :             spdm_context,</span>
+<span id="L46"><span class="lineNum">      46</span>              :             SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,</span>
+<span id="L47"><span class="lineNum">      47</span>              :             response_size, response);</span>
+<span id="L48"><span class="lineNum">      48</span>              :     }</span>
+<span id="L49"><span class="lineNum">      49</span>              : </span>
+<span id="L50"><span class="lineNum">      50</span>              :     /*chunk mechanism can be used for normal or encap state*/</span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          17 :     if ((spdm_context-&gt;response_state != LIBSPDM_RESPONSE_STATE_NORMAL) &amp;&amp;</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">           1 :         (spdm_context-&gt;response_state != LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP)) {</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">           1 :         return libspdm_responder_handle_response_state(</span></span>
+<span id="L54"><span class="lineNum">      54</span>              :             spdm_context,</span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">           1 :             spdm_request-&gt;header.request_response_code,</span></span>
+<span id="L56"><span class="lineNum">      56</span>              :             response_size, response);</span>
+<span id="L57"><span class="lineNum">      57</span>              :     }</span>
+<span id="L58"><span class="lineNum">      58</span>              : </span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          16 :     if (spdm_context-&gt;connection_info.connection_state &lt;</span></span>
+<span id="L60"><span class="lineNum">      60</span>              :         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES) {</span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">           1 :         return libspdm_generate_error_response(</span></span>
+<span id="L62"><span class="lineNum">      62</span>              :             spdm_context,</span>
+<span id="L63"><span class="lineNum">      63</span>              :             SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,</span>
+<span id="L64"><span class="lineNum">      64</span>              :             response_size, response);</span>
+<span id="L65"><span class="lineNum">      65</span>              :     }</span>
+<span id="L66"><span class="lineNum">      66</span>              : </span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          15 :     if (libspdm_get_connection_version(spdm_context) &lt; SPDM_MESSAGE_VERSION_14) {</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          11 :         if (request_size &lt; sizeof(spdm_chunk_get_request_t)) {</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">           1 :             return libspdm_generate_error_response(</span></span>
+<span id="L70"><span class="lineNum">      70</span>              :                 spdm_context,</span>
+<span id="L71"><span class="lineNum">      71</span>              :                 SPDM_ERROR_CODE_INVALID_REQUEST, 0,</span>
+<span id="L72"><span class="lineNum">      72</span>              :                 response_size, response);</span>
+<span id="L73"><span class="lineNum">      73</span>              :         }</span>
+<span id="L74"><span class="lineNum">      74</span>              :     } else {</span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">           4 :         if (request_size &lt; sizeof(spdm_chunk_get_request_14_t)) {</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaUNC tlaBgUNC">           0 :             return libspdm_generate_error_response(</span></span>
+<span id="L77"><span class="lineNum">      77</span>              :                 spdm_context,</span>
+<span id="L78"><span class="lineNum">      78</span>              :                 SPDM_ERROR_CODE_INVALID_REQUEST, 0,</span>
+<span id="L79"><span class="lineNum">      79</span>              :                 response_size, response);</span>
+<span id="L80"><span class="lineNum">      80</span>              :         }</span>
+<span id="L81"><span class="lineNum">      81</span>              :     }</span>
+<span id="L82"><span class="lineNum">      82</span>              : </span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC tlaBgGNC">          14 :     if (spdm_request-&gt;header.spdm_version &lt; SPDM_MESSAGE_VERSION_12) {</span></span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">           1 :         return libspdm_generate_error_response(</span></span>
+<span id="L85"><span class="lineNum">      85</span>              :             spdm_context,</span>
+<span id="L86"><span class="lineNum">      86</span>              :             SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, SPDM_CHUNK_GET,</span>
+<span id="L87"><span class="lineNum">      87</span>              :             response_size, response);</span>
+<span id="L88"><span class="lineNum">      88</span>              :     }</span>
+<span id="L89"><span class="lineNum">      89</span>              : </span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">          13 :     if (spdm_request-&gt;header.spdm_version</span></span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">          13 :         != libspdm_get_connection_version(spdm_context)) {</span></span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaUNC tlaBgUNC">           0 :         return libspdm_generate_error_response(</span></span>
+<span id="L93"><span class="lineNum">      93</span>              :             spdm_context,</span>
+<span id="L94"><span class="lineNum">      94</span>              :             SPDM_ERROR_CODE_VERSION_MISMATCH, 0,</span>
+<span id="L95"><span class="lineNum">      95</span>              :             response_size, response);</span>
+<span id="L96"><span class="lineNum">      96</span>              :     }</span>
+<span id="L97"><span class="lineNum">      97</span>              : </span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC tlaBgGNC">          13 :     if (get_info-&gt;chunk_in_use == false) {</span></span>
+<span id="L99"><span class="lineNum">      99</span> <span class="tlaGNC">           1 :         return libspdm_generate_error_response(</span></span>
+<span id="L100"><span class="lineNum">     100</span>              :             spdm_context,</span>
+<span id="L101"><span class="lineNum">     101</span>              :             SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,</span>
+<span id="L102"><span class="lineNum">     102</span>              :             response_size, response);</span>
+<span id="L103"><span class="lineNum">     103</span>              :     }</span>
+<span id="L104"><span class="lineNum">     104</span>              : </span>
+<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">          12 :     if (spdm_request-&gt;header.param2 != get_info-&gt;chunk_handle) {</span></span>
+<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">           1 :         return libspdm_generate_error_response(</span></span>
+<span id="L107"><span class="lineNum">     107</span>              :             spdm_context,</span>
+<span id="L108"><span class="lineNum">     108</span>              :             SPDM_ERROR_CODE_INVALID_REQUEST, 0,</span>
+<span id="L109"><span class="lineNum">     109</span>              :             response_size, response);</span>
+<span id="L110"><span class="lineNum">     110</span>              :     }</span>
+<span id="L111"><span class="lineNum">     111</span>              : </span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">          11 :     if (libspdm_get_connection_version(spdm_context) &lt; SPDM_MESSAGE_VERSION_14) {</span></span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">           7 :         if (spdm_request-&gt;chunk_seq_no != (uint16_t) get_info-&gt;chunk_seq_no) {</span></span>
+<span id="L114"><span class="lineNum">     114</span> <span class="tlaGNC">           2 :             return libspdm_generate_error_response(</span></span>
+<span id="L115"><span class="lineNum">     115</span>              :                 spdm_context,</span>
+<span id="L116"><span class="lineNum">     116</span>              :                 SPDM_ERROR_CODE_INVALID_REQUEST, 0,</span>
+<span id="L117"><span class="lineNum">     117</span>              :                 response_size, response);</span>
+<span id="L118"><span class="lineNum">     118</span>              :         }</span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">           5 :         chunk_seq_no = spdm_request-&gt;chunk_seq_no;</span></span>
+<span id="L120"><span class="lineNum">     120</span>              :     } else {</span>
+<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">           4 :         spdm_request_14 = (const spdm_chunk_get_request_14_t*) request;</span></span>
+<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">           4 :         if (spdm_request_14-&gt;chunk_seq_no != get_info-&gt;chunk_seq_no) {</span></span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaUNC tlaBgUNC">           0 :             return libspdm_generate_error_response(</span></span>
+<span id="L124"><span class="lineNum">     124</span>              :                 spdm_context,</span>
+<span id="L125"><span class="lineNum">     125</span>              :                 SPDM_ERROR_CODE_INVALID_REQUEST, 0,</span>
+<span id="L126"><span class="lineNum">     126</span>              :                 response_size, response);</span>
+<span id="L127"><span class="lineNum">     127</span>              :         }</span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC tlaBgGNC">           4 :         chunk_seq_no = spdm_request_14-&gt;chunk_seq_no;</span></span>
+<span id="L129"><span class="lineNum">     129</span>              :     }</span>
+<span id="L130"><span class="lineNum">     130</span>              : </span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">           9 :     min_data_transfer_size = LIBSPDM_MIN(</span></span>
+<span id="L132"><span class="lineNum">     132</span>              :         spdm_context-&gt;connection_info.capability.data_transfer_size,</span>
+<span id="L133"><span class="lineNum">     133</span>              :         spdm_context-&gt;local_context.capability.sender_data_transfer_size);</span>
+<span id="L134"><span class="lineNum">     134</span>              : </span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">           9 :     if (libspdm_get_connection_version(spdm_context) &lt; SPDM_MESSAGE_VERSION_14) {</span></span>
+<span id="L136"><span class="lineNum">     136</span>              :         /* chunk seq no wrap not considered in spdm 1.4+ */</span>
+<span id="L137"><span class="lineNum">     137</span>              : </span>
+<span id="L138"><span class="lineNum">     138</span>              :         /* Fail if exceed max chunks */</span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">           5 :         max_chunk_data_transfer_size =</span></span>
+<span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">           5 :             ((size_t) min_data_transfer_size - sizeof(spdm_chunk_response_response_t)) * 65536 -</span></span>
+<span id="L141"><span class="lineNum">     141</span>              :             sizeof(uint32_t);</span>
+<span id="L142"><span class="lineNum">     142</span>              : </span>
+<span id="L143"><span class="lineNum">     143</span>              :         /* max_spdm_msg_size already checked in caller */</span>
+<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">           5 :         if (get_info-&gt;large_message_size &gt; max_chunk_data_transfer_size) {</span></span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">           1 :             return libspdm_generate_error_response(</span></span>
+<span id="L146"><span class="lineNum">     146</span>              :                 spdm_context,</span>
+<span id="L147"><span class="lineNum">     147</span>              :                 SPDM_ERROR_CODE_RESPONSE_TOO_LARGE, 0,</span>
+<span id="L148"><span class="lineNum">     148</span>              :                 response_size, response);</span>
+<span id="L149"><span class="lineNum">     149</span>              :         }</span>
+<span id="L150"><span class="lineNum">     150</span>              :     }</span>
+<span id="L151"><span class="lineNum">     151</span>              : </span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">           8 :     libspdm_zero_mem(response, *response_size);</span></span>
+<span id="L153"><span class="lineNum">     153</span>              : </span>
+<span id="L154"><span class="lineNum">     154</span>              :     /* Assert the data transfer size is smaller than the response size.</span>
+<span id="L155"><span class="lineNum">     155</span>              :      * Otherwise there is no reason to chunk this response. */</span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">           8 :     LIBSPDM_ASSERT(min_data_transfer_size &lt; *response_size);</span></span>
+<span id="L157"><span class="lineNum">     157</span>              : </span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">           8 :     spdm_response-&gt;header.spdm_version = spdm_request-&gt;header.spdm_version;</span></span>
+<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">           8 :     spdm_response-&gt;header.request_response_code = SPDM_CHUNK_RESPONSE;</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">           8 :     spdm_response-&gt;header.param1 = 0;</span></span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">           8 :     spdm_response-&gt;header.param2 = get_info-&gt;chunk_handle;</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">           8 :     if (libspdm_get_connection_version(spdm_context) &lt; SPDM_MESSAGE_VERSION_14) {</span></span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">           4 :         spdm_response-&gt;chunk_seq_no = (uint16_t) get_info-&gt;chunk_seq_no;</span></span>
+<span id="L164"><span class="lineNum">     164</span>              :     } else {</span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">           4 :         spdm_response_14 = (spdm_chunk_response_response_14_t*) response;</span></span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">           4 :         spdm_response_14-&gt;chunk_seq_no = get_info-&gt;chunk_seq_no;</span></span>
+<span id="L167"><span class="lineNum">     167</span>              :     }</span>
+<span id="L168"><span class="lineNum">     168</span>              : </span>
+<span id="L169"><span class="lineNum">     169</span>              :     LIBSPDM_ASSERT(sizeof(spdm_chunk_response_response_t) == sizeof(spdm_chunk_response_response_14_t));</span>
+<span id="L170"><span class="lineNum">     170</span>              : </span>
+<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC">           8 :     if (chunk_seq_no == 0) {</span></span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">           2 :         spdm_response-&gt;chunk_size =</span></span>
+<span id="L173"><span class="lineNum">     173</span>              :             min_data_transfer_size</span>
+<span id="L174"><span class="lineNum">     174</span>              :             - sizeof(spdm_chunk_response_response_t)</span>
+<span id="L175"><span class="lineNum">     175</span> <span class="tlaGNC">           2 :             - sizeof(uint32_t);</span></span>
+<span id="L176"><span class="lineNum">     176</span>              : </span>
+<span id="L177"><span class="lineNum">     177</span>              :         /* No reason to do chunking if message is smaller than largest chunk size. */</span>
+<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">           2 :         LIBSPDM_ASSERT(spdm_response-&gt;chunk_size &lt; get_info-&gt;large_message_size);</span></span>
+<span id="L179"><span class="lineNum">     179</span>              : </span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">           2 :         spdm_chunk = (uint8_t*) (spdm_response + 1);</span></span>
+<span id="L181"><span class="lineNum">     181</span>              : </span>
+<span id="L182"><span class="lineNum">     182</span>              :         /* Set LargeMessageSize only in first chunk. */</span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">           2 :         *((uint32_t*) (spdm_chunk)) = (uint32_t)get_info-&gt;large_message_size;</span></span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">           2 :         spdm_chunk += sizeof(uint32_t);</span></span>
+<span id="L185"><span class="lineNum">     185</span>              : </span>
+<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">           2 :         *response_size = sizeof(spdm_chunk_response_response_t)</span></span>
+<span id="L187"><span class="lineNum">     187</span>              :                          + sizeof(uint32_t)</span>
+<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">           2 :                          + spdm_response-&gt;chunk_size;</span></span>
+<span id="L189"><span class="lineNum">     189</span>              :     } else {</span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">           6 :         spdm_response-&gt;chunk_size =</span></span>
+<span id="L191"><span class="lineNum">     191</span> <span class="tlaGNC">           6 :             LIBSPDM_MIN(min_data_transfer_size</span></span>
+<span id="L192"><span class="lineNum">     192</span>              :                         - sizeof(spdm_chunk_response_response_t),</span>
+<span id="L193"><span class="lineNum">     193</span>              :                         (uint32_t) (get_info-&gt;large_message_size</span>
+<span id="L194"><span class="lineNum">     194</span>              :                                     - get_info-&gt;chunk_bytes_transferred));</span>
+<span id="L195"><span class="lineNum">     195</span>              : </span>
+<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">           6 :         spdm_chunk = (uint8_t*) (spdm_response + 1);</span></span>
+<span id="L197"><span class="lineNum">     197</span>              : </span>
+<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">           6 :         *response_size = sizeof(spdm_chunk_response_response_t)</span></span>
+<span id="L199"><span class="lineNum">     199</span> <span class="tlaGNC">           6 :                          + spdm_response-&gt;chunk_size;</span></span>
+<span id="L200"><span class="lineNum">     200</span>              :     }</span>
+<span id="L201"><span class="lineNum">     201</span>              : </span>
+<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">           8 :     libspdm_copy_mem(spdm_chunk, spdm_response-&gt;chunk_size,</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">           8 :                      (uint8_t*) get_info-&gt;large_message + get_info-&gt;chunk_bytes_transferred,</span></span>
+<span id="L204"><span class="lineNum">     204</span> <span class="tlaGNC">           8 :                      spdm_response-&gt;chunk_size);</span></span>
+<span id="L205"><span class="lineNum">     205</span>              : </span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">           8 :     get_info-&gt;chunk_seq_no++;</span></span>
+<span id="L207"><span class="lineNum">     207</span> <span class="tlaGNC">           8 :     get_info-&gt;chunk_bytes_transferred += spdm_response-&gt;chunk_size;</span></span>
+<span id="L208"><span class="lineNum">     208</span>              : </span>
+<span id="L209"><span class="lineNum">     209</span> <span class="tlaGNC">           8 :     LIBSPDM_ASSERT(get_info-&gt;chunk_bytes_transferred &lt;= get_info-&gt;large_message_size);</span></span>
+<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">           8 :     if (get_info-&gt;chunk_bytes_transferred == get_info-&gt;large_message_size) {</span></span>
+<span id="L211"><span class="lineNum">     211</span> <span class="tlaGNC">           4 :         libspdm_zero_mem(get_info-&gt;large_message, get_info-&gt;large_message_capacity);</span></span>
+<span id="L212"><span class="lineNum">     212</span> <span class="tlaGNC">           4 :         get_info-&gt;chunk_in_use = false;</span></span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">           4 :         get_info-&gt;chunk_handle++; /* implicit wrap - around to 0. */</span></span>
+<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">           4 :         get_info-&gt;chunk_seq_no = 0;</span></span>
+<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">           4 :         get_info-&gt;large_message = NULL;</span></span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">           4 :         get_info-&gt;large_message_size = 0;</span></span>
+<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">           4 :         get_info-&gt;chunk_bytes_transferred = 0;</span></span>
+<span id="L218"><span class="lineNum">     218</span>              : </span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">           4 :         spdm_response-&gt;header.param1 |= SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK;</span></span>
+<span id="L220"><span class="lineNum">     220</span>              :     }</span>
+<span id="L221"><span class="lineNum">     221</span>              : </span>
+<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">           8 :     return LIBSPDM_STATUS_SUCCESS;</span></span>
+<span id="L223"><span class="lineNum">     223</span>              : }</span>
+<span id="L224"><span class="lineNum">     224</span>              : </span>
+<span id="L225"><span class="lineNum">     225</span>              : #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>
