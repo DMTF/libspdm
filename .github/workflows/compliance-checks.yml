@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: motlin/forbid-merge-commits-action@v1.0.6
+        uses: motlin/forbid-merge-commits-action@v1.0.7
         with:
             fail-on-merge-commits: true
 
