@@ -117,7 +117,35 @@ bool libspdm_measurement_extension_log_collection(
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP */
 
-#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP)
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+bool libspdm_key_exchange_rsp_opaque_data(
+    void *spdm_context,
+    spdm_version_number_t spdm_version,
+    uint8_t measurement_hash_type,
+    uint8_t slot_id,
+    uint8_t session_policy,
+    const void *req_opaque_data,
+    size_t req_opaque_data_size,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    return false;
+}
+
+bool libspdm_finish_rsp_opaque_data(
+    void *spdm_context,
+    uint32_t session_id,
+    spdm_version_number_t spdm_version,
+    uint8_t req_slot_id,
+    const void *req_opaque_data,
+    size_t req_opaque_data_size,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    return false;
+}
+
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 extern uint8_t libspdm_key_exchange_start_mut_auth(
     void *spdm_context,
     uint32_t session_id,
@@ -131,7 +159,8 @@ extern uint8_t libspdm_key_exchange_start_mut_auth(
 {
     return false;
 }
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP */
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
 bool libspdm_requester_data_sign(
@@ -180,6 +209,32 @@ bool libspdm_psk_master_secret_hkdf_expand(
     const uint8_t *info,
     size_t info_size, uint8_t *out,
     size_t out_size)
+{
+    return false;
+}
+
+bool libspdm_psk_exchange_rsp_opaque_data(
+    void *spdm_context,
+    const void *psk_hint,
+    uint16_t psk_hint_size,
+    spdm_version_number_t spdm_version,
+    uint8_t measurement_hash_type,
+    const void *req_opaque_data,
+    size_t req_opaque_data_size,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    return false;
+}
+
+bool libspdm_psk_finish_rsp_opaque_data(
+    void *spdm_context,
+    uint32_t session_id,
+    spdm_version_number_t spdm_version,
+    const void *req_opaque_data,
+    size_t req_opaque_data_size,
+    void *opaque_data,
+    size_t *opaque_data_size)
 {
     return false;
 }
