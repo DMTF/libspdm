@@ -47,4 +47,8 @@ target_sources(cryptlib_openssl
 
 target_compile_options(cryptlib_openssl PRIVATE ${OPENSSL_FLAGS})
 
-target_link_libraries(cryptlib_openssl PUBLIC openssllib memlib)
+if(ENABLE_BINARY_BUILD STREQUAL "1")
+    target_link_libraries(cryptlib_openssl PUBLIC ssl crypto memlib)
+else()
+    target_link_libraries(cryptlib_openssl PUBLIC openssllib memlib)
+endif()
