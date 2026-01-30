@@ -195,7 +195,7 @@
      libspdm_release_receiver_buffer (receiver_buffer);
    }
 
-   The buffer usage of sender buffer is:
+   The buffer usage of receiver buffer is:
 
      ===== : SPDM message
 
