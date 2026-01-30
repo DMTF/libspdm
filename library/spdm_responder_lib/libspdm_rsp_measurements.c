@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -103,6 +103,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
     uint8_t *fill_response_ptr;
     size_t request_context_size;
     const void *request_context;
+    const uint32_t *session_id_ptr;
 
     spdm_request = request;
 
@@ -111,7 +112,9 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
 
     if (!spdm_context->last_spdm_request_session_id_valid) {
         session_info = NULL;
+        session_id_ptr = NULL;
     } else {
+        session_id_ptr = &spdm_context->last_spdm_request_session_id;
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context,
             spdm_context->last_spdm_request_session_id);
@@ -277,6 +280,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
 
     status = libspdm_measurement_collection(
         spdm_context,
+        session_id_ptr,
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.measurement_spec,
         spdm_context->connection_info.algorithm.measurement_hash_algo,
@@ -325,6 +329,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
 
         ret = libspdm_measurement_opaque_data(
             spdm_context,
+            session_id_ptr,
             spdm_context->connection_info.version,
             spdm_context->connection_info.algorithm.measurement_spec,
             spdm_context->connection_info.algorithm.measurement_hash_algo,

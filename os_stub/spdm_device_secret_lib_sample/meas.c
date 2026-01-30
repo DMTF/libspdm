@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -382,6 +382,7 @@ uint64_t g_measurement_request_context;
 
 libspdm_return_t libspdm_measurement_collection(
     void *spdm_context,
+    const uint32_t *session_id,
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -624,6 +625,7 @@ size_t libspdm_secret_lib_meas_opaque_data_size;
 
 bool libspdm_measurement_opaque_data(
     void *spdm_context,
+    const uint32_t *session_id,
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -695,6 +697,7 @@ bool libspdm_generate_measurement_summary_hash(
         device_measurement_size = sizeof(device_measurement);
         status = libspdm_measurement_collection(
             spdm_context,
+            NULL,
             spdm_version, measurement_specification,
             measurement_hash_algo,
             0xFF, /* Get all measurements*/

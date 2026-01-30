@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -71,6 +71,7 @@
  **/
 extern libspdm_return_t libspdm_measurement_collection(
     void *spdm_context,
+    const uint32_t *session_id,
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -116,6 +117,7 @@ extern libspdm_return_t libspdm_measurement_collection(
  **/
 extern bool libspdm_measurement_opaque_data(
     void *spdm_context,
+    const uint32_t *session_id,
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,

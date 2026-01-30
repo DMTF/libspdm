@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1719,6 +1719,7 @@ static void rsp_measurements_case27(void **state)
 
     libspdm_measurement_collection(
         spdm_context,
+        NULL,
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.measurement_spec,
         spdm_context->connection_info.algorithm.measurement_hash_algo,
@@ -1733,6 +1734,7 @@ static void rsp_measurements_case27(void **state)
 
     libspdm_measurement_opaque_data(
         spdm_context,
+        NULL,
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.measurement_spec,
         spdm_context->connection_info.algorithm.measurement_hash_algo,

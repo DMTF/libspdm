@@ -21,6 +21,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 libspdm_return_t libspdm_measurement_collection(
     void *spdm_context,
+    const uint32_t *session_id,
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -38,6 +39,7 @@ libspdm_return_t libspdm_measurement_collection(
 
 bool libspdm_measurement_opaque_data(
     void *spdm_context,
+    const uint32_t *session_id,
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
