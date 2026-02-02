@@ -1,0 +1,25 @@
+/**
+ *  Copyright Notice:
+ *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
+
+#pragma once
+
+#define TPM_ROOT_CTX 0x81000000
+#define TPM_ROOT_KEY 0x81000001
+
+#define TPM_REQU_CTX 0x81000010
+#define TPM_REQU_KEY 0x81000011
+#define TPM_REQU_HANDLE "handle:0x81000011"
+
+#define TPM_RESP_CTX 0x81000020
+#define TPM_RESP_KEY 0x81000021
+#define TPM_RESP_HANDLE "handle:0x81000021"
+
+#define TPM_ROOT_CERT 0x1500000
+#define TPM_REQU_CERT 0x1500010
+#define TPM_RESP_CERT 0x1500020
+
+#define TPM_REQU_CERT_CHAIN 0x1500011
+#define TPM_RESP_CERT_CHAIN 0x1500021
