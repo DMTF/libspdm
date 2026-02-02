@@ -13,3 +13,4 @@ target_sources(spdm_crypt_ext_lib
         spdm_crypt_ext.c
         spdm_crypt_ext_pqc.c
 )
+

@@ -8,7 +8,7 @@ if(NOT ((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC")))
             ${LIBSPDM_DIR}/unit_test/test_spdm_requester
             ${LIBSPDM_DIR}/include
             ${LIBSPDM_DIR}/unit_test/include
-            ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
+            ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_${DEVICE}
             ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
             ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
             ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common
@@ -38,7 +38,7 @@ if(NOT ((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC")))
             spdm_crypt_lib
             spdm_crypt_ext_lib
             spdm_secured_message_lib
-            spdm_device_secret_lib_sample
+            spdm_device_secret_lib_${DEVICE}
             spdm_transport_test_lib
             cmockalib
             platform_lib_null
