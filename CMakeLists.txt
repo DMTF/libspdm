@@ -804,7 +804,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
         # See https://gitlab.kitware.com/cmake/cmake/-/issues/18317 for following workaround
         string(REGEX REPLACE "/W3" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
         add_compile_options(/nologo /WX /W4 /Gs32768 /D UNICODE /Gy /EHs-c- /GR- /GF /Z7 /Gw /Oy- /D_CRT_SECURE_NO_WARNINGS /wd4063 /wd4100 /wd4127 /wd4701 /wd4703 /wd4057)
-        set(OPENSSL_FLAGS /FIbase.h /wd4090 /wd4132 /wd4244 /wd4245 /wd4267 /wd4306 /wd4310 /wd4700 /wd4389 /wd4702 /wd4706 /wd4819 /wd4013)
+        set(OPENSSL_FLAGS /FIbase.h /wd4090 /wd4132 /wd4244 /wd4245 /wd4267 /wd4306 /wd4310 /wd4700 /wd4389 /wd4702 /wd4706 /wd4819 /wd4013 /wd4319)
         set(CMOCKA_FLAGS /wd4090 /wd4204 /wd4133 /wd4267 /wd4701 /wd4702 /wd4703 /D_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES=1 /D_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES_COUNT=1 /D_CRT_NONSTDC_NO_WARNINGS=1)
 
         set(CMAKE_STATIC_LINKER_FLAGS "/NOLOGO /LTCG")
