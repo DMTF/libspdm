@@ -596,9 +596,9 @@ static bool libspdm_get_public_key_algo_OID(
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048: {
     #if (LIBSPDM_RSA_SSA_2048_SUPPORT) || (LIBSPDM_RSA_PSS_2048_SUPPORT)
             uint8_t encry_algo_oid_rsa2048[] = KEY_ENCRY_ALGO_RSA2048_FLAG;
-            uint8_t encry_algo_oid_rsa2048_ohter[] = KEY_ENCRY_ALGO_RSA2048_FLAG_OTHER;
+            uint8_t encry_algo_oid_rsa2048_other[] = KEY_ENCRY_ALGO_RSA2048_FLAG_OTHER;
             libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa2048, oid_len);
-            libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa2048_ohter, oid_len);
+            libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa2048_other, oid_len);
             return true;
     #else
             return false;
@@ -608,9 +608,9 @@ static bool libspdm_get_public_key_algo_OID(
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072: {
     #if (LIBSPDM_RSA_SSA_3072_SUPPORT) || (LIBSPDM_RSA_PSS_3072_SUPPORT)
             uint8_t encry_algo_oid_rsa3072[] = KEY_ENCRY_ALGO_RSA3072_FLAG;
-            uint8_t encry_algo_oid_rsa3072_ohter[] = KEY_ENCRY_ALGO_RSA3072_FLAG_OTHER;
+            uint8_t encry_algo_oid_rsa3072_other[] = KEY_ENCRY_ALGO_RSA3072_FLAG_OTHER;
             libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa3072, oid_len);
-            libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa3072_ohter, oid_len);
+            libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa3072_other, oid_len);
             return true;
     #else
             return false;
@@ -620,9 +620,9 @@ static bool libspdm_get_public_key_algo_OID(
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096: {
     #if (LIBSPDM_RSA_SSA_4096_SUPPORT) || (LIBSPDM_RSA_PSS_4096_SUPPORT)
             uint8_t encry_algo_oid_rsa4096[] = KEY_ENCRY_ALGO_RSA4096_FLAG;
-            uint8_t encry_algo_oid_rsa4096_ohter[] = KEY_ENCRY_ALGO_RSA4096_FLAG_OTHER;
+            uint8_t encry_algo_oid_rsa4096_other[] = KEY_ENCRY_ALGO_RSA4096_FLAG_OTHER;
             libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa4096, oid_len);
-            libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa4096_ohter, oid_len);
+            libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa4096_other, oid_len);
             return true;
     #else
             return false;
@@ -1333,7 +1333,7 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
                                                     uint8_t cert_model)
 {
     bool status;
-    bool find_sucessful;
+    bool find_successful;
     uint8_t spdm_extension[LIBSPDM_MAX_EXTENSION_LEN];
     size_t len;
     uint8_t *ptr;
@@ -1362,7 +1362,7 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
     }
 
     /*find the spdm hardware identity OID*/
-    find_sucessful = false;
+    find_successful = false;
     ptr = spdm_extension;
     obj_len = 0;
 
@@ -1391,7 +1391,7 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
         if ((obj_len == sizeof(hardware_identity_oid)) &&
             (libspdm_consttime_is_mem_equal(ptr, hardware_identity_oid,
                                             sizeof(hardware_identity_oid)))) {
-            find_sucessful = true;
+            find_successful = true;
         }
         ptr = temptr;
     }
@@ -1402,7 +1402,7 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
 
     /* Responder does not determine Requester's certificate model */
     if (!is_requester_cert) {
-        if ((find_sucessful) && (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT)) {
+        if ((find_successful) && (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT)) {
             /* Hardware_identity_OID is found in alias cert model */
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "Hardware identity OID present in alias leaf certificate.\n"));
