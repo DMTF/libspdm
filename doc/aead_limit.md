@@ -19,7 +19,7 @@ value, such as 0xFFFFFFFF (32-bit) or 0xFFFFFF (24-bit).
 
 The Integrator may query `LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_REQ_DIR` and
 `LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_RSP_DIR` to get the current number of messages that have been
-encrypted / decrypted in the request and response directions, and trigger may trigger a `KEY_UPDATE`
+encrypted / decrypted in the request and response directions, and may trigger a `KEY_UPDATE`
 accordingly.
 
 If `KEY_UPDATE` is not sent before the maximum sequence number is reached, the SPDM session will be

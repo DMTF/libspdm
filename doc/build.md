@@ -122,7 +122,7 @@ a) [ARC GNU](https://github.com/foss-for-synopsys-dwc-arc-processors).
       git clone https://github.com/foss-for-synopsys-dwc-arc-processors/gcc.git
       git clone --reference binutils https://github.com/foss-for-synopsys-dwc-arc-processors/binutils-gdb.git gdb
       git clone https://github.com/foss-for-synopsys-dwc-arc-processors/newlib.git
-      git clone https://github.com/wbx-github/uclibc-ng.git # For For Linux uClibc toolchain
+      git clone https://github.com/wbx-github/uclibc-ng.git # For Linux uClibc toolchain
       git clone https://github.com/foss-for-synopsys-dwc-arc-processors/glibc.git # For Linux glibc toolchain
       git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux
       ```
@@ -143,7 +143,7 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 #### Compiler for LOONGARCH64
 
 a) [LOONGARCH64_GNU](https://github.com/loongson/build-tools/)
-  - Download [Release 2025.08.08](https://github.com/loongson/build-tools/releases/download/2025.08.08/x86_64-cross-tools-loongarch64-binutils_2.45-gcc_15.1.0-glibc_2.42.tar.xz): (loongarch64-unknown-linux-gnu), and unzip it`.
+  - Download [Release 2025.08.08](https://github.com/loongson/build-tools/releases/download/2025.08.08/x86_64-cross-tools-loongarch64-binutils_2.45-gcc_15.1.0-glibc_2.42.tar.xz): (loongarch64-unknown-linux-gnu), and unzip it.
   - Add <tool_path>/bin to the $PATH environment. For example:
     ```
     echo 'export PATH=~/x86_64-cross-tools-loongarch64-binutils_2.45-gcc_15.1.0-glibc_2.42/bin:$PATH' | sudo tee -a ~/.bashrc

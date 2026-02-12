@@ -4,7 +4,7 @@
 
 ### Level 1 - Persistent Secret Handling
 
-  (req)asymsignlib / psklib. (Device Specific)a
+  (req)asymsignlib / psklib. (Device Specific)
 
   It can access the device private key and sign the message.
   It can access the PSK and HMAC the message.

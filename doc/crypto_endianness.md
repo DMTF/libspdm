@@ -4,7 +4,7 @@
 
 SPDM 1.2 and later define the endianness of digital signatures for RSA, ECDSA, SM2_DSA, and EdDSA.
 * RSA: big endian for s.
-* ECDSA and SMD2_DSA: big endian for r and s.
+* ECDSA and SM2_DSA: big endian for r and s.
 * EdDSA: big endian for R and little endian for S.
 
 When the negotiated SPDM version is 1.2 or later libspdm follows these definitions.

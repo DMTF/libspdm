@@ -6,7 +6,7 @@ The core libraries in `libspdm/library` adhere to the C99 standard and make use 
 freestanding headers.
 - stdint.h
 - stdbool.h
-- stdef.h
+- stddef.h
 
 If a compiler does not provide at least one of these headers or if at least one of the compiler's
 headers must be overridden by the Integrator's headers then they can be overridden with the
