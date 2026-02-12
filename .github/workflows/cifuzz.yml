@@ -4,6 +4,8 @@ on:
     paths-ignore:
       - 'doc/**'
       - '**/*.md'
+  workflow_dispatch:
+
 permissions: {}
 jobs:
   Fuzzing:
