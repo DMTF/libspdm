@@ -45,48 +45,18 @@ typedef struct {
 } libspdm_algorithms_response_max_t;
 #pragma pack()
 
-/**
- * This function sends NEGOTIATE_ALGORITHMS and receives ALGORITHMS.
- *
- * @param  spdm_context A pointer to the SPDM context.
- *
- * @retval LIBSPDM_STATUS_SUCCESS
- *         NEGOTIATE_ALGORITHMS was sent and ALGORITHMS was received.
- * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
- *         Cannot send NEGOTIATE_ALGORITHMS due to Requester's state.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
- *         The size of the ALGORITHMS response is invalid.
- * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
- *         The ALGORITHMS response contains one or more invalid fields.
- * @retval LIBSPDM_STATUS_ERROR_PEER
- *         The Responder returned an unexpected error.
- * @retval LIBSPDM_STATUS_BUSY_PEER
- *         The Responder continually returned Busy error messages.
- * @retval LIBSPDM_STATUS_RESYNCH_PEER
- *         The Responder returned a RequestResynch error message.
- * @retval LIBSPDM_STATUS_BUFFER_FULL
- *         The buffer used to store transcripts is exhausted.
- * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
- *         The Requester and Responder could not agree on mutual algorithms.
- *         Note: This return value may be removed in the future.
- **/
-static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_context)
+static libspdm_return_t
+libspdm_negotiate_algorithms_send_request(libspdm_context_t *spdm_context,
+                                          libspdm_negotiate_algorithms_request_mine_t **request,
+                                          size_t *request_size)
 {
     libspdm_return_t status;
     libspdm_negotiate_algorithms_request_mine_t *spdm_request;
     size_t spdm_request_size;
-    libspdm_algorithms_response_max_t *spdm_response;
-    size_t spdm_response_size;
-    uint32_t algo_size;
-    uint32_t pqc_algo_size;
     size_t index = 0;
-    spdm_negotiate_algorithms_common_struct_table_t *struct_table;
-    uint8_t fixed_alg_size;
-    uint8_t ext_alg_count;
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
-    uint8_t alg_type_pre;
     uint8_t req_param1 = 0;
 
     /* -=[Verify State Phase]=- */
@@ -181,6 +151,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
             }
             break;
         default:
+            libspdm_release_sender_buffer (spdm_context);
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (spdm_context->connection_info.multi_key_conn_rsp) {
@@ -265,14 +236,40 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         return status;
     }
     libspdm_release_sender_buffer (spdm_context);
-    spdm_request = (void *)spdm_context->last_spdm_request;
+    *request = (void *)spdm_context->last_spdm_request;
+    *request_size = spdm_request_size;
+
+    return status;
+}
+
+static libspdm_return_t
+libspdm_negotiate_algorithms_process_response(
+    libspdm_context_t *spdm_context,
+    libspdm_negotiate_algorithms_request_mine_t *spdm_request,
+    size_t spdm_request_size)
+{
+    libspdm_return_t status;
+    libspdm_algorithms_response_max_t *spdm_response;
+    size_t spdm_response_size;
+    uint32_t algo_size;
+    uint32_t pqc_algo_size;
+    size_t index;
+    spdm_negotiate_algorithms_common_struct_table_t *struct_table;
+    uint8_t fixed_alg_size;
+    uint8_t ext_alg_count;
+    uint8_t *message;
+    size_t message_size;
+    size_t transport_header_size;
+    uint8_t alg_type_pre;
 
     /* -=[Receive Response Phase]=- */
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
     status = libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
     LIBSPDM_ASSERT (message_size >= transport_header_size);
+    (void)(transport_header_size);
     spdm_response = (void *)(message);
     spdm_response_size = message_size;
 
@@ -755,6 +752,48 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
 
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
+    return status;
+}
+
+/**
+ * This function sends NEGOTIATE_ALGORITHMS and receives ALGORITHMS.
+ *
+ * @param  spdm_context A pointer to the SPDM context.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         NEGOTIATE_ALGORITHMS was sent and ALGORITHMS was received.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
+ *         Cannot send NEGOTIATE_ALGORITHMS due to Requester's state.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the ALGORITHMS response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The ALGORITHMS response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
+ *         The buffer used to store transcripts is exhausted.
+ * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
+ *         The Requester and Responder could not agree on mutual algorithms.
+ *         Note: This return value may be removed in the future.
+ **/
+static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_context)
+{
+    libspdm_return_t status;
+    libspdm_negotiate_algorithms_request_mine_t *spdm_request;
+    size_t spdm_request_size;
+
+    status = libspdm_negotiate_algorithms_send_request(
+        spdm_context, &spdm_request, &spdm_request_size);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+
+    status = libspdm_negotiate_algorithms_process_response(
+        spdm_context, spdm_request, spdm_request_size);
     return status;
 }
 
