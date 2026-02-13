@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2025 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -11,7 +11,7 @@
 #if LIBSPDM_FIPS_MODE
 
 /*hardcode random for ecdsa*/
-int libspdm_hardcode_random_number_ecdsa(void *rng_state, unsigned char *output, size_t len)
+static int libspdm_hardcode_random_number_ecdsa(void *rng_state, unsigned char *output, size_t len)
 {
     /*Random number*/
     const uint8_t random[] = {

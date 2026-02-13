@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2025 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -20,7 +20,7 @@ typedef struct {
 } libspdm_vendor_defined_response_msg_max_t;
 #pragma pack()
 
-libspdm_return_t libspdm_try_vendor_send_request_receive_response(
+static libspdm_return_t libspdm_try_vendor_send_request_receive_response(
     libspdm_context_t *spdm_context,
     const uint32_t *session_id,
     uint16_t req_standard_id,

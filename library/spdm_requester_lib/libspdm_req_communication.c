@@ -512,8 +512,8 @@ libspdm_return_t libspdm_send_receive_data(void *spdm_context, const uint32_t *s
 }
 
 
-libspdm_return_t libspdm_send_spdm_data(void *spdm_context, const uint32_t *session_id,
-                                        const void *request, size_t request_size)
+static libspdm_return_t libspdm_send_spdm_data(void *spdm_context, const uint32_t *session_id,
+                                               const void *request, size_t request_size)
 {
     libspdm_return_t status;
     libspdm_context_t *context;
@@ -548,8 +548,8 @@ libspdm_return_t libspdm_send_spdm_data(void *spdm_context, const uint32_t *sess
     return status;
 }
 
-libspdm_return_t libspdm_receive_spdm_data(void *spdm_context, const uint32_t *session_id,
-                                           void *response, size_t *response_size)
+static libspdm_return_t libspdm_receive_spdm_data(void *spdm_context, const uint32_t *session_id,
+                                                  void *response, size_t *response_size)
 {
     libspdm_return_t status;
     libspdm_context_t *context;

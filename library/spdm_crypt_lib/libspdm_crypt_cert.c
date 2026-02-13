@@ -1427,7 +1427,7 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
  * @retval  true   Success.
  * @retval  false  Certificate is not valid.
  **/
-bool libspdm_x509_common_certificate_check(
+static bool libspdm_x509_common_certificate_check(
     const uint8_t *cert, size_t cert_size,
     uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
     bool is_requester_cert, uint8_t cert_model,

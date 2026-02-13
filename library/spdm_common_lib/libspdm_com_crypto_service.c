@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -465,10 +465,10 @@ static bool libspdm_calculate_m1m2_hash(void *context, bool is_mut,
 #endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-bool libspdm_calculate_il1il2(libspdm_context_t *spdm_context,
-                              void *session_info,
-                              bool is_mut,
-                              libspdm_il1il2_managed_buffer_t *il1il2)
+static bool libspdm_calculate_il1il2(libspdm_context_t *spdm_context,
+                                     void *session_info,
+                                     bool is_mut,
+                                     libspdm_il1il2_managed_buffer_t *il1il2)
 {
     libspdm_return_t status;
     libspdm_session_info_t *spdm_session_info;
@@ -587,9 +587,9 @@ bool libspdm_calculate_il1il2(libspdm_context_t *spdm_context,
     return true;
 }
 #else
-bool libspdm_calculate_il1il2_hash(libspdm_context_t *spdm_context,
-                                   void *session_info, bool is_encap,
-                                   size_t *il1il2_hash_size, void *il1il2_hash)
+static bool libspdm_calculate_il1il2_hash(libspdm_context_t *spdm_context,
+                                          void *session_info, bool is_encap,
+                                          size_t *il1il2_hash_size, void *il1il2_hash)
 {
     libspdm_session_info_t *spdm_session_info;
     bool result;

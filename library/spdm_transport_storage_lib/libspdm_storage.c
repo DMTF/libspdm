@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -19,7 +19,7 @@
  * @return The DSP0277 version specified in binding specification,
  *         which is bound to secured_message_version.
  */
-spdm_version_number_t libspdm_storage_get_secured_spdm_version(
+static spdm_version_number_t libspdm_storage_get_secured_spdm_version(
     spdm_version_number_t secured_message_version)
 {
     return secured_message_version;
@@ -33,7 +33,7 @@ spdm_version_number_t libspdm_storage_get_secured_spdm_version(
  * @return Max random number count in an SPDM secured message.
  *        0 means no random number is required.
  **/
-uint32_t libspdm_storage_get_max_random_number_count(void)
+static uint32_t libspdm_storage_get_max_random_number_count(void)
 {
     return LIBSPDM_STORAGE_MAX_RANDOM_NUMBER_COUNT;
 }
@@ -51,8 +51,8 @@ uint32_t libspdm_storage_get_max_random_number_count(void)
  *        It shall be no greater than 8.
  *        0 means no sequence number is required.
  **/
-uint8_t libspdm_storage_get_sequence_number(uint64_t sequence_number,
-                                            uint8_t *sequence_number_buffer)
+static uint8_t libspdm_storage_get_sequence_number(uint64_t sequence_number,
+                                                   uint8_t *sequence_number_buffer)
 {
     libspdm_copy_mem(sequence_number_buffer, sizeof(uint64_t),
                      &sequence_number, sizeof(uint64_t));
@@ -83,7 +83,7 @@ uint8_t libspdm_storage_get_sequence_number(uint64_t sequence_number,
  * @param  is_request_message      Indicates if it is a request message.
  *
  **/
-libspdm_return_t libspdm_storage_secured_message_decode(
+static libspdm_return_t libspdm_storage_secured_message_decode(
     void *spdm_context, uint32_t session_id, size_t *message_size, void **message,
     bool is_request_message)
 {
@@ -163,7 +163,7 @@ libspdm_return_t libspdm_storage_secured_message_decode(
  * @param  is_request_message      Indicates if it is a request message.
  *
  **/
-libspdm_return_t libspdm_storage_secured_message_encode(
+static libspdm_return_t libspdm_storage_secured_message_encode(
     void *spdm_context, size_t *message_size, void **message,
     size_t *secured_message_size, uint8_t **secured_message,
     size_t *transport_message_size, void **transport_message,
