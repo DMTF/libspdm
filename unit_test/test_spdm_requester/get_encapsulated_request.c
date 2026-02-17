@@ -1232,11 +1232,11 @@ static void req_get_encapsulated_request_case13(void **State)
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
 
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
 
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_req_asym_algo, &data,
