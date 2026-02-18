@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1240,31 +1240,16 @@ bool libspdm_check_context (void *spdm_context)
 }
 #endif /* LIBSPDM_CHECK_CONTEXT */
 
-/**
- * Reset message A cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- **/
 void libspdm_reset_message_a(libspdm_context_t *spdm_context)
 {
     libspdm_reset_managed_buffer(&spdm_context->transcript.message_a);
 }
 
-/**
- * Reset message D cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- **/
 void libspdm_reset_message_d(libspdm_context_t *spdm_context)
 {
     libspdm_reset_managed_buffer(&spdm_context->transcript.message_d);
 }
 
-/**
- * Reset message B cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- **/
 void libspdm_reset_message_b(libspdm_context_t *spdm_context)
 {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1278,11 +1263,6 @@ void libspdm_reset_message_b(libspdm_context_t *spdm_context)
 #endif
 }
 
-/**
- * Reset message C cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- **/
 void libspdm_reset_message_c(libspdm_context_t *spdm_context)
 {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1296,11 +1276,6 @@ void libspdm_reset_message_c(libspdm_context_t *spdm_context)
 #endif
 }
 
-/**
- * Reset message MutB cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- **/
 void libspdm_reset_message_mut_b(libspdm_context_t *spdm_context)
 {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1314,11 +1289,6 @@ void libspdm_reset_message_mut_b(libspdm_context_t *spdm_context)
 #endif
 }
 
-/**
- * Reset message MutC cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- **/
 void libspdm_reset_message_mut_c(libspdm_context_t *spdm_context)
 {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1332,14 +1302,6 @@ void libspdm_reset_message_mut_c(libspdm_context_t *spdm_context)
 #endif
 }
 
-/**
- * Reset message M cache in SPDM context.
- * If session_info is NULL, this function will use M cache of SPDM context,
- * else will use M cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- **/
 void libspdm_reset_message_m(libspdm_context_t *spdm_context, void *session_info)
 {
     libspdm_session_info_t *spdm_session_info;
@@ -1374,12 +1336,6 @@ void libspdm_reset_message_m(libspdm_context_t *spdm_context, void *session_info
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 }
 
-/**
- * Reset message K cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  spdm_session_info              A pointer to the SPDM session context.
- **/
 void libspdm_reset_message_k(libspdm_context_t *spdm_context, void *session_info)
 {
     libspdm_session_info_t *spdm_session_info;
@@ -1403,12 +1359,6 @@ void libspdm_reset_message_k(libspdm_context_t *spdm_context, void *session_info
 #endif
 }
 
-/**
- * Reset message EncapD cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  spdm_session_info              A pointer to the SPDM session context.
- **/
 void libspdm_reset_message_encap_d(libspdm_context_t *spdm_context, void *session_info)
 {
     libspdm_session_info_t *spdm_session_info;
@@ -1417,12 +1367,6 @@ void libspdm_reset_message_encap_d(libspdm_context_t *spdm_context, void *sessio
     libspdm_reset_managed_buffer(&spdm_session_info->session_transcript.message_encap_d);
 }
 
-/**
- * Reset message F cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  spdm_session_info              A pointer to the SPDM session context.
- **/
 void libspdm_reset_message_f(libspdm_context_t *spdm_context, void *session_info)
 {
     libspdm_session_info_t *spdm_session_info;
@@ -1444,14 +1388,6 @@ void libspdm_reset_message_f(libspdm_context_t *spdm_context, void *session_info
 #endif
 }
 
-/**
- * Reset message E cache in SPDM context.
- * If session_info is NULL, this function will use E cache of SPDM context,
- * else will use E cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  spdm_session_info              A pointer to the SPDM session context.
- **/
 void libspdm_reset_message_e(libspdm_context_t *spdm_context, void *session_info)
 {
     libspdm_session_info_t *spdm_session_info;
@@ -1480,14 +1416,6 @@ void libspdm_reset_message_e(libspdm_context_t *spdm_context, void *session_info
 #endif
 }
 
-/**
- * Reset message encap E cache in SPDM context.
- * If session_info is NULL, this function will use encap E cache of SPDM context,
- * else will use encap E cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  spdm_session_info              A pointer to the SPDM session context.
- **/
 void libspdm_reset_message_encap_e(libspdm_context_t *spdm_context, void *session_info)
 {
     libspdm_session_info_t *spdm_session_info;
@@ -1516,13 +1444,6 @@ void libspdm_reset_message_encap_e(libspdm_context_t *spdm_context, void *sessio
 #endif
 }
 
-/**
- * Reset message buffer in SPDM context according to request code.
- *
- * @param  spdm_context                   A pointer to the SPDM context.
- * @param  spdm_session_info             A pointer to the SPDM session context.
- * @param  spdm_request                   The SPDM request code.
- */
 void libspdm_reset_message_buffer_via_request_code(void *context, void *session_info,
                                                    uint8_t request_code)
 {
@@ -2465,15 +2386,6 @@ libspdm_return_t libspdm_append_message_encap_e(libspdm_context_t *spdm_context,
     }
 #endif
 }
-/**
- * This function returns if a given version is supported based upon the GET_VERSION/VERSION.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  version                      The SPDM version.
- *
- * @retval true  the version is supported.
- * @retval false the version is not supported.
- **/
 bool libspdm_is_version_supported(const libspdm_context_t *spdm_context, uint8_t version)
 {
     if (version == (spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT)) {
@@ -2483,29 +2395,11 @@ bool libspdm_is_version_supported(const libspdm_context_t *spdm_context, uint8_t
     return false;
 }
 
-/**
- * This function returns connection version negotiated by GET_VERSION/VERSION.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @return the connection version.
- **/
 uint8_t libspdm_get_connection_version(const libspdm_context_t *spdm_context)
 {
     return (uint8_t)(spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT);
 }
 
-/**
- * This function returns if a capabilities flag is supported in current SPDM connection.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  is_requester                  Is the function called from a requester.
- * @param  requester_capabilities_flag    The requester capabilities flag to be checked
- * @param  responder_capabilities_flag    The responder capabilities flag to be checked
- *
- * @retval true  the capabilities flag is supported.
- * @retval false the capabilities flag is not supported.
- **/
 bool libspdm_is_capabilities_flag_supported(const libspdm_context_t *spdm_context,
                                             bool is_requester,
                                             uint32_t requester_capabilities_flag,
@@ -2534,17 +2428,6 @@ bool libspdm_is_capabilities_flag_supported(const libspdm_context_t *spdm_contex
     }
 }
 
-/**
- * This function returns if a capabilities extended flag is supported in current SPDM connection.
- *
- * @param  spdm_context                     A pointer to the SPDM context.
- * @param  is_requester                     Is the function called from a requester.
- * @param  requester_capabilities_ext_flag  The requester capabilities extended flag to be checked
- * @param  responder_capabilities_ext_flag  The responder capabilities extended flag to be checked
- *
- * @retval true  the capabilities extended flag is supported.
- * @retval false the capabilities extended flag is not supported.
- **/
 bool libspdm_is_capabilities_ext_flag_supported(const libspdm_context_t *spdm_context,
                                                 bool is_requester,
                                                 uint16_t requester_capabilities_ext_flag,
@@ -2606,15 +2489,6 @@ bool libspdm_is_encap_supported(const libspdm_context_t *spdm_context)
     }
 }
 
-/**
- * Register SPDM device input/output functions.
- *
- * This function must be called after libspdm_init_context, and before any SPDM communication.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  send_message                  The function to send an SPDM transport layer message.
- * @param  receive_message               The function to receive an SPDM transport layer message.
- **/
 void libspdm_register_device_io_func(
     void *spdm_context, libspdm_device_send_message_func send_message,
     libspdm_device_receive_message_func receive_message)
@@ -2626,49 +2500,6 @@ void libspdm_register_device_io_func(
     context->receive_message = receive_message;
 }
 
-/**
- * Register SPDM device buffer management functions.
- *
- * This function must be called after libspdm_init_context, and before any SPDM communication.
- *
- * The sender_buffer_size and receiver_buffer_size must be no smaller than
- * MAX (non-secure Transport Message Header Size +
- *          SPDM_CAPABILITIES.DataTransferSize +
- *          max alignment pad size (transport specific),
- *      secure Transport Message Header Size +
- *          sizeof(spdm_secured_message_a_data_header1_t) +
- *          length of sequence_number (transport specific) +
- *          sizeof(spdm_secured_message_a_data_header2_t) +
- *          sizeof(spdm_secured_message_cipher_header_t) +
- *          App Message Header Size (transport specific) +
- *          SPDM_CAPABILITIES.DataTransferSize +
- *          maximum random data size (transport specific) +
- *          AEAD MAC size (16) +
- *          max alignment pad size (transport specific)).
- *
- * Finally, the SPDM_CAPABILITIES.DataTransferSize will be calculated based upon it.
- *
- *   For MCTP,
- *          Transport Message Header Size = sizeof(mctp_message_header_t)
- *          length of sequence_number = 2
- *          App Message Header Size = sizeof(mctp_message_header_t)
- *          maximum random data size = MCTP_MAX_RANDOM_NUMBER_COUNT
- *          max alignment pad size = 0
- *   For PCI_DOE,
- *          Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
- *          length of sequence_number = 0
- *          App Message Header Size = 0
- *          maximum random data size = 0
- *          max alignment pad size = 3
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  sender_buffer_size            Size in bytes of the sender buffer.
- * @param  receiver_buffer_size          Size in bytes of the receiver buffer.
- * @param  acquire_sender_buffer         The function to acquire transport layer sender buffer.
- * @param  release_sender_buffer         The function to release transport layer sender buffer.
- * @param  acquire_receiver_buffer       The function to acquire transport layer receiver buffer.
- * @param  release_receiver_buffer       The function to release transport layer receiver buffer.
- **/
 void libspdm_register_device_buffer_func(
     void *spdm_context,
     uint32_t sender_buffer_size,
@@ -2705,15 +2536,6 @@ void libspdm_register_device_buffer_func(
     context->local_context.capability.data_transfer_size = receiver_buffer_size;
 }
 
-/**
- * Register SPDM transport layer encode/decode functions for SPDM or APP messages.
- *
- * This function must be called after libspdm_init_context, and before any SPDM communication.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  transport_encode_message       The function to encode an SPDM or APP message to a transport layer message.
- * @param  transport_decode_message       The function to decode an SPDM or APP message from a transport layer message.
- **/
 void libspdm_register_transport_layer_func(
     void *spdm_context,
     uint32_t max_spdm_msg_size,
@@ -2749,20 +2571,6 @@ void libspdm_register_transport_layer_func(
     context->transport_decode_message = transport_decode_message;
 }
 
-/**
- * Register SPDM certificate verification functions for SPDM GET_CERTIFICATE in requester or responder.
- * It is called after GET_CERTIFICATE gets a full certificate chain from peer.
- *
- * If it is NOT registered, the default verification in SPDM lib will be used. It verifies:
- *    1) The integrity of the certificate chain, (Root Cert Hash->Root Cert->Cert Chain), according to X.509.
- *  2) The trust anchor, according LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT or LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN.
- * If it is registered, SPDM lib will use this function to verify the certificate.
- *
- * This function must be called after libspdm_init_context, and before any SPDM communication.
- *
- * @param  context                  A pointer to the SPDM context.
- * @param  verify_spdm_cert_chain   The function to verify an SPDM certificate after GET_CERTIFICATE.
- **/
 void libspdm_register_verify_spdm_cert_chain_func(
     void *spdm_context,
     const libspdm_verify_spdm_cert_chain_func verify_spdm_cert_chain)
@@ -2773,16 +2581,6 @@ void libspdm_register_verify_spdm_cert_chain_func(
     context->local_context.verify_peer_spdm_cert_chain = verify_spdm_cert_chain;
 }
 
-/**
- * Get the size of required scratch buffer.
- *
- * The SPDM Integrator must call libspdm_get_sizeof_required_scratch_buffer to get the size,
- * then allocate enough scratch buffer and call libspdm_set_scratch_buffer().
- *
- * @param  context                  A pointer to the SPDM context.
- *
- * @return the size of required scratch buffer.
- **/
 size_t libspdm_get_sizeof_required_scratch_buffer (void *spdm_context)
 {
     libspdm_context_t *context;
@@ -2795,16 +2593,6 @@ size_t libspdm_get_sizeof_required_scratch_buffer (void *spdm_context)
     return scratch_buffer_size;
 }
 
-/**
- * Set the scratch buffer.
- *
- * This function must be called after libspdm_init_context, and before any SPDM communication.
- *
- * @param  context                  A pointer to the SPDM context.
- * @param  scratch_buffer           Buffer address of the scratch buffer.
- * @param  scratch_buffer_size      Size of the scratch buffer.
- *
- **/
 void libspdm_set_scratch_buffer (
     void *spdm_context,
     void *scratch_buffer,
@@ -2825,14 +2613,6 @@ void libspdm_set_scratch_buffer (
 #endif
 }
 
-/**
- * Get the scratch buffer.
- *
- * @param  context                  A pointer to the SPDM context.
- * @param  scratch_buffer           Buffer address of the scratch buffer.
- * @param  scratch_buffer_size      Size of the scratch buffer.
- *
- **/
 void libspdm_get_scratch_buffer (
     void *spdm_context,
     void **scratch_buffer,
@@ -2884,14 +2664,6 @@ void libspdm_release_sender_buffer (libspdm_context_t *spdm_context)
     spdm_context->sender_buffer = NULL;
 }
 
-/**
- * Get the sender buffer.
- *
- * @param  context                  A pointer to the SPDM context.
- * @param  receiver_buffer            Buffer address of the sender buffer.
- * @param  receiver_buffer_size       Size of the sender buffer.
- *
- **/
 void libspdm_get_sender_buffer (
     libspdm_context_t *spdm_context,
     void **sender_buffer,
@@ -2932,14 +2704,6 @@ void libspdm_release_receiver_buffer (libspdm_context_t *spdm_context)
     spdm_context->receiver_buffer = NULL;
 }
 
-/**
- * Get the receiver buffer.
- *
- * @param  context                  A pointer to the SPDM context.
- * @param  receiver_buffer            Buffer address of the receiver buffer.
- * @param  receiver_buffer_size       Size of the receiver buffer.
- *
- **/
 void libspdm_get_receiver_buffer (
     libspdm_context_t *spdm_context,
     void **receiver_buffer,
@@ -2949,12 +2713,6 @@ void libspdm_get_receiver_buffer (
     *receiver_buffer_size = spdm_context->receiver_buffer_size;
 }
 
-/**
- * Get the last SPDM error struct of an SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  last_spdm_error                Last SPDM error struct of an SPDM context.
- */
 void libspdm_get_last_spdm_error_struct(void *spdm_context, libspdm_error_struct_t *last_spdm_error)
 {
     libspdm_context_t *context;
@@ -2964,12 +2722,6 @@ void libspdm_get_last_spdm_error_struct(void *spdm_context, libspdm_error_struct
                      &context->last_spdm_error,sizeof(libspdm_error_struct_t));
 }
 
-/**
- * Set the last SPDM error struct of an SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  last_spdm_error                Last SPDM error struct of an SPDM context.
- */
 void libspdm_set_last_spdm_error_struct(void *spdm_context, libspdm_error_struct_t *last_spdm_error)
 {
     libspdm_context_t *context;
@@ -3004,11 +2756,6 @@ libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Return the size in bytes of the fips_selftest_context.
- *
- * @return the size in bytes of the fips_selftest_context.
- **/
 size_t libspdm_get_fips_selftest_context_size(void)
 {
     size_t size;
@@ -3017,26 +2764,11 @@ size_t libspdm_get_fips_selftest_context_size(void)
     return size;
 }
 
-/**
- * Returns the required buffer size for FIPS self-tests.
- *
- * @retval  The required buffer size in bytes.
- */
 size_t libspdm_get_fips_selftest_buffer_size(void)
 {
     return LIBSPDM_FIPS_REQUIRED_BUFFER_SIZE;
 }
 
-/**
- * import fips_selftest_context to spdm_context;
- *
- * @param[in,out]  spdm_context                A pointer to the spdm_context.
- * @param[in]      fips_selftest_context       A pointer to the fips_selftest_context.
- * @param[in]      fips_selftest_context_size  The size of fips_selftest_context.
- *
- * @retval true   import fips_selftest_context successful.
- * @retval false  spdm_context or fips_selftest_context is null.
- */
 bool libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context,
                                                           void *fips_selftest_context,
                                                           size_t fips_selftest_context_size)
@@ -3060,16 +2792,6 @@ bool libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context,
     return true;
 }
 
-/**
- * export fips_selftest_context from spdm_context;
- *
- * @param[in]          spdm_context                A pointer to the spdm_context.
- * @param[in,out]      fips_selftest_context       A pointer to the fips_selftest_context.
- * @param[in]          fips_selftest_context_size  The size of fips_selftest_context.
- *
- * @retval true   export fips_selftest_context successful.
- * @retval false  spdm_context or fips_selftest_context is null.
- */
 bool libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context,
                                                             void *fips_selftest_context,
                                                             size_t fips_selftest_context_size)
@@ -3258,14 +2980,6 @@ void libspdm_reset_context(void *spdm_context)
     context->current_psk_session_count = 0;
 }
 
-/**
- * Free the memory of contexts within the SPDM context.
- * These are typically contexts whose memory has been allocated by the cryptography library.
- * This function does not free the SPDM context itself.
- *
- * @param[in]  spdm_context         A pointer to the SPDM context.
- *
- */
 void libspdm_deinit_context(void *spdm_context)
 {
     uint32_t session_id;
@@ -3330,14 +3044,6 @@ void libspdm_deinit_context(void *spdm_context)
     }
 }
 
-/**
- * Return the size in bytes of the SPDM context. This includes all
- * secured message context data as well.
- *
- * For just the SPDM context size, use libspdm_get_context_size_without_secured_context.
- *
- * @return the size in bytes of the SPDM context and secured message contexts.
- **/
 size_t libspdm_get_context_size(void)
 {
     size_t size;
@@ -3348,13 +3054,6 @@ size_t libspdm_get_context_size(void)
     return size;
 }
 
-/**
- * Return the size in bytes of just the SPDM context, without secured message context.
- *
- * For the complete context size, use libspdm_get_context_size.
- *
- * @return the size in bytes of the SPDM context.
- **/
 size_t libspdm_get_context_size_without_secured_context(void)
 {
     size_t size;
@@ -3364,25 +3063,11 @@ size_t libspdm_get_context_size_without_secured_context(void)
     return size;
 }
 
-/**
- * Return the SPDMversion field of the version number struct.
- *
- * @param  ver                Spdm version number struct.
- *
- * @return the SPDMversion of the version number struct.
- **/
 uint8_t libspdm_get_version_from_version_number(const spdm_version_number_t ver)
 {
     return (uint8_t)(ver >> SPDM_VERSION_NUMBER_SHIFT_BIT);
 }
 
-/**
- * Sort SPDMversion in descending order.
- *
- * @param  spdm_context                A pointer to the SPDM context.
- * @param  ver_set                    A pointer to the version set.
- * @param  ver_num                    Version number.
- */
 void libspdm_version_number_sort(spdm_version_number_t *ver_set, size_t ver_num)
 {
     size_t index;
@@ -3408,19 +3093,6 @@ void libspdm_version_number_sort(spdm_version_number_t *ver_set, size_t ver_num)
     }
 }
 
-/**
- * Negotiate SPDMversion for connection.
- * ver_set is the local version set of requester, res_ver_set is the version set of responder.
- *
- * @param  common_version             A pointer to store the common version.
- * @param  req_ver_set                A pointer to the requester version set.
- * @param  req_ver_num                Version number of requester.
- * @param  res_ver_set                A pointer to the responder version set.
- * @param  res_ver_num                Version number of responder.
- *
- * @retval true                       Negotiation successfully, connect version be saved to common_version.
- * @retval false                      Negotiation failed.
- */
 bool libspdm_negotiate_connection_version(spdm_version_number_t *common_version,
                                           spdm_version_number_t *req_ver_set,
                                           size_t req_ver_num,

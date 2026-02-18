@@ -1,18 +1,11 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #include "internal/libspdm_common_lib.h"
 
-/**
- * Return the size in bytes of opaque data version selection.
- *
- * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response generation.
- *
- * @return the size in bytes of opaque data version selection.
- **/
 size_t libspdm_get_opaque_data_version_selection_data_size(const libspdm_context_t *spdm_context)
 {
     size_t size;
@@ -34,13 +27,6 @@ size_t libspdm_get_opaque_data_version_selection_data_size(const libspdm_context
     return (size + 3) & ~3;
 }
 
-/**
- * Return the size in bytes of opaque data supported version.
- *
- * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request generation.
- *
- * @return the size in bytes of opaque data supported version.
- **/
 size_t libspdm_get_opaque_data_supported_version_data_size(libspdm_context_t *spdm_context)
 {
     size_t size;
@@ -66,15 +52,6 @@ size_t libspdm_get_opaque_data_supported_version_data_size(libspdm_context_t *sp
     return (size + 3) & ~3;
 }
 
-/**
- * Return the size in bytes of opaque data supported version.
- *
- * This function should be called in libspdm_process_opaque_data_supported_version_data.
- *
- * @param  version_count                 Secure version count.
- *
- * @return the size in bytes of opaque data supported version.
- **/
 size_t libspdm_get_untrusted_opaque_data_supported_version_data_size(
     libspdm_context_t *spdm_context, uint8_t version_count)
 {
@@ -95,21 +72,6 @@ size_t libspdm_get_untrusted_opaque_data_supported_version_data_size(
     return (size + 3) & ~3;
 }
 
-/**
- * Get element from multi element opaque data by element id.
- *
- * This function should be called in
- * libspdm_process_opaque_data_supported_version_data/libspdm_process_opaque_data_version_selection_data.
- *
- * @param[in]  data_in_size                size of multi element opaque data.
- * @param[in]  data_in                     A pointer to the multi element opaque data.
- * @param[in]  element_id                  element id.
- * @param[in]  sm_data_id                  sm_data_id to identify for the Secured Message data type.
- * @param[out] get_element_ptr             pointer to store found element
- *
- * @retval true                            get element successfully
- * @retval false                           get element failed
- **/
 bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
                                           size_t data_in_size, const void *data_in,
                                           uint8_t element_id, uint8_t sm_data_id,
@@ -239,15 +201,6 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
     return result;
 }
 
-/**
- *  Process general opaque data check
- *
- * @param  data_in_size                  size in bytes of the data_in.
- * @param  data_in                       A pointer to the buffer to store the opaque data version selection.
- *
- * @retval true                           check opaque data successfully
- * @retval false                          check opaque data failed
- **/
 bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
                                                size_t data_in_size,
                                                const void *data_in)

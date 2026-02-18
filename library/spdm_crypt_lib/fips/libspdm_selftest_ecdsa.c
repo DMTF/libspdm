@@ -25,9 +25,6 @@ static int libspdm_hardcode_random_number_ecdsa(void *rng_state, unsigned char *
     return 0;
 }
 
-/**
- * ECDSA self_test
- **/
 bool libspdm_fips_selftest_ecdsa(void *fips_selftest_context)
 {
     bool result = true;

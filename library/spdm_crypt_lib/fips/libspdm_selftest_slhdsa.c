@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -10,9 +10,6 @@
 
 #if LIBSPDM_FIPS_MODE
 
-/**
- * slhdsa self_test
- **/
 bool libspdm_fips_selftest_slhdsa(void *fips_selftest_context)
 {
     bool result = true;

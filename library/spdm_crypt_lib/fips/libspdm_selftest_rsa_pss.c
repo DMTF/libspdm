@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2025 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -11,9 +11,6 @@
 
 #if LIBSPDM_FIPS_MODE
 
-/**
- * RSA_PSS self_test
- **/
 bool libspdm_fips_selftest_rsa_pss(void *fips_selftest_context)
 {
     bool result = true;

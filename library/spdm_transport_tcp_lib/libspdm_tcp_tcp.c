@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -9,47 +9,17 @@
 #include "hal/library/memlib.h"
 #include "industry_standard/spdm_tcp_binding.h"
 
-/**
- * Get sequence number in an SPDM secure message.
- *
- * This value is transport layer specific.
- *
- * @param sequence_number        The current sequence number used to encode or decode message.
- * @param sequence_number_buffer  A buffer to hold the sequence number output used in the secured message.
- *                             The size in byte of the output buffer shall be 8.
- *
- * @return size in byte of the sequence_number_buffer.
- *        It shall be no greater than 8.
- *        0 means no sequence number is required.
- **/
 uint8_t libspdm_tcp_get_sequence_number(uint64_t sequence_number,
                                         uint8_t *sequence_number_buffer)
 {
     return SPDM_TCP_SEQUENCE_NUMBER_COUNT;
 }
 
-/**
- * Return max random number count in an SPDM secure message.
- *
- * This value is transport layer specific.
- *
- * @return Max random number count in an SPDM secured message.
- *        0 means no randum number is required.
- **/
 uint32_t libspdm_tcp_get_max_random_number_count(void)
 {
     return SPDM_TCP_MAX_RANDOM_NUMBER_COUNT;
 }
 
-/**
- * This function translates the negotiated secured_message_version to a DSP0277 version.
- *
- * @param  secured_message_version  The version specified in binding specification and
- *                                  negotiated in KEY_EXCHANGE/KEY_EXCHANGE_RSP.
- *
- * @return The DSP0277 version specified in binding specification,
- *         which is bound to secured_message_version.
- */
 spdm_version_number_t libspdm_tcp_get_secured_spdm_version(
     spdm_version_number_t secured_message_version)
 {
@@ -160,22 +130,6 @@ libspdm_return_t libspdm_tcp_decode_message(uint32_t **session_id,
 }
 
 
-/**
- * @brief Encode a SPDM-over-TCP message that contains no SPDM payload.
- *
- * This function builds a TCP binding header suitable for Role-Inquiry (0xBF) or
- * any error message (0xC0-0xFF). It does not append any SPDM data after the header.
- *
- * @param[in]      message_type            The message type to encode (e.g., 0xBF, 0xC0...0xFF).
- *                                         Must be SPDM_TCP_MESSAGE_TYPE_ROLE_INQUIRY or an error message type.
- * @param[in,out]  transport_message_size  On input, size of the output buffer. On output, encoded size.
- * @param[in,out]  transport_message       On input, pointer to buffer to write the encoded message.
- *                                         On success, contains the encoded message header.
- *
- * @retval LIBSPDM_STATUS_SUCCESS            Encoding completed successfully.
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER  Unsupported message type for this function.
- * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL   Provided buffer is too small for header.
- **/
 libspdm_return_t libspdm_tcp_encode_discovery_message(uint8_t message_type,
                                                       size_t *transport_message_size,
                                                       void **transport_message)
@@ -202,20 +156,6 @@ libspdm_return_t libspdm_tcp_encode_discovery_message(uint8_t message_type,
 }
 
 
-/**
- * @brief Decode a SPDM-over-TCP discovery or error message (no SPDM payload).
- *
- * Validates header fields including binding version, payload length, and message type.
- *
- * @param[in]  transport_message_size   Size of the incoming buffer.
- * @param[in]  transport_message        Pointer to the incoming buffer.
- * @param[out] message_type             On success, receives the validated message type.
- *
- * @retval LIBSPDM_STATUS_SUCCESS             Decoding successful.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE    Buffer too small for TCP header.
- * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP     Unsupported binding version.
- * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD   Payload length is non-zero or message type invalid.
- **/
 libspdm_return_t libspdm_tcp_decode_discovery_message(size_t transport_message_size,
                                                       const void *transport_message,
                                                       uint8_t *message_type)
@@ -246,17 +186,6 @@ libspdm_return_t libspdm_tcp_decode_discovery_message(size_t transport_message_s
 }
 
 
-/**
- * Return the maximum transport layer message header size.
- *   Transport Message Header Size + sizeof(spdm_secured_message_cipher_header_t))
- *
- *   For TCP, Transport Message Header Size = sizeof(tcp_spdm_binding_header_t)
- *   For PCI_DOE, Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @return size of maximum transport layer message header size
- **/
 uint32_t libspdm_transport_tcp_get_header_size(
     void *spdm_context)
 {

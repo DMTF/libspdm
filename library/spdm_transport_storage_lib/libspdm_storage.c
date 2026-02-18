@@ -238,22 +238,6 @@ static libspdm_return_t libspdm_storage_secured_message_encode(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Decode an Security Protocol Command message to a normal message or secured message.
- *
- * @param  session_id                  Indicates if it is a secured message protected via SPDM session.
- *                                     If *session_id is NULL, it is a normal message.
- *                                     If *session_id is NOT NULL, it is a secured message.
- * @param  connection_id               Indicates the connection ID of the message.
- * @param  transport_message_size      size in bytes of the transport message data buffer.
- * @param  transport_message           A pointer to a source buffer to store the transport message.
- * @param  message_size                size in bytes of the message data buffer.
- * @param  message                     A pointer to a destination buffer to store the message.
- *
- * @retval LIBSPDM_STATUS_SUCCESS              The message is encoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the transport_message_size is zero.
- * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD    The message field is incorrect.
- **/
 libspdm_return_t libspdm_storage_decode_message(uint32_t **session_id,
                                                 uint8_t *connection_id,
                                                 size_t transport_message_size,
@@ -330,37 +314,6 @@ libspdm_return_t libspdm_storage_decode_message(uint32_t **session_id,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Decode an SPDM or APP message from a storage transport layer message.
- *
- * For normal SPDM message, it removes the transport layer wrapper,
- * For secured SPDM message, it removes the transport layer wrapper, then decrypts and verifies a secured message.
- * For secured APP message, it removes the transport layer wrapper, then decrypts and verifies a secured message.
- *
- * The APP message is decoded from a secured message directly in SPDM session.
- * The APP message format is defined by the transport layer.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
- *
- * @param  spdm_context            A pointer to the SPDM context.
- * @param  session_id              On entry, indicates if it is a secured message protected via SPDM session.
- *                                 If session_id is NULL, it is a normal message.
- *                                 If session_id is not NULL, it is a secured message.
- * @param  is_app_message          Indicates if it is an APP message or SPDM message.
- * @param  is_request_message      Indicates if it is a request message.
- * @param  transport_message_size  Size in bytes of the transport message data buffer.
- * @param  transport_message       A pointer to a source buffer to store the transport message.
- *                                 For normal message or secured message, it shall point to acquired receiver buffer.
- * @param  message_size            Size in bytes of the message data buffer.
- * @param  message                 A pointer to a destination buffer to store the message.
- *                                 On input, it shall point to the scratch buffer in spdm_context.
- *                                 On output, for normal message, it will point to the original receiver buffer.
- *                                 On output, for secured message, it will point to the scratch buffer in spdm_context.
- *
- * @retval LIBSPDM_STATUS_SUCCESS              The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size is zero.
- * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD    The message field is incorrect.
- * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP      The transport_message is unsupported.
- **/
 libspdm_return_t libspdm_transport_storage_decode_message(
     void *spdm_context, uint32_t **session_id,
     bool *is_app_message, bool is_request_message,
@@ -525,24 +478,6 @@ libspdm_return_t libspdm_transport_storage_decode_message(
     }
 }
 
-/**
- * Encode a normal message or secured message to a storage transport message.
- *
- * @param  session_id                  Indicates if it is a secured message protected via SPDM session.
- *                                     If *session_id is NULL, it is a normal message.
- *                                     If *session_id is NOT NULL, it is a secured message.
- * @param  connection_id               Indicates the connection ID of the message.
- * @param  message_size                size in bytes of the message data buffer.
- * @param  message                     A pointer to a destination buffer to store the message.
- * @param  transport_message_size      Size in bytes of the transport message data buffer.
- *                                     On return, length of the transport message.
- * @param  transport_message           A pointer to a source buffer to store the transport message.
- *
- * @retval LIBSPDM_STATUS_SUCCESS              The message is encoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size/transport_message_size is zero.
- * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD    The message field is incorrect.
- * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL     Insufficient transport buffer size.
- **/
 libspdm_return_t libspdm_storage_encode_message(const uint32_t *session_id,
                                                 uint8_t connection_id,
                                                 size_t message_size, void *message,
@@ -604,29 +539,6 @@ libspdm_return_t libspdm_storage_encode_message(const uint32_t *session_id,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Encode an SPDM or APP message into a transport layer message.
- *
- * @param  spdm_context            A pointer to the SPDM context.
- * @param  session_id              Indicates if it is a secured message protected via SPDM session.
- *                                 If session_id is NULL, it is a normal message.
- *                                 If session_id is not NULL, it is a secured message.
- * @param  is_app_message          Indicates if it is an APP message or SPDM message.
- * @param  is_request_message      Indicates if it is a request message.
- * @param  message_size            Size in bytes of the message data buffer.
- * @param  message                 A pointer to a destination buffer to store the message.
- *                                 On input, it shall point to the scratch buffer in spdm_context.
- *                                 On output, for normal message, it will point to the original receiver buffer.
- *                                 On output, for secured message, it will point to the scratch buffer in spdm_context.
- * @param  transport_message_size  Size in bytes of the transport message data buffer.
- * @param  transport_message       A pointer to a source buffer to store the transport message.
- *                                 For normal message or secured message, it shall point to acquired receiver buffer.
- *
- * @retval LIBSPDM_STATUS_SUCCESS              The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size is zero.
- * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD    The message field is incorrect.
- * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP      The transport_message is unsupported.
- **/
 libspdm_return_t libspdm_transport_storage_encode_message(
     void *spdm_context, const uint32_t *session_id,
     bool is_app_message,
@@ -735,23 +647,6 @@ libspdm_return_t libspdm_transport_storage_encode_message(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Encode a storage transport management command, supports only Discovery and
- * Pending Info.
- *
- * @param  cmd_direction           Specify the direction of the command IF_SEND/RECV
- * @param  transport_operation     Transport operation type, Discovery/Pending Info
- * @param  connection_id           SPDM Connection ID
- * @param  transport_message_size  Size in bytes of the transport message data buffer.
- *                                 On return, the length of the encoded message
- * @param  allocation_length       Storage buffer allocation length
- * @param  transport_message       A pointer to a transport message buffer.
- *
- * @retval LIBSPDM_STATUS_SUCCESS              The message is encoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size is zero.
- * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD    The message field is incorrect.
- * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL     Insufficient transport buffer size
- **/
 libspdm_return_t libspdm_transport_storage_encode_management_cmd(
     uint8_t cmd_direction, uint8_t transport_operation,
     uint8_t connection_id, size_t *transport_message_size,
@@ -815,17 +710,6 @@ libspdm_return_t libspdm_transport_storage_encode_management_cmd(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Encode a storage transport discovery response. As defined by the DMTF DSP0286
- *
- * @param  transport_message_size  Size in bytes of the transport message data buffer.
- *                                 On return, the size of the response
- * @param  transport_message       A pointer to a source buffer to store the transport message.
- *
- * @retval LIBSPDM_STATUS_SUCCESS              The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size is zero.
- * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL     @transport_message is too small
- **/
 libspdm_return_t libspdm_transport_storage_encode_discovery_response(
     size_t *transport_message_size,
     void *transport_message)
@@ -859,21 +743,6 @@ libspdm_return_t libspdm_transport_storage_encode_discovery_response(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Encode a storage transport pending response. As defined by the DMTF DSP0286
- *
- * @param  transport_message_size  Size in bytes of the transport message data buffer.
- *                                 On return, the size of the response
- * @param  transport_message       A pointer to a source buffer to store the transport message.
- * @param  response_pending        If true, the responder has a pending response
- * @param  pending_response_length Valid only if @response_pending is true,
- *                                 specifies the length of the pending message
- *                                 in bytes.
- *
- * @retval LIBSPDM_STATUS_SUCCESS              The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size is zero.
- * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL     @transport_message is too small
- **/
 libspdm_return_t libspdm_transport_storage_encode_pending_info_response(
     size_t *transport_message_size,
     void *transport_message, bool response_pending,
@@ -906,18 +775,6 @@ libspdm_return_t libspdm_transport_storage_encode_pending_info_response(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Decode a storage transport management command
- *
- * @param  transport_message_size  Size in bytes of the transport message data buffer.
- * @param  transport_message       A pointer to an encoded transport message buffer.
- * @param  transport_command       Storage transport command contained in transport message
- *
- * @retval LIBSPDM_STATUS_SUCCESS              The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size is zero.
- * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD    The message field is incorrect.
- * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP      The transport_message is unsupported.
- **/
 libspdm_return_t libspdm_transport_storage_decode_management_cmd(
     size_t transport_message_size,
     const void *transport_message,

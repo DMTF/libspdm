@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -10,19 +10,6 @@
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 
-/**
- * Get sequence number in an SPDM secure message.
- *
- * This value is transport layer specific.
- *
- * @param sequence_number        The current sequence number used to encode or decode message.
- * @param sequence_number_buffer  A buffer to hold the sequence number output used in the secured message.
- *                             The size in byte of the output buffer shall be 8.
- *
- * @return size in byte of the sequence_number_buffer.
- *        It shall be no greater than 8.
- *        0 means no sequence number is required.
- **/
 uint8_t libspdm_mctp_get_sequence_number(uint64_t sequence_number,
                                          uint8_t *sequence_number_buffer)
 {
@@ -31,28 +18,11 @@ uint8_t libspdm_mctp_get_sequence_number(uint64_t sequence_number,
     return LIBSPDM_MCTP_SEQUENCE_NUMBER_COUNT;
 }
 
-/**
- * Return max random number count in an SPDM secure message.
- *
- * This value is transport layer specific.
- *
- * @return Max random number count in an SPDM secured message.
- *        0 means no random number is required.
- **/
 uint32_t libspdm_mctp_get_max_random_number_count(void)
 {
     return LIBSPDM_MCTP_MAX_RANDOM_NUMBER_COUNT;
 }
 
-/**
- * This function translates the negotiated secured_message_version to a DSP0277 version.
- *
- * @param  secured_message_version  The version specified in binding specification and
- *                                  negotiated in KEY_EXCHANGE/KEY_EXCHANGE_RSP.
- *
- * @return The DSP0277 version specified in binding specification,
- *         which is bound to secured_message_version.
- */
 spdm_version_number_t libspdm_mctp_get_secured_spdm_version(
     spdm_version_number_t secured_message_version)
 {

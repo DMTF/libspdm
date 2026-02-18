@@ -267,19 +267,6 @@ libspdm_get_asym_get_public_key_from_x509(uint32_t base_asym_algo)
     return NULL;
 }
 
-/**
- * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
- * based upon negotiated asymmetric algorithm.
- *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  cert                         Pointer to the DER-encoded X509 certificate.
- * @param  cert_size                     size of the X509 certificate in bytes.
- * @param  context                      Pointer to newly generated asymmetric context which contain the retrieved public key component.
- *                                     Use libspdm_asym_free() function to free the resource.
- *
- * @retval  true   public key was retrieved successfully.
- * @retval  false  Fail to retrieve public key from X509 certificate.
- **/
 bool libspdm_asym_get_public_key_from_x509(uint32_t base_asym_algo,
                                            const uint8_t *cert,
                                            size_t cert_size,
@@ -306,19 +293,6 @@ libspdm_get_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg)
     return libspdm_get_asym_get_public_key_from_x509(req_base_asym_alg);
 }
 
-/**
- * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
- * based upon negotiated requester asymmetric algorithm.
- *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  cert                         Pointer to the DER-encoded X509 certificate.
- * @param  cert_size                     size of the X509 certificate in bytes.
- * @param  context                      Pointer to newly generated asymmetric context which contain the retrieved public key component.
- *                                     Use libspdm_asym_free() function to free the resource.
- *
- * @retval  true   public key was retrieved successfully.
- * @retval  false  Fail to retrieve public key from X509 certificate.
- **/
 bool libspdm_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg,
                                                const uint8_t *cert,
                                                size_t cert_size,
@@ -1642,21 +1616,6 @@ cleanup:
     return status;
 }
 
-/**
- * Certificate Check for SPDM leaf cert when get_cert command.
- *
- * @param[in]  spdm_version          One of SPDM_MESSAGE_VERSION_* macros.
- * @param[in]  cert                  Pointer to the DER-encoded certificate data.
- * @param[in]  cert_size             The size of certificate data in bytes.
- * @param[in]  base_asym_algo        SPDM base_asym_algo
- * @param[in]  pqc_asym_algo         SPDM pqc_asym_algo
- * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
- * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
- *
- * @retval  true   Success.
- * @retval  false  Certificate is not valid
- **/
 bool libspdm_x509_certificate_check(
     uint8_t spdm_version,
     const uint8_t *cert, size_t cert_size,
@@ -1686,21 +1645,6 @@ bool libspdm_x509_certificate_check(
     return status;
 }
 
-/**
- * Certificate Check for SPDM leaf cert when set_cert.
- *
- * @param[in]  spdm_version          One of SPDM_MESSAGE_VERSION_* macros.
- * @param[in]  cert                  Pointer to the DER-encoded certificate data.
- * @param[in]  cert_size             The size of certificate data in bytes.
- * @param[in]  base_asym_algo        SPDM base_asym_algo
- * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
- * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
- *                                   If false, the local endpoint uses the AliasCert model.
- *
- * @retval  true   Success.
- * @retval  false  Certificate is not valid.
- **/
 bool libspdm_x509_set_cert_certificate_check(
     uint8_t spdm_version,
     const uint8_t *cert, size_t cert_size,
@@ -1794,25 +1738,6 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)
     return true;
 }
 
-/**
- * Retrieve the SubjectAltName from SubjectAltName Bytes.
- *
- * @param[in]      buffer           Pointer to subjectAltName oct bytes.
- * @param[in]      len              size of buffer in bytes.
- * @param[out]     name_buffer       buffer to contain the retrieved certificate
- *                                 SubjectAltName. At most name_buffer_size bytes will be
- *                                 written. Maybe NULL in order to determine the size
- *                                 buffer needed.
- * @param[in,out]  name_buffer_size   The size in bytes of the name buffer on input,
- *                                 and the size of buffer returned name on output.
- *                                 If name_buffer is NULL then the amount of space needed
- *                                 in buffer (including the final null) is returned.
- * @param[out]     oid              OID of otherName
- * @param[in,out]  oid_size          the buffersize for required OID
- *
- * @retval true                     get the subjectAltName string successfully
- * @retval failed                   get the subjectAltName string failed
- **/
 bool libspdm_get_dmtf_subject_alt_name_from_bytes(
     uint8_t *buffer, const size_t len, char *name_buffer,
     size_t *name_buffer_size, uint8_t *oid,
@@ -1911,25 +1836,6 @@ bool libspdm_get_dmtf_subject_alt_name_from_bytes(
     return false;
 }
 
-/**
- * Retrieve the SubjectAltName from one X.509 certificate.
- *
- * @param[in]      cert             Pointer to the DER-encoded X509 certificate.
- * @param[in]      cert_size         size of the X509 certificate in bytes.
- * @param[out]     name_buffer       buffer to contain the retrieved certificate
- *                                 SubjectAltName. At most name_buffer_size bytes will be
- *                                 written. Maybe NULL in order to determine the size
- *                                 buffer needed.
- * @param[in,out]  name_buffer_size   The size in bytes of the name buffer on input,
- *                                 and the size of buffer returned name on output.
- *                                 If name_buffer is NULL then the amount of space needed
- *                                 in buffer (including the final null) is returned.
- * @param[out]     oid              OID of otherName
- * @param[in,out]  oid_size          the buffersize for required OID
- *
- * @retval true                     get the subjectAltName string successfully
- * @retval failed                   get the subjectAltName string failed
- **/
 bool libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,
                                        char *name_buffer,
                                        size_t *name_buffer_size,
@@ -1966,21 +1872,6 @@ bool libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_si
         name_buffer_size, oid, oid_size);
 }
 
-/**
- * This function verifies the integrity of certificate chain data without spdm_cert_chain_t header.
- *
- * @param  spdm_version          One of SPDM_MESSAGE_VERSION_* macros.
- * @param  cert_chain_data       The certificate chain data without spdm_cert_chain_t header.
- * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
- * @param  base_asym_algo        SPDM base_asym_algo
- * @param  pqc_asym_algo         SPDM pqc_asym_algo
- * @param  base_hash_algo        SPDM base_hash_algo
- * @param  is_requester_cert     Is the function verifying requester or responder cert.
- * @param  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
- *
- * @retval true  certificate chain data integrity verification pass.
- * @retval false certificate chain data integrity verification fail.
- **/
 bool libspdm_verify_cert_chain_data(
     uint8_t spdm_version,
     uint8_t *cert_chain_data, size_t cert_chain_data_size,
@@ -2034,22 +1925,6 @@ bool libspdm_verify_cert_chain_data(
     return true;
 }
 
-/**
- * This function verifies the integrity of certificate chain buffer including
- * spdm_cert_chain_t header.
- *
- * @param  spdm_version            One of SPDM_MESSAGE_VERSION_* macros.
- * @param  base_hash_algo          SPDM base_hash_algo
- * @param  base_asym_algo          SPDM base_asym_algo
- * @param  pqc_asym_algo           SPDM pqc_asym_algo
- * @param  cert_chain_buffer       The certificate chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
- * @param  is_requester_cert       Is the function verifying requester or responder cert.
- * @param  cert_model              One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
- *
- * @retval true   Certificate chain buffer integrity verification pass.
- * @retval false  Certificate chain buffer integrity verification fail.
- **/
 bool libspdm_verify_certificate_chain_buffer(
     uint8_t spdm_version,
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
@@ -2178,20 +2053,6 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
     return true;
 }
 
-/**
- * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
- * based upon negotiated asymmetric or requester asymmetric algorithm.
- *
- * @param  base_hash_algo        SPDM base_hash_algo.
- * @param  pqc_asym_alg          SPDM pqc_asym_algo or req_pqc_asym_alg.
- * @param  cert_chain_data       Certificate chain data with spdm_cert_chain_t header.
- * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
- * @param  public_key            Pointer to newly generated asymmetric context which contain the
- *                               retrieved public key component.
- *
- * @retval  true   Public key was retrieved successfully.
- * @retval  false  Fail to retrieve public key from X509 certificate.
- **/
 bool libspdm_get_pqc_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
                                                           uint32_t pqc_asym_alg,
                                                           uint8_t *cert_chain_data,

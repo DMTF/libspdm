@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -101,14 +101,6 @@ void libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_co
     libspdm_zero_mem(end, (size_t)data_out + final_data_size - (size_t)end);
 }
 
-/**
- * Process opaque data version selection.
- *
- * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response parsing in requester.
- *
- * @param  data_in_size                   size in bytes of the data_in.
- * @param  data_in                       A pointer to the buffer to store the opaque data version selection.
- **/
 libspdm_return_t libspdm_process_opaque_data_version_selection_data(
     libspdm_context_t *spdm_context, size_t data_in_size, void *data_in,
     spdm_version_number_t *secured_message_version)

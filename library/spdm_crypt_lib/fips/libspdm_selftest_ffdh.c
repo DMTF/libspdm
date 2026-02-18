@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2025 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -9,9 +9,6 @@
 #include "internal/libspdm_fips_lib.h"
 
 #if LIBSPDM_FIPS_MODE
-/**
- * FFDH self_test
- **/
 bool libspdm_fips_selftest_ffdh(void *fips_selftest_context)
 {
     bool result = true;

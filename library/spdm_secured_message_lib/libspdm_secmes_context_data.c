@@ -1,28 +1,16 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #include "internal/libspdm_secured_message_lib.h"
 
-/**
- * Return the size in bytes of a single SPDM secured message context.
- *
- * @return the size in bytes of a single SPDM secured message context.
- **/
 size_t libspdm_secured_message_get_context_size(void)
 {
     return sizeof(libspdm_secured_message_context_t);
 }
 
-/**
- * Initialize an SPDM secured message context.
- *
- * The size in bytes of the spdm_secured_message_context can be returned by libspdm_secured_message_get_context_size.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- */
 void libspdm_secured_message_init_context(void *spdm_secured_message_context)
 {
     libspdm_secured_message_context_t *secured_message_context;
@@ -31,12 +19,6 @@ void libspdm_secured_message_init_context(void *spdm_secured_message_context)
     libspdm_zero_mem(secured_message_context, sizeof(libspdm_secured_message_context_t));
 }
 
-/**
- * Set use_psk to an SPDM secured message context.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  use_psk                       Indicate if the SPDM session use PSK.
- */
 void libspdm_secured_message_set_use_psk(void *spdm_secured_message_context, bool use_psk)
 {
     libspdm_secured_message_context_t *secured_message_context;
@@ -45,12 +27,6 @@ void libspdm_secured_message_set_use_psk(void *spdm_secured_message_context, boo
     secured_message_context->use_psk = use_psk;
 }
 
-/**
- * Set session_state to an SPDM secured message context.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  session_state                 Indicate the SPDM session state.
- */
 void libspdm_secured_message_set_session_state(
     void *spdm_secured_message_context,
     libspdm_session_state_t session_state)
@@ -67,13 +43,6 @@ void libspdm_secured_message_set_session_state(
     }
 }
 
-/**
- * Return session_state of an SPDM secured message context.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- *
- * @return the SPDM session state.
- */
 libspdm_session_state_t
 libspdm_secured_message_get_session_state(void *spdm_secured_message_context)
 {
@@ -83,12 +52,6 @@ libspdm_secured_message_get_session_state(void *spdm_secured_message_context)
     return secured_message_context->session_state;
 }
 
-/**
- * Set session_type to an SPDM secured message context.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  session_type                  Indicate the SPDM session type.
- */
 void libspdm_secured_message_set_session_type(void *spdm_secured_message_context,
                                               libspdm_session_type_t session_type)
 {
@@ -98,15 +61,6 @@ void libspdm_secured_message_set_session_type(void *spdm_secured_message_context
     secured_message_context->session_type = session_type;
 }
 
-/**
- * Set algorithm to an SPDM secured message context.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  base_hash_algo                 Indicate the negotiated base_hash_algo for the SPDM session.
- * @param  dhe_named_group                Indicate the negotiated dhe_named_group for the SPDM session.
- * @param  aead_cipher_suite              Indicate the negotiated aead_cipher_suite for the SPDM session.
- * @param  key_schedule                  Indicate the negotiated key_schedule for the SPDM session.
- */
 void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
                                             const spdm_version_number_t version,
                                             const spdm_version_number_t secured_message_version,
@@ -162,12 +116,6 @@ void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
-/**
- * Set the maximum sequence_number to an SPDM secured message context.
- *
- * @param  spdm_secured_message_context      A pointer to the SPDM secured message context.
- * @param  max_spdm_session_sequence_number  Indicate the maximum sequence_number in SPDM session.
- */
 void libspdm_secured_message_set_max_spdm_session_sequence_number(
     void *spdm_secured_message_context,
     uint64_t max_spdm_session_sequence_number)
@@ -356,12 +304,6 @@ bool libspdm_secured_message_import_session_keys(void *spdm_secured_message_cont
     return true;
 }
 
-/**
- * Get the last SPDM error struct of an SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  last_spdm_error                Last SPDM error struct of an SPDM context.
- */
 void libspdm_secured_message_get_last_spdm_error_struct(
     void *spdm_secured_message_context,
     libspdm_error_struct_t *last_spdm_error)
@@ -374,12 +316,6 @@ void libspdm_secured_message_get_last_spdm_error_struct(
                      sizeof(libspdm_error_struct_t));
 }
 
-/**
- * Set the last SPDM error struct of an SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  last_spdm_error                Last SPDM error struct of an SPDM context.
- */
 void libspdm_secured_message_set_last_spdm_error_struct(
     void *spdm_secured_message_context,
     const libspdm_error_struct_t *last_spdm_error)

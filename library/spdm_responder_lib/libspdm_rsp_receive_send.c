@@ -7,13 +7,6 @@
 #include "internal/libspdm_responder_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-/**
- * Return the GET_SPDM_RESPONSE function via request code.
- *
- * @param  request_code                  The SPDM request code.
- *
- * @return GET_SPDM_RESPONSE function according to the request code.
- **/
 libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_t request_code)
 {
     size_t index;
@@ -135,19 +128,6 @@ static libspdm_get_spdm_response_func libspdm_get_response_func_via_last_request
     return libspdm_get_response_func_via_request_code(spdm_request->request_response_code);
 }
 
-/**
- * Process a SPDM request from a device.
- *
- * @param  spdm_context                  The SPDM context for the device.
- * @param  session_id                    Indicate if the request is a secured message.
- *                                     If session_id is NULL, it is a normal message.
- *                                     If session_id is NOT NULL, it is a secured message.
- * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
- * @param  request_size                  size in bytes of the request data buffer.
- * @param  request                      A pointer to a destination buffer to store the request.
- *                                     The caller is responsible for having
- *                                     either implicit or explicit ownership of the buffer.
- **/
 libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_id,
                                          bool *is_app_message,
                                          size_t request_size, void *request)
@@ -340,13 +320,6 @@ static void libspdm_trigger_session_state_callback(libspdm_context_t *spdm_conte
     }
 }
 
-/**
- * Set session_state to an SPDM secured message context and trigger callback.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    Indicate the SPDM session ID.
- * @param  session_state                 Indicate the SPDM session state.
- */
 void libspdm_set_session_state(libspdm_context_t *spdm_context,
                                uint32_t session_id,
                                libspdm_session_state_t session_state)
@@ -370,16 +343,6 @@ void libspdm_set_session_state(libspdm_context_t *spdm_context,
     }
 }
 
-/**
- * This function allows the consumer to terminate a session.
- * For example, it can be used when the heartbeat period is over.
- *
- * @param  spdm_context                 A pointer to the SPDM context.
- * @param  session_id                   session_id of the session to be terminated.
- *
- * @retval LIBSPDM_STATUS_SUCCESS Success
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER session_id is invalid.
- **/
 libspdm_return_t libspdm_terminate_session(
     void *spdm_context, uint32_t session_id)
 {
@@ -411,12 +374,6 @@ static void libspdm_trigger_connection_state_callback(libspdm_context_t *spdm_co
     }
 }
 
-/**
- * Set connection_state to an SPDM context and trigger callback.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  connection_state              Indicate the SPDM connection state.
- */
 void libspdm_set_connection_state(libspdm_context_t *spdm_context,
                                   libspdm_connection_state_t connection_state)
 {

@@ -94,14 +94,6 @@ static bool libspdm_sm2_dsa_sign_wrap (void *context, size_t hash_nid,
 }
 #endif
 
-/**
- * Get the SPDM signing context string, which is required since SPDM 1.2.
- *
- * @param  spdm_version                         negotiated SPDM version
- * @param  op_code                              the SPDM opcode which requires the signing
- * @param  is_requester                         indicate if the signing is from a requester
- * @param  context_size                         SPDM signing context size
- **/
 const void *libspdm_get_signing_context_string (
     spdm_version_number_t spdm_version,
     uint8_t op_code,
@@ -124,14 +116,6 @@ const void *libspdm_get_signing_context_string (
     return NULL;
 }
 
-/**
- * Create SPDM signing context, which is required since SPDM 1.2.
- *
- * @param  spdm_version                         negotiated SPDM version
- * @param  op_code                              the SPDM opcode which requires the signing
- * @param  is_requester                         indicate if the signing is from a requester
- * @param  spdm_signing_context                 SPDM signing context
- **/
 void libspdm_create_signing_context (
     spdm_version_number_t spdm_version,
     uint8_t op_code,

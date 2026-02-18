@@ -1,18 +1,11 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #include "internal/libspdm_crypt_lib.h"
 
-/**
- * This function returns the SPDM DHE algorithm key size.
- *
- * @param  dhe_named_group                SPDM dhe_named_group
- *
- * @return SPDM DHE algorithm key size.
- **/
 uint32_t libspdm_get_dhe_pub_key_size(uint16_t dhe_named_group)
 {
     switch (dhe_named_group) {
@@ -63,13 +56,6 @@ uint32_t libspdm_get_dhe_pub_key_size(uint16_t dhe_named_group)
     }
 }
 
-/**
- * This function returns the SPDM DHE shared secret size.
- *
- * @param  dhe_named_group                SPDM dhe_named_group
- *
- * @return SPDM DHE shared secret size.
- **/
 uint32_t libspdm_get_dhe_shared_secret_size(uint16_t dhe_named_group)
 {
     switch (dhe_named_group) {

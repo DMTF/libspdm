@@ -1,17 +1,11 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #include "internal/libspdm_secured_message_lib.h"
 
-/**
- * This function initializes the session info.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    The SPDM session ID.
- **/
 void libspdm_session_info_init(libspdm_context_t *spdm_context,
                                libspdm_session_info_t *session_info,
                                uint32_t session_id, spdm_version_number_t secured_message_version,
@@ -136,14 +130,6 @@ void libspdm_session_info_set_psk_hint(libspdm_session_info_t *session_info,
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
-/**
- * This function gets the session info via session ID.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    The SPDM session ID.
- *
- * @return session info.
- **/
 void *libspdm_get_session_info_via_session_id(void *spdm_context, uint32_t session_id)
 {
     libspdm_context_t *context;
@@ -171,14 +157,6 @@ void *libspdm_get_session_info_via_session_id(void *spdm_context, uint32_t sessi
     return NULL;
 }
 
-/**
- * This function gets the secured message context via session ID.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    The SPDM session ID.
- *
- * @return secured message context.
- **/
 void *libspdm_get_secured_message_context_via_session_id(void *spdm_context, uint32_t session_id)
 {
     libspdm_session_info_t *session_info;
@@ -191,13 +169,6 @@ void *libspdm_get_secured_message_context_via_session_id(void *spdm_context, uin
     }
 }
 
-/**
- * This function gets the secured message context via session ID.
- *
- * @param  spdm_session_info              A pointer to the SPDM context.
- *
- * @return secured message context.
- **/
 void *libspdm_get_secured_message_context_via_session_info(void *spdm_session_info)
 {
     libspdm_session_info_t *session_info;
@@ -210,14 +181,6 @@ void *libspdm_get_secured_message_context_via_session_info(void *spdm_session_in
     }
 }
 
-/**
- * This function generate a new session ID by concatenating req_session_id and rsp_session_id.
- *
- * @param[in]  req_session_id
- * @param[in]  rsp_session_id
- *
- * @return this new session ID.
- **/
 uint32_t libspdm_generate_session_id(uint16_t req_session_id, uint16_t rsp_session_id)
 {
     uint32_t session_id;
@@ -264,12 +227,6 @@ libspdm_session_info_t *libspdm_assign_session_id(libspdm_context_t *spdm_contex
     return NULL;
 }
 
-/**
- * This function frees a session ID.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    The SPDM session ID.
- **/
 void libspdm_free_session_id(libspdm_context_t *spdm_context, uint32_t session_id)
 {
     libspdm_session_info_t *session_info;

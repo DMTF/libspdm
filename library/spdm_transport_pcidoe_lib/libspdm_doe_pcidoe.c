@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -10,19 +10,6 @@
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 
-/**
- * Get sequence number in an SPDM secure message.
- *
- * This value is transport layer specific.
- *
- * @param sequence_number        The current sequence number used to encode or decode message.
- * @param sequence_number_buffer  A buffer to hold the sequence number output used in the secured message.
- *                             The size in byte of the output buffer shall be 8.
- *
- * @return size in byte of the sequence_number_buffer.
- *        It shall be no greater than 8.
- *        0 means no sequence number is required.
- **/
 uint8_t libspdm_pci_doe_get_sequence_number(uint64_t sequence_number,
                                             uint8_t *sequence_number_buffer)
 {
@@ -31,28 +18,11 @@ uint8_t libspdm_pci_doe_get_sequence_number(uint64_t sequence_number,
     return LIBSPDM_PCI_DOE_SEQUENCE_NUMBER_COUNT;
 }
 
-/**
- * Return max random number count in an SPDM secure message.
- *
- * This value is transport layer specific.
- *
- * @return Max random number count in an SPDM secured message.
- *        0 means no random number is required.
- **/
 uint32_t libspdm_pci_doe_get_max_random_number_count(void)
 {
     return LIBSPDM_PCI_DOE_MAX_RANDOM_NUMBER_COUNT;
 }
 
-/**
- * This function translates the negotiated secured_message_version to a DSP0277 version.
- *
- * @param  secured_message_version  The version specified in binding specification and
- *                                  negotiated in KEY_EXCHANGE/KEY_EXCHANGE_RSP.
- *
- * @return The DSP0277 version specified in binding specification,
- *         which is bound to secured_message_version.
- */
 spdm_version_number_t libspdm_pci_doe_get_secured_spdm_version(
     spdm_version_number_t secured_message_version)
 {
@@ -295,17 +265,6 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_messa
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Decode a DOE discovery request message to get the DOE Discovery Version field.
- * DOE Discovery Version is introduced in PCIe Spec 6.1 Section 6.30.1.1.
- *
- * @param  transport_message_size               Size in bytes of the transport message data buffer.
- * @param  transport_message                    A pointer to a source buffer to store the transport message.
- * @param  version                              A pointer to a destination to store the DOE Discovery Version.
- *
- * @retval LIBSPDM_STATUS_SUCCESS               The message is encoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
- **/
 libspdm_return_t libspdm_pci_doe_decode_discovery_request_version(size_t transport_message_size,
                                                                   const void *transport_message,
                                                                   uint8_t *version)
@@ -399,17 +358,6 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_response(size_t transport_mess
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Return the maximum transport layer message header size.
- *   Transport Message Header Size + sizeof(spdm_secured_message_cipher_header_t))
- *
- *   For MCTP, Transport Message Header Size = sizeof(mctp_message_header_t)
- *   For PCI_DOE, Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @return size of maximum transport layer message header size
- **/
 uint32_t libspdm_transport_pci_doe_get_header_size(
     void *spdm_context)
 {

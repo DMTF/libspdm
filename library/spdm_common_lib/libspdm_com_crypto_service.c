@@ -6,15 +6,6 @@
 
 #include "internal/libspdm_common_lib.h"
 
-/**
- * Map slot ID to key pair ID.
- *
- * @param  spdm_context   A pointer to the SPDM context.
- * @param  slot_id        The slot ID.
- * @param  is_requester   Indicate of the key generation for a requester or a responder.
- *
- * @return key pair ID.
- */
 uint8_t libspdm_slot_id_to_key_pair_id (
     void *spdm_context,
     uint8_t slot_id,
@@ -73,16 +64,6 @@ void libspdm_get_peer_cert_chain_data(void *spdm_context,
 }
 #endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
-/**
- * This function returns local used certificate chain buffer including spdm_cert_chain_t header.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  cert_chain_buffer              Certificate chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
- *
- * @retval true  Local used certificate chain buffer including spdm_cert_chain_t header is returned.
- * @retval false Local used certificate chain buffer including spdm_cert_chain_t header is not found.
- **/
 void libspdm_get_local_cert_chain_buffer(void *spdm_context,
                                          uint8_t slot_id,
                                          const void **cert_chain_buffer,
@@ -99,16 +80,6 @@ void libspdm_get_local_cert_chain_buffer(void *spdm_context,
     *cert_chain_buffer_size = context->local_context.local_cert_chain_provision_size[slot_id];
 }
 
-/**
- * This function returns local used certificate chain data without spdm_cert_chain_t header.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  cert_chain_data                Certificate chain data without spdm_cert_chain_t header.
- * @param  cert_chain_data_size            size in bytes of the certificate chain data.
- *
- * @retval true  Local used certificate chain data without spdm_cert_chain_t header is returned.
- * @retval false Local used certificate chain data without spdm_cert_chain_t header is not found.
- **/
 bool libspdm_get_local_cert_chain_data(void *spdm_context,
                                        uint8_t slot_id,
                                        const void **cert_chain_data,
@@ -129,16 +100,6 @@ bool libspdm_get_local_cert_chain_data(void *spdm_context,
     return true;
 }
 
-/**
- * This function returns peer public key buffer.
- *
- * @param  spdm_context                 A pointer to the SPDM context.
- * @param  peer_public_key_buffer       Peer public key buffer.
- * @param  peer_public_key_buffer_size  Size in bytes of peer public key buffer.
- *
- * @retval true  Peer public key buffer is returned.
- * @retval false Peer public key buffer is not found.
- **/
 bool libspdm_get_peer_public_key_buffer(void *spdm_context,
                                         const void **peer_public_key_buffer,
                                         size_t *peer_public_key_buffer_size)
@@ -154,16 +115,6 @@ bool libspdm_get_peer_public_key_buffer(void *spdm_context,
     return false;
 }
 
-/**
- * This function returns local public key buffer.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  local_public_key_buffer       Local public key buffer.
- * @param  local_public_key_buffer_size  Size in bytes of local public key buffer.
- *
- * @retval true  Local public key buffer is returned.
- * @retval false Local public key buffer is not found.
- **/
 bool libspdm_get_local_public_key_buffer(void *spdm_context,
                                          const void **local_public_key_buffer,
                                          size_t *local_public_key_buffer_size)
@@ -634,16 +585,6 @@ static bool libspdm_calculate_il1il2_hash(libspdm_context_t *spdm_context,
 }
 #endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
-/**
- * This function generates the certificate chain hash.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  slot_id                    The slot index of the certificate chain.
- * @param  signature                    The buffer to store the certificate chain hash.
- *
- * @retval true  certificate chain hash is generated.
- * @retval false certificate chain hash is not generated.
- **/
 bool libspdm_generate_cert_chain_hash(libspdm_context_t *spdm_context,
                                       size_t slot_id, uint8_t *hash)
 {
@@ -654,15 +595,6 @@ bool libspdm_generate_cert_chain_hash(libspdm_context_t *spdm_context,
         spdm_context->local_context.local_cert_chain_provision_size[slot_id], hash);
 }
 
-/**
- * This function generates the public key hash.
- *
- * @param  spdm_context               A pointer to the SPDM context.
- * @param  hash                       The buffer to store the public key hash.
- *
- * @retval true  public key hash is generated.
- * @retval false public key hash is not generated.
- **/
 bool libspdm_generate_public_key_hash(libspdm_context_t *spdm_context,
                                       uint8_t *hash)
 {
@@ -672,13 +604,6 @@ bool libspdm_generate_public_key_hash(libspdm_context_t *spdm_context,
         spdm_context->local_context.local_public_key_provision_size, hash);
 }
 
-/**
- * Get the certificate slot mask
- *
- * @param[in]   context              A pointer to the SPDM context.
- *
- * @retval slot_mask                 get slot mask
- **/
 uint8_t libspdm_get_cert_slot_mask(libspdm_context_t *spdm_context)
 {
     size_t index;
@@ -694,13 +619,6 @@ uint8_t libspdm_get_cert_slot_mask(libspdm_context_t *spdm_context)
     return slot_mask;
 }
 
-/**
- * Get the certificate slot count
- *
- * @param[in]   context              A pointer to the SPDM context.
- *
- * @retval slot_count                get slot count
- **/
 uint8_t libspdm_get_cert_slot_count(libspdm_context_t *spdm_context)
 {
     size_t index;
@@ -717,17 +635,6 @@ uint8_t libspdm_get_cert_slot_count(libspdm_context_t *spdm_context)
 }
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
-/**
- * This function verifies the integrity of peer certificate chain buffer including
- * spdm_cert_chain_t header.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  cert_chain_buffer              Certificate chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
- *
- * @retval true  Peer certificate chain buffer integrity verification passed.
- * @retval false Peer certificate chain buffer integrity verification failed.
- **/
 bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_context,
                                                      const void *cert_chain_buffer,
                                                      size_t cert_chain_buffer_size)
@@ -768,19 +675,6 @@ bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_con
     return result;
 }
 
-/**
- * This function verifies peer certificate chain authority.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  cert_chain_buffer              Certificate chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
- * @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
- * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
- *
- * @retval true  Peer certificate chain buffer authority verification passed.
- *               Or there is no root_cert in local_context.
- * @retval false Peer certificate chain buffer authority verification failed.
- **/
 bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_context,
                                                      const void *cert_chain_buffer,
                                                      size_t cert_chain_buffer_size,
@@ -881,16 +775,6 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
 }
 #endif
 
-/**
- * This function generates the challenge signature based upon m1m2 for authentication.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  is_requester                  Indicate of the signature generation for a requester or a responder.
- * @param  signature                    The buffer to store the challenge signature.
- *
- * @retval true  challenge signature is generated.
- * @retval false challenge signature is not generated.
- **/
 bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
                                                bool is_requester,
                                                uint8_t slot_id,
@@ -995,16 +879,6 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
     return result;
 }
 
-/**
- * This function verifies the certificate chain hash.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  certificate_chain_hash         The certificate chain hash data buffer.
- * @param  certificate_chain_hash_size     size in bytes of the certificate chain hash data buffer.
- *
- * @retval true  hash verification pass.
- * @retval false hash verification fail.
- **/
 bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
                                            uint8_t slot_id,
                                            const void *certificate_chain_hash,
@@ -1063,16 +937,6 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
     return true;
 }
 
-/**
- * This function verifies the public key hash.
- *
- * @param  spdm_context            A pointer to the SPDM context.
- * @param  public_key_hash         The public key hash data buffer.
- * @param  public_key_hash_size    size in bytes of the public key hash data buffer.
- *
- * @retval true  hash verification pass.
- * @retval false hash verification fail.
- **/
 bool libspdm_verify_public_key_hash(libspdm_context_t *spdm_context,
                                     const void *public_key_hash,
                                     size_t public_key_hash_size)
@@ -1107,17 +971,6 @@ bool libspdm_verify_public_key_hash(libspdm_context_t *spdm_context,
     return true;
 }
 
-/**
- * This function verifies the challenge signature based upon m1m2.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  is_requester                  Indicate of the signature verification for a requester or a responder.
- * @param  sign_data                     The signature data buffer.
- * @param  sign_data_size                 size in bytes of the signature data buffer.
- *
- * @retval true  signature verification pass.
- * @retval false signature verification fail.
- **/
 bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
                                              bool is_requester,
                                              uint8_t slot_id,
@@ -1333,16 +1186,6 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
     return true;
 }
 
-/**
- * This function calculate the measurement summary hash size.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  is_requester                  Is the function called from a requester.
- * @param  measurement_summary_hash_type   The type of the measurement summary hash.
- *
- * @return 0 measurement summary hash type is invalid, NO_MEAS hash type or no MEAS capabilities.
- * @return measurement summary hash size according to type.
- **/
 uint32_t
 libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_context,
                                           bool is_requester,
@@ -1370,17 +1213,6 @@ libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_context,
 }
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
-/**
- * This function generates the endpoint info signature based upon il1il2 for authentication.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  is_requester                  Indicate of the signature generation for a requester or a responder.
- * @param  signature                     The buffer to store the endpoint info signature.
- *
- * @retval true  challenge signature is generated.
- * @retval false challenge signature is not generated.
- **/
 bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
                                               libspdm_session_info_t *session_info,
                                               bool is_requester,
@@ -1482,18 +1314,6 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
 
-/**
- * This function verifies the endpoint info signature based upon il1il2.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  is_requester                  Indicate of the signature verification for a requester or a responder.
- * @param  sign_data                     The signature data buffer.
- * @param  sign_data_size                size in bytes of the signature data buffer.
- *
- * @retval true  signature verification pass.
- * @retval false signature verification fail.
- **/
 bool libspdm_verify_endpoint_info_signature(libspdm_context_t *spdm_context,
                                             libspdm_session_info_t *session_info,
                                             bool is_requester,
