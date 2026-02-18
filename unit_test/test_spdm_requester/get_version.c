@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -188,8 +188,7 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             libspdm_zero_mem(spdm_response, spdm_response_size);
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
             spdm_response->header.request_response_code = SPDM_ERROR;
             spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response->header.param2 = 0;
@@ -208,10 +207,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             libspdm_zero_mem(spdm_response, spdm_response_size);
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
-            spdm_response->header.request_response_code =
-                SPDM_VERSION;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.request_response_code = SPDM_VERSION;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
             spdm_response->version_number_entry_count = 2;
@@ -261,8 +258,7 @@ static libspdm_return_t receive_message(
         libspdm_zero_mem(spdm_response, spdm_response_size);
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_ERROR;
-        spdm_response->header.param1 =
-            SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
         spdm_response->header.param2 = 0;
         spdm_response->extend_error_data.rd_exponent = 1;
         spdm_response->extend_error_data.rd_tm = 2;
@@ -719,8 +715,7 @@ static void req_get_version_case15(void **state)
     spdm_context->local_context.version.spdm_version[3] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(
-        spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT, 0x11);
+    assert_int_equal( spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT, 0x11);
 }
 
 /**
@@ -752,8 +747,7 @@ static void req_get_version_case16(void **state)
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(spdm_context->transcript.message_a.buffer_size,
-                     m_libspdm_local_buffer_size);
+    assert_int_equal(spdm_context->transcript.message_a.buffer_size, m_libspdm_local_buffer_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%zx):\n",
                    m_libspdm_local_buffer_size));
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);

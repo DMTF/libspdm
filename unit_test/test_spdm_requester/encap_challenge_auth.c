@@ -67,14 +67,10 @@ static void req_encap_challenge_auth_case1(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
 
@@ -87,8 +83,7 @@ static void req_encap_challenge_auth_case1(void **state)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_mut_c(spdm_context);
@@ -98,8 +93,7 @@ static void req_encap_challenge_auth_case1(void **state)
 #endif
 
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_spdm_challenge_request1.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_spdm_challenge_request1.nonce);
     status = libspdm_get_encap_response_challenge_auth(
         spdm_context, m_spdm_challenge_request1_size,
         &m_spdm_challenge_request1, &response_size, response);
@@ -112,13 +106,11 @@ static void req_encap_challenge_auth_case1(void **state)
                      libspdm_get_req_asym_signature_size(
                          spdm_context->connection_info.algorithm.req_base_asym_alg));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_CHALLENGE_AUTH);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->header.param2, 1 << 0);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(spdm_context->transcript.message_m.buffer_size,
-                     0);
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
     assert_int_equal(spdm_context->transcript.message_mut_c.buffer_size, 0);
 #else
     assert_null(spdm_context->transcript.digest_context_mut_m1m2);
@@ -396,18 +388,13 @@ static void req_encap_challenge_auth_case7(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -415,8 +402,7 @@ static void req_encap_challenge_auth_case7(void **state)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
     libspdm_reset_message_mut_c(spdm_context);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -425,8 +411,7 @@ static void req_encap_challenge_auth_case7(void **state)
 #endif
 
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_spdm_challenge_request5.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_spdm_challenge_request5.nonce);
 
     libspdm_zero_mem(request, sizeof(request));
     libspdm_copy_mem(request, sizeof(spdm_challenge_request_t),
@@ -445,8 +430,7 @@ static void req_encap_challenge_auth_case7(void **state)
                      libspdm_get_asym_signature_size(m_libspdm_use_req_asym_algo) +
                      SPDM_REQ_CONTEXT_SIZE);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_CHALLENGE_AUTH);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->header.param2, 1 << 0);
 
@@ -457,8 +441,7 @@ static void req_encap_challenge_auth_case7(void **state)
     assert_memory_equal(requester_context, responder_context, SPDM_REQ_CONTEXT_SIZE);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(spdm_context->transcript.message_m.buffer_size,
-                     0);
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
     assert_int_equal(spdm_context->transcript.message_mut_c.buffer_size, 0);
 #else
     assert_null(spdm_context->transcript.digest_context_mut_m1m2);
@@ -499,18 +482,13 @@ static void req_encap_challenge_auth_case8(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->connection_info.multi_key_conn_req = true;
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13
@@ -519,8 +497,7 @@ static void req_encap_challenge_auth_case8(void **state)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
     libspdm_reset_message_mut_c(spdm_context);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -537,8 +514,7 @@ static void req_encap_challenge_auth_case8(void **state)
         SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE;
 
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_spdm_challenge_request5.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_spdm_challenge_request5.nonce);
 
     libspdm_zero_mem(request, sizeof(request));
     libspdm_copy_mem(request, sizeof(spdm_challenge_request_t),

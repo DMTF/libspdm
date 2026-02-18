@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -699,8 +699,7 @@ static libspdm_return_t receive_message(
         spdm_response->ct_exponent = 0;
         spdm_response->flags =
             LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 &
-            (0xFFFFFFFF ^
-             (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP));
+            (0xFFFFFFFF ^ (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP));
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -726,8 +725,7 @@ static libspdm_return_t receive_message(
         spdm_response->ct_exponent = 0;
         spdm_response->flags =
             LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 &
-            (0xFFFFFFFF ^
-             (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP));
+            (0xFFFFFFFF ^ (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP));
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -802,13 +800,11 @@ static libspdm_return_t receive_message(
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_GET_CAPABILITIES;
+        spdm_response->header.request_response_code = SPDM_GET_CAPABILITIES;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags =
-            LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
+        spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -832,8 +828,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags =
-            LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
+        spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -1189,8 +1184,7 @@ static void libspdm_test_requester_get_capabilities_err_case4(void **state)
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
@@ -1209,8 +1203,7 @@ static void libspdm_test_requester_get_capabilities_err_case5(void **state)
     spdm_test_context->case_id = 0x5;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
@@ -1253,8 +1246,7 @@ static void libspdm_test_requester_get_capabilities_err_case7(void **state)
     spdm_test_context->case_id = 0x7;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
@@ -1494,12 +1486,10 @@ static void libspdm_test_requester_get_capabilities_err_case18(void **state)
     spdm_test_context->case_id = 0x12;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
-    spdm_context->local_context.capability.flags =
-        LIBSPDM_DEFAULT_CAPABILITY_FLAG_VERSION_11;
+    spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG_VERSION_11;
     status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     /*assert_int_equal (spdm_context->connection_info.capability.ct_exponent, 0);

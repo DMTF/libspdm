@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -327,16 +327,13 @@ static void req_get_csr_case1(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
 
     /*init req_info*/
     libspdm_gen_req_info();
 
-    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
-                             &csr_len);
+    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len);
 
     assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
 }
@@ -362,13 +359,10 @@ static void req_get_csr_case2(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
 
-    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
-                             &csr_len);
+    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(csr_len, global_csr_len);
@@ -397,14 +391,12 @@ static void req_get_csr_case3(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
 
-    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
-                             &csr_len);
+    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len);
 
     assert_int_equal(status, LIBSPDM_STATUS_RESET_REQUIRED_PEER);
 
@@ -412,8 +404,7 @@ static void req_get_csr_case3(void **state)
     spdm_context->connection_info.capability.flags &=
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
 
-    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
-                             &csr_len);
+    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(csr_len, global_csr_len);
@@ -485,8 +476,7 @@ static void req_get_csr_case5(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;

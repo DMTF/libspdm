@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -24,37 +24,27 @@ static void libspdm_set_standard_key_update_test_state(
     size_t hash_size;
     libspdm_session_info_t    *session_info;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
         assert(false);
     }
     spdm_context->transcript.message_a.buffer_size = 0;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -76,10 +66,8 @@ static void libspdm_set_standard_key_update_test_secrets(
     uint8_t *m_rsp_secret_buffer, uint8_t rsp_secret_fill,
     uint8_t *m_req_secret_buffer, uint8_t req_secret_fill)
 {
-    libspdm_set_mem(m_rsp_secret_buffer, secured_message_context
-                    ->hash_size, rsp_secret_fill);
-    libspdm_set_mem(m_req_secret_buffer, secured_message_context
-                    ->hash_size, req_secret_fill);
+    libspdm_set_mem(m_rsp_secret_buffer, secured_message_context->hash_size, rsp_secret_fill);
+    libspdm_set_mem(m_req_secret_buffer, secured_message_context->hash_size, req_secret_fill);
 
     libspdm_copy_mem(secured_message_context->application_secret.response_data_secret,
                      sizeof(secured_message_context->application_secret.response_data_secret),
@@ -149,8 +137,7 @@ static libspdm_return_t send_message(
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_SEND_FAIL;
         }
@@ -190,8 +177,7 @@ static libspdm_return_t send_message(
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
 
-            session_info = libspdm_get_session_info_via_session_id(
-                spdm_context, session_id);
+            session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
             if (session_info == NULL) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
@@ -236,8 +222,7 @@ static libspdm_return_t send_message(
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
 
-            session_info = libspdm_get_session_info_via_session_id(
-                spdm_context, session_id);
+            session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
             if (session_info == NULL) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
@@ -282,8 +267,7 @@ static libspdm_return_t send_message(
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
 
-            session_info = libspdm_get_session_info_via_session_id(
-                spdm_context, session_id);
+            session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
             if (session_info == NULL) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
@@ -328,8 +312,7 @@ static libspdm_return_t send_message(
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
 
-            session_info = libspdm_get_session_info_via_session_id(
-                spdm_context, session_id);
+            session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
             if (session_info == NULL) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
@@ -377,8 +360,7 @@ static libspdm_return_t send_message(
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
 
-            session_info = libspdm_get_session_info_via_session_id(
-                spdm_context, session_id);
+            session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
             if (session_info == NULL) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
@@ -432,8 +414,7 @@ static libspdm_return_t send_message(
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_SEND_FAIL;
         }
@@ -473,8 +454,7 @@ static libspdm_return_t send_message(
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
 
-            session_info = libspdm_get_session_info_via_session_id(
-                spdm_context, session_id);
+            session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
             if (session_info == NULL) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
@@ -521,8 +501,7 @@ static libspdm_return_t send_message(
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
 
-            session_info = libspdm_get_session_info_via_session_id(
-                spdm_context, session_id);
+            session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
             if (session_info == NULL) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
@@ -568,8 +547,7 @@ static libspdm_return_t send_message(
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_SEND_FAIL;
         }
@@ -606,8 +584,7 @@ static libspdm_return_t send_message(
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_SEND_FAIL;
         }
@@ -647,8 +624,7 @@ static libspdm_return_t send_message(
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
 
-            session_info = libspdm_get_session_info_via_session_id(
-                spdm_context, session_id);
+            session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
             if (session_info == NULL) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
@@ -693,8 +669,7 @@ static libspdm_return_t send_message(
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
 
-            session_info = libspdm_get_session_info_via_session_id(
-                spdm_context, session_id);
+            session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
             if (session_info == NULL) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
@@ -739,8 +714,7 @@ static libspdm_return_t send_message(
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
 
-            session_info = libspdm_get_session_info_via_session_id(
-                spdm_context, session_id);
+            session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
             if (session_info == NULL) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
@@ -788,8 +762,7 @@ static libspdm_return_t send_message(
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
 
-            session_info = libspdm_get_session_info_via_session_id(
-                spdm_context, session_id);
+            session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
             if (session_info == NULL) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
@@ -854,22 +827,18 @@ static libspdm_return_t receive_message(
 
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_UPDATE_ACK;
+        spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -910,22 +879,18 @@ static libspdm_return_t receive_message(
 
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_UPDATE_ACK;
+        spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -963,8 +928,7 @@ static libspdm_return_t receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -1006,8 +970,7 @@ static libspdm_return_t receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -1042,8 +1005,7 @@ static libspdm_return_t receive_message(
         libspdm_session_info_t    *session_info;
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -1059,8 +1021,7 @@ static libspdm_return_t receive_message(
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_ERROR;
             spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response->header.param2 = 0;
@@ -1094,10 +1055,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1129,10 +1088,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1172,8 +1129,7 @@ static libspdm_return_t receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -1215,16 +1171,14 @@ static libspdm_return_t receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_ERROR;
-        spdm_response->header.param1 =
-            SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
         spdm_response->header.param2 = 0;
         spdm_response->extend_error_data.rd_exponent = 1;
         spdm_response->extend_error_data.rd_tm = 2;
@@ -1256,8 +1210,7 @@ static libspdm_return_t receive_message(
         libspdm_session_info_t    *session_info;
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -1274,16 +1227,13 @@ static libspdm_return_t receive_message(
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_ERROR;
-            spdm_response->header.param1 =
-                SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
             spdm_response->header.param2 = 0;
             spdm_response->extend_error_data.rd_exponent = 1;
             spdm_response->extend_error_data.rd_tm = 2;
-            spdm_response->extend_error_data.request_code =
-                SPDM_KEY_UPDATE;
+            spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
             spdm_response->extend_error_data.token = 1;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1315,10 +1265,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1350,10 +1298,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1396,8 +1342,7 @@ static libspdm_return_t receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -1465,22 +1410,18 @@ static libspdm_return_t receive_message(
 
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_UPDATE_ACK;
+        spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1521,23 +1462,19 @@ static libspdm_return_t receive_message(
 
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         /*wrong response code*/
-        spdm_response->header.request_response_code =
-            SPDM_KEY_UPDATE;
+        spdm_response->header.request_response_code = SPDM_KEY_UPDATE;
         if (sub_index == 0) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1578,22 +1515,18 @@ static libspdm_return_t receive_message(
 
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_UPDATE_ACK;
+        spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1634,22 +1567,18 @@ static libspdm_return_t receive_message(
 
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_UPDATE_ACK;
+        spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1690,23 +1619,19 @@ static libspdm_return_t receive_message(
 
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_UPDATE_ACK;
+        spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             /*wrong token*/
             spdm_response->header.param2 = m_libspdm_last_token + 1;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1747,23 +1672,19 @@ static libspdm_return_t receive_message(
 
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_UPDATE_ACK;
+        spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
             /*wrong operation code*/
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1794,8 +1715,7 @@ static libspdm_return_t receive_message(
         libspdm_session_info_t    *session_info;
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -1812,10 +1732,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1881,8 +1799,7 @@ static libspdm_return_t receive_message(
         libspdm_session_info_t    *session_info;
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -1899,10 +1816,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1968,8 +1883,7 @@ static libspdm_return_t receive_message(
         libspdm_session_info_t    *session_info;
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -1986,10 +1900,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2020,8 +1932,7 @@ static libspdm_return_t receive_message(
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_ERROR;
             spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response->header.param2 = 0;
@@ -2055,10 +1966,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2091,8 +2000,7 @@ static libspdm_return_t receive_message(
         libspdm_session_info_t    *session_info;
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -2109,10 +2017,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2178,8 +2084,7 @@ static libspdm_return_t receive_message(
         libspdm_session_info_t    *session_info;
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -2196,10 +2101,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2232,8 +2135,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_ERROR;
-            spdm_response->header.param1 =
-                SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
             spdm_response->header.param2 = 0;
             spdm_response->extend_error_data.rd_exponent = 1;
             spdm_response->extend_error_data.rd_tm = 2;
@@ -2270,8 +2172,7 @@ static libspdm_return_t receive_message(
         libspdm_session_info_t    *session_info;
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -2288,10 +2189,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2324,8 +2223,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_ERROR;
-            spdm_response->header.param1 =
-                SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
             spdm_response->header.param2 = 0;
             spdm_response->extend_error_data.rd_exponent = 1;
             spdm_response->extend_error_data.rd_tm = 2;
@@ -2361,10 +2259,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2398,8 +2294,7 @@ static libspdm_return_t receive_message(
         libspdm_session_info_t    *session_info;
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -2421,10 +2316,8 @@ static libspdm_return_t receive_message(
                 spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
                 spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-                spdm_response->header.request_response_code =
-                    SPDM_KEY_UPDATE_ACK;
-                spdm_response->header.param1 =
-                    SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+                spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+                spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
                 spdm_response->header.param2 = m_libspdm_last_token;
 
                 /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2516,27 +2409,21 @@ static libspdm_return_t receive_message(
 
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_UPDATE_ACK;
+        spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
             /*wrong response code*/
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -2577,22 +2464,18 @@ static libspdm_return_t receive_message(
 
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_UPDATE_ACK;
+        spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             /*wrong token*/
             spdm_response->header.param2 = m_libspdm_last_token + 1;
         }
@@ -2634,23 +2517,19 @@ static libspdm_return_t receive_message(
 
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_UPDATE_ACK;
+        spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
             /*wrong operation code*/
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -2691,8 +2570,7 @@ static libspdm_return_t receive_message(
 
         session_id = 0xFFFFFFFF;
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -2700,12 +2578,10 @@ static libspdm_return_t receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* as it is using single context, the keys were updated
@@ -2752,8 +2628,7 @@ static libspdm_return_t receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -2838,8 +2713,7 @@ static libspdm_return_t receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -2917,8 +2791,7 @@ static libspdm_return_t receive_message(
         libspdm_secured_message_context_t *secured_message_context;
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -2965,8 +2838,7 @@ static libspdm_return_t receive_message(
             secured_message_context->application_secret
             .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_ERROR;
             spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response->header.param2 = 0;
@@ -3011,10 +2883,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -3045,10 +2915,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -3092,8 +2960,7 @@ static libspdm_return_t receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -3178,8 +3045,7 @@ static libspdm_return_t receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -3216,8 +3082,7 @@ static libspdm_return_t receive_message(
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_ERROR;
-        spdm_response->header.param1 =
-            SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
         spdm_response->header.param2 = 0;
         spdm_response->extend_error_data.rd_exponent = 1;
         spdm_response->extend_error_data.rd_tm = 2;
@@ -3262,8 +3127,7 @@ static libspdm_return_t receive_message(
         libspdm_secured_message_context_t *secured_message_context;
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -3311,16 +3175,13 @@ static libspdm_return_t receive_message(
             secured_message_context->application_secret
             .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_ERROR;
-            spdm_response->header.param1 =
-                SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
             spdm_response->header.param2 = 0;
             spdm_response->extend_error_data.rd_exponent = 1;
             spdm_response->extend_error_data.rd_tm = 2;
-            spdm_response->extend_error_data.request_code =
-                SPDM_KEY_UPDATE;
+            spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
             spdm_response->extend_error_data.token = 1;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -3363,10 +3224,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -3397,10 +3256,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -3447,8 +3304,7 @@ static libspdm_return_t receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -3551,8 +3407,7 @@ static libspdm_return_t receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -3608,8 +3463,7 @@ static void req_key_update_case1(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -3618,8 +3472,7 @@ static void req_key_update_case1(void **state)
         m_rsp_secret_buffer, (uint8_t)(0xFF),
         m_req_secret_buffer, (uint8_t)(0xEE));
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
 }
@@ -3647,8 +3500,7 @@ static void req_key_update_case2(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -3665,8 +3517,7 @@ static void req_key_update_case2(void **state)
                                   sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -3703,12 +3554,10 @@ static void req_key_update_case3(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     /*state not negotiated*/
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
 
     session_info = &spdm_context->session_info[0];
 
@@ -3717,8 +3566,7 @@ static void req_key_update_case3(void **state)
         m_rsp_secret_buffer, (uint8_t)(0xFF),
         m_req_secret_buffer, (uint8_t)(0xEE));
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
 }
@@ -3746,8 +3594,7 @@ static void req_key_update_case4(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -3758,8 +3605,7 @@ static void req_key_update_case4(void **state)
 
     /*no keys are updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -3797,8 +3643,7 @@ static void req_key_update_case5(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -3809,8 +3654,7 @@ static void req_key_update_case5(void **state)
 
     /*no keys are updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -3851,8 +3695,7 @@ static void req_key_update_case6(void **state)
     spdm_context->retry_times = 3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -3869,8 +3712,7 @@ static void req_key_update_case6(void **state)
                                   sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -3909,8 +3751,7 @@ static void req_key_update_case7(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -3919,8 +3760,7 @@ static void req_key_update_case7(void **state)
         m_rsp_secret_buffer, (uint8_t)(0xFF),
         m_req_secret_buffer, (uint8_t)(0xEE));
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
@@ -3951,8 +3791,7 @@ static void req_key_update_case8(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -3963,8 +3802,7 @@ static void req_key_update_case8(void **state)
 
     /*no keys are updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -4068,8 +3906,7 @@ static void req_key_update_case10(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4086,8 +3923,7 @@ static void req_key_update_case10(void **state)
 
         /*no keys are updated*/
 
-        status = libspdm_key_update(
-            spdm_context, session_id, true);
+        status = libspdm_key_update( spdm_context, session_id, true);
 
         LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
         assert_memory_equal(((libspdm_secured_message_context_t
@@ -4134,8 +3970,7 @@ static void req_key_update_case11(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4164,8 +3999,7 @@ static void req_key_update_case11(void **state)
         spdm_context->transcript.message_mut_c.max_buffer_size;
 #endif
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -4211,8 +4045,7 @@ static void req_key_update_case12(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     /*no capabilities*/
     spdm_context->connection_info.capability.flags &=
@@ -4229,8 +4062,7 @@ static void req_key_update_case12(void **state)
 
     /*no keys are updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -4268,8 +4100,7 @@ static void req_key_update_case13(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4280,8 +4111,7 @@ static void req_key_update_case13(void **state)
 
     /*no keys are updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -4320,8 +4150,7 @@ static void req_key_update_case14(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4337,8 +4166,7 @@ static void req_key_update_case14(void **state)
 
     /*no keys are updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -4377,8 +4205,7 @@ static void req_key_update_case15(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4389,8 +4216,7 @@ static void req_key_update_case15(void **state)
 
     /*no keys are updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -4429,8 +4255,7 @@ static void req_key_update_case16(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4441,8 +4266,7 @@ static void req_key_update_case16(void **state)
 
     /*no keys are updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -4536,8 +4360,7 @@ static void req_key_update_case18(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4554,8 +4377,7 @@ static void req_key_update_case18(void **state)
                                   sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -4596,8 +4418,7 @@ static void req_key_update_case19(void **state)
     spdm_context->retry_times = 3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4614,8 +4435,7 @@ static void req_key_update_case19(void **state)
                                   sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -4654,8 +4474,7 @@ static void req_key_update_case20(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4664,8 +4483,7 @@ static void req_key_update_case20(void **state)
         m_rsp_secret_buffer, (uint8_t)(0xFF),
         m_req_secret_buffer, (uint8_t)(0xEE));
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
@@ -4696,8 +4514,7 @@ static void req_key_update_case21(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4714,8 +4531,7 @@ static void req_key_update_case21(void **state)
                                   sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -4754,8 +4570,7 @@ static void req_key_update_case22(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4819,8 +4634,7 @@ static void req_key_update_case23(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4843,8 +4657,7 @@ static void req_key_update_case23(void **state)
                                       sizeof(m_req_secret_buffer));
         /*response side *not* updated*/
 
-        status = libspdm_key_update(
-            spdm_context, session_id, true);
+        status = libspdm_key_update( spdm_context, session_id, true);
 
         LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
         assert_memory_equal(((libspdm_secured_message_context_t
@@ -4897,8 +4710,7 @@ static void req_key_update_case24(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4915,8 +4727,7 @@ static void req_key_update_case24(void **state)
                                   sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -4955,8 +4766,7 @@ static void req_key_update_case25(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4973,8 +4783,7 @@ static void req_key_update_case25(void **state)
                                   sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -5013,8 +4822,7 @@ static void req_key_update_case26(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -5031,8 +4839,7 @@ static void req_key_update_case26(void **state)
                                   sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update( spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -5070,8 +4877,7 @@ static void req_key_update_case27(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -5093,8 +4899,7 @@ static void req_key_update_case27(void **state)
                                   m_rsp_secret_buffer, m_rsp_secret_buffer,
                                   sizeof(m_rsp_secret_buffer));
 
-    status = libspdm_key_update(
-        spdm_context, session_id, false);
+    status = libspdm_key_update( spdm_context, session_id, false);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -5134,8 +4939,7 @@ static void req_key_update_case28(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -5159,8 +4963,7 @@ static void req_key_update_case28(void **state)
 
     /*no keys are updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, false);
+    status = libspdm_key_update( spdm_context, session_id, false);
 
     assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -5201,8 +5004,7 @@ static void req_key_update_case29(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -5226,8 +5028,7 @@ static void req_key_update_case29(void **state)
 
     /*no keys are updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, false);
+    status = libspdm_key_update( spdm_context, session_id, false);
 
     assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -5270,8 +5071,7 @@ static void req_key_update_case30(void **state)
     spdm_context->retry_times = 3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -5306,8 +5106,7 @@ static void req_key_update_case30(void **state)
                                   m_rsp_secret_buffer, m_rsp_secret_buffer,
                                   sizeof(m_rsp_secret_buffer));
 
-    status = libspdm_key_update(
-        spdm_context, session_id, false);
+    status = libspdm_key_update( spdm_context, session_id, false);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -5348,8 +5147,7 @@ static void req_key_update_case31(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -5371,8 +5169,7 @@ static void req_key_update_case31(void **state)
     m_libspdm_last_rsp_sequence_number = secured_message_context
                                          ->application_secret.response_data_sequence_number;
 
-    status = libspdm_key_update(
-        spdm_context, session_id, false);
+    status = libspdm_key_update( spdm_context, session_id, false);
 
     assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
@@ -5405,8 +5202,7 @@ static void req_key_update_case32(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -5430,8 +5226,7 @@ static void req_key_update_case32(void **state)
 
     /*no keys are updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, false);
+    status = libspdm_key_update( spdm_context, session_id, false);
 
     assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -5557,8 +5352,7 @@ static void req_key_update_case34(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -5588,8 +5382,7 @@ static void req_key_update_case34(void **state)
 
         /*no keys are updated*/
 
-        status = libspdm_key_update(
-            spdm_context, session_id, false);
+        status = libspdm_key_update( spdm_context, session_id, false);
 
         LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
         assert_memory_equal(((libspdm_secured_message_context_t

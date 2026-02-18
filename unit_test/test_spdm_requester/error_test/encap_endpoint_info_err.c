@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -51,8 +51,7 @@ spdm_get_endpoint_info_request_max_t m_libspdm_get_endpoint_info_request_err3 = 
     {0, 0, 0},
     /* no nonce */
 };
-size_t m_libspdm_get_endpoint_info_request_err3_size =
-    sizeof(spdm_get_endpoint_info_request_t);
+size_t m_libspdm_get_endpoint_info_request_err3_size = sizeof(spdm_get_endpoint_info_request_t);
 
 /* request signature, but invalid slot_id */
 spdm_get_endpoint_info_request_max_t m_libspdm_get_endpoint_info_request_err4 = {
@@ -128,8 +127,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case1(void **state)
 
     libspdm_reset_message_encap_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request_err1.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request_err1.nonce);
 
     status = libspdm_get_encap_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request_err1_size,
@@ -142,10 +140,8 @@ void libspdm_test_requester_encap_endpoint_info_err_case1(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, SPDM_GET_ENDPOINT_INFO);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -180,8 +176,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case2(void **state)
 
     libspdm_reset_message_encap_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request_err1.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request_err1.nonce);
 
     status = libspdm_get_encap_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request_err1_size,
@@ -194,10 +189,8 @@ void libspdm_test_requester_encap_endpoint_info_err_case2(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, SPDM_GET_ENDPOINT_INFO);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -234,8 +227,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case3(void **state)
 
     libspdm_reset_message_encap_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request_err2.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request_err2.nonce);
 
     status = libspdm_get_encap_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request_err2_size,
@@ -248,10 +240,8 @@ void libspdm_test_requester_encap_endpoint_info_err_case3(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_VERSION_MISMATCH);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_VERSION_MISMATCH);
     assert_int_equal(spdm_response->header.param2, 0);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -288,8 +278,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case4(void **state)
 
     libspdm_reset_message_encap_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request_err1.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request_err1.nonce);
 
     status = libspdm_get_encap_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request_err1_size,
@@ -302,10 +291,8 @@ void libspdm_test_requester_encap_endpoint_info_err_case4(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, SPDM_GET_ENDPOINT_INFO);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -354,10 +341,8 @@ void libspdm_test_requester_encap_endpoint_info_err_case5(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -394,8 +379,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case6(void **state)
 
     libspdm_reset_message_encap_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request_err4.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request_err4.nonce);
 
     status = libspdm_get_encap_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request_err4_size,
@@ -408,10 +392,8 @@ void libspdm_test_requester_encap_endpoint_info_err_case6(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -455,8 +437,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case7(void **state)
 
     libspdm_reset_message_encap_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request_err1.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request_err1.nonce);
 
     status = libspdm_get_encap_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request_err1_size,
@@ -469,10 +450,8 @@ void libspdm_test_requester_encap_endpoint_info_err_case7(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -513,8 +492,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case8(void **state)
 
     libspdm_reset_message_encap_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request_err5.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request_err5.nonce);
 
     status = libspdm_get_encap_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request_err5_size,
@@ -527,10 +505,8 @@ void libspdm_test_requester_encap_endpoint_info_err_case8(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -605,8 +581,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case9(void **state)
 
     libspdm_reset_message_encap_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request_err6.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request_err6.nonce);
 
     status = libspdm_get_encap_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request_err6_size,
@@ -619,10 +594,8 @@ void libspdm_test_requester_encap_endpoint_info_err_case9(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -659,8 +632,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case10(void **state)
 
     libspdm_reset_message_encap_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request_err7.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request_err7.nonce);
 
     status = libspdm_get_encap_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request_err7_size,
@@ -673,10 +645,8 @@ void libspdm_test_requester_encap_endpoint_info_err_case10(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT

@@ -38,10 +38,8 @@ void libspdm_requester_chunk_send_test_case1_build_algorithms_response(
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = 0;
     spdm_response->length = sizeof(spdm_algorithms_response_t);
-    spdm_response->measurement_specification_sel =
-        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-    spdm_response->measurement_hash_algo =
-        m_libspdm_use_measurement_hash_algo;
+    spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+    spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
     spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
     spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
     spdm_response->ext_asym_sel_count = 0;
@@ -62,10 +60,8 @@ void libspdm_requester_chunk_send_test_case15_build_algorithms_response(
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = 0;
     spdm_response->length = sizeof(spdm_algorithms_response_t);
-    spdm_response->measurement_specification_sel =
-        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-    spdm_response->measurement_hash_algo =
-        m_libspdm_use_measurement_hash_algo;
+    spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+    spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
     spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
     spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
     spdm_response->ext_asym_sel_count = 0;
@@ -531,8 +527,7 @@ libspdm_return_t libspdm_test_requester_chunk_send_generic_test_case(
                                                 SPDM_VERSION_NUMBER_SHIFT_BIT;
     }
     spdm_context->connection_info.capability.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->connection_info.capability.flags |=
         (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
@@ -564,8 +559,7 @@ libspdm_return_t libspdm_test_requester_chunk_send_generic_test_case(
         spdm_context->connection_info.capability.max_spdm_msg_size = 42;
     }
 
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
     spdm_context->local_context.algorithm.measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
 
@@ -606,8 +600,7 @@ libspdm_return_t libspdm_test_requester_chunk_send_vendor_specific_test_case(
     /* Large request need a large scratch buffer. */
     spdm_context->connection_info.capability.max_spdm_msg_size = 0x12000;
     spdm_context->local_context.capability.max_spdm_msg_size = 0x12000;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);

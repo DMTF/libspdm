@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -157,10 +157,8 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        spdm_response->measurement_hash_algo =
-            m_libspdm_use_measurement_hash_algo;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
         spdm_response->ext_asym_sel_count = 0;
@@ -188,10 +186,8 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            m_measurement_specification_sel;
-        spdm_response->measurement_hash_algo =
-            m_libspdm_use_measurement_hash_algo;
+        spdm_response->measurement_specification_sel = m_measurement_specification_sel;
+        spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
         spdm_response->ext_asym_sel_count = 0;
@@ -260,8 +256,7 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             libspdm_zero_mem(spdm_response, spdm_response_size);
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
             spdm_response->header.request_response_code = SPDM_ERROR;
             spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response->header.param2 = 0;
@@ -280,18 +275,13 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             libspdm_zero_mem(spdm_response, spdm_response_size);
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
-            spdm_response->header.request_response_code =
-                SPDM_ALGORITHMS;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.request_response_code = SPDM_ALGORITHMS;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
-            spdm_response->length =
-                sizeof(spdm_algorithms_response_t);
-            spdm_response->measurement_specification_sel =
-                SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-            spdm_response->measurement_hash_algo =
-                m_libspdm_use_measurement_hash_algo;
+            spdm_response->length = sizeof(spdm_algorithms_response_t);
+            spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+            spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
             spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
             spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
             spdm_response->ext_asym_sel_count = 0;
@@ -340,13 +330,11 @@ static libspdm_return_t receive_message(
         libspdm_zero_mem(spdm_response, spdm_response_size);
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_ERROR;
-        spdm_response->header.param1 =
-            SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
         spdm_response->header.param2 = 0;
         spdm_response->extend_error_data.rd_exponent = 1;
         spdm_response->extend_error_data.rd_tm = 2;
-        spdm_response->extend_error_data.request_code =
-            SPDM_NEGOTIATE_ALGORITHMS;
+        spdm_response->extend_error_data.request_code = SPDM_NEGOTIATE_ALGORITHMS;
         spdm_response->extend_error_data.token = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
@@ -374,8 +362,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = 0;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -404,10 +391,8 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        spdm_response->measurement_hash_algo =
-            m_libspdm_use_measurement_hash_algo;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = 0;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
         spdm_response->ext_asym_sel_count = 0;
@@ -435,10 +420,8 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        spdm_response->measurement_hash_algo =
-            m_libspdm_use_measurement_hash_algo;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = 0;
         spdm_response->ext_asym_sel_count = 0;
@@ -467,8 +450,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -497,8 +479,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -526,8 +507,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -556,8 +536,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -586,8 +565,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -616,8 +594,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512;
@@ -646,8 +623,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo|
                                                SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_512;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
@@ -677,8 +653,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo|
                                        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521;
@@ -708,8 +683,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo|
@@ -739,8 +713,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -785,8 +758,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -831,8 +803,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -877,8 +848,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -924,8 +894,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -971,8 +940,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -1017,8 +985,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -1064,8 +1031,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -1111,8 +1077,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -1158,8 +1123,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -1204,8 +1168,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -1255,8 +1218,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->other_params_selection = SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
@@ -1302,8 +1264,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->other_params_selection = 0;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
@@ -1349,10 +1310,8 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(spdm_algorithms_response_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        spdm_response->measurement_hash_algo =
-            m_libspdm_use_measurement_hash_algo;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
         spdm_response->ext_asym_sel_count = 0;
@@ -1381,8 +1340,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -1434,8 +1392,7 @@ static void req_negotiate_algorithms_case2(void **state)
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->local_context.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
@@ -1487,8 +1444,7 @@ static void req_negotiate_algorithms_case3(void **state)
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->local_context.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
@@ -1582,8 +1538,7 @@ static void req_negotiate_algorithms_case6(void **state)
     spdm_context->retry_times = 3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->local_context.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
@@ -1766,8 +1721,7 @@ static void req_negotiate_algorithms_case32(void **state) {
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->local_context.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
@@ -1780,30 +1734,24 @@ static void req_negotiate_algorithms_case32(void **state) {
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
     spdm_context->local_context.algorithm.measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
 
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
 
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
 
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
 
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
 
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     /*filling A with arbitrary data*/

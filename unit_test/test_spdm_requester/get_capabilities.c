@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -265,8 +265,7 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             libspdm_zero_mem(spdm_response, spdm_response_size);
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
             spdm_response->header.request_response_code = SPDM_ERROR;
             spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response->header.param2 = 0;
@@ -285,10 +284,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             libspdm_zero_mem(spdm_response, spdm_response_size);
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
-            spdm_response->header.request_response_code =
-                SPDM_CAPABILITIES;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.request_response_code = SPDM_CAPABILITIES;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
             spdm_response->ct_exponent = 0;
@@ -725,8 +722,7 @@ static libspdm_return_t receive_message(
         spdm_response->ct_exponent = 0;
         spdm_response->flags =
             LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 &
-            (0xFFFFFFFF ^
-             (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP));
+            (0xFFFFFFFF ^ (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP));
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -752,8 +748,7 @@ static libspdm_return_t receive_message(
         spdm_response->ct_exponent = 0;
         spdm_response->flags =
             LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 &
-            (0xFFFFFFFF ^
-             (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP));
+            (0xFFFFFFFF ^ (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP));
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -828,13 +823,11 @@ static libspdm_return_t receive_message(
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_GET_CAPABILITIES;
+        spdm_response->header.request_response_code = SPDM_GET_CAPABILITIES;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags =
-            LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
+        spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -858,8 +851,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags =
-            LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
+        spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -1044,10 +1036,8 @@ static libspdm_return_t receive_message(
         supported_algorithms->param2 = 0;
         supported_algorithms->length = sizeof(spdm_supported_algorithms_block_t) +
                                        4 *
-                                       sizeof(
-            spdm_negotiate_algorithms_common_struct_table_t);
-        supported_algorithms->measurement_specification =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+                                       sizeof( spdm_negotiate_algorithms_common_struct_table_t);
+        supported_algorithms->measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         supported_algorithms->other_params_support = 0;
         supported_algorithms->base_asym_algo = m_libspdm_use_asym_algo;
         supported_algorithms->base_hash_algo = m_libspdm_use_hash_algo;
@@ -1058,29 +1048,22 @@ static libspdm_return_t receive_message(
         spdm_negotiate_algorithms_common_struct_table_t *struct_table =
             (spdm_negotiate_algorithms_common_struct_table_t *)(supported_algorithms + 1);
 
-        struct_table[0].alg_type =
-            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE;
+        struct_table[0].alg_type = SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE;
         struct_table[0].alg_count = 0x20;
-        struct_table[0].alg_supported =
-            SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1;
+        struct_table[0].alg_supported = SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1;
 
-        struct_table[1].alg_type =
-            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD;
+        struct_table[1].alg_type = SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD;
         struct_table[1].alg_count = 0x20;
-        struct_table[1].alg_supported =
-            SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM;;
+        struct_table[1].alg_supported = SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM;;
 
         struct_table[2].alg_type =
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG;
         struct_table[2].alg_count = 0x20;
-        struct_table[2].alg_supported =
-            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
+        struct_table[2].alg_supported = SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
 
-        struct_table[3].alg_type =
-            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE;
+        struct_table[3].alg_type = SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE;
         struct_table[3].alg_count = 0x20;
-        struct_table[3].alg_supported =
-            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM;
+        struct_table[3].alg_supported = SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -1158,8 +1141,7 @@ static void req_get_capabilities_case6(void **state)
     spdm_context->retry_times = 3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
@@ -1199,8 +1181,7 @@ static void req_get_capabilities_case10(void **state)
     spdm_test_context->case_id = 0xa;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
@@ -1407,8 +1388,7 @@ static void req_get_capabilities_case32(void **state)
     spdm_test_context->case_id = 0x20;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     /*filling A with arbitrary data*/
     arbitrary_size = 10;

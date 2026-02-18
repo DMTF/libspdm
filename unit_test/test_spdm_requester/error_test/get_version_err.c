@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -166,8 +166,7 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             libspdm_zero_mem(spdm_response, spdm_response_size);
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
             spdm_response->header.request_response_code = SPDM_ERROR;
             spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response->header.param2 = 0;
@@ -186,10 +185,8 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             libspdm_zero_mem(spdm_response, spdm_response_size);
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
-            spdm_response->header.request_response_code =
-                SPDM_VERSION;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.request_response_code = SPDM_VERSION;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
             spdm_response->version_number_entry_count = 2;
@@ -239,8 +236,7 @@ static libspdm_return_t receive_message(
         libspdm_zero_mem(spdm_response, spdm_response_size);
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_ERROR;
-        spdm_response->header.param1 =
-            SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
         spdm_response->header.param2 = 0;
         spdm_response->extend_error_data.rd_exponent = 1;
         spdm_response->extend_error_data.rd_tm = 2;

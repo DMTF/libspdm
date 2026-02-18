@@ -46,18 +46,13 @@ static void req_encap_digests_case1(void **state)
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0] =
-        m_local_certificate_chain;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_local_certificate_chain);
-    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain),
-                    (uint8_t)(0xFF));
+    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain), (uint8_t)(0xFF));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
@@ -73,14 +68,11 @@ static void req_encap_digests_case1(void **state)
     assert_int_equal(
         response_size,
         sizeof(spdm_digest_response_t) +
-        libspdm_get_hash_size(spdm_context->connection_info
-                              .algorithm.base_hash_algo));
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_DIGESTS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_DIGESTS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(spdm_context->transcript.message_m.buffer_size,
-                     0);
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
 
@@ -111,18 +103,13 @@ static void req_encap_digests_case3(void **state)
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0] =
-        m_local_certificate_chain;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_local_certificate_chain);
-    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain),
-                    (uint8_t)(0xFF));
+    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain), (uint8_t)(0xFF));
 
     response_size = sizeof(response);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -139,13 +126,10 @@ static void req_encap_digests_case3(void **state)
     assert_int_equal(
         response_size,
         sizeof(spdm_digest_response_t) +
-        libspdm_get_hash_size(spdm_context->connection_info
-                              .algorithm.base_hash_algo));
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_DIGESTS);
-    assert_int_equal(spdm_response->header.param1,
-                     0);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_DIGESTS);
+    assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->header.param2, SPDM_ERROR_CODE_INVALID_REQUEST);
 #endif
 }
@@ -170,18 +154,13 @@ static void req_encap_digests_case4(void **state)
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0] =
-        m_local_certificate_chain;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_local_certificate_chain);
-    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain),
-                    (uint8_t)(0xFF));
+    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain), (uint8_t)(0xFF));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_b.buffer_size =
@@ -196,13 +175,10 @@ static void req_encap_digests_case4(void **state)
     assert_int_equal(
         response_size,
         sizeof(spdm_digest_response_t) +
-        libspdm_get_hash_size(spdm_context->connection_info
-                              .algorithm.base_hash_algo));
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_DIGESTS);
-    assert_int_equal(spdm_response->header.param1,
-                     0);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_DIGESTS);
+    assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->header.param2, SPDM_ERROR_CODE_INVALID_REQUEST);
 #endif
 }
@@ -228,18 +204,13 @@ static void req_encap_digests_case5(void **state)
     spdm_test_context->case_id = 0x5;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0] =
-        m_local_certificate_chain;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_local_certificate_chain);
-    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain),
-                    (uint8_t)(0xFF));
+    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain), (uint8_t)(0xFF));
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -271,11 +242,9 @@ static void req_encap_digests_case5(void **state)
         sizeof(spdm_digest_response_t) +  sizeof(spdm_key_pair_id_t) +
         sizeof(spdm_certificate_info_t) +
         sizeof(spdm_key_usage_bit_mask_t) +
-        libspdm_get_hash_size(spdm_context->connection_info
-                              .algorithm.base_hash_algo));
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_DIGESTS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_DIGESTS);
     assert_int_equal(session_info->session_transcript.message_encap_d.buffer_size,
                      sizeof(spdm_digest_response_t) +  sizeof(spdm_key_pair_id_t) +
                      sizeof(spdm_certificate_info_t) +
@@ -295,11 +264,9 @@ static void req_encap_digests_case5(void **state)
     assert_int_equal(
         response_size,
         sizeof(spdm_digest_response_t) +
-        libspdm_get_hash_size(spdm_context->connection_info
-                              .algorithm.base_hash_algo));
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_DIGESTS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_DIGESTS);
     assert_int_equal(session_info->session_transcript.message_encap_d.buffer_size, 0);
 }
 
@@ -331,12 +298,9 @@ static void req_encap_digests_case6(void **state)
     spdm_test_context->case_id = 0x6;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     slot_count = SPDM_MAX_SLOT_COUNT;
     additional_size = sizeof(spdm_key_pair_id_t) + sizeof(spdm_certificate_info_t) +
@@ -350,8 +314,7 @@ static void req_encap_digests_case6(void **state)
         .local_cert_chain_provision_size[index] = hash_size;
     }
 
-    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain),
-                    (uint8_t)(0xFF));
+    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain), (uint8_t)(0xFF));
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -382,8 +345,7 @@ static void req_encap_digests_case6(void **state)
                      sizeof(spdm_digest_response_t) + (hash_size + additional_size) * slot_count);
 
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_DIGESTS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_DIGESTS);
     assert_int_equal(session_info->session_transcript.message_encap_d.buffer_size,
                      sizeof(spdm_digest_response_t) + (hash_size + additional_size) * slot_count);
 

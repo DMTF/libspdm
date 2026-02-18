@@ -76,8 +76,7 @@ bool libspdm_libspdm_read_responder_public_certificate_chain_expiration(
         return res;
     }
 
-    libspdm_hash_all(base_hash_algo, root_cert, root_cert_len,
-                     (uint8_t *)(cert_chain + 1));
+    libspdm_hash_all(base_hash_algo, root_cert, root_cert_len, (uint8_t *)(cert_chain + 1));
     libspdm_copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
                      cert_chain_size - (sizeof(spdm_cert_chain_t) + digest_size),
                      file_data, file_size);
@@ -234,8 +233,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -300,8 +298,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -385,8 +382,7 @@ static libspdm_return_t receive_message(
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
             spdm_response->header.request_response_code = SPDM_ERROR;
             spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response->header.param2 = 0;
@@ -437,10 +433,8 @@ static libspdm_return_t receive_message(
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
-            spdm_response->header.request_response_code =
-                SPDM_CERTIFICATE;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.request_response_code = SPDM_CERTIFICATE;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
             spdm_response->portion_length = portion_length;
@@ -499,13 +493,11 @@ static libspdm_return_t receive_message(
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_ERROR;
-        spdm_response->header.param1 =
-            SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
         spdm_response->header.param2 = 0;
         spdm_response->extend_error_data.rd_exponent = 1;
         spdm_response->extend_error_data.rd_tm = 2;
-        spdm_response->extend_error_data.request_code =
-            SPDM_GET_CERTIFICATE;
+        spdm_response->extend_error_data.request_code = SPDM_GET_CERTIFICATE;
         spdm_response->extend_error_data.token = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
@@ -527,16 +519,13 @@ static libspdm_return_t receive_message(
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
             spdm_response->header.request_response_code = SPDM_ERROR;
-            spdm_response->header.param1 =
-                SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
             spdm_response->header.param2 = 0;
             spdm_response->extend_error_data.rd_exponent = 1;
             spdm_response->extend_error_data.rd_tm = 2;
-            spdm_response->extend_error_data.request_code =
-                SPDM_GET_CERTIFICATE;
+            spdm_response->extend_error_data.request_code = SPDM_GET_CERTIFICATE;
             spdm_response->extend_error_data.token = 1;
             sub_index2++;
 
@@ -585,10 +574,8 @@ static libspdm_return_t receive_message(
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
-            spdm_response->header.request_response_code =
-                SPDM_CERTIFICATE;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.request_response_code = SPDM_CERTIFICATE;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
             spdm_response->portion_length = portion_length;
@@ -649,8 +636,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -740,8 +726,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -806,8 +791,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -872,8 +856,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -935,13 +918,11 @@ static libspdm_return_t receive_message(
                            get_cert_length * (calling_index + 1));
         } else {
             portion_length =
-                (uint16_t)(m_libspdm_local_certificate_chain_size -
-                           get_cert_length * (count - 1));
+                (uint16_t)(m_libspdm_local_certificate_chain_size - get_cert_length * (count - 1));
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1008,8 +989,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1161,8 +1141,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1283,8 +1262,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1351,8 +1329,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1417,8 +1394,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1483,8 +1459,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1551,8 +1526,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1616,8 +1590,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1687,8 +1660,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1762,8 +1734,7 @@ static libspdm_return_t receive_message(
                 remainder_length = 0;
             }
 
-            spdm_response_size =
-                sizeof(spdm_certificate_response_t) + portion_length;
+            spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1815,16 +1786,13 @@ static libspdm_return_t receive_message(
                                                                          &data_size, NULL, NULL);
             }
             ((libspdm_context_t *)spdm_context)
-            ->local_context.local_cert_chain_provision_size[slot_id] =
-                data_size;
+            ->local_context.local_cert_chain_provision_size[slot_id] = data_size;
             ((libspdm_context_t *)spdm_context)
             ->local_context.local_cert_chain_provision[slot_id] = data;
             ((libspdm_context_t *)spdm_context)
-            ->connection_info.algorithm.base_asym_algo =
-                m_libspdm_use_asym_algo;
+            ->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
             ((libspdm_context_t *)spdm_context)
-            ->connection_info.algorithm.base_hash_algo =
-                m_libspdm_use_hash_algo;
+            ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
             spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
                                  libspdm_get_hash_size(m_libspdm_use_hash_algo) +
                                  SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 +
@@ -1833,8 +1801,7 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-            spdm_response->header.request_response_code =
-                SPDM_CHALLENGE_AUTH;
+            spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
             spdm_response->header.param1 = slot_id & 0xF;
             spdm_response->header.param2 = (1 << slot_id);
             ptr = (void *)(spdm_response + 1);
@@ -1927,8 +1894,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1965,8 +1931,7 @@ static libspdm_return_t receive_message(
             m_libspdm_local_certificate_chain = NULL;
             m_libspdm_local_certificate_chain_size = 0;
         }
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -2011,8 +1976,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -2077,8 +2041,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -2143,8 +2106,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -2213,8 +2175,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -2273,8 +2234,7 @@ static libspdm_return_t receive_message(
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_certificate_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -2376,10 +2336,8 @@ static void req_get_certificate_case1(void **state)
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -2390,21 +2348,16 @@ static void req_get_certificate_case1(void **state)
             data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
         assert(false);
     }
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
@@ -2442,10 +2395,8 @@ static void req_get_certificate_case2(void **state)
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->local_context.is_requester = true;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
@@ -2458,19 +2409,13 @@ static void req_get_certificate_case2(void **state)
         assert(false);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    libspdm_dump_hex(
-        root_cert,
-        root_cert_size);
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    libspdm_dump_hex( root_cert, root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     libspdm_zero_mem(&parameter, sizeof(parameter));
     parameter.location = LIBSPDM_DATA_LOCATION_CONNECTION;
@@ -2490,8 +2435,7 @@ static void req_get_certificate_case2(void **state)
 #endif
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
@@ -2539,10 +2483,8 @@ static void req_get_certificate_case3(void **state)
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -2553,21 +2495,16 @@ static void req_get_certificate_case3(void **state)
             data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
         assert(false);
     }
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
@@ -2598,10 +2535,8 @@ static void req_get_certificate_case4(void **state)
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -2612,21 +2547,16 @@ static void req_get_certificate_case4(void **state)
             data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
         assert(false);
     }
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
@@ -2657,10 +2587,8 @@ static void req_get_certificate_case5(void **state)
     spdm_test_context->case_id = 0x5;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -2671,21 +2599,16 @@ static void req_get_certificate_case5(void **state)
             data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
         assert(false);
     }
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
@@ -2719,10 +2642,8 @@ static void req_get_certificate_case6(void **state)
     spdm_context->retry_times = 3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->local_context.is_requester = true;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
@@ -2734,21 +2655,16 @@ static void req_get_certificate_case6(void **state)
             data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
         assert(false);
     }
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
@@ -2784,10 +2700,8 @@ static void req_get_certificate_case7(void **state)
     spdm_test_context->case_id = 0x7;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -2798,21 +2712,16 @@ static void req_get_certificate_case7(void **state)
             data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
         assert(false);
     }
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
@@ -2845,10 +2754,8 @@ static void req_get_certificate_case8(void **state)
     spdm_test_context->case_id = 0x8;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -2859,21 +2766,16 @@ static void req_get_certificate_case8(void **state)
             data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
         assert(false);
     }
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     free(data);
 }
@@ -2926,8 +2828,7 @@ static void req_get_certificate_case9(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     } else {
@@ -2969,10 +2870,8 @@ static void req_get_certificate_case10(void **state)
     spdm_test_context->case_id = 0xA;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -2987,18 +2886,14 @@ static void req_get_certificate_case10(void **state)
     spdm_context->local_context.peer_root_cert_provision_size[0] = 0;
     spdm_context->local_context.peer_root_cert_provision[0] = NULL;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->local_context.is_requester = true;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
@@ -3037,10 +2932,8 @@ static void req_get_certificate_case11(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     /* Setting SPDM context as the first steps of the protocol has been accomplished*/
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     /* Loading certificate chain and saving root certificate hash*/
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
@@ -3052,15 +2945,11 @@ static void req_get_certificate_case11(void **state)
             data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
         assert(false);
     }
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     /* Resetting message buffer*/
     libspdm_reset_message_b(spdm_context);
@@ -3068,8 +2957,7 @@ static void req_get_certificate_case11(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
@@ -3110,10 +2998,8 @@ static void req_get_certificate_case12(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     /* Setting SPDM context as the first steps of the protocol has been accomplished*/
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -3129,15 +3015,11 @@ static void req_get_certificate_case12(void **state)
         memcpy(root_cert_buffer, root_cert, root_cert_size);
         root_cert_buffer[0]++;
     }
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert_buffer;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     /* Resetting message buffer*/
     libspdm_reset_message_b(spdm_context);
     /* Calculating expected number of messages received*/
@@ -3145,8 +3027,7 @@ static void req_get_certificate_case12(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_NO_AUTHORITY);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
@@ -3182,8 +3063,7 @@ static void req_get_certificate_case13(void **state)
 
     /* This case requires a short certificate chain (fits in 1 message) for testing,
      * so skip when m_libspdm_use_asym_algo is other than ECC_P256 */
-    if (m_libspdm_use_asym_algo !=
-        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256) {
+    if (m_libspdm_use_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256) {
         return;
     }
 
@@ -3193,10 +3073,8 @@ static void req_get_certificate_case13(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     /* Setting SPDM context as the first steps of the protocol has been accomplished*/
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     /* Loading Root certificate and saving its hash*/
     libspdm_read_responder_public_certificate_chain_by_size(
         m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, LIBSPDM_TEST_CERT_SMALL, &data,
@@ -3206,15 +3084,11 @@ static void req_get_certificate_case13(void **state)
             data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
         assert(false);
     }
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->local_context.is_requester = true;
     /* Resetting message buffer*/
     libspdm_reset_message_b(spdm_context);
@@ -3222,8 +3096,7 @@ static void req_get_certificate_case13(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
@@ -3266,10 +3139,8 @@ static void req_get_certificate_case14(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     /* Setting SPDM context as the first steps of the protocol has been accomplished*/
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     /* Loading Root certificate and saving its hash*/
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
@@ -3281,15 +3152,11 @@ static void req_get_certificate_case14(void **state)
             data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
         assert(false);
     }
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     /* Resetting message buffer*/
     libspdm_reset_message_b(spdm_context);
     /* Calculating expected number of messages received*/
@@ -3341,10 +3208,8 @@ static void req_get_certificate_case15(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     /* Setting SPDM context as the first steps of the protocol has been accomplished*/
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     /* Loading Root certificate and saving its hash*/
 
     libspdm_read_responder_public_certificate_chain_by_size(
@@ -3356,23 +3221,18 @@ static void req_get_certificate_case15(void **state)
             data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
         assert(false);
     }
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     /* Resetting message buffer*/
     libspdm_reset_message_b(spdm_context);
     /* Calculating expected number of messages received*/
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     /* It may fail because the spdm does not support too long message.
      * assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);*/
     if (status == LIBSPDM_STATUS_SUCCESS) {
@@ -3485,10 +3345,8 @@ static void req_get_certificate_case17(void **state)
     spdm_test_context->case_id = 0x11;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -3503,18 +3361,14 @@ static void req_get_certificate_case17(void **state)
     spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->local_context.is_requester = true;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
@@ -3542,10 +3396,8 @@ static void req_get_certificate_case18(void **state)
     spdm_test_context->case_id = 0x12;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -3560,17 +3412,13 @@ static void req_get_certificate_case18(void **state)
     spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
     free(data);
 }
@@ -3602,10 +3450,8 @@ static void req_get_certificate_case19(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     /* Setting SPDM context as the first steps of the protocol has been accomplished*/
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     /* Loading the target expiration certificate chain and saving root certificate hash
      * "rsa3072_Expiration/bundle_responder.certchain.der"*/
     libspdm_libspdm_read_responder_public_certificate_chain_expiration(&data,
@@ -3615,23 +3461,19 @@ static void req_get_certificate_case19(void **state)
         (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
         data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
         &root_cert, &root_cert_size);
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     spdm_context->connection_info.algorithm.base_hash_algo =
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     /* Resetting message buffer*/
     libspdm_reset_message_b(spdm_context);
     /* Calculating expected number of messages received*/
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
@@ -3667,10 +3509,8 @@ static void req_get_certificate_case20(void **state)
     spdm_test_context->case_id = 0x14;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -3682,24 +3522,17 @@ static void req_get_certificate_case20(void **state)
         assert(false);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    libspdm_dump_hex(
-        root_cert,
-        root_cert_size);
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    libspdm_dump_hex( root_cert, root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
@@ -3728,10 +3561,8 @@ static void req_get_certificate_case21(void **state)
     spdm_test_context->case_id = 0x15;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
 
     /* Set max_spdm_msg_size to small value to force responder to send portion_length
      * greater than request length */
@@ -3749,24 +3580,17 @@ static void req_get_certificate_case21(void **state)
         assert(false);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    libspdm_dump_hex(
-        root_cert,
-        root_cert_size);
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    libspdm_dump_hex( root_cert, root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 
     spdm_context->local_context.capability.max_spdm_msg_size = original_max_spdm_msg_size;
@@ -3798,10 +3622,8 @@ static void req_get_certificate_case22(void **state)
     spdm_test_context->case_id = 0x16;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -3813,24 +3635,17 @@ static void req_get_certificate_case22(void **state)
         assert(false);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    libspdm_dump_hex(
-        root_cert,
-        root_cert_size);
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    libspdm_dump_hex( root_cert, root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
@@ -3863,10 +3678,8 @@ static void req_get_certificate_case23(void **state)
     spdm_test_context->case_id = 0x17;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -3933,10 +3746,8 @@ static void req_get_certificate_case24(void **state)
     spdm_test_context->case_id = 0x18;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     /*The only different setting with normal case2: cert model is AliasCert model*/
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
@@ -3951,24 +3762,17 @@ static void req_get_certificate_case24(void **state)
         assert(false);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    LIBSPDM_INTERNAL_DUMP_HEX(
-        root_cert,
-        root_cert_size);
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    LIBSPDM_INTERNAL_DUMP_HEX( root_cert, root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
     free(data);
 }
@@ -4004,23 +3808,17 @@ static void req_get_certificate_case25(void **state)
     spdm_test_context->case_id = 0x19;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.capability.flags &=
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_b(spdm_context);
     libspdm_reset_message_c(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->local_context.is_requester = true;
 
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -4034,11 +3832,8 @@ static void req_get_certificate_case25(void **state)
         assert(false);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    libspdm_dump_hex(
-        root_cert,
-        root_cert_size);
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    libspdm_dump_hex( root_cert, root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
 
     libspdm_read_responder_public_certificate_chain_per_slot(1, m_libspdm_use_hash_algo,
@@ -4048,19 +3843,15 @@ static void req_get_certificate_case25(void **state)
                                           data1_size - sizeof(spdm_cert_chain_t) - hash1_size, 0,
                                           &root_cert1, &root_cert1_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    libspdm_dump_hex(
-        root_cert1,
-        root_cert1_size);
-    spdm_context->local_context.peer_root_cert_provision_size[1] =
-        root_cert1_size;
+    libspdm_dump_hex( root_cert1, root_cert1_size);
+    spdm_context->local_context.peer_root_cert_provision_size[1] = root_cert1_size;
     spdm_context->local_context.peer_root_cert_provision[1] = root_cert1;
 
     m_get_cert = true;
     for (slot_id = 0; slot_id < 2; slot_id++) {
         cert_chain_size = sizeof(cert_chain);
         libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-        status = libspdm_get_certificate(spdm_context, NULL, slot_id, &cert_chain_size,
-                                         cert_chain);
+        status = libspdm_get_certificate(spdm_context, NULL, slot_id, &cert_chain_size, cert_chain);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_get_certificate - %xu\n", status));
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     }
@@ -4107,30 +3898,21 @@ static void req_get_certificate_case26(void **state)
     spdm_test_context->case_id = 0x1A;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
     spdm_context->connection_info.capability.flags &=
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
@@ -4143,19 +3925,13 @@ static void req_get_certificate_case26(void **state)
         assert(false);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    libspdm_dump_hex(
-        root_cert,
-        root_cert_size);
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    libspdm_dump_hex( root_cert, root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->local_context.is_requester = true;
 
     session_id = 0xFFFFFFFF;
@@ -4204,10 +3980,8 @@ static void req_get_certificate_case27(void **state)
     spdm_test_context->case_id = 0x1B;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -4219,24 +3993,17 @@ static void req_get_certificate_case27(void **state)
         assert(false);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    libspdm_dump_hex(
-        root_cert,
-        root_cert_size);
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    libspdm_dump_hex( root_cert, root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 
@@ -4272,10 +4039,8 @@ static void req_get_certificate_case28(void **state)
     spdm_test_context->case_id = 0x1C;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
     libspdm_read_responder_public_certificate_chain_alias_cert(
@@ -4291,18 +4056,14 @@ static void req_get_certificate_case28(void **state)
     spdm_context->local_context.peer_root_cert_provision_size[0] = 0;
     spdm_context->local_context.peer_root_cert_provision[0] = NULL;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->local_context.is_requester = true;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
@@ -4338,10 +4099,8 @@ static void req_get_certificate_case29(void **state)
     spdm_test_context->case_id = 0x1D;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
     libspdm_read_responder_public_certificate_chain_alias_cert(
@@ -4357,18 +4116,14 @@ static void req_get_certificate_case29(void **state)
     spdm_context->local_context.peer_root_cert_provision_size[0] = 0;
     spdm_context->local_context.peer_root_cert_provision[0] = NULL;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->local_context.is_requester = true;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
     free(data);
 }
@@ -4406,11 +4161,9 @@ static void req_get_certificate_case30(void **state)
     spdm_context->retry_times = 1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags = 0;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->local_context.is_requester = true;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
@@ -4423,19 +4176,13 @@ static void req_get_certificate_case30(void **state)
         assert(false);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    libspdm_dump_hex(
-        root_cert,
-        root_cert_size);
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    libspdm_dump_hex( root_cert, root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     libspdm_zero_mem(&parameter, sizeof(parameter));
     parameter.location = LIBSPDM_DATA_LOCATION_CONNECTION;
@@ -4464,8 +4211,7 @@ static void req_get_certificate_case30(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0], m_cert_model);
     assert_int_equal(cert_chain_size, m_libspdm_local_certificate_chain_size);
@@ -4482,8 +4228,7 @@ static void req_get_certificate_case30(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0], m_cert_model);
     assert_int_equal(cert_chain_size, m_libspdm_local_certificate_chain_size);
@@ -4501,8 +4246,7 @@ static void req_get_certificate_case30(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[1], m_cert_model);
     assert_int_equal(cert_chain_size, m_libspdm_local_certificate_chain_size);
@@ -4520,8 +4264,7 @@ static void req_get_certificate_case30(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0], 0);
 
@@ -4537,8 +4280,7 @@ static void req_get_certificate_case30(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0], m_cert_model);
 
@@ -4554,8 +4296,7 @@ static void req_get_certificate_case30(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0], m_cert_model);
     assert_int_equal(cert_chain_size, m_libspdm_local_certificate_chain_size);
@@ -4596,10 +4337,8 @@ static void req_get_certificate_case31(void **state)
     spdm_test_context->case_id = 0x1F;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->local_context.is_requester = true;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
@@ -4612,19 +4351,13 @@ static void req_get_certificate_case31(void **state)
         assert(false);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    libspdm_dump_hex(
-        root_cert,
-        root_cert_size);
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    libspdm_dump_hex( root_cert, root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     libspdm_zero_mem(&parameter, sizeof(parameter));
     parameter.location = LIBSPDM_DATA_LOCATION_CONNECTION;
@@ -4645,8 +4378,7 @@ static void req_get_certificate_case31(void **state)
     /* Set cert_chain_size to a value that is less than the actual size of the certificate chain */
     cert_chain_size = data_size - 1;
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_BUFFER_TOO_SMALL);
     free(data);
     if (m_libspdm_local_certificate_chain != NULL) {
@@ -4673,10 +4405,8 @@ static void req_get_certificate_case32(void **state)
     spdm_test_context->case_id = 0x20;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -4706,10 +4436,8 @@ static void req_get_certificate_case33(void **state)
     spdm_test_context->case_id = 0x21;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
     spdm_context->connection_info.capability.flags |=

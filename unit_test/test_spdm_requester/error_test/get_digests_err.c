@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -96,8 +96,7 @@ static libspdm_return_t receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
+        ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -133,8 +132,7 @@ static libspdm_return_t receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
+        ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -229,8 +227,7 @@ static libspdm_return_t receive_message(
             size_t transport_header_size;
 
             ((libspdm_context_t *)spdm_context)
-            ->connection_info.algorithm.base_hash_algo =
-                m_libspdm_use_hash_algo;
+            ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
             spdm_response_size = sizeof(spdm_digest_response_t) +
                                  libspdm_get_hash_size(m_libspdm_use_hash_algo);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -350,8 +347,7 @@ static libspdm_return_t receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
+        ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         spdm_response_size = 2;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
@@ -375,8 +371,7 @@ static libspdm_return_t receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
+        ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -439,8 +434,7 @@ static libspdm_return_t receive_message(
 #endif
 
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
+        ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -478,8 +472,7 @@ static libspdm_return_t receive_message(
         size_t index;
 
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
+        ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         digest_count = 4;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
@@ -518,8 +511,7 @@ static libspdm_return_t receive_message(
         size_t index;
 
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
+        ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         digest_count = 4;
         spdm_response_size =
             sizeof(spdm_digest_response_t) +
@@ -588,8 +580,7 @@ static libspdm_return_t receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
+        ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_message_header_t) +
                              LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT + 1;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -701,8 +692,7 @@ static libspdm_return_t receive_message(
             size_t transport_header_size;
 
             ((libspdm_context_t *)spdm_context)
-            ->connection_info.algorithm.base_hash_algo =
-                m_libspdm_use_hash_algo;
+            ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
             spdm_response_size = sizeof(spdm_digest_response_t) +
                                  libspdm_get_hash_size(m_libspdm_use_hash_algo);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -761,8 +751,7 @@ static libspdm_return_t receive_message(
                 remainder_length = 0;
             }
 
-            spdm_response_size =
-                sizeof(spdm_certificate_response_t) + portion_length;
+            spdm_response_size = sizeof(spdm_certificate_response_t) + portion_length;
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -807,8 +796,7 @@ static libspdm_return_t receive_message(
         session_id = 0xFFFFFFFF;
 
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
+        ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -843,8 +831,7 @@ static libspdm_return_t receive_message(
                                               spdm_response, response_size,
                                               response);
 
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, session_id);
+        session_info = libspdm_get_session_info_via_session_id( spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
@@ -1223,8 +1210,7 @@ static void libspdm_test_requester_get_digests_err_case11(void **state)
     status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(spdm_context->transcript.message_b.buffer_size,
-                     0);
+    assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
 }
 
@@ -1298,8 +1284,7 @@ static void libspdm_test_requester_get_digests_err_case14(void **state)
     status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(spdm_context->transcript.message_b.buffer_size,
-                     0);
+    assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
 }
 
@@ -1382,8 +1367,7 @@ static void libspdm_test_requester_get_digests_err_case18(void **state)
     status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(spdm_context->transcript.message_b.buffer_size,
-                     0);
+    assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
 }
 

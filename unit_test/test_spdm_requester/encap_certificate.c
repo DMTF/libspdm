@@ -21,22 +21,19 @@ spdm_get_certificate_request_t m_spdm_get_certificate_request1 = {
     0,
     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
 };
-size_t m_spdm_get_certificate_request1_size =
-    sizeof(m_spdm_get_certificate_request1);
+size_t m_spdm_get_certificate_request1_size = sizeof(m_spdm_get_certificate_request1);
 
 spdm_get_certificate_request_t m_spdm_get_certificate_request3 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_GET_CERTIFICATE, 0, 0}, 0, 0
 };
-size_t m_spdm_get_certificate_request3_size =
-    sizeof(m_spdm_get_certificate_request3);
+size_t m_spdm_get_certificate_request3_size = sizeof(m_spdm_get_certificate_request3);
 
 spdm_get_certificate_request_t m_spdm_get_certificate_request4 = {
     {SPDM_MESSAGE_VERSION_13, SPDM_GET_CERTIFICATE, 0, 0},
     0,
     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
 };
-size_t m_spdm_get_certificate_request4_size =
-    sizeof(m_spdm_get_certificate_request4);
+size_t m_spdm_get_certificate_request4_size = sizeof(m_spdm_get_certificate_request4);
 
 /**
  * Test 1: request the first LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of the
@@ -59,10 +56,8 @@ static void req_encap_certificate_case1(void **state)
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo,
@@ -84,13 +79,10 @@ static void req_encap_certificate_case1(void **state)
     assert_int_equal(response_size, sizeof(spdm_certificate_response_t) +
                      LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_CERTIFICATE);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CERTIFICATE);
     assert_int_equal(spdm_response->header.param1, 0);
-    assert_int_equal(spdm_response->portion_length,
-                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
-    assert_int_equal(spdm_response->remainder_length,
-                     data_size - LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    assert_int_equal(spdm_response->portion_length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    assert_int_equal(spdm_response->remainder_length, data_size - LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
@@ -139,8 +131,7 @@ static void req_encap_certificate_case3(void **state)
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo,
@@ -165,21 +156,17 @@ static void req_encap_certificate_case3(void **state)
         /* resetting an internal buffer to avoid overflow and prevent tests to
          * succeed*/
         libspdm_reset_message_mut_b(spdm_context);
-        m_spdm_get_certificate_request3_size =
-            sizeof(m_spdm_get_certificate_request3);
+        m_spdm_get_certificate_request3_size = sizeof(m_spdm_get_certificate_request3);
         status = libspdm_get_encap_response_certificate(
             spdm_context, m_spdm_get_certificate_request3_size,
             &m_spdm_get_certificate_request3, &response_size, response);
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-        assert_int_equal(response_size,
-                         sizeof(spdm_certificate_response_t) + expected_chunk_size);
+        assert_int_equal(response_size, sizeof(spdm_certificate_response_t) + expected_chunk_size);
         spdm_response = (void *)response;
-        assert_int_equal(spdm_response->header.request_response_code,
-                         SPDM_CERTIFICATE);
+        assert_int_equal(spdm_response->header.request_response_code, SPDM_CERTIFICATE);
         assert_int_equal(spdm_response->header.param1, 0);
         assert_int_equal(spdm_response->portion_length, expected_chunk_size);
-        assert_int_equal(spdm_response->remainder_length,
-                         data_size - expected_chunk_size);
+        assert_int_equal(spdm_response->remainder_length, data_size - expected_chunk_size);
     }
     free(data);
 }
@@ -221,8 +208,7 @@ static void req_encap_certificate_case4(void **state)
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo,
@@ -254,16 +240,13 @@ static void req_encap_certificate_case4(void **state)
         if (m_spdm_get_certificate_request3.offset >= data_size) {
             /* A too long of an offset should return an error*/
             spdm_responseError = (void *)response;
-            assert_int_equal(spdm_responseError->header.request_response_code,
-                             SPDM_ERROR);
-            assert_int_equal(spdm_responseError->header.param1,
-                             SPDM_ERROR_CODE_INVALID_REQUEST);
+            assert_int_equal(spdm_responseError->header.request_response_code, SPDM_ERROR);
+            assert_int_equal(spdm_responseError->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
         } else {
             /* Otherwise it should work properly, considering length = 0*/
             assert_int_equal(response_size, sizeof(spdm_certificate_response_t));
             spdm_response = (void *)response;
-            assert_int_equal(spdm_response->header.request_response_code,
-                             SPDM_CERTIFICATE);
+            assert_int_equal(spdm_response->header.request_response_code, SPDM_CERTIFICATE);
             assert_int_equal(spdm_response->header.param1, 0);
             assert_int_equal(spdm_response->portion_length, 0);
             assert_int_equal(
@@ -303,8 +286,7 @@ static void req_encap_certificate_case5(void **state)
     spdm_test_context->case_id = 0x5;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     m_spdm_get_certificate_request3.length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -319,8 +301,7 @@ static void req_encap_certificate_case5(void **state)
         spdm_context->local_context.local_cert_chain_provision[0] = data;
         spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
-        m_spdm_get_certificate_request3.offset =
-            (uint16_t)(LIBSPDM_MIN(data_size - 1, 0xFFFF));
+        m_spdm_get_certificate_request3.offset = (uint16_t)(LIBSPDM_MIN(data_size - 1, 0xFFFF));
         TEST_DEBUG_PRINT("data_size: %u\n", data_size);
         TEST_DEBUG_PRINT("m_spdm_get_certificate_request3.offset: %u\n",
                          m_spdm_get_certificate_request3.offset);
@@ -344,28 +325,23 @@ static void req_encap_certificate_case5(void **state)
         expected_chunk_size =
             (uint16_t)(LIBSPDM_MIN(m_spdm_get_certificate_request3.length,
                                    data_size - m_spdm_get_certificate_request3.offset));
-        expected_chunk_size =
-            LIBSPDM_MIN(expected_chunk_size, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+        expected_chunk_size = LIBSPDM_MIN(expected_chunk_size, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
         /* Expected certificate length left*/
         expected_remainder =
-            (uint16_t)(data_size - m_spdm_get_certificate_request3.offset -
-                       expected_chunk_size);
+            (uint16_t)(data_size - m_spdm_get_certificate_request3.offset - expected_chunk_size);
 
         TEST_DEBUG_PRINT("expected_chunk_size %u\n", expected_chunk_size);
         TEST_DEBUG_PRINT("expected_remainder %u\n", expected_remainder);
 
         if (expected_remainder > 0xFFFF || expected_chunk_size > 0xFFFF) {
             spdm_responseError = (void *)response;
-            assert_int_equal(spdm_responseError->header.request_response_code,
-                             SPDM_ERROR);
-            assert_int_equal(spdm_responseError->header.param1,
-                             SPDM_ERROR_CODE_INVALID_REQUEST);
+            assert_int_equal(spdm_responseError->header.request_response_code, SPDM_ERROR);
+            assert_int_equal(spdm_responseError->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
         } else {
             assert_int_equal(response_size, sizeof(spdm_certificate_response_t) +
                              expected_chunk_size);
             spdm_response = (void *)response;
-            assert_int_equal(spdm_response->header.request_response_code,
-                             SPDM_CERTIFICATE);
+            assert_int_equal(spdm_response->header.request_response_code, SPDM_CERTIFICATE);
             assert_int_equal(spdm_response->header.param1, 0);
             assert_int_equal(spdm_response->portion_length, expected_chunk_size);
             assert_int_equal(spdm_response->remainder_length, expected_remainder);
@@ -404,8 +380,7 @@ static void req_encap_certificate_case6(void **state)
     spdm_test_context->case_id = 0x6;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo,
@@ -437,8 +412,7 @@ static void req_encap_certificate_case6(void **state)
          * assert_int_equal (spdm_response->header.request_response_code,
          * SPDM_CERTIFICATE);*/
         if (spdm_response->header.request_response_code == SPDM_CERTIFICATE) {
-            assert_int_equal(spdm_response->header.request_response_code,
-                             SPDM_CERTIFICATE);
+            assert_int_equal(spdm_response->header.request_response_code, SPDM_CERTIFICATE);
             assert_int_equal(response_size, sizeof(spdm_certificate_response_t) +
                              expected_chunk_size);
             assert_int_equal(spdm_response->header.param1, 0);
@@ -488,11 +462,9 @@ static void req_encap_certificate_case7(void **state)
     spdm_test_context->case_id = 0x7;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->local_context.capability.flags = 0;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo,
@@ -518,8 +490,7 @@ static void req_encap_certificate_case7(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_certificate_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_CERTIFICATE);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CERTIFICATE);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->portion_length,0);
     assert_int_equal(spdm_response->remainder_length, data_size);

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #include "spdm_unit_test.h"
@@ -75,30 +75,21 @@ static void spdm_set_standard_key_update_test_state(
     libspdm_session_info_t *session_info;
 
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
 
     spdm_context->transcript.message_a.buffer_size = 0;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 
     *session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = *session_id;
@@ -191,8 +182,7 @@ static void req_encap_key_update_ack_case1(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -219,12 +209,9 @@ static void req_encap_key_update_ack_case1(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_KEY_UPDATE_ACK);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY);
-    assert_int_equal(spdm_response->header.param2,
-                     m_spdm_key_update_request1.header.param2);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_UPDATE_ACK);
+    assert_int_equal(spdm_response->header.param1, SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY);
+    assert_int_equal(spdm_response->header.param2, m_spdm_key_update_request1.header.param2);
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,
                         m_req_secret_buffer, secured_message_context->hash_size);
@@ -262,8 +249,7 @@ static void req_encap_key_update_ack_case2(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -284,10 +270,8 @@ static void req_encap_key_update_ack_case2(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,
@@ -319,8 +303,7 @@ static void req_encap_key_update_ack_case3(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     /*"filling" buffers*/
@@ -361,12 +344,9 @@ static void req_encap_key_update_ack_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_KEY_UPDATE_ACK);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY);
-    assert_int_equal(spdm_response->header.param2,
-                     m_spdm_key_update_request1.header.param2);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_UPDATE_ACK);
+    assert_int_equal(spdm_response->header.param1, SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY);
+    assert_int_equal(spdm_response->header.param2, m_spdm_key_update_request1.header.param2);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
@@ -411,8 +391,7 @@ static void req_encap_key_update_ack_case4(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     /*no capabilities*/
     spdm_context->connection_info.capability.flags &=
@@ -439,10 +418,8 @@ static void req_encap_key_update_ack_case4(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, SPDM_KEY_UPDATE);
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,
@@ -481,8 +458,7 @@ static void req_encap_key_update_ack_case5(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -507,10 +483,8 @@ static void req_encap_key_update_ack_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,
@@ -544,8 +518,7 @@ static void req_encap_key_update_ack_case6(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     response_size = sizeof(response);
     status = libspdm_get_encap_response_key_update(spdm_context,
@@ -556,12 +529,9 @@ static void req_encap_key_update_ack_case6(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(spdm_response->header.param2,
-                     0);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 /**
@@ -593,8 +563,7 @@ static void req_encap_key_update_ack_case7(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -615,10 +584,8 @@ static void req_encap_key_update_ack_case7(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,
@@ -658,8 +625,7 @@ static void req_encap_key_update_ack_case8(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -681,12 +647,9 @@ static void req_encap_key_update_ack_case8(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(spdm_response->header.param2,
-                     0);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 /**
@@ -717,8 +680,7 @@ static void req_encap_key_update_ack_case9(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -739,10 +701,8 @@ static void req_encap_key_update_ack_case9(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,
@@ -775,8 +735,7 @@ static void req_encap_key_update_ack_case10(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -806,12 +765,9 @@ static void req_encap_key_update_ack_case10(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(spdm_response->header.param2,
-                     0);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 /* VerifyNewKey + UpdateKey: success*/
@@ -837,8 +793,7 @@ static void req_encap_key_update_ack_case11(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -870,12 +825,9 @@ static void req_encap_key_update_ack_case11(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_KEY_UPDATE_ACK);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY);
-    assert_int_equal(spdm_response->header.param2,
-                     m_spdm_key_update_request1.header.param2);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_UPDATE_ACK);
+    assert_int_equal(spdm_response->header.param1, SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY);
+    assert_int_equal(spdm_response->header.param2, m_spdm_key_update_request1.header.param2);
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,
                         m_req_secret_buffer, secured_message_context->hash_size);
@@ -907,8 +859,7 @@ static void req_encap_key_update_ack_case12(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -940,12 +891,9 @@ static void req_encap_key_update_ack_case12(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(spdm_response->header.param2,
-                     0);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 
@@ -972,8 +920,7 @@ static void req_encap_key_update_ack_case13(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -1003,12 +950,9 @@ static void req_encap_key_update_ack_case13(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_KEY_UPDATE_ACK);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY);
-    assert_int_equal(spdm_response->header.param2,
-                     m_spdm_key_update_request1.header.param2);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_UPDATE_ACK);
+    assert_int_equal(spdm_response->header.param1, SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY);
+    assert_int_equal(spdm_response->header.param2, m_spdm_key_update_request1.header.param2);
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,
                         m_req_secret_buffer, secured_message_context->hash_size);
@@ -1041,8 +985,7 @@ static void req_encap_key_update_ack_case14(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    spdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -1072,12 +1015,9 @@ static void req_encap_key_update_ack_case14(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(spdm_response->header.param2,
-                     0);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 int libspdm_req_encap_key_update_ack_test(void)

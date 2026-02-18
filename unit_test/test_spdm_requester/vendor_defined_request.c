@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2025 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -43,8 +43,7 @@ static libspdm_return_t send_message(
         const uint8_t *ptr = (const uint8_t *)request;
 
         m_libspdm_local_buffer_size = 0;
-        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         ptr, request_size);
+        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer), ptr, request_size);
         m_libspdm_local_buffer_size += request_size;
     }
         return LIBSPDM_STATUS_SUCCESS;
@@ -52,8 +51,7 @@ static libspdm_return_t send_message(
         const uint8_t *ptr = (const uint8_t *)request;
 
         m_libspdm_local_buffer_size = 0;
-        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         ptr, request_size);
+        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer), ptr, request_size);
         m_libspdm_local_buffer_size += request_size;
     }
         return LIBSPDM_STATUS_SUCCESS;
@@ -201,8 +199,7 @@ static void req_vendor_defined_request_case1(void **state)
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.is_requester = true;
 
     request.standard_id = 6;
@@ -252,8 +249,7 @@ static void req_vendor_defined_request_case2(void **state)
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP;
     spdm_context->local_context.is_requester = true;
