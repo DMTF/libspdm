@@ -36,7 +36,6 @@ jobs:
           - openssl
         arch:
           - x64
-          - ia32
         target:
           - Debug
           - Release
