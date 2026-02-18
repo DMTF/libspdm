@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #include "spdm_unit_test.h"
@@ -52,7 +52,7 @@ static void rsp_encap_get_certificate_case1(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -146,7 +146,7 @@ static void rsp_encap_get_certificate_case2(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -212,7 +212,7 @@ static void rsp_encap_get_certificate_case3(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
@@ -312,7 +312,7 @@ static void rsp_encap_get_certificate_case4(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
 
     /* Set max_spdm_msg_size to small value to force responder to send portion_length
      * greater than request length */
@@ -419,7 +419,7 @@ static void rsp_encap_get_certificate_case5(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg =
