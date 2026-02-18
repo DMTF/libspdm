@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2025 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -89,8 +89,7 @@ static void libspdm_test_responder_vendor_cmds_err_case1(void **state)
     request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
     spdm_context->connection_info.version = request.header.spdm_version <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.is_requester = true;
 
     status = libspdm_register_vendor_callback_func(spdm_context,

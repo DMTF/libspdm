@@ -78,8 +78,7 @@ static void set_standard_state(libspdm_context_t *spdm_context)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EVENT_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -87,12 +86,9 @@ static void set_standard_state(libspdm_context_t *spdm_context)
 
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
 
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;

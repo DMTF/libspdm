@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -33,10 +33,8 @@ static void rsp_chunk_response_case1(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     spdm_context->connection_info.capability.data_transfer_size =
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
@@ -84,18 +82,14 @@ static void rsp_chunk_response_case2(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
 
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     /* Set bad response state */
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
@@ -147,15 +141,12 @@ static void rsp_chunk_response_case3(void** state)
     /* Set bad connection_state */
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES - 1;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
@@ -202,18 +193,14 @@ static void rsp_chunk_response_case4(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
 
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -259,17 +246,13 @@ static void rsp_chunk_response_case5(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11; /* Mismatching SPDM version */
@@ -313,17 +296,13 @@ static void rsp_chunk_response_case6(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     /* Set no chunk saved */
     spdm_context->chunk_context.get.chunk_in_use = false;
@@ -374,17 +353,13 @@ static void rsp_chunk_response_case7(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -446,17 +421,13 @@ static void rsp_chunk_response_case8(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -518,17 +489,13 @@ static void rsp_chunk_response_case9(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -600,17 +567,13 @@ static void rsp_chunk_response_case10(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -706,17 +669,13 @@ static void rsp_chunk_response_case11(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -810,17 +769,13 @@ static void rsp_chunk_response_case12(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -916,17 +871,13 @@ static void rsp_chunk_response_case13(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -1022,17 +973,13 @@ static void rsp_chunk_response_case14(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     /* large response need a large scratch buffer */
     spdm_context->connection_info.capability.max_spdm_msg_size = data_transfer_size * 65536;
@@ -1121,17 +1068,13 @@ static void rsp_chunk_response_case15(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -1227,17 +1170,13 @@ static void rsp_chunk_response_case16(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -1331,17 +1270,13 @@ static void rsp_chunk_response_case17(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -1437,17 +1372,13 @@ static void rsp_chunk_response_case18(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 

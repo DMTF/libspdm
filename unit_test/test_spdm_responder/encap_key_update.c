@@ -61,8 +61,7 @@ static void rsp_encap_key_update_case1(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     spdm_context->encap_context.last_encap_request_header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_context->encap_context.last_encap_request_header.request_response_code =
@@ -106,8 +105,7 @@ static void rsp_encap_key_update_case2(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     spdm_context->encap_context.last_encap_request_header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_context->encap_context.last_encap_request_header.request_response_code =
@@ -150,8 +148,7 @@ static void rsp_encap_key_update_case3(void **state)
     spdm_context->last_spdm_request_session_id_valid = false;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     spdm_key_update_response_t spdm_response;
     size_t spdm_response_size = sizeof(spdm_key_update_response_t);
@@ -186,8 +183,7 @@ static void rsp_encap_key_update_case4(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     spdm_key_update_response_t spdm_response;
     size_t spdm_response_size = sizeof(spdm_key_update_response_t);
@@ -222,8 +218,7 @@ static void rsp_encap_key_update_case5(void **state)
     spdm_context->last_spdm_request_session_id_valid = true;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state( spdm_context, &session_id);
 
     spdm_context->encap_context.last_encap_request_header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_context->encap_context.last_encap_request_header.request_response_code =

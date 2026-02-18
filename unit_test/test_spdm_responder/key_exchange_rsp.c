@@ -140,8 +140,7 @@ static void rsp_key_exchange_rsp_case1(void **state)
 
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request1.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
     m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request1.reserved = 0;
     ptr = m_libspdm_key_exchange_request1.exchange_data;
@@ -195,39 +194,31 @@ static void rsp_key_exchange_rsp_case2(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request2.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request2.random_data);
     m_libspdm_key_exchange_request2.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request2.reserved = 0;
     ptr = m_libspdm_key_exchange_request2.exchange_data;
@@ -251,10 +242,8 @@ static void rsp_key_exchange_rsp_case2(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
     free(data1);
 }
@@ -278,39 +267,31 @@ static void rsp_key_exchange_rsp_case3(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request1.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
     m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request1.reserved = 0;
     ptr = m_libspdm_key_exchange_request1.exchange_data;
@@ -334,12 +315,10 @@ static void rsp_key_exchange_rsp_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
-    assert_int_equal(spdm_context->response_state,
-                     LIBSPDM_RESPONSE_STATE_BUSY);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_BUSY);
     free(data1);
 }
 
@@ -362,39 +341,31 @@ static void rsp_key_exchange_rsp_case4(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request1.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
     m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request1.reserved = 0;
     ptr = m_libspdm_key_exchange_request1.exchange_data;
@@ -418,13 +389,10 @@ static void rsp_key_exchange_rsp_case4(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_REQUEST_RESYNCH);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response->header.param2, 0);
-    assert_int_equal(spdm_context->response_state,
-                     LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
     free(data1);
 }
 
@@ -449,39 +417,31 @@ static void rsp_key_exchange_rsp_case5(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request1.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
     m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request1.reserved = 0;
     ptr = m_libspdm_key_exchange_request1.exchange_data;
@@ -509,13 +469,10 @@ static void rsp_key_exchange_rsp_case5(void **state)
     spdm_response = (void *)response;
     error_data = (spdm_error_data_response_not_ready_t
                   *)(&spdm_response->rsp_session_id);
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_RESPONSE_NOT_READY);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     assert_int_equal(spdm_response->header.param2, 0);
-    assert_int_equal(spdm_context->response_state,
-                     LIBSPDM_RESPONSE_STATE_NOT_READY);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NOT_READY);
     assert_int_equal(error_data->request_code, SPDM_KEY_EXCHANGE);
     free(data1);
 }
@@ -540,39 +497,31 @@ static void rsp_key_exchange_rsp_case6(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request1.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
     m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request1.reserved = 0;
     ptr = m_libspdm_key_exchange_request1.exchange_data;
@@ -596,10 +545,8 @@ static void rsp_key_exchange_rsp_case6(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
     free(data1);
 }
@@ -622,34 +569,27 @@ static void rsp_key_exchange_rsp_case7(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -665,8 +605,7 @@ static void rsp_key_exchange_rsp_case7(void **state)
         spdm_context->transcript.message_mut_c.max_buffer_size;
 #endif
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request1.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
     m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request1.reserved = 0;
     ptr = m_libspdm_key_exchange_request1.exchange_data;
@@ -693,8 +632,7 @@ static void rsp_key_exchange_rsp_case7(void **state)
             spdm_context->session_info[0].secured_message_context),
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_KEY_EXCHANGE_RSP);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
@@ -735,41 +673,32 @@ static void rsp_key_exchange_rsp_case8(void **state)
         libspdm_free_session_id(spdm_context,0xFFFFFFFF);
     }
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request3.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request3.random_data);
     m_libspdm_key_exchange_request3.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request3.reserved = 0;
     ptr = m_libspdm_key_exchange_request3.exchange_data;
@@ -796,8 +725,7 @@ static void rsp_key_exchange_rsp_case8(void **state)
             spdm_context->session_info[0].secured_message_context),
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_KEY_EXCHANGE_RSP);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
     assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
 
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
@@ -852,41 +780,32 @@ static void rsp_key_exchange_rsp_case9(void **state)
         libspdm_free_session_id(spdm_context,0xFFFFFFFF);
     }
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request4.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request4.random_data);
     m_libspdm_key_exchange_request4.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request4.reserved = 0;
     ptr = m_libspdm_key_exchange_request4.exchange_data;
@@ -913,8 +832,7 @@ static void rsp_key_exchange_rsp_case9(void **state)
             spdm_context->session_info[0].secured_message_context),
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_KEY_EXCHANGE_RSP);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
     assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
 
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
@@ -967,41 +885,32 @@ static void rsp_key_exchange_rsp_case10(void **state)
         libspdm_free_session_id(spdm_context,0xFFFFFFFF);
     }
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request5.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request5.random_data);
     m_libspdm_key_exchange_request5.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request5.reserved = 0;
     ptr = m_libspdm_key_exchange_request5.exchange_data;
@@ -1025,8 +934,7 @@ static void rsp_key_exchange_rsp_case10(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
 
     free(data1);
@@ -1056,12 +964,10 @@ static void rsp_key_exchange_rsp_case11(void **state)
         libspdm_free_session_id(spdm_context,0xFFFFFFFF);
     }
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
 
     /* Clear capabilities flag */
-    spdm_context->local_context.capability.flags &=
-        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
+    spdm_context->local_context.capability.flags &= ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
 
     /*set capabilities flags */
     spdm_context->connection_info.capability.flags |=
@@ -1070,31 +976,24 @@ static void rsp_key_exchange_rsp_case11(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request3.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request3.random_data);
     m_libspdm_key_exchange_request3.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request3.reserved = 0;
     ptr = m_libspdm_key_exchange_request3.exchange_data;
@@ -1118,8 +1017,7 @@ static void rsp_key_exchange_rsp_case11(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
 
     free(data1);
@@ -1162,20 +1060,14 @@ static void rsp_key_exchange_rsp_case14(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PUB_KEY_ID_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data1, &data_size1);
@@ -1187,8 +1079,7 @@ static void rsp_key_exchange_rsp_case14(void **state)
 
     libspdm_reset_message_a(spdm_context);
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request7.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request7.random_data);
     m_libspdm_key_exchange_request7.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request7.reserved = 0;
     ptr = m_libspdm_key_exchange_request7.exchange_data;
@@ -1215,8 +1106,7 @@ static void rsp_key_exchange_rsp_case14(void **state)
             spdm_context->session_info[0].secured_message_context),
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_KEY_EXCHANGE_RSP);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
     assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
     free(data1);
     free(data2);
@@ -1277,8 +1167,7 @@ static void rsp_key_exchange_rsp_case15(void **state)
 
     libspdm_reset_message_a(spdm_context);
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request1.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
     m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request1.reserved = 0;
     ptr = m_libspdm_key_exchange_request1.exchange_data;
@@ -1348,8 +1237,7 @@ static void rsp_key_exchange_rsp_case16(void **state)
         libspdm_free_session_id(spdm_context,0xFFFFFFFF);
     }
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
@@ -1439,8 +1327,7 @@ static void rsp_key_exchange_rsp_case17(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x11;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
@@ -1531,41 +1418,33 @@ static void rsp_key_exchange_rsp_case18(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x12;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request9.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request9.random_data);
     m_libspdm_key_exchange_request9.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request9.reserved = 0;
     ptr = m_libspdm_key_exchange_request9.exchange_data;
@@ -1589,10 +1468,8 @@ static void rsp_key_exchange_rsp_case18(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
     free(data1);
 }
@@ -1615,8 +1492,7 @@ static void rsp_key_exchange_rsp_case19(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x13;
     spdm_context->response_state = 0;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
@@ -1625,18 +1501,13 @@ static void rsp_key_exchange_rsp_case19(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.algorithm.other_params_support =
@@ -1646,15 +1517,13 @@ static void rsp_key_exchange_rsp_case19(void **state)
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request8.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request8.random_data);
     m_libspdm_key_exchange_request8.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request8.reserved = 0;
     ptr = m_libspdm_key_exchange_request8.exchange_data;
@@ -1704,8 +1573,7 @@ static void rsp_key_exchange_rsp_case19(void **state)
         /*move to next element*/
         opaque_element_table_header =
             (secured_message_opaque_element_table_header_t *)
-            ((uint8_t *)opaque_element_table_header +
-             current_element_len);
+            ((uint8_t *)opaque_element_table_header + current_element_len);
 
         opaque_data_size += current_element_len;
     }
@@ -1719,10 +1587,8 @@ static void rsp_key_exchange_rsp_case19(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
     free(data1);
 }
@@ -1745,8 +1611,7 @@ static void rsp_key_exchange_rsp_case20(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x14;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags =
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
@@ -1754,18 +1619,13 @@ static void rsp_key_exchange_rsp_case20(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.algorithm.other_params_support =
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
@@ -1785,8 +1645,7 @@ static void rsp_key_exchange_rsp_case20(void **state)
 
     libspdm_reset_message_a(spdm_context);
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request8.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request8.random_data);
     m_libspdm_key_exchange_request8.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request8.reserved = 0;
     m_libspdm_key_exchange_request8.session_policy = 0xFF;
@@ -1811,16 +1670,14 @@ static void rsp_key_exchange_rsp_case20(void **state)
     assert_int_equal(spdm_context->session_info[0].session_policy,
                      m_libspdm_key_exchange_request8.session_policy);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.spdm_version,
-                     SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_KEY_EXCHANGE_RSP);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
     assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
     free(data1);
 }
@@ -1848,8 +1705,7 @@ static void rsp_key_exchange_rsp_case21(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x15;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
@@ -2065,8 +1921,7 @@ static void rsp_key_exchange_rsp_case23(void **state)
 
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request1.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
     m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request1.reserved = 0;
     ptr = m_libspdm_key_exchange_request1.exchange_data;
@@ -2090,10 +1945,8 @@ static void rsp_key_exchange_rsp_case23(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_UNSPECIFIED);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSPECIFIED);
     assert_int_equal(spdm_response->header.param2, 0);
 
     g_key_exchange_start_mut_auth = 0;
@@ -2150,8 +2003,7 @@ static void rsp_key_exchange_rsp_case24(void **state)
 
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
-    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                              m_libspdm_key_exchange_request10.random_data);
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request10.random_data);
     m_libspdm_key_exchange_request10.req_session_id = 0xFFFF;
     m_libspdm_key_exchange_request10.reserved = 0;
     ptr = m_libspdm_key_exchange_request10.exchange_data;
@@ -2175,10 +2027,8 @@ static void rsp_key_exchange_rsp_case24(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_POLICY);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_POLICY);
     assert_int_equal(spdm_response->header.param2, 0);
 
     g_mandatory_mut_auth = false;

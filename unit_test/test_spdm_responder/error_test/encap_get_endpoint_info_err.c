@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #include "spdm_unit_test.h"
@@ -48,15 +48,12 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case1(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
 
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -144,15 +141,12 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case2(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
 
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -210,8 +204,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case2(void **state)
     *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
     ptr += sizeof(uint32_t);
 
-    libspdm_copy_mem(ptr, endpoint_info_size,
-                     m_endpoint_info_buffer_receive, endpoint_info_size);
+    libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
     ptr += endpoint_info_size;
 
     libspdm_requester_data_sign(
@@ -223,8 +216,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case2(void **state)
             ptr, &sig_size);
 
     /* Subcase 1: wrong version */
-    libspdm_copy_mem(temp_buf_error, response_size,
-                     temp_buf_valid, response_size);
+    libspdm_copy_mem(temp_buf_error, response_size, temp_buf_valid, response_size);
     spdm_response = (void *)temp_buf_error;
     spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
 
@@ -236,8 +228,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case2(void **state)
 #endif
 
     /* Subcase 2: wrong response code */
-    libspdm_copy_mem(temp_buf_error, response_size,
-                     temp_buf_valid, response_size);
+    libspdm_copy_mem(temp_buf_error, response_size, temp_buf_valid, response_size);
     spdm_response = (void *)temp_buf_error;
     spdm_response->header.request_response_code = SPDM_ENDPOINT_INFO + 1;
 
@@ -249,8 +240,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case2(void **state)
 #endif
 
     /* Subcase 3: wrong slot_id */
-    libspdm_copy_mem(temp_buf_error, response_size,
-                     temp_buf_valid, response_size);
+    libspdm_copy_mem(temp_buf_error, response_size, temp_buf_valid, response_size);
     spdm_response = (void *)temp_buf_error;
     spdm_response->header.param2 = 0x1; /* slot_id = 1 */
 
@@ -262,8 +252,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case2(void **state)
 #endif
 
     /* Subcase 4: wrong ep_info_len */
-    libspdm_copy_mem(temp_buf_error, response_size,
-                     temp_buf_valid, response_size);
+    libspdm_copy_mem(temp_buf_error, response_size, temp_buf_valid, response_size);
     spdm_response = (void *)temp_buf_error;
     ptr = (void *)(spdm_response + 1);
     ptr += SPDM_NONCE_SIZE;
@@ -277,8 +266,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case2(void **state)
 #endif
 
     /* Subcase 5: wrong signature */
-    libspdm_copy_mem(temp_buf_error, response_size,
-                     temp_buf_valid, response_size);
+    libspdm_copy_mem(temp_buf_error, response_size, temp_buf_valid, response_size);
     spdm_response = (void *)temp_buf_error;
     ptr = (void *)(spdm_response + 1);
     ptr += SPDM_NONCE_SIZE + sizeof(uint32_t) + endpoint_info_size;
@@ -316,15 +304,12 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case3(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
 
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -375,8 +360,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case3(void **state)
     *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
     ptr += sizeof(uint32_t);
 
-    libspdm_copy_mem(ptr, endpoint_info_size,
-                     m_endpoint_info_buffer_receive, endpoint_info_size);
+    libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
 
     status = libspdm_process_encap_response_endpoint_info(spdm_context, response_size,
                                                           spdm_response, &need_continue);
@@ -410,15 +394,12 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case4(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_NO_SIG; /* no signature */
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
 
     libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -476,8 +457,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case4(void **state)
     *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
     ptr += sizeof(uint32_t);
 
-    libspdm_copy_mem(ptr, endpoint_info_size,
-                     m_endpoint_info_buffer_receive, endpoint_info_size);
+    libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
     ptr += endpoint_info_size;
 
     libspdm_requester_data_sign(
@@ -515,8 +495,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case5(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_NO_SIG; /* no signature */
@@ -545,13 +524,11 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case5(void **state)
     *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
     ptr += sizeof(uint32_t);
 
-    libspdm_copy_mem(ptr, endpoint_info_size,
-                     m_endpoint_info_buffer_receive, endpoint_info_size);
+    libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
     ptr += endpoint_info_size;
 
     /* Subcase 1: wrong slot id */
-    libspdm_copy_mem(temp_buf_error, response_size,
-                     temp_buf_valid, response_size);
+    libspdm_copy_mem(temp_buf_error, response_size, temp_buf_valid, response_size);
     spdm_response = (void *)temp_buf_error;
     spdm_response->header.param2 = 0x1; /* slot_id = 1 */
 
@@ -560,8 +537,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 
     /* Subcase 2: wrong ep_info_len */
-    libspdm_copy_mem(temp_buf_error, response_size,
-                     temp_buf_valid, response_size);
+    libspdm_copy_mem(temp_buf_error, response_size, temp_buf_valid, response_size);
     spdm_response = (void *)temp_buf_error;
     ptr = (void *)(spdm_response + 1);
     *(uint32_t *)ptr = endpoint_info_size + 1; /* ep_info_len */

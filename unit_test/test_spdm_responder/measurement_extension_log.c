@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -61,18 +61,12 @@ static void rsp_measurement_extension_log_case1(void **state)
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
-    spdm_context->connection_info.algorithm.mel_spec =
-        m_libspdm_use_mel_spec;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.mel_spec = m_libspdm_use_mel_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
 
@@ -95,8 +89,7 @@ static void rsp_measurement_extension_log_case1(void **state)
                      sizeof(spdm_measurement_extension_log_response_t) +
                      spdm_mel_len);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_MEASUREMENT_EXTENSION_LOG);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_MEASUREMENT_EXTENSION_LOG);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->portion_length, spdm_mel_len);
     assert_int_equal(spdm_response->remainder_length, 0);
@@ -123,18 +116,12 @@ static void rsp_measurement_extension_log_case2(void **state)
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
-    spdm_context->connection_info.algorithm.mel_spec =
-        m_libspdm_use_mel_spec;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.mel_spec = m_libspdm_use_mel_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
 
@@ -159,8 +146,7 @@ static void rsp_measurement_extension_log_case2(void **state)
                      sizeof(spdm_measurement_extension_log_response_t) +
                      spdm_mel_len / 2);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_MEASUREMENT_EXTENSION_LOG);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_MEASUREMENT_EXTENSION_LOG);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->portion_length, spdm_mel_len / 2);
     assert_int_equal(spdm_response->remainder_length, spdm_mel_len / 2 + 1);
@@ -188,18 +174,12 @@ static void rsp_measurement_extension_log_case3(void **state)
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
-    spdm_context->connection_info.algorithm.mel_spec =
-        m_libspdm_use_mel_spec;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.mel_spec = m_libspdm_use_mel_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
 
@@ -221,8 +201,7 @@ static void rsp_measurement_extension_log_case3(void **state)
                      sizeof(spdm_measurement_extension_log_response_t) +
                      spdm_mel_len);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_MEASUREMENT_EXTENSION_LOG);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_MEASUREMENT_EXTENSION_LOG);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->portion_length, spdm_mel_len);
     assert_int_equal(spdm_response->remainder_length, 0);
@@ -250,18 +229,12 @@ static void rsp_measurement_extension_log_case4(void **state)
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
-    spdm_context->connection_info.algorithm.mel_spec =
-        m_libspdm_use_mel_spec;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.mel_spec = m_libspdm_use_mel_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
 
@@ -309,18 +282,12 @@ static void rsp_measurement_extension_log_case5(void **state)
     spdm_test_context->case_id = 0x5;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
-    spdm_context->connection_info.algorithm.mel_spec =
-        m_libspdm_use_mel_spec;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.mel_spec = m_libspdm_use_mel_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
 
@@ -346,8 +313,7 @@ static void rsp_measurement_extension_log_case5(void **state)
                      sizeof(spdm_measurement_extension_log_response_t) +
                      spdm_mel_len / 2 + 1);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_MEASUREMENT_EXTENSION_LOG);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_MEASUREMENT_EXTENSION_LOG);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->portion_length, spdm_mel_len / 2 + 1);
     assert_int_equal(spdm_response->remainder_length, 0);

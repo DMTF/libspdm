@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -62,8 +62,7 @@ spdm_get_endpoint_info_request_max_t m_libspdm_get_endpoint_info_request4 = {
     0,
     {0, 0, 0},
 };
-size_t m_libspdm_get_endpoint_info_request4_size =
-    sizeof(spdm_get_endpoint_info_request_t);
+size_t m_libspdm_get_endpoint_info_request4_size = sizeof(spdm_get_endpoint_info_request_t);
 
 /**
  * Test 1: Successful response to get endpoint_info with signature
@@ -95,15 +94,12 @@ static void rsp_endpoint_info_case1(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EP_INFO_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     session_info = NULL;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -115,8 +111,7 @@ static void rsp_endpoint_info_case1(void **state)
         spdm_context->local_context.local_cert_chain_provision[i] = data;
     }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -137,8 +132,7 @@ static void rsp_endpoint_info_case1(void **state)
 
     libspdm_reset_message_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request1.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request1.nonce);
 
     status = libspdm_get_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request1_size,
@@ -160,8 +154,7 @@ static void rsp_endpoint_info_case1(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ENDPOINT_INFO);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ENDPOINT_INFO);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     /* transcript.message_e size check */
@@ -215,15 +208,12 @@ static void rsp_endpoint_info_case2(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EP_INFO_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     session_info = NULL;
     libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data, &data_size);
@@ -234,8 +224,7 @@ static void rsp_endpoint_info_case2(void **state)
 
     libspdm_reset_message_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request2.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request2.nonce);
 
     status = libspdm_get_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request2_size,
@@ -257,8 +246,7 @@ static void rsp_endpoint_info_case2(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ENDPOINT_INFO);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ENDPOINT_INFO);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     /* transcript.message_e size check */
@@ -313,15 +301,12 @@ static void rsp_endpoint_info_case3(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EP_INFO_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     session_info = NULL;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -338,8 +323,7 @@ static void rsp_endpoint_info_case3(void **state)
         SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[1].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[1].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[1].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[1].buffer),
                      data, data_size);
@@ -359,8 +343,7 @@ static void rsp_endpoint_info_case3(void **state)
 
     libspdm_reset_message_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request3.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request3.nonce);
 
     status = libspdm_get_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request3_size,
@@ -382,8 +365,7 @@ static void rsp_endpoint_info_case3(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ENDPOINT_INFO);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ENDPOINT_INFO);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     /* transcript.message_e size check */
@@ -430,15 +412,12 @@ static void rsp_endpoint_info_case4(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EP_INFO_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     session_info = NULL;
 
@@ -462,8 +441,7 @@ static void rsp_endpoint_info_case4(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ENDPOINT_INFO);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ENDPOINT_INFO);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -498,15 +476,12 @@ static void rsp_endpoint_info_case5(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EP_INFO_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.multi_key_conn_rsp = false;
 
     session_id = 0xFFFFFFFF;
@@ -529,8 +504,7 @@ static void rsp_endpoint_info_case5(void **state)
         spdm_context->local_context.local_cert_chain_provision[i] = data;
     }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -551,8 +525,7 @@ static void rsp_endpoint_info_case5(void **state)
 
     libspdm_reset_message_e(spdm_context, session_info);
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_endpoint_info_request1.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_endpoint_info_request1.nonce);
 
     status = libspdm_get_response_endpoint_info(
         spdm_context, m_libspdm_get_endpoint_info_request1_size,
@@ -574,8 +547,7 @@ static void rsp_endpoint_info_case5(void **state)
     spdm_response = (void *)response;
 
     /* response message check */
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ENDPOINT_INFO);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ENDPOINT_INFO);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     /* transcript.message_e size check */

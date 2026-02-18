@@ -42,9 +42,7 @@ static libspdm_return_t libspdm_vendor_response_func_test(
     void *resp_data)
 {
     if (req_data == NULL ||
-        resp_size == NULL ||
-        resp_data == NULL)
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
+        resp_size == NULL || resp_data == NULL) return LIBSPDM_STATUS_INVALID_PARAMETER;
 
     assert_int_equal(*session_id, m_session_id);
 
@@ -101,8 +99,7 @@ static void rsp_vendor_defined_response_case1(void **state)
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
-    status = libspdm_register_vendor_callback_func(spdm_context,
-                                                   libspdm_vendor_response_func_test);
+    status = libspdm_register_vendor_callback_func(spdm_context, libspdm_vendor_response_func_test);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     request.header.request_response_code = SPDM_VENDOR_DEFINED_REQUEST;
@@ -184,8 +181,7 @@ static void rsp_vendor_defined_response_case2(void **state)
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
-    status = libspdm_register_vendor_callback_func(spdm_context,
-                                                   libspdm_vendor_response_func_test);
+    status = libspdm_register_vendor_callback_func(spdm_context, libspdm_vendor_response_func_test);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     request.header.request_response_code = SPDM_VENDOR_DEFINED_REQUEST;

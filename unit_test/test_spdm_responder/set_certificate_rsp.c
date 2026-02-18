@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -47,19 +47,14 @@ static void rsp_set_certificate_rsp_case1(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    spdm_context->local_context.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
@@ -88,8 +83,7 @@ static void rsp_set_certificate_rsp_case1(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_set_certificate_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_CERTIFICATE_RSP);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_CERTIFICATE_RSP);
 
     free(cert_chain);
     free(m_libspdm_set_certificate_request);
@@ -126,8 +120,7 @@ static void rsp_set_certificate_rsp_case1(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_set_certificate_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_CERTIFICATE_RSP);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_CERTIFICATE_RSP);
 
     /*check that the cert_chain is overwritten*/
     libspdm_read_input_file("slot_id_0_cert_chain.der",
@@ -174,19 +167,14 @@ static void rsp_set_certificate_rsp_case2(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    spdm_context->local_context.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
@@ -216,10 +204,8 @@ static void rsp_set_certificate_rsp_case2(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
     free(cert_chain);
@@ -249,19 +235,14 @@ static void rsp_set_certificate_rsp_case3(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    spdm_context->local_context.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
@@ -292,12 +273,10 @@ static void rsp_set_certificate_rsp_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
-    assert_int_equal(spdm_context->response_state,
-                     LIBSPDM_RESPONSE_STATE_BUSY);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_BUSY);
 
     free(cert_chain);
     free(m_libspdm_set_certificate_request);
@@ -327,19 +306,14 @@ static void rsp_set_certificate_rsp_case4(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    spdm_context->local_context.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
@@ -368,13 +342,10 @@ static void rsp_set_certificate_rsp_case4(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_REQUEST_RESYNCH);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response->header.param2, 0);
-    assert_int_equal(spdm_context->response_state,
-                     LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 
     free(cert_chain);
     free(m_libspdm_set_certificate_request);
@@ -406,21 +377,16 @@ static void rsp_set_certificate_rsp_case5(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     /*responset_state need to set normal*/
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    spdm_context->local_context.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -460,8 +426,7 @@ static void rsp_set_certificate_rsp_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_set_certificate_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_CERTIFICATE_RSP);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_CERTIFICATE_RSP);
 
     free(cert_chain);
     free(m_libspdm_set_certificate_request);
@@ -489,21 +454,16 @@ static void rsp_set_certificate_rsp_case6(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    spdm_context->local_context.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
@@ -532,10 +492,8 @@ static void rsp_set_certificate_rsp_case6(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
     assert_int_equal(spdm_response->header.param2, 0);
 
     free(cert_chain);
@@ -564,21 +522,16 @@ static void rsp_set_certificate_rsp_case7(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags &=
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
 
-    spdm_context->local_context.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     /*set alias cert mode*/
     spdm_context->local_context.capability.flags |=
@@ -611,8 +564,7 @@ static void rsp_set_certificate_rsp_case7(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_set_certificate_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_CERTIFICATE_RSP);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_CERTIFICATE_RSP);
 
     free(cert_chain);
     free(m_libspdm_set_certificate_request);
@@ -641,8 +593,7 @@ static void rsp_set_certificate_rsp_case8(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     /*responset_state need to set normal*/
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->local_context.capability.flags &=
@@ -651,10 +602,8 @@ static void rsp_set_certificate_rsp_case8(void **state)
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     spdm_context->last_spdm_request_session_id_valid = false;
     g_in_trusted_environment = true;
@@ -686,8 +635,7 @@ static void rsp_set_certificate_rsp_case8(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_set_certificate_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_CERTIFICATE_RSP);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_CERTIFICATE_RSP);
 
     free(cert_chain);
     free(m_libspdm_set_certificate_request);
@@ -716,8 +664,7 @@ static void rsp_set_certificate_rsp_case9(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     /*responset_state need to set normal*/
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->local_context.capability.flags &=
@@ -726,10 +673,8 @@ static void rsp_set_certificate_rsp_case9(void **state)
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     spdm_context->last_spdm_request_session_id_valid = false;
     g_in_trusted_environment = false;
@@ -761,10 +706,8 @@ static void rsp_set_certificate_rsp_case9(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
     free(cert_chain);
@@ -807,21 +750,16 @@ static void rsp_set_certificate_rsp_case10(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     /*responset_state need to set normal*/
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    spdm_context->local_context.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -852,8 +790,7 @@ static void rsp_set_certificate_rsp_case10(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_set_certificate_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_CERTIFICATE_RSP);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_CERTIFICATE_RSP);
     assert_int_equal(spdm_response->header.param1, slot_id);
 
     /*change the file name, for example: slot_id_1_cert_chain.der*/
@@ -917,20 +854,15 @@ static void rsp_set_certificate_rsp_case11(void **state)
     slot_id = 1;
     key_pair_id = 1;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.multi_key_conn_rsp = true;
 
-    spdm_context->local_context.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
@@ -961,8 +893,7 @@ static void rsp_set_certificate_rsp_case11(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_set_certificate_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_CERTIFICATE_RSP);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_CERTIFICATE_RSP);
 
     free(cert_chain);
     free(m_libspdm_set_certificate_request);

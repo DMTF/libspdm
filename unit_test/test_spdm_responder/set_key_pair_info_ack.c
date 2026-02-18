@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -40,10 +40,8 @@ static void rsp_set_key_pair_info_ack_case1(void **state)
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
 
@@ -67,25 +65,20 @@ static void rsp_set_key_pair_info_ack_case1(void **state)
         spdm_context, set_key_pair_info_request_size,
         set_key_pair_info_request, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size,
-                     sizeof(spdm_set_key_pair_info_ack_response_t));
+    assert_int_equal(response_size, sizeof(spdm_set_key_pair_info_ack_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_KEY_PAIR_INFO_ACK);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
 
     /*erase: erase the keyusage and asymalgo*/
     set_key_pair_info_request->header.param1 = SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION;
-    set_key_pair_info_request_size =
-        sizeof(spdm_set_key_pair_info_request_t);
+    set_key_pair_info_request_size = sizeof(spdm_set_key_pair_info_request_t);
     status = libspdm_get_response_set_key_pair_info_ack(
         spdm_context, set_key_pair_info_request_size,
         set_key_pair_info_request, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size,
-                     sizeof(spdm_set_key_pair_info_ack_response_t));
+    assert_int_equal(response_size, sizeof(spdm_set_key_pair_info_ack_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_KEY_PAIR_INFO_ACK);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
 
     /*generate: generate a new key pair*/
     desired_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
@@ -117,11 +110,9 @@ static void rsp_set_key_pair_info_ack_case1(void **state)
         spdm_context, set_key_pair_info_request_size,
         set_key_pair_info_request, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size,
-                     sizeof(spdm_set_key_pair_info_ack_response_t));
+    assert_int_equal(response_size, sizeof(spdm_set_key_pair_info_ack_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_KEY_PAIR_INFO_ACK);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
     free(set_key_pair_info_request);
 }
 
@@ -162,10 +153,8 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
 
@@ -195,10 +184,8 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
     assert_int_equal(spdm_response->header.param2, 0);
 
     /* Sub Case 1: If KeyPairErase is set, all fields after the KeyPairID field in this request should not exist. */
@@ -243,15 +230,12 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_OPERATION_FAILED);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_OPERATION_FAILED);
     assert_int_equal(spdm_response->header.param2, 0);
 
     /*Sub Case 2: When GenerateKeyPair is set, the fields of DesiredKeyUsage, DesiredAsymAlgo and DesiredAssocCertSlotMask should exist. */
-    set_key_pair_info_request_size =
-        sizeof(spdm_set_key_pair_info_request_t);
+    set_key_pair_info_request_size = sizeof(spdm_set_key_pair_info_request_t);
 
     libspdm_zero_mem(set_key_pair_info_request, set_key_pair_info_request_size);
     set_key_pair_info_request->header.spdm_version = SPDM_MESSAGE_VERSION_14;
@@ -267,15 +251,12 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
     /*Sub Case 3: key_pair_id = 0 */
-    set_key_pair_info_request_size =
-        sizeof(spdm_set_key_pair_info_request_t);
+    set_key_pair_info_request_size = sizeof(spdm_set_key_pair_info_request_t);
 
     libspdm_zero_mem(set_key_pair_info_request, set_key_pair_info_request_size);
     set_key_pair_info_request->header.spdm_version = SPDM_MESSAGE_VERSION_14;
@@ -291,10 +272,8 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
     /* Sub Case 4: DesiredAsymAlgo must not have multiple bits set. */
@@ -340,10 +319,8 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
     /*Before reset, change: remove an association with slot*/
@@ -366,10 +343,8 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -406,10 +381,8 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags = 0; /* clear flags */
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
@@ -441,10 +414,8 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
     assert_int_equal(spdm_response->header.param2, 0);
 
     /*After reset, change: remove an association with slot*/
@@ -452,26 +423,21 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
         spdm_context, set_key_pair_info_request_size,
         set_key_pair_info_request, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size,
-                     sizeof(spdm_set_key_pair_info_ack_response_t));
+    assert_int_equal(response_size, sizeof(spdm_set_key_pair_info_ack_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_KEY_PAIR_INFO_ACK);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
 
     /*Before reset, erase: erase the keyusage and asymalgo*/
     set_key_pair_info_request->header.param1 = SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION;
-    set_key_pair_info_request_size =
-        sizeof(spdm_set_key_pair_info_request_t);
+    set_key_pair_info_request_size = sizeof(spdm_set_key_pair_info_request_t);
     status = libspdm_get_response_set_key_pair_info_ack(
         spdm_context, set_key_pair_info_request_size,
         set_key_pair_info_request, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
     assert_int_equal(spdm_response->header.param2, 0);
 
     /*After reset, erase: erase the keyusage and asymalgo*/
@@ -479,11 +445,9 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
         spdm_context, set_key_pair_info_request_size,
         set_key_pair_info_request, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size,
-                     sizeof(spdm_set_key_pair_info_ack_response_t));
+    assert_int_equal(response_size, sizeof(spdm_set_key_pair_info_ack_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_KEY_PAIR_INFO_ACK);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
 
 
     /*Before reset, generate: generate a new key pair*/
@@ -527,10 +491,8 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
     assert_int_equal(spdm_response->header.param2, 0);
 
     /*After reset, generate: generate a new key pair*/
@@ -538,11 +500,9 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
         spdm_context, set_key_pair_info_request_size,
         set_key_pair_info_request, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size,
-                     sizeof(spdm_set_key_pair_info_ack_response_t));
+    assert_int_equal(response_size, sizeof(spdm_set_key_pair_info_ack_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_SET_KEY_PAIR_INFO_ACK);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
     free(set_key_pair_info_request);
 }
 

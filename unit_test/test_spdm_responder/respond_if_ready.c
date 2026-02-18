@@ -490,8 +490,7 @@ static void rsp_respond_if_ready_case3(void **state) {
     assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (
                           m_libspdm_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 +
-                      libspdm_get_asym_signature_size (
-                          m_libspdm_use_asym_algo));
+                      libspdm_get_asym_signature_size ( m_libspdm_use_asym_algo));
     spdm_response = (void *)response;
     assert_int_equal (spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
     assert_int_equal (spdm_response->header.param1, 0);
@@ -860,8 +859,7 @@ static void rsp_respond_if_ready_case7(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
-    m_libspdm_psk_exchange_request.psk_hint_length =
-        (uint16_t)sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
+    m_libspdm_psk_exchange_request.psk_hint_length = (uint16_t)sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     m_libspdm_psk_exchange_request.requester_context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
     opaque_psk_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size (spdm_context);

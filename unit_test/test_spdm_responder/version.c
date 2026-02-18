@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -72,8 +72,7 @@ static void rsp_version_case1(void **state)
                      LIBSPDM_DEFAULT_SPDM_VERSION_ENTRY_COUNT *
                      sizeof(spdm_version_number_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_VERSION);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_VERSION);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_AFTER_VERSION);
 }
@@ -114,12 +113,10 @@ static void rsp_version_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
-    assert_int_equal(spdm_context->response_state,
-                     LIBSPDM_RESPONSE_STATE_BUSY);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_BUSY);
 }
 
 /**
@@ -153,10 +150,8 @@ static void rsp_version_case4(void **state)
                      LIBSPDM_DEFAULT_SPDM_VERSION_ENTRY_COUNT *
                      sizeof(spdm_version_number_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_VERSION);
-    assert_int_equal(spdm_context->response_state,
-                     LIBSPDM_RESPONSE_STATE_NORMAL);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_VERSION);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NORMAL);
 }
 
 /**

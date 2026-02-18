@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -79,14 +79,12 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
 
     spdm_context->local_context.capability.flags |=
         (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_read_responder_public_certificate_chain(
         m_libspdm_use_hash_algo,
@@ -99,14 +97,11 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
 
     libspdm_reset_message_m(spdm_context, NULL);
 
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
@@ -131,14 +126,12 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
     spdm_context->connection_info.capability.data_transfer_size =
         CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
 
-    spdm_context->connection_info.capability.max_spdm_msg_size =
-        LIBSPDM_MAX_SPDM_MSG_SIZE;
+    spdm_context->connection_info.capability.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
     spdm_request.header.request_response_code = SPDM_GET_MEASUREMENTS;
-    spdm_request.header.param1 =
-        SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
+    spdm_request.header.param1 = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
     spdm_request.header.param2 =
         SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS;
     spdm_request.slot_id_param = 0;
@@ -154,8 +147,7 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
     response_size = message_size;
     libspdm_zero_mem(response, response_size);
 
-    status = libspdm_build_response(spdm_context, NULL, false,
-                                    &response_size, (void**)&response);
+    status = libspdm_build_response(spdm_context, NULL, false, &response_size, (void**)&response);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     transport_header_size = spdm_context->local_context.capability.transport_header_size;
@@ -207,24 +199,20 @@ void libspdm_test_responder_receive_send_rsp_case2(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
 
     spdm_context->local_context.capability.flags |=
         (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     /* The local Responder transmit buffer size for sending a single and complete SPDM message */
     spdm_context->local_context.capability.sender_data_transfer_size =
         CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
     /* The peer Requester buffer size for receiving a single and complete SPDM message */
-    spdm_context->connection_info.capability.data_transfer_size =
-        LIBSPDM_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
 
-    spdm_context->connection_info.capability.max_spdm_msg_size =
-        LIBSPDM_MAX_SPDM_MSG_SIZE;
+    spdm_context->connection_info.capability.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -245,8 +233,7 @@ void libspdm_test_responder_receive_send_rsp_case2(void** state)
     /* Make response message size greater than the sending transmit buffer size of responder */
     spdm_context->get_response_func = (void *)my_test_get_response_func;
 
-    status = libspdm_build_response(spdm_context, NULL, false,
-                                    &response_size, (void**)&response);
+    status = libspdm_build_response(spdm_context, NULL, false, &response_size, (void**)&response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     transport_header_size = spdm_context->local_context.capability.transport_header_size;
 
@@ -290,24 +277,20 @@ void libspdm_test_responder_receive_send_rsp_case3(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
 
     spdm_context->local_context.capability.flags |=
         (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     /* The local Responder transmit buffer size for sending a single and complete SPDM message */
     spdm_context->local_context.capability.sender_data_transfer_size =
         CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
     /* The peer Requester buffer size for receiving a single and complete SPDM message */
-    spdm_context->connection_info.capability.data_transfer_size =
-        LIBSPDM_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
 
-    spdm_context->connection_info.capability.max_spdm_msg_size =
-        LIBSPDM_MAX_SPDM_MSG_SIZE;
+    spdm_context->connection_info.capability.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -328,8 +311,7 @@ void libspdm_test_responder_receive_send_rsp_case3(void** state)
     /* Make response message size greater than the sending transmit buffer size of responder */
     libspdm_register_vendor_callback_func(spdm_context, my_test_get_response_func2);
 
-    status = libspdm_build_response(spdm_context, NULL, false,
-                                    &response_size, (void**)&response);
+    status = libspdm_build_response(spdm_context, NULL, false, &response_size, (void**)&response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     transport_header_size = spdm_context->local_context.capability.transport_header_size;
 
@@ -378,14 +360,12 @@ void libspdm_test_responder_receive_send_rsp_case4(void** state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
 
     spdm_context->local_context.capability.flags |=
         (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_read_responder_public_certificate_chain(
         m_libspdm_use_hash_algo,
@@ -398,14 +378,11 @@ void libspdm_test_responder_receive_send_rsp_case4(void** state)
 
     libspdm_reset_message_m(spdm_context, NULL);
 
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
@@ -436,8 +413,7 @@ void libspdm_test_responder_receive_send_rsp_case4(void** state)
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
     spdm_request.header.request_response_code = SPDM_GET_MEASUREMENTS;
-    spdm_request.header.param1 =
-        SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
+    spdm_request.header.param1 = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
     spdm_request.header.param2 =
         SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS;
     spdm_request.slot_id_param = 0;
@@ -453,8 +429,7 @@ void libspdm_test_responder_receive_send_rsp_case4(void** state)
     response_size = message_size;
     libspdm_zero_mem(response, response_size);
 
-    status = libspdm_build_response(spdm_context, NULL, false,
-                                    &response_size, (void**)&response);
+    status = libspdm_build_response(spdm_context, NULL, false, &response_size, (void**)&response);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     transport_header_size = spdm_context->local_context.capability.transport_header_size;

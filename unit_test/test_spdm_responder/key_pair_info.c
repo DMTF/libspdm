@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -39,10 +39,8 @@ static void rsp_key_pair_info_case1(void **state)
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
 
@@ -55,13 +53,10 @@ static void rsp_key_pair_info_case1(void **state)
         spdm_context, m_libspdm_get_key_pair_info_request1_size,
         &m_libspdm_get_key_pair_info_request1, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size,
-                     sizeof(spdm_key_pair_info_response_t) + public_key_info_len);
+    assert_int_equal(response_size, sizeof(spdm_key_pair_info_response_t) + public_key_info_len);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_KEY_PAIR_INFO);
-    assert_int_equal(spdm_response->key_pair_id,
-                     key_pair_id);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_PAIR_INFO);
+    assert_int_equal(spdm_response->key_pair_id, key_pair_id);
 }
 
 /**
@@ -85,8 +80,7 @@ static void rsp_key_pair_info_case2(void **state)
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
 
@@ -102,8 +96,7 @@ static void rsp_key_pair_info_case2(void **state)
         &m_libspdm_get_key_pair_info_request1, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
@@ -127,8 +120,7 @@ static void rsp_key_pair_info_case3(void **state)
     spdm_test_context->case_id = 0x3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
 
@@ -143,8 +135,7 @@ static void rsp_key_pair_info_case3(void **state)
         &m_libspdm_get_key_pair_info_request1, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
@@ -168,8 +159,7 @@ static void rsp_key_pair_info_case4(void **state)
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     /* not set KEY_PAIR_INFO*/
     spdm_context->local_context.capability.flags &=
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
@@ -184,8 +174,7 @@ static void rsp_key_pair_info_case4(void **state)
         &m_libspdm_get_key_pair_info_request1, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, SPDM_GET_KEY_PAIR_INFO);
 }

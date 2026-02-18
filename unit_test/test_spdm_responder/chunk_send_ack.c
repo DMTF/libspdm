@@ -17,8 +17,7 @@ typedef struct {
 } libspdm_negotiate_algorithms_request_spdm_tables_t;
 
 libspdm_negotiate_algorithms_request_spdm_tables_t
-    m_libspdm_chunk_send_negotiate_algorithm_request1 =
-{
+    m_libspdm_chunk_send_negotiate_algorithm_request1 = {
     {
         {
             SPDM_MESSAGE_VERSION_12,
@@ -58,8 +57,7 @@ size_t m_libspdm_chunk_send_negotiate_algorithm_request1_size =
     sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
 
 libspdm_negotiate_algorithms_request_spdm_tables_t
-    m_libspdm_chunk_send_negotiate_algorithm_request22 =
-{
+    m_libspdm_chunk_send_negotiate_algorithm_request22 = {
     {
         {
             SPDM_MESSAGE_VERSION_14,
@@ -104,8 +102,7 @@ void libspdm_test_responder_chunk_send_ack_setup_algo_state(libspdm_context_t* s
         m_libspdm_use_asym_algo;
 
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -143,10 +140,8 @@ void libspdm_test_responder_chunk_send_ack_setup_algo_state(libspdm_context_t* s
     spdm_context->local_context.capability.data_transfer_size =
         CHUNK_SEND_ACK_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
 
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 }
 
 /* Test sending large NegAlg Request in multiple chunks. */
@@ -293,10 +288,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case1(void** state)
 
     libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
 
-    spdm_context->local_context.capability.flags &=
-        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags &= ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     chunk_num = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);

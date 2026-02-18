@@ -401,8 +401,7 @@ static void rsp_encapsulated_request_case6(void **State)
     spdm_response_requester = (void *)response;
     assert_int_equal(spdm_response_requester->header.request_response_code,
                      SPDM_ENCAPSULATED_REQUEST);
-    assert_int_equal(spdm_response_requester->header.param1,
-                     0x1);
+    assert_int_equal(spdm_response_requester->header.param1, 0x1);
     assert_int_equal(spdm_response_requester->header.param2, 0);
     free(data);
 }
@@ -510,8 +509,7 @@ static void rsp_encapsulated_request_case8(void **State)
     spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_encap_response;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -1201,8 +1199,7 @@ static void rsp_encapsulated_response_ack_case9(void **State)
     assert_int_equal(response_size, sizeof(spdm_encapsulated_response_ack_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ENCAPSULATED_RESPONSE_ACK);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ENCAPSULATED_RESPONSE_ACK);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->header.param2,
                      SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT);

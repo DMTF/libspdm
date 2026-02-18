@@ -368,8 +368,7 @@ size_t m_libspdm_negotiate_algorithm_request11_size =
     sizeof(m_libspdm_negotiate_algorithm_request11);
 
 libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
-    m_libspdm_negotiate_algorithm_request12 =
-{
+    m_libspdm_negotiate_algorithm_request12 = {
     {
         {
             SPDM_MESSAGE_VERSION_11,
@@ -447,8 +446,7 @@ size_t m_libspdm_negotiate_algorithm_request12_size =
     sizeof(m_libspdm_negotiate_algorithm_request12);
 
 libspdm_negotiate_algorithms_request_spdm11_t
-    m_libspdm_negotiate_algorithm_request13 =
-{
+    m_libspdm_negotiate_algorithm_request13 = {
     {
         {
             SPDM_MESSAGE_VERSION_11,
@@ -485,12 +483,10 @@ libspdm_negotiate_algorithms_request_spdm11_t
 };
 size_t m_libspdm_negotiate_algorithm_request13_size =
     sizeof(m_libspdm_negotiate_algorithm_request13)-
-    sizeof(
-        spdm_negotiate_algorithms_common_struct_table_t);
+    sizeof( spdm_negotiate_algorithms_common_struct_table_t);
 
 libspdm_negotiate_algorithms_request_spdm11_t
-    m_libspdm_negotiate_algorithm_request14 =
-{
+    m_libspdm_negotiate_algorithm_request14 = {
     {
         {
             SPDM_MESSAGE_VERSION_11,
@@ -527,12 +523,10 @@ libspdm_negotiate_algorithms_request_spdm11_t
 };
 size_t m_libspdm_negotiate_algorithm_request14_size =
     sizeof(m_libspdm_negotiate_algorithm_request14)+
-    sizeof(
-        spdm_negotiate_algorithms_common_struct_table_t);
+    sizeof( spdm_negotiate_algorithms_common_struct_table_t);
 
 libspdm_negotiate_algorithms_request_spdm11_t
-    m_libspdm_negotiate_algorithm_request15 =
-{
+    m_libspdm_negotiate_algorithm_request15 = {
     {
         {
             SPDM_MESSAGE_VERSION_11,
@@ -608,8 +602,7 @@ size_t m_libspdm_negotiate_algorithm_request16_size =
     sizeof(m_libspdm_negotiate_algorithm_request16);
 
 libspdm_negotiate_algorithms_request_spdm12_t
-    m_libspdm_negotiate_algorithm_request17 =
-{
+    m_libspdm_negotiate_algorithm_request17 = {
     {
         {
             SPDM_MESSAGE_VERSION_12,
@@ -648,8 +641,7 @@ size_t m_libspdm_negotiate_algorithm_request17_size =
     sizeof(m_libspdm_negotiate_algorithm_request17);
 
 libspdm_negotiate_algorithms_request_spdm12_t
-    m_libspdm_negotiate_algorithm_request18 =
-{
+    m_libspdm_negotiate_algorithm_request18 = {
     {
         {
             SPDM_MESSAGE_VERSION_12,
@@ -729,8 +721,7 @@ size_t m_libspdm_negotiate_algorithm_request24_size =
     sizeof(m_libspdm_negotiate_algorithm_request24);
 
 libspdm_negotiate_algorithms_request_spdm12_t
-    m_libspdm_negotiate_algorithm_request25 =
-{
+    m_libspdm_negotiate_algorithm_request25 = {
     {
         {
             SPDM_MESSAGE_VERSION_12,
@@ -771,8 +762,7 @@ size_t m_libspdm_negotiate_algorithm_request25_size =
     sizeof(m_libspdm_negotiate_algorithm_request25);
 
 libspdm_negotiate_algorithms_request_spdm12_t
-    m_libspdm_negotiate_algorithm_request26 =
-{
+    m_libspdm_negotiate_algorithm_request26 = {
     {
         {
             SPDM_MESSAGE_VERSION_12,
@@ -813,8 +803,7 @@ size_t m_libspdm_negotiate_algorithm_request26_size =
     sizeof(m_libspdm_negotiate_algorithm_request26);
 
 libspdm_negotiate_algorithms_request_spdm12_more_algo_t
-    m_libspdm_negotiate_algorithm_request27 =
-{
+    m_libspdm_negotiate_algorithm_request27 = {
     {
         {
             SPDM_MESSAGE_VERSION_12,
@@ -860,8 +849,7 @@ size_t m_libspdm_negotiate_algorithm_request27_size =
     sizeof(m_libspdm_negotiate_algorithm_request27);
 
 libspdm_negotiate_algorithms_request_spdm12_more_algo_t
-    m_libspdm_negotiate_algorithm_request28 =
-{
+    m_libspdm_negotiate_algorithm_request28 = {
     {
         {
             SPDM_MESSAGE_VERSION_12,
@@ -907,8 +895,7 @@ size_t m_libspdm_negotiate_algorithm_request28_size =
     sizeof(m_libspdm_negotiate_algorithm_request28);
 
 libspdm_negotiate_algorithms_request_spdm12_t
-    m_libspdm_negotiate_algorithm_request29 =
-{
+    m_libspdm_negotiate_algorithm_request29 = {
     {
         {
             SPDM_MESSAGE_VERSION_12,
@@ -972,8 +959,7 @@ static void rsp_algorithms_case1(void **state)
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
@@ -985,8 +971,7 @@ static void rsp_algorithms_case1(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
 }
 
 static void rsp_algorithms_case2(void **state)
@@ -1003,8 +988,7 @@ static void rsp_algorithms_case2(void **state)
     spdm_test_context->case_id = 0x2;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
@@ -1016,10 +1000,8 @@ static void rsp_algorithms_case2(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -1038,8 +1020,7 @@ static void rsp_algorithms_case3(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
@@ -1051,12 +1032,10 @@ static void rsp_algorithms_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
-    assert_int_equal(spdm_context->response_state,
-                     LIBSPDM_RESPONSE_STATE_BUSY);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_BUSY);
 }
 
 static void rsp_algorithms_case4(void **state)
@@ -1074,8 +1053,7 @@ static void rsp_algorithms_case4(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
@@ -1087,13 +1065,10 @@ static void rsp_algorithms_case4(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_REQUEST_RESYNCH);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response->header.param2, 0);
-    assert_int_equal(spdm_context->response_state,
-                     LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 }
 
 static void rsp_algorithms_case6(void **state)
@@ -1111,8 +1086,7 @@ static void rsp_algorithms_case6(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NOT_STARTED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
@@ -1124,10 +1098,8 @@ static void rsp_algorithms_case6(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
@@ -1990,8 +1962,7 @@ static void rsp_algorithms_case21(void **state) {
 
     libspdm_reset_message_a(spdm_context);
 
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
@@ -2000,20 +1971,16 @@ static void rsp_algorithms_case21(void **state) {
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
 
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
 
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
 
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
 
     /*filling A with arbitrary data*/
     arbitrary_size = 10;
@@ -2303,8 +2270,7 @@ static void rsp_algorithms_case24(void **state)
                      sizeof(spdm_algorithms_response_t) +
                      4*sizeof(spdm_negotiate_algorithms_common_struct_table_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
     assert_int_equal(spdm_response->measurement_hash_algo, 0);
     assert_int_equal(spdm_response->measurement_specification_sel, 0);
 }
@@ -2672,8 +2638,7 @@ static void rsp_algorithms_case30(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
     assert_int_equal(spdm_context->connection_info.multi_key_conn_rsp, false);
     assert_int_equal(spdm_context->connection_info.multi_key_conn_req, false);
 
@@ -2694,8 +2659,7 @@ static void rsp_algorithms_case30(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     libspdm_reset_message_a(spdm_context);
@@ -2716,8 +2680,7 @@ static void rsp_algorithms_case30(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     libspdm_reset_message_a(spdm_context);
@@ -2737,8 +2700,7 @@ static void rsp_algorithms_case30(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
     assert_int_equal(spdm_context->connection_info.multi_key_conn_rsp, true);
     assert_int_equal(spdm_context->connection_info.multi_key_conn_req, true);
 
@@ -2760,8 +2722,7 @@ static void rsp_algorithms_case30(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
     assert_int_equal(spdm_context->connection_info.multi_key_conn_rsp, false);
     assert_int_equal(spdm_context->connection_info.multi_key_conn_req, false);
 
@@ -2783,8 +2744,7 @@ static void rsp_algorithms_case30(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
     assert_int_equal(spdm_context->connection_info.multi_key_conn_rsp, true);
     assert_int_equal(spdm_context->connection_info.multi_key_conn_req, true);
 }
@@ -2832,8 +2792,7 @@ static void rsp_algorithms_case31(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
     assert_int_equal(spdm_response->mel_specification_sel, SPDM_MEL_SPECIFICATION_DMTF);
     assert_int_equal(spdm_context->connection_info.algorithm.mel_spec, SPDM_MEL_SPECIFICATION_DMTF);
 
@@ -2852,8 +2811,7 @@ static void rsp_algorithms_case31(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
     assert_int_equal(spdm_response->mel_specification_sel, 0);
     assert_int_equal(spdm_context->connection_info.algorithm.mel_spec, 0);
 }
@@ -2901,8 +2859,7 @@ static void rsp_algorithms_case32(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
     assert_int_equal(spdm_response->measurement_specification_sel,
                      SPDM_MEASUREMENT_SPECIFICATION_DMTF);
     assert_int_equal(spdm_context->connection_info.algorithm.measurement_spec,
@@ -2925,8 +2882,7 @@ static void rsp_algorithms_case32(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
     assert_int_equal(spdm_response->measurement_specification_sel, 0);
     assert_int_equal(spdm_context->connection_info.algorithm.measurement_spec, 0);
 }
