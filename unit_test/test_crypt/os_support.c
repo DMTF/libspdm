@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -8,9 +8,7 @@
 
 #include <stdio.h>
 
-bool libspdm_read_input_file(const char *file_name, void **file_data,
-                             size_t *file_size)
-{
+bool libspdm_read_input_file(const char *file_name, void **file_data, size_t *file_size) {
     FILE *fp_in;
     size_t temp_result;
 
@@ -44,9 +42,7 @@ bool libspdm_read_input_file(const char *file_name, void **file_data,
     return true;
 }
 
-bool libspdm_write_output_file(const char *file_name, const void *file_data,
-                               size_t file_size)
-{
+bool libspdm_write_output_file(const char *file_name, const void *file_data, size_t file_size) {
     FILE *fp_out;
 
     if ((fp_out = fopen(file_name, "w+b")) == NULL) {

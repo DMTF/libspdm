@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -292,8 +292,7 @@ bool libspdm_validate_crypt_rsa(void)
         }
 
         if ((key_size != (size_t)(index + 1)) ||
-            memcmp(KeyBuffer, m_libspdm_test_rsa_public_exponent[index],
-                   (index + 1)) != 0) {
+            memcmp(KeyBuffer, m_libspdm_test_rsa_public_exponent[index], (index + 1)) != 0) {
             libspdm_my_print("[Fail]");
             free_pool(KeyBuffer);
             libspdm_rsa_free(rsa);
@@ -357,8 +356,7 @@ bool libspdm_validate_crypt_rsa(void)
         return false;
     }
 
-    if (key_size != 3 ||
-        memcmp(KeyBuffer, m_libspdm_default_public_key, 3) != 0) {
+    if (key_size != 3 || memcmp(KeyBuffer, m_libspdm_default_public_key, 3) != 0) {
         libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
         libspdm_rsa_free(rsa);

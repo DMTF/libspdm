@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -90,8 +90,7 @@ bool libspdm_validate_crypt_ec(void)
     }
 
     libspdm_my_print("Compute key1 ... ");
-    status = libspdm_ec_compute_key(ec1, public2, public2_length, key1,
-                                    &key1_length);
+    status = libspdm_ec_compute_key(ec1, public2, public2_length, key1, &key1_length);
     if (!status || key1_length != 48) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
@@ -100,8 +99,7 @@ bool libspdm_validate_crypt_ec(void)
     }
 
     libspdm_my_print("Compute key2 ... ");
-    status = libspdm_ec_compute_key(ec2, public1, public1_length, key2,
-                                    &key2_length);
+    status = libspdm_ec_compute_key(ec2, public1, public1_length, key2, &key2_length);
     if (!status || key2_length != 48) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
@@ -171,8 +169,7 @@ bool libspdm_validate_crypt_ec(void)
     }
 
     libspdm_my_print("Compute key1 ... ");
-    status = libspdm_ec_compute_key(ec1, public2, public2_length, key1,
-                                    &key1_length);
+    status = libspdm_ec_compute_key(ec1, public2, public2_length, key1, &key1_length);
     if (!status || key1_length != 66) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
@@ -181,8 +178,7 @@ bool libspdm_validate_crypt_ec(void)
     }
 
     libspdm_my_print("Compute key2 ... ");
-    status = libspdm_ec_compute_key(ec2, public1, public1_length, key2,
-                                    &key2_length);
+    status = libspdm_ec_compute_key(ec2, public1, public1_length, key2, &key2_length);
     if (!status || key2_length != 66) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
@@ -300,8 +296,7 @@ bool libspdm_validate_crypt_ec(void)
     libspdm_ec_free(ec1);
     libspdm_ec_free(ec2);
 
-    libspdm_my_print(
-        "\nCrypto EC-DSA Signing Verification Testing with SetPubKey:\n");
+    libspdm_my_print( "\nCrypto EC-DSA Signing Verification Testing with SetPubKey:\n");
 
     public1_length = sizeof(public1);
     public2_length = sizeof(public2);
