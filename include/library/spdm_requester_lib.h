@@ -1028,7 +1028,7 @@ void libspdm_set_msg_log_mode (void *spdm_context, uint32_t mode);
  *
  * @param  context  A pointer to the SPDM context.
  *
- * @retval uint32_t A bitmask giving the status of the message logger.
+ * @return uint32_t A bitmask giving the status of the message logger.
  *                  LIBSPDM_MSG_LOG_STATUS_BUFFER_FULL - if set the message logging buffer has
  *                                                       reached capacity.
  */
@@ -1038,7 +1038,7 @@ uint32_t libspdm_get_msg_log_status (void *spdm_context);
  * This function returns the size of the message log.
  *
  * @param  context  A pointer to the SPDM context.
- * @retval size_t   The size of the message log in bytes.
+ * @return size_t   The size of the message log in bytes.
  */
 size_t libspdm_get_msg_log_size (void *spdm_context);
 

@@ -1035,7 +1035,7 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size);
  * @param[in,out]  oid_size          The buffersize for required OID
  *
  * @retval true    Get the subjectAltName string successfully
- * @retval failed  Get the subjectAltName string failed
+ * @retval false   Get the subjectAltName string failed
  **/
 bool libspdm_get_dmtf_subject_alt_name_from_bytes(
     uint8_t *buffer, const size_t len, char *name_buffer,
@@ -1059,7 +1059,7 @@ bool libspdm_get_dmtf_subject_alt_name_from_bytes(
  * @param[in,out]  oid_size          The buffersize for required OID
  *
  * @retval true    Get the subjectAltName string successfully
- * @retval failed  Get the subjectAltName string failed
+ * @retval false   Get the subjectAltName string failed
  **/
 bool libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,
                                        char *name_buffer,

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1330,7 +1330,7 @@ void libspdm_get_receiver_buffer (
  *
  * @param[in]   context              A pointer to the SPDM context.
  *
- * @retval slot_mask                 get slot mask
+ * @return slot_mask                 get slot mask
  **/
 uint8_t libspdm_get_cert_slot_mask (libspdm_context_t *spdm_context);
 
@@ -1339,7 +1339,7 @@ uint8_t libspdm_get_cert_slot_mask (libspdm_context_t *spdm_context);
  *
  * @param[in]   context              A pointer to the SPDM context.
  *
- * @retval slot_count                get slot count
+ * @return slot_count                get slot count
  **/
 uint8_t libspdm_get_cert_slot_count(libspdm_context_t *spdm_context);
 
@@ -1451,8 +1451,8 @@ void libspdm_reset_message_encap_e(libspdm_context_t *spdm_context, void *sessio
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval RETURN_SUCCESS          message is appended.
+ * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_a(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size);
@@ -1464,8 +1464,8 @@ libspdm_return_t libspdm_append_message_a(libspdm_context_t *spdm_context, const
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval RETURN_SUCCESS          message is appended.
+ * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_d(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size);
@@ -1477,8 +1477,8 @@ libspdm_return_t libspdm_append_message_d(libspdm_context_t *spdm_context, const
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval RETURN_SUCCESS          message is appended.
+ * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_b(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size);
@@ -1490,8 +1490,8 @@ libspdm_return_t libspdm_append_message_b(libspdm_context_t *spdm_context, const
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval RETURN_SUCCESS          message is appended.
+ * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_c(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size);
@@ -1503,8 +1503,8 @@ libspdm_return_t libspdm_append_message_c(libspdm_context_t *spdm_context, const
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval RETURN_SUCCESS          message is appended.
+ * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_mut_b(libspdm_context_t *spdm_context, const void *message,
                                               size_t message_size);
@@ -1516,8 +1516,8 @@ libspdm_return_t libspdm_append_message_mut_b(libspdm_context_t *spdm_context, c
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval RETURN_SUCCESS          message is appended.
+ * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_mut_c(libspdm_context_t *spdm_context, const void *message,
                                               size_t message_size);
@@ -1532,8 +1532,8 @@ libspdm_return_t libspdm_append_message_mut_c(libspdm_context_t *spdm_context, c
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval RETURN_SUCCESS          message is appended.
+ * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_m(libspdm_context_t *spdm_context,
                                           void *session_info,
@@ -1548,8 +1548,8 @@ libspdm_return_t libspdm_append_message_m(libspdm_context_t *spdm_context,
  * @param  message            Message buffer.
  * @param  message_size       Size in bytes of message buffer.
  *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval RETURN_SUCCESS          message is appended.
+ * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
                                           void *spdm_session_info,
@@ -1565,8 +1565,8 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
  * @param  message            Message buffer.
  * @param  message_size       Size in bytes of message buffer.
  *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval RETURN_SUCCESS          message is appended.
+ * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_encap_d(libspdm_context_t *spdm_context,
                                                 void *spdm_session_info,
@@ -1582,8 +1582,8 @@ libspdm_return_t libspdm_append_message_encap_d(libspdm_context_t *spdm_context,
  * @param  message            Message buffer.
  * @param  message_size       Size in bytes of message buffer.
  *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval RETURN_SUCCESS          message is appended.
+ * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
                                           void *spdm_session_info,
@@ -1600,8 +1600,8 @@ libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
  * @param  message                      message buffer.
  * @param  message_size                  size in bytes of message buffer.
  *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval RETURN_SUCCESS          message is appended.
+ * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_e(libspdm_context_t *spdm_context, void *session_info,
                                           const void *message, size_t message_size);
@@ -1616,8 +1616,8 @@ libspdm_return_t libspdm_append_message_e(libspdm_context_t *spdm_context, void 
  * @param  message                      message buffer.
  * @param  message_size                  size in bytes of message buffer.
  *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval RETURN_SUCCESS          message is appended.
+ * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_encap_e(libspdm_context_t *spdm_context, void *session_info,
                                                 const void *message, size_t message_size);
@@ -1872,8 +1872,8 @@ void libspdm_write_uint64(uint8_t *buffer, uint64_t value);
  *
  * @param mask  The bitmask to be tested.
  *
- * @return true   At most one bit is set.
- * @return false  More than one bit is set.
+ * @retval true   At most one bit is set.
+ * @retval false  More than one bit is set.
  */
 static inline bool libspdm_onehot0(uint32_t mask)
 {

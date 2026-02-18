@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -384,7 +384,7 @@ size_t libspdm_get_fips_selftest_context_size(void);
 /**
  * Returns the required buffer size for FIPS self-tests.
  *
- * @retval  The required buffer size in bytes.
+ * @return  The required buffer size in bytes.
  */
 size_t libspdm_get_fips_selftest_buffer_size(void);
 

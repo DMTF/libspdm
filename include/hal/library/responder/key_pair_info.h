@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -17,7 +17,7 @@
  * return the total key pairs number.
  * It is a fixed number per SPDM connection.
  *
- * @retval the total key pairs number.
+ * @return the total key pairs number.
  */
 extern uint8_t libspdm_read_total_key_pairs (void *spdm_context);
 
