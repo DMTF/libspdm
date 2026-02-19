@@ -864,10 +864,12 @@ static libspdm_return_t receive_message(
         if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
             error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
         }
-        if(error_code == LIBSPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
+        /* skip some reserved error codes (0d to 3e) */
+        if(error_code == LIBSPDM_ERROR_CODE_RESERVED_0D) {
             error_code = LIBSPDM_ERROR_CODE_RESERVED_3F;
         }
-        if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
+        /* skip response not ready, request resync, and some reserved codes (44 to fc) */
+        if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
             error_code = LIBSPDM_ERROR_CODE_RESERVED_FD;
         }
     }
@@ -1730,10 +1732,12 @@ static void libspdm_test_requester_get_capabilities_err_case29(void **state) {
         if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
             error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;
         }
-        if(error_code == LIBSPDM_ERROR_CODE_RESERVED_0D) { /*skip some reserved error codes (0d to 3e)*/
+        /* skip some reserved error codes (0d to 3e) */
+        if(error_code == LIBSPDM_ERROR_CODE_RESERVED_0D) {
             error_code = LIBSPDM_ERROR_CODE_RESERVED_3F;
         }
-        if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) { /*skip response not ready, request resync, and some reserved codes (44 to fc)*/
+        /* skip response not ready, request resync, and some reserved codes (44 to fc) */
+        if(error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
             error_code = LIBSPDM_ERROR_CODE_RESERVED_FD;
         }
     }
