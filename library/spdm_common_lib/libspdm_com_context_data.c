@@ -10,7 +10,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 /* first section */
-uint32_t libspdm_get_scratch_buffer_secure_message_offset(libspdm_context_t *spdm_context) {
+uint32_t libspdm_get_scratch_buffer_secure_message_offset(void) {
     return 0;
 }
 
@@ -1359,7 +1359,7 @@ void libspdm_reset_message_k(libspdm_context_t *spdm_context, void *session_info
 #endif
 }
 
-void libspdm_reset_message_encap_d(libspdm_context_t *spdm_context, void *session_info)
+void libspdm_reset_message_encap_d(void *session_info)
 {
     libspdm_session_info_t *spdm_session_info;
 
@@ -2000,9 +2000,8 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
 #endif
 }
 
-libspdm_return_t libspdm_append_message_encap_d(libspdm_context_t *spdm_context,
-                                                void *session_info,
-                                                bool is_requester, const void *message,
+libspdm_return_t libspdm_append_message_encap_d(void *session_info,
+                                                const void *message,
                                                 size_t message_size)
 {
     libspdm_session_info_t *spdm_session_info;
@@ -3038,7 +3037,7 @@ void libspdm_deinit_context(void *spdm_context)
         libspdm_reset_message_m(context, session_info);
         libspdm_reset_message_e(context, session_info);
         libspdm_reset_message_encap_e(context, session_info);
-        libspdm_reset_message_encap_d(context, session_info);
+        libspdm_reset_message_encap_d(session_info);
         libspdm_reset_message_k(context, session_info);
         libspdm_reset_message_f(context, session_info);
     }

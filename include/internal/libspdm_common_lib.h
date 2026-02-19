@@ -778,7 +778,7 @@ void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
  */
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 /* first section */
-uint32_t libspdm_get_scratch_buffer_secure_message_offset(libspdm_context_t *spdm_context);
+uint32_t libspdm_get_scratch_buffer_secure_message_offset(void);
 uint32_t libspdm_get_scratch_buffer_secure_message_capacity(libspdm_context_t *spdm_context);
 
 /* second section */
@@ -1411,10 +1411,9 @@ void libspdm_reset_message_k(libspdm_context_t *spdm_context, void *spdm_session
 /**
  * Reset message EncapD cache in SPDM context.
  *
- * @param  spdm_context       A pointer to the SPDM context.
  * @param  spdm_session_info  A pointer to the SPDM session context.
  **/
-void libspdm_reset_message_encap_d(libspdm_context_t *spdm_context, void *spdm_session_info);
+void libspdm_reset_message_encap_d(void *spdm_session_info);
 
 /**
  * Reset message F cache in SPDM context.
@@ -1559,18 +1558,15 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
 /**
  * Append message EncapD cache in SPDM context.
  *
- * @param  spdm_context       A pointer to the SPDM context.
  * @param  spdm_session_info  A pointer to the SPDM session context.
- * @param  is_requester       Indicate of the key generation for a requester or a responder.
  * @param  message            Message buffer.
  * @param  message_size       Size in bytes of message buffer.
  *
  * @retval RETURN_SUCCESS          message is appended.
  * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_encap_d(libspdm_context_t *spdm_context,
-                                                void *spdm_session_info,
-                                                bool is_requester, const void *message,
+libspdm_return_t libspdm_append_message_encap_d(void *spdm_session_info,
+                                                const void *message,
                                                 size_t message_size);
 
 /**
@@ -1961,8 +1957,7 @@ uint32_t libspdm_mask_measurement_hash_algo(libspdm_context_t *spdm_context,
  *
  * @return The masked MeasurementSpecification.
  */
-uint8_t libspdm_mask_measurement_specification(libspdm_context_t *spdm_context,
-                                               uint8_t measurement_specification);
+uint8_t libspdm_mask_measurement_specification(uint8_t measurement_specification);
 
 /**
  * Return MELspecification that is masked by the negotiated SPDM version.

@@ -291,7 +291,7 @@ static void rsp_encap_get_digests_case6(void **state)
 
     /* Sub Case 1: Set multi_key_conn_req to true*/
     spdm_context->connection_info.multi_key_conn_req = true;
-    libspdm_reset_message_encap_d(spdm_context, session_info);
+    libspdm_reset_message_encap_d(session_info);
 
     spdm_response_size = sizeof(spdm_digest_response_t) + sizeof(spdm_key_pair_id_t) +
                          sizeof(spdm_certificate_info_t) +
@@ -306,7 +306,7 @@ static void rsp_encap_get_digests_case6(void **state)
 
     /* Sub Case 2: Set multi_key_conn_req to false*/
     spdm_context->connection_info.multi_key_conn_req = false;
-    libspdm_reset_message_encap_d(spdm_context, session_info);
+    libspdm_reset_message_encap_d(session_info);
 
     spdm_response_size = sizeof(spdm_digest_response_t) + sizeof(spdm_key_pair_id_t) +
                          sizeof(spdm_certificate_info_t) +
@@ -429,7 +429,7 @@ static void rsp_encap_get_digests_case7(void **state)
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     spdm_context->connection_info.multi_key_conn_req = true;
-    libspdm_reset_message_encap_d(spdm_context, session_info);
+    libspdm_reset_message_encap_d(session_info);
 
     spdm_response_size = sizeof(spdm_digest_response_t) +
                          (hash_size + additional_size) * slot_count;

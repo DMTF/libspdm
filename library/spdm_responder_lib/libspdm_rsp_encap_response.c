@@ -493,8 +493,7 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-libspdm_return_t libspdm_handle_encap_error_response_main(
-    libspdm_context_t *spdm_context, uint8_t error_code)
+libspdm_return_t libspdm_handle_encap_error_response_main(uint8_t error_code)
 {
     if (error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
         return LIBSPDM_STATUS_NOT_READY_PEER;

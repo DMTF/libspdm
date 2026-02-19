@@ -170,7 +170,7 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
     libspdm_get_scratch_buffer (context, (void **)&scratch_buffer, &scratch_buffer_size);
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     decoded_message_ptr = scratch_buffer +
-                          libspdm_get_scratch_buffer_secure_message_offset(context) +
+                          libspdm_get_scratch_buffer_secure_message_offset() +
                           transport_header_size;
     decoded_message_size = libspdm_get_scratch_buffer_secure_message_capacity(context) -
                            transport_header_size;
@@ -437,7 +437,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     if (session_id != NULL) {
         libspdm_get_scratch_buffer (context, (void **)&scratch_buffer, &scratch_buffer_size);
         #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-        my_response = scratch_buffer + libspdm_get_scratch_buffer_secure_message_offset(context) +
+        my_response = scratch_buffer + libspdm_get_scratch_buffer_secure_message_offset() +
                       transport_header_size;
         my_response_size = libspdm_get_scratch_buffer_secure_message_capacity(context) -
                            transport_header_size -

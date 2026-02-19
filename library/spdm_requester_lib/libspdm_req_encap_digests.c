@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -151,8 +151,7 @@ libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
     }
     if (session_info != NULL) {
         if (context->connection_info.multi_key_conn_req) {
-            status = libspdm_append_message_encap_d(context, session_info, true,
-                                                    spdm_response, *response_size);
+            status = libspdm_append_message_encap_d(session_info, spdm_response, *response_size);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return libspdm_generate_encap_error_response(
                     context, SPDM_ERROR_CODE_UNSPECIFIED, 0,

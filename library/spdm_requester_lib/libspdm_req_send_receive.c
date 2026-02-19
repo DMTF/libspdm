@@ -185,7 +185,7 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
     transport_header_size = context->local_context.capability.transport_header_size;
     libspdm_get_scratch_buffer (context, (void **)&scratch_buffer, &scratch_buffer_size);
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-    *response = scratch_buffer + libspdm_get_scratch_buffer_secure_message_offset(context) +
+    *response = scratch_buffer + libspdm_get_scratch_buffer_secure_message_offset() +
                 transport_header_size;
     *response_size = libspdm_get_scratch_buffer_secure_message_capacity(context) -
                      transport_header_size;

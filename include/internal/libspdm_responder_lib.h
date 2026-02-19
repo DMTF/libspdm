@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -694,13 +694,11 @@ void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context);
 /**
  * This function handles the encap error response.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
  * @param  error_code                    Indicate the error code.
  *
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-libspdm_return_t libspdm_handle_encap_error_response_main(
-    libspdm_context_t *spdm_context, uint8_t error_code);
+libspdm_return_t libspdm_handle_encap_error_response_main(uint8_t error_code);
 
 /**
  * Set session_state to an SPDM secured message context and trigger callback.

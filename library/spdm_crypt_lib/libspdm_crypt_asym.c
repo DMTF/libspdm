@@ -36,7 +36,6 @@ static const libspdm_signing_context_str_t m_libspdm_signing_context_str_table[]
 
 #if LIBSPDM_RSA_SSA_SUPPORT
 static bool libspdm_rsa_pkcs1_sign_with_nid_wrap (void *context, size_t hash_nid,
-                                                  const uint8_t *param, size_t param_size,
                                                   const uint8_t *message,
                                                   size_t message_size, uint8_t *signature,
                                                   size_t *sig_size)
@@ -48,7 +47,6 @@ static bool libspdm_rsa_pkcs1_sign_with_nid_wrap (void *context, size_t hash_nid
 
 #if LIBSPDM_RSA_PSS_SUPPORT
 static bool libspdm_rsa_pss_sign_wrap (void *context, size_t hash_nid,
-                                       const uint8_t *param, size_t param_size,
                                        const uint8_t *message,
                                        size_t message_size, uint8_t *signature,
                                        size_t *sig_size)
@@ -60,7 +58,6 @@ static bool libspdm_rsa_pss_sign_wrap (void *context, size_t hash_nid,
 
 #if LIBSPDM_ECDSA_SUPPORT
 static bool libspdm_ecdsa_sign_wrap (void *context, size_t hash_nid,
-                                     const uint8_t *param, size_t param_size,
                                      const uint8_t *message,
                                      size_t message_size, uint8_t *signature,
                                      size_t *sig_size)
@@ -260,7 +257,6 @@ static bool libspdm_asym_sign_wrap (void *context, size_t hash_nid, uint32_t bas
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096);
 #endif
         return libspdm_rsa_pkcs1_sign_with_nid_wrap(context, hash_nid,
-                                                    param, param_size,
                                                     message, message_size,
                                                     signature, sig_size);
 #else
@@ -281,7 +277,6 @@ static bool libspdm_asym_sign_wrap (void *context, size_t hash_nid, uint32_t bas
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096);
 #endif
         return libspdm_rsa_pss_sign_wrap(context, hash_nid,
-                                         param, param_size,
                                          message, message_size,
                                          signature, sig_size);
 #else
@@ -302,7 +297,6 @@ static bool libspdm_asym_sign_wrap (void *context, size_t hash_nid, uint32_t bas
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521);
 #endif
         return libspdm_ecdsa_sign_wrap(context, hash_nid,
-                                       param, param_size,
                                        message, message_size,
                                        signature, sig_size);
 #else
@@ -738,7 +732,6 @@ bool libspdm_is_signature_buffer_palindrome(
 
 #if LIBSPDM_RSA_SSA_SUPPORT
 static bool libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, size_t hash_nid,
-                                                    const uint8_t *param, size_t param_size,
                                                     const uint8_t *message,
                                                     size_t message_size,
                                                     const uint8_t *signature,
@@ -751,7 +744,6 @@ static bool libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, size_t hash_n
 
 #if LIBSPDM_RSA_PSS_SUPPORT
 static bool libspdm_rsa_pss_verify_wrap (void *context, size_t hash_nid,
-                                         const uint8_t *param, size_t param_size,
                                          const uint8_t *message,
                                          size_t message_size,
                                          const uint8_t *signature,
@@ -763,7 +755,6 @@ static bool libspdm_rsa_pss_verify_wrap (void *context, size_t hash_nid,
 
 #if LIBSPDM_ECDSA_SUPPORT
 static bool libspdm_ecdsa_verify_wrap (void *context, size_t hash_nid,
-                                       const uint8_t *param, size_t param_size,
                                        const uint8_t *message,
                                        size_t message_size,
                                        const uint8_t *signature,
@@ -820,7 +811,6 @@ static bool libspdm_asym_verify_wrap(
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096);
 #endif
         return libspdm_rsa_pkcs1_verify_with_nid_wrap(context, hash_nid,
-                                                      param, param_size,
                                                       message, message_size,
                                                       signature, sig_size);
 #else
@@ -841,7 +831,6 @@ static bool libspdm_asym_verify_wrap(
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096);
 #endif
         return libspdm_rsa_pss_verify_wrap(context, hash_nid,
-                                           param, param_size,
                                            message, message_size,
                                            signature, sig_size);
 #else
@@ -862,7 +851,6 @@ static bool libspdm_asym_verify_wrap(
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521);
 #endif
         return libspdm_ecdsa_verify_wrap(context, hash_nid,
-                                         param, param_size,
                                          message, message_size,
                                          signature, sig_size);
 #else

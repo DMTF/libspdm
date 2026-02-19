@@ -104,8 +104,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
-        status = libspdm_handle_encap_error_response_main(
-            spdm_context, spdm_response->header.param1);
+        status = libspdm_handle_encap_error_response_main(spdm_response->header.param1);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }

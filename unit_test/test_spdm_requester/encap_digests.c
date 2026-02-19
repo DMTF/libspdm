@@ -229,7 +229,7 @@ static void req_encap_digests_case5(void **state)
 #endif
     /* Sub Case 1: Set multi_key_conn_req to true*/
     spdm_context->connection_info.multi_key_conn_req = true;
-    libspdm_reset_message_encap_d(spdm_context, session_info);
+    libspdm_reset_message_encap_d(session_info);
 
     response_size = sizeof(response);
     status = libspdm_get_encap_response_digest(spdm_context,
@@ -253,7 +253,7 @@ static void req_encap_digests_case5(void **state)
 
     /* Sub Case 2: Set multi_key_conn_req to false*/
     spdm_context->connection_info.multi_key_conn_req = false;
-    libspdm_reset_message_encap_d(spdm_context, session_info);
+    libspdm_reset_message_encap_d(session_info);
 
     response_size = sizeof(response);
     status = libspdm_get_encap_response_digest(spdm_context,
@@ -332,7 +332,7 @@ static void req_encap_digests_case6(void **state)
         spdm_context->transcript.message_m.max_buffer_size;
 #endif
     spdm_context->connection_info.multi_key_conn_req = true;
-    libspdm_reset_message_encap_d(spdm_context, session_info);
+    libspdm_reset_message_encap_d(session_info);
 
     response_size = sizeof(response);
     status = libspdm_get_encap_response_digest(spdm_context,

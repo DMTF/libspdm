@@ -372,8 +372,7 @@ uint32_t libspdm_mask_measurement_hash_algo(libspdm_context_t *spdm_context,
     }
 }
 
-uint8_t libspdm_mask_measurement_specification(libspdm_context_t *spdm_context,
-                                               uint8_t measurement_specification)
+uint8_t libspdm_mask_measurement_specification(uint8_t measurement_specification)
 {
     return (measurement_specification & SPDM_MEASUREMENT_SPECIFICATION_10_MASK);
 }
