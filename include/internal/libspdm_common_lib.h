@@ -1227,7 +1227,7 @@ size_t libspdm_get_opaque_data_version_selection_data_size(const libspdm_context
  *
  * @return the SPDMversion of the version number struct.
  **/
-uint8_t libspdm_get_version_from_version_number(const spdm_version_number_t ver);
+uint8_t libspdm_get_version_from_version_number(spdm_version_number_t ver);
 
 /**
  * Sort SPDMversion in descending order.

@@ -365,8 +365,7 @@ libspdm_return_t libspdm_terminate_session(
  * @param  connection_state              Indicate the SPDM connection state.
  **/
 static void libspdm_trigger_connection_state_callback(libspdm_context_t *spdm_context,
-                                                      const libspdm_connection_state_t
-                                                      connection_state)
+                                                      libspdm_connection_state_t connection_state)
 {
     if (spdm_context->spdm_connection_state_callback != NULL) {
         ((libspdm_connection_state_callback_func)

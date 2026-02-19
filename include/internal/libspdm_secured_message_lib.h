@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -133,8 +133,8 @@ void libspdm_secured_message_set_session_type(void *spdm_secured_message_context
  * @param  key_schedule                  Indicate the negotiated key_schedule for the SPDM session.
  */
 void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
-                                            const spdm_version_number_t version,
-                                            const spdm_version_number_t secured_message_version,
+                                            spdm_version_number_t version,
+                                            spdm_version_number_t secured_message_version,
                                             uint32_t base_hash_algo,
                                             uint16_t dhe_named_group,
                                             uint32_t kem_alg,

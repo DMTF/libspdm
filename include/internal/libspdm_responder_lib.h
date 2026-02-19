@@ -932,7 +932,7 @@ bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
 bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
                                          libspdm_session_info_t *session_info,
                                          const void *sign_data,
-                                         const size_t sign_data_size);
+                                         size_t sign_data_size);
 #endif
 
 /**

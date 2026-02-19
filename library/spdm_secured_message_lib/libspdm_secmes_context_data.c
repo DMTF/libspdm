@@ -62,8 +62,8 @@ void libspdm_secured_message_set_session_type(void *spdm_secured_message_context
 }
 
 void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
-                                            const spdm_version_number_t version,
-                                            const spdm_version_number_t secured_message_version,
+                                            spdm_version_number_t version,
+                                            spdm_version_number_t secured_message_version,
                                             uint32_t base_hash_algo,
                                             uint16_t dhe_named_group,
                                             uint32_t kem_alg,

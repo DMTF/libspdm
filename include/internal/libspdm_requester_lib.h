@@ -650,7 +650,7 @@ bool libspdm_verify_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
  **/
 bool libspdm_verify_key_exchange_rsp_signature(
     libspdm_context_t *spdm_context, libspdm_session_info_t *session_info,
-    const void *sign_data, const size_t sign_data_size);
+    const void *sign_data, size_t sign_data_size);
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**

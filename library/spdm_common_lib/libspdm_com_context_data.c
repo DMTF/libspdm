@@ -3062,7 +3062,7 @@ size_t libspdm_get_context_size_without_secured_context(void)
     return size;
 }
 
-uint8_t libspdm_get_version_from_version_number(const spdm_version_number_t ver)
+uint8_t libspdm_get_version_from_version_number(spdm_version_number_t ver)
 {
     return (uint8_t)(ver >> SPDM_VERSION_NUMBER_SHIFT_BIT);
 }
