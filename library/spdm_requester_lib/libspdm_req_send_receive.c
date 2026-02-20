@@ -439,7 +439,8 @@ static libspdm_return_t libspdm_handle_large_request(
         }
 
         if (send_info->chunk_seq_no == 0) {
-            *(uint32_t *)(spdm_request + 1) = (uint32_t)send_info->large_message_size;
+            libspdm_write_uint32((uint8_t *)(spdm_request + 1),
+                                 (uint32_t)send_info->large_message_size);
             chunk_ptr += sizeof(uint32_t);
             copy_size -= sizeof(uint32_t);
         }
