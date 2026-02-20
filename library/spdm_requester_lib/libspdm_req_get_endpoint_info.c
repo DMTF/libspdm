@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -240,7 +240,7 @@ static libspdm_return_t libspdm_try_get_endpoint_info(libspdm_context_t *spdm_co
         }
 
         ptr += SPDM_NONCE_SIZE;
-        ep_info_data_len = *(uint32_t *) ptr;
+        ep_info_data_len = libspdm_read_uint32(ptr);
         if (spdm_response_size !=
             sizeof(spdm_endpoint_info_response_t) + SPDM_NONCE_SIZE +
             signature_size + ep_info_data_len + sizeof(uint32_t)) {
@@ -286,7 +286,7 @@ static libspdm_return_t libspdm_try_get_endpoint_info(libspdm_context_t *spdm_co
 
         /* nonce and signature not present */
         ptr = (uint8_t *)(spdm_response + 1);
-        ep_info_data_len = *(uint32_t *) ptr;
+        ep_info_data_len = libspdm_read_uint32(ptr);
         if (spdm_response_size <
             sizeof(spdm_endpoint_info_response_t) + ep_info_data_len + sizeof(uint32_t)) {
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
