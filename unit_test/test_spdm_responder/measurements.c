@@ -1560,6 +1560,8 @@ static void rsp_measurements_case27(void **state)
         spdm_context->connection_info.algorithm.measurement_hash_algo,
         m_libspdm_get_measurements_request15.header.param2,
         m_libspdm_get_measurements_request15.header.param1,
+        NULL,
+        0,
         0,
         NULL,
         &content_changed,

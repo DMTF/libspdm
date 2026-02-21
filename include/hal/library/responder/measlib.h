@@ -45,6 +45,13 @@
  *
  * @param request_attribute A bitmask who fields are SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_*.
  *
+ * @param  requester_nonce  If not NULL, a pointer to the requester nonce (32 bytes) from the
+ *                          GET_MEASUREMENTS request. It is present when the GENERATE_SIGNATURE
+ *                          attribute is set, otherwise it is NULL.
+ *
+ * @param  slot_id_param  The slot ID from the GET_MEASUREMENTS request (BIT[0:3]).
+ *                        It is valid when the GENERATE_SIGNATURE attribute is set, otherwise it is 0.
+ *
  * @param  request_context_size  The size, in bytes, of request_context.
  * @param  request_context       If spdm_version is greater than 1.2, then it is a pointer to the
  *                               Context field in the request message, else it is NULL and ignore
@@ -77,6 +84,8 @@ extern libspdm_return_t libspdm_measurement_collection(
     uint32_t measurement_hash_algo,
     uint8_t measurement_index,
     uint8_t request_attribute,
+    const uint8_t *requester_nonce,
+    uint8_t slot_id_param,
     size_t request_context_size,
     const void *request_context,
     uint8_t *content_changed,

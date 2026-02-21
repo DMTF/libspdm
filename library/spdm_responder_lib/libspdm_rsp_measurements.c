@@ -286,6 +286,13 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
         spdm_context->connection_info.algorithm.measurement_hash_algo,
         measurements_index,
         spdm_request->header.param1,
+        ((spdm_request->header.param1 &
+          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) ?
+        spdm_request->nonce : NULL,
+        ((spdm_request->header.param1 &
+          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0 &&
+         spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) ?
+        (spdm_request->slot_id_param & SPDM_GET_MEASUREMENTS_REQUEST_SLOT_ID_MASK) : 0,
         request_context_size,
         request_context,
         &content_changed,
