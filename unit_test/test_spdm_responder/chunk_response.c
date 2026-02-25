@@ -628,11 +628,11 @@ static void rsp_chunk_response_case10(void** state)
     assert_int_equal(spdm_response->chunk_seq_no, 0);
     assert_int_equal(spdm_response->chunk_size, first_chunk_size);
 
-    large_response = *(uint32_t*) (spdm_response + 1);
+    large_response = libspdm_read_uint32((const uint8_t *)(spdm_response + 1));
     assert_int_equal(large_response, total_chunk_size);
 
     /* Verify the 1st chunk is filled with 1 */
-    chunk_ptr = (uint8_t*)(((uint32_t*) (spdm_response + 1)) + 1);
+    chunk_ptr = (uint8_t *)(spdm_response + 1) + sizeof(uint32_t);
     for (i = 0; i < spdm_response->chunk_size; i++) {
         assert_int_equal(chunk_ptr[i], 1);
     }
@@ -1129,11 +1129,11 @@ static void rsp_chunk_response_case15(void** state)
     assert_int_equal(spdm_response->chunk_seq_no, 0);
     assert_int_equal(spdm_response->chunk_size, first_chunk_size);
 
-    large_response = *(uint32_t*) (spdm_response + 1);
+    large_response = libspdm_read_uint32((const uint8_t *)(spdm_response + 1));
     assert_int_equal(large_response, total_chunk_size);
 
     /* Verify the 1st chunk is filled with 1 */
-    chunk_ptr = (uint8_t*)(((uint32_t*) (spdm_response + 1)) + 1);
+    chunk_ptr = (uint8_t *)(spdm_response + 1) + sizeof(uint32_t);
     for (i = 0; i < spdm_response->chunk_size; i++) {
         assert_int_equal(chunk_ptr[i], 1);
     }

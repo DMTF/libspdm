@@ -77,7 +77,7 @@ static void rsp_encap_challenge_case1(void **state)
     libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
     ptr += SPDM_NONCE_SIZE;
 
-    *(uint16_t *)ptr = 0;
+    libspdm_write_uint16(ptr, 0);
     ptr += sizeof(uint16_t);
 
     libspdm_requester_data_sign(
@@ -353,7 +353,7 @@ static void rsp_encap_challenge_case5(void **state)
     libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
     ptr += SPDM_NONCE_SIZE;
 
-    *(uint16_t *)ptr = 0;
+    libspdm_write_uint16(ptr, 0);
     ptr += sizeof(uint16_t);
 
     libspdm_requester_data_sign(
@@ -444,7 +444,7 @@ static void rsp_encap_challenge_case6(void **state)
     libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
     ptr += SPDM_NONCE_SIZE;
 
-    *(uint16_t *)ptr = 0;
+    libspdm_write_uint16(ptr, 0);
     ptr += sizeof(uint16_t);
 
     libspdm_set_mem(ptr, SPDM_REQ_CONTEXT_SIZE, 0xAA);

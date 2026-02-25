@@ -1821,7 +1821,7 @@ static libspdm_return_t receive_message(
             ptr += SPDM_NONCE_SIZE;
             /* libspdm_zero_mem (ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
              * ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-            *(uint16_t *)ptr = 0;
+            libspdm_write_uint16(ptr, 0);
             ptr += sizeof(uint16_t);
             libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                              sizeof(m_libspdm_local_buffer) -

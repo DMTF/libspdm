@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -85,7 +85,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     ptr += SPDM_NONCE_SIZE;
     /* libspdm_zero_mem (ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
      * ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-    *(uint16_t *)ptr = 0;
+    libspdm_write_uint16(ptr, 0);
     ptr += sizeof(uint16_t);
     libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                      sizeof(m_libspdm_local_buffer),
