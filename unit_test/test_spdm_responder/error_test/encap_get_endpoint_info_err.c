@@ -201,7 +201,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case2(void **state)
     libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
     ptr += SPDM_NONCE_SIZE;
 
-    *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
+    libspdm_write_uint32(ptr, endpoint_info_size); /* ep_info_len */
     ptr += sizeof(uint32_t);
 
     libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
@@ -256,7 +256,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case2(void **state)
     spdm_response = (void *)temp_buf_error;
     ptr = (void *)(spdm_response + 1);
     ptr += SPDM_NONCE_SIZE;
-    *(uint32_t *)ptr = endpoint_info_size + 1; /* ep_info_len */
+    libspdm_write_uint32(ptr, endpoint_info_size + 1); /* ep_info_len */
 
     status = libspdm_process_encap_response_endpoint_info(spdm_context, response_size,
                                                           spdm_response, &need_continue);
@@ -357,7 +357,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case3(void **state)
     spdm_response->reserved = 0;
 
     ptr = (void *)(spdm_response + 1);
-    *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
+    libspdm_write_uint32(ptr, endpoint_info_size); /* ep_info_len */
     ptr += sizeof(uint32_t);
 
     libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
@@ -454,7 +454,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case4(void **state)
     libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
     ptr += SPDM_NONCE_SIZE;
 
-    *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
+    libspdm_write_uint32(ptr, endpoint_info_size); /* ep_info_len */
     ptr += sizeof(uint32_t);
 
     libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
@@ -521,7 +521,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case5(void **state)
     spdm_response->reserved = 0;
 
     ptr = (void *)(spdm_response + 1);
-    *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
+    libspdm_write_uint32(ptr, endpoint_info_size); /* ep_info_len */
     ptr += sizeof(uint32_t);
 
     libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
@@ -540,7 +540,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case5(void **state)
     libspdm_copy_mem(temp_buf_error, response_size, temp_buf_valid, response_size);
     spdm_response = (void *)temp_buf_error;
     ptr = (void *)(spdm_response + 1);
-    *(uint32_t *)ptr = endpoint_info_size + 1; /* ep_info_len */
+    libspdm_write_uint32(ptr, endpoint_info_size + 1); /* ep_info_len */
     status = libspdm_process_encap_response_endpoint_info(spdm_context, response_size,
                                                           spdm_response, &need_continue);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);

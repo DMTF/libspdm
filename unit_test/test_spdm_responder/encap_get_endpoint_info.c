@@ -113,7 +113,7 @@ static void rsp_encap_get_endpoint_info_case1(void **state)
     libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
     ptr += SPDM_NONCE_SIZE;
 
-    *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
+    libspdm_write_uint32(ptr, endpoint_info_size); /* ep_info_len */
     ptr += sizeof(uint32_t);
 
     libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
@@ -167,7 +167,7 @@ static void rsp_encap_get_endpoint_info_case1(void **state)
     libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
     ptr += SPDM_NONCE_SIZE;
 
-    *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
+    libspdm_write_uint32(ptr, endpoint_info_size); /* ep_info_len */
     ptr += sizeof(uint32_t);
 
     libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
@@ -257,7 +257,7 @@ static void rsp_encap_get_endpoint_info_case2(void **state)
     libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
     ptr += SPDM_NONCE_SIZE;
 
-    *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
+    libspdm_write_uint32(ptr, endpoint_info_size); /* ep_info_len */
     ptr += sizeof(uint32_t);
 
     libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
@@ -332,7 +332,7 @@ static void rsp_encap_get_endpoint_info_case3(void **state)
     spdm_response->reserved = 0;
 
     ptr = (void *)(spdm_response + 1);
-    *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
+    libspdm_write_uint32(ptr, endpoint_info_size); /* ep_info_len */
     ptr += sizeof(uint32_t);
 
     libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
@@ -454,7 +454,7 @@ static void rsp_encap_get_endpoint_info_case4(void **state)
     libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
     ptr += SPDM_NONCE_SIZE;
 
-    *(uint32_t *)ptr = endpoint_info_size; /* ep_info_len */
+    libspdm_write_uint32(ptr, endpoint_info_size); /* ep_info_len */
     ptr += sizeof(uint32_t);
 
     libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);

@@ -248,7 +248,7 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint32_t *)ptr = endpoint_info_buffer_size; /* ep_info_len */
+        libspdm_write_uint32(ptr, endpoint_info_buffer_size); /* ep_info_len */
         ptr += sizeof(uint32_t);
 
         libspdm_copy_mem(ptr, endpoint_info_buffer_size,
@@ -316,7 +316,7 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint32_t *)ptr = endpoint_info_buffer_size; /* ep_info_len */
+        libspdm_write_uint32(ptr, endpoint_info_buffer_size); /* ep_info_len */
         ptr += sizeof(uint32_t);
 
         libspdm_copy_mem(ptr, endpoint_info_buffer_size,
@@ -381,7 +381,7 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint32_t *)ptr = endpoint_info_buffer_size; /* ep_info_len */
+        libspdm_write_uint32(ptr, endpoint_info_buffer_size); /* ep_info_len */
         ptr += sizeof(uint32_t);
 
         libspdm_copy_mem(ptr, endpoint_info_buffer_size,
@@ -423,7 +423,7 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint32_t *)ptr = endpoint_info_buffer_size; /* ep_info_len */
+        libspdm_write_uint32(ptr, endpoint_info_buffer_size); /* ep_info_len */
         ptr += sizeof(uint32_t);
 
         libspdm_copy_mem(ptr, endpoint_info_buffer_size,
@@ -470,7 +470,7 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint32_t *)ptr = endpoint_info_buffer_size; /* ep_info_len */
+        libspdm_write_uint32(ptr, endpoint_info_buffer_size); /* ep_info_len */
         ptr += sizeof(uint32_t);
 
         libspdm_copy_mem(ptr, endpoint_info_buffer_size,
@@ -519,7 +519,7 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint32_t *)ptr = endpoint_info_buffer_size + 1; /* ep_info_len */
+        libspdm_write_uint32(ptr, endpoint_info_buffer_size + 1); /* ep_info_len */
         ptr += sizeof(uint32_t);
 
         libspdm_copy_mem(ptr, endpoint_info_buffer_size,
@@ -589,7 +589,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param2 = 1; /* slot_id */
         ptr = (uint8_t *)(spdm_response + 1);
 
-        *(uint32_t *)ptr = endpoint_info_buffer_size; /* ep_info_len */
+        libspdm_write_uint32(ptr, endpoint_info_buffer_size); /* ep_info_len */
         ptr += sizeof(uint32_t);
 
         libspdm_copy_mem(ptr, endpoint_info_buffer_size,
@@ -627,7 +627,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param2 = 0; /* slot_id */
         ptr = (uint8_t *)(spdm_response + 1);
 
-        *(uint32_t *)ptr = endpoint_info_buffer_size + 1; /* ep_info_len */
+        libspdm_write_uint32(ptr, endpoint_info_buffer_size + 1); /* ep_info_len */
         ptr += sizeof(uint32_t);
 
         libspdm_copy_mem(ptr, endpoint_info_buffer_size,
@@ -671,7 +671,7 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint32_t *)ptr = endpoint_info_buffer_size; /* ep_info_len */
+        libspdm_write_uint32(ptr, endpoint_info_buffer_size); /* ep_info_len */
         ptr += sizeof(uint32_t);
 
         libspdm_copy_mem(ptr, endpoint_info_buffer_size,
@@ -739,7 +739,7 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint32_t *)ptr = endpoint_info_buffer_size; /* ep_info_len */
+        libspdm_write_uint32(ptr, endpoint_info_buffer_size); /* ep_info_len */
         ptr += sizeof(uint32_t);
 
         libspdm_copy_mem(ptr, endpoint_info_buffer_size,
@@ -807,7 +807,7 @@ static libspdm_return_t receive_message(
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
-        *(uint32_t *)ptr = endpoint_info_buffer_size; /* ep_info_len */
+        libspdm_write_uint32(ptr, endpoint_info_buffer_size); /* ep_info_len */
         ptr += sizeof(uint32_t);
 
         libspdm_copy_mem(ptr, endpoint_info_buffer_size,

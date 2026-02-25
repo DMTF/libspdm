@@ -199,7 +199,7 @@ static libspdm_return_t receive_message(
         ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)ptr = 0;
+        libspdm_write_uint16(ptr, 0);
         ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -279,7 +279,7 @@ static libspdm_return_t receive_message(
         ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)ptr = 0;
+        libspdm_write_uint16(ptr, 0);
         ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -419,7 +419,7 @@ static libspdm_return_t receive_message(
             ptr += SPDM_NONCE_SIZE;
             /* libspdm_zero_mem (ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
              * ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-            *(uint16_t *)ptr = 0;
+            libspdm_write_uint16(ptr, 0);
             ptr += sizeof(uint16_t);
             libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                              sizeof(m_libspdm_local_buffer)
@@ -571,7 +571,7 @@ static libspdm_return_t receive_message(
             ptr += SPDM_NONCE_SIZE;
             /* libspdm_zero_mem (ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
              * ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-            *(uint16_t *)ptr = 0;
+            libspdm_write_uint16(ptr, 0);
             ptr += sizeof(uint16_t);
             libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                              sizeof(m_libspdm_local_buffer)
@@ -649,7 +649,7 @@ static libspdm_return_t receive_message(
         Ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (Ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)Ptr = 0;
+        libspdm_write_uint16(Ptr, 0);
         Ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -743,7 +743,7 @@ static libspdm_return_t receive_message(
         Ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (Ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)Ptr = 0;
+        libspdm_write_uint16(Ptr, 0);
         Ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -817,7 +817,7 @@ static libspdm_return_t receive_message(
         Ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (Ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)Ptr = 0;
+        libspdm_write_uint16(Ptr, 0);
         Ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -891,7 +891,7 @@ static libspdm_return_t receive_message(
         Ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (Ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)Ptr = 0;
+        libspdm_write_uint16(Ptr, 0);
         Ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -965,7 +965,7 @@ static libspdm_return_t receive_message(
         Ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (Ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)Ptr = 0;
+        libspdm_write_uint16(Ptr, 0);
         Ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -1039,7 +1039,7 @@ static libspdm_return_t receive_message(
         Ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (Ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)Ptr = (uint16_t)strlen("libspdm");
+        libspdm_write_uint16(Ptr, (uint16_t)strlen("libspdm"));
         Ptr += sizeof(uint16_t);
         libspdm_copy_mem(Ptr, (size_t)(*response) + *response_size - (size_t)Ptr, "libspdm",
                          strlen("libspdm"));
@@ -1116,7 +1116,7 @@ static libspdm_return_t receive_message(
         Ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (Ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)Ptr = 0;
+        libspdm_write_uint16(Ptr, 0);
         Ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -1192,7 +1192,7 @@ static libspdm_return_t receive_message(
         Ptr += SPDM_NONCE_SIZE;
         libspdm_zero_mem (Ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
         Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);
-        *(uint16_t *)Ptr = 0;
+        libspdm_write_uint16(Ptr, 0);
         Ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -1302,7 +1302,7 @@ static libspdm_return_t receive_message(
         ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);
         libspdm_get_random_number (SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
-        *(uint16_t *)ptr = 0;
+        libspdm_write_uint16(ptr, 0);
         ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -1372,7 +1372,7 @@ static libspdm_return_t receive_message(
         ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (ptr, spdm_get_hash_size (m_libspdm_use_hash_algo));
          * ptr += spdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)ptr = 0;
+        libspdm_write_uint16(ptr, 0);
         ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
@@ -1458,7 +1458,7 @@ static libspdm_return_t receive_message(
         ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)ptr = 0;
+        libspdm_write_uint16(ptr, 0);
         ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -1537,7 +1537,7 @@ static libspdm_return_t receive_message(
         ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)ptr = 0;
+        libspdm_write_uint16(ptr, 0);
         ptr += sizeof(uint16_t);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -1621,7 +1621,7 @@ static libspdm_return_t receive_message(
         Ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (Ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)Ptr = opaque_length;
+        libspdm_write_uint16(Ptr, opaque_length);
         Ptr += sizeof(uint16_t);
         libspdm_set_mem(Ptr, opaque_length, 255);
         Ptr += opaque_length;
@@ -1743,7 +1743,7 @@ static libspdm_return_t receive_message(
         Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);
         libspdm_get_random_number (SPDM_NONCE_SIZE, Ptr);
         Ptr += SPDM_NONCE_SIZE;
-        *(uint16_t *)Ptr = (uint16_t)m_libspdm_opaque_data_size;
+        libspdm_write_uint16(Ptr, (uint16_t)m_libspdm_opaque_data_size);
         Ptr += sizeof(uint16_t);
         libspdm_copy_mem(Ptr, (size_t)(*response) + *response_size - (size_t)Ptr,
                          m_libspdm_opaque_data,
@@ -1818,7 +1818,7 @@ static libspdm_return_t receive_message(
         ptr += libspdm_get_hash_size(m_libspdm_use_hash_algo);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
-        *(uint16_t *)ptr = 0;
+        libspdm_write_uint16(ptr, 0);
         ptr += sizeof(uint16_t);
         libspdm_copy_mem(ptr, SPDM_REQ_CONTEXT_SIZE, m_requester_context, SPDM_REQ_CONTEXT_SIZE);
         ptr += SPDM_REQ_CONTEXT_SIZE;
@@ -1899,7 +1899,7 @@ static libspdm_return_t receive_message(
         ptr += libspdm_get_hash_size(m_libspdm_use_hash_algo);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
-        *(uint16_t *)ptr = 0;
+        libspdm_write_uint16(ptr, 0);
         ptr += sizeof(uint16_t);
         libspdm_get_random_number(SPDM_REQ_CONTEXT_SIZE,ptr);
         ptr += SPDM_REQ_CONTEXT_SIZE;

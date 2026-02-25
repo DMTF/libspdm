@@ -152,7 +152,7 @@ static void rsp_key_exchange_rsp_case1(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -230,7 +230,7 @@ static void rsp_key_exchange_rsp_case2(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -303,7 +303,7 @@ static void rsp_key_exchange_rsp_case3(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -377,7 +377,7 @@ static void rsp_key_exchange_rsp_case4(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -453,7 +453,7 @@ static void rsp_key_exchange_rsp_case5(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -533,7 +533,7 @@ static void rsp_key_exchange_rsp_case6(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -617,7 +617,7 @@ static void rsp_key_exchange_rsp_case7(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -710,7 +710,7 @@ static void rsp_key_exchange_rsp_case8(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -817,7 +817,7 @@ static void rsp_key_exchange_rsp_case9(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -922,7 +922,7 @@ static void rsp_key_exchange_rsp_case10(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -1005,7 +1005,7 @@ static void rsp_key_exchange_rsp_case11(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -1091,7 +1091,7 @@ static void rsp_key_exchange_rsp_case14(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -1179,7 +1179,7 @@ static void rsp_key_exchange_rsp_case15(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -1275,7 +1275,7 @@ static void rsp_key_exchange_rsp_case16(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -1372,7 +1372,7 @@ static void rsp_key_exchange_rsp_case17(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -1456,7 +1456,7 @@ static void rsp_key_exchange_rsp_case18(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -1578,7 +1578,7 @@ static void rsp_key_exchange_rsp_case19(void **state)
         opaque_data_size += current_element_len;
     }
 
-    *(uint16_t *)ptr = (uint16_t)opaque_data_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_data_size);
 
     response_size = sizeof(response);
     status = libspdm_get_response_key_exchange(
@@ -1658,7 +1658,7 @@ static void rsp_key_exchange_rsp_case20(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -1759,7 +1759,7 @@ static void rsp_key_exchange_rsp_case21(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -1846,7 +1846,7 @@ static void rsp_key_exchange_rsp_case22(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -1933,7 +1933,7 @@ static void rsp_key_exchange_rsp_case23(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -2015,7 +2015,7 @@ static void rsp_key_exchange_rsp_case24(void **state)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);

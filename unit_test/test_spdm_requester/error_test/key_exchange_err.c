@@ -47,8 +47,8 @@ static size_t libspdm_test_get_key_exchange_request_size(const void *spdm_contex
     }
 
     opaque_length =
-        *(uint16_t *)((size_t)buffer +
-                      sizeof(spdm_key_exchange_request_t) + dhe_key_size);
+        libspdm_read_uint16((const uint8_t *)buffer +
+                            sizeof(spdm_key_exchange_request_t) + dhe_key_size);
     message_size += opaque_length;
     if (buffer_size < message_size) {
         return buffer_size;
@@ -435,7 +435,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -593,7 +593,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -814,7 +814,7 @@ static libspdm_return_t receive_message(
             ptr += dhe_key_size;
             /* libspdm_zero_mem (ptr, hash_size);
              * ptr += hash_size;*/
-            *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+            libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
             ptr += sizeof(uint16_t);
             libspdm_build_opaque_data_version_selection_data(
                 spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -1052,7 +1052,7 @@ static libspdm_return_t receive_message(
             ptr += dhe_key_size;
             /* libspdm_zero_mem (ptr, hash_size);
              * ptr += hash_size;*/
-            *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+            libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
             ptr += sizeof(uint16_t);
             libspdm_build_opaque_data_version_selection_data(
                 spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -1256,7 +1256,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -1423,7 +1423,7 @@ static libspdm_return_t receive_message(
                          measurement_hash_data, measurement_hash_size);
         /*libspdm_zero_mem (ptr, measurement_hash_size);*/
         ptr += measurement_hash_size;
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -1589,7 +1589,7 @@ static libspdm_return_t receive_message(
                          measurement_hash_data, measurement_hash_size);
         /*libspdm_zero_mem (ptr, measurement_hash_size);*/
         ptr += measurement_hash_size;
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -1758,7 +1758,7 @@ static libspdm_return_t receive_message(
                          measurement_hash_data, measurement_hash_size);
         /*libspdm_zero_mem (ptr, measurement_hash_size);*/
         ptr += measurement_hash_size;
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -1917,7 +1917,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -2076,7 +2076,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -2243,7 +2243,7 @@ static libspdm_return_t receive_message(
                          measurement_hash_data, measurement_hash_size);
         /*libspdm_zero_mem (ptr, measurement_hash_size);*/
         ptr += measurement_hash_size;
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -2403,7 +2403,7 @@ static libspdm_return_t receive_message(
         libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
         ptr += dhe_key_size;
 
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -2568,7 +2568,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -2724,7 +2724,7 @@ static libspdm_return_t receive_message(
         libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
         ptr += dhe_key_size;
 
-        *(uint16_t *)ptr = SPDM_MAX_OPAQUE_DATA_SIZE + 1;
+        libspdm_write_uint16(ptr, SPDM_MAX_OPAQUE_DATA_SIZE + 1);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -2885,7 +2885,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -3045,7 +3045,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -3205,7 +3205,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -3365,7 +3365,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -3527,7 +3527,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -3689,7 +3689,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -3851,7 +3851,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -4007,7 +4007,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -4162,7 +4162,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
@@ -4321,7 +4321,7 @@ static libspdm_return_t receive_message(
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
             spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,

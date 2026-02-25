@@ -637,7 +637,7 @@ static void rsp_respond_if_ready_case5(void **state) {
     libspdm_dhe_free (m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size (spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data (spdm_context, &opaque_key_exchange_req_size,
                                                       ptr);

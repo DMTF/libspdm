@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -91,7 +91,7 @@ void libspdm_test_responder_key_exchange_case1(void **State)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
                                                      ptr);
@@ -159,7 +159,7 @@ void libspdm_test_responder_key_exchange_case2(void **State)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
                                                      ptr);
@@ -291,7 +291,7 @@ void libspdm_test_responder_key_exchange_case4(void **State)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
                                                      ptr);
@@ -368,7 +368,7 @@ void libspdm_test_responder_key_exchange_case5(void **State)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
                                                      ptr);
@@ -436,7 +436,7 @@ void libspdm_test_responder_key_exchange_case6(void **State)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
                                                      ptr);
@@ -503,7 +503,7 @@ void libspdm_test_responder_key_exchange_case7(void **State)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
                                                      ptr);
@@ -592,7 +592,7 @@ void libspdm_test_responder_key_exchange_case8(void **State)
     libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_key_exchange_req_size,
                                                      ptr);

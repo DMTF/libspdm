@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -52,7 +52,8 @@ size_t libspdm_test_get_key_exchange_request_size(const void *spdm_context, cons
     }
 
     opaque_length =
-        *(uint16_t *)((size_t)buffer + sizeof(spdm_key_exchange_request_t) + dhe_key_size);
+        libspdm_read_uint16((const uint8_t *)buffer +
+                            sizeof(spdm_key_exchange_request_t) + dhe_key_size);
     message_size += opaque_length;
     if (buffer_size < message_size) {
         return buffer_size;
@@ -169,7 +170,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         ptr += dhe_key_size;
         /* libspdm_zero_mem (ptr, hash_size);
          * ptr += hash_size;*/
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(spdm_context,
                                                          SECURED_SPDM_VERSION_11 <<

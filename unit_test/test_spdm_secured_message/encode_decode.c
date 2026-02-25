@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -93,7 +93,7 @@ static void libspdm_test_secured_message_encode_case1(void **state)
         assert_int_equal(0, m_secured_message[index]);
     }
 
-    assert_int_equal(0x0022, *(uint16_t*)&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]);
+    assert_int_equal(0x0022, libspdm_read_uint16(&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]));
 
     ptr = (uint8_t *)&m_secured_message + 6 + PARTIAL_SEQ_NUM_SIZE;
 
@@ -147,7 +147,7 @@ static void libspdm_test_secured_message_encode_case2(void **state)
         }
     }
 
-    assert_int_equal(0x0022, *(uint16_t*)&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]);
+    assert_int_equal(0x0022, libspdm_read_uint16(&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]));
 
     ptr = (uint8_t *)&m_secured_message + 6 + PARTIAL_SEQ_NUM_SIZE;
 
@@ -199,7 +199,7 @@ static void libspdm_test_secured_message_encode_case3(void **state)
         assert_int_equal(0, m_secured_message[index]);
     }
 
-    assert_int_equal(0x0022, *(uint16_t*)&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]);
+    assert_int_equal(0x0022, libspdm_read_uint16(&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]));
 
     ptr = (uint8_t *)&m_secured_message + 6 + PARTIAL_SEQ_NUM_SIZE;
 
@@ -255,7 +255,7 @@ static void libspdm_test_secured_message_encode_case4(void **state)
         }
     }
 
-    assert_int_equal(0x0022, *(uint16_t*)&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]);
+    assert_int_equal(0x0022, libspdm_read_uint16(&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]));
 
     ptr = (uint8_t *)&m_secured_message + 6 + PARTIAL_SEQ_NUM_SIZE;
 
@@ -620,7 +620,7 @@ static void libspdm_test_secured_message_encode_case9(void **state) {
         }
     }
 
-    assert_int_equal(0x0022, *(uint16_t*)&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]);
+    assert_int_equal(0x0022, libspdm_read_uint16(&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]));
     assert_int_equal(0xaa55aa55aa55aa56,
                      encode_secured_message_context.application_secret.request_data_sequence_number);
 
@@ -696,7 +696,7 @@ static void libspdm_test_secured_message_encode_case10(void **state)
         }
     }
 
-    assert_int_equal(0x0022, *(uint16_t*)&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]);
+    assert_int_equal(0x0022, libspdm_read_uint16(&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]));
     assert_int_equal(0x000000000000002,
                      encode_secured_message_context.application_secret.request_data_sequence_number);
 
@@ -774,7 +774,7 @@ static void libspdm_test_secured_message_encode_case11(void **state)
         }
     }
 
-    assert_int_equal(0x0020, *(uint16_t*)&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]);
+    assert_int_equal(0x0020, libspdm_read_uint16(&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]));
     assert_int_equal(0xaa55aa55aa55aa56,
                      encode_secured_message_context.application_secret.request_data_sequence_number);
 
@@ -859,7 +859,7 @@ static void libspdm_test_secured_message_encode_case12(void **state)
         }
     }
 
-    assert_int_equal(0x0020, *(uint16_t*)&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]);
+    assert_int_equal(0x0020, libspdm_read_uint16(&m_secured_message[4 + PARTIAL_SEQ_NUM_SIZE]));
     assert_int_equal(0x0000000000000002,
                      encode_secured_message_context.application_secret.request_data_sequence_number);
 

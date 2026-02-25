@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -172,7 +172,7 @@ bool libspdm_psk_master_secret_hkdf_expand(
         return result;
     }
 
-    *(uint16_t *)m_libspdm_bin_str0 = (uint16_t)hash_size;
+    libspdm_write_uint16((uint8_t *)m_libspdm_bin_str0, (uint16_t)hash_size);
     /* patch the version*/
     m_libspdm_bin_str0[6] = (char)('0' + ((spdm_version >> 12) & 0xF));
     m_libspdm_bin_str0[8] = (char)('0' + ((spdm_version >> 8) & 0xF));
