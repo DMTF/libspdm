@@ -9,7 +9,7 @@
 #include "spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
 
 /* https://lapo.it/asn1js/#MCQGCisGAQQBgxyCEgEMFkFDTUU6V0lER0VUOjEyMzQ1Njc4OTA*/
-uint8_t m_libspdm_subject_alt_name_buffer1[] = {
+static uint8_t m_libspdm_subject_alt_name_buffer1[] = {
     0x30, 0x24, 0x06, 0x0A, 0x2B, 0x06, 0x01, 0x04, 0x01, 0x83,
     0x1C, 0x82, 0x12, 0x01, 0x0C, 0x16, 0x41, 0x43, 0x4D, 0x45,
     0x3A, 0x57, 0x49, 0x44, 0x47, 0x45, 0x54, 0x3A, 0x31, 0x32,
@@ -17,7 +17,7 @@ uint8_t m_libspdm_subject_alt_name_buffer1[] = {
 };
 
 /* https://lapo.it/asn1js/#MCYGCisGAQQBgxyCEgGgGAwWQUNNRTpXSURHRVQ6MTIzNDU2Nzg5MA*/
-uint8_t m_libspdm_subject_alt_name_buffer2[] = {
+static uint8_t m_libspdm_subject_alt_name_buffer2[] = {
     0x30, 0x26, 0x06, 0x0A, 0x2B, 0x06, 0x01, 0x04, 0x01, 0x83,
     0x1C, 0x82, 0x12, 0x01, 0xA0, 0x18, 0x0C, 0x16, 0x41, 0x43,
     0x4D, 0x45, 0x3A, 0x57, 0x49, 0x44, 0x47, 0x45, 0x54, 0x3A,
@@ -25,17 +25,17 @@ uint8_t m_libspdm_subject_alt_name_buffer2[] = {
 };
 
 /* https://lapo.it/asn1js/#MCigJgYKKwYBBAGDHIISAaAYDBZBQ01FOldJREdFVDoxMjM0NTY3ODkw*/
-uint8_t m_libspdm_subject_alt_name_buffer3[] = {
+static uint8_t m_libspdm_subject_alt_name_buffer3[] = {
     0x30, 0x28, 0xA0, 0x26, 0x06, 0x0A, 0x2B, 0x06, 0x01, 0x04, 0x01,
     0x83, 0x1C, 0x82, 0x12, 0x01, 0xA0, 0x18, 0x0C, 0x16, 0x41, 0x43,
     0x4D, 0x45, 0x3A, 0x57, 0x49, 0x44, 0x47, 0x45, 0x54, 0x3A, 0x31,
     0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x30
 };
 
-uint8_t m_libspdm_dmtf_oid[] = { 0x2B, 0x06, 0x01, 0x4,  0x01,
-                                 0x83, 0x1C, 0x82, 0x12, 0x01 };
+static uint8_t m_libspdm_dmtf_oid[] = { 0x2B, 0x06, 0x01, 0x4,  0x01,
+                                        0x83, 0x1C, 0x82, 0x12, 0x01 };
 
-void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
+static void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
 {
     size_t common_name_size;
     char common_name[64];
@@ -77,7 +77,7 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
 }
 
-void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
+static void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
 {
     size_t common_name_size;
     char common_name[64];
@@ -166,7 +166,7 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     free(file_buffer);
 }
 
-void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
+static void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
 {
     bool status;
     uint8_t *file_buffer;
@@ -532,7 +532,7 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
 
 }
 
-void libspdm_test_crypt_spdm_x509_set_cert_certificate_check(void **state)
+static void libspdm_test_crypt_spdm_x509_set_cert_certificate_check(void **state)
 {
     bool status;
     uint8_t *file_buffer;
@@ -605,7 +605,7 @@ void libspdm_test_crypt_spdm_x509_set_cert_certificate_check(void **state)
 
 }
 
-void libspdm_test_crypt_spdm_verify_cert_chain_data(void **state)
+static void libspdm_test_crypt_spdm_verify_cert_chain_data(void **state)
 {
     bool status;
     uint8_t *file_buffer;
@@ -685,7 +685,7 @@ void libspdm_test_crypt_spdm_verify_cert_chain_data(void **state)
 }
 
 
-void libspdm_test_crypt_spdm_verify_certificate_chain_buffer(void **state)
+static void libspdm_test_crypt_spdm_verify_certificate_chain_buffer(void **state)
 {
     bool status;
     void *data;
@@ -770,7 +770,7 @@ void libspdm_test_crypt_spdm_verify_certificate_chain_buffer(void **state)
     }
 }
 
-void libspdm_test_crypt_asym_verify(void **state)
+static void libspdm_test_crypt_asym_verify(void **state)
 {
     spdm_version_number_t spdm_version;
     void *context;
@@ -1001,7 +1001,7 @@ void libspdm_test_crypt_asym_verify(void **state)
 #endif
 }
 
-void libspdm_test_crypt_req_asym_verify(void **state)
+static void libspdm_test_crypt_req_asym_verify(void **state)
 {
     spdm_version_number_t spdm_version;
     void *context;
@@ -1233,7 +1233,7 @@ bool libspdm_is_palindrome(const uint8_t *buf, size_t buf_size);
 bool libspdm_is_signature_buffer_palindrome(
     uint32_t base_asym_algo, const uint8_t *buf, size_t buf_size);
 
-void libspdm_test_crypt_palindrome(void **state)
+static void libspdm_test_crypt_palindrome(void **state)
 {
     bool status;
 
@@ -1263,7 +1263,7 @@ void libspdm_test_crypt_palindrome(void **state)
     assert_false(status);
 }
 
-void libspdm_test_crypt_rsa_palindrome(void **state)
+static void libspdm_test_crypt_rsa_palindrome(void **state)
 {
     /* Test RSA Buffers as palindrome */
     int i;
@@ -1308,7 +1308,7 @@ void libspdm_test_crypt_rsa_palindrome(void **state)
     }
 }
 
-void libspdm_test_crypt_ecdsa_palindrome(void **state)
+static void libspdm_test_crypt_ecdsa_palindrome(void **state)
 {
     int i;
     bool status;
@@ -1365,44 +1365,33 @@ void libspdm_test_crypt_ecdsa_palindrome(void **state)
     }
 }
 
-int libspdm_crypt_lib_setup(void **state)
+static int libspdm_crypt_lib_setup(void **state)
 {
     return 0;
 }
 
-int libspdm_crypt_lib_teardown(void **state)
+static int libspdm_crypt_lib_teardown(void **state)
 {
     return 0;
 }
 
-int libspdm_crypt_lib_test_main(void)
+static int libspdm_crypt_lib_test_main(void)
 {
-    const struct CMUnitTest spdm_crypt_lib_tests[] = {
-        cmocka_unit_test(
-            libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes),
-
+    const struct CMUnitTest test_cases[] = {
+        cmocka_unit_test(libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes),
         cmocka_unit_test(libspdm_test_crypt_spdm_get_dmtf_subject_alt_name),
-
         cmocka_unit_test(libspdm_test_crypt_spdm_x509_certificate_check),
-
         cmocka_unit_test(libspdm_test_crypt_spdm_x509_set_cert_certificate_check),
-
         cmocka_unit_test(libspdm_test_crypt_spdm_verify_cert_chain_data),
-
         cmocka_unit_test(libspdm_test_crypt_spdm_verify_certificate_chain_buffer),
-
         cmocka_unit_test(libspdm_test_crypt_asym_verify),
-
         cmocka_unit_test(libspdm_test_crypt_req_asym_verify),
-
         cmocka_unit_test(libspdm_test_crypt_palindrome),
-
         cmocka_unit_test(libspdm_test_crypt_rsa_palindrome),
-
         cmocka_unit_test(libspdm_test_crypt_ecdsa_palindrome),
     };
 
-    return cmocka_run_group_tests(spdm_crypt_lib_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_crypt_lib_setup,
                                   libspdm_crypt_lib_teardown);
 }
