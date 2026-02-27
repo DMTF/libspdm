@@ -162,6 +162,8 @@ static void req_get_key_pair_info_case1(void **state)
     uint16_t current_key_usage;
     uint32_t asym_algo_capabilities;
     uint32_t current_asym_algo;
+    uint32_t pqc_asym_algo_capabilities;
+    uint32_t current_pqc_asym_algo;
     uint16_t public_key_info_len;
     uint8_t assoc_cert_slot_mask;
     uint8_t public_key_info[SPDM_MAX_PUBLIC_KEY_INFO_LEN];
@@ -185,6 +187,7 @@ static void req_get_key_pair_info_case1(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
 
@@ -214,6 +217,8 @@ void req_get_key_pair_info_case2(void **state)
     uint16_t current_key_usage;
     uint32_t asym_algo_capabilities;
     uint32_t current_asym_algo;
+    uint32_t pqc_asym_algo_capabilities;
+    uint32_t current_pqc_asym_algo;
     uint16_t public_key_info_len;
     uint8_t assoc_cert_slot_mask;
     uint8_t public_key_info[SPDM_MAX_PUBLIC_KEY_INFO_LEN];
@@ -248,6 +253,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
 
@@ -271,6 +277,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
 
@@ -294,6 +301,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
 
@@ -327,6 +335,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
 
@@ -346,6 +355,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
 
@@ -370,6 +380,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
 
@@ -394,6 +405,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -422,6 +434,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
@@ -442,6 +455,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -467,6 +481,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
@@ -485,6 +500,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
 
@@ -505,6 +521,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
 
@@ -531,6 +548,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
 
@@ -550,6 +568,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
 
@@ -569,6 +588,7 @@ void req_get_key_pair_info_case2(void **state)
     status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
                                        &capabilities, &key_usage_capabilities, &current_key_usage,
                                        &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                                        &assoc_cert_slot_mask, &public_key_info_len,
                                        public_key_info);
 

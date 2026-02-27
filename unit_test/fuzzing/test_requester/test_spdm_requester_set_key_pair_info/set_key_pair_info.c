@@ -65,6 +65,7 @@ void libspdm_test_requester_set_key_pair_info(void **State)
     uint8_t operation;
     uint16_t desired_key_usage;
     uint32_t desired_asym_algo;
+    uint32_t desired_pqc_asym_algo;
     uint8_t desired_assoc_cert_slot_mask;
 
 
@@ -82,29 +83,32 @@ void libspdm_test_requester_set_key_pair_info(void **State)
     operation = SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION;
     desired_key_usage = 0;
     desired_asym_algo = 0;
+    desired_pqc_asym_algo = 0;
     desired_assoc_cert_slot_mask = 0;
     libspdm_set_key_pair_info(spdm_context, NULL, key_pair_id,
                               operation, desired_key_usage, desired_asym_algo,
-                              desired_assoc_cert_slot_mask);
+                              desired_pqc_asym_algo, desired_assoc_cert_slot_mask);
 
     key_pair_id = 1;
     operation = SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION;
     desired_key_usage = 0;
     desired_asym_algo = 0;
+    desired_pqc_asym_algo = 0;
     desired_assoc_cert_slot_mask = 0;
     libspdm_set_key_pair_info(spdm_context, NULL, key_pair_id,
                               operation, desired_key_usage, desired_asym_algo,
-                              desired_assoc_cert_slot_mask);
+                              desired_pqc_asym_algo, desired_assoc_cert_slot_mask);
 
 
     key_pair_id = 1;
     operation = SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION;
     desired_key_usage = 0;
     desired_asym_algo = 0;
+    desired_pqc_asym_algo = 0;
     desired_assoc_cert_slot_mask = 0;
     libspdm_set_key_pair_info(spdm_context, NULL, key_pair_id,
                               operation, desired_key_usage, desired_asym_algo,
-                              desired_assoc_cert_slot_mask);
+                              desired_pqc_asym_algo, desired_assoc_cert_slot_mask);
 
 }
 

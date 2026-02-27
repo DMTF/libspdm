@@ -422,6 +422,8 @@ libspdm_return_t libspdm_get_measurement_extension_log(void *spdm_context,
  * @param  current_key_usage          Indicate the currently configured key usage for the requested key pairs ID.
  * @param  asym_algo_capabilities     Indicate the asymmetric algorithms the Responder supports for this key pair ID.
  * @param  current_asym_algo          Indicate the currently configured asymmetric algorithm for this key pair ID.
+ * @param  pqc_asym_algo_capabilities Indicate the post-quantum cryptography asymmetric algorithms the Responder supports for this key pair ID.
+ * @param  current_pqc_asym_algo      Indicate the currently configured post-quantum cryptography asymmetric algorithm for this key pair ID.
  * @param  assoc_cert_slot_mask       This field is a bit mask representing the currently associated certificate slots.
  * @param  public_key_info_len        On input, indicate the size in bytes of the destination buffer to store.
  *                                    On output, indicate the size in bytes of the public_key_info.
@@ -434,10 +436,13 @@ libspdm_return_t libspdm_get_key_pair_info(void *spdm_context, const uint32_t *s
                                            uint16_t *current_key_usage,
                                            uint32_t *asym_algo_capabilities,
                                            uint32_t *current_asym_algo,
+                                           uint32_t *pqc_asym_algo_capabilities,
+                                           uint32_t *current_pqc_asym_algo,
                                            uint8_t *assoc_cert_slot_mask,
                                            uint16_t *public_key_info_len,
                                            void *public_key_info
                                            );
+
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
@@ -452,6 +457,7 @@ libspdm_return_t libspdm_get_key_pair_info(void *spdm_context, const uint32_t *s
  * @param  operation                    Set key pair info operation: change/erase/generate.
  * @param  desired_key_usage            Indicate the desired key usage for the requested key pair ID.
  * @param  desired_asym_algo            Indicate the desired asymmetric algorithm for the requested key pair ID.
+ * @param  desired_pqc_asym_algo        Indicate the desired PQC asymmetric algorithm for the requested key pair ID.
  * @param  desired_assoc_cert_slot_mask Indicate the desired certificate slot association for the requested key pair ID.
  **/
 libspdm_return_t libspdm_set_key_pair_info(void *spdm_context, const uint32_t *session_id,
@@ -459,6 +465,7 @@ libspdm_return_t libspdm_set_key_pair_info(void *spdm_context, const uint32_t *s
                                            uint8_t operation,
                                            uint16_t desired_key_usage,
                                            uint32_t desired_asym_algo,
+                                           uint32_t desired_pqc_asym_algo,
                                            uint8_t desired_assoc_cert_slot_mask
                                            );
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */

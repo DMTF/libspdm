@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -191,46 +191,12 @@ receive_done:
     return status;
 }
 
-libspdm_return_t libspdm_set_key_pair_info_pqc(void *spdm_context, const uint32_t *session_id,
-                                               uint8_t key_pair_id,
-                                               uint8_t operation,
-                                               uint16_t desired_key_usage,
-                                               uint32_t desired_asym_algo,
-                                               uint32_t desired_pqc_asym_algo,
-                                               uint8_t desired_assoc_cert_slot_mask
-                                               )
-{
-    libspdm_context_t *context;
-    size_t retry;
-    uint64_t retry_delay_time;
-    libspdm_return_t status;
-
-    context = spdm_context;
-    context->crypto_request = true;
-    retry = context->retry_times;
-    retry_delay_time = context->retry_delay_time;
-    do {
-        status = libspdm_try_set_key_pair_info(context, session_id, key_pair_id,
-                                               operation,
-                                               desired_key_usage,
-                                               desired_asym_algo,
-                                               desired_pqc_asym_algo,
-                                               desired_assoc_cert_slot_mask);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
-            return status;
-        }
-
-        libspdm_sleep(retry_delay_time);
-    } while (retry-- != 0);
-
-    return status;
-}
-
 libspdm_return_t libspdm_set_key_pair_info(void *spdm_context, const uint32_t *session_id,
                                            uint8_t key_pair_id,
                                            uint8_t operation,
                                            uint16_t desired_key_usage,
                                            uint32_t desired_asym_algo,
+                                           uint32_t desired_pqc_asym_algo,
                                            uint8_t desired_assoc_cert_slot_mask
                                            )
 {
@@ -248,7 +214,7 @@ libspdm_return_t libspdm_set_key_pair_info(void *spdm_context, const uint32_t *s
                                                operation,
                                                desired_key_usage,
                                                desired_asym_algo,
-                                               0,
+                                               desired_pqc_asym_algo,
                                                desired_assoc_cert_slot_mask);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
