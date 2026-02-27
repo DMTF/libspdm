@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1265,7 +1265,7 @@ void libspdm_test_crypt_palindrome(void **state)
 
 void libspdm_test_crypt_rsa_palindrome(void **state)
 {
-    /* Test RSA Buffers as palindrone */
+    /* Test RSA Buffers as palindrome */
     int i;
     bool status;
 
@@ -1294,11 +1294,11 @@ void libspdm_test_crypt_rsa_palindrome(void **state)
 
     /* Test each of these buffers against each RSA algo type */
     for (i = 0; i < (sizeof(rsa_algos) / sizeof(rsa_algos[0])); i++) {
-        /* Test case where buffer is palindrone */
+        /* Test case where buffer is palindrome */
         status = libspdm_is_signature_buffer_palindrome(rsa_algos[i], buf0, sizeof(buf0));
         assert_true(status);
 
-        /* Test cases where buffer is NOT palindrone */
+        /* Test cases where buffer is NOT palindrome */
         status = libspdm_is_signature_buffer_palindrome(rsa_algos[i], buf1, sizeof(buf1));
         assert_false(status);
         status = libspdm_is_signature_buffer_palindrome(rsa_algos[i], buf2, sizeof(buf2));
@@ -1345,11 +1345,11 @@ void libspdm_test_crypt_ecdsa_palindrome(void **state)
 
     /* Test each of the buffers against each ECDSA algo type */
     for (i = 0; i < (sizeof(ecdsa_algos) / sizeof(ecdsa_algos[0])); i++) {
-        /* Test case where buffer is palindrone */
+        /* Test case where buffer is palindrome */
         status = libspdm_is_signature_buffer_palindrome(ecdsa_algos[i], buf0, sizeof(buf0));
         assert_true(status);
 
-        /* Test cases where buffer is NOT palindrone */
+        /* Test cases where buffer is NOT palindrome */
         status = libspdm_is_signature_buffer_palindrome(ecdsa_algos[i], buf1, sizeof(buf1));
         assert_false(status);
         status = libspdm_is_signature_buffer_palindrome(ecdsa_algos[i], buf2, sizeof(buf2));

@@ -675,7 +675,7 @@ void libspdm_copy_signature_swap_endian(
 /**
  * libspdm_is_palindrome
  * Checks to see if a buffer is a palindrome.
- * If the buffer is a palindrone, it is the same for both endians,
+ * If the buffer is a palindrome, it is the same for both endians,
  * and therefore endianness cannot be determined.
  **/
 bool libspdm_is_palindrome(const uint8_t* buf, size_t buf_size)
