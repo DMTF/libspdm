@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -313,47 +313,6 @@ receive_done:
     return status;
 }
 
-libspdm_return_t libspdm_get_key_pair_info_with_pqc(void *spdm_context, const uint32_t *session_id,
-                                                    uint8_t key_pair_id, uint8_t *total_key_pairs,
-                                                    uint16_t *capabilities,
-                                                    uint16_t *key_usage_capabilities,
-                                                    uint16_t *current_key_usage,
-                                                    uint32_t *asym_algo_capabilities,
-                                                    uint32_t *current_asym_algo,
-                                                    uint32_t *pqc_asym_algo_capabilities,
-                                                    uint32_t *current_pqc_asym_algo,
-                                                    uint8_t *assoc_cert_slot_mask,
-                                                    uint16_t *public_key_info_len,
-                                                    void *public_key_info
-                                                    )
-{
-    libspdm_context_t *context;
-    size_t retry;
-    uint64_t retry_delay_time;
-    libspdm_return_t status;
-
-    context = spdm_context;
-    context->crypto_request = true;
-    retry = context->retry_times;
-    retry_delay_time = context->retry_delay_time;
-    do {
-        status = libspdm_try_get_key_pair_info(context, session_id, key_pair_id,
-                                               total_key_pairs, capabilities,
-                                               key_usage_capabilities, current_key_usage,
-                                               asym_algo_capabilities, current_asym_algo,
-                                               pqc_asym_algo_capabilities, current_pqc_asym_algo,
-                                               assoc_cert_slot_mask, public_key_info_len,
-                                               public_key_info);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
-            return status;
-        }
-
-        libspdm_sleep(retry_delay_time);
-    } while (retry-- != 0);
-
-    return status;
-}
-
 libspdm_return_t libspdm_get_key_pair_info(void *spdm_context, const uint32_t *session_id,
                                            uint8_t key_pair_id, uint8_t *total_key_pairs,
                                            uint16_t *capabilities,
@@ -361,6 +320,8 @@ libspdm_return_t libspdm_get_key_pair_info(void *spdm_context, const uint32_t *s
                                            uint16_t *current_key_usage,
                                            uint32_t *asym_algo_capabilities,
                                            uint32_t *current_asym_algo,
+                                           uint32_t *pqc_asym_algo_capabilities,
+                                           uint32_t *current_pqc_asym_algo,
                                            uint8_t *assoc_cert_slot_mask,
                                            uint16_t *public_key_info_len,
                                            void *public_key_info
@@ -380,7 +341,7 @@ libspdm_return_t libspdm_get_key_pair_info(void *spdm_context, const uint32_t *s
                                                total_key_pairs, capabilities,
                                                key_usage_capabilities, current_key_usage,
                                                asym_algo_capabilities, current_asym_algo,
-                                               NULL, NULL,
+                                               pqc_asym_algo_capabilities, current_pqc_asym_algo,
                                                assoc_cert_slot_mask, public_key_info_len,
                                                public_key_info);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
