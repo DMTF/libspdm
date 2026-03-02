@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -59,14 +59,14 @@ libspdm_return_t libspdm_get_encap_request_key_update(libspdm_context_t *spdm_co
 
     if (spdm_context->encap_context.last_encap_request_header.request_response_code !=
         SPDM_KEY_UPDATE) {
-        spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+        spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
         spdm_request->header.param2 = 0;
         if (!libspdm_get_random_number(sizeof(spdm_request->header.param2),
                                        &spdm_request->header.param2)) {
             return LIBSPDM_STATUS_LOW_ENTROPY;
         }
     } else {
-        spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+        spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
         spdm_request->header.param2 = 1;
         if (!libspdm_get_random_number(sizeof(spdm_request->header.param2),
                                        &spdm_request->header.param2)) {
@@ -153,7 +153,7 @@ libspdm_return_t libspdm_process_encap_response_key_update(
         (spdm_response->header.request_response_code != SPDM_KEY_UPDATE_ACK) ||
         (spdm_response->header.param1 != spdm_request->header.param1) ||
         (spdm_response->header.param2 != spdm_request->header.param2)) {
-        if (spdm_request->header.param1 != SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY) {
+        if (spdm_request->header.param1 != SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_key_update[%x] failed\n", session_id));
         } else {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] failed\n", session_id));
@@ -161,7 +161,7 @@ libspdm_return_t libspdm_process_encap_response_key_update(
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
 
-    if (spdm_request->header.param1 != SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY) {
+    if (spdm_request->header.param1 != SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_key_update[%x] success\n", session_id));
         *need_continue = true;
     } else {

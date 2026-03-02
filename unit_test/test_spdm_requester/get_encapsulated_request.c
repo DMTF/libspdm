@@ -476,7 +476,7 @@ static libspdm_return_t receive_message(
             spdm_response = (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = 0x3;
 
             sub_index++;

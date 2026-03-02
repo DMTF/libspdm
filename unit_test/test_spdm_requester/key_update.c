@@ -835,10 +835,10 @@ static libspdm_return_t receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -887,10 +887,10 @@ static libspdm_return_t receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1056,7 +1056,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1089,7 +1089,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1266,7 +1266,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1299,7 +1299,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1418,10 +1418,10 @@ static libspdm_return_t receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1471,10 +1471,10 @@ static libspdm_return_t receive_message(
         /*wrong response code*/
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE;
         if (sub_index == 0) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1523,10 +1523,10 @@ static libspdm_return_t receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1575,10 +1575,10 @@ static libspdm_return_t receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1627,11 +1627,11 @@ static libspdm_return_t receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             /*wrong token*/
             spdm_response->header.param2 = m_libspdm_last_token + 1;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1681,10 +1681,10 @@ static libspdm_return_t receive_message(
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
             /*wrong operation code*/
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -1733,7 +1733,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1817,7 +1817,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1901,7 +1901,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -1967,7 +1967,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2018,7 +2018,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2102,7 +2102,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2190,7 +2190,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2260,7 +2260,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2317,7 +2317,7 @@ static libspdm_return_t receive_message(
 
                 spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
                 spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-                spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+                spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
                 spdm_response->header.param2 = m_libspdm_last_token;
 
                 /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2418,12 +2418,12 @@ static libspdm_return_t receive_message(
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
             /*wrong response code*/
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -2472,10 +2472,10 @@ static libspdm_return_t receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             /*wrong token*/
             spdm_response->header.param2 = m_libspdm_last_token + 1;
         }
@@ -2525,11 +2525,11 @@ static libspdm_return_t receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
             /*wrong operation code*/
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
@@ -2578,10 +2578,10 @@ static libspdm_return_t receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
         if (sub_index == 0) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS;
             spdm_response->header.param2 = m_libspdm_last_token;
         } else if (sub_index == 1) {
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* as it is using single context, the keys were updated
@@ -2884,7 +2884,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -2916,7 +2916,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -3225,7 +3225,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -3257,7 +3257,7 @@ static libspdm_return_t receive_message(
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+            spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
             /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
