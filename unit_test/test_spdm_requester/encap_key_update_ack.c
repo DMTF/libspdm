@@ -12,55 +12,55 @@
 
 spdm_key_update_request_t m_spdm_key_update_request1 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
-     SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY, 0x3}
+     SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY, 0x3}
 };
 size_t m_spdm_key_update_request1_size = sizeof(m_spdm_key_update_request1);
 
 spdm_key_update_request_t m_spdm_key_update_request2 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
-     SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY, 0x3}
+     SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY, 0x3}
 };
 size_t m_spdm_key_update_request2_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
 spdm_key_update_request_t m_spdm_key_update_request3 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
-     SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS, 0x71}
+     SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS, 0x71}
 };
 size_t m_spdm_key_update_request3_size = sizeof(m_spdm_key_update_request3);
 
 spdm_key_update_request_t m_spdm_key_update_request4 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
-     SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS, 0x71}
+     SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS, 0x71}
 };
 size_t m_spdm_key_update_request4_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
 spdm_key_update_request_t m_spdm_key_update_request5 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
-     SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY, 0x4A}
+     SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY, 0x4A}
 };
 size_t m_spdm_key_update_request5_size = sizeof(m_spdm_key_update_request5);
 
 spdm_key_update_request_t m_spdm_key_update_request6 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
-     SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY, 0x4A}
+     SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY, 0x4A}
 };
 size_t m_spdm_key_update_request6_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
 spdm_key_update_request_t m_spdm_key_update_request7 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
-     SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY, 0x92}
+     SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY, 0x92}
 };
 size_t m_spdm_key_update_request7_size = sizeof(m_spdm_key_update_request7);
 
 spdm_key_update_request_t m_spdm_key_update_request8 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
-     SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS, 0x13}
+     SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS, 0x13}
 };
 size_t m_spdm_key_update_request8_size = sizeof(m_spdm_key_update_request8);
 
 spdm_key_update_request_t m_spdm_key_update_request9 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
-     SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY, 0x22}
+     SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY, 0x22}
 };
 size_t m_spdm_key_update_request9_size = sizeof(m_spdm_key_update_request9);
 
@@ -210,7 +210,7 @@ static void req_encap_key_update_ack_case1(void **state)
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_UPDATE_ACK);
-    assert_int_equal(spdm_response->header.param1, SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY);
+    assert_int_equal(spdm_response->header.param1, SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY);
     assert_int_equal(spdm_response->header.param2, m_spdm_key_update_request1.header.param2);
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,
@@ -345,7 +345,7 @@ static void req_encap_key_update_ack_case3(void **state)
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_UPDATE_ACK);
-    assert_int_equal(spdm_response->header.param1, SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY);
+    assert_int_equal(spdm_response->header.param1, SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY);
     assert_int_equal(spdm_response->header.param2, m_spdm_key_update_request1.header.param2);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
@@ -826,7 +826,7 @@ static void req_encap_key_update_ack_case11(void **state)
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_UPDATE_ACK);
-    assert_int_equal(spdm_response->header.param1, SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY);
+    assert_int_equal(spdm_response->header.param1, SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY);
     assert_int_equal(spdm_response->header.param2, m_spdm_key_update_request1.header.param2);
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,
@@ -951,7 +951,7 @@ static void req_encap_key_update_ack_case13(void **state)
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_UPDATE_ACK);
-    assert_int_equal(spdm_response->header.param1, SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY);
+    assert_int_equal(spdm_response->header.param1, SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY);
     assert_int_equal(spdm_response->header.param2, m_spdm_key_update_request1.header.param2);
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,

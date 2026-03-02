@@ -67,7 +67,7 @@ static void rsp_encap_key_update_case1(void **state)
     spdm_context->encap_context.last_encap_request_header.request_response_code =
         SPDM_KEY_UPDATE_ACK;
     spdm_context->encap_context.last_encap_request_header.param1 =
-        SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+        SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
     spdm_context->encap_context.last_encap_request_header.param2 = 0;
 
     spdm_key_update_response_t spdm_response;
@@ -75,7 +75,7 @@ static void rsp_encap_key_update_case1(void **state)
 
     spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response.header.request_response_code = SPDM_KEY_UPDATE_ACK;
-    spdm_response.header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+    spdm_response.header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
     spdm_response.header.param2 = 0;
 
     status = libspdm_process_encap_response_key_update(spdm_context, spdm_response_size,
@@ -111,7 +111,7 @@ static void rsp_encap_key_update_case2(void **state)
     spdm_context->encap_context.last_encap_request_header.request_response_code =
         SPDM_KEY_UPDATE_ACK;
     spdm_context->encap_context.last_encap_request_header.param1 =
-        SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+        SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
     spdm_context->encap_context.last_encap_request_header.param2 = 0;
 
     spdm_key_update_response_t spdm_response;
@@ -119,7 +119,7 @@ static void rsp_encap_key_update_case2(void **state)
 
     spdm_response.header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response.header.request_response_code = SPDM_KEY_UPDATE_ACK;
-    spdm_response.header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+    spdm_response.header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
     spdm_response.header.param2 = 0;
 
     status = libspdm_process_encap_response_key_update(spdm_context, spdm_response_size,

@@ -797,7 +797,7 @@ static void rsp_encapsulated_response_ack_case3(void **State)
     spdm_context->encap_context.last_encap_request_header.request_response_code =
         SPDM_KEY_UPDATE_ACK;
     spdm_context->encap_context.last_encap_request_header.param1 =
-        SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+        SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
     spdm_context->encap_context.last_encap_request_header.param2 = 0;
 
     spdm_response_requester = (void *)temp_buf;
@@ -811,7 +811,7 @@ static void rsp_encapsulated_response_ack_case3(void **State)
 
     spdm_response_requester_key_update->header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_response_requester_key_update->header.request_response_code = SPDM_KEY_UPDATE_ACK;
-    spdm_response_requester_key_update->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+    spdm_response_requester_key_update->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
     spdm_response_requester_key_update->header.param2 = 0;
 
     response_size = sizeof(response);

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -93,9 +93,9 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
         spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
         spdm_request->header.request_response_code = SPDM_KEY_UPDATE;
         if (single_direction) {
-            spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
         } else {
-            spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
+            spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS;
         }
         spdm_request->header.param2 = 0;
 
@@ -242,7 +242,7 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
     LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_key_update_request_t));
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_KEY_UPDATE;
-    spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+    spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
     spdm_request->header.param2 = 1;
     if (!libspdm_get_random_number(sizeof(spdm_request->header.param2),
                                    &spdm_request->header.param2)) {

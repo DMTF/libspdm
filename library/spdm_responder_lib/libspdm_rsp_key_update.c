@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -111,7 +111,7 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t *spdm_context
     libspdm_zero_mem(&spdm_key_init_update_operation, sizeof(spdm_key_update_request_t));
 
     switch (spdm_request->header.param1) {
-    case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY:
+    case SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY:
         if (!libspdm_consttime_is_mem_equal(prev_spdm_request,
                                             &spdm_key_init_update_operation,
                                             sizeof(spdm_key_update_request_t))) {
@@ -137,7 +137,7 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t *spdm_context
         libspdm_copy_mem(prev_spdm_request, sizeof(spdm_key_update_request_t),
                          spdm_request, request_size);
         break;
-    case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS:
+    case SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS:
         if (!libspdm_consttime_is_mem_equal(prev_spdm_request,
                                             &spdm_key_init_update_operation,
                                             sizeof(spdm_key_update_request_t))) {
@@ -190,10 +190,10 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t *spdm_context
         libspdm_copy_mem(prev_spdm_request, sizeof(spdm_key_update_request_t),
                          spdm_request, request_size);
         break;
-    case SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY:
-        if ((prev_spdm_request->header.param1 != SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY) &&
+    case SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY:
+        if ((prev_spdm_request->header.param1 != SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY) &&
             (prev_spdm_request->header.param1 !=
-             SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS)) {
+             SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS)) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
