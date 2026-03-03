@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -118,10 +118,9 @@ libspdm_return_t libspdm_process_opaque_data_supported_version_data(
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
 
-    result = libspdm_get_element_from_opaque_data(
+    result = libspdm_get_sm_data_element_from_opaque_data(
         spdm_context, data_in_size,
-        data_in, SPDM_REGISTRY_ID_DMTF,
-        SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION,
+        data_in, SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION,
         &get_element_ptr, &get_element_len);
     if ((!result) || (get_element_ptr == NULL)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"get element error!\n"));
