@@ -11,6 +11,7 @@
 #include "library/spdm_secured_message_lib.h"
 #include "library/spdm_return_status.h"
 #include "library/spdm_crypt_lib.h"
+#include "industry_standard/spdm_authorization.h"
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 #include "hal/library/requester/reqasymsignlib.h"
@@ -1201,6 +1202,25 @@ bool libspdm_get_sm_data_element_from_opaque_data (libspdm_context_t *spdm_conte
                                                    size_t data_in_size, const void *data_in,
                                                    uint8_t sm_data_id,
                                                    const void **get_element_ptr, size_t *get_element_len);
+
+/**
+ * Get AODS element from multi element opaque data by AODS id
+ *
+ * @param[in]  spdm_context               A pointer to the SPDM context.
+ * @param[in]  data_in_size               Size of multi element opaque data.
+ * @param[in]  data_in                    A pointer to the multi element opaque data.
+ * @param[in]  aods_id                    ID for the AODS data type.
+ * @param[out] get_element_ptr            Pointer to store found element.
+ * @param[out] get_element_len            Pointer to length of found element.
+ *
+ * @retval true   Get element successfully
+ * @retval false  Get element failed
+ **/
+bool libspdm_get_aods_element_from_opaque_data (libspdm_context_t *spdm_context,
+                                                size_t data_in_size, const void *data_in,
+                                                uint8_t aods_id,
+                                                const void **get_element_ptr, size_t *get_element_len);
+
 
 /**
  *  Process general opaque data check

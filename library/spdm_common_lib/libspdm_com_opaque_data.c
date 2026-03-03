@@ -254,6 +254,73 @@ bool libspdm_get_sm_data_element_from_opaque_data (libspdm_context_t *spdm_conte
     return false;
 }
 
+bool libspdm_get_aods_element_from_opaque_data (libspdm_context_t *spdm_context,
+                                                size_t data_in_size, const void *data_in,
+                                                uint8_t aods_id,
+                                                const void **get_element_ptr, size_t *get_element_len)
+{
+    const opaque_element_table_header_t *opaque_element_table_header;
+    size_t opaque_element_len;
+    const aods_general_opaque_data_table_header_t *aods_element_table_header;
+    const aods_general_opaque_element_header_t *aods_element_header;
+    bool result;
+    uint8_t element_index;
+    uint8_t element_num;
+    uint8_t total_matched_element_cnt;
+
+    /*check parameter in*/
+    if ((data_in_size == 0) || (data_in == NULL)) {
+        return false;
+    }
+
+    if (libspdm_get_connection_version (spdm_context) < SPDM_MESSAGE_VERSION_14) {
+        return false;
+    }
+
+    if (aods_id > SPDM_AUTHORIZATION_DATA_STRUCTURE_ID_MAX) {
+        return false;
+    }
+
+    /*get the total matched element count*/
+    result = libspdm_get_element_from_opaque_data_with_element_id(
+        spdm_context, data_in_size, data_in,
+        SPDM_REGISTRY_ID_DMTF_DSP, 0, &total_matched_element_cnt,
+        (const void **) &opaque_element_table_header, &opaque_element_len);
+    if (!result) {
+        return false;
+    }
+    element_num = total_matched_element_cnt;
+    for (element_index = 0; element_index < element_num; element_index++) {
+        /*get element by element id*/
+        result = libspdm_get_element_from_opaque_data_with_element_id(
+            spdm_context, data_in_size, data_in,
+            SPDM_REGISTRY_ID_DMTF_DSP, element_index, &total_matched_element_cnt,
+            (const void **) &opaque_element_table_header, &opaque_element_len);
+        if (!result) {
+            return false;
+        }
+
+        aods_element_table_header = (const void *)opaque_element_table_header;
+        if (aods_element_table_header->vendor_len == 2 &&
+            aods_element_table_header->dmtf_spec_id == SPDM_SPEC_ID_0289) {
+            aods_element_header = (const void *)(aods_element_table_header + 1);
+            if ((const uint8_t *)aods_element_header +
+                sizeof(aods_general_opaque_element_header_t) >
+                (const uint8_t *)data_in + data_in_size) {
+                return false;
+            }
+
+            if (aods_element_header->aods_id == aods_id) {
+                *get_element_ptr = opaque_element_table_header;
+                *get_element_len = opaque_element_len;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
                                                size_t data_in_size,
                                                const void *data_in)
