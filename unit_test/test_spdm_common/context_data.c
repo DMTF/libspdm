@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1695,19 +1695,17 @@ static void libspdm_test_process_opaque_data_case22(void **state)
 
     opaque_data_ptr = (uint8_t *)&opaque_data;
     opaque_data_size = sizeof(opaque_data);
-    status = libspdm_get_element_from_opaque_data(spdm_context,
-                                                  opaque_data_size, opaque_data_ptr,
-                                                  SPDM_REGISTRY_ID_DMTF,
-                                                  SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION,
-                                                  &get_element_ptr, &get_element_len
-                                                  );
+    status = libspdm_get_sm_data_element_from_opaque_data(spdm_context,
+                                                          opaque_data_size, opaque_data_ptr,
+                                                          SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION,
+                                                          &get_element_ptr, &get_element_len
+                                                          );
     assert_int_equal (status, true);
-    status = libspdm_get_element_from_opaque_data(spdm_context,
-                                                  opaque_data_size, opaque_data_ptr,
-                                                  SPDM_REGISTRY_ID_DMTF,
-                                                  SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION,
-                                                  &get_element_ptr, &get_element_len
-                                                  );
+    status = libspdm_get_sm_data_element_from_opaque_data(spdm_context,
+                                                          opaque_data_size, opaque_data_ptr,
+                                                          SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION,
+                                                          &get_element_ptr, &get_element_len
+                                                          );
     assert_int_equal (status, true);
 }
 
