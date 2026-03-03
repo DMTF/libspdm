@@ -388,6 +388,8 @@ libspdm_return_t libspdm_measurement_collection(
     uint32_t measurement_hash_algo,
     uint8_t measurements_index,
     uint8_t request_attribute,
+    const uint8_t *requester_nonce,
+    uint8_t slot_id_param,
     size_t request_context_size,
     const void *request_context,
     uint8_t *content_changed,
@@ -701,6 +703,8 @@ bool libspdm_generate_measurement_summary_hash(
             spdm_version, measurement_specification,
             measurement_hash_algo,
             0xFF, /* Get all measurements*/
+            0,
+            NULL,
             0,
             0,
             NULL,
