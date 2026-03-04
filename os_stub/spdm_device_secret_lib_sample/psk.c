@@ -44,6 +44,10 @@ uint8_t m_cxl_tsp_2nd_session_psk[CXL_TSP_2ND_SESSION_COUNT][CXL_TSP_2ND_SESSION
 
 uint8_t m_cxl_tsp_current_psk_session_index = 0xFF;
 
+bool g_generate_psk_exchange_opaque_data = false;
+size_t libspdm_secret_lib_psk_finish_opaque_data_size;
+bool g_generate_psk_finish_opaque_data = false;
+
 bool libspdm_psk_handshake_secret_hkdf_expand(
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
@@ -197,4 +201,80 @@ bool libspdm_psk_master_secret_hkdf_expand(
 
     return result;
 }
+
+bool libspdm_psk_exchange_rsp_opaque_data(
+    void *spdm_context,
+    const void *psk_hint,
+    uint16_t psk_hint_size,
+    spdm_version_number_t spdm_version,
+    uint8_t measurement_hash_type,
+    const void *req_opaque_data,
+    size_t req_opaque_data_size,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    if (g_generate_psk_exchange_opaque_data) {
+        size_t version_selection_data_size;
+        version_selection_data_size = sizeof(spdm_general_opaque_data_table_header_t) +
+                                      sizeof(secured_message_opaque_element_table_header_t) +
+                                      sizeof(secured_message_opaque_element_version_selection_t);
+
+        LIBSPDM_ASSERT(*opaque_data_size >= version_selection_data_size);
+        *opaque_data_size = version_selection_data_size;
+
+        if (opaque_data != NULL) {
+            spdm_general_opaque_data_table_header_t *spdm_general_opaque_data_table_header;
+            secured_message_opaque_element_table_header_t *opaque_element_table_header;
+            secured_message_opaque_element_version_selection_t *opaque_element_version_section;
+
+            spdm_general_opaque_data_table_header = opaque_data;
+            spdm_general_opaque_data_table_header->total_elements = 1;
+            libspdm_write_uint24(spdm_general_opaque_data_table_header->reserved, 0);
+
+            opaque_element_table_header = (void *)(spdm_general_opaque_data_table_header + 1);
+            opaque_element_table_header->id = SPDM_REGISTRY_ID_DMTF;
+            opaque_element_table_header->vendor_len = 0;
+            opaque_element_table_header->opaque_element_data_len =
+                sizeof(secured_message_opaque_element_version_selection_t);
+            opaque_element_version_section = (void *)(opaque_element_table_header + 1);
+            opaque_element_version_section->sm_data_version =
+                SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
+            opaque_element_version_section->sm_data_id =
+                SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION;
+            opaque_element_version_section->selected_version =
+                SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        }
+
+        return true;
+    }
+    return false;
+}
+
+bool libspdm_psk_finish_rsp_opaque_data(
+    void *spdm_context,
+    uint32_t session_id,
+    spdm_version_number_t spdm_version,
+    const void *req_opaque_data,
+    size_t req_opaque_data_size,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    if (g_generate_psk_finish_opaque_data) {
+        LIBSPDM_ASSERT(libspdm_secret_lib_psk_finish_opaque_data_size <= *opaque_data_size);
+
+        *opaque_data_size = libspdm_secret_lib_psk_finish_opaque_data_size;
+
+        if (opaque_data != NULL) {
+            for (size_t index = 0; index < *opaque_data_size; index++)
+            {
+                ((uint8_t *)opaque_data)[index] = (uint8_t)(index + 1);
+            }
+        }
+    } else {
+        *opaque_data_size = 0;
+    }
+
+    return true;
+}
+
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
