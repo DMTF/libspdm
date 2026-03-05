@@ -485,9 +485,9 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
  * @retval RETURN_SUCCESS               The encapsulated request is returned.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-libspdm_return_t libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
-                                                      size_t *encap_request_size,
-                                                      void *encap_request);
+libspdm_return_t libspdm_get_encap_request_get_digests(libspdm_context_t *spdm_context,
+                                                       size_t *encap_request_size,
+                                                       void *encap_request);
 
 /**
  * Process the SPDM encapsulated DIGESTS response.
@@ -520,6 +520,7 @@ libspdm_return_t libspdm_process_encap_response_digest(
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
+                                                           uint8_t slot_id,
                                                            size_t *encap_request_size,
                                                            void *encap_request);
 
@@ -555,6 +556,8 @@ libspdm_return_t libspdm_process_encap_response_certificate(
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_context,
+                                                     uint8_t req_slot_id,
+                                                     const void *requester_context,
                                                      size_t *encap_request_size,
                                                      void *encap_request);
 

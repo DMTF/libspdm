@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -243,6 +243,31 @@ void libspdm_init_key_update_encap_state_with_session(
     void *spdm_context, uint32_t session_id);
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+/**
+ * This function is called when the Responder receives a GET_ENCAPSULATED_REQUEST or
+ * DELIVER_ENCAPSULATED_RESPONSE.
+ *
+ * @param  spdm_context       A pointer to the SPDM context.
+ * @param  session_id         If non-NULL, the session ID.
+ * @param  encap_flow_type    One of the LIBSPDM_ENCAP_FLOW_* values.
+ * @param  last_request_code  One of the SPDM_* request codes. If this function is called due to
+ *                            GET_ENCAPSULATED_REQUEST then its value is 0x00.
+ * @param  terminate_flow     Specifies whether to terminate the encapsulated flow or not.
+ * @param  encap_request_size Size, in bytes, of the encapsulated request.
+ * @param  encap_request      The encapsulated request.
+ **/
+typedef libspdm_return_t (*libspdm_encap_flow_handler_func)(
+    void *spdm_context,
+    const uint32_t *session_id,
+    libspdm_encap_flow_type_t encap_flow_type,
+    uint8_t last_request_code,
+    bool *terminate_flow,
+    size_t *encap_request_size,
+    void *encap_request);
+
+void libspdm_register_encap_flow_handler(void *spdm_context,
+                                         libspdm_encap_flow_handler_func encap_flow_handler);
+
 #if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
 /**
  * This function initializes the get_endpoint_info encapsulated state.

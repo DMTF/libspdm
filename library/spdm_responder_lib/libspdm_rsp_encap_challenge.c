@@ -10,6 +10,8 @@
     (LIBSPDM_SEND_CHALLENGE_SUPPORT)
 
 libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_context,
+                                                     uint8_t req_slot_id,
+                                                     const void *requester_context,
                                                      size_t *encap_request_size,
                                                      void *encap_request)
 {
@@ -43,7 +45,7 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
 
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_CHALLENGE;
-    spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
+    spdm_request->header.param1 = req_slot_id;
     spdm_request->header.param2 = SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH;
     if (!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
         return LIBSPDM_STATUS_LOW_ENTROPY;
@@ -52,8 +54,12 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
     LIBSPDM_INTERNAL_DUMP_DATA(spdm_request->nonce, SPDM_NONCE_SIZE);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
-        libspdm_copy_mem(spdm_request + 1, SPDM_REQ_CONTEXT_SIZE,
-                         spdm_context->encap_context.req_context, SPDM_REQ_CONTEXT_SIZE);
+        if (requester_context == NULL) {
+            libspdm_zero_mem(spdm_request + 1, SPDM_REQ_CONTEXT_SIZE);
+        } else {
+            libspdm_copy_mem(spdm_request + 1, SPDM_REQ_CONTEXT_SIZE,
+                             requester_context, SPDM_REQ_CONTEXT_SIZE);
+        }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap RequesterContext - "));
         LIBSPDM_INTERNAL_DUMP_DATA((uint8_t *)(spdm_request + 1), SPDM_REQ_CONTEXT_SIZE);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));

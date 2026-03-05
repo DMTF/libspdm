@@ -490,6 +490,7 @@ typedef struct {
     uint8_t req_context[SPDM_REQ_CONTEXT_SIZE];
     uint32_t session_id;
     bool use_large_cert_chain;
+    libspdm_encap_flow_type_t flow_type;
 } libspdm_encap_context_t;
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
@@ -602,6 +603,9 @@ typedef struct {
     /* Register libspdm_key_update_callback function (responder only)
      * Register can know when session keys are updated during KEY_UPDATE operations. */
     void *spdm_key_update_callback;
+
+    /* Callback function so that Integrator can specify encapsulated requests (responder only) */
+    void *encap_flow_handler_callback;
 
     libspdm_local_context_t local_context;
 
