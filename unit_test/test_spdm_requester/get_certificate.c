@@ -17,13 +17,9 @@ static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
 
 static bool m_get_cert;
-
 static uint8_t m_cert_model;
-
 static uint8_t m_slot_id;
-
 static size_t m_calling_index;
-
 
 /* Loading the target expiration certificate chain and saving root certificate hash
  * "rsa3072_Expiration/bundle_responder.certchain.der"*/
@@ -183,6 +179,16 @@ static libspdm_return_t send_message(
     case 0x1F:
     case 0x20:
     case 0x21:
+    case 0x22:
+    case 0x23:
+    case 0x24:
+    case 0x25:
+    case 0x26:
+    case 0x27:
+    case 0x28:
+    case 0x29:
+    case 0x2A:
+    case 0x2B:
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -2308,6 +2314,61 @@ static libspdm_return_t receive_message(
                                               false, spdm_response_size,
                                               spdm_response, response_size,
                                               response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x24:
+    case 0x28:
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
+    case 0x29: {
+        /* Response smaller than spdm_message_header_t (4 bytes). */
+        uint8_t *spdm_response;
+        size_t transport_header_size;
+
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+        *spdm_response = 0;
+        libspdm_transport_test_encode_message(spdm_context, NULL, false, false, 1,
+                                              spdm_response, response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x2A: {
+        /* Response code is not SPDM_CERTIFICATE or SPDM_ERROR. */
+        spdm_message_header_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_certificate_response_t);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->request_response_code = SPDM_DIGESTS; /* wrong code */
+        spdm_response->param1 = 0;
+        spdm_response->param2 = 0;
+        libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                              spdm_response_size, spdm_response,
+                                              response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x2B: {
+        /* Response spdm_version mismatches the request version. */
+        spdm_certificate_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_certificate_response_t);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11; /* mismatches VERSION_10 request */
+        spdm_response->header.request_response_code = SPDM_CERTIFICATE;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->portion_length = 0;
+        spdm_response->remainder_length = 0;
+        libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                              spdm_response_size, spdm_response,
+                                              response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
     default:
@@ -4454,6 +4515,275 @@ static void req_get_certificate_case33(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 34: length parameter exceeds SPDM_MAX_CERTIFICATE_CHAIN_SIZE with a connection version
+ *          below 1.4, which does not support larger certificate chains.
+ * Expected Behavior: returns LIBSPDM_STATUS_UNSUPPORTED_CAP.
+ **/
+static void req_get_certificate_case34(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x22;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+
+    cert_chain_size = sizeof(cert_chain);
+    status = libspdm_get_certificate_ex(spdm_context, NULL, 0,
+                                        SPDM_MAX_CERTIFICATE_CHAIN_SIZE + 1,
+                                        &cert_chain_size, cert_chain, NULL, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+}
+
+/**
+ * Test 35: length parameter equals SPDM_MAX_CERTIFICATE_CHAIN_SIZE with a connection version
+ *          of 1.4 or above, causing the length to be silently adjusted upward for backwards
+ *          compatibility.
+ * Expected Behavior: returns LIBSPDM_STATUS_UNSUPPORTED_CAP.
+ **/
+static void req_get_certificate_case35(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x23;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+
+    /* Intentionally omit CERT_CAP so execution stops at the capability check after the length
+     * adjustment has already been executed. */
+
+    cert_chain_size = sizeof(cert_chain);
+    status = libspdm_get_certificate_ex(spdm_context, NULL, 0,
+                                        SPDM_MAX_CERTIFICATE_CHAIN_SIZE,
+                                        &cert_chain_size, cert_chain, NULL, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+}
+
+/**
+ * Test 36: connection version is 1.4 and the responder advertises LARGE_RESP_CAP,
+ *          causing use_large_cert_chain to be set to true. The receive callback
+ *          returns a failure to terminate the exchange early.
+ * Expected Behavior: returns LIBSPDM_STATUS_RECEIVE_FAIL.
+ **/
+static void req_get_certificate_case36(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x24;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP;
+
+    cert_chain_size = sizeof(cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
+    assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
+}
+
+/**
+ * Test 37: libspdm_get_slot_storage_size is called with a connection version below 1.3,
+ *          which does not support the slot-storage-size query.
+ * Expected Behavior: returns LIBSPDM_STATUS_UNSUPPORTED_CAP.
+ **/
+static void req_get_certificate_case37(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t slot_storage_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x25;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
+
+    status = libspdm_get_slot_storage_size(spdm_context, NULL, 0, &slot_storage_size);
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+}
+
+/**
+ * Test 38: the responder does not advertise CERT_CAP.
+ * Expected Behavior: returns LIBSPDM_STATUS_UNSUPPORTED_CAP.
+ **/
+static void req_get_certificate_case38(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x26;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+
+    /* CERT_CAP is intentionally not set in capability flags. */
+
+    cert_chain_size = sizeof(cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+}
+
+/**
+ * Test 39: libspdm_acquire_receiver_buffer fails after the request has been sent.
+ * Expected Behavior: returns LIBSPDM_STATUS_ACQUIRE_FAIL.
+ **/
+static void req_get_certificate_case39(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x27;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+
+    cert_chain_size = sizeof(cert_chain);
+    libspdm_force_error(LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
+    libspdm_release_error(LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER);
+    assert_int_equal(status, LIBSPDM_STATUS_ACQUIRE_FAIL);
+}
+
+/**
+ * Test 40: libspdm_receive_spdm_response fails (receive_message callback returns an error).
+ * Expected Behavior: returns LIBSPDM_STATUS_RECEIVE_FAIL.
+ **/
+static void req_get_certificate_case40(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x28;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+
+    cert_chain_size = sizeof(cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
+    assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
+}
+
+/**
+ * Test 41: the CERTIFICATE response payload is smaller than sizeof(spdm_message_header_t).
+ * Expected Behavior: returns LIBSPDM_STATUS_INVALID_MSG_SIZE.
+ **/
+static void req_get_certificate_case41(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x29;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+
+    cert_chain_size = sizeof(cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
+}
+
+/**
+ * Test 42: the response carries a request_response_code that is neither SPDM_CERTIFICATE
+ *          nor SPDM_ERROR.
+ * Expected Behavior: returns LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ **/
+static void req_get_certificate_case42(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2A;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+
+    cert_chain_size = sizeof(cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
+
+/**
+ * Test 43: the spdm_version in the CERTIFICATE response does not match the version used
+ *          in the GET_CERTIFICATE request.
+ * Expected Behavior: returns LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ **/
+static void req_get_certificate_case43(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2B;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+
+    cert_chain_size = sizeof(cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
+
 int libspdm_req_get_certificate_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -4526,6 +4856,26 @@ int libspdm_req_get_certificate_test(void)
         cmocka_unit_test(req_get_certificate_case32),
         /* Fail response: get slot storage size, portion length not zero */
         cmocka_unit_test(req_get_certificate_case33),
+        /* Fail: length exceeds SPDM_MAX_CERTIFICATE_CHAIN_SIZE for version < 1.4 */
+        cmocka_unit_test(req_get_certificate_case34),
+        /* length == SPDM_MAX_CERTIFICATE_CHAIN_SIZE adjusted for version >= 1.4 */
+        cmocka_unit_test(req_get_certificate_case35),
+        /* use_large_cert_chain set to true for version >= 1.4 with LARGE_RESP_CAP */
+        cmocka_unit_test(req_get_certificate_case36),
+        /* Fail: slot_storage_size_requested with version < 1.3 */
+        cmocka_unit_test(req_get_certificate_case37),
+        /* Fail: responder does not advertise CERT_CAP */
+        cmocka_unit_test(req_get_certificate_case38),
+        /* Fail: libspdm_acquire_receiver_buffer returns an error */
+        cmocka_unit_test(req_get_certificate_case39),
+        /* Fail: libspdm_receive_spdm_response returns an error */
+        cmocka_unit_test(req_get_certificate_case40),
+        /* Fail: response smaller than spdm_message_header_t */
+        cmocka_unit_test(req_get_certificate_case41),
+        /* Fail: response code is not SPDM_CERTIFICATE or SPDM_ERROR */
+        cmocka_unit_test(req_get_certificate_case42),
+        /* Fail: response spdm_version mismatches request version */
+        cmocka_unit_test(req_get_certificate_case43),
     };
 
     libspdm_test_context_t test_context = {
