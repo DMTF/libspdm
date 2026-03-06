@@ -36,6 +36,9 @@ set(GCOV ${GCOV} CACHE STRING "Choose the target of Gcov: ON  OFF, and default i
 set(STACK_USAGE ${STACK_USAGE} CACHE STRING "Choose the target of STACK_USAGE: ON  OFF, and default is OFF" FORCE)
 set(BUILD_LINUX_SHARED_LIB ${BUILD_LINUX_SHARED_LIB} CACHE STRING "Choose if libspdm shared library should be built for linux: ON OFF, and default is OFF" FORCE)
 set(X509_IGNORE_CRITICAL ${X509_IGNORE_CRITICAL} CACHE STRING "Choose if libspdm-provided cryptography libraries (OpenSSL and MbedTLS) ignore unsupported critical extensions in certificates : ON OFF, and default is OFF" FORCE)
+set(DEVICE ${DEVICE} CACHE STRING "Choose the test device: sample tpm, and default is sample" FORCE)
+
+option(LIBSPDM_TPM_SUPPORT "Add TPM support in crypt_ext" OFF)
 
 if(NOT GCOV)
     set(GCOV "OFF")
@@ -53,6 +56,11 @@ if(NOT X509_IGNORE_CRITICAL)
     set(X509_IGNORE_CRITICAL "OFF")
 endif()
 
+if (NOT DEVICE)
+    set(DEVICE "sample")
+endif()
+
+
 set(LIBSPDM_DIR ${PROJECT_SOURCE_DIR})
 
 #
@@ -62,6 +70,7 @@ set(COMPILED_LIBCRYPTO_PATH ${COMPILED_LIBCRYPTO_PATH} CACHE STRING "Optionally 
 set(COMPILED_LIBSSL_PATH ${COMPILED_LIBSSL_PATH} CACHE STRING "Optionally provide a path to libssl" FORCE)
 
 message("CMAKE_GENERATOR = ${CMAKE_GENERATOR}")
+message("DEVICE = ${DEVICE}")
 
 if(ARCH STREQUAL "x64")
     message("ARCH = x64")
@@ -211,6 +220,14 @@ elseif(CRYPTO STREQUAL "openssl")
     add_definitions(-DLIBSPDM_AEAD_SM4_128_GCM_SUPPORT=0)
 else()
     message(FATAL_ERROR "Unknown CRYPTO")
+endif()
+
+if (LIBSPDM_TPM_SUPPORT)
+    if (NOT CRYPTO STREQUAL "openssl")
+        message(FATAL_ERROR "${CRYPTO} does not support TPM")
+    endif ()
+    message(STATUS "crypt_ext tpm supported enabled")
+    add_definitions(-DLIBSPDM_TPM_SUPPORT=1)
 endif()
 
 if (X509_IGNORE_CRITICAL STREQUAL "ON")
@@ -981,7 +998,7 @@ if(ENABLE_CODEQL STREQUAL "ON")
     add_subdirectory(os_stub/platform_lib)
     add_subdirectory(os_stub/platform_lib_null)
     add_subdirectory(os_stub/malloclib)
-    add_subdirectory(os_stub/spdm_device_secret_lib_sample)
+    add_subdirectory(os_stub/spdm_device_secret_lib_${DEVICE})
     add_subdirectory(os_stub/spdm_device_secret_lib_null)
     add_subdirectory(os_stub/spdm_cert_verify_callback_sample)
     add_subdirectory(os_stub/cryptlib_null)
@@ -1020,7 +1037,7 @@ else()
         add_subdirectory(os_stub/platform_lib)
         add_subdirectory(os_stub/platform_lib_null)
         add_subdirectory(os_stub/malloclib)
-        add_subdirectory(os_stub/spdm_device_secret_lib_sample)
+        add_subdirectory(os_stub/spdm_device_secret_lib_${DEVICE})
         add_subdirectory(os_stub/spdm_device_secret_lib_null)
         add_subdirectory(os_stub/spdm_cert_verify_callback_sample)
 
