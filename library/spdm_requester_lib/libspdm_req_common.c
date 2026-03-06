@@ -120,9 +120,8 @@ libspdm_return_t libspdm_process_opaque_data_version_selection_data(
         return LIBSPDM_STATUS_SUCCESS;
     }
 
-    result = libspdm_get_element_from_opaque_data(
-        spdm_context, data_in_size,
-        data_in, SPDM_REGISTRY_ID_DMTF,
+    result = libspdm_get_sm_data_element_from_opaque_data(
+        spdm_context, data_in_size, data_in,
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION,
         &get_element_ptr, &get_element_len);
     if ((!result) || (get_element_ptr == NULL)) {

@@ -11,6 +11,7 @@
 #include "library/spdm_secured_message_lib.h"
 #include "library/spdm_return_status.h"
 #include "library/spdm_crypt_lib.h"
+#include "industry_standard/spdm_authorization.h"
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 #include "hal/library/requester/reqasymsignlib.h"
@@ -1158,24 +1159,68 @@ bool libspdm_calculate_l1l2_hash(libspdm_context_t *spdm_context,
 #endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
 /**
- * Get element from multi element opaque data by element id.
+ * Get element from multi element opaque data by element id and element index
  *
  * This function should be called in
- * libspdm_process_opaque_data_supported_version_data/libspdm_process_opaque_data_version_selection_data.
  *
- * @param[in]  data_in_size     Size of multi element opaque data.
- * @param[in]  data_in          A pointer to the multi element opaque data.
- * @param[in]  element_id       Element id.
- * @param[in]  sm_data_id       ID for the Secured Message data type.
- * @param[out] get_element_ptr  Pointer to store found element.
+ * @param[in]  spdm_context               A pointer to the SPDM context.
+ * @param[in]  data_in_size               Size of multi element opaque data.
+ * @param[in]  data_in                    A pointer to the multi element opaque data.
+ * @param[in]  element_id                 Element id.
+ * @param[in]  element_index              Element index, start from 0.
+ *                                        It is used to get the nth element with the same element id.
+ * @param[out] total_matched_element_cnt  Pointer to store total matched element count with the same element id.
+ * @param[out] get_element_ptr            Pointer to store found element.
+ * @param[out] get_element_len            Pointer to length of found element.
  *
  * @retval true   Get element successfully
  * @retval false  Get element failed
  **/
-bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
-                                          size_t data_in_size, const void *data_in,
-                                          uint8_t element_id, uint8_t sm_data_id,
-                                          const void **get_element_ptr, size_t *get_element_len);
+bool libspdm_get_element_from_opaque_data_with_element_id (libspdm_context_t *spdm_context,
+                                                           size_t data_in_size, const void *data_in,
+                                                           uint8_t element_id, uint8_t element_index,
+                                                           uint8_t *total_matched_element_cnt,
+                                                           const void **get_element_ptr, size_t *get_element_len);
+
+/**
+ * Get secured message opaque data element from multi element opaque data by sm data id
+ *
+ * This function should be called in
+ * libspdm_process_opaque_data_supported_version_data/libspdm_process_opaque_data_version_selection_data.
+ *
+ * @param[in]  spdm_context               A pointer to the SPDM context.
+ * @param[in]  data_in_size               Size of multi element opaque data.
+ * @param[in]  data_in                    A pointer to the multi element opaque data.
+ * @param[in]  sm_data_id                 ID for the Secured Message data type.
+ * @param[out] get_element_ptr            Pointer to store found element.
+ * @param[out] get_element_len            Pointer to length of found element.
+ *
+ * @retval true   Get element successfully
+ * @retval false  Get element failed
+ **/
+bool libspdm_get_sm_data_element_from_opaque_data (libspdm_context_t *spdm_context,
+                                                   size_t data_in_size, const void *data_in,
+                                                   uint8_t sm_data_id,
+                                                   const void **get_element_ptr, size_t *get_element_len);
+
+/**
+ * Get AODS element from multi element opaque data by AODS id
+ *
+ * @param[in]  spdm_context               A pointer to the SPDM context.
+ * @param[in]  data_in_size               Size of multi element opaque data.
+ * @param[in]  data_in                    A pointer to the multi element opaque data.
+ * @param[in]  aods_id                    ID for the AODS data type.
+ * @param[out] get_element_ptr            Pointer to store found element.
+ * @param[out] get_element_len            Pointer to length of found element.
+ *
+ * @retval true   Get element successfully
+ * @retval false  Get element failed
+ **/
+bool libspdm_get_aods_element_from_opaque_data (libspdm_context_t *spdm_context,
+                                                size_t data_in_size, const void *data_in,
+                                                uint8_t aods_id,
+                                                const void **get_element_ptr, size_t *get_element_len);
+
 
 /**
  *  Process general opaque data check

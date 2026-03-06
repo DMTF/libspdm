@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1612,6 +1612,16 @@ typedef struct {
     secured_message_opaque_element_supported_version_t dmtf_sm_sup_ver_opaque;
     spdm_version_number_t dmtf_sm_sup_ver_versions_list[3];
     uint8_t dmtf_sm_sup_ver_align[3];
+    spdm_svh_dmtf_dsp_header_t dmtf_dsp_aods_invoke_seap_header;
+    uint16_t dmtf_dsp_aods_invoke_seap_opaque_len;
+    aods_general_opaque_element_invoke_seap_t dmtf_dsp_aods_invoke_seap_opaque;
+    uint8_t dmtf_dsp_aods_invoke_seap_opaque_align[2];
+    spdm_svh_dmtf_dsp_header_t dmtf_dsp_aods_seap_success_header;
+    uint16_t dmtf_dsp_aods_seap_success_opaque_len;
+    aods_general_opaque_element_seap_success_t dmtf_dsp_aods_seap_success_opaque;
+    spdm_svh_dmtf_dsp_header_t dmtf_dsp_aods_auth_hello_header;
+    uint16_t dmtf_dsp_aods_auth_hello_opaque_len;
+    aods_general_opaque_element_auth_hello_t dmtf_dsp_aods_auth_hello_opaque;
 } test_spdm12_opaque_data_table_t;
 
 #pragma pack()
@@ -1631,13 +1641,13 @@ static void libspdm_test_process_opaque_data_case22(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x16;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
 
     libspdm_set_mem ((uint8_t *)&opaque_data, sizeof(opaque_data), 0xFF);
-    opaque_data.opaque_header.total_elements = SPDM_REGISTRY_ID_MAX + 2;
+    opaque_data.opaque_header.total_elements = SPDM_REGISTRY_ID_MAX + 5;
     opaque_data.cbor_header.header.id = SPDM_REGISTRY_ID_IANA_CBOR;
     opaque_data.cbor_header.header.vendor_id_len = sizeof(opaque_data.cbor_vendor_id);
     opaque_data.cbor_opaque_len = sizeof(opaque_data.cbor_opaque);
@@ -1692,22 +1702,66 @@ static void libspdm_test_process_opaque_data_case22(void **state)
     opaque_data.dmtf_sm_sup_ver_versions_list[0] = SECURED_SPDM_VERSION_10 << 8;
     opaque_data.dmtf_sm_sup_ver_versions_list[1] = SECURED_SPDM_VERSION_11 << 8;
     opaque_data.dmtf_sm_sup_ver_versions_list[2] = SECURED_SPDM_VERSION_12 << 8;
+    opaque_data.dmtf_dsp_aods_invoke_seap_header.header.id = SPDM_REGISTRY_ID_DMTF_DSP;
+    opaque_data.dmtf_dsp_aods_invoke_seap_header.header.vendor_id_len =
+        sizeof(opaque_data.dmtf_dsp_aods_invoke_seap_header.vendor_id);
+    opaque_data.dmtf_dsp_aods_invoke_seap_header.vendor_id = SPDM_SPEC_ID_0289;
+    opaque_data.dmtf_dsp_aods_invoke_seap_opaque_len =
+        sizeof(opaque_data.dmtf_dsp_aods_invoke_seap_opaque);
+    opaque_data.dmtf_dsp_aods_invoke_seap_opaque.aods_id =
+        SPDM_AUTHORIZATION_DATA_STRUCTURE_ID_INVOKE_SEAP;
+    opaque_data.dmtf_dsp_aods_invoke_seap_opaque.presence_extension = 0;
+    opaque_data.dmtf_dsp_aods_invoke_seap_opaque.credetial_id = 1;
+    opaque_data.dmtf_dsp_aods_seap_success_header.header.id = SPDM_REGISTRY_ID_DMTF_DSP;
+    opaque_data.dmtf_dsp_aods_seap_success_header.header.vendor_id_len =
+        sizeof(opaque_data.dmtf_dsp_aods_seap_success_header.vendor_id);
+    opaque_data.dmtf_dsp_aods_seap_success_header.vendor_id = SPDM_SPEC_ID_0289;
+    opaque_data.dmtf_dsp_aods_seap_success_opaque_len =
+        sizeof(opaque_data.dmtf_dsp_aods_seap_success_opaque);
+    opaque_data.dmtf_dsp_aods_seap_success_opaque.aods_id =
+        SPDM_AUTHORIZATION_DATA_STRUCTURE_ID_SEAP_SUCCESS;
+    opaque_data.dmtf_dsp_aods_seap_success_opaque.presence_extension = 0;
+    opaque_data.dmtf_dsp_aods_auth_hello_header.header.id = SPDM_REGISTRY_ID_DMTF_DSP;
+    opaque_data.dmtf_dsp_aods_auth_hello_header.header.vendor_id_len =
+        sizeof(opaque_data.dmtf_dsp_aods_auth_hello_header.vendor_id);
+    opaque_data.dmtf_dsp_aods_auth_hello_header.vendor_id = SPDM_SPEC_ID_0289;
+    opaque_data.dmtf_dsp_aods_auth_hello_opaque_len =
+        sizeof(opaque_data.dmtf_dsp_aods_auth_hello_opaque);
+    opaque_data.dmtf_dsp_aods_auth_hello_opaque.aods_id =
+        SPDM_AUTHORIZATION_DATA_STRUCTURE_ID_AUTH_HELLO;
+    opaque_data.dmtf_dsp_aods_auth_hello_opaque.presence_extension = 0;
 
     opaque_data_ptr = (uint8_t *)&opaque_data;
     opaque_data_size = sizeof(opaque_data);
-    status = libspdm_get_element_from_opaque_data(spdm_context,
-                                                  opaque_data_size, opaque_data_ptr,
-                                                  SPDM_REGISTRY_ID_DMTF,
-                                                  SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION,
-                                                  &get_element_ptr, &get_element_len
-                                                  );
+    status = libspdm_get_sm_data_element_from_opaque_data(spdm_context,
+                                                          opaque_data_size, opaque_data_ptr,
+                                                          SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION,
+                                                          &get_element_ptr, &get_element_len
+                                                          );
     assert_int_equal (status, true);
-    status = libspdm_get_element_from_opaque_data(spdm_context,
-                                                  opaque_data_size, opaque_data_ptr,
-                                                  SPDM_REGISTRY_ID_DMTF,
-                                                  SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION,
-                                                  &get_element_ptr, &get_element_len
-                                                  );
+    status = libspdm_get_sm_data_element_from_opaque_data(spdm_context,
+                                                          opaque_data_size, opaque_data_ptr,
+                                                          SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION,
+                                                          &get_element_ptr, &get_element_len
+                                                          );
+    assert_int_equal (status, true);
+    status = libspdm_get_aods_element_from_opaque_data(spdm_context,
+                                                       opaque_data_size, opaque_data_ptr,
+                                                       SPDM_AUTHORIZATION_DATA_STRUCTURE_ID_INVOKE_SEAP,
+                                                       &get_element_ptr, &get_element_len
+                                                       );
+    assert_int_equal (status, true);
+    status = libspdm_get_aods_element_from_opaque_data(spdm_context,
+                                                       opaque_data_size, opaque_data_ptr,
+                                                       SPDM_AUTHORIZATION_DATA_STRUCTURE_ID_SEAP_SUCCESS,
+                                                       &get_element_ptr, &get_element_len
+                                                       );
+    assert_int_equal (status, true);
+    status = libspdm_get_aods_element_from_opaque_data(spdm_context,
+                                                       opaque_data_size, opaque_data_ptr,
+                                                       SPDM_AUTHORIZATION_DATA_STRUCTURE_ID_AUTH_HELLO,
+                                                       &get_element_ptr, &get_element_len
+                                                       );
     assert_int_equal (status, true);
 }
 
