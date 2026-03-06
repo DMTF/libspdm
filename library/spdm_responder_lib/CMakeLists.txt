@@ -5,7 +5,6 @@ add_library(spdm_responder_lib STATIC "")
 target_include_directories(spdm_responder_lib
     PRIVATE
         ${LIBSPDM_DIR}/include
-        ${LIBSPDM_DIR}/os_stub
 )
 
 target_sources(spdm_responder_lib

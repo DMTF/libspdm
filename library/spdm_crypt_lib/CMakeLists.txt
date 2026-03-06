@@ -5,7 +5,6 @@ add_library(spdm_crypt_lib STATIC "")
 target_include_directories(spdm_crypt_lib
     PRIVATE
         ${LIBSPDM_DIR}/include
-        ${LIBSPDM_DIR}/os_stub
 )
 
 target_sources(spdm_crypt_lib
