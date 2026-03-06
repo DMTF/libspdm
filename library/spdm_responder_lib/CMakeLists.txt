@@ -23,29 +23,29 @@ target_sources(spdm_responder_lib
         libspdm_rsp_encap_key_update.c
         libspdm_rsp_encap_response.c
         libspdm_rsp_encap_send_event.c
-        libspdm_rsp_end_session.c
+        libspdm_rsp_end_session_ack.c
         libspdm_rsp_endpoint_info.c
         libspdm_rsp_error.c
         libspdm_rsp_event_ack.c
-        libspdm_rsp_finish.c
+        libspdm_rsp_finish_rsp.c
         libspdm_rsp_handle_response_state.c
         libspdm_rsp_heartbeat.c
         libspdm_rsp_key_exchange.c
-        libspdm_rsp_key_update.c
+        libspdm_rsp_key_update_ack.c
         libspdm_rsp_measurements.c
-        libspdm_rsp_psk_exchange.c
-        libspdm_rsp_psk_finish.c
+        libspdm_rsp_psk_exchange_rsp.c
+        libspdm_rsp_psk_finish_rsp.c
         libspdm_rsp_receive_send.c
         libspdm_rsp_respond_if_ready.c
         libspdm_rsp_version.c
-        libspdm_rsp_set_certificate.c
+        libspdm_rsp_set_certificate_rsp.c
         libspdm_rsp_supported_event_types.c
         libspdm_rsp_subscribe_event_types_ack.c
         libspdm_rsp_csr.c
         libspdm_rsp_chunk_send_ack.c
-        libspdm_rsp_chunk_get.c
-        libspdm_rsp_vendor_response.c
+        libspdm_rsp_chunk_response.c
+        libspdm_rsp_vendor_defined_response.c
         libspdm_rsp_measurement_extension_log.c
-        libspdm_rsp_get_key_pair_info.c
+        libspdm_rsp_key_pair_info.c
         libspdm_rsp_set_key_pair_info_ack.c
 )
