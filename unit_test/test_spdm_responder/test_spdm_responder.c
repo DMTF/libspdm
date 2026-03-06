@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -35,7 +35,8 @@ int libspdm_rsp_measurement_extension_log_test(void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
 int libspdm_rsp_key_pair_info_test(void);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP*/
+int libspdm_rsp_key_pair_info_error_test(void);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
 int libspdm_rsp_set_key_pair_info_ack_test(void);
@@ -170,7 +171,10 @@ int main(void)
     if (libspdm_rsp_key_pair_info_test() != 0) {
         return_value = 1;
     }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP*/
+    if (libspdm_rsp_key_pair_info_error_test() != 0) {
+        return_value = 1;
+    }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
 
     #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
     if (libspdm_rsp_set_key_pair_info_ack_test() != 0) {
