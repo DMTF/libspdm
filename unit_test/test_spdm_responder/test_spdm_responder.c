@@ -40,6 +40,7 @@ int libspdm_rsp_key_pair_info_error_test(void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
 int libspdm_rsp_set_key_pair_info_ack_test(void);
+int libspdm_rsp_set_key_pair_info_ack_error_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP*/
 
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
@@ -178,6 +179,9 @@ int main(void)
 
     #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
     if (libspdm_rsp_set_key_pair_info_ack_test() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_rsp_set_key_pair_info_ack_error_test() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP*/
