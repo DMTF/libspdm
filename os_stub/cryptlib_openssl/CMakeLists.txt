@@ -58,5 +58,5 @@ if (LIBSPDM_TPM_SUPPORT)
     target_sources(cryptlib_openssl
         PRIVATE
             tpm/tpm.c)
-    target_link_libraries(cryptlib_openssl PUBLIC tss2-esys tss2-tctildr tss2-rc)
+    target_link_libraries(cryptlib_openssl PUBLIC tss2-esys tss2-sys tss2-mu tss2-tctildr tss2-rc)
 endif ()
