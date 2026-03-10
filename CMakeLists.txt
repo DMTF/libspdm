@@ -1,1236 +1,166 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 
-project("libspdm" C)
+project(libspdm LANGUAGES C)
+
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION.md CMAKE_INPUT_PROJECT_VERSION)
 string(REPLACE " " "_" CMAKE_PROJECT_VERSION ${CMAKE_INPUT_PROJECT_VERSION})
 string(REGEX REPLACE "[ ]*[A-Za-z]+[ ]*[A-Za-z ]+" "" PROJECT_VERSION ${CMAKE_INPUT_PROJECT_VERSION})
 
-#
-# Build Configuration Macro Definition
-#
 message("#########################")
 message("## Build Configuration ##")
 message("#########################")
 
-set(CMAKE_GENERATOR ${CMAKE_GENERATOR} CACHE STRING "Choose the generator of cmake")
+set(LIBSPDM_DIR "${PROJECT_SOURCE_DIR}")
 
-# Detect ARCH only if not set
-if(NOT DEFINED ARCH)
-    string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" DETECTED_ARCH)
+set(LIBSPDM_CRYPTO "openssl" CACHE STRING "Crypto backend: openssl or mbedtls")
 
-    if (DETECTED_ARCH STREQUAL "amd64" OR DETECTED_ARCH STREQUAL "x86_64")
-        set(DETECTED_ARCH "x64")
-    elseif (DETECTED_ARCH STREQUAL "x86" OR DETECTED_ARCH STREQUAL "i386" OR DETECTED_ARCH STREQUAL "i686")
-        set(DETECTED_ARCH "ia32")
-    endif()
+option(LIBSPDM_TPM_SUPPORT "Enable TPM support in crypt_ext" OFF)
+option(LIBSPDM_GCOV "Enable GCOV instrumentation" OFF)
+option(LIBSPDM_STACK_USAGE "Enable stack usage instrumentation" OFF)
+option(LIBSPDM_BUILD_SHARED_LIB "Build libspdm shared library" OFF)
+option(LIBSPDM_X509_IGNORE_CRITICAL "Ignore unsupported critical extensions in certificates" OFF)
+option(LIBSPDM_ENABLE_BINARY_BUILD "Use precompiled OpenSSL libraries" OFF)
+option(LIBSPDM_BUILD_TESTS "Build unit tests" ON)
 
-    message(STATUS "Auto-detected ARCH = ${DETECTED_ARCH}")
-    set(ARCH "${DETECTED_ARCH}")
-endif()
+set(LIBSPDM_DEVICE "sample" CACHE STRING "Device secret implementation")
 
-set(ARCH ${ARCH} CACHE STRING "Choose the arch of build: ia32 x64 arm aarch64 riscv32 riscv64 arc loongarch64" FORCE)
-set(TOOLCHAIN ${TOOLCHAIN} CACHE STRING "Choose the toolchain of build: Windows: VS2015 VS2019 VS2022 CLANG ARM_DS2022 LIBFUZZER Linux: GCC ARM_DS2022 ARM_GNU ARM_GNU_BARE_METAL ARM_GCC AARCH64_GCC RISCV_GNU RISCV64_GCC RISCV_XPACK ARC_GCC LOONGARCH64_GNU CLANG CBMC AFL KLEE LIBFUZZER" FORCE)
-set(CMAKE_BUILD_TYPE ${TARGET} CACHE STRING "Choose the target of build: Debug Release" FORCE)
-set(CRYPTO ${CRYPTO} CACHE STRING "Choose the crypto of build: mbedtls openssl" FORCE)
-set(GCOV ${GCOV} CACHE STRING "Choose the target of Gcov: ON  OFF, and default is OFF" FORCE)
-set(STACK_USAGE ${STACK_USAGE} CACHE STRING "Choose the target of STACK_USAGE: ON  OFF, and default is OFF" FORCE)
-set(BUILD_LINUX_SHARED_LIB ${BUILD_LINUX_SHARED_LIB} CACHE STRING "Choose if libspdm shared library should be built for linux: ON OFF, and default is OFF" FORCE)
-set(X509_IGNORE_CRITICAL ${X509_IGNORE_CRITICAL} CACHE STRING "Choose if libspdm-provided cryptography libraries (OpenSSL and MbedTLS) ignore unsupported critical extensions in certificates : ON OFF, and default is OFF" FORCE)
-set(DEVICE ${DEVICE} CACHE STRING "Choose the test device: sample tpm, and default is sample" FORCE)
+set(COMPILED_LIBCRYPTO_PATH "" CACHE PATH "Path to libcrypto")
+set(COMPILED_LIBSSL_PATH "" CACHE PATH "Path to libssl")
 
-option(LIBSPDM_TPM_SUPPORT "Add TPM support in crypt_ext" OFF)
+message(STATUS "CMAKE_SYSTEM_NAME = ${CMAKE_SYSTEM_NAME}")
+message(STATUS "CMAKE_BUILD_TYPE  = ${CMAKE_BUILD_TYPE}")
+message(STATUS "LIBSPDM_CRYPTO    = ${LIBSPDM_CRYPTO}")
+message(STATUS "LIBSPDM_DEVICE    = ${LIBSPDM_DEVICE}")
 
-if(NOT GCOV)
-    set(GCOV "OFF")
-endif()
+if(LIBSPDM_CRYPTO STREQUAL "mbedtls")
 
-if(NOT STACK_USAGE)
-    set(STACK_USAGE "OFF")
-endif()
+    add_compile_definitions(
+        LIBSPDM_SM3_256_SUPPORT=0
+        LIBSPDM_EDDSA_ED25519_SUPPORT=0
+        LIBSPDM_EDDSA_ED448_SUPPORT=0
+        LIBSPDM_SM2_DSA_P256_SUPPORT=0
+        LIBSPDM_SM2_KEY_EXCHANGE_P256_SUPPORT=0
+        LIBSPDM_AEAD_SM4_128_GCM_SUPPORT=0
+        LIBSPDM_ML_DSA_44_SUPPORT=0
+        LIBSPDM_ML_DSA_65_SUPPORT=0
+        LIBSPDM_ML_DSA_87_SUPPORT=0
+        LIBSPDM_SLH_DSA_SHA2_128S_SUPPORT=0
+        LIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT=0
+        LIBSPDM_SLH_DSA_SHA2_128F_SUPPORT=0
+        LIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT=0
+        LIBSPDM_SLH_DSA_SHA2_192S_SUPPORT=0
+        LIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT=0
+        LIBSPDM_SLH_DSA_SHA2_192F_SUPPORT=0
+        LIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT=0
+        LIBSPDM_SLH_DSA_SHA2_256S_SUPPORT=0
+        LIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT=0
+        LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT=0
+        LIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT=0
+        LIBSPDM_ML_KEM_512_SUPPORT=0
+        LIBSPDM_ML_KEM_768_SUPPORT=0
+        LIBSPDM_ML_KEM_1024_SUPPORT=0
+    )
 
-if(NOT BUILD_LINUX_SHARED_LIB)
-    set(BUILD_LINUX_SHARED_LIB "OFF")
-endif()
+elseif(LIBSPDM_CRYPTO STREQUAL "openssl")
 
-if(NOT X509_IGNORE_CRITICAL)
-    set(X509_IGNORE_CRITICAL "OFF")
-endif()
-
-if (NOT DEVICE)
-    set(DEVICE "sample")
-endif()
-
-
-set(LIBSPDM_DIR ${PROJECT_SOURCE_DIR})
-
-#
-# OpenSSL specific compiled libraries.
-#
-set(COMPILED_LIBCRYPTO_PATH ${COMPILED_LIBCRYPTO_PATH} CACHE STRING "Optionally provide a path to libcrypto" FORCE)
-set(COMPILED_LIBSSL_PATH ${COMPILED_LIBSSL_PATH} CACHE STRING "Optionally provide a path to libssl" FORCE)
-
-message("CMAKE_GENERATOR = ${CMAKE_GENERATOR}")
-message("DEVICE = ${DEVICE}")
-
-if(ARCH STREQUAL "x64")
-    message("ARCH = x64")
-elseif(ARCH STREQUAL "x86_64")
-    message("ARCH = x64")
-elseif(ARCH STREQUAL "ia32")
-    message("ARCH = ia32")
-elseif(ARCH STREQUAL "arm")
-    message("ARCH = arm")
-elseif(ARCH STREQUAL "aarch64")
-    message("ARCH = aarch64")
-elseif(ARCH STREQUAL "ppc64le")
-    message("ARCH = ppc64le")
-elseif(ARCH STREQUAL "riscv32")
-    message("ARCH = riscv32")
-elseif(ARCH STREQUAL "riscv64")
-    message("ARCH = riscv64")
-elseif(ARCH STREQUAL "arc")
-    message("ARCH = arc")
-elseif(ARCH STREQUAL "nios2")
-    message("ARCH = nios2")
-elseif(ARCH STREQUAL "loongarch64")
-    message("ARCH = loongarch64")
-else()
-    message(FATAL_ERROR "Unknown ARCH : ${ARCH}")
-endif()
-
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    if(TOOLCHAIN STREQUAL "GCC")
-        message("TOOLCHAIN = GCC")
-    elseif(TOOLCHAIN STREQUAL "CLANG")
-        message("TOOLCHAIN = CLANG")
-    elseif(TOOLCHAIN STREQUAL "CBMC")
-        message("TOOLCHAIN = CBMC")
-    elseif(TOOLCHAIN STREQUAL "AFL")
-        message("TOOLCHAIN = AFL")
-    elseif(TOOLCHAIN STREQUAL "KLEE")
-        message("TOOLCHAIN = KLEE")
-    elseif(TOOLCHAIN STREQUAL "LIBFUZZER")
-        message("TOOLCHAIN = LIBFUZZER")
-    elseif(TOOLCHAIN STREQUAL "ARM_DS2022")
-        message("TOOLCHAIN = ARM_DS2022")
-    elseif(TOOLCHAIN STREQUAL "ARM_GNU")
-        message("TOOLCHAIN = ARM_GNU")
-    elseif(TOOLCHAIN STREQUAL "ARM_GNU_BARE_METAL")
-        message("TOOLCHAIN = ARM_GNU_BARE_METAL")
-    elseif(TOOLCHAIN STREQUAL "ARM_GCC")
-        message("TOOLCHAIN = ARM_GCC")
-    elseif(TOOLCHAIN STREQUAL "AARCH64_GCC")
-        message("TOOLCHAIN = AARCH64_GCC")
-    elseif(TOOLCHAIN STREQUAL "RISCV_GNU")
-        message("TOOLCHAIN = RISCV_GNU")
-    elseif(TOOLCHAIN STREQUAL "RISCV64_GCC")
-        message("TOOLCHAIN = RISCV64_GCC")
-    elseif(TOOLCHAIN STREQUAL "RISCV_NONE")
-        message("TOOLCHAIN = RISCV_NONE")
-    elseif(TOOLCHAIN STREQUAL "RISCV_XPACK")
-        message("TOOLCHAIN = RISCV_XPACK")
-    elseif(TOOLCHAIN STREQUAL "ARC_GCC")
-        message("TOOLCHAIN = ARC_GCC")
-    elseif(TOOLCHAIN STREQUAL "LOONGARCH64_GNU")
-        message("TOOLCHAIN = LOONGARCH64_GNU")
-    elseif(TOOLCHAIN STREQUAL "NIOS2_GCC")
-        message("TOOLCHAIN = NIOS2_GCC")
-    elseif(TOOLCHAIN STREQUAL "NONE")
-        message("TOOLCHAIN = NONE")
-    else()
-        message(FATAL_ERROR "Unknown TOOLCHAIN")
-    endif()
-    if(GCOV STREQUAL "ON")
-        message("GCOV = ON")
-    elseif(GCOV STREQUAL "OFF")
-        message("GCOV = OFF")
-    else()
-        message(FATAL_ERROR "Unknown GCOV switch input")
-    endif()
-    if(STACK_USAGE STREQUAL "ON")
-        message("STACK_USAGE = ON")
-    endif()
-elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    if (TOOLCHAIN STREQUAL "CLANG")
-        message("TOOLCHAIN = CLANG")
-    else()
-        message(FATAL_ERROR "Unknown TOOLCHAIN")
-    endif()
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if(TOOLCHAIN STREQUAL "GCC")
-        message("TOOLCHAIN = GCC")
-    elseif(TOOLCHAIN STREQUAL "VS2015")
-        message("TOOLCHAIN = VS2015")
-    elseif(TOOLCHAIN STREQUAL "VS2019")
-        message("TOOLCHAIN = VS2019")
-    elseif(TOOLCHAIN STREQUAL "VS2022")
-        message("TOOLCHAIN = VS2022")
-    elseif(TOOLCHAIN STREQUAL "CLANG")
-        message("TOOLCHAIN = CLANG")
-    elseif(TOOLCHAIN STREQUAL "CBMC")
-        message("TOOLCHAIN = CBMC")
-    elseif(TOOLCHAIN STREQUAL "LIBFUZZER")
-        message("TOOLCHAIN = LIBFUZZER")
-    elseif(TOOLCHAIN STREQUAL "ARM_DS2022")
-        message("TOOLCHAIN = ARM_DS2022")
-    else()
-        message(FATAL_ERROR "Unknown TOOLCHAIN")
-    endif()
-else()
-    message(FATAL_ERROR "${CMAKE_SYSTEM_NAME} is not supportted")
-endif()
-
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message("TARGET = Debug")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    message("TARGET = Release")
-else()
-    message(FATAL_ERROR "Unknown build type")
-endif()
-
-if(CRYPTO STREQUAL "mbedtls")
-    message("CRYPTO = mbedtls")
-    add_definitions(-DLIBSPDM_SM3_256_SUPPORT=0)
-    add_definitions(-DLIBSPDM_EDDSA_ED25519_SUPPORT=0)
-    add_definitions(-DLIBSPDM_EDDSA_ED448_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SM2_DSA_P256_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SM2_KEY_EXCHANGE_P256_SUPPORT=0)
-    add_definitions(-DLIBSPDM_AEAD_SM4_128_GCM_SUPPORT=0)
-    add_definitions(-DLIBSPDM_ML_DSA_44_SUPPORT=0)
-    add_definitions(-DLIBSPDM_ML_DSA_65_SUPPORT=0)
-    add_definitions(-DLIBSPDM_ML_DSA_87_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SLH_DSA_SHA2_128S_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SLH_DSA_SHA2_128F_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SLH_DSA_SHA2_192S_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SLH_DSA_SHA2_192F_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SLH_DSA_SHA2_256S_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SLH_DSA_SHA2_256F_SUPPORT=0)
-    add_definitions(-DLIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT=0)
-    add_definitions(-DLIBSPDM_ML_KEM_512_SUPPORT=0)
-    add_definitions(-DLIBSPDM_ML_KEM_768_SUPPORT=0)
-    add_definitions(-DLIBSPDM_ML_KEM_1024_SUPPORT=0)
-elseif(CRYPTO STREQUAL "openssl")
-    message("CRYPTO = openssl")
-    add_definitions(-DLIBSPDM_SM2_KEY_EXCHANGE_P256_SUPPORT=0)
-    add_definitions(-DLIBSPDM_AEAD_SM4_128_GCM_SUPPORT=0)
-else()
-    message(FATAL_ERROR "Unknown CRYPTO")
-endif()
-
-if (LIBSPDM_TPM_SUPPORT)
-    if (NOT CRYPTO STREQUAL "openssl")
-        message(FATAL_ERROR "${CRYPTO} does not support TPM")
-    endif ()
-    message(STATUS "crypt_ext tpm supported enabled")
-    add_definitions(-DLIBSPDM_TPM_SUPPORT=1)
-endif()
-
-if (X509_IGNORE_CRITICAL STREQUAL "ON")
-    if (CRYPTO STREQUAL "openssl")
-        add_definitions(-DOPENSSL_IGNORE_CRITICAL=1)
-    elseif(CRYPTO STREQUAL "mbedtls")
-        add_definitions(-DLIBSPDM_MBEDTLS_X509_ALLOW_UNSUPPORTED_CRITICAL_EXTENSION)
-    endif()
-endif()
-
-if(ENABLE_BINARY_BUILD STREQUAL "1")
-    if(NOT CRYPTO STREQUAL "openssl")
-        message(FATAL_ERROR "enabling binary build not supported for non-openssl")
-    endif()
-
-    if(NOT COMPILED_LIBCRYPTO_PATH)
-        message(FATAL_ERROR "enabling binary build requires path to libcrypto.")
-    endif()
-
-    if(NOT COMPILED_LIBSSL_PATH)
-        message(FATAL_ERROR "enabling binary build requires path to libssl.")
-    endif()
-
-    # Disable EDDSA when binary builds are enabled. EDDSA may be enabled in the future.
-    add_definitions(-DLIBSPDM_EDDSA_ED25519_SUPPORT=0)
-    add_definitions(-DLIBSPDM_EDDSA_ED448_SUPPORT=0)
-
-    message("ENABLE_BINARY_BUILD=1")
-    message("COMPILED_LIBCRYPTO_PATH=${COMPILED_LIBCRYPTO_PATH}")
-    message("COMPILED_LIBSSL_PATH=${COMPILED_LIBSSL_PATH}")
-    message("Disabling EDDSA support due to ENABLE_BINARY_BUILD=1")
-
-    set(CRYPTO_LIB_PATHS ${COMPILED_LIBCRYPTO_PATH} ${COMPILED_LIBSSL_PATH})
+    add_compile_definitions(
+        LIBSPDM_SM2_KEY_EXCHANGE_P256_SUPPORT=0
+        LIBSPDM_AEAD_SM4_128_GCM_SUPPORT=0
+    )
 
 else()
-    set(CRYPTO_LIB_PATHS ${CRYPTO}lib)
-    message("ENABLE_BINARY_BUILD=0; Building ${CRYPTO} library from source.")
+    message(FATAL_ERROR "Unknown crypto backend: ${LIBSPDM_CRYPTO}")
 endif()
 
-if(ENABLE_CODEQL STREQUAL "ON")
-    message("Enable CodeQL scan.")
+if(LIBSPDM_TPM_SUPPORT)
+
+    if(NOT LIBSPDM_CRYPTO STREQUAL "openssl")
+        message(FATAL_ERROR "TPM support requires OpenSSL backend")
+    endif()
+
+    add_compile_definitions(LIBSPDM_TPM_SUPPORT=1)
+
 endif()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    set(CMAKE_EXE_EXPORTS_C_FLAG "")
-
-    if(TOOLCHAIN STREQUAL "GCC")
-        set(CMAKE_C_COMPILER gcc)
-        add_compile_options(-std=c99 -fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration -Wcast-qual)
-        if (NOT ARCH STREQUAL "riscv32" AND "riscv64")
-            add_compile_options(-Wcast-align)
-        endif()
-        if (ARCH STREQUAL "x64")
-            add_compile_options(-mno-red-zone)
-        endif()
-        if (ARCH STREQUAL "x64" OR "ia32")
-            add_compile_options(-maccumulate-outgoing-args)
-        endif()
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-            add_compile_options(-g)
-        endif()
-        if(STACK_USAGE STREQUAL "ON")
-            add_compile_options(-fstack-usage)
-        else()
-            add_compile_options(-flto)
-        endif()
-        if(GCOV STREQUAL "ON")
-        add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        if(STACK_USAGE STREQUAL "ON")
-            set(OPENSSL_FLAGS ${OPENSSL_FLAGS} -fstack-usage)
-        endif()
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-        if(STACK_USAGE STREQUAL "ON")
-            set(CMOCKA_FLAGS ${CMOCKA_FLAGS} -fstack-usage)
-        endif()
-
-        set(CMAKE_AR gcc-ar)
-
-        if(NOT CMAKE_C_COMPILER_VERSION VERSION_GREATER 9.2)
-                set(CMAKE_C_ARCHIVE_FINISH true)
-        endif()
-
-        set(CMAKE_LINKER gcc)
-        set(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error -no-pie" )
-        if(GCOV STREQUAL "ON")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
-        endif()
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "ARM_DS2022")
-        if(ARCH STREQUAL "aarch64")
-            set(CMAKE_SYSTEM_NAME   Linux)
-            set(CMAKE_C_COMPILER    armclang)
-            set(CMAKE_AR            armar)
-            set(CMAKE_LINKER        armlink)
-            set(CMAKE_OBJCOPY       fromelf)
-
-            set(CMAKE_EXECUTABLE_SUFFIX ".elf")
-            set(CMAKE_LIBRARY_PATH_FLAG "--userlibpath=")
-            add_compile_options(-fshort-wchar -fno-strict-aliasing  -ffunction-sections -fdata-sections -fno-common -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO)
-            set(CMOCKA_FLAGS -std=gnu99 -Wpedantic )
-            set(OPENSSL_FLAGS -include base.h)
-            set(CMAKE_C_CREATE_STATIC_LIBRARY "armar -r -s --create <TARGET> <LINK_FLAGS> <OBJECTS>")
-            set(CMAKE_SYSTEM_PROCESSOR aarch64v)
-            add_compile_options(--target=aarch64-arm-none-eabi)
-            set(CMAKE_EXE_LINKER_FLAGS "--target=aarch64-arm-none-eabi -flto -Wl,--undefined=__udivti3")
-        elseif(ARCH STREQUAL "arm")
-            set(CMAKE_SYSTEM_NAME   Linux)
-            set(CMAKE_C_COMPILER    armclang)
-            set(CMAKE_LINKER        armlink)
-            set(CMAKE_SYSTEM_PROCESSOR arm)
-
-            set(CMAKE_EXECUTABLE_SUFFIX ".elf")
-            add_compile_options(--target=arm-arm-none-eabi -march=armv9-a)
-            set(CMAKE_EXE_LINKER_FLAGS "--target=arm-arm-none-eabi -march=armv9-a -Wl,--undefined=__udivti3")
-            set(OPENSSL_FLAGS -include base.h)
-            set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
-        endif()
-
-        set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-        set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-        set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-        set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
-
-    elseif(TOOLCHAIN STREQUAL "ARM_GNU")
-        if(ARCH STREQUAL "aarch64")
-            set(CMAKE_C_COMPILER aarch64-none-linux-gnu-gcc)
-            set(CMAKE_AR aarch64-none-linux-gnu-gcc-ar)
-            set(CMAKE_LINKER aarch64-none-linux-gnu-gcc)
-        elseif(ARCH STREQUAL "arm")
-            set(CMAKE_C_COMPILER arm-none-linux-gnueabihf-gcc)
-            set(CMAKE_AR arm-none-linux-gnueabihf-gcc-ar)
-            set(CMAKE_LINKER arm-none-linux-gnueabihf-gcc)
-        endif()
-        add_compile_options(-fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        if(GCOV STREQUAL "ON")
-        add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error -no-pie" )
-        if(GCOV STREQUAL "ON")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
-        endif()
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-
-    elseif(TOOLCHAIN STREQUAL "ARM_GNU_BARE_METAL")
-        if(ARCH STREQUAL "aarch64")
-            set(CMAKE_C_COMPILER aarch64-none-elf-gcc)
-            set(CMAKE_AR aarch64-none-elf-gcc-ar)
-            set(CMAKE_LINKER aarch64-none-elf-gcc)
-        elseif(ARCH STREQUAL "arm")
-            set(CMAKE_C_COMPILER arm-none-eabi-gcc)
-            set(CMAKE_AR arm-none-eabi-gcc-ar)
-            set(CMAKE_LINKER arm-none-eabi-gcc)
-        endif()
-        if(NOT DEFINED MARCH)
-            message(FATAL_ERROR "A target architecture must be set with the -DMARCH option")
-        endif()
-        if(DISABLE_LTO STREQUAL "1")
-            set(FLTO_COMPILE_OPTS "-fno-lto")
-            set(FLTO_LINK_OPTS "-fno-lto")
-        else()
-            if (DEFINED USING_LTO)
-                set(FLTO_COMPILE_OPTS "-flto" "-${USING_LTO}")
-            else()
-                set(FLTO_COMPILE_OPTS "-flto")
-            endif()
-            set(FLTO_LINK_OPTS "-flto")
-        endif()
-        set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
-        add_compile_options(-march=${MARCH} -fshort-wchar --specs=nosys.specs -fno-strict-aliasing -Wall -Wno-error=format -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables ${FLTO_COMPILE_OPTS}  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-            add_compile_options(-g)
-        endif()
-
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wno-error=format -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-        set(CMAKE_EXE_LINKER_FLAGS "--specs=nosys.specs -Wno-error -no-pie ${FLTO_LINK_OPTS}")
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "ARM_GCC")
-        set(CMAKE_C_COMPILER arm-linux-gnueabi-gcc)
-        add_compile_options(-fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-            add_compile_options(-g)
-        endif()
-        if(GCOV STREQUAL "ON")
-        add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_AR arm-linux-gnueabi-gcc-ar)
-
-        set(CMAKE_LINKER arm-linux-gnueabi-gcc)
-        set(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error -no-pie" )
-        if(GCOV STREQUAL "ON")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
-        endif()
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "AARCH64_GCC")
-        set(CMAKE_C_COMPILER aarch64-linux-gnu-gcc)
-        add_compile_options(-fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        if(GCOV STREQUAL "ON")
-        add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
-        endif()
-        set(OPENSSL_FLAGS -std=c11 -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_AR aarch64-linux-gnu-gcc-ar)
-
-        set(CMAKE_LINKER aarch64-linux-gnu-gcc)
-        set(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error -no-pie" )
-        if(GCOV STREQUAL "ON")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
-        endif()
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "RISCV_GNU")
-        if(ARCH STREQUAL "riscv32")
-            set(CMAKE_C_COMPILER riscv32-unknown-linux-gnu-gcc)
-            set(CMAKE_AR riscv32-unknown-linux-gnu-gcc-ar)
-            set(CMAKE_LINKER riscv32-unknown-linux-gnu-gcc)
-        elseif(ARCH STREQUAL "riscv64")
-            set(CMAKE_C_COMPILER riscv64-unknown-linux-gnu-gcc)
-            set(CMAKE_AR riscv64-unknown-linux-gnu-gcc-ar)
-            set(CMAKE_LINKER riscv64-unknown-linux-gnu-gcc)
-        endif()
-        add_compile_options(-fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        if(GCOV STREQUAL "ON")
-        add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error -no-pie" )
-        if(GCOV STREQUAL "ON")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
-        endif()
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "RISCV64_GCC")
-        set(CMAKE_C_COMPILER riscv64-linux-gnu-gcc)
-        add_compile_options(-fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        if(GCOV STREQUAL "ON")
-        add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_AR riscv64-linux-gnu-gcc-ar)
-
-        set(CMAKE_LINKER riscv64-linux-gnu-gcc)
-        set(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error -no-pie" )
-        if(GCOV STREQUAL "ON")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
-        endif()
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "RISCV_NONE")
-        set(CMAKE_C_COMPILER riscv64-elf-gcc)
-        add_compile_options(-nostdlib -lgcc)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-
-        if(ARCH STREQUAL "riscv32")
-            add_compile_options(-march=rv32imac_zicsr -mabi=ilp32)
-        elseif(ARCH STREQUAL "riscv64")
-            add_compile_options(-march=rv64imac_zicsr -mabi=lp64)
-        else()
-            add_compile_options(-march=error -mabi=error)
-        endif()
-
-        set(CMAKE_AR riscv64-elf-ar)
-
-        set(CMAKE_LINKER riscv64-elf-gcc)
-        set(CMAKE_EXE_LINKER_FLAGS "-no-pie" )
-
-        set(MBEDTLS_FLAGS -nostdlib -lgcc)
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "RISCV_XPACK")
-        set(CMAKE_C_COMPILER riscv-none-elf-gcc)
-        set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
-
-        if(ARCH STREQUAL "riscv32")
-            add_compile_options(-march=rv32imafdc_zicsr -mabi=ilp32d)
-        elseif(ARCH STREQUAL "riscv64")
-            add_compile_options(-march=rv64imafdc_zicsr -mabi=lp64d)
-        else()
-            add_compile_options(-march=error -mabi=error)
-        endif()
-
-        add_compile_options(-fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds   -Wno-error=format -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow  -Wno-error=format -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_AR riscv-none-elf-ar)
-
-        set(CMAKE_LINKER riscv-none-elf-gcc)
-
-        if(ARCH STREQUAL "riscv32")
-            set(CMAKE_EXE_LINKER_FLAGS "-march=rv32imafdc_zicsr -mabi=ilp32d -flto -Wno-error -no-pie" )
-        elseif(ARCH STREQUAL "riscv64")
-            set(CMAKE_EXE_LINKER_FLAGS "-march=rv64imafdc_zicsr -mabi=lp64d -flto -Wno-error -no-pie" )
-        endif()
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "ARC_GCC")
-        set(CMAKE_C_COMPILER arc-linux-gcc)
-        add_compile_options(-fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        if(GCOV STREQUAL "ON")
-        add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_AR arc-linux-gcc-ar)
-
-        set(CMAKE_LINKER arc-linux-gcc)
-        set(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error -no-pie" )
-        if(GCOV STREQUAL "ON")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
-        endif()
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "LOONGARCH64_GNU")
-        set(CMAKE_C_COMPILER loongarch64-unknown-linux-gnu-gcc)
-        add_compile_options(-fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -flto=auto -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        if(GCOV STREQUAL "ON")
-            add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
-        endif()
-        set(OPENSSL_FLAGS -std=c11 -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_AR loongarch64-unknown-linux-gnu-gcc-ar)
-        set(CMAKE_RANLIB loongarch64-unknown-linux-gnu-gcc-ranlib)
-
-        set(CMAKE_LINKER loongarch64-unknown-linux-gnu-gcc)
-        set(CMAKE_EXE_LINKER_FLAGS "-flto=auto -Wno-error -no-pie" )
-        if(GCOV STREQUAL "ON")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
-        endif()
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "CLANG")
-        set(CMAKE_C_COMPILER clang)
-        add_compile_options(-std=c99 -fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        if (ARCH STREQUAL "x64")
-            add_compile_options(-mno-red-zone)
-        endif()
-        set(OPENSSL_FLAGS -std=c11 -include base.h -Wno-error=format -Wno-format -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_AR llvm-ar)
-        set(CMAKE_RANLIB llvm-ranlib)
-
-        set(CMAKE_LINKER clang)
-        set(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error -no-pie" )
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "CBMC")
-        set(CMAKE_C_COMPILER goto-cc)
-        add_compile_options(-fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -maccumulate-outgoing-args -mno-red-zone -Wno-address -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -DCBMC -DDEBUG_ASSERT_CHOICE=0 -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_LINKER goto-cc)
-        set(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error")
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <OBJECTS> -o <TARGET>")
-
-    elseif(TOOLCHAIN STREQUAL "AFL")
-        set(CMAKE_C_COMPILER afl-gcc)
-        add_compile_options(-std=c99 -fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -maccumulate-outgoing-args -mno-red-zone -Wno-address -fpie -fno-asynchronous-unwind-tables -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        if(GCOV STREQUAL "ON")
-        add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_AR gcc-ar)
-
-        set(CMAKE_LINKER gcc)
-        set(CMAKE_EXE_LINKER_FLAGS "-Wno-error -no-pie" )
-        if(GCOV STREQUAL "ON")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
-        endif()
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "KLEE")
-        set(CMAKE_C_COMPILER clang)
-        add_compile_options(-fno-strict-aliasing -Wall  -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common  -mno-red-zone -Wno-address -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO  -emit-llvm -DTEST_WITH_KLEE=TRUE -DDEBUG_ASSERT_CHOICE=0 -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_C_CREATE_STATIC_LIBRARY "")
-
-        set(CMAKE_LINKER llvm-link)
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <OBJECTS> -o <TARGET>")
-
-    elseif(TOOLCHAIN STREQUAL "LIBFUZZER")
-        set(CMAKE_C_COMPILER clang)
-        # -O1 may cause fuzzing test buffer overflow, use -O0 as workaround
-        add_compile_options(-std=c99 -fshort-wchar -fno-strict-aliasing -Wall  -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common  -mno-red-zone -Wno-address -fpie -fno-asynchronous-unwind-tables -DUSING_LTO  -DTEST_WITH_LIBFUZZER=TRUE -O0 -fsanitize=fuzzer,address -Werror-implicit-function-declaration)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        if(GCOV STREQUAL "ON")
-        add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_AR llvm-ar)
-
-        set(CMAKE_LINKER clang)
-        set(CMAKE_EXE_LINKER_FLAGS "-Wno-error -no-pie -fsanitize=fuzzer,address" )
-        if(GCOV STREQUAL "ON")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-instr-generate")
-        endif()
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "NIOS2_GCC")
-        set(CMAKE_C_COMPILER nios2-elf-gcc)
-        add_compile_options(-xc -MP -MMD -pipe -O3  -Wall -Wno-maybe-uninitialized -Wno-unused-but-set-variable -Wno-nonnull-compare -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast  -Wno-builtin-declaration-mismatch  -mno-hw-div -mhw-mul -mno-hw-mulx -mgpopt=global -Werror-implicit-function-declaration)
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-
-        set(CMAKE_AR nios2-elf-ar)
-
-        set(CMAKE_LINKER nios2-elf-gcc)
-        set(CMAKE_EXE_LINKER_FLAGS "")
-
-        set(CMAKE_C_LINK_EXECUTABLE "")
+if(LIBSPDM_X509_IGNORE_CRITICAL)
+
+    if(LIBSPDM_CRYPTO STREQUAL "openssl")
+        add_compile_definitions(OPENSSL_IGNORE_CRITICAL=1)
+    elseif(LIBSPDM_CRYPTO STREQUAL "mbedtls")
+        add_compile_definitions(LIBSPDM_MBEDTLS_X509_ALLOW_UNSUPPORTED_CRITICAL_EXTENSION)
     endif()
 
-    if(NOT TOOLCHAIN STREQUAL "NIOS2_GCC")
-        set(CMAKE_C_FLAGS_RELEASE     "-Os")
-        set(CMAKE_C_FLAGS_DEBUG       "-O0")
-    endif()
-
-    if(ARCH STREQUAL "x64")
-        add_compile_options(-m64 -mcmodel=small)
-    elseif(ARCH STREQUAL "ia32")
-        add_compile_options(-m32)
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32" )
-    endif()
-elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    if (TOOLCHAIN STREQUAL "CLANG")
-        set(CMAKE_C_COMPILER clang)
-        add_compile_options(-g -Og -fshort-wchar -fno-strict-aliasing -Wall  -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables)
-
-        set(MBEDTLS_FLAGS "")
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable)
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong)
-
-        set(CMAKE_LINKER clang)
-        set(CMAKE_EXE_LINKER_FLAGS "-Wno-error")
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
-    endif()
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if(TOOLCHAIN STREQUAL "GCC")
-        set(CMAKE_C_COMPILER gcc)
-        add_compile_options(-std=c99 -fshort-wchar -fno-strict-aliasing -Wall -Wno-error=incompatible-pointer-types -Wno-error=format-extra-args -Wno-error=format= -Wno-error=unknown-pragmas -Wno-error=attributes -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration -Wcast-qual)
-        if (ARCH STREQUAL "x64")
-            add_compile_options(-mno-red-zone)
-        endif()
-        if (ARCH STREQUAL "x64" OR "ia32")
-            add_compile_options(-maccumulate-outgoing-args)
-        endif()
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-            add_compile_options(-g)
-        endif()
-        if(STACK_USAGE STREQUAL "ON")
-            add_compile_options(-fstack-usage)
-        else()
-            add_compile_options(-fno-lto)
-        endif()
-        if(GCOV STREQUAL "ON")
-        add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-        if(STACK_USAGE STREQUAL "ON")
-            set(OPENSSL_FLAGS ${OPENSSL_FLAGS} -fstack-usage)
-        endif()
-        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
-        if(STACK_USAGE STREQUAL "ON")
-            set(CMOCKA_FLAGS ${CMOCKA_FLAGS} -fstack-usage)
-        endif()
-
-        set(CMAKE_AR gcc-ar)
-
-        if(NOT CMAKE_C_COMPILER_VERSION VERSION_GREATER 9.2)
-                set(CMAKE_C_ARCHIVE_FINISH true)
-        endif()
-
-        set(CMAKE_LINKER gcc)
-        set(CMAKE_EXE_LINKER_FLAGS "-Wno-error -no-pie -fstack-protector" )
-        if(GCOV STREQUAL "ON")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
-        endif()
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group /mingw64/lib/libbcrypt.a <LINK_LIBRARIES> -Wl,--end-group")
-    elseif(TOOLCHAIN STREQUAL "CLANG")
-        set(CMAKE_C_COMPILER clang-cl.exe)
-        add_compile_options(-fno-strict-aliasing -Wall  -Wno-array-bounds -Wno-address  -flto -DUSING_LTO  -D_CRT_SECURE_NO_WARNINGS /w)
-        set(OPENSSL_FLAGS /FIbase.h -Wno-cast-qual)
-        set(CMOCKA_FLAGS -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -Wformat -Wno-cast-qual)
-
-        set(CMAKE_STATIC_LINKER_FLAGS "")
-
-        set(CMAKE_LINKER lld-link.exe)
-        set(CMAKE_EXE_LINKER_FLAGS "/NOLOGO /SUBSYSTEM:CONSOLE /NODEFAULTLIB:libcmt.lib /IGNORE:4086 /MLLVM:-exception-model=wineh /lldmap /OPT:REF")
-
-        if(ARCH STREQUAL "x64")
-            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:AMD64 /LIBPATH:'%VCToolsInstallDir%lib/x64' /LIBPATH:'%UniversalCRTSdkDir%lib/%UCRTVersion%/ucrt/x64' /LIBPATH:'%WindowsSdkDir%lib/%WindowsSDKLibVersion%/um/x64'")
-        elseif(ARCH STREQUAL "ia32")
-            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:I386 /LIBPATH:'%VCToolsInstallDir%lib/x86' /LIBPATH:'%UniversalCRTSdkDir%lib/%UCRTVersion%/ucrt/x86' /LIBPATH:'%WindowsSdkDir%lib/%WindowsSDKLibVersion%/um/x86'")
-        endif()
-
-        set(CMAKE_C_FLAGS_RELEASE     "-Oz")
-        set(CMAKE_C_FLAGS_DEBUG       "-O0 -gcodeview")
-
-        set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/DEBUG:GHASH")
-
-        if(ARCH STREQUAL "x64")
-            add_compile_options(-m64)
-        elseif(ARCH STREQUAL "ia32")
-            add_compile_options(-m32 -march=i586)
-        endif()
-
-        set(CMAKE_C_STANDARD_LIBRARIES "Kernel32.lib MSVCRTD.lib vcruntimed.lib ucrtd.lib Gdi32.lib User32.lib Winmm.lib Advapi32.lib ws2_32.lib")
-
-    elseif(TOOLCHAIN STREQUAL "ARM_DS2022")
-        set(CMAKE_C_COMPILER    "armclang.exe")
-        set(CMAKE_AR            "armar.exe")
-        set(CMAKE_LINKER        "armlink.exe")
-        set(CMAKE_OBJCOPY       "fromelf.exe")
-        set(CMAKE_SYSTEM_ARCH   "armv8.2-a")
-        set(CMAKE_${lang}_COMPILER_FRONTEND_VARIANT "GNU")
-        set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-        set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-        set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-        set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
-        set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_PATH})
-        set(CMAKE_EXECUTABLE_SUFFIX ".elf")
-
-        set(OPENSSL_FLAGS  -include base.h)
-
-        if (ARCH STREQUAL "arm")
-        set(CMAKE_SYSTEM_PROCESSOR ARM)
-        add_compile_options(-marm)
-        add_compile_options(--target=arm-arm-none-eabi)
-        elseif (ARCH STREQUAL "aarch64")
-        set(CMAKE_SYSTEM_PROCESSOR aarch64v)
-        add_compile_options(--target=aarch64-arm-none-eabi -Wl,--undefined=__udivti3)
-        endif()
-
-        set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
-        set(CMAKE_SYSTEM_NAME Linux )
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> -o <TARGET> <LINK_LIBRARIES> <OBJECTS>")
-
-    elseif(TOOLCHAIN STREQUAL "LIBFUZZER")
-        set(CMAKE_C_COMPILER clang-cl.exe)
-        add_compile_options(-fno-strict-aliasing -Wall  -Wno-array-bounds -Wno-address  -flto -DUSING_LTO  -D_CRT_SECURE_NO_WARNINGS /w -DTEST_WITH_LIBFUZZER=TRUE)
-        set(OPENSSL_FLAGS /FIbase.h -Wno-cast-qual)
-        set(CMOCKA_FLAGS -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -Wformat -Wno-cast-qual)
-
-        set(CMAKE_STATIC_LINKER_FLAGS "")
-
-        set(CMAKE_LINKER lld-link.exe)
-        set(CMAKE_EXE_LINKER_FLAGS "/NOLOGO /SUBSYSTEM:CONSOLE /NODEFAULTLIB:libcmt.lib /IGNORE:4086 /MLLVM:-exception-model=wineh /lldmap /OPT:REF")
-
-        if(ARCH STREQUAL "x64")
-            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:AMD64 /LIBPATH:'%VCToolsInstallDir%lib/x64' /LIBPATH:'%UniversalCRTSdkDir%lib/%UCRTVersion%/ucrt/x64' /LIBPATH:'%WindowsSdkDir%lib/%WindowsSDKLibVersion%/um/x64'")
-        elseif(ARCH STREQUAL "ia32")
-            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:I386 /LIBPATH:'%VCToolsInstallDir%lib/x86' /LIBPATH:'%UniversalCRTSdkDir%lib/%UCRTVersion%/ucrt/x86' /LIBPATH:'%WindowsSdkDir%lib/%WindowsSDKLibVersion%/um/x86'")
-        endif()
-
-        set(CMAKE_C_FLAGS_RELEASE     "-Oz")
-        set(CMAKE_C_FLAGS_DEBUG       "-O0 -gcodeview")
-
-        set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/DEBUG:GHASH")
-
-        if(ARCH STREQUAL "x64")
-            add_compile_options(-m64)
-        elseif(ARCH STREQUAL "ia32")
-            add_compile_options(-m32 -march=i586)
-        endif()
-
-        if(ARCH STREQUAL "x64")
-            set(CMAKE_C_STANDARD_LIBRARIES "Kernel32.lib MSVCRTD.lib vcruntimed.lib ucrtd.lib Gdi32.lib User32.lib Winmm.lib Advapi32.lib ws2_32.lib")
-            set(CMAKE_C_STANDARD_LIBRARIES "${CMAKE_C_STANDARD_LIBRARIES} C:/LLVM/lib/clang/13.0.0/lib/windows/clang_rt.asan_dynamic-x86_64.lib C:/LLVM/lib/clang/13.0.0/lib/windows/clang_rt.asan_dynamic_runtime_thunk-x86_64.lib C:/LLVM/lib/clang/13.0.0/lib/windows/clang_rt.fuzzer-x86_64.lib")
-        elseif(ARCH STREQUAL "ia32")
-            set(CMAKE_C_STANDARD_LIBRARIES "Kernel32.lib MSVCRTD.lib vcruntimed.lib ucrtd.lib Gdi32.lib User32.lib Winmm.lib Advapi32.lib ws2_32.lib clang_rt.asan_dynamic-i386.lib clang_rt.asan_dynamic_runtime_thunk-i386.lib clang_rt.fuzzer-i386.lib")
-        endif()
-
-    elseif(TOOLCHAIN STREQUAL "CBMC")
-        set(CMAKE_C_COMPILER goto-cl.exe)
-        # See https://gitlab.kitware.com/cmake/cmake/-/issues/18317 for following workaround
-        string(REGEX REPLACE "/W3" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-        add_compile_options(/nologo /WX /W4 /Gs32768 /D UNICODE /Gy /EHs-c- /GR- /GF /Z7 /Oy- /D_CRT_SECURE_NO_WARNINGS /DCBMC_CC)
-        set(OPENSSL_FLAGS /FIbase.h /wd4090 /wd4132 /wd4244 /wd4245 /wd4267 /wd4306 /wd4310 /wd4700 /wd4389 /wd4702 /wd4706 /wd4819 /wd4013)
-        set(CMOCKA_FLAGS /wd4090 /wd4204 /wd4133 /wd4267 /wd4701 /wd4702 /wd4703 /D _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES=1 /D _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES_COUNT=1 /D _CRT_NONSTDC_NO_WARNINGS=1)
-
-        set(CMAKE_C_CREATE_STATIC_LIBRARY "")
-
-        set(CMAKE_LINKER goto-cl.exe)
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <OBJECTS>")
-
-        set(CMAKE_C_FLAGS_RELEASE     "/GL /O1b2s")
-        set(CMAKE_C_FLAGS_DEBUG       "/Od")
-    else()
-        # See https://gitlab.kitware.com/cmake/cmake/-/issues/18317 for following workaround
-        string(REGEX REPLACE "/W3" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-        add_compile_options(/nologo /WX /W4 /Gs32768 /D UNICODE /Gy /EHs-c- /GR- /GF /Z7 /Gw /Oy- /D_CRT_SECURE_NO_WARNINGS /wd4063 /wd4100 /wd4127 /wd4701 /wd4703 /wd4057)
-        set(OPENSSL_FLAGS /FIbase.h /wd4090 /wd4132 /wd4244 /wd4245 /wd4267 /wd4306 /wd4310 /wd4700 /wd4389 /wd4702 /wd4706 /wd4819 /wd4013)
-        set(CMOCKA_FLAGS /wd4090 /wd4204 /wd4133 /wd4267 /wd4701 /wd4702 /wd4703 /D_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES=1 /D_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES_COUNT=1 /D_CRT_NONSTDC_NO_WARNINGS=1)
-
-        set(CMAKE_STATIC_LINKER_FLAGS "/NOLOGO /LTCG")
-
-        set(CMAKE_EXE_LINKER_FLAGS "/NOLOGO /SUBSYSTEM:CONSOLE /NODEFAULTLIB:libcmt.lib /IGNORE:4086 /MAP /OPT:REF")
-
-        set(CMAKE_C_FLAGS_RELEASE     "/GL /O1b2s")
-        set(CMAKE_C_FLAGS_DEBUG       "/Od")
-        set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/LTCG")
-        set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/DEBUG")
-
-        if(ARCH STREQUAL "x64")
-            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:AMD64")
-        elseif(ARCH STREQUAL "ia32")
-            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:I386")
-        endif()
-        set(CMAKE_C_STANDARD_LIBRARIES "Kernel32.lib MSVCRTD.lib vcruntimed.lib ucrtd.lib Gdi32.lib User32.lib Winmm.lib Advapi32.lib ws2_32.lib")
-
-    endif()
 endif()
 
-if(TOOLCHAIN STREQUAL "VS2015")
-    if(ARCH STREQUAL "x64")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LIBPATH:'%VCINSTALLDIR%Lib/AMD64' /LIBPATH:'%UniversalCRTSdkDir%lib/%UCRTVersion%/ucrt/x64' /LIBPATH:'%WindowsSdkDir%lib/%WindowsSDKLibVersion%/um/x64'")
-    elseif(ARCH STREQUAL "ia32")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LIBPATH:'%VCINSTALLDIR%Lib' /LIBPATH:'%UniversalCRTSdkDir%lib/%UCRTVersion%/ucrt/x86' /LIBPATH:'%WindowsSdkDir%lib/%WindowsSDKLibVersion%/um/x86'")
+if(LIBSPDM_ENABLE_BINARY_BUILD)
+
+    if(NOT LIBSPDM_CRYPTO STREQUAL "openssl")
+        message(FATAL_ERROR "Binary build supported only with OpenSSL")
     endif()
-elseif((TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-    if(ARCH STREQUAL "x64")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LIBPATH:'%VCToolsInstallDir%lib/x64' /LIBPATH:'%UniversalCRTSdkDir%lib/%UCRTVersion%/ucrt/x64' /LIBPATH:'%WindowsSdkDir%lib/%WindowsSDKLibVersion%/um/x64'")
-    elseif(ARCH STREQUAL "ia32")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LIBPATH:'%VCToolsInstallDir%lib/x86' /LIBPATH:'%UniversalCRTSdkDir%lib/%UCRTVersion%/ucrt/x86' /LIBPATH:'%WindowsSdkDir%lib/%WindowsSDKLibVersion%/um/x86'")
+
+    if(NOT COMPILED_LIBCRYPTO_PATH OR NOT COMPILED_LIBSSL_PATH)
+        message(FATAL_ERROR "Binary build requires libcrypto and libssl paths")
     endif()
+
+    set(CRYPTO_LIB_PATHS
+        ${COMPILED_LIBCRYPTO_PATH}
+        ${COMPILED_LIBSSL_PATH}
+    )
+
+else()
+
+    set(CRYPTO_LIB_PATHS ${LIBSPDM_CRYPTO}lib)
+
 endif()
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
-add_custom_target(copy_sample_key)
-
-execute_process(COMMAND uname OUTPUT_VARIABLE uname)
-if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR uname MATCHES "^MINGW" OR CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    add_custom_command(TARGET copy_sample_key
-                    PRE_BUILD
-                    COMMAND cp -r -f ${LIBSPDM_DIR}/unit_test/sample_key/* ${EXECUTABLE_OUTPUT_PATH})
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    string(REPLACE "/" "\\" SRC ${LIBSPDM_DIR}/unit_test/sample_key/*)
-    if(CMAKE_GENERATOR MATCHES "^Visual Studio")
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-            string(REPLACE "/" "\\" DEST ${EXECUTABLE_OUTPUT_PATH}/Debug)
-        else()
-            string(REPLACE "/" "\\" DEST ${EXECUTABLE_OUTPUT_PATH}/Release)
-        endif()
-    else()
-        string(REPLACE "/" "\\" DEST ${EXECUTABLE_OUTPUT_PATH})
-    endif()
-    add_custom_command(TARGET copy_sample_key
-                    PRE_BUILD
-                    COMMAND xcopy /y /s ${SRC} ${DEST})
-endif()
-
-add_custom_target(copy_seed)
-
-if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR uname MATCHES "^MINGW" OR CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    add_custom_command(TARGET copy_seed
-                    PRE_BUILD
-                    COMMAND cp -r -f ${LIBSPDM_DIR}/unit_test/fuzzing/seeds ${EXECUTABLE_OUTPUT_PATH}
-                    COMMAND cp -r -f ${LIBSPDM_DIR}/unit_test/fuzzing/run_initial_seed.sh ${EXECUTABLE_OUTPUT_PATH})
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    string(REPLACE "/" "\\" SRC ${LIBSPDM_DIR}/unit_test/fuzzing/seeds)
-    string(REPLACE "/" "\\" DEST ${EXECUTABLE_OUTPUT_PATH})
-
-    add_custom_command(TARGET copy_seed
-                       PRE_BUILD
-                       COMMAND xcopy /y /s ${SRC} ${DEST})
-endif()
-
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    add_compile_options(-DLIBSPDM_DEBUG_ENABLE=0)
+    add_compile_definitions(LIBSPDM_DEBUG_ENABLE=0)
 endif()
 
-if(ENABLE_CODEQL STREQUAL "ON")
-    add_subdirectory(library/spdm_common_lib)
-    add_subdirectory(library/spdm_requester_lib)
-    add_subdirectory(library/spdm_responder_lib)
-    add_subdirectory(library/spdm_crypt_lib)
-    add_subdirectory(library/spdm_secured_message_lib)
-    add_subdirectory(library/spdm_transport_mctp_lib)
-    add_subdirectory(library/spdm_transport_pcidoe_lib)
-    add_subdirectory(library/spdm_transport_tcp_lib)
-    ADD_SUBDIRECTORY(library/spdm_transport_storage_lib)
-    add_subdirectory(os_stub/memlib)
-    add_subdirectory(os_stub/debuglib)
-    add_subdirectory(os_stub/debuglib_null)
-    add_subdirectory(os_stub/rnglib)
-    add_subdirectory(os_stub/platform_lib)
-    add_subdirectory(os_stub/platform_lib_null)
-    add_subdirectory(os_stub/malloclib)
-    add_subdirectory(os_stub/spdm_device_secret_lib_${DEVICE})
-    add_subdirectory(os_stub/spdm_device_secret_lib_null)
-    add_subdirectory(os_stub/spdm_cert_verify_callback_sample)
-    add_subdirectory(os_stub/cryptlib_null)
+if(LIBSPDM_CRYPTO STREQUAL "mbedtls")
     add_subdirectory(os_stub/cryptlib_mbedtls)
+elseif(LIBSPDM_CRYPTO STREQUAL "openssl")
     add_subdirectory(os_stub/cryptlib_openssl)
-    add_subdirectory(os_stub/spdm_crypt_ext_lib)
-else()
-    if(CRYPTO STREQUAL "mbedtls")
-        add_subdirectory(os_stub/cryptlib_mbedtls)
-    elseif(CRYPTO STREQUAL "openssl")
-        add_subdirectory(os_stub/cryptlib_openssl)
+endif()
+
+if(NOT LIBSPDM_ENABLE_BINARY_BUILD)
+
+    if(LIBSPDM_CRYPTO STREQUAL "mbedtls")
+        add_subdirectory(os_stub/mbedtlslib)
+    elseif(LIBSPDM_CRYPTO STREQUAL "openssl")
+        add_subdirectory(os_stub/openssllib)
     endif()
 
-    if(NOT ENABLE_BINARY_BUILD STREQUAL "1")
-        if(CRYPTO STREQUAL "mbedtls")
-            add_subdirectory(os_stub/mbedtlslib)
-        elseif(CRYPTO STREQUAL "openssl")
-            add_subdirectory(os_stub/openssllib)
-        endif()
-    endif()
+endif()
 
-        add_subdirectory(library/spdm_common_lib)
-        add_subdirectory(library/spdm_requester_lib)
-        add_subdirectory(library/spdm_responder_lib)
-        add_subdirectory(library/spdm_crypt_lib)
-        add_subdirectory(os_stub/spdm_crypt_ext_lib)
-        add_subdirectory(library/spdm_secured_message_lib)
-        add_subdirectory(library/spdm_transport_mctp_lib)
-        add_subdirectory(library/spdm_transport_pcidoe_lib)
-        add_subdirectory(library/spdm_transport_tcp_lib)
-        ADD_SUBDIRECTORY(library/spdm_transport_storage_lib)
-        add_subdirectory(os_stub/memlib)
-        add_subdirectory(os_stub/debuglib)
-        add_subdirectory(os_stub/debuglib_null)
-        add_subdirectory(os_stub/rnglib)
-        add_subdirectory(os_stub/platform_lib)
-        add_subdirectory(os_stub/platform_lib_null)
-        add_subdirectory(os_stub/malloclib)
-        add_subdirectory(os_stub/spdm_device_secret_lib_${DEVICE})
-        add_subdirectory(os_stub/spdm_device_secret_lib_null)
-        add_subdirectory(os_stub/spdm_cert_verify_callback_sample)
+add_subdirectory(library/spdm_common_lib)
+add_subdirectory(library/spdm_requester_lib)
+add_subdirectory(library/spdm_responder_lib)
+add_subdirectory(library/spdm_crypt_lib)
+add_subdirectory(os_stub/spdm_crypt_ext_lib)
+add_subdirectory(library/spdm_secured_message_lib)
 
-        if(NOT DISABLE_TESTS STREQUAL "1")
-            add_subdirectory(unit_test/spdm_transport_test_lib)
-            add_subdirectory(unit_test/cmockalib)
+add_subdirectory(library/spdm_transport_mctp_lib)
+add_subdirectory(library/spdm_transport_pcidoe_lib)
+add_subdirectory(library/spdm_transport_tcp_lib)
+add_subdirectory(library/spdm_transport_storage_lib)
 
-            if(TOOLCHAIN STREQUAL "ARM_DS2022" OR TOOLCHAIN STREQUAL "ARM_GNU" OR TOOLCHAIN STREQUAL "ARM_GNU_BARE_METAL")
-            add_subdirectory(os_stub/armbuild_lib)
-            endif()
+add_subdirectory(os_stub/memlib)
+add_subdirectory(os_stub/debuglib)
+add_subdirectory(os_stub/debuglib_null)
+add_subdirectory(os_stub/rnglib)
+add_subdirectory(os_stub/platform_lib)
+add_subdirectory(os_stub/platform_lib_null)
+add_subdirectory(os_stub/malloclib)
 
-            if(NOT TOOLCHAIN STREQUAL "LIBFUZZER")
-            add_subdirectory(unit_test/test_spdm_requester)
-            add_subdirectory(unit_test/test_spdm_responder)
-            add_subdirectory(unit_test/test_crypt)
-            add_subdirectory(unit_test/test_spdm_crypt)
-            add_subdirectory(unit_test/test_spdm_fips)
-            add_subdirectory(unit_test/test_spdm_secured_message)
-            add_subdirectory(unit_test/test_spdm_sample)
-            endif()
+add_subdirectory(os_stub/spdm_device_secret_lib_${LIBSPDM_DEVICE})
+add_subdirectory(os_stub/spdm_device_secret_lib_null)
 
-            if((NOT TOOLCHAIN STREQUAL "ARM_DS2022") AND (NOT TOOLCHAIN STREQUAL "RISCV_XPACK"))
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_get_version)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_version)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_get_capabilities)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_capabilities)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_negotiate_algorithms)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_algorithms)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_get_digests)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_digests)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_get_certificate)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_certificate)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_get_measurements)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_measurements)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_key_exchange)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_key_exchange)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_finish)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_finish_rsp)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_psk_exchange)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_psk_exchange_rsp)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_heartbeat)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_heartbeat_ack)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_key_update)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_key_update)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_end_session)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_end_session)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_psk_finish_rsp)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_psk_finish)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_challenge)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_challenge_auth)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_encap_challenge_auth)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_encap_challenge)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_encap_certificate)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_encap_get_certificate)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_encap_digests)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_encap_get_digests)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_encap_key_update)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_encap_key_update)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_encap_request)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_encap_response)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_if_ready)
-            add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_mctp_encode_message)
-            add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_mctp_decode_message)
-            add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_pci_doe_encode_message)
-            add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_pci_doe_decode_message)
-            add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_tcp_encode_message)
-            add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_tcp_decode_message)
-            add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_storage_encode_message)
-            add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_storage_decode_message)
-            add_subdirectory(unit_test/fuzzing/test_secured_message/test_spdm_decode_secured_message)
-            add_subdirectory(unit_test/fuzzing/test_secured_message/test_spdm_encode_secured_message)
-            add_subdirectory(unit_test/fuzzing/test_spdm_crypt/test_x509_certificate_check)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_set_certificate)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_set_certificate)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_csr)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_get_csr)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_chunk_get)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_chunk_get)
-            add_subdirectory(unit_test/fuzzing/test_spdm_common/test_process_opaque_data)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_chunk_send_ack)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_chunk_send)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_supported_event_types)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_get_event_types)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_vendor_cmds)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_vendor_cmds)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_get_measurement_extension_log)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_measurement_extension_log)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_get_key_pair_info)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_key_pair_info)
-            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_set_key_pair_info)
-            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_set_key_pair_info_ack)
-            endif()
+add_subdirectory(os_stub/spdm_cert_verify_callback_sample)
 
-            add_subdirectory(os_stub/cryptlib_null)
-            add_subdirectory(unit_test/test_size/cryptstublib_dummy)
-            add_subdirectory(unit_test/test_size/intrinsiclib)
-            add_subdirectory(unit_test/test_size/malloclib_null)
-            add_subdirectory(unit_test/test_size/malloclib_simple)
-            add_subdirectory(unit_test/test_size/rnglib_null)
-
-            if(NOT TOOLCHAIN STREQUAL "LIBFUZZER")
-            add_subdirectory(unit_test/test_spdm_common)
-            endif()
-
-        if(GCOV STREQUAL "OFF")
-            if((CMAKE_SYSTEM_NAME MATCHES "Windows" AND ARCH STREQUAL "x64" AND TOOLCHAIN STREQUAL "VS2019") OR
-            (CMAKE_SYSTEM_NAME MATCHES "Linux" AND ARCH STREQUAL "x64" AND (TOOLCHAIN STREQUAL "GCC" OR TOOLCHAIN STREQUAL "CLANG")) OR
-            (CMAKE_SYSTEM_NAME MATCHES "Linux"  AND TOOLCHAIN STREQUAL "RISCV_XPACK") OR
-            (CMAKE_SYSTEM_NAME MATCHES "Linux" AND ARCH STREQUAL "aarch64") OR
-            (CMAKE_SYSTEM_NAME MATCHES "Linux" AND ARCH STREQUAL "loongarch64"))
-                add_subdirectory(unit_test/test_size/test_size_of_spdm_requester)
-                add_subdirectory(unit_test/test_size/test_size_of_spdm_responder)
-            endif()
-        endif()
-    endif()
-
-    if ((BUILD_LINUX_SHARED_LIB STREQUAL "ON") AND (CMAKE_SYSTEM_NAME MATCHES "Linux"))
-        set(LIB_NAME "spdm")
-        set(CMAKE_PROJECT_NAME "libspdm")
-        set(CMAKE_PROJECT_DESCRIPTION "libspdm shared library")
-
-        if(NOT TOOLCHAIN STREQUAL "NONE")
-            set(CMAKE_SKIP_BUILD_RPATH FALSE)
-            set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-            set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-            set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-        endif()
-
-        add_library(${LIB_NAME} SHARED
-            $<TARGET_OBJECTS:spdm_common_lib>
-            $<TARGET_OBJECTS:spdm_crypt_lib>
-            $<TARGET_OBJECTS:spdm_requester_lib>
-            $<TARGET_OBJECTS:spdm_responder_lib>
-            $<TARGET_OBJECTS:spdm_secured_message_lib>
-            $<TARGET_OBJECTS:spdm_transport_mctp_lib>
-            $<TARGET_OBJECTS:spdm_transport_pcidoe_lib>
-            $<TARGET_OBJECTS:spdm_transport_tcp_lib>
-            $<TARGET_OBJECTS:spdm_transport_storage_lib>
-        )
-
-        add_library(${LIB_NAME}_platform SHARED
-            $<TARGET_OBJECTS:debuglib>
-            $<TARGET_OBJECTS:malloclib>
-            $<TARGET_OBJECTS:platform_lib>
-            $<TARGET_OBJECTS:rnglib>
-            $<TARGET_OBJECTS:memlib>
-        )
-
-        add_library(${LIB_NAME}_crypto SHARED
-            $<TARGET_OBJECTS:spdm_crypt_ext_lib>
-            $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
-        )
-
-	set_target_properties(
-           ${LIB_NAME}
-	   ${LIB_NAME}_platform
-	   ${LIB_NAME}_crypto
-	   PROPERTIES
-	   VERSION ${PROJECT_VERSION}
-	)
-
-        if(CRYPTO STREQUAL "mbedtls")
-            set(CRYPTO_DEPS "-lmbedtls -lmbedx509 -lmbedcrypto")
-            target_link_libraries(${LIB_NAME}_crypto
-                PUBLIC mbedtls
-                PUBLIC mbedx509
-                PUBLIC mbedcrypto
-            )
-        elseif(CRYPTO STREQUAL "openssl")
-            set(CRYPTO_DEPS "-lssl -lcrypto")
-            if((TOOLCHAIN STREQUAL "NONE") AND (ENABLE_BINARY_BUILD STREQUAL "0"))
-                target_link_libraries(${LIB_NAME}_crypto
-                    PUBLIC openssllib
-                    PUBLIC cryptlib_openssl
-                )
-            else()
-                target_link_libraries(${LIB_NAME}_crypto
-                    PUBLIC ssl
-                    PUBLIC crypto
-                )
-            endif()
-        endif()
-
-        target_link_libraries(${LIB_NAME}
-            PUBLIC ${LIB_NAME}_platform
-            PUBLIC ${LIB_NAME}_crypto
-        )
-
-        install(DIRECTORY include DESTINATION include/libspdm)
-        configure_file(libspdm.pc.in lib/pkgconfig/libspdm.pc @ONLY)
-        install(FILES ${CMAKE_BINARY_DIR}/lib/pkgconfig/libspdm.pc DESTINATION lib/pkgconfig/)
-        install(TARGETS ${LIB_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-        install(TARGETS ${LIB_NAME}_platform LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-        install(TARGETS ${LIB_NAME}_crypto LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-    endif()
+if(LIBSPDM_BUILD_TESTS)
+    add_subdirectory(unit_test)
 endif()
