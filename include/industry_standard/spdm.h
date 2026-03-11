@@ -62,6 +62,9 @@
 #define SPDM_KEY_PAIR_INFO 0x7C
 #define SPDM_SET_KEY_PAIR_INFO_ACK 0x7D
 
+/* SPDM response code (1.4) */
+#define SPDM_SLOT_MANAGEMENT_RESP 0x08
+
 /* SPDM request code (1.0) */
 #define SPDM_GET_DIGESTS 0x81
 #define SPDM_GET_CERTIFICATE 0x82
@@ -98,6 +101,9 @@
 #define SPDM_GET_MEASUREMENT_EXTENSION_LOG 0xEF
 #define SPDM_GET_KEY_PAIR_INFO 0xFC
 #define SPDM_SET_KEY_PAIR_INFO 0xFD
+
+/* SPDM request code (1.4) */
+#define SPDM_SLOT_MANAGEMENT 0x88
 
 /* SPDM message header*/
 typedef struct {
