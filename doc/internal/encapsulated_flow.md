@@ -53,8 +53,8 @@ Integrator may
 - Specify the Requester's certificate slot.
     - For session-based mutual authentication the certificate slot is specified either in
       `KEY_EXCHANGE_RSP` or `ENCAPSULATED_RESPONSE_ACK`.
-- Evaluate `CHALLENGE.OpaqueData` or `FINISH.OpaqueData` to determine whether or not to accept
-  authentication of the Requester.
+- Evaluate `FINISH.OpaqueData` to determine whether or not to accept authentication of the
+  Requester.
 
 ### Secure Session Management
 
