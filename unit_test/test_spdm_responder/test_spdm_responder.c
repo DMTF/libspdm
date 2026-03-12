@@ -31,6 +31,7 @@ int libspdm_rsp_endpoint_info_error_test(void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
 int libspdm_rsp_measurement_extension_log_test(void);
+int libspdm_rsp_measurement_extension_log_error_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
@@ -164,6 +165,9 @@ int main(void)
 
     #if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
     if (libspdm_rsp_measurement_extension_log_test() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_rsp_measurement_extension_log_error_test() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP*/
