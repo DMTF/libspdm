@@ -44,6 +44,7 @@ target_sources(test_spdm_responder
         event_ack.c
         supported_event_types.c
         subscribe_event_types_ack.c
+        error_test/measurement_extension_log_err.c
         error_test/key_pair_info_err.c
         error_test/set_key_pair_info_ack_err.c
         error_test/supported_event_types_err.c
