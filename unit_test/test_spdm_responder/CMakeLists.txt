@@ -47,6 +47,7 @@ target_sources(test_spdm_responder
         error_test/measurement_extension_log_err.c
         error_test/key_pair_info_err.c
         error_test/set_key_pair_info_ack_err.c
+        error_test/encapsulated_request_err.c
         error_test/supported_event_types_err.c
         error_test/subscribe_event_types_ack_err.c
         error_test/vendor_response_err.c
