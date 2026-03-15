@@ -197,40 +197,21 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
     return true;
 }
 
-/**
- * This function sends GET_CAPABILITIES and receives CAPABILITIES.
- *
- * @param  spdm_context A pointer to the SPDM context.
- *
- * @retval LIBSPDM_STATUS_SUCCESS
- *         GET_CAPABILITIES was sent and CAPABILITIES was received.
- * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
- *         Cannot send GET_CAPABILITIES due to Requester's state. Send GET_VERSION first.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
- *         The size of the CAPABILITIES response is invalid.
- * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
- *         The CAPABILITIES response contains one or more invalid fields.
- * @retval LIBSPDM_STATUS_ERROR_PEER
- *         The Responder returned an unexpected error.
- * @retval LIBSPDM_STATUS_BUSY_PEER
- *         The Responder continually returned Busy error messages.
- * @retval LIBSPDM_STATUS_RESYNCH_PEER
- *         The Responder returned a RequestResynch error message.
- * @retval LIBSPDM_STATUS_BUFFER_FULL
- *         The buffer used to store transcripts is exhausted.
- **/
-static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context,
-                                                     size_t *supported_algs_length,
-                                                     void *supported_algs)
+static libspdm_return_t
+libspdm_get_capabilities_send_request(libspdm_context_t *spdm_context,
+                                      spdm_get_capabilities_request_t **request,
+                                      size_t *request_size,
+                                      size_t *supported_algs_length,
+                                      void *supported_algs)
 {
     libspdm_return_t status;
-    spdm_get_capabilities_request_t *spdm_request;
-    size_t spdm_request_size;
-    spdm_capabilities_response_t *spdm_response;
-    size_t spdm_response_size;
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
+    spdm_get_capabilities_request_t *spdm_request;
+    size_t spdm_request_size;
+
+    spdm_request = *request;
 
     /* -=[Verify State Phase]=- */
     if (spdm_context->connection_info.connection_state != LIBSPDM_CONNECTION_STATE_AFTER_VERSION) {
@@ -305,14 +286,34 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
         return status;
     }
     libspdm_release_sender_buffer (spdm_context);
-    spdm_request = (void *)spdm_context->last_spdm_request;
+    *request = (void *)spdm_context->last_spdm_request;
+    *request_size = spdm_request_size;
+
+    return status;
+}
+
+static libspdm_return_t
+libspdm_get_capabilities_process_response(libspdm_context_t *spdm_context,
+                                          spdm_get_capabilities_request_t *spdm_request,
+                                          size_t spdm_request_size,
+                                          size_t *supported_algs_length,
+                                          void *supported_algs)
+{
+    libspdm_return_t status;
+    spdm_capabilities_response_t *spdm_response;
+    size_t spdm_response_size;
+    uint8_t *message;
+    size_t message_size;
+    size_t transport_header_size;
 
     /* -=[Receive Response Phase]=- */
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
     status = libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
     LIBSPDM_ASSERT (message_size >= transport_header_size);
+    (void)(transport_header_size);
     spdm_response = (void *)(message);
     spdm_response_size = message_size;
 
@@ -461,6 +462,52 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
 
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
+    return status;
+}
+/**
+ * This function sends GET_CAPABILITIES and receives CAPABILITIES.
+ *
+ * @param  spdm_context A pointer to the SPDM context.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_CAPABILITIES was sent and CAPABILITIES was received.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
+ *         Cannot send GET_CAPABILITIES due to Requester's state. Send GET_VERSION first.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the CAPABILITIES response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The CAPABILITIES response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
+ *         The buffer used to store transcripts is exhausted.
+ **/
+static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context,
+                                                     size_t *supported_algs_length,
+                                                     void *supported_algs)
+{
+    libspdm_return_t status;
+    spdm_get_capabilities_request_t *spdm_request;
+    size_t spdm_request_size;
+
+    status = libspdm_get_capabilities_send_request(
+        spdm_context,
+        &spdm_request, &spdm_request_size,
+        supported_algs_length, supported_algs
+    );
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+
+    status = libspdm_get_capabilities_process_response(
+        spdm_context,
+        spdm_request, spdm_request_size,
+        supported_algs_length, supported_algs
+    );
     return status;
 }
 
