@@ -59,6 +59,8 @@ libspdm_return_t libspdm_get_encap_request_send_event(
 
     spdm_request->event_count = event_count;
 
+    *encap_request_size = sizeof(spdm_send_event_request_t) + events_list_size;
+
     return LIBSPDM_STATUS_SUCCESS;
 }
 
