@@ -24,6 +24,7 @@ bool g_event_all_subscribe = false;
 bool g_event_all_unsubscribe = false;
 uint32_t g_event_count = 1;
 bool g_generate_event_list_error = false;
+size_t g_events_list_size = 0;
 bool g_event_get_types_error = false;
 bool g_event_subscribe_error = false;
 
@@ -121,6 +122,10 @@ bool libspdm_generate_event_list(
     }
 
     *event_count = g_event_count;
+
+    if ((g_events_list_size != 0) && (g_events_list_size < *events_list_size)) {
+        *events_list_size = g_events_list_size;
+    }
 
     for (uint32_t index = 0; index < *events_list_size; index++)
     {

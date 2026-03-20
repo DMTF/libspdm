@@ -10,6 +10,7 @@
 #if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP)
 
 extern uint32_t g_event_count;
+extern size_t g_events_list_size;
 
 static uint8_t m_send_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE];
 static uint8_t m_receive_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE];
@@ -93,9 +94,40 @@ static void rsp_encap_send_event_case1(void **state)
 }
 
 /**
- * Test 2: Responder processes the encapsulated EVENT_ACK response.
+ * Test 2: encap_request_size is trimmed to the exact number of bytes written
+ * by libspdm_generate_event_list.
  **/
 static void rsp_encap_send_event_case2(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t request_buffer_size = sizeof(m_send_buffer);
+    const size_t actual_events_bytes = 32;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x02;
+
+    set_standard_state(spdm_context);
+
+    g_event_count = 1;
+    g_events_list_size = actual_events_bytes;
+
+    status = libspdm_get_encap_request_send_event(spdm_context, &request_buffer_size,
+                                                  m_send_buffer);
+
+    g_events_list_size = 0;
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(request_buffer_size,
+                     sizeof(spdm_send_event_request_t) + actual_events_bytes);
+}
+
+/**
+ * Test 3: Responder processes the encapsulated EVENT_ACK response.
+ **/
+static void rsp_encap_send_event_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -106,7 +138,7 @@ static void rsp_encap_send_event_case2(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x02;
+    spdm_test_context->case_id = 0x03;
 
     set_standard_state(spdm_context);
 
@@ -130,6 +162,7 @@ int libspdm_rsp_encap_send_event_test(void)
     const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(rsp_encap_send_event_case1),
         cmocka_unit_test(rsp_encap_send_event_case2),
+        cmocka_unit_test(rsp_encap_send_event_case3),
     };
 
     libspdm_test_context_t test_context = {
