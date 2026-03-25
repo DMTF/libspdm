@@ -175,6 +175,9 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
    - For MinGW/MSYS2 builds, Perl is included in the MSYS2 environment.
    - Use `perl -v` to check the installed Perl version.
 
+4) [TPM2](https://tpm2-software.github.io) (Version 4.1.x or higher)
+  - Optionally required for building libspdm with TPM backend support.
+
 ### Build Tools for Linux
 
 1) Compiler for IA32/X64 (Choose one)
@@ -198,6 +201,13 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
      - RHEL/CentOS: `sudo yum install perl`
      - Fedora: `sudo dnf install perl`
    - Use `perl -v` to check the installed Perl version.
+
+4) [TPM2](https://tpm2-software.github.io) (Version 4.1.x or higher)
+  - Optionally required for building libspdm with TPM backend support.
+  - If not available, install via:
+    - Debian/Ubuntu: `sudo apt-get install tpm2-tools libtss2-dev libengine-tpm2-tss-openssl`
+    - Fedora: `sudo dnf install tpm2-tools tpm2-tss-devel tpm2-tss-engine` 
+    - Arch Linux: `sudo package -S tpm2-tools tpm2-tss tpm2-openssl`
 
 ### Cryptography Library
 
@@ -306,6 +316,12 @@ Example CMake commands:
    ```
 
 For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
+
+## TPM support (Optional)
+  
+  ```
+  cmake -DLIBSPDM_TPM_SUPPORT=ON -DDEVICE=tpm ...
+  ```
 
 ## Run Test
 
