@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -717,7 +717,10 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
 
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) ||
+        libspdm_is_capabilities_flag_supported(
+            spdm_context, false, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP)) {
         spdm_response->measurement_specification_sel = (uint8_t)libspdm_prioritize_algorithm(
             measurement_spec_priority_table,
             LIBSPDM_ARRAY_SIZE(measurement_spec_priority_table),
