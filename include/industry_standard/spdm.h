@@ -1005,6 +1005,8 @@ typedef struct {
 
 /* SPDM error code (1.4) */
 #define SPDM_ERROR_CODE_DATA_TOO_LARGE 0x12
+#define SPDM_ERROR_CODE_REQUEST_SESSION_TERMINATED 0x46
+#define SPDM_ERROR_CODE_INVALID_STATE 0x47
 
 /* SPDM ResponseNotReady extended data */
 typedef struct {
