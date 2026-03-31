@@ -486,13 +486,13 @@ static void rsp_encap_get_endpoint_info_case4(void **state)
 int libspdm_rsp_encap_get_endpoint_info_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        /* Success requeset endpoint info with signature */
+        /* Success request endpoint info with signature */
         cmocka_unit_test(rsp_encap_get_endpoint_info_case1),
-        /* Success requeset endpoint info with signature, req_slot_id = 0xFF */
+        /* Success request endpoint info with signature, req_slot_id = 0xFF */
         cmocka_unit_test(rsp_encap_get_endpoint_info_case2),
-        /* Success requeset endpoint info without signature */
+        /* Success request endpoint info without signature */
         cmocka_unit_test(rsp_encap_get_endpoint_info_case3),
-        /* Success requeset endpoint info with signature in a session */
+        /* Success request endpoint info with signature in a session */
         cmocka_unit_test(rsp_encap_get_endpoint_info_case4),
     };
 
