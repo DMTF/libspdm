@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -241,6 +241,10 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
             &chunk_response_size, chunk_response);
 
         *response_size = response_header_size + chunk_response_size;
+
+        /* Return success so that libspdm_build_response() does not overwrite
+         * the CHUNK_ACK with EarlyErrorDetected with a generic error. */
+        status = LIBSPDM_STATUS_SUCCESS;
 
         send_info->chunk_in_use = false;
         send_info->chunk_handle = 0;
