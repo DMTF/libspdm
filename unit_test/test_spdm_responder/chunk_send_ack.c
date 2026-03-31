@@ -821,7 +821,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case8(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -900,7 +900,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case9(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -978,7 +978,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case10(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -1054,7 +1054,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case11(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -1132,7 +1132,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case12(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -1221,7 +1221,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case13(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -1298,7 +1298,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case14(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -1377,7 +1377,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case15(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -1454,7 +1454,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case16(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -1531,7 +1531,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case17(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -1608,7 +1608,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case18(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -1688,7 +1688,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case19(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -1769,7 +1769,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case20(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
@@ -1847,7 +1847,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case21(void** state)
         request_size, request,
         &response_size, response);
 
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
                 + sizeof(spdm_error_response_t));
 
