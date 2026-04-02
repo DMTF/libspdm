@@ -80,12 +80,6 @@ bool libspdm_verify_cert_dicetcbinfo(const void *cert, size_t cert_size,
         *spdm_get_dice_tcb_info_size = 0;
         return false;
     }
-    result = libspdm_asn1_get_tag(&ptr, end, &obj_len,
-                                  LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
-    if (!result) {
-        *spdm_get_dice_tcb_info_size = 0;
-        return false;
-    }
 
     /*vendor*/
     result = libspdm_asn1_get_tag(&ptr, end, &obj_len,
