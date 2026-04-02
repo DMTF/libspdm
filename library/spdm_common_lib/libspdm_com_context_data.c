@@ -269,9 +269,9 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         data16 = libspdm_read_uint16((const uint8_t *)data);
 
         if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
-            context->local_context.capability.flags = data16;
+            context->local_context.capability.ext_flags = data16;
         } else if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
-            context->connection_info.capability.flags = data16;
+            context->connection_info.capability.ext_flags = data16;
         } else {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
