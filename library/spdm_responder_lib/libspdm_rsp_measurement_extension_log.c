@@ -125,7 +125,7 @@ libspdm_return_t libspdm_get_response_measurement_extension_log(libspdm_context_
                                                response_size, response);
     }
 
-    if ((uint64_t)(offset + length) > spdm_mel_len) {
+    if (((uint64_t)offset + length) > spdm_mel_len) {
         length = (uint32_t)(spdm_mel_len - offset);
     }
     remainder_length = spdm_mel_len - (length + offset);
