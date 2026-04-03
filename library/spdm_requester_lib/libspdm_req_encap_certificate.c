@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -140,7 +140,7 @@ libspdm_return_t libspdm_get_encap_response_certificate(void *spdm_context,
             response_size, response);
     }
 
-    if ((size_t)(offset + length) > cert_chain_size) {
+    if (((uint64_t)offset + length) > cert_chain_size) {
         length = (uint32_t)(cert_chain_size - offset);
     }
     remainder_length = (uint32_t)(cert_chain_size - (length + offset));

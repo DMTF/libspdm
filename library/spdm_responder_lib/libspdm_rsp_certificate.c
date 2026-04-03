@@ -173,7 +173,7 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
         }
     }
 
-    if ((size_t)(offset + length) > cert_chain_size) {
+    if (((uint64_t)offset + length) > cert_chain_size) {
         length = (uint32_t)(cert_chain_size - offset);
     }
     remainder_length = (uint32_t)(cert_chain_size - (length + offset));
