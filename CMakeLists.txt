@@ -62,6 +62,10 @@ endif()
 
 
 set(LIBSPDM_DIR ${PROJECT_SOURCE_DIR})
+include_directories(
+  "${LIBSPDM_DIR}/include"
+  "${LIBSPDM_DIR}/os_stub/include"
+)
 
 #
 # OpenSSL specific compiled libraries.

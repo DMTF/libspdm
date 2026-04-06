@@ -15,7 +15,7 @@
 #include <tss2/tss2_tcti.h>
 #include <tss2/tss2_rc.h>
 #include <tss2/tss2_tpm2_types.h>
-#include "../../spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
+#include "library/spdm_crypt_ext_lib.h"
 #include "internal/libspdm_crypt_lib.h"
 
 #include "../key_context.h"

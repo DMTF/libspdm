@@ -5,9 +5,9 @@
  **/
 
 #include "internal/libspdm_lib_config.h"
-#include "spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
+#include "library/spdm_crypt_ext_lib.h"
 #include "hal/library/cryptlib.h"
-#include "spdm_crypt_ext_lib/cryptlib_ext.h"
+#include "hal/library/cryptlib_ext.h"
 #include "industry_standard/spdm.h"
 #include "hal/library/debuglib.h"
 

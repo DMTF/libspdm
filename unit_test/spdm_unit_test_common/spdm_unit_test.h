@@ -23,7 +23,7 @@
 #include "library/spdm_responder_lib.h"
 #include "library/spdm_transport_test_lib.h"
 #include "internal/libspdm_common_lib.h"
-#include "spdm_device_secret_lib_internal.h"
+#include "internal/libspdm_device_secret_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
 /* need redefine MAX_MESSAGE_x_BUFFER_SIZE macro if TRANSCRIPT_DATA_SUPPORT is 0,
