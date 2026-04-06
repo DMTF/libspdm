@@ -15,7 +15,7 @@
 
 #include <base.h>
 #include "library/memlib.h"
-#include "spdm_device_secret_lib_internal.h"
+#include "internal/libspdm_device_secret_lib.h"
 #include "internal/libspdm_common_lib.h"
 
 #define LIBSPDM_CXL_TSP_2ND_SESSION_0_PSK_DATA_STRING "CxlTsp_2ndSess0_Psk"

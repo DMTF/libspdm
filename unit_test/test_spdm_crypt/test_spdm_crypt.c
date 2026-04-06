@@ -6,7 +6,7 @@
 
 #include "spdm_unit_test.h"
 #include "library/spdm_common_lib.h"
-#include "spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
+#include "library/spdm_crypt_ext_lib.h"
 
 /* https://lapo.it/asn1js/#MCQGCisGAQQBgxyCEgEMFkFDTUU6V0lER0VUOjEyMzQ1Njc4OTA*/
 static uint8_t m_libspdm_subject_alt_name_buffer1[] = {

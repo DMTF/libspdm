@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -8,7 +8,7 @@
 
 #include "spdm_unit_test.h"
 #include "library/spdm_common_lib.h"
-#include "spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
+#include "library/spdm_crypt_ext_lib.h"
 #include "spdm_cert_verify_callback_sample/spdm_cert_verify_callback_internal.h"
 
 /*read cert chain or root cert with dice extension*/

@@ -15,9 +15,9 @@
 
 #include <base.h>
 #include "library/memlib.h"
-#include "spdm_device_secret_lib_internal.h"
+#include "internal/libspdm_device_secret_lib.h"
 #include "internal/libspdm_common_lib.h"
-#include "spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
+#include "library/spdm_crypt_ext_lib.h"
 #include "keys.h"
 
 static bool get_certificate(uint32_t index, uint32_t base_hash_algo, uint32_t base_asym_algo, void **data,
