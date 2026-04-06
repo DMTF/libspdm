@@ -93,6 +93,14 @@ static libspdm_return_t libspdm_storage_secured_message_decode(
     spdm_storage_secured_message_descriptor *descriptor;
     uint8_t num_descriptors = ((uint8_t *)(*message))[0];
 
+    /* Check for invalid message with no descriptors (DSP0286 Table 8) */
+    if (num_descriptors == 0) {
+        spdm_error.session_id = session_id;
+        spdm_error.error_code = SPDM_STORAGE_SECURED_MSG_ENCAPSULATED_STATUS_INVALID_CMD;
+        libspdm_set_last_spdm_error_struct(spdm_context, &spdm_error);
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+
     /* Currently support handling only a single SPDM descriptor */
     if (num_descriptors > 1) {
         spdm_error.session_id = session_id;
