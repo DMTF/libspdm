@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -9,11 +9,11 @@
 
 #if LIBSPDM_EVENT_RECIPIENT_SUPPORT
 
-libspdm_return_t libspdm_get_response_send_event(libspdm_context_t *spdm_context,
-                                                 size_t request_size,
-                                                 const void *request,
-                                                 size_t *response_size,
-                                                 void *response)
+libspdm_return_t libspdm_get_response_event_ack(libspdm_context_t *spdm_context,
+                                                size_t request_size,
+                                                const void *request,
+                                                size_t *response_size,
+                                                void *response)
 {
     const spdm_send_event_request_t *spdm_request;
     spdm_event_ack_response_t *spdm_response;
