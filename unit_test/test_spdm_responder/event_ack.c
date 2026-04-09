@@ -154,7 +154,7 @@ static void rsp_event_ack_case1(void **state)
 
     request_size = sizeof(spdm_send_event_request_t) + event_data_size;
 
-    status = libspdm_get_response_send_event(
+    status = libspdm_get_response_event_ack(
         spdm_context, request_size, m_spdm_request_buffer,
         &response_size, m_spdm_response_buffer);
 
@@ -237,7 +237,7 @@ static void rsp_event_ack_case2(void **state)
 
     request_size = sizeof(spdm_send_event_request_t) + event_data_size[0] + event_data_size[1];
 
-    status = libspdm_get_response_send_event(
+    status = libspdm_get_response_event_ack(
         spdm_context, request_size, m_spdm_request_buffer,
         &response_size, m_spdm_response_buffer);
 
@@ -320,7 +320,7 @@ static void rsp_event_ack_case3(void **state)
 
     request_size = sizeof(spdm_send_event_request_t) + event_data_size[0] + event_data_size[1];
 
-    status = libspdm_get_response_send_event(
+    status = libspdm_get_response_event_ack(
         spdm_context, request_size, m_spdm_request_buffer,
         &response_size, m_spdm_response_buffer);
 
@@ -435,7 +435,7 @@ static void rsp_event_ack_case4(void **state)
     request_size = sizeof(spdm_send_event_request_t) + event_data_size[0] + event_data_size[1] +
                    event_data_size[2] + event_data_size[3];
 
-    status = libspdm_get_response_send_event(
+    status = libspdm_get_response_event_ack(
         spdm_context, request_size, m_spdm_request_buffer,
         &response_size, m_spdm_response_buffer);
 

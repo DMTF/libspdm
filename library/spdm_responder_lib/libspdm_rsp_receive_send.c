@@ -99,6 +99,10 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_SUBSCRIBE_EVENT_TYPES, libspdm_get_response_subscribe_event_types_ack },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
+        #if LIBSPDM_EVENT_RECIPIENT_SUPPORT
+        { SPDM_SEND_EVENT, libspdm_get_response_event_ack },
+        #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
+
         #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
         { SPDM_VENDOR_DEFINED_REQUEST, libspdm_get_vendor_defined_response },
         #endif /*LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES*/
