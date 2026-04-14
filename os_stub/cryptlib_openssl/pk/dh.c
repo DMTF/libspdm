@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -579,7 +579,16 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
         goto cleanup;
     }
 
-    *key_size = secret_len;
+    if (secret_len > final_key_size) {
+        goto cleanup;
+    }
+
+    /* Pad with leading zeros.
+     * OpenSSL strip leading zero bytes from the raw DH result. */
+    memmove(key + final_key_size - secret_len, key, secret_len);
+    libspdm_zero_mem(key, final_key_size - secret_len);
+
+    *key_size = final_key_size;
     result = true;
 
 cleanup:
