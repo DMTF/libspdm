@@ -77,6 +77,8 @@
 
    libspdm implements a raw public key format as defined in [RFC7250](https://www.rfc-editor.org/rfc/rfc7250). Refer to [libspdm raw public key](https://github.com/DMTF/libspdm/blob/main/doc/raw_public_key.md) for more information.
 
+   libspdm only supports cryptography algorithms enumerated in the SPDM specifications. It does not support any extended algorithms.
+
 6) Execution Context
 
    Support to build an OS application for spdm_requester_emu and spdm_responder_emu to trace communication between Requester and Responder in [spdm-emu](https://github.com/DMTF/spdm-emu).
