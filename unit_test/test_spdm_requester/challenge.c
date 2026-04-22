@@ -470,7 +470,7 @@ static libspdm_return_t receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
-    case 0x8: { /*correct ERROR message (response net ready)*/
+    case 0x8: { /*correct ERROR message (response not ready)*/
         spdm_error_response_data_response_not_ready_t *spdm_response;
         size_t spdm_response_size;
         size_t transport_header_size;

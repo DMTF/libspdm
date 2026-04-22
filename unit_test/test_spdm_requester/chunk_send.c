@@ -803,7 +803,7 @@ int libspdm_req_chunk_send_test(void)
         /* Request size exceed max chunks */
         cmocka_unit_test(req_chunk_send_case13),
 #endif
-        /* Recieved and error message indicating RequestResynch */
+        /* Received and error message indicating RequestResynch */
         cmocka_unit_test(req_chunk_send_case14),
         /* Request Algorithms successfully sent in chunks, with SPDM 1.4 */
         cmocka_unit_test(req_chunk_send_case15),
