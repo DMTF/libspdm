@@ -1199,7 +1199,7 @@ int libspdm_req_chunk_get_test(void)
         /* Request Vendor Specific Response and chunk seq no wrapped */
         cmocka_unit_test(req_chunk_get_case6),
         /* Request Vendor Specific Response
-         * and recieve error code RequestResync */
+         * and receive error code RequestResync */
         cmocka_unit_test(req_chunk_get_case7),
 #endif
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
