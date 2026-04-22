@@ -353,6 +353,10 @@ libspdm_return_t libspdm_handle_error_large_response(
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             break;
         }
+        if (spdm_response->header.param2 != chunk_handle) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            break;
+        }
 
         LIBSPDM_ASSERT(sizeof(spdm_chunk_response_response_t) == sizeof(spdm_chunk_response_response_14_t));
         if (chunk_seq_no == 0) {
