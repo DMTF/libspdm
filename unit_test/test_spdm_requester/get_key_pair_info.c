@@ -28,6 +28,7 @@ static libspdm_return_t send_message(
     switch (spdm_test_context->case_id) {
     case 0x1:
     case 0x2:
+    case 0x3:
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -132,6 +133,87 @@ static libspdm_return_t receive_message(
 
         libspdm_copy_mem((void*)(spdm_response + 1), public_key_info_len,
                          public_key_info_rsa2048, public_key_info_len);
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
+    case 0x3: {
+        spdm_key_pair_info_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        uint8_t total_key_pairs;
+        uint8_t key_pair_id;
+        uint16_t public_key_info_len;
+        uint16_t capabilities;
+        uint16_t key_usage_capabilities;
+        uint16_t current_key_usage;
+        uint32_t asym_algo_capabilities;
+        uint32_t current_asym_algo;
+        uint8_t assoc_cert_slot_mask;
+        uint8_t *ptr;
+
+        uint8_t public_key_info_rsa2048[] = {0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7,
+                                             0x0D, 0x01, 0x01, 0x01, 0x05, 0x00};
+
+        key_pair_id = 1;
+        total_key_pairs = 1;
+        public_key_info_len = (uint16_t)sizeof(public_key_info_rsa2048);
+
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+        spdm_response_size = sizeof(spdm_key_pair_info_response_t) + public_key_info_len +
+                             sizeof(uint8_t) + 5 + sizeof(uint8_t) + 4;
+
+        capabilities = SPDM_KEY_PAIR_CAP_GEN_KEY_CAP;
+        key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+        current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+        asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA2048;
+        current_asym_algo = 0;
+
+        /* association with slot 1 */
+        assoc_cert_slot_mask = 0x02;
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_14;
+        spdm_response->header.request_response_code = SPDM_KEY_PAIR_INFO;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->total_key_pairs = total_key_pairs;
+        spdm_response->key_pair_id = key_pair_id;
+        spdm_response->capabilities = capabilities;
+        spdm_response->key_usage_capabilities = key_usage_capabilities;
+        spdm_response->current_key_usage = current_key_usage;
+        spdm_response->asym_algo_capabilities = asym_algo_capabilities;
+        spdm_response->current_asym_algo = current_asym_algo;
+        spdm_response->public_key_info_len = public_key_info_len;
+        spdm_response->assoc_cert_slot_mask = assoc_cert_slot_mask;
+
+        libspdm_copy_mem((void*)(spdm_response + 1), public_key_info_len,
+                         public_key_info_rsa2048, public_key_info_len);
+
+        ptr = (uint8_t *)(spdm_response + 1) + public_key_info_len;
+        *ptr = 5;
+        ptr += sizeof(uint8_t);
+
+        /* First 4 bytes carry ML_DSA_44 capability, 5th byte is non-zero to expose cursor bugs. */
+        ptr[0] = 0x01;
+        ptr[1] = 0x00;
+        ptr[2] = 0x00;
+        ptr[3] = 0x00;
+        ptr[4] = 0x04;
+        ptr += 5;
+
+        *ptr = 4;
+        ptr += sizeof(uint8_t);
+
+        ptr[0] = 0x01;
+        ptr[1] = 0x00;
+        ptr[2] = 0x00;
+        ptr[3] = 0x00;
+
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
                                               spdm_response, response_size,
@@ -595,6 +677,58 @@ void req_get_key_pair_info_case2(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 3: SPDM 1.4 KEY_PAIR_INFO parser must advance using raw PQC lengths.
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
+ **/
+static void req_get_key_pair_info_case3(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    uint8_t key_pair_id;
+    uint8_t associated_slot_id;
+    uint8_t total_key_pairs;
+    uint16_t capabilities;
+    uint16_t key_usage_capabilities;
+    uint16_t current_key_usage;
+    uint32_t asym_algo_capabilities;
+    uint32_t current_asym_algo;
+    uint32_t pqc_asym_algo_capabilities;
+    uint32_t current_pqc_asym_algo;
+    uint16_t public_key_info_len;
+    uint8_t assoc_cert_slot_mask;
+    uint8_t public_key_info[SPDM_MAX_PUBLIC_KEY_INFO_LEN];
+
+    key_pair_id = 1;
+    associated_slot_id = 1;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x3;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
+
+    spdm_context->connection_info.peer_key_pair_id[associated_slot_id] = key_pair_id;
+    public_key_info_len = SPDM_MAX_PUBLIC_KEY_INFO_LEN;
+
+    status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
+                                       &capabilities, &key_usage_capabilities, &current_key_usage,
+                                       &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
+                                       &assoc_cert_slot_mask, &public_key_info_len,
+                                       public_key_info);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(pqc_asym_algo_capabilities, SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_44);
+    assert_int_equal(current_pqc_asym_algo, SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_44);
+}
+
 int libspdm_req_get_key_pair_info_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -602,6 +736,8 @@ int libspdm_req_get_key_pair_info_test(void)
         cmocka_unit_test(req_get_key_pair_info_case1),
         /* The collection of multiple sub-cases for invalid combination.*/
         cmocka_unit_test(req_get_key_pair_info_case2),
+        /* SPDM 1.4 oversized PQC length uses raw_len for cursor advancement */
+        cmocka_unit_test(req_get_key_pair_info_case3),
     };
 
     libspdm_test_context_t test_context = {

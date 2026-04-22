@@ -58,8 +58,10 @@ static libspdm_return_t libspdm_try_get_key_pair_info(libspdm_context_t *spdm_co
     size_t transport_header_size;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
-    uint8_t pqc_asym_algo_cap_len;
-    uint8_t current_pqc_asym_algo_len;
+    uint8_t pqc_asym_algo_cap_raw_len;
+    uint8_t pqc_asym_algo_cap_copy_len;
+    uint8_t current_pqc_asym_algo_raw_len;
+    uint8_t current_pqc_asym_algo_copy_len;
     uint8_t *ptr;
     uint32_t rsp_pqc_asym_algo_capabilities;
     uint32_t rsp_current_pqc_asym_algo;
@@ -189,24 +191,31 @@ static libspdm_return_t libspdm_try_get_key_pair_info(libspdm_context_t *spdm_co
         }
         ptr = (uint8_t *)spdm_response + sizeof(spdm_key_pair_info_response_t) + spdm_response->public_key_info_len;
 
-        pqc_asym_algo_cap_len = *ptr;
+        pqc_asym_algo_cap_raw_len = *ptr;
         if (spdm_response_size < sizeof(spdm_key_pair_info_response_t) +
-            spdm_response->public_key_info_len + sizeof(uint8_t) + pqc_asym_algo_cap_len + sizeof(uint8_t)) {
+            spdm_response->public_key_info_len + sizeof(uint8_t) +
+            pqc_asym_algo_cap_raw_len + sizeof(uint8_t)) {
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
             goto receive_done;
         }
-        if (pqc_asym_algo_cap_len > sizeof(uint32_t)) {
-            pqc_asym_algo_cap_len = sizeof(uint32_t);
-        }
+        pqc_asym_algo_cap_copy_len = (uint8_t)LIBSPDM_MIN(pqc_asym_algo_cap_raw_len,
+                                                          sizeof(uint32_t));
         libspdm_copy_mem (&rsp_pqc_asym_algo_capabilities, sizeof(rsp_pqc_asym_algo_capabilities),
-                          ptr + sizeof(uint8_t), pqc_asym_algo_cap_len);
+                          ptr + sizeof(uint8_t), pqc_asym_algo_cap_copy_len);
 
-        current_pqc_asym_algo_len = *(ptr + sizeof(uint8_t) + pqc_asym_algo_cap_len);
-        if (current_pqc_asym_algo_len > sizeof(uint32_t)) {
-            current_pqc_asym_algo_len = sizeof(uint32_t);
+        current_pqc_asym_algo_raw_len = *(ptr + sizeof(uint8_t) + pqc_asym_algo_cap_raw_len);
+        if (spdm_response_size < sizeof(spdm_key_pair_info_response_t) +
+            spdm_response->public_key_info_len + sizeof(uint8_t) +
+            pqc_asym_algo_cap_raw_len + sizeof(uint8_t) +
+            current_pqc_asym_algo_raw_len) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
         }
+        current_pqc_asym_algo_copy_len = (uint8_t)LIBSPDM_MIN(current_pqc_asym_algo_raw_len,
+                                                              sizeof(uint32_t));
         libspdm_copy_mem (&rsp_current_pqc_asym_algo, sizeof(rsp_current_pqc_asym_algo),
-                          ptr + sizeof(uint8_t) + pqc_asym_algo_cap_len + sizeof(uint8_t), current_pqc_asym_algo_len);
+                          ptr + sizeof(uint8_t) + pqc_asym_algo_cap_raw_len + sizeof(uint8_t),
+                          current_pqc_asym_algo_copy_len);
 
         rsp_pqc_asym_algo_capabilities &= SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
         rsp_current_pqc_asym_algo &= SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
