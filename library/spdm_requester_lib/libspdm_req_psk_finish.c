@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -293,6 +293,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
+
         /* this message can only be in secured session
          * thus don't need to consider transport layer padding, just check its exact size */
         if (spdm_response_size != sizeof(spdm_psk_finish_response_t) + sizeof(uint16_t) +
@@ -302,7 +303,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(
         }
 
         if ((responder_opaque_data != NULL) && (responder_opaque_data_size != NULL)) {
-            if (opaque_data_size >= *responder_opaque_data_size) {
+            if (opaque_data_size > *responder_opaque_data_size) {
                 status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
                 goto receive_done;
             }
@@ -325,7 +326,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(
         }
         opaque_data_entry_size = 0;
     }
-    spdm_response_size = sizeof(spdm_finish_response_t) + opaque_data_entry_size;
+    spdm_response_size = sizeof(spdm_psk_finish_response_t) + opaque_data_entry_size;
 
     status = libspdm_append_message_f(spdm_context, session_info, true, spdm_response,
                                       spdm_response_size);
