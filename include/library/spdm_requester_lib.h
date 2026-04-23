@@ -1112,6 +1112,27 @@ libspdm_return_t libspdm_vendor_send_request_receive_response(
 
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
 
+/**
+ * This function parses a measurement transaction data buffer and extracts the measurement blocks.
+ *
+ * This is useful to allow parsing of full transaction blobs from calls such as Redfish's SPDMGetSignedMeasurements.
+ * This might move into a utility library at a later date.
+ *
+ * @param data                  The measurement transaction data buffer
+ * @param data_size             The size of the measurement transaction data buffer
+ * @param measurements          A pointer to an array of measurement blocks. This must be freed by the caller.
+ * @param measurement_count     A pointer to the number of measurement blocks
+ *
+ * @return LIBSPDM_STATUS_SUCCESS if the measurement blocks were successfully extracted
+ * @return LIBSPDM_STATUS_INVALID_PARAMETER if the parameters are invalid
+ * @return LIBSPDM_STATUS_BUFFER_TOO_SMALL if the input buffer is too small
+ **/
+libspdm_return_t libspdm_parse_measurement_transaction_data(
+    void* data,
+    size_t data_size,
+    spdm_measurement_block_common_header_t** measurements,
+    size_t* measurement_count);
+
 #ifdef __cplusplus
 }
 #endif
