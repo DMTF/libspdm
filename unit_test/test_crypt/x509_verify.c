@@ -82,6 +82,36 @@ size_t libspdm_get_aysm_nid_from_file_name(char *Path, size_t len)
         return LIBSPDM_CRYPTO_NID_EDDSA_ED25519;
     } else if (libspdm_consttime_is_mem_equal(Path, "ed448", len - 1)) {
         return LIBSPDM_CRYPTO_NID_EDDSA_ED448;
+    } else if (libspdm_consttime_is_mem_equal(Path, "mldsa44", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_ML_DSA_44;
+    } else if (libspdm_consttime_is_mem_equal(Path, "mldsa65", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_ML_DSA_65;
+    } else if (libspdm_consttime_is_mem_equal(Path, "mldsa87", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_ML_DSA_87;
+    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-sha2-128s", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_128S;
+    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-sha2-128f", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_128F;
+    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-sha2-192s", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_192S;
+    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-sha2-192f", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_192F;
+    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-sha2-256s", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_256S;
+    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-sha2-256f", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_256F;
+    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-shake-128s", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_128S;
+    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-shake-128f", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_128F;
+    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-shake-192s", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_192S;
+    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-shake-192f", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_192F;
+    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-shake-256s", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_256S;
+    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-shake-256f", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_256F;
     } else {
         return LIBSPDM_CRYPTO_NID_NULL;
     }
@@ -126,7 +156,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
     size_t hash_nid;
     size_t asym_nid;
-    uint8_t csr[1024];
+    uint8_t *csr;
     size_t csr_size;
     void *x509_ca_cert;
     void *context;
@@ -139,6 +169,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     test_private_key = NULL;
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
     x509_ca_cert = NULL;
+    csr = NULL;
 #endif
 
     libspdm_zero_mem(file_name_buffer, 1024);
@@ -531,6 +562,31 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
             test_private_key, test_private_key_len, NULL, &context);
         break;
     #endif /* LIBSPDM_EDDSA_SUPPORT */
+    #if LIBSPDM_ML_DSA_SUPPORT
+    case LIBSPDM_CRYPTO_NID_ML_DSA_44:
+    case LIBSPDM_CRYPTO_NID_ML_DSA_65:
+    case LIBSPDM_CRYPTO_NID_ML_DSA_87:
+        status = libspdm_mldsa_get_private_key_from_pem(
+            test_private_key, test_private_key_len, NULL, &context);
+        break;
+    #endif /* LIBSPDM_ML_DSA_SUPPORT */
+    #if LIBSPDM_SLH_DSA_SUPPORT
+    case LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_128S:
+    case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_128S:
+    case LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_128F:
+    case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_128F:
+    case LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_192S:
+    case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_192S:
+    case LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_192F:
+    case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_192F:
+    case LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_256S:
+    case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_256S:
+    case LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_256F:
+    case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_256F:
+        status = libspdm_slhdsa_get_private_key_from_pem(
+            test_private_key, test_private_key_len, NULL, &context);
+        break;
+    #endif /* LIBSPDM_SLH_DSA_SUPPORT */
     default:
         libspdm_my_print("\n  - Get Private Key - [Fail]");
         status = false;
@@ -544,10 +600,23 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("\n  - Get Private Key - [Pass]");
     }
 
-    csr_size = 1024;
-    status = libspdm_gen_x509_csr(
-        hash_nid, asym_nid, 0, NULL, 0, true, context,
-        subject_name, &csr_size, csr, NULL);
+    csr_size = 0x10000;
+    csr = (uint8_t *)allocate_pool(csr_size);
+    if (csr == NULL) {
+        libspdm_my_print("\n  - Allocate CSR buffer - [Fail]");
+        goto cleanup;
+    }
+
+    if ((asym_nid & 0x8000) != 0) {
+        /* PQC algorithm: use pqc CSR API */
+        status = libspdm_gen_x509_csr(
+            hash_nid, 0, asym_nid, NULL, 0, true, context,
+            subject_name, &csr_size, csr, NULL);
+    } else {
+        status = libspdm_gen_x509_csr(
+            hash_nid, asym_nid, 0, NULL, 0, true, context,
+            subject_name, &csr_size, csr, NULL);
+    }
     if (!status) {
         libspdm_my_print("\n  - Gen CSR - [Fail]");
         goto cleanup;
@@ -576,6 +645,9 @@ cleanup:
         free(test_private_key);
     }
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
+    if (csr != NULL) {
+        free_pool(csr);
+    }
     if (x509_ca_cert != NULL) {
         libspdm_x509_free(x509_ca_cert);
     }

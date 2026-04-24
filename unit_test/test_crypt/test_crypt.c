@@ -110,6 +110,30 @@ bool libspdm_cryptest_main(void)
     }
     #endif /* LIBSPDM_SM2_DSA_SUPPORT */
 
+    #if LIBSPDM_ML_DSA_SUPPORT
+    status = libspdm_validate_crypt_x509("mldsa44", sizeof("mldsa44"));
+    if (!status) {
+        return status;
+    }
+
+    status = libspdm_validate_crypt_x509("mldsa65", sizeof("mldsa65"));
+    if (!status) {
+        return status;
+    }
+
+    status = libspdm_validate_crypt_x509("mldsa87", sizeof("mldsa87"));
+    if (!status) {
+        return status;
+    }
+    #endif /* LIBSPDM_ML_DSA_SUPPORT */
+
+    #if LIBSPDM_SLH_DSA_SUPPORT
+    status = libspdm_validate_crypt_x509("slh-dsa-sha2-128s", sizeof("slh-dsa-sha2-128s"));
+    if (!status) {
+        return status;
+    }
+    #endif /* LIBSPDM_SLH_DSA_SUPPORT */
+
     #if LIBSPDM_FFDHE_SUPPORT
     status = libspdm_validate_crypt_dh();
     if (!status) {
