@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -2414,6 +2414,7 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
  *
  * @param[in]      hash_nid              hash algo for sign
  * @param[in]      asym_nid              asym algo for sign
+ * @param[in]      pqc_asym_nid          pqc asym algo for sign
  *
  * @param[in]      requester_info        requester info to gen CSR
  * @param[in]      requester_info_length The len of requester info
@@ -2442,7 +2443,7 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
  **/
-bool libspdm_gen_x509_csr_with_pqc(
+bool libspdm_gen_x509_csr(
     size_t hash_nid, size_t asym_nid, size_t pqc_asym_nid,
     uint8_t *requester_info, size_t requester_info_length,
     bool is_ca,
@@ -2771,17 +2772,6 @@ free_all:
     }
 
     return (ret != 0);
-}
-bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
-                          uint8_t *requester_info, size_t requester_info_length,
-                          bool is_ca,
-                          void *context, char *subject_name,
-                          size_t *csr_len, uint8_t *csr_pointer,
-                          void *base_cert)
-{
-    return libspdm_gen_x509_csr_with_pqc(
-        hash_nid, asym_nid, 0, requester_info, requester_info_length,
-        is_ca, context, subject_name, csr_len, csr_pointer, base_cert);
 }
 
 #endif

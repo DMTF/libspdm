@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -166,21 +166,15 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
 
         char *subject_name = "C=NL,O=PolarSSL,CN=PolarSSL Server 1";
 
+        result = libspdm_gen_x509_csr(hash_nid, asym_nid, pqc_asym_nid,
+                                      requester_info, requester_info_length,
+                                      !is_device_cert_model,
+                                      context, subject_name,
+                                      csr_len, csr_pointer,
+                                      x509_ca_cert);
         if (pqc_asym_algo != 0) {
-            result = libspdm_gen_x509_csr_with_pqc(hash_nid, 0, pqc_asym_nid,
-                                                   requester_info, requester_info_length,
-                                                   !is_device_cert_model,
-                                                   context, subject_name,
-                                                   csr_len, csr_pointer,
-                                                   x509_ca_cert);
             libspdm_pqc_asym_free(pqc_asym_algo, context);
         } else {
-            result = libspdm_gen_x509_csr(hash_nid, asym_nid,
-                                          requester_info, requester_info_length,
-                                          !is_device_cert_model,
-                                          context, subject_name,
-                                          csr_len, csr_pointer,
-                                          x509_ca_cert);
             libspdm_asym_free(base_asym_algo, context);
         }
         libspdm_zero_mem(prikey, prikey_size);
@@ -225,21 +219,15 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
 
     char *subject_name = "C=NL,O=PolarSSL,CN=PolarSSL Server 1";
 
+    result = libspdm_gen_x509_csr(hash_nid, asym_nid, pqc_asym_nid,
+                                  requester_info, requester_info_length,
+                                  !is_device_cert_model,
+                                  context, subject_name,
+                                  csr_len, csr_pointer,
+                                  x509_ca_cert);
     if (pqc_asym_algo != 0) {
-        result = libspdm_gen_x509_csr_with_pqc(hash_nid, 0, pqc_asym_nid,
-                                               requester_info, requester_info_length,
-                                               !is_device_cert_model,
-                                               context, subject_name,
-                                               csr_len, csr_pointer,
-                                               x509_ca_cert);
         libspdm_pqc_asym_free(pqc_asym_algo, context);
     } else {
-        result = libspdm_gen_x509_csr(hash_nid, asym_nid,
-                                      requester_info, requester_info_length,
-                                      !is_device_cert_model,
-                                      context, subject_name,
-                                      csr_len, csr_pointer,
-                                      x509_ca_cert);
         libspdm_asym_free(base_asym_algo, context);
     }
     libspdm_x509_free(x509_ca_cert);
