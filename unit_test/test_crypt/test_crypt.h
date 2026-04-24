@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -184,11 +184,27 @@ bool libspdm_validate_crypt_mlkem(void);
 bool libspdm_validate_crypt_mldsa(void);
 
 /**
+ * Validate Crypto ML-DSA key Retrieving (from PEM & X509) & signature Interfaces.
+ *
+ * @retval  true   Validation succeeded.
+ * @retval  false  Validation failed.
+ **/
+bool libspdm_validate_crypt_mldsa_2(void);
+
+/**
  * Validate Crypto SLHDSA Interfaces.
  *
  * @retval  true   Validation succeeded.
  * @retval  false  Validation failed.
  **/
 bool libspdm_validate_crypt_slhdsa(void);
+
+/**
+ * Validate Crypto SLH-DSA key Retrieving (from PEM & X509) & signature Interfaces.
+ *
+ * @retval  true   Validation succeeded.
+ * @retval  false  Validation failed.
+ **/
+bool libspdm_validate_crypt_slhdsa_2(void);
 
 #endif

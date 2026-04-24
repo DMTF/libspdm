@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -172,10 +172,20 @@ bool libspdm_cryptest_main(void)
     if (!status) {
         return status;
     }
+
+    status = libspdm_validate_crypt_mldsa_2();
+    if (!status) {
+        return status;
+    }
     #endif /* LIBSPDM_ML_DSA_SUPPORT */
 
     #if LIBSPDM_SLH_DSA_SUPPORT
     status = libspdm_validate_crypt_slhdsa();
+    if (!status) {
+        return status;
+    }
+
+    status = libspdm_validate_crypt_slhdsa_2();
     if (!status) {
         return status;
     }
