@@ -564,6 +564,8 @@ typedef struct {
     libspdm_transport_encode_message_func transport_encode_message;
     libspdm_transport_decode_message_func transport_decode_message;
 
+    libspdm_device_algs_negotiated_func algs_negotiated;
+
     /* Cached plain text command
      * If the command is cipher text, decrypt then cache it. */
     void *last_spdm_request;

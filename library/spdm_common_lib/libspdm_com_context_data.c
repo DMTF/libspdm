@@ -2499,6 +2499,15 @@ void libspdm_register_device_io_func(
     context->receive_message = receive_message;
 }
 
+void libspdm_register_rsp_alg_func(
+    void *spdm_context, libspdm_device_algs_negotiated_func algs_negotiated)
+{
+    libspdm_context_t *context;
+
+    context = spdm_context;
+    context->algs_negotiated = algs_negotiated;
+}
+
 void libspdm_register_device_buffer_func(
     void *spdm_context,
     uint32_t sender_buffer_size,

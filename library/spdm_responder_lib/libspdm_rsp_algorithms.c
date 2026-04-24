@@ -1135,5 +1135,13 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
     /* -=[Update State Phase]=- */
     libspdm_set_connection_state(spdm_context, LIBSPDM_CONNECTION_STATE_NEGOTIATED);
 
+    if (spdm_context->algs_negotiated) {
+        if (spdm_context->algs_negotiated(spdm_context) != LIBSPDM_STATUS_SUCCESS) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
+    }
+
     return LIBSPDM_STATUS_SUCCESS;
 }

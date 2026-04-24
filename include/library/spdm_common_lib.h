@@ -528,6 +528,21 @@ typedef libspdm_return_t (*libspdm_device_receive_message_func)(void *spdm_conte
                                                                 uint64_t timeout);
 
 /**
+ * A callback function that is called after a ALGORITHMS have been sucessfully
+ * negotiated by the responder.
+ *
+ * This can be used by implementions to support the SPDM Banked Architecture as
+ * described in section 10.32.1. The idea is that implementations can change
+ * the certificate banks once the algorithm is negotiated.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS   The bank was successfully updated.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL Unable to update the bank.
+ **/
+typedef libspdm_return_t (*libspdm_device_algs_negotiated_func)(void *spdm_context);
+
+/**
  * Register SPDM device input/output functions.
  *
  * This function must be called after libspdm_init_context, and before any SPDM communication.
@@ -539,6 +554,23 @@ typedef libspdm_return_t (*libspdm_device_receive_message_func)(void *spdm_conte
 void libspdm_register_device_io_func(
     void *spdm_context, libspdm_device_send_message_func send_message,
     libspdm_device_receive_message_func receive_message);
+
+
+/**
+ * Register SPDM responder ALGORITHMS negotiated callback.
+ *
+ * Sets an optional callback function that is called after ALGORITHMS
+ * have been sucessfully negotiated by the responder.
+ *
+ * This can be used by implementions to support the SPDM Banked Architecture as
+ * described in section 10.32.1. The idea is that implementations can change
+ * the certificate banks once the algorithm is negotiated.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  algs_negotiated               The function callback to be called.
+ **/
+void libspdm_register_rsp_alg_func(
+    void *spdm_context, libspdm_device_algs_negotiated_func algs_negotiated);
 
 /**
  * Acquire a device sender buffer for transport layer message.
