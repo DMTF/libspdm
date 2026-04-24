@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -728,6 +728,7 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
  *
  * @param[in]      hash_nid              hash algo for sign
  * @param[in]      asym_nid              asym algo for sign
+ * @param[in]      pqc_asym_nid          pqc asym algo for sign
  *
  * @param[in]      requester_info        requester info to gen CSR
  * @param[in]      requester_info_length The len of requester info
@@ -756,24 +757,12 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
  **/
-bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
+bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t pqc_asym_nid,
                           uint8_t *requester_info, size_t requester_info_length,
                           bool is_ca,
                           void *context, char *subject_name,
                           size_t *csr_len, uint8_t *csr_pointer,
                           void *base_cert)
-{
-    LIBSPDM_ASSERT(false);
-    return false;
-}
-
-bool libspdm_gen_x509_csr_with_pqc(
-    size_t hash_nid, size_t asym_nid, size_t pqc_asym_nid,
-    uint8_t *requester_info, size_t requester_info_length,
-    bool is_ca,
-    void *context, char *subject_name,
-    size_t *csr_len, uint8_t *csr_pointer,
-    void *base_cert)
 {
     LIBSPDM_ASSERT(false);
     return false;

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -109,6 +109,7 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
     bool result;
     size_t hash_nid;
     size_t asym_nid;
+    size_t pqc_asym_nid;
     void *context;
     size_t csr_buffer_size;
 
@@ -132,10 +133,11 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     asym_nid = libspdm_get_aysm_nid(base_asym_algo);
+    pqc_asym_nid = libspdm_get_pqc_aysm_nid(pqc_asym_algo);
 
     char * subject_name = "C=NL,O=PolarSSL,CN=PolarSSL Server 1";
 
-    result = libspdm_gen_x509_csr(hash_nid, asym_nid,
+    result = libspdm_gen_x509_csr(hash_nid, asym_nid, pqc_asym_nid,
                                   requester_info, requester_info_length, !is_device_cert_model,
                                   context, subject_name, csr_len, csr_pointer, x509_ca_cert);
 

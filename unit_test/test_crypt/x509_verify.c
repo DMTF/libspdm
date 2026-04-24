@@ -546,7 +546,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
 
     csr_size = 1024;
     status = libspdm_gen_x509_csr(
-        hash_nid, asym_nid, NULL, 0, true, context,
+        hash_nid, asym_nid, 0, NULL, 0, true, context,
         subject_name, &csr_size, csr, NULL);
     if (!status) {
         libspdm_my_print("\n  - Gen CSR - [Fail]");
