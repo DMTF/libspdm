@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - library/spdm_secured_message_lib/libspdm_secmes_key_exchange.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">library/spdm_secured_message_lib</a> - libspdm_secmes_key_exchange.c<span style="font-size: 80%;"> (source / <a href="libspdm_secmes_key_exchange.c.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">94.1&nbsp;%</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">16</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-04-26 08:32:12</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">4</td>
+          </tr>
+                  <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : /**</span>
+<span id="L2"><span class="lineNum">       2</span>              :  *  Copyright Notice:</span>
+<span id="L3"><span class="lineNum">       3</span>              :  *  Copyright 2021-2026 DMTF. All rights reserved.</span>
+<span id="L4"><span class="lineNum">       4</span>              :  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md</span>
+<span id="L5"><span class="lineNum">       5</span>              :  **/</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;internal/libspdm_secured_message_lib.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : </span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC tlaBgGNC">         103 : void *libspdm_secured_message_dhe_new(spdm_version_number_t spdm_version,</span></span>
+<span id="L10"><span class="lineNum">      10</span>              :                                       uint16_t dhe_named_group, bool is_initiator)</span>
+<span id="L11"><span class="lineNum">      11</span>              : {</span>
+<span id="L12"><span class="lineNum">      12</span> <span class="tlaGNC">         103 :     return libspdm_dhe_new(spdm_version, dhe_named_group, is_initiator);</span></span>
+<span id="L13"><span class="lineNum">      13</span>              : }</span>
+<span id="L14"><span class="lineNum">      14</span>              : </span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC">         103 : void libspdm_secured_message_dhe_free(uint16_t dhe_named_group, void *dhe_context)</span></span>
+<span id="L16"><span class="lineNum">      16</span>              : {</span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">         103 :     libspdm_dhe_free(dhe_named_group, dhe_context);</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">         103 : }</span></span>
+<span id="L19"><span class="lineNum">      19</span>              : </span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">         103 : bool libspdm_secured_message_dhe_generate_key(uint16_t dhe_named_group,</span></span>
+<span id="L21"><span class="lineNum">      21</span>              :                                               void *dhe_context,</span>
+<span id="L22"><span class="lineNum">      22</span>              :                                               uint8_t *public_key,</span>
+<span id="L23"><span class="lineNum">      23</span>              :                                               size_t *public_key_size)</span>
+<span id="L24"><span class="lineNum">      24</span>              : {</span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         103 :     return libspdm_dhe_generate_key(dhe_named_group, dhe_context, public_key, public_key_size);</span></span>
+<span id="L26"><span class="lineNum">      26</span>              : }</span>
+<span id="L27"><span class="lineNum">      27</span>              : </span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          32 : bool libspdm_secured_message_dhe_compute_key(</span></span>
+<span id="L29"><span class="lineNum">      29</span>              :     uint16_t dhe_named_group, void *dhe_context,</span>
+<span id="L30"><span class="lineNum">      30</span>              :     const uint8_t *peer_public, size_t peer_public_size,</span>
+<span id="L31"><span class="lineNum">      31</span>              :     void *spdm_secured_message_context)</span>
+<span id="L32"><span class="lineNum">      32</span>              : {</span>
+<span id="L33"><span class="lineNum">      33</span>              :     libspdm_secured_message_context_t *secured_message_context;</span>
+<span id="L34"><span class="lineNum">      34</span>              :     uint8_t final_key[LIBSPDM_MAX_DHE_SS_SIZE];</span>
+<span id="L35"><span class="lineNum">      35</span>              :     size_t final_key_size;</span>
+<span id="L36"><span class="lineNum">      36</span>              :     bool ret;</span>
+<span id="L37"><span class="lineNum">      37</span>              : </span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          32 :     secured_message_context = spdm_secured_message_context;</span></span>
+<span id="L39"><span class="lineNum">      39</span>              : </span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          32 :     final_key_size = sizeof(final_key);</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          32 :     ret = libspdm_dhe_compute_key(dhe_named_group, dhe_context, peer_public,</span></span>
+<span id="L42"><span class="lineNum">      42</span>              :                                   peer_public_size, final_key,</span>
+<span id="L43"><span class="lineNum">      43</span>              :                                   &amp;final_key_size);</span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">          32 :     if (!ret) {</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaUNC tlaBgUNC">           0 :         return ret;</span></span>
+<span id="L46"><span class="lineNum">      46</span>              :     }</span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC tlaBgGNC">          32 :     libspdm_copy_mem(secured_message_context-&gt;master_secret.shared_secret,</span></span>
+<span id="L48"><span class="lineNum">      48</span>              :                      sizeof(secured_message_context-&gt;master_secret.shared_secret),</span>
+<span id="L49"><span class="lineNum">      49</span>              :                      final_key, final_key_size);</span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          32 :     libspdm_zero_mem(final_key, final_key_size);</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          32 :     secured_message_context-&gt;shared_key_size = final_key_size;</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          32 :     return true;</span></span>
+<span id="L53"><span class="lineNum">      53</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>
