@@ -556,29 +556,52 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         get_response_func = libspdm_get_response_func_via_last_request(context);
 
         #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-        /* If responder is expecting chunk_get or chunk_send requests
-         * and gets other requests instead, drop out of chunking mode */
+        /* Per DSP0274: The chunked transfer shall not be interrupted by any commands
+         * that are not part of the chunk transfer sequence, with the exception of
+         * GET_VERSION. The Responder shall return ErrorCode=UnexpectedRequest if an
+         * unexpected command is received during the chunked transfer. These error codes
+         * shall not interrupt the chunk transfer sequence. */
         if (context->chunk_context.get.chunk_in_use
             && get_response_func != libspdm_get_response_chunk_get) {
 
-            context->chunk_context.get.chunk_in_use = false;
-            context->chunk_context.get.chunk_handle++; /* implicit wrap - around to 0. */
-            context->chunk_context.get.chunk_seq_no = 0;
-
-            context->chunk_context.get.large_message = NULL;
-            context->chunk_context.get.large_message_size = 0;
-            context->chunk_context.get.chunk_bytes_transferred = 0;
+            if (get_response_func == libspdm_get_response_version) {
+                /* GET_VERSION is allowed to interrupt chunk transfer.
+                 * Reset chunk get context and proceed normally. */
+                context->chunk_context.get.chunk_in_use = false;
+                context->chunk_context.get.chunk_handle++;
+                context->chunk_context.get.chunk_seq_no = 0;
+                context->chunk_context.get.large_message = NULL;
+                context->chunk_context.get.large_message_size = 0;
+                context->chunk_context.get.chunk_bytes_transferred = 0;
+            } else {
+                /* Reject with UnexpectedRequest without terminating
+                 * the chunk transfer sequence. */
+                status = libspdm_generate_error_response(
+                    context, SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                    &my_response_size, my_response);
+                goto response_dispatched;
+            }
         }
         if (context->chunk_context.send.chunk_in_use
             && get_response_func != libspdm_get_response_chunk_send) {
 
-            context->chunk_context.send.chunk_in_use = false;
-            context->chunk_context.send.chunk_handle = 0;
-            context->chunk_context.send.chunk_seq_no = 0;
-
-            context->chunk_context.send.large_message = NULL;
-            context->chunk_context.send.large_message_size = 0;
-            context->chunk_context.send.chunk_bytes_transferred = 0;
+            if (get_response_func == libspdm_get_response_version) {
+                /* GET_VERSION is allowed to interrupt chunk transfer.
+                 * Reset chunk send context and proceed normally. */
+                context->chunk_context.send.chunk_in_use = false;
+                context->chunk_context.send.chunk_handle = 0;
+                context->chunk_context.send.chunk_seq_no = 0;
+                context->chunk_context.send.large_message = NULL;
+                context->chunk_context.send.large_message_size = 0;
+                context->chunk_context.send.chunk_bytes_transferred = 0;
+            } else {
+                /* Reject with UnexpectedRequest without terminating
+                 * the chunk transfer sequence. */
+                status = libspdm_generate_error_response(
+                    context, SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                    &my_response_size, my_response);
+                goto response_dispatched;
+            }
         }
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
@@ -603,6 +626,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     }
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+response_dispatched:
     if (libspdm_get_connection_version(context) < SPDM_MESSAGE_VERSION_14) {
         chunk_send_ack_response_header_size = sizeof(spdm_chunk_send_ack_response_t);
     } else {
