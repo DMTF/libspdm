@@ -456,6 +456,309 @@ void libspdm_test_responder_receive_send_rsp_case4(void** state)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 }
 
+/**
+ * Test 5: During an active chunk GET transfer, a non-chunk, non-GET_VERSION
+ * request should be rejected with UnexpectedRequest error, and
+ * the chunk transfer sequence should NOT be terminated.
+ **/
+void libspdm_test_responder_receive_send_rsp_case5(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t *response;
+    spdm_error_response_t *spdm_response;
+    spdm_message_header_t spdm_request;
+    void *message;
+    size_t message_size;
+    uint32_t transport_header_size;
+    uint8_t saved_chunk_handle;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 5;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.data_transfer_size =
+        LIBSPDM_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.max_spdm_msg_size =
+        LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    /* Simulate an active chunk GET transfer. */
+    spdm_context->chunk_context.get.chunk_in_use = true;
+    spdm_context->chunk_context.get.chunk_handle = 1;
+    spdm_context->chunk_context.get.chunk_seq_no = 2;
+    saved_chunk_handle = spdm_context->chunk_context.get.chunk_handle;
+
+    /* Send a GET_CAPABILITIES request (non-chunk, non-GET_VERSION). */
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    spdm_request.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_request.request_response_code = SPDM_GET_CAPABILITIES;
+
+    libspdm_copy_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
+                     &spdm_request, sizeof(spdm_request));
+    spdm_context->last_spdm_request_size = sizeof(spdm_request);
+
+    libspdm_acquire_sender_buffer(spdm_context, &message_size, (void **)&message);
+    response = message;
+    response_size = message_size;
+    libspdm_zero_mem(response, response_size);
+
+    status = libspdm_build_response(spdm_context, NULL, false,
+                                    &response_size, (void **)&response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    transport_header_size =
+        spdm_context->local_context.capability.transport_header_size;
+    spdm_response = (spdm_error_response_t *)((uint8_t *)message + transport_header_size);
+
+    /* Verify error UnexpectedRequest is returned. */
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+
+    /* Verify chunk transfer sequence is NOT terminated. */
+    assert_true(spdm_context->chunk_context.get.chunk_in_use);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_handle,
+                     saved_chunk_handle);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_seq_no, 2);
+
+    libspdm_release_sender_buffer(spdm_context);
+
+    /* Clean up chunk state for subsequent tests. */
+    spdm_context->chunk_context.get.chunk_in_use = false;
+}
+
+/**
+ * Test 6: During an active chunk GET transfer, a GET_VERSION request
+ * should be allowed to interrupt: the chunk transfer should be
+ * terminated and GET_VERSION processed normally.
+ **/
+void libspdm_test_responder_receive_send_rsp_case6(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t *response;
+    spdm_message_header_t *spdm_response;
+    spdm_get_version_request_t spdm_request;
+    void *message;
+    size_t message_size;
+    uint32_t transport_header_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 6;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.data_transfer_size =
+        LIBSPDM_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.max_spdm_msg_size =
+        LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    /* Simulate an active chunk GET transfer. */
+    spdm_context->chunk_context.get.chunk_in_use = true;
+    spdm_context->chunk_context.get.chunk_handle = 1;
+    spdm_context->chunk_context.get.chunk_seq_no = 2;
+
+    /* Send a GET_VERSION request. */
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+    spdm_request.header.request_response_code = SPDM_GET_VERSION;
+
+    libspdm_copy_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
+                     &spdm_request, sizeof(spdm_request));
+    spdm_context->last_spdm_request_size = sizeof(spdm_request);
+
+    libspdm_acquire_sender_buffer(spdm_context, &message_size, (void **)&message);
+    response = message;
+    response_size = message_size;
+    libspdm_zero_mem(response, response_size);
+
+    status = libspdm_build_response(spdm_context, NULL, false,
+                                    &response_size, (void **)&response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    transport_header_size =
+        spdm_context->local_context.capability.transport_header_size;
+    spdm_response = (spdm_message_header_t *)((uint8_t *)message + transport_header_size);
+
+    /* Verify GET_VERSION was processed: response should be VERSION. */
+    assert_int_equal(spdm_response->request_response_code, SPDM_VERSION);
+
+    /* Verify chunk transfer was terminated. */
+    assert_false(spdm_context->chunk_context.get.chunk_in_use);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_seq_no, 0);
+
+    libspdm_release_sender_buffer(spdm_context);
+}
+
+/**
+ * Test 7: During an active chunk SEND transfer, a non-chunk, non-GET_VERSION
+ * request should be rejected with UnexpectedRequest error, and
+ * the chunk transfer sequence should NOT be terminated.
+ **/
+void libspdm_test_responder_receive_send_rsp_case7(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t *response;
+    spdm_error_response_t *spdm_response;
+    spdm_message_header_t spdm_request;
+    void *message;
+    size_t message_size;
+    uint32_t transport_header_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 7;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.data_transfer_size =
+        LIBSPDM_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.max_spdm_msg_size =
+        LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    /* Simulate an active chunk SEND transfer. */
+    spdm_context->chunk_context.send.chunk_in_use = true;
+    spdm_context->chunk_context.send.chunk_handle = 1;
+    spdm_context->chunk_context.send.chunk_seq_no = 3;
+
+    /* Send a GET_CAPABILITIES request (non-chunk, non-GET_VERSION). */
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    spdm_request.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_request.request_response_code = SPDM_GET_CAPABILITIES;
+
+    libspdm_copy_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
+                     &spdm_request, sizeof(spdm_request));
+    spdm_context->last_spdm_request_size = sizeof(spdm_request);
+
+    libspdm_acquire_sender_buffer(spdm_context, &message_size, (void **)&message);
+    response = message;
+    response_size = message_size;
+    libspdm_zero_mem(response, response_size);
+
+    status = libspdm_build_response(spdm_context, NULL, false,
+                                    &response_size, (void **)&response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    transport_header_size =
+        spdm_context->local_context.capability.transport_header_size;
+    spdm_response = (spdm_error_response_t *)((uint8_t *)message + transport_header_size);
+
+    /* Verify error UnexpectedRequest is returned. */
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+
+    /* Verify chunk SEND transfer sequence is NOT terminated. */
+    assert_true(spdm_context->chunk_context.send.chunk_in_use);
+    assert_int_equal(spdm_context->chunk_context.send.chunk_handle, 1);
+    assert_int_equal(spdm_context->chunk_context.send.chunk_seq_no, 3);
+
+    libspdm_release_sender_buffer(spdm_context);
+
+    /* Clean up chunk state for subsequent tests. */
+    spdm_context->chunk_context.send.chunk_in_use = false;
+}
+
+/**
+ * Test 8: During an active chunk SEND transfer, a GET_VERSION request
+ * should be allowed to interrupt: the chunk send transfer should be
+ * terminated and GET_VERSION processed normally.
+ **/
+void libspdm_test_responder_receive_send_rsp_case8(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t *response;
+    spdm_message_header_t *spdm_response;
+    spdm_get_version_request_t spdm_request;
+    void *message;
+    size_t message_size;
+    uint32_t transport_header_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 8;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.data_transfer_size =
+        LIBSPDM_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.max_spdm_msg_size =
+        LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    /* Simulate an active chunk SEND transfer. */
+    spdm_context->chunk_context.send.chunk_in_use = true;
+    spdm_context->chunk_context.send.chunk_handle = 1;
+    spdm_context->chunk_context.send.chunk_seq_no = 3;
+
+    /* Send a GET_VERSION request. */
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+    spdm_request.header.request_response_code = SPDM_GET_VERSION;
+
+    libspdm_copy_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
+                     &spdm_request, sizeof(spdm_request));
+    spdm_context->last_spdm_request_size = sizeof(spdm_request);
+
+    libspdm_acquire_sender_buffer(spdm_context, &message_size, (void **)&message);
+    response = message;
+    response_size = message_size;
+    libspdm_zero_mem(response, response_size);
+
+    status = libspdm_build_response(spdm_context, NULL, false,
+                                    &response_size, (void **)&response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    transport_header_size =
+        spdm_context->local_context.capability.transport_header_size;
+    spdm_response = (spdm_message_header_t *)((uint8_t *)message + transport_header_size);
+
+    /* Verify GET_VERSION was processed: response should be VERSION. */
+    assert_int_equal(spdm_response->request_response_code, SPDM_VERSION);
+
+    /* Verify chunk send transfer was terminated. */
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+    assert_int_equal(spdm_context->chunk_context.send.chunk_seq_no, 0);
+
+    libspdm_release_sender_buffer(spdm_context);
+}
+
 int libspdm_rsp_receive_send_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -472,6 +775,20 @@ int libspdm_rsp_receive_send_test(void)
         #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
         /* response message size is larger than requester max_spdm_msg_size */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case4,
+                               libspdm_unit_test_group_setup),
+        /* non-chunk request during active chunk GET transfer returns UnexpectedRequest
+         * and does not terminate chunk transfer */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case5,
+                               libspdm_unit_test_group_setup),
+        /* GET_VERSION during active chunk GET transfer terminates chunk and proceeds */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case6,
+                               libspdm_unit_test_group_setup),
+        /* non-chunk request during active chunk SEND transfer returns UnexpectedRequest
+         * and does not terminate chunk transfer */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case7,
+                               libspdm_unit_test_group_setup),
+        /* GET_VERSION during active chunk SEND transfer terminates chunk and proceeds */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case8,
                                libspdm_unit_test_group_setup),
     };
 
