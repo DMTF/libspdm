@@ -15,7 +15,7 @@
 
 #include <base.h>
 #include "library/memlib.h"
-#include "spdm_device_secret_lib_internal.h"
+#include "internal/libspdm_device_secret_lib.h"
 #include "internal/libspdm_common_lib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP

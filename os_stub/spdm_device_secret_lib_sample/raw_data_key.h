@@ -9,7 +9,7 @@
 #ifndef RAW_DATA_KEY_H
 #define RAW_DATA_KEY_H
 
-#include "spdm_device_secret_lib_internal.h"
+#include "internal/libspdm_device_secret_lib.h"
 
 #if LIBSPDM_ECDSA_SUPPORT
 #define LIBSPDM_EC256_RESPONDER_PRIVATE_KEY     { \

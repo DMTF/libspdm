@@ -19,7 +19,7 @@ def extract_ec_private_key(file_path):
     match = re.search(r"priv:(.*?)pub:", output, re.DOTALL)
     if match:
         private_key = match.group(1).strip()
-        # format 
+        # format
         private_key_list = private_key.split(":")
         private_key_with_prefix = [f"0x{num}" for num in private_key_list]
         private_key_with_prefix = [num.replace('\n', '') for num in private_key_with_prefix]
@@ -43,7 +43,7 @@ def extract_ec_public_key(file_path):
     match = re.search(r"pub:(.*?)ASN1 OID:", output, re.DOTALL)
     if match:
         public_key = match.group(1).strip()
-        # format 
+        # format
         public_key_list = public_key.split(":")
         public_key_with_prefix = [f"0x{num}" for num in public_key_list]
         public_key_with_prefix = [num.replace('\n', '') for num in public_key_with_prefix]
@@ -68,7 +68,7 @@ def extract_rsa_n(file_path):
     match = re.search(r"modulus:(.*?)publicExponent:", output, re.DOTALL)
     if match:
         n = match.group(1).strip()
-        # format 
+        # format
         n_list = n.split(":")
         n_with_prefix = [f"0x{num}" for num in n_list]
         n_with_prefix = [num.replace('\n', '') for num in n_with_prefix]
@@ -95,7 +95,7 @@ def extract_rsa_d(file_path):
     match = re.search(r"privateExponent:(.*?)prime1:", output, re.DOTALL)
     if match:
         d = match.group(1).strip()
-        # format 
+        # format
         d_list = d.split(":")
         d_with_prefix = [f"0x{num}" for num in d_list]
         d_with_prefix = [num.replace('\n', '') for num in d_with_prefix]
@@ -293,7 +293,7 @@ with open(header_file, 'w') as f:
     f.write('#define RAW_DATA_KEY_H\n')
 
 # write include .h
-    f.write('\n#include "spdm_device_secret_lib_internal.h"\n')
+    f.write('\n#include "internal/libspdm_device_secret_lib.h"\n')
 
 # write ec responder key
     f.write('\n#if LIBSPDM_ECDSA_SUPPORT')

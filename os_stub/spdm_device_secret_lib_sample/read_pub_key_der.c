@@ -15,7 +15,7 @@
 
 #include <base.h>
 #include "library/memlib.h"
-#include "spdm_device_secret_lib_internal.h"
+#include "internal/libspdm_device_secret_lib.h"
 #include "internal/libspdm_common_lib.h"
 
 bool libspdm_read_responder_public_key(uint32_t base_asym_algo,

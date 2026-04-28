@@ -16,7 +16,7 @@
 #include "library/malloclib.h"
 #include "library/debuglib.h"
 #include "library/cryptlib.h"
-#include "spdm_crypt_ext_lib/cryptlib_ext.h"
+#include "hal/library/cryptlib_ext.h"
 
 /* We should always add mbedtls/build_info.h here
  * to ensure the config override takes effect.
