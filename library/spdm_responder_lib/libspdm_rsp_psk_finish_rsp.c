@@ -266,6 +266,12 @@ libspdm_return_t libspdm_get_response_psk_finish(libspdm_context_t *spdm_context
                                                        SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                        response_size, response);
             }
+
+            if (opaque_data_size > SPDM_MAX_OPAQUE_DATA_SIZE) {
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                       response_size, response);
+            }
         }
         libspdm_write_uint16(ptr, (uint16_t)opaque_data_size);
         opaque_data_entry_size = sizeof(uint16_t) + opaque_data_size;
