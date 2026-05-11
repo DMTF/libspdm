@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -35,6 +35,17 @@
 #define LIBSPDM_FIPS_HASH_ALGO_SUPPORT \
     ((LIBSPDM_SHA2_SUPPORT) || (LIBSPDM_SHA3_SUPPORT))
 #endif /*LIBSPDM_FIPS_MODE*/
+
+#if ((LIBSPDM_ML_KEM_SUPPORT) || (LIBSPDM_DHE_ALGO_SUPPORT)) && \
+    !(LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP)
+    #error KEM/DHE support requires KEY_EX_CAP capability.
+#endif
+
+#if ((LIBSPDM_ASYM_ALGO_SUPPORT) || (LIBSPDM_ML_DSA_SUPPORT) || (LIBSPDM_SLH_DSA_SUPPORT)) && \
+    !((LIBSPDM_ENABLE_CAPABILITY_CERT_CAP) || (LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP) || \
+    (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP))
+    #error Asymmetric signature support requires CERT_CAP, CHAL_CAP, or KEY_EX_CAP.
+#endif
 
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && !LIBSPDM_ASYM_ALGO_SUPPORT
     #error If KEY_EX_CAP is enabled then at least one asymmetric algorithm must also be enabled.
