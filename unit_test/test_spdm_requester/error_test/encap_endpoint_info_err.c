@@ -545,9 +545,11 @@ void libspdm_test_requester_encap_endpoint_info_err_case9(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
-    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_req_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
 
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
         spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;

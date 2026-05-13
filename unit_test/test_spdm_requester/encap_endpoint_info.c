@@ -100,9 +100,11 @@ static void req_encap_endpoint_info_case1(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
-    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_req_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
 
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -211,9 +213,11 @@ static void req_encap_endpoint_info_case2(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
-    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_req_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
     spdm_context->local_context.local_cert_chain_provision_size[1] = data_size;
     spdm_context->local_context.local_cert_chain_provision[1] = data;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -321,7 +325,9 @@ static void req_encap_endpoint_info_case3(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
-    libspdm_read_requester_public_key(m_libspdm_use_req_asym_algo, &data, &data_size);
+    if (!libspdm_read_requester_public_key(m_libspdm_use_req_asym_algo, &data, &data_size)) {
+        return;
+    }
     spdm_context->local_context.local_public_key_provision = data;
     spdm_context->local_context.local_public_key_provision_size = data_size;
     spdm_context->encap_context.req_slot_id = 0xF;
@@ -463,9 +469,11 @@ static void req_encap_endpoint_info_case5(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
-    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_req_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
 
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->local_context.local_cert_chain_provision[0] = data;

@@ -5678,7 +5678,9 @@ static void req_get_measurements_case38(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PUB_KEY_ID_CAP;
-    libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data, &data_size);
+    if (!libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data, &data_size)) {
+        return;
+    }
     spdm_context->local_context.peer_public_key_provision = data;
     spdm_context->local_context.peer_public_key_provision_size = data_size;
 

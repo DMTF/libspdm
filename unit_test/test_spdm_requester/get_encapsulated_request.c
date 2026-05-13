@@ -1235,10 +1235,12 @@ static void req_get_encapsulated_request_case13(void **State)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
 
-    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_req_asym_algo, &data,
-                                                    &data_size,
-                                                    &hash, &hash_size);
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size,
+                                                         &hash, &hash_size)) {
+        return;
+    }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
