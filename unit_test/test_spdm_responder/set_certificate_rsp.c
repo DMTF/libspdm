@@ -56,9 +56,11 @@ static void rsp_set_certificate_rsp_case1(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &cert_chain,
-                                                    &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
                                                cert_chain_size);
@@ -91,10 +93,12 @@ static void rsp_set_certificate_rsp_case1(void **state)
     /*test overwrite same slot_id cert*/
 
     /*read a different cert_chain*/
-    libspdm_read_responder_public_certificate_chain_per_slot(1, m_libspdm_use_hash_algo,
-                                                             m_libspdm_use_asym_algo,
-                                                             &cert_chain_slot_1,
-                                                             &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain_per_slot(1, m_libspdm_use_hash_algo,
+                                                                  m_libspdm_use_asym_algo,
+                                                                  &cert_chain_slot_1,
+                                                                  &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
                                                cert_chain_size);
@@ -176,9 +180,11 @@ static void rsp_set_certificate_rsp_case2(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &cert_chain,
-                                                    &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     spdm_set_certificate_request_t *m_libspdm_set_certificate_request;
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
@@ -244,9 +250,11 @@ static void rsp_set_certificate_rsp_case3(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &cert_chain,
-                                                    &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     spdm_set_certificate_request_t *m_libspdm_set_certificate_request;
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
@@ -315,9 +323,11 @@ static void rsp_set_certificate_rsp_case4(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &cert_chain,
-                                                    &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
                                                cert_chain_size);
@@ -399,9 +409,11 @@ static void rsp_set_certificate_rsp_case5(void **state)
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &cert_chain,
-                                                    &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
                                                cert_chain_size);
@@ -465,9 +477,11 @@ static void rsp_set_certificate_rsp_case6(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &cert_chain,
-                                                    &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
                                                cert_chain_size);
@@ -537,9 +551,11 @@ static void rsp_set_certificate_rsp_case7(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
     /*read alias cert(alias cert chain is partial)*/
-    libspdm_read_responder_public_certificate_chain_alias_cert_till_dev_cert_ca(
-        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-        &cert_chain, &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain_alias_cert_till_dev_cert_ca(
+            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+            &cert_chain, &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
                                                cert_chain_size);
@@ -608,9 +624,11 @@ static void rsp_set_certificate_rsp_case8(void **state)
     spdm_context->last_spdm_request_session_id_valid = false;
     g_in_trusted_environment = true;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &cert_chain,
-                                                    &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
                                                cert_chain_size);
@@ -679,9 +697,11 @@ static void rsp_set_certificate_rsp_case9(void **state)
     spdm_context->last_spdm_request_session_id_valid = false;
     g_in_trusted_environment = false;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &cert_chain,
-                                                    &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
                                                cert_chain_size);
@@ -864,9 +884,11 @@ static void rsp_set_certificate_rsp_case11(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &cert_chain,
-                                                    &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
                                                cert_chain_size);
@@ -935,9 +957,11 @@ static void rsp_set_certificate_rsp_case12(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &cert_chain,
-                                                    &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
                                                cert_chain_size);
@@ -1006,9 +1030,11 @@ static void rsp_set_certificate_rsp_case13(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &cert_chain,
-                                                    &cert_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        return;
+    }
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
                                                cert_chain_size);

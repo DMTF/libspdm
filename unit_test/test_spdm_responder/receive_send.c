@@ -86,11 +86,13 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
-    libspdm_read_responder_public_certificate_chain(
-        m_libspdm_use_hash_algo,
-        m_libspdm_use_asym_algo, &data,
-        &data_size,
-        &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(
+            m_libspdm_use_hash_algo,
+            m_libspdm_use_asym_algo, &data,
+            &data_size,
+            &hash, &hash_size)) {
+        return;
+    }
 
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -367,11 +369,13 @@ void libspdm_test_responder_receive_send_rsp_case4(void** state)
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
-    libspdm_read_responder_public_certificate_chain(
-        m_libspdm_use_hash_algo,
-        m_libspdm_use_asym_algo, &data,
-        &data_size,
-        &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(
+            m_libspdm_use_hash_algo,
+            m_libspdm_use_asym_algo, &data,
+            &data_size,
+            &hash, &hash_size)) {
+        return;
+    }
 
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->local_context.local_cert_chain_provision[0] = data;

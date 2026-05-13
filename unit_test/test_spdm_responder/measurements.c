@@ -1026,9 +1026,11 @@ static void rsp_measurements_case18(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
     libspdm_secret_lib_meas_opaque_data_size = 0;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
@@ -1447,9 +1449,11 @@ static void rsp_measurements_case26(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
     libspdm_secret_lib_meas_opaque_data_size = 0;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
@@ -1524,9 +1528,11 @@ static void rsp_measurements_case27(void **state)
     /*opaque data*/
     libspdm_secret_lib_meas_opaque_data_size = 0x20;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) +
                           libspdm_secret_lib_meas_opaque_data_size +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
@@ -1645,7 +1651,9 @@ static void rsp_measurements_case28(void **state)
     /*opaque data*/
     libspdm_secret_lib_meas_opaque_data_size = 0x20;
 
-    libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data, &data_size);
+    if (!libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data, &data_size)) {
+        return;
+    }
     spdm_context->local_context.local_public_key_provision = data;
     spdm_context->local_context.local_public_key_provision_size = data_size;
 
@@ -1854,10 +1862,12 @@ static void rsp_measurements_case30(void** state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_MEASUREMENTS);
     assert_int_equal(spdm_response->header.param1, LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
 
-    libspdm_read_responder_public_certificate_chain(
-        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-        &data, &data_size,
-        &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(
+            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+            &data, &data_size,
+            &hash, &hash_size)) {
+        return;
+    }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
@@ -1970,10 +1980,12 @@ static void rsp_measurements_case31(void** state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_MEASUREMENTS);
     assert_int_equal(spdm_response->header.param1, LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
 
-    libspdm_read_responder_public_certificate_chain(
-        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-        &data, &data_size,
-        &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(
+            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+            &data, &data_size,
+            &hash, &hash_size)) {
+        return;
+    }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
@@ -2086,10 +2098,12 @@ static void rsp_measurements_case32(void** state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_MEASUREMENTS);
     assert_int_equal(spdm_response->header.param1, LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
 
-    libspdm_read_responder_public_certificate_chain(
-        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-        &data, &data_size,
-        &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(
+            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+            &data, &data_size,
+            &hash, &hash_size)) {
+        return;
+    }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
@@ -2207,10 +2221,12 @@ static void rsp_measurements_case33(void** state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_MEASUREMENTS);
     assert_int_equal(spdm_response->header.param1, LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
 
-    libspdm_read_responder_public_certificate_chain(
-        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-        &data, &data_size,
-        &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(
+            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+            &data, &data_size,
+            &hash, &hash_size)) {
+        return;
+    }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
@@ -2329,10 +2345,12 @@ static void rsp_measurements_case34(void** state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_MEASUREMENTS);
     assert_int_equal(spdm_response->header.param1, LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
 
-    libspdm_read_responder_public_certificate_chain(
-        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-        &data, &data_size,
-        &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(
+            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+            &data, &data_size,
+            &hash, &hash_size)) {
+        return;
+    }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
@@ -2488,9 +2506,11 @@ static void rsp_measurements_case36(void **state)
     spdm_context->connection_info.multi_key_conn_rsp = true;
     libspdm_reset_message_m(spdm_context, NULL);
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
         spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
         spdm_context->local_context.local_cert_chain_provision[i] = data;
