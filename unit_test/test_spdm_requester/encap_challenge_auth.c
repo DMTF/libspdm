@@ -79,9 +79,11 @@ static void req_encap_challenge_auth_case1(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
@@ -157,9 +159,11 @@ static void req_encap_challenge_auth_case3(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data, &data_size,
-                                                    NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data, &data_size,
+                                                         NULL, NULL)) {
+        return;
+    }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
@@ -211,9 +215,11 @@ static void req_encap_challenge_auth_case4(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data, &data_size,
-                                                    NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data, &data_size,
+                                                         NULL, NULL)) {
+        return;
+    }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
@@ -265,9 +271,11 @@ static void req_encap_challenge_auth_case5(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data, &data_size,
-                                                    NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data, &data_size,
+                                                         NULL, NULL)) {
+        return;
+    }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
@@ -318,7 +326,9 @@ static void req_encap_challenge_auth_case6(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    libspdm_read_requester_public_key(m_libspdm_use_req_asym_algo, &data, &data_size);
+    if (!libspdm_read_requester_public_key(m_libspdm_use_req_asym_algo, &data, &data_size)) {
+        return;
+    }
     spdm_context->local_context.local_public_key_provision = data;
     spdm_context->local_context.local_public_key_provision_size = data_size;
 
@@ -398,9 +408,11 @@ static void req_encap_challenge_auth_case7(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
@@ -493,9 +505,11 @@ static void req_encap_challenge_auth_case8(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 

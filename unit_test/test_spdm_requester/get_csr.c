@@ -58,8 +58,10 @@ void libspdm_gen_req_info() {
     req_info_p = right_req_info;
     right_req_info_size = sizeof(right_req_info);
 
-    libspdm_read_responder_public_key(m_libspdm_use_asym_algo,
-                                      &req_info_pkinfo, &req_info_pkinfo_len);
+    if (!libspdm_read_responder_public_key(m_libspdm_use_asym_algo,
+                                           &req_info_pkinfo, &req_info_pkinfo_len)) {
+        return;
+    }
 
     /*concat right_req_info*/
     libspdm_copy_mem(req_info_p, right_req_info_size, req_info_sequence, sizeof(req_info_sequence));
