@@ -164,9 +164,11 @@ void libspdm_test_requester_set_certificate_case1(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo,
-                                                    &data, &data_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo,
+                                                         &data, &data_size, NULL, NULL)) {
+        return;
+    }
 
     libspdm_set_certificate(spdm_context, NULL, 0, data, data_size);
     free(data);
@@ -207,9 +209,11 @@ void libspdm_test_requester_set_certificate_case2(void **State)
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_libspdm_use_aead_algo;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];

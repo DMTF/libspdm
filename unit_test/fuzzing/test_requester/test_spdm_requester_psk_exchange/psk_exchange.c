@@ -138,10 +138,12 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                    m_libspdm_local_buffer_size));
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
     libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size,
-                                                    NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size,
+                                                         NULL, NULL)) {
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
+    }
     cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
     cert_buffer_size = data_size - (sizeof(spdm_cert_chain_t) + hash_size);
     libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size, cert_buffer_hash);
@@ -206,10 +208,12 @@ void libspdm_test_requester_psk_exchange_case1(void **State)
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
     spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size,
-                                                    &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size,
+                                                         &hash, &hash_size)) {
+        return;
+    }
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -269,10 +273,12 @@ void libspdm_test_requester_psk_exchange_case2(void **State)
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
     spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size,
-                                                    &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size,
+                                                         &hash, &hash_size)) {
+        return;
+    }
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
@@ -334,10 +340,12 @@ void libspdm_test_requester_psk_exchange_case3(void **State)
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
     spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size,
-                                                    &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size,
+                                                         &hash, &hash_size)) {
+        return;
+    }
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -397,10 +405,12 @@ void libspdm_test_requester_psk_exchange_ex_case1(void **State)
     spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
     spdm_context->local_context.secured_message_version.secured_message_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size,
-                                                    &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size,
+                                                         &hash, &hash_size)) {
+        return;
+    }
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;

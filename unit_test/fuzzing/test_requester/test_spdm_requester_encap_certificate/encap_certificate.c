@@ -46,10 +46,12 @@ void libspdm_test_requester_encap_certificate(void **State)
         request_size = sizeof(spdm_get_certificate_request_t);
     }
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size,
-                                                    NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size,
+                                                         NULL, NULL)) {
+        return;
+    }
 
     spdm_context->local_context.local_cert_chain_provision[slot_id] = data;
     spdm_context->local_context.local_cert_chain_provision_size[slot_id] = data_size;
