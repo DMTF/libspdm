@@ -692,11 +692,13 @@ static void libspdm_test_crypt_spdm_verify_certificate_chain_buffer(void **state
     size_t data_size;
 
     if ((LIBSPDM_RSA_SSA_2048_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
-        libspdm_read_responder_public_certificate_chain(
-            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
-            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
-            &data,&data_size,
-            NULL, NULL);
+        if (!libspdm_read_responder_public_certificate_chain(
+                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                &data,&data_size,
+                NULL, NULL)) {
+            return;
+        }
 
         status = libspdm_verify_certificate_chain_buffer(
             SPDM_MESSAGE_VERSION_13,
@@ -731,11 +733,13 @@ static void libspdm_test_crypt_spdm_verify_certificate_chain_buffer(void **state
     }
 
     if ((LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
-        libspdm_read_responder_public_certificate_chain(
-            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
-            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
-            &data,&data_size,
-            NULL, NULL);
+        if (!libspdm_read_responder_public_certificate_chain(
+                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                &data,&data_size,
+                NULL, NULL)) {
+            return;
+        }
 
         status = libspdm_verify_certificate_chain_buffer(
             SPDM_MESSAGE_VERSION_13,
