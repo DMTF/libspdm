@@ -620,9 +620,11 @@ void libspdm_test_verify_peer_cert_chain_buffer_case6(void **state)
         assert(false);
     }
     /* Loading Other test Root certificate and saving its hash*/
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo_test, &data_test,
-                                                    &data_size_test, &hash_test, &hash_size_test);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo_test, &data_test,
+                                                         &data_size_test, &hash_test, &hash_size_test)) {
+        return;
+    }
     libspdm_x509_get_cert_from_cert_chain(
         (uint8_t *)data_test + sizeof(spdm_cert_chain_t) + hash_size_test,
         data_size_test - sizeof(spdm_cert_chain_t) - hash_size_test, 0,
@@ -709,9 +711,11 @@ void libspdm_test_verify_peer_cert_chain_buffer_case7(void **state)
         assert(false);
     }
     /* Loading Other test Root certificate and saving its hash*/
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo_test, &data_test,
-                                                    &data_size_test, &hash_test, &hash_size_test);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo_test, &data_test,
+                                                         &data_size_test, &hash_test, &hash_size_test)) {
+        return;
+    }
     libspdm_x509_get_cert_from_cert_chain(
         (uint8_t *)data_test + sizeof(spdm_cert_chain_t) + hash_size_test,
         data_size_test - sizeof(spdm_cert_chain_t) - hash_size_test, 0,
@@ -815,9 +819,11 @@ void libspdm_test_verify_peer_cert_chain_buffer_case8(void **state)
         assert(false);
     }
     /* Loading Other test Root certificate and saving its hash*/
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo_test, &data_test,
-                                                    &data_size_test, &hash_test, &hash_size_test);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo_test, &data_test,
+                                                         &data_size_test, &hash_test, &hash_size_test)) {
+        return;
+    }
     libspdm_x509_get_cert_from_cert_chain(
         (uint8_t *)data_test + sizeof(spdm_cert_chain_t) + hash_size_test,
         data_size_test - sizeof(spdm_cert_chain_t) - hash_size_test, 0,
