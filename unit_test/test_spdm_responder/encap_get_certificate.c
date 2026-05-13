@@ -72,10 +72,12 @@ static void rsp_encap_get_certificate_case1(void **state)
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256;
 
     if (m_libspdm_local_certificate_chain == NULL) {
-        libspdm_read_responder_public_certificate_chain(
-            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-            &m_libspdm_local_certificate_chain,
-            &m_libspdm_local_certificate_chain_size, NULL, NULL);
+        if (!libspdm_read_responder_public_certificate_chain(
+                m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+                &m_libspdm_local_certificate_chain,
+                &m_libspdm_local_certificate_chain_size, NULL, NULL)) {
+            return;
+        }
     }
 
     portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -223,10 +225,12 @@ static void rsp_encap_get_certificate_case3(void **state)
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256;
 
     if (m_libspdm_local_certificate_chain == NULL) {
-        libspdm_read_responder_public_certificate_chain(
-            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-            &m_libspdm_local_certificate_chain,
-            &m_libspdm_local_certificate_chain_size, NULL, NULL);
+        if (!libspdm_read_responder_public_certificate_chain(
+                m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+                &m_libspdm_local_certificate_chain,
+                &m_libspdm_local_certificate_chain_size, NULL, NULL)) {
+            return;
+        }
     }
 
     portion_length = 0;
@@ -322,10 +326,12 @@ static void rsp_encap_get_certificate_case4(void **state)
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256;
 
     if (m_libspdm_local_certificate_chain == NULL) {
-        libspdm_read_responder_public_certificate_chain(
-            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-            &m_libspdm_local_certificate_chain,
-            &m_libspdm_local_certificate_chain_size, NULL, NULL);
+        if (!libspdm_read_responder_public_certificate_chain(
+                m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+                &m_libspdm_local_certificate_chain,
+                &m_libspdm_local_certificate_chain_size, NULL, NULL)) {
+            return;
+        }
     }
 
     portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1; /* Fail response: responder return portion_length > spdm_request.length*/
@@ -414,10 +420,12 @@ static void rsp_encap_get_certificate_case5(void **state)
     spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
 
-    libspdm_read_responder_public_certificate_chain(
-        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-        &m_libspdm_local_certificate_chain,
-        &m_libspdm_local_certificate_chain_size, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(
+            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+            &m_libspdm_local_certificate_chain,
+            &m_libspdm_local_certificate_chain_size, NULL, NULL)) {
+        return;
+    }
 
     portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     remainder_length =

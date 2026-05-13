@@ -56,9 +56,11 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case1(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
 
-    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_req_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_encap_e(spdm_context, NULL);
 
@@ -149,9 +151,11 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case2(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
 
-    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_req_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_encap_e(spdm_context, NULL);
 
@@ -312,9 +316,11 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case3(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
 
-    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_req_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_encap_e(spdm_context, NULL);
 
@@ -402,9 +408,11 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case4(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->get_endpoint_info_callback = get_endpoint_info_callback_in_err;
 
-    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_req_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_encap_e(spdm_context, NULL);
 
