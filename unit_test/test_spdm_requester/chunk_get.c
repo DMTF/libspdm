@@ -316,6 +316,69 @@ void libspdm_requester_chunk_get_test_case8_build_digest_response(
     spdm_response->header.param2 |= (0xFF << 0);
 }
 
+void libspdm_requester_chunk_get_test_case11_build_capabilities_response(
+    void *context, void *response, size_t *response_size)
+{
+    spdm_capabilities_response_t *spdm_response;
+    spdm_supported_algorithms_block_t *supported_algorithms;
+    spdm_negotiate_algorithms_common_struct_table_t *struct_table;
+
+    *response_size = sizeof(spdm_capabilities_response_t) +
+                     sizeof(spdm_supported_algorithms_block_t) +
+                     4 * sizeof(spdm_negotiate_algorithms_common_struct_table_t);
+    spdm_response = response;
+
+    libspdm_zero_mem(spdm_response, *response_size);
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    spdm_response->header.request_response_code = SPDM_CAPABILITIES;
+    spdm_response->header.param1 =
+        SPDM_CAPABILITIES_RESPONSE_PARAM1_SUPPORTED_ALGORITHMS;
+    spdm_response->header.param2 = 0;
+    spdm_response->ct_exponent = 0;
+    spdm_response->flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_response->data_transfer_size = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_response->max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    supported_algorithms =
+        (spdm_supported_algorithms_block_t *)((uint8_t *)spdm_response +
+                                              sizeof(spdm_capabilities_response_t));
+
+    supported_algorithms->param1 = 4;
+    supported_algorithms->param2 = 0;
+    supported_algorithms->length = sizeof(spdm_supported_algorithms_block_t) +
+                                   4 * sizeof(spdm_negotiate_algorithms_common_struct_table_t);
+    supported_algorithms->measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+    supported_algorithms->other_params_support = 0;
+    supported_algorithms->base_asym_algo = m_libspdm_use_asym_algo;
+    supported_algorithms->base_hash_algo = m_libspdm_use_hash_algo;
+    supported_algorithms->ext_asym_count = 0;
+    supported_algorithms->ext_hash_count = 0;
+    supported_algorithms->mel_specification = SPDM_MEL_SPECIFICATION_DMTF;
+
+    struct_table =
+        (spdm_negotiate_algorithms_common_struct_table_t *)(supported_algorithms + 1);
+
+    struct_table[0].alg_type = SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE;
+    struct_table[0].alg_count = 0x20;
+    struct_table[0].alg_supported = SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1;
+
+    struct_table[1].alg_type = SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD;
+    struct_table[1].alg_count = 0x20;
+    struct_table[1].alg_supported = SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM;
+
+    struct_table[2].alg_type =
+        SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG;
+    struct_table[2].alg_count = 0x20;
+    struct_table[2].alg_supported = SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
+
+    struct_table[3].alg_type = SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE;
+    struct_table[3].alg_count = 0x20;
+    struct_table[3].alg_supported = SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM;
+}
+
 static libspdm_return_t send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
@@ -363,6 +426,8 @@ static libspdm_return_t send_message(
         return LIBSPDM_STATUS_SUCCESS;
     } else if (spdm_test_context->case_id == 0xA) {
         return LIBSPDM_STATUS_SUCCESS;
+    } else if (spdm_test_context->case_id == 0xB) {
+        return LIBSPDM_STATUS_SUCCESS;
     } else {
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -394,6 +459,17 @@ static libspdm_return_t receive_message(
 
     spdm_test_context = libspdm_get_test_context();
     spdm_request_header = (spdm_message_header_t*) m_libspdm_local_request_buffer;
+
+    /* Reset statics when entering case 0xB with the initial GET_CAPABILITIES request */
+    if (spdm_test_context->case_id == 0xB &&
+        spdm_request_header->request_response_code == SPDM_GET_CAPABILITIES) {
+        sub_rsp = NULL;
+        sub_rsp_size = 0;
+        sub_rsp_copied = 0;
+        sub_rsp_remaining = 0;
+        chunk_seq_no = 0;
+        error_large_response_sent = false;
+    }
 
     /* First response to these tests should always be error large response */
     if (error_large_response_sent == false) {
@@ -546,6 +622,9 @@ static libspdm_return_t receive_message(
         build_response_func = libspdm_requester_chunk_get_test_case4_build_digest_response;
     } else if (spdm_test_context->case_id == 0xA) {
         build_response_func = libspdm_requester_chunk_get_test_case8_build_digest_response;
+    } else if (spdm_test_context->case_id == 0xB) {
+        build_response_func =
+            libspdm_requester_chunk_get_test_case11_build_capabilities_response;
     } else {
         LIBSPDM_ASSERT(0);
         return LIBSPDM_STATUS_RECEIVE_FAIL;
@@ -1253,6 +1332,46 @@ static void req_chunk_get_case10(void** state)
 }
 #endif
 
+/* Test chunked CAPABILITIES response with Supported Algorithms Block */
+static void req_chunk_get_case11(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t supported_algs_buffer[1024];
+    size_t supported_algs_length;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xB;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    /* Pre-set chunk capability so that chunk handling works during get_capabilities */
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+
+    spdm_context->local_context.capability.data_transfer_size =
+        CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->local_context.capability.ct_exponent = 0;
+
+    supported_algs_length = sizeof(supported_algs_buffer);
+    status = libspdm_get_capabilities_with_supported_algs(
+        spdm_context, &supported_algs_length, supported_algs_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(
+        spdm_context->connection_info.capability.flags &
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP,
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
+    assert_int_equal(spdm_context->connection_info.capability.data_transfer_size,
+                     CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE);
+    assert_int_equal(spdm_context->connection_info.capability.max_spdm_msg_size,
+                     LIBSPDM_MAX_SPDM_MSG_SIZE);
+    assert_true(supported_algs_length > 0);
+}
 
 int libspdm_req_chunk_get_test(void)
 {
@@ -1293,6 +1412,8 @@ int libspdm_req_chunk_get_test(void)
         /* Reject CHUNK_RESPONSE with mismatched handle in spdm 1.4 */
         cmocka_unit_test(req_chunk_get_case10),
 #endif
+        /* Chunked CAPABILITIES response with Supported Algorithms Block */
+        cmocka_unit_test(req_chunk_get_case11),
     };
 
     libspdm_test_context_t test_context = {
