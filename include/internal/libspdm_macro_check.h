@@ -56,20 +56,20 @@
     #error Asymmetric signature support requires CERT_CAP, CHAL_CAP, or KEY_EX_CAP.
 #endif
 
-#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && !LIBSPDM_ASYM_ALGO_SUPPORT
-    #error If KEY_EX_CAP is enabled then at least one asymmetric algorithm must also be enabled.
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && !(LIBSPDM_ASYM_ALGO_SUPPORT || LIBSPDM_PQC_ASYM_ALGO_SUPPORT)
+    #error If KEY_EX_CAP is enabled then at least one base asymmetric or PQC asymmetric algorithm must also be enabled.
 #endif
 
-#if (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP) && !LIBSPDM_ASYM_ALGO_SUPPORT
-    #error If CERT_CAP is enabled then at least one asymmetric algorithm must also be enabled.
+#if (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP) && !(LIBSPDM_ASYM_ALGO_SUPPORT || LIBSPDM_PQC_ASYM_ALGO_SUPPORT)
+    #error If CERT_CAP is enabled then at least one base asymmetric or PQC asymmetric algorithm must also be enabled.
 #endif
 
-#if (LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP) && !LIBSPDM_ASYM_ALGO_SUPPORT
-    #error If CHAL_CAP is enabled then at least one asymmetric algorithm must also be enabled.
+#if (LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP) && !(LIBSPDM_ASYM_ALGO_SUPPORT || LIBSPDM_PQC_ASYM_ALGO_SUPPORT)
+    #error If CHAL_CAP is enabled then at least one base asymmetric or PQC asymmetric algorithm must also be enabled.
 #endif
 
-#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && !LIBSPDM_DHE_ALGO_SUPPORT
-    #error If KEY_EX_CAP is enabled then at least one DHE algorithm must also be enabled.
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && !(LIBSPDM_DHE_ALGO_SUPPORT || LIBSPDM_KEM_ALGO_SUPPORT)
+    #error If KEY_EX_CAP is enabled then at least one DHE or KEM algorithm must also be enabled.
 #endif
 
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && !LIBSPDM_AEAD_ALGO_SUPPORT
