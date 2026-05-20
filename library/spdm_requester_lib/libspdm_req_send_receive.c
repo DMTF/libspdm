@@ -802,12 +802,21 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
             goto receive_done;
         }
 
-        /* Per the spec, SPDM_VERSION and SPDM_CAPABILITIES shall not be chunked
+        /* Per the spec, SPDM_VERSION shall not be chunked
          * and should be an unexpected error. */
-        if (spdm_response->request_response_code == SPDM_VERSION ||
-            spdm_response->request_response_code == SPDM_CAPABILITIES) {
+        if (spdm_response->request_response_code == SPDM_VERSION) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
+        }
+
+        /* Per the spec, SPDM_CAPABILITIES shall not be chunked unless
+         * the response includes Supported Algorithms. */
+        if (spdm_response->request_response_code == SPDM_CAPABILITIES) {
+            if ((spdm_response->param1 &
+                 SPDM_CAPABILITIES_RESPONSE_PARAM1_SUPPORTED_ALGORITHMS) == 0) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto receive_done;
+            }
         }
     }
 
