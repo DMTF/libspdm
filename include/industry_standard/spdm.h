@@ -16,6 +16,7 @@
 /* Encompasses SPDM specification versions 1.0, 1.1, 1.2, 1.3, 1.4 */
 #define SPDM_MAX_VERSION_COUNT 5
 #define SPDM_MAX_SLOT_COUNT 8
+#define SPDM_MAX_BANK_COUNT 240
 #define SPDM_MAX_OPAQUE_DATA_SIZE 1024
 #define SPDM_MAX_CSR_TRACKING_TAG 7
 /* MeasurementRecordLength is 3 bytes. */

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -100,7 +100,7 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
     no_local_cert_chain = true;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (spdm_context->local_context
-            .local_cert_chain_provision[index] != NULL) {
+            .local_cert_chain_provision[0][index] != NULL) {
             no_local_cert_chain = false;
         }
     }
@@ -146,16 +146,16 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
     slot_index = 0;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (spdm_context->local_context
-            .local_cert_chain_provision[index] != NULL) {
+            .local_cert_chain_provision[0][index] != NULL) {
             spdm_response->header.param2 |= (1 << index);
             result = libspdm_generate_cert_chain_hash(spdm_context, index,
                                                       &digest[hash_size * slot_index]);
             if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
                 spdm_context->connection_info.multi_key_conn_rsp) {
-                key_pair_id[slot_index] = spdm_context->local_context.local_key_pair_id[index];
-                cert_info[slot_index] = spdm_context->local_context.local_cert_info[index];
+                key_pair_id[slot_index] = spdm_context->local_context.local_key_pair_id[0][index];
+                cert_info[slot_index] = spdm_context->local_context.local_cert_info[0][index];
                 key_usage_bit_mask[slot_index] =
-                    spdm_context->local_context.local_key_usage_bit_mask[index];
+                    spdm_context->local_context.local_key_usage_bit_mask[0][index];
             }
             slot_index++;
             if (!result) {

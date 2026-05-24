@@ -99,13 +99,13 @@ typedef struct {
     libspdm_secured_message_version_t secured_message_version;
 
     /* My Certificate */
-    const void *local_cert_chain_provision[SPDM_MAX_SLOT_COUNT];
-    size_t local_cert_chain_provision_size[SPDM_MAX_SLOT_COUNT];
+    const void *local_cert_chain_provision[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
+    size_t local_cert_chain_provision_size[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
     uint8_t local_supported_slot_mask;
     uint8_t cert_slot_reset_mask;
-    spdm_key_pair_id_t local_key_pair_id[SPDM_MAX_SLOT_COUNT];
-    spdm_certificate_info_t local_cert_info[SPDM_MAX_SLOT_COUNT];
-    spdm_key_usage_bit_mask_t local_key_usage_bit_mask[SPDM_MAX_SLOT_COUNT];
+    spdm_key_pair_id_t local_key_pair_id[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
+    spdm_certificate_info_t local_cert_info[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
+    spdm_key_usage_bit_mask_t local_key_usage_bit_mask[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
     /* My raw public key (slot_id - 0xFF) */
     const void *local_public_key_provision;
     size_t local_public_key_provision_size;

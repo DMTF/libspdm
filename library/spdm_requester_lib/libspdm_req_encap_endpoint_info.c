@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -126,7 +126,7 @@ libspdm_return_t libspdm_get_encap_response_endpoint_info(void *spdm_context,
         }
 
         if (slot_id != 0xF) {
-            if (context->local_context.local_cert_chain_provision[slot_id] == NULL) {
+            if (context->local_context.local_cert_chain_provision[0][slot_id] == NULL) {
                 return libspdm_generate_encap_error_response(
                     context, SPDM_ERROR_CODE_INVALID_REQUEST,
                     0, response_size, response);
@@ -140,7 +140,7 @@ libspdm_return_t libspdm_get_encap_response_endpoint_info(void *spdm_context,
         }
 
         if (context->connection_info.multi_key_conn_req && slot_id != 0xF) {
-            if ((context->local_context.local_key_usage_bit_mask[slot_id] &
+            if ((context->local_context.local_key_usage_bit_mask[0][slot_id] &
                  SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE) == 0) {
                 return libspdm_generate_encap_error_response(
                     context, SPDM_ERROR_CODE_INVALID_REQUEST,

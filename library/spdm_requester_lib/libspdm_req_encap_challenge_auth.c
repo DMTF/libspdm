@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -86,7 +86,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
 
     if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
         context->connection_info.multi_key_conn_req && (slot_id != 0xFF)) {
-        if ((context->local_context.local_key_usage_bit_mask[slot_id] &
+        if ((context->local_context.local_key_usage_bit_mask[0][slot_id] &
              SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE) == 0) {
             return libspdm_generate_encap_error_response(
                 context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,

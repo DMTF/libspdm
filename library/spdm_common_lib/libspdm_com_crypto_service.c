@@ -27,7 +27,7 @@ uint8_t libspdm_slot_id_to_key_pair_id (
         }
     }
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
-    return context->local_context.local_key_pair_id[slot_id];
+    return context->local_context.local_key_pair_id[0][slot_id];
 }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -73,11 +73,11 @@ void libspdm_get_local_cert_chain_buffer(void *spdm_context,
 
     context = spdm_context;
 
-    LIBSPDM_ASSERT(context->local_context.local_cert_chain_provision[slot_id] != NULL);
-    LIBSPDM_ASSERT(context->local_context.local_cert_chain_provision_size != 0);
+    LIBSPDM_ASSERT(context->local_context.local_cert_chain_provision[0][slot_id] != NULL);
+    LIBSPDM_ASSERT(context->local_context.local_cert_chain_provision_size[0] != 0);
 
-    *cert_chain_buffer = context->local_context.local_cert_chain_provision[slot_id];
-    *cert_chain_buffer_size = context->local_context.local_cert_chain_provision_size[slot_id];
+    *cert_chain_buffer = context->local_context.local_cert_chain_provision[0][slot_id];
+    *cert_chain_buffer_size = context->local_context.local_cert_chain_provision_size[0][slot_id];
 }
 
 bool libspdm_get_local_cert_chain_data(void *spdm_context,
@@ -591,8 +591,8 @@ bool libspdm_generate_cert_chain_hash(libspdm_context_t *spdm_context,
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
     return libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
-        spdm_context->local_context.local_cert_chain_provision[slot_id],
-        spdm_context->local_context.local_cert_chain_provision_size[slot_id], hash);
+        spdm_context->local_context.local_cert_chain_provision[0][slot_id],
+        spdm_context->local_context.local_cert_chain_provision_size[0][slot_id], hash);
 }
 
 bool libspdm_generate_public_key_hash(libspdm_context_t *spdm_context,
@@ -611,7 +611,7 @@ uint8_t libspdm_get_cert_slot_mask(libspdm_context_t *spdm_context)
 
     slot_mask = 0;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
-        if (spdm_context->local_context.local_cert_chain_provision[index] != NULL) {
+        if (spdm_context->local_context.local_cert_chain_provision[0][index] != NULL) {
             slot_mask |= (1 << index);
         }
     }
@@ -626,7 +626,7 @@ uint8_t libspdm_get_cert_slot_count(libspdm_context_t *spdm_context)
 
     slot_count = 0;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
-        if (spdm_context->local_context.local_cert_chain_provision[index] != NULL) {
+        if (spdm_context->local_context.local_cert_chain_provision[0][index] != NULL) {
             slot_count++;
         }
     }
