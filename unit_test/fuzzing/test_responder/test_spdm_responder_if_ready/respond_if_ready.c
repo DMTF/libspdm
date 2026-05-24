@@ -49,9 +49,9 @@ void libspdm_test_responder_respond_if_ready(void **State)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.local_cert_chain_provision[0] =
+    spdm_context->local_context.local_cert_chain_provision[0][0] =
         local_certificate_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
         sizeof(local_certificate_chain);
     libspdm_set_mem(local_certificate_chain, sizeof(local_certificate_chain),
                     (uint8_t)(0xFF));
@@ -106,9 +106,9 @@ void libspdm_test_responder_respond_if_ready_case2(void **State)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.local_cert_chain_provision[0] =
+    spdm_context->local_context.local_cert_chain_provision[0][0] =
         local_certificate_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
         sizeof(local_certificate_chain);
     libspdm_set_mem(local_certificate_chain, sizeof(local_certificate_chain),
                     (uint8_t)(0xFF));
@@ -163,9 +163,9 @@ void libspdm_test_responder_respond_if_ready_case3(void **State)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.local_cert_chain_provision[0] =
+    spdm_context->local_context.local_cert_chain_provision[0][0] =
         local_certificate_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
         sizeof(local_certificate_chain);
     libspdm_set_mem(local_certificate_chain, sizeof(local_certificate_chain),
                     (uint8_t)(0xFF));

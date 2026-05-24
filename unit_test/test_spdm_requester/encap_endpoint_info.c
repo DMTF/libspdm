@@ -106,8 +106,8 @@ static void req_encap_endpoint_info_case1(void **state)
         return;
     }
 
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
@@ -218,8 +218,8 @@ static void req_encap_endpoint_info_case2(void **state)
                                                          &data_size, NULL, NULL)) {
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision_size[1] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[1] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][1] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][1] = data;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[1].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[1].buffer,
@@ -475,8 +475,8 @@ static void req_encap_endpoint_info_case5(void **state)
         return;
     }
 
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,

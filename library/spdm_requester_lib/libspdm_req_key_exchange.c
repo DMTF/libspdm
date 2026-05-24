@@ -628,7 +628,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
             if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
                 spdm_context->connection_info.multi_key_conn_req &&
                 (*req_slot_id_param != 0xf)) {
-                if ((spdm_context->local_context.local_key_usage_bit_mask[*req_slot_id_param] &
+                if ((spdm_context->local_context.local_key_usage_bit_mask[0][*req_slot_id_param] &
                      SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE) == 0) {
                     status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                     goto receive_done;
