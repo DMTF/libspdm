@@ -1777,10 +1777,10 @@ static void req_communication_case33(void **state)
         m_libspdm_use_hash_algo, m_libspdm_use_req_asym_algo, &local_cert_chain,
         &local_cert_chain_size, NULL, NULL);
     assert_true(result);
-    spdm_context->local_context.local_cert_chain_provision[0] = local_cert_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = local_cert_chain_size;
-    spdm_context->local_context.local_cert_chain_provision[1] = local_cert_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[1] = local_cert_chain_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = local_cert_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = local_cert_chain_size;
+    spdm_context->local_context.local_cert_chain_provision[0][1] = local_cert_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0][1] = local_cert_chain_size;
 
     status = libspdm_start_session_exchange(
         spdm_context, false, NULL, 0, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
@@ -1805,10 +1805,10 @@ static void req_communication_case33(void **state)
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     libspdm_free_session_id(spdm_context, session_id);
-    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
-    spdm_context->local_context.local_cert_chain_provision[1] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[1] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][1] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][1] = 0;
     free(local_cert_chain);
     #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_free_peer_leaf_cert_public_key(spdm_context, 0);

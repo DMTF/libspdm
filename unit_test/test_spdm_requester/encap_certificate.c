@@ -65,8 +65,8 @@ static void req_encap_certificate_case1(void **state)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
@@ -127,8 +127,8 @@ static void req_encap_certificate_case2(void **state)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_14;
     spdm_request.header.request_response_code = SPDM_GET_CERTIFICATE;
@@ -158,8 +158,8 @@ static void req_encap_certificate_case2(void **state)
                      data_size - LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
     assert_memory_equal(spdm_response + 1, data, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
-    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
     free(data);
 }
 
@@ -205,8 +205,8 @@ static void req_encap_certificate_case3(void **state)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     /* This tests considers only offset = 0, other tests vary offset value*/
     m_spdm_get_certificate_request3.offset = 0;
@@ -285,8 +285,8 @@ static void req_encap_certificate_case4(void **state)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     /* This tests considers only length = 0, other tests vary length value*/
     m_spdm_get_certificate_request3.length = 0;
@@ -373,8 +373,8 @@ static void req_encap_certificate_case5(void **state)
             return;
         }
 
-        spdm_context->local_context.local_cert_chain_provision[0] = data;
-        spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+        spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
         m_spdm_get_certificate_request3.offset = (uint16_t)(LIBSPDM_MIN(data_size - 1, 0xFFFF));
         TEST_DEBUG_PRINT("data_size: %u\n", data_size);
@@ -424,8 +424,8 @@ static void req_encap_certificate_case5(void **state)
 
         TEST_DEBUG_PRINT("\n");
 
-        spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-        spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+        spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+        spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
         free(data);
     }
 }
@@ -463,8 +463,8 @@ static void req_encap_certificate_case6(void **state)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     /* This tests considers only length = 1*/
     m_spdm_get_certificate_request3.length = 1;
@@ -550,8 +550,8 @@ static void req_encap_certificate_case7(void **state)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_mut_b.buffer_size = 0;
@@ -612,9 +612,9 @@ static void req_encap_certificate_case8(void **state)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.local_cert_info[0] = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_info[0][0] = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
 
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
     spdm_request.header.request_response_code = SPDM_GET_CERTIFICATE;
@@ -638,9 +638,9 @@ static void req_encap_certificate_case8(void **state)
     assert_int_equal(spdm_response->remainder_length, data_size - LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
     spdm_context->connection_info.multi_key_conn_req = false;
-    spdm_context->local_context.local_cert_info[0] = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
-    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_info[0][0] = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
     free(data);
 }
 

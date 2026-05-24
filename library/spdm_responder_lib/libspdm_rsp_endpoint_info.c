@@ -145,7 +145,7 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
         }
 
         if (slot_id != 0xF) {
-            if (spdm_context->local_context.local_cert_chain_provision[slot_id] == NULL) {
+            if (spdm_context->local_context.local_cert_chain_provision[0][slot_id] == NULL) {
                 return libspdm_generate_error_response(
                     spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                     0, response_size, response);
@@ -159,7 +159,7 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
         }
 
         if (spdm_context->connection_info.multi_key_conn_rsp && slot_id != 0xF) {
-            if ((spdm_context->local_context.local_key_usage_bit_mask[slot_id] &
+            if ((spdm_context->local_context.local_key_usage_bit_mask[0][slot_id] &
                  SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE) == 0) {
                 return libspdm_generate_error_response(
                     spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,

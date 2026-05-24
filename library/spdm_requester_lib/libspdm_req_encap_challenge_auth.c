@@ -86,7 +86,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
 
     if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
         context->connection_info.multi_key_conn_req && (slot_id != 0xFF)) {
-        if ((context->local_context.local_key_usage_bit_mask[slot_id] &
+        if ((context->local_context.local_key_usage_bit_mask[0][slot_id] &
              SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE) == 0) {
             return libspdm_generate_encap_error_response(
                 context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -95,7 +95,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     }
 
     /* The Responder shall not request a slot that is not provisioned. */
-    if ((slot_id != 0xFF) && (context->local_context.local_cert_chain_provision[slot_id] == NULL)) {
+    if ((slot_id != 0xFF) && (context->local_context.local_cert_chain_provision[0][slot_id] == NULL)) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);

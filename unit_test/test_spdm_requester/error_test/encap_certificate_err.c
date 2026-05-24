@@ -53,10 +53,10 @@ static void req_encap_certificate_err_case1(void **state)
                                                          &data, &data_size, NULL, NULL)) {
         assert_true(false);
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[1] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[1] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][1] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][1] = 0;
 
     response_size = sizeof(response);
     status = libspdm_get_encap_response_certificate(
@@ -71,8 +71,8 @@ static void req_encap_certificate_err_case1(void **state)
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
-    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
     free(data);
 }
 
@@ -104,8 +104,8 @@ static void req_encap_certificate_err_case2(void **state)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
     /* {ERROR} The certificate chain in slot 0 needs the LargeOffset and LargeLength fields. */
-    spdm_context->local_context.local_cert_chain_provision[0] = m_libspdm_large_cert_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision[0][0] = m_libspdm_large_cert_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
         sizeof(m_libspdm_large_cert_chain);
 
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_14;
@@ -129,8 +129,8 @@ static void req_encap_certificate_err_case2(void **state)
     assert_int_equal(spdm_response->extend_error_data.cert_chain_length,
                      sizeof(m_libspdm_large_cert_chain));
 
-    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
 }
 
 /**

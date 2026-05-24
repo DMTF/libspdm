@@ -682,7 +682,7 @@ static void req_get_encapsulated_request_err_case15(void **state)
     set_standard_state(spdm_context);
     spdm_context->connection_info.multi_key_conn_req = true;
     /* {ERROR} The key in slot 1 cannot be used for key exchange. */
-    spdm_context->local_context.local_key_usage_bit_mask[1] =
+    spdm_context->local_context.local_key_usage_bit_mask[0][1] =
         SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE;
 
     req_slot_id = 0;
@@ -690,7 +690,7 @@ static void req_get_encapsulated_request_err_case15(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 
     spdm_context->connection_info.multi_key_conn_req = false;
-    spdm_context->local_context.local_key_usage_bit_mask[1] = 0;
+    spdm_context->local_context.local_key_usage_bit_mask[0][1] = 0;
 }
 
 /**
@@ -894,8 +894,8 @@ static void req_get_encapsulated_request_err_case23(void **state)
     spdm_test_context->case_id = 0xF;
 
     set_standard_state(spdm_context);
-    spdm_context->local_context.local_cert_chain_provision[1] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[1] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][1] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][1] = 0;
 
     req_slot_id = 0;
     status = libspdm_encapsulated_request(spdm_context, NULL, 0, &req_slot_id);
@@ -920,16 +920,16 @@ static void req_get_encapsulated_request_err_case24(void **state)
     spdm_test_context->case_id = 0xF;
 
     set_standard_state(spdm_context);
-    spdm_context->local_context.local_cert_chain_provision[1] = cert_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[1] = sizeof(cert_chain);
+    spdm_context->local_context.local_cert_chain_provision[0][1] = cert_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0][1] = sizeof(cert_chain);
 
     req_slot_id = 0;
     status = libspdm_encapsulated_request(spdm_context, NULL, 0, &req_slot_id);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(req_slot_id, 1);
 
-    spdm_context->local_context.local_cert_chain_provision[1] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[1] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][1] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][1] = 0;
 }
 
 int libspdm_req_get_encapsulated_request_error_test(void)

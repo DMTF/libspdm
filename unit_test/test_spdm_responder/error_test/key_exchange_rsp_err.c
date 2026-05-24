@@ -61,8 +61,8 @@ static void rsp_key_exchange_rsp_err_case1(void **state)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -101,8 +101,8 @@ static void rsp_key_exchange_rsp_err_case1(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->session_info[0].session_id, INVALID_SESSION_ID);
 
-    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
     free(data1);
 }
 
