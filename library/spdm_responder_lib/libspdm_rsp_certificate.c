@@ -121,13 +121,13 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
                                                response_size, response);
     }
 
-    if (spdm_context->local_context.local_cert_chain_provision[slot_id] == NULL) {
+    if (spdm_context->local_context.local_cert_chain_provision[0][slot_id] == NULL) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
             0, response_size, response);
     }
 
-    cert_chain_size = spdm_context->local_context.local_cert_chain_provision_size[slot_id];
+    cert_chain_size = spdm_context->local_context.local_cert_chain_provision_size[0][slot_id];
 
     if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_14) &&
         (!use_large_cert_chain) && (cert_chain_size > SPDM_MAX_CERTIFICATE_CHAIN_SIZE)) {
@@ -193,7 +193,7 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     spdm_response->header.param2 = 0;
     if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
         spdm_context->connection_info.multi_key_conn_rsp) {
-        spdm_response->header.param2 = spdm_context->local_context.local_cert_info[slot_id];
+        spdm_response->header.param2 = spdm_context->local_context.local_cert_info[0][slot_id];
     }
     if (use_large_cert_chain) {
         spdm_response->header.param1 |= SPDM_CERTIFICATE_RESPONSE_LARGE_CERT_CHAIN;
@@ -219,7 +219,7 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     libspdm_copy_mem((uint8_t *)spdm_response + rsp_msg_header_size,
                      response_capacity - rsp_msg_header_size,
                      (const uint8_t *)spdm_context->local_context
-                     .local_cert_chain_provision[slot_id] + offset, length);
+                     .local_cert_chain_provision[0][slot_id] + offset, length);
 
     if (session_info == NULL) {
         /* Log to transcript. */
