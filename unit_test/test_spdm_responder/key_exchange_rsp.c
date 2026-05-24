@@ -134,8 +134,8 @@ static void rsp_key_exchange_rsp_case1(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -214,8 +214,8 @@ static void rsp_key_exchange_rsp_case2(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -287,8 +287,8 @@ static void rsp_key_exchange_rsp_case3(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -361,8 +361,8 @@ static void rsp_key_exchange_rsp_case4(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -437,8 +437,8 @@ static void rsp_key_exchange_rsp_case5(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -517,8 +517,8 @@ static void rsp_key_exchange_rsp_case6(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -589,8 +589,8 @@ static void rsp_key_exchange_rsp_case7(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -694,8 +694,8 @@ static void rsp_key_exchange_rsp_case8(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -801,8 +801,8 @@ static void rsp_key_exchange_rsp_case9(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -906,8 +906,8 @@ static void rsp_key_exchange_rsp_case10(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -989,8 +989,8 @@ static void rsp_key_exchange_rsp_case11(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1163,8 +1163,8 @@ static void rsp_key_exchange_rsp_case15(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1259,8 +1259,8 @@ static void rsp_key_exchange_rsp_case16(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1355,8 +1355,8 @@ static void rsp_key_exchange_rsp_case17(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1438,8 +1438,8 @@ static void rsp_key_exchange_rsp_case18(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1517,8 +1517,8 @@ static void rsp_key_exchange_rsp_case19(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1641,8 +1641,8 @@ static void rsp_key_exchange_rsp_case20(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1734,8 +1734,8 @@ static void rsp_key_exchange_rsp_case21(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1743,7 +1743,7 @@ static void rsp_key_exchange_rsp_case21(void **state)
      * the SlotID fields in KEY_EXCHANGE and KEY_EXCHANGE_RSP shall not specify this certificate slot */
     slot_id = 0;
     m_libspdm_key_exchange_request10.header.param2 = slot_id;
-    spdm_context->local_context.local_key_usage_bit_mask[slot_id] =
+    spdm_context->local_context.local_key_usage_bit_mask[0][slot_id] =
         SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE |
         SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE;
 
@@ -1828,8 +1828,8 @@ static void rsp_key_exchange_rsp_case22(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -1913,8 +1913,8 @@ static void rsp_key_exchange_rsp_case23(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
     g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
@@ -1995,8 +1995,8 @@ static void rsp_key_exchange_rsp_case24(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
     g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
@@ -2090,8 +2090,8 @@ static void rsp_key_exchange_rsp_case25(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size1;
 
     libspdm_reset_message_a(spdm_context);
 

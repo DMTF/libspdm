@@ -62,9 +62,9 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision_size[0] =
+    ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision_size[0][0] =
         data_size;
-    ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision[0] = data;
+    ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision[0][0] = data;
     ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
     ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
@@ -77,8 +77,8 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     ptr = (void *)(spdm_response + 1);
     libspdm_hash_all(
         m_libspdm_use_hash_algo,
-        ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision[0],
-        ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision_size[0], ptr);
+        ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision[0][0],
+        ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision_size[0][0], ptr);
     free(data);
     ptr += libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);

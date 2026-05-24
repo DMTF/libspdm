@@ -50,8 +50,8 @@ void libspdm_test_responder_challenge_case1(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
@@ -90,8 +90,8 @@ void libspdm_test_responder_challenge_case2(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
@@ -129,8 +129,8 @@ void libspdm_test_responder_challenge_case3(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
@@ -172,8 +172,8 @@ void libspdm_test_responder_challenge_case4(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     g_start_basic_mut_auth = true;
@@ -213,8 +213,8 @@ void libspdm_test_responder_challenge_case5(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
@@ -257,8 +257,8 @@ void libspdm_test_responder_challenge_case6(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     response_size = sizeof(response);
@@ -296,8 +296,8 @@ void libspdm_test_responder_challenge_case7(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
@@ -336,8 +336,8 @@ void libspdm_test_responder_challenge_case8(void **State)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
@@ -347,7 +347,7 @@ void libspdm_test_responder_challenge_case8(void **State)
 #endif
 
     for (uint8_t i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_key_usage_bit_mask[i] =
+        spdm_context->local_context.local_key_usage_bit_mask[0][i] =
             SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
             SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE;
     }

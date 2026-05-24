@@ -49,8 +49,8 @@ void libspdm_test_get_response_encapsulated_request_case1(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_b(spdm_context);
@@ -84,8 +84,8 @@ void libspdm_test_get_response_encapsulated_request_case2(void **State)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0] = local_certificate_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision[0][0] = local_certificate_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
         sizeof(local_certificate_chain);
     libspdm_set_mem(local_certificate_chain, sizeof(local_certificate_chain), (uint8_t)(0xFF));
 
@@ -118,8 +118,8 @@ void libspdm_test_get_response_encapsulated_request_case3(void **State)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0] = local_certificate_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision[0][0] = local_certificate_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
         sizeof(local_certificate_chain);
     libspdm_set_mem(local_certificate_chain, sizeof(local_certificate_chain), (uint8_t)(0xFF));
 
@@ -153,8 +153,8 @@ void libspdm_test_get_response_encapsulated_request_case4(void **State)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0] = local_certificate_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision[0][0] = local_certificate_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
         sizeof(local_certificate_chain);
     libspdm_set_mem(local_certificate_chain, sizeof(local_certificate_chain), (uint8_t)(0xFF));
 
@@ -221,8 +221,8 @@ void libspdm_test_get_response_encapsulated_response_ack_case1(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_b(spdm_context);
@@ -290,14 +290,14 @@ void libspdm_test_get_response_encapsulated_response_ack_case3(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0] = local_certificate_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision[0][0] = local_certificate_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
         sizeof(local_certificate_chain);
     libspdm_set_mem(local_certificate_chain, sizeof(local_certificate_chain), (uint8_t)(0xFF));
 
@@ -386,8 +386,8 @@ void libspdm_test_get_response_encapsulated_response_ack_case6(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_b(spdm_context);

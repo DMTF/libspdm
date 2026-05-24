@@ -523,8 +523,8 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (slot_id >= SPDM_MAX_SLOT_COUNT) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->local_context.local_cert_chain_provision_size[slot_id] = data_size;
-        context->local_context.local_cert_chain_provision[slot_id] = data;
+        context->local_context.local_cert_chain_provision_size[0][slot_id] = data_size;
+        context->local_context.local_cert_chain_provision[0][slot_id] = data;
         break;
     case LIBSPDM_DATA_LOCAL_SUPPORTED_SLOT_MASK:
         if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
@@ -546,7 +546,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(spdm_key_pair_id_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->local_context.local_key_pair_id[slot_id] = *(const spdm_key_pair_id_t *)data;
+        context->local_context.local_key_pair_id[0][slot_id] = *(const spdm_key_pair_id_t *)data;
         break;
     case LIBSPDM_DATA_LOCAL_CERT_INFO:
         if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
@@ -559,7 +559,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(spdm_certificate_info_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->local_context.local_cert_info[slot_id] = *(const spdm_certificate_info_t *)data;
+        context->local_context.local_cert_info[0][slot_id] = *(const spdm_certificate_info_t *)data;
         break;
     case LIBSPDM_DATA_LOCAL_KEY_USAGE_BIT_MASK:
         if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
@@ -572,7 +572,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(spdm_key_usage_bit_mask_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->local_context.local_key_usage_bit_mask[slot_id] =
+        context->local_context.local_key_usage_bit_mask[0][slot_id] =
             libspdm_read_uint16((const uint8_t *)data);
         break;
     case LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER:
@@ -1222,15 +1222,15 @@ bool libspdm_check_context (void *spdm_context)
           SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP) != 0) &&
         (context->local_context.capability.max_spdm_msg_size != 0)) {
         for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
-            if ((context->local_context.local_cert_chain_provision_size[index] != 0) &&
-                (context->local_context.local_cert_chain_provision_size[index] +
+            if ((context->local_context.local_cert_chain_provision_size[0][index] != 0) &&
+                (context->local_context.local_cert_chain_provision_size[0][index] +
                  sizeof(spdm_certificate_response_t) >
                  context->local_context.capability.max_spdm_msg_size)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                                "max_spdm_msg_size (%d) must be greater than or "
-                               "equal to local_cert_chain_provision_size[%zu] (%zu).\n",
+                               "equal to local_cert_chain_provision_size[0][%zu] (%zu).\n",
                                context->local_context.capability.max_spdm_msg_size, index,
-                               context->local_context.local_cert_chain_provision_size[index]));
+                               context->local_context.local_cert_chain_provision_size[0][index]));
                 return false;
             }
         }

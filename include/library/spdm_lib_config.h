@@ -86,6 +86,14 @@
 #define LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP 1
 #endif
 
+/* SPDM 1.4 capabilities. */
+#ifndef LIBSPDM_MAX_BANK_COUNT
+/* We support up to 240 (SPDM_MAX_BANK_COUNT) banks, deafult to 2 as that seems
+ * to be a reasonable starting point.
+ */
+#define LIBSPDM_MAX_BANK_COUNT 2
+#endif
+
 /* Includes SPDM 1.3 features for CSR messages. If enabled then LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
  * must also be enabled.
  */

@@ -404,7 +404,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case6(void **state)
 
 /**
  * Test 7: Error case, signature was required
- *         but local_cert_chain_provision[slot_id] == NULL
+ *         but local_cert_chain_provision[0][slot_id] == NULL
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
 void libspdm_test_requester_encap_endpoint_info_err_case7(void **state)
@@ -429,10 +429,10 @@ void libspdm_test_requester_encap_endpoint_info_err_case7(void **state)
 
     session_info = NULL;
 
-    /* no initialization for spdm_context->local_context.local_cert_chain_provision */
+    /* no initialization for spdm_context->local_context.local_cert_chain_provision[0] */
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_cert_chain_provision_size[i] = 0;
-        spdm_context->local_context.local_cert_chain_provision[i] = NULL;
+        spdm_context->local_context.local_cert_chain_provision_size[0][i] = 0;
+        spdm_context->local_context.local_cert_chain_provision[0][i] = NULL;
     }
 
     libspdm_reset_message_encap_e(spdm_context, session_info);
@@ -517,7 +517,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case8(void **state)
 
 /**
  * Test 9: Error case, signature was required, multi_key_conn_rsp is set
- *         but local_key_usage_bit_mask[slot_id] not meet requirement
+ *         but local_key_usage_bit_mask[0][slot_id] not meet requirement
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
 void libspdm_test_requester_encap_endpoint_info_err_case9(void **state)
@@ -550,8 +550,8 @@ void libspdm_test_requester_encap_endpoint_info_err_case9(void **state)
                                                     &data_size, NULL, NULL);
 
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-        spdm_context->local_context.local_cert_chain_provision[0] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+        spdm_context->local_context.local_cert_chain_provision[0][0] = data;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
         libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
@@ -574,9 +574,9 @@ void libspdm_test_requester_encap_endpoint_info_err_case9(void **state)
 
     session_info = NULL;
     spdm_context->connection_info.multi_key_conn_rsp = true;
-    /* no initialization for spdm_context->local_context.local_key_usage_bit_mask */
+    /* no initialization for spdm_context->local_context.local_key_usage_bit_mask[0] */
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_key_usage_bit_mask[i] = 0;
+        spdm_context->local_context.local_key_usage_bit_mask[0][i] = 0;
     }
 
     libspdm_reset_message_encap_e(spdm_context, session_info);
@@ -670,12 +670,12 @@ int libspdm_req_encap_endpoint_info_error_test(void)
         cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case5),
         /* Request contains invalid slot_id */
         cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case6),
-        /* Signature was required but local_cert_chain_provision[slot_id] == NULL */
+        /* Signature was required but local_cert_chain_provision[0][slot_id] == NULL */
         cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case7),
         /* Signature was required, slot_id == 0xF but local_public_key_provision == NULL */
         cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case8),
         /* Signature was required, multi_key_conn_rsp is set but
-         * local_key_usage_bit_mask[slot_id] not meet requirement
+         * local_key_usage_bit_mask[0][slot_id] not meet requirement
          */
         cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case9),
         /* Invalid sub_code */

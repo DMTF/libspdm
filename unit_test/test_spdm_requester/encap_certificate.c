@@ -62,8 +62,8 @@ static void req_encap_certificate_case1(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo,
                                                     &data, &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
@@ -136,8 +136,8 @@ static void req_encap_certificate_case3(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo,
                                                     &data, &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     /* This tests considers only offset = 0, other tests vary offset value*/
     m_spdm_get_certificate_request3.offset = 0;
@@ -213,8 +213,8 @@ static void req_encap_certificate_case4(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo,
                                                     &data, &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     /* This tests considers only length = 0, other tests vary length value*/
     m_spdm_get_certificate_request3.length = 0;
@@ -298,8 +298,8 @@ static void req_encap_certificate_case5(void **state)
             m_libspdm_use_hash_algo, SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
             test_cases[i], &data, &data_size, NULL, NULL);
 
-        spdm_context->local_context.local_cert_chain_provision[0] = data;
-        spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+        spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
         m_spdm_get_certificate_request3.offset = (uint16_t)(LIBSPDM_MIN(data_size - 1, 0xFFFF));
         TEST_DEBUG_PRINT("data_size: %u\n", data_size);
@@ -349,8 +349,8 @@ static void req_encap_certificate_case5(void **state)
 
         TEST_DEBUG_PRINT("\n");
 
-        spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-        spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+        spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+        spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
         free(data);
     }
 }
@@ -385,8 +385,8 @@ static void req_encap_certificate_case6(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo,
                                                     &data, &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     /* This tests considers only length = 1*/
     m_spdm_get_certificate_request3.length = 1;
@@ -469,8 +469,8 @@ static void req_encap_certificate_case7(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo,
                                                     &data, &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_mut_b.buffer_size = 0;

@@ -51,8 +51,8 @@ void libspdm_test_requester_encap_challenge(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);

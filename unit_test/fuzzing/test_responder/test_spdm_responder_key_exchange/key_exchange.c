@@ -77,8 +77,8 @@ void libspdm_test_responder_key_exchange_case1(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -146,8 +146,8 @@ void libspdm_test_responder_key_exchange_case2(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
     ptr = spdm_test_key_exchange_request->exchange_data;
@@ -209,8 +209,8 @@ void libspdm_test_responder_key_exchange_case3(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -273,8 +273,8 @@ void libspdm_test_responder_key_exchange_case4(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_register_cert_chain_buffer(spdm_context, m_cert_chain_buffer,
                                        sizeof(m_cert_chain_buffer));
@@ -354,8 +354,8 @@ void libspdm_test_responder_key_exchange_case5(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -422,8 +422,8 @@ void libspdm_test_responder_key_exchange_case6(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -489,8 +489,8 @@ void libspdm_test_responder_key_exchange_case7(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
 

@@ -57,8 +57,8 @@ void libspdm_test_responder_heartbeat_case1(void **State)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
@@ -171,8 +171,8 @@ void libspdm_test_responder_heartbeat_case4(void **State)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
         data_size1;
 
     libspdm_reset_message_a(spdm_context);

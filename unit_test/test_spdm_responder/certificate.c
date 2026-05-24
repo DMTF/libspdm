@@ -69,8 +69,8 @@ static void rsp_certificate_case1(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
@@ -130,8 +130,8 @@ static void rsp_certificate_case3(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     response_size = sizeof(response);
     status = libspdm_get_response_certificate(
@@ -174,8 +174,8 @@ static void rsp_certificate_case4(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     response_size = sizeof(response);
     status = libspdm_get_response_certificate(
@@ -220,8 +220,8 @@ static void rsp_certificate_case5(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     response_size = sizeof(response);
     status = libspdm_get_response_certificate(
@@ -270,8 +270,8 @@ static void rsp_certificate_case6(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
 
     response_size = sizeof(response);
@@ -322,8 +322,8 @@ static void rsp_certificate_case7(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     /* This tests considers only offset = 0, other tests vary offset value*/
     m_libspdm_get_certificate_request3.offset = 0;
@@ -396,8 +396,8 @@ static void rsp_certificate_case8(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     /* This tests considers only length = 1, other tests vary length value*/
     m_libspdm_get_certificate_request3.length = 1;
@@ -489,8 +489,8 @@ static void rsp_certificate_case9(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     /* Setting up offset values at the boundary of certificate length*/
     test_sizes[0] += (uint16_t)(test_sizes[0] + data_size);
@@ -596,8 +596,8 @@ static void rsp_certificate_case10(void **state)
             m_libspdm_use_hash_algo, SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
             test_cases[i], &data, &data_size, NULL, NULL);
 
-        spdm_context->local_context.local_cert_chain_provision[0] = data;
-        spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+        spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
         m_libspdm_get_certificate_request3.offset = (uint16_t)(LIBSPDM_MIN(data_size - 1, 0xFFFF));
         TEST_LIBSPDM_DEBUG_PRINT("data_size: %u\n", data_size);
@@ -650,8 +650,8 @@ static void rsp_certificate_case10(void **state)
 
         TEST_LIBSPDM_DEBUG_PRINT("\n");
 
-        spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-        spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+        spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+        spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
         free(data);
     }
 }
@@ -700,8 +700,8 @@ static void rsp_certificate_case11(void **state)
         libspdm_read_responder_public_certificate_chain_by_size(
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, test_cases[i], &data,
             &data_size, NULL, NULL);
-        spdm_context->local_context.local_cert_chain_provision[0] = data;
-        spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+        spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
         TEST_LIBSPDM_DEBUG_PRINT("data_size: %u\n", data_size);
         TEST_LIBSPDM_DEBUG_PRINT("m_libspdm_get_certificate_request3.offset: %u\n",
@@ -786,8 +786,8 @@ static void rsp_certificate_case12(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     /* This tests considers only length = 1*/
     m_libspdm_get_certificate_request3.length = 1;
@@ -876,8 +876,8 @@ static void rsp_certificate_case13(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     /*filling buffer B with arbitrary data*/
@@ -953,8 +953,8 @@ static void rsp_certificate_case14(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     session_info->session_transcript.message_m.buffer_size =
@@ -1023,8 +1023,8 @@ static void rsp_certificate_case15(void **state)
         &data_size, NULL, NULL);
     assert_true(ret);
 
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     spdm_cert_request = (spdm_get_certificate_request_t *) request;
 
@@ -1083,8 +1083,8 @@ static void rsp_certificate_case16(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     m_libspdm_get_certificate_request3.offset = 0;
     m_libspdm_get_certificate_request3.length = 0;
@@ -1130,8 +1130,8 @@ static void rsp_certificate_case17(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     response_size = sizeof(response);
     status = libspdm_get_response_certificate(
@@ -1226,8 +1226,8 @@ static void rsp_certificate_case19(void **state)
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     /* Responder needs to be reset before certificate can be retrieved from specified SlotID. */
     m_libspdm_get_certificate_request5.header.param1 = slot_id;

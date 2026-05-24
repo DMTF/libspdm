@@ -129,8 +129,8 @@ void libspdm_test_responder_measurements_case3(void **State)
                                                     &data_size,
                                                     NULL, NULL);
     for (int i = 1; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
-        spdm_context->local_context.local_cert_chain_provision[i] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[0][i] = data_size;
+        spdm_context->local_context.local_cert_chain_provision[0][i] = data;
     }
 
     response_size = sizeof(response);
@@ -178,8 +178,8 @@ void libspdm_test_responder_measurements_case4(void **State)
                                                     &data_size,
                                                     NULL, NULL);
     for (int i = 1; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
-        spdm_context->local_context.local_cert_chain_provision[i] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[0][i] = data_size;
+        spdm_context->local_context.local_cert_chain_provision[0][i] = data;
     }
 
     session_id = 0xFFFFFFFF;

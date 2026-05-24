@@ -151,8 +151,8 @@ static void rsp_encap_challenge_case2(void **state)
 #endif
     spdm_context->encap_context.req_slot_id = 0;
 
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
 
     response_size = sizeof(spdm_error_response_t);
     spdm_response = (void *)temp_buf;
@@ -219,8 +219,8 @@ static void rsp_encap_challenge_case3(void **state)
 #endif
     spdm_context->encap_context.req_slot_id = 0;
 
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
 
     response_size = sizeof(spdm_error_response_t);
     spdm_response = (void *)temp_buf;
@@ -286,8 +286,8 @@ static void rsp_encap_challenge_case4(void **state)
 #endif
     spdm_context->encap_context.req_slot_id = 0;
 
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
 
     response_size = sizeof(spdm_error_response_t);
     spdm_response = (void *)temp_buf;

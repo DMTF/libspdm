@@ -167,8 +167,8 @@ void libspdm_requester_chunk_get_test_case3_build_challenge_response(
         m_libspdm_use_hash_algo,
         m_libspdm_use_asym_algo, &data,
         &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     *response_size = sizeof(spdm_challenge_auth_response_t) +
@@ -184,8 +184,8 @@ void libspdm_requester_chunk_get_test_case3_build_challenge_response(
     ptr = (void*) (spdm_response + 1);
     libspdm_hash_all(
         m_libspdm_use_hash_algo,
-        spdm_context->local_context.local_cert_chain_provision[0],
-        spdm_context->local_context.local_cert_chain_provision_size[0],
+        spdm_context->local_context.local_cert_chain_provision[0][0],
+        spdm_context->local_context.local_cert_chain_provision_size[0][0],
         ptr);
     free(data);
     data = NULL;

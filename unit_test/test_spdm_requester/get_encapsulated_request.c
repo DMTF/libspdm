@@ -1042,8 +1042,8 @@ static void req_get_encapsulated_request_case8(void **State)
                                                          &hash, &hash_size)) {
         assert(false);
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
@@ -1103,8 +1103,8 @@ static void req_get_encapsulated_request_case9(void **State)
                                                          &hash, &hash_size)) {
         assert(false);
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
@@ -1239,8 +1239,8 @@ static void req_get_encapsulated_request_case13(void **State)
                                                     m_libspdm_use_req_asym_algo, &data,
                                                     &data_size,
                                                     &hash, &hash_size);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_encap_e(spdm_context, NULL);
@@ -1293,8 +1293,8 @@ static void req_get_encapsulated_request_case14(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
 
-    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
 
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
@@ -1352,8 +1352,8 @@ static void req_get_encapsulated_request_case15(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
 
-    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
 
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,

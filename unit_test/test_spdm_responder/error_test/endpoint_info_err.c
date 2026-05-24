@@ -651,7 +651,7 @@ void libspdm_test_responder_endpoint_info_err_case10(void **state)
 
 /**
  * Test 11: Error case, signature was required
- *          but local_cert_chain_provision[slot_id] == NULL
+ *          but local_cert_chain_provision[0][slot_id] == NULL
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
 void libspdm_test_responder_endpoint_info_err_case11(void **state)
@@ -678,10 +678,10 @@ void libspdm_test_responder_endpoint_info_err_case11(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
     session_info = NULL;
-    /* no initialization for spdm_context->local_context.local_cert_chain_provision */
+    /* no initialization for spdm_context->local_context.local_cert_chain_provision[0] */
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_cert_chain_provision_size[i] = 0;
-        spdm_context->local_context.local_cert_chain_provision[i] = NULL;
+        spdm_context->local_context.local_cert_chain_provision_size[0][i] = 0;
+        spdm_context->local_context.local_cert_chain_provision[0][i] = NULL;
     }
 
     libspdm_reset_message_e(spdm_context, session_info);
@@ -768,7 +768,7 @@ void libspdm_test_responder_endpoint_info_err_case12(void **state)
 
 /**
  * Test 13: Error case, signature was required, multi_key_conn_rsp is set
- *          but local_key_usage_bit_mask[slot_id] not meet requirement
+ *          but local_key_usage_bit_mask[0][slot_id] not meet requirement
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
 void libspdm_test_responder_endpoint_info_err_case13(void **state)
@@ -801,13 +801,13 @@ void libspdm_test_responder_endpoint_info_err_case13(void **state)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
-        spdm_context->local_context.local_cert_chain_provision[i] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[0][i] = data_size;
+        spdm_context->local_context.local_cert_chain_provision[0][i] = data;
     }
 
     spdm_context->connection_info.multi_key_conn_rsp = true;
-    /* no initialization for spdm_context->local_context.local_key_usage_bit_mask */
-    spdm_context->local_context.local_key_usage_bit_mask[1] = 0;
+    /* no initialization for spdm_context->local_context.local_key_usage_bit_mask[0] */
+    spdm_context->local_context.local_key_usage_bit_mask[0][1] = 0;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[1].buffer_size = data_size;

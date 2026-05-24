@@ -1788,9 +1788,9 @@ static libspdm_return_t receive_message(
                                                                          &data_size, NULL, NULL);
             }
             ((libspdm_context_t *)spdm_context)
-            ->local_context.local_cert_chain_provision_size[slot_id] = data_size;
+            ->local_context.local_cert_chain_provision_size[0][slot_id] = data_size;
             ((libspdm_context_t *)spdm_context)
-            ->local_context.local_cert_chain_provision[slot_id] = data;
+            ->local_context.local_cert_chain_provision[0][slot_id] = data;
             ((libspdm_context_t *)spdm_context)
             ->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
             ((libspdm_context_t *)spdm_context)
@@ -1810,10 +1810,10 @@ static libspdm_return_t receive_message(
             libspdm_hash_all(
                 m_libspdm_use_hash_algo,
                 ((libspdm_context_t *)spdm_context)
-                ->local_context.local_cert_chain_provision[slot_id],
+                ->local_context.local_cert_chain_provision[0][slot_id],
                 ((libspdm_context_t *)spdm_context)
                 ->local_context
-                .local_cert_chain_provision_size[slot_id],
+                .local_cert_chain_provision_size[0][slot_id],
                 ptr);
             free(data);
             ptr += libspdm_get_hash_size(m_libspdm_use_hash_algo);
