@@ -101,16 +101,18 @@ libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
     slot_index = 0;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (context->local_context
-            .local_cert_chain_provision[0][index] != NULL) {
+            .local_cert_chain_provision[context->connection_info.current_bank][index] != NULL) {
             spdm_response->header.param2 |= (1 << index);
             result = libspdm_generate_cert_chain_hash(context, index,
                                                       &digest[hash_size * slot_index]);
             if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
                 context->connection_info.multi_key_conn_req) {
-                key_pair_id[slot_index] = context->local_context.local_key_pair_id[0][index];
-                cert_info[slot_index] = context->local_context.local_cert_info[0][index];
+                key_pair_id[slot_index] =
+                    context->local_context.local_key_pair_id[context->connection_info.current_bank][index];
+                cert_info[slot_index] =
+                    context->local_context.local_cert_info[context->connection_info.current_bank][index];
                 key_usage_bit_mask[slot_index] =
-                    context->local_context.local_key_usage_bit_mask[0][index];
+                    context->local_context.local_key_usage_bit_mask[context->connection_info.current_bank][index];
             }
             slot_index++;
             if (!result) {
