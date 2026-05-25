@@ -2910,6 +2910,9 @@ libspdm_return_t libspdm_init_context(void *spdm_context)
 
     LIBSPDM_ASSERT(spdm_context != NULL);
 
+    /* Zero the memory */
+    libspdm_zero_mem(spdm_context, libspdm_get_context_size());
+
     /* libspdm_get_context_size() allocates space for all secured message
      * contexts. They are appended to the general SPDM context. */
     context = spdm_context;
