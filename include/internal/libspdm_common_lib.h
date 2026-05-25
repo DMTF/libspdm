@@ -103,7 +103,7 @@ typedef struct {
     size_t local_cert_chain_provision_size[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
     uint8_t local_supported_slot_mask;
     uint8_t cert_slot_reset_mask;
-    spdm_key_pair_id_t local_key_pair_id[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
+    spdm_key_pair_id_t local_key_pair_id[SPDM_MAX_SLOT_COUNT];
     spdm_certificate_info_t local_cert_info[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
     spdm_key_usage_bit_mask_t local_key_usage_bit_mask[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
     /* My raw public key (slot_id - 0xFF) */
@@ -147,6 +147,9 @@ typedef struct {
 
     /* Peer CertificateChain */
     libspdm_peer_used_cert_chain_t peer_used_cert_chain[SPDM_MAX_SLOT_COUNT];
+
+    /* The local certificate bank to use */
+    uint8_t current_bank;
 
     /* Specifies whether the cached negotiated state should be invalidated. (responder only)
      * This is a "sticky" bit wherein if it is set to 1 then it cannot be set to 0. */

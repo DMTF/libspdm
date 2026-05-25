@@ -59,8 +59,8 @@ void libspdm_test_responder_heartbeat_case1(void **State)
                                                          &data_size1, NULL, NULL)) {
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
         data_size1;
 
     libspdm_reset_message_a(spdm_context);
@@ -175,8 +175,8 @@ void libspdm_test_responder_heartbeat_case4(void **State)
                                                          &data_size1, NULL, NULL)) {
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
         data_size1;
 
     libspdm_reset_message_a(spdm_context);

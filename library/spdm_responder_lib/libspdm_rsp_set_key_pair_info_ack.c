@@ -416,13 +416,13 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
             if ((new_assoc_cert_slot_mask & (1 << slot_index)) != 0) {
                 /* Slot is (still) associated with this KeyPairID. */
                 spdm_context->local_context.local_key_pair_id[slot_index] = key_pair_id;
-                spdm_context->local_context.local_key_usage_bit_mask[slot_index] =
+                spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][slot_index] =
                     new_current_key_usage;
             } else if (spdm_context->local_context.local_key_pair_id[slot_index] == key_pair_id) {
                 /* Context still points at this KeyPairID but the slot is no longer in the
                  * authoritative mask (removed or stale); clear it. */
                 spdm_context->local_context.local_key_pair_id[slot_index] = 0;
-                spdm_context->local_context.local_key_usage_bit_mask[slot_index] = 0;
+                spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][slot_index] = 0;
             }
         }
 

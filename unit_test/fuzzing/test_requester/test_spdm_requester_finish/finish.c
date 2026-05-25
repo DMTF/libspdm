@@ -321,8 +321,10 @@ void libspdm_test_send_receive_finish_case3(void **State)
                                                          &data_size, &hash, &hash_size)) {
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision_size[0][req_slot_id_param] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0][req_slot_id_param] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][
+        req_slot_id_param] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][req_slot_id_param]
+        = data;
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
