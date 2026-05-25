@@ -3305,7 +3305,7 @@ static void libspdm_test_set_data_local_items_case36(void **state)
                                 sizeof(uint8_t), 0x03, &local_context->local_supported_slot_mask);
     libspdm_test_set_local_item(spdm_context, LIBSPDM_DATA_LOCAL_KEY_PAIR_ID, 1,
                                 sizeof(spdm_key_pair_id_t), 2,
-                                &local_context->local_key_pair_id[0][1]);
+                                &local_context->local_key_pair_id[1]);
     libspdm_test_set_local_item(spdm_context, LIBSPDM_DATA_LOCAL_CERT_INFO, 1,
                                 sizeof(spdm_certificate_info_t), 1,
                                 &local_context->local_cert_info[0][1]);

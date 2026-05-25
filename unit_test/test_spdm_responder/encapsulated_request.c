@@ -653,8 +653,9 @@ static void rsp_encapsulated_request_case1(void **State)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_b(spdm_context);
@@ -724,8 +725,9 @@ static void rsp_encapsulated_request_case2(void **State)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_b(spdm_context);
@@ -798,8 +800,9 @@ static void rsp_encapsulated_request_case3(void **State)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0][0] = m_local_certificate_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] =
+        m_local_certificate_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
         sizeof(m_local_certificate_chain);
     libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain), (uint8_t)(0xFF));
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
@@ -847,8 +850,9 @@ static void rsp_encapsulated_request_case4(void **State)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0][0] = m_local_certificate_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] =
+        m_local_certificate_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
         sizeof(m_local_certificate_chain);
     libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain), (uint8_t)(0xFF));
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
@@ -908,8 +912,9 @@ static void rsp_encapsulated_request_case5(void **State)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_b(spdm_context);
@@ -987,8 +992,9 @@ static void rsp_encapsulated_request_case6(void **State)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_b(spdm_context);
@@ -1066,8 +1072,9 @@ static void rsp_encapsulated_request_case7(void **State)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0][0] = m_local_certificate_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] =
+        m_local_certificate_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
         sizeof(m_local_certificate_chain);
     libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain), 0xFF);
 
@@ -1133,8 +1140,9 @@ static void rsp_encapsulated_request_case8(void **State)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     /* The handler supplies the endpoint information buffer to
@@ -1621,8 +1629,9 @@ static void rsp_encapsulated_response_ack_case3(void **State)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
 
     libspdm_reset_message_b(spdm_context);
     libspdm_register_encap_flow_handler(spdm_context, encap_flow_handler);
@@ -1768,8 +1777,9 @@ static void rsp_encapsulated_response_ack_case6(void **State)
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size,
                                                              NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
 
@@ -1835,8 +1845,9 @@ static void rsp_encapsulated_response_ack_case7(void **State)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_b(spdm_context);
@@ -1943,8 +1954,9 @@ static void rsp_encapsulated_response_ack_case8(void **State)
         assert_true(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_b(spdm_context);

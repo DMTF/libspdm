@@ -2888,9 +2888,9 @@ static void req_finish_case16(void **state)
         return;
     }
     spdm_context->local_context.
-    local_cert_chain_provision_size[0][req_slot_id_param] = data_size;
+    local_cert_chain_provision_size[spdm_context->connection_info.current_bank][req_slot_id_param] = data_size;
     spdm_context->local_context.
-    local_cert_chain_provision[0][req_slot_id_param] = data;
+    local_cert_chain_provision[spdm_context->connection_info.current_bank][req_slot_id_param] = data;
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
@@ -2988,9 +2988,9 @@ static void req_finish_case17(void **state)
         return;
     }
     spdm_context->local_context.
-    local_cert_chain_provision_size[0][req_slot_id_param] = data_size;
+    local_cert_chain_provision_size[spdm_context->connection_info.current_bank][req_slot_id_param] = data_size;
     spdm_context->local_context.
-    local_cert_chain_provision[0][req_slot_id_param] = data;
+    local_cert_chain_provision[spdm_context->connection_info.current_bank][req_slot_id_param] = data;
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
@@ -3084,9 +3084,9 @@ static void req_finish_case18(void **state)
         return;
     }
     spdm_context->local_context.
-    local_cert_chain_provision_size[0][req_slot_id_param] = data_size;
+    local_cert_chain_provision_size[spdm_context->connection_info.current_bank][req_slot_id_param] = data_size;
     spdm_context->local_context.
-    local_cert_chain_provision[0][req_slot_id_param] = data;
+    local_cert_chain_provision[spdm_context->connection_info.current_bank][req_slot_id_param] = data;
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
@@ -3189,9 +3189,9 @@ static void req_finish_case20(void **state)
         return;
     }
     spdm_context->local_context.
-    local_cert_chain_provision_size[0][req_slot_id_param] = data_size;
+    local_cert_chain_provision_size[spdm_context->connection_info.current_bank][req_slot_id_param] = data_size;
     spdm_context->local_context.
-    local_cert_chain_provision[0][req_slot_id_param] = data;
+    local_cert_chain_provision[spdm_context->connection_info.current_bank][req_slot_id_param] = data;
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
@@ -3367,9 +3367,9 @@ static void req_finish_case22(void **state)
         return;
     }
     spdm_context->local_context.
-    local_cert_chain_provision_size[0][req_slot_id_param] = data_size;
+    local_cert_chain_provision_size[spdm_context->connection_info.current_bank][req_slot_id_param] = data_size;
     spdm_context->local_context.
-    local_cert_chain_provision[0][req_slot_id_param] = data;
+    local_cert_chain_provision[spdm_context->connection_info.current_bank][req_slot_id_param] = data;
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];

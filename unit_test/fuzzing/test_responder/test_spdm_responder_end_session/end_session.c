@@ -59,8 +59,8 @@ void libspdm_test_responder_end_session(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] =
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
         data_size;
 
     libspdm_reset_message_a(spdm_context);

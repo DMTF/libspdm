@@ -82,8 +82,9 @@ void libspdm_test_responder_key_exchange_case1(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -157,8 +158,9 @@ void libspdm_test_responder_key_exchange_case2(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_reset_message_a(spdm_context);
     ptr = spdm_test_key_exchange_request->exchange_data;
@@ -226,8 +228,9 @@ void libspdm_test_responder_key_exchange_case3(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -296,8 +299,9 @@ void libspdm_test_responder_key_exchange_case4(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
 
     libspdm_reset_message_a(spdm_context);
@@ -381,8 +385,9 @@ void libspdm_test_responder_key_exchange_case5(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -455,8 +460,9 @@ void libspdm_test_responder_key_exchange_case6(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_reset_message_a(spdm_context);
 
@@ -528,8 +534,9 @@ void libspdm_test_responder_key_exchange_case7(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_reset_message_a(spdm_context);
 
