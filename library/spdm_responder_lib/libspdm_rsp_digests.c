@@ -100,7 +100,7 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
     no_local_cert_chain = true;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (spdm_context->local_context
-            .local_cert_chain_provision[0][index] != NULL) {
+            .local_cert_chain_provision[spdm_context->connection_info.current_bank][index] != NULL) {
             no_local_cert_chain = false;
         }
     }
@@ -146,16 +146,19 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
     slot_index = 0;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (spdm_context->local_context
-            .local_cert_chain_provision[0][index] != NULL) {
+            .local_cert_chain_provision[spdm_context->connection_info.current_bank][index] != NULL) {
             spdm_response->header.param2 |= (1 << index);
             result = libspdm_generate_cert_chain_hash(spdm_context, index,
                                                       &digest[hash_size * slot_index]);
             if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
                 spdm_context->connection_info.multi_key_conn_rsp) {
-                key_pair_id[slot_index] = spdm_context->local_context.local_key_pair_id[0][index];
-                cert_info[slot_index] = spdm_context->local_context.local_cert_info[0][index];
+                key_pair_id[slot_index] =
+                    spdm_context->local_context.local_key_pair_id[spdm_context->connection_info.current_bank][index];
+                cert_info[slot_index] =
+                    spdm_context->local_context.local_cert_info[spdm_context->connection_info.current_bank][index];
                 key_usage_bit_mask[slot_index] =
-                    spdm_context->local_context.local_key_usage_bit_mask[0][index];
+                    spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][
+                        index];
             }
             slot_index++;
             if (!result) {

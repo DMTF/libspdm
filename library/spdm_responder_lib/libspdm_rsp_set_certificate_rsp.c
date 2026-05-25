@@ -163,9 +163,9 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     old_local_cert_chain =
-        spdm_context->local_context.local_cert_chain_provision[0][slot_id];
+        spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][slot_id];
     old_local_cert_chain_size =
-        spdm_context->local_context.local_cert_chain_provision_size[0][slot_id];
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][slot_id];
 
     if (spdm_version >= SPDM_MESSAGE_VERSION_13) {
         const uint8_t key_pair_id = spdm_request->header.param2;
