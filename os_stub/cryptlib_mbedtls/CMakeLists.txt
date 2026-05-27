@@ -15,6 +15,10 @@ target_include_directories(cryptlib_mbedtls
         ${LIBSPDM_DIR}/os_stub/mbedtlslib/mbedtls/include/mbedtls
 )
 
+if(LIBSPDM_PQC_BACKEND_SUPPORT)
+    target_include_directories(cryptlib_mbedtls PRIVATE ${LIBSPDM_IPPCP_INCLUDE_DIR})
+endif()
+
 target_sources(cryptlib_mbedtls
     PRIVATE
         cipher/aead_aes_gcm.c
@@ -64,4 +68,12 @@ endif()
 if(MBEDTLS_CONFIG_FILE)
 else()
     target_compile_definitions(cryptlib_mbedtls PRIVATE -DMBEDTLS_CONFIG_FILE=<libspdm_mbedtls_config.h>)
+endif()
+
+# cryptlib_mbedtls is a static library; keep IPPCP dependency visible to final linkers.
+if(LIBSPDM_PQC_BACKEND_SUPPORT)
+    if(TARGET ${LIBSPDM_IPPCP_TARGET})
+        add_dependencies(cryptlib_mbedtls ${LIBSPDM_IPPCP_TARGET})
+    endif()
+    target_link_libraries(cryptlib_mbedtls PUBLIC ${LIBSPDM_IPPCP_LIBRARY})
 endif()

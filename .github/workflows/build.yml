@@ -157,6 +157,83 @@ jobs:
         with:
           submodules: recursive
 
+      - name: NASM Setup - Linux
+        if: matrix.os == 'ubuntu-latest' && matrix.crypto == 'mbedtls' && (matrix.arch == 'x64' || matrix.arch == 'ia32')
+        run: |
+          set -euo pipefail
+          NASM_MIN_VERSION=2.16.02
+          NASM_VERSION=3.01
+          NASM_TAR_SHA256=aea120d4adb0241f08ae24d6add09e4a993bc1c4d9f754dbfc8020d6916c9be1
+          cd /tmp
+          curl -fL -o nasm-${NASM_VERSION}.tar.gz https://www.nasm.us/pub/nasm/releasebuilds/${NASM_VERSION}/nasm-${NASM_VERSION}.tar.gz
+          echo "${NASM_TAR_SHA256}  nasm-${NASM_VERSION}.tar.gz" | sha256sum -c -
+          tar -xzf nasm-${NASM_VERSION}.tar.gz
+          cd nasm-${NASM_VERSION}
+          ./configure --prefix="$HOME/.local"
+          make -j"$(nproc)"
+          make install
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          NASM_INSTALLED_VERSION="$($HOME/.local/bin/nasm -v | awk '{print $3}')"
+          echo "Installed NASM version: ${NASM_INSTALLED_VERSION}"
+          if ! printf '%s\n%s\n' "$NASM_MIN_VERSION" "$NASM_INSTALLED_VERSION" | sort -V -C; then
+            echo "Error: NASM >= ${NASM_MIN_VERSION} is required, found ${NASM_INSTALLED_VERSION}."
+            exit 1
+          fi
+
+      - name: NASM Setup - Darwin
+        if: matrix.os == 'macos-latest' && matrix.crypto == 'mbedtls' && (matrix.arch == 'x64' || matrix.arch == 'ia32')
+        run: |
+          set -euo pipefail
+          NASM_MIN_VERSION=2.16.02
+          NASM_VERSION=3.01
+          NASM_TAR_SHA256=aea120d4adb0241f08ae24d6add09e4a993bc1c4d9f754dbfc8020d6916c9be1
+          cd /tmp
+          curl -fL -o nasm-${NASM_VERSION}.tar.gz https://www.nasm.us/pub/nasm/releasebuilds/${NASM_VERSION}/nasm-${NASM_VERSION}.tar.gz
+          echo "${NASM_TAR_SHA256}  nasm-${NASM_VERSION}.tar.gz" | shasum -a 256 -c -
+          tar -xzf nasm-${NASM_VERSION}.tar.gz
+          cd nasm-${NASM_VERSION}
+          ./configure --prefix="$HOME/.local"
+          make -j"$(sysctl -n hw.logicalcpu)"
+          make install
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          NASM_INSTALLED_VERSION="$($HOME/.local/bin/nasm -v | awk '{print $3}')"
+          echo "Installed NASM version: ${NASM_INSTALLED_VERSION}"
+          if ! printf '%s\n%s\n' "$NASM_MIN_VERSION" "$NASM_INSTALLED_VERSION" | sort -V -C; then
+            echo "Error: NASM >= ${NASM_MIN_VERSION} is required, found ${NASM_INSTALLED_VERSION}."
+            exit 1
+          fi
+
+      - name: NASM Setup - Windows
+        if: matrix.os == 'windows-latest' && matrix.crypto == 'mbedtls' && (matrix.arch == 'x64' || matrix.arch == 'ia32')
+        shell: pwsh
+        run: |
+          $nasmMinVersion = [version]'2.16.2'
+          $nasmVersion = '3.01'
+          $nasmZipSha256 = 'e0ba5157007abc7b1a65118a96657a961ddf55f7e3f632ee035366dfce039ca4'
+          $zipPath = Join-Path $env:RUNNER_TEMP 'nasm.zip'
+          $extractDir = Join-Path $env:RUNNER_TEMP 'nasm-extract'
+          Invoke-WebRequest -Uri "https://www.nasm.us/pub/nasm/releasebuilds/$nasmVersion/win64/nasm-$nasmVersion-win64.zip" -OutFile $zipPath
+          $downloadedHash = (Get-FileHash -Path $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($downloadedHash -ne $nasmZipSha256) {
+            throw "SHA256 mismatch for nasm-$nasmVersion-win64.zip. Expected $nasmZipSha256, got $downloadedHash"
+          }
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          $nasmExe = Get-ChildItem -Path $extractDir -Recurse -Filter nasm.exe | Select-Object -First 1
+          if (-not $nasmExe) {
+            throw 'nasm.exe not found after extraction'
+          }
+          $nasmBin = $nasmExe.Directory.FullName
+          $nasmBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          $nasmVersionText = & $nasmExe.FullName -v
+          if ($nasmVersionText -notmatch 'NASM version ([0-9]+\.[0-9]+(\.[0-9]+)?)') {
+            throw "Unable to parse NASM version from: $nasmVersionText"
+          }
+          $nasmInstalledVersion = [version]$Matches[1]
+          Write-Host "Installed NASM version: $nasmInstalledVersion"
+          if ($nasmInstalledVersion -lt $nasmMinVersion) {
+            throw "NASM >= $nasmMinVersion is required, found $nasmInstalledVersion"
+          }
+
       - name: Build - Linux
         if: matrix.os == 'ubuntu-latest'
         run: |

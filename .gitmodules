@@ -7,3 +7,7 @@
 [submodule "unit_test/cmockalib/cmocka"]
     path = unit_test/cmockalib/cmocka
 	url = https://gitlab.com/cmocka/cmocka.git
+[submodule "os_stub/ippcplib/ipp-crypto"]
+	path = os_stub/ippcplib/ipp-crypto
+	url = https://github.com/intel/ipp-crypto.git
+	branch = cryptography-primitives_2_2_0

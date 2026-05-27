@@ -189,6 +189,11 @@ bool libspdm_cryptest_main(void)
     if (!status) {
         return status;
     }
+
+    status = libspdm_validate_crypt_mlkem_negative();
+    if (!status) {
+        return status;
+    }
     #endif /* LIBSPDM_ML_KEM_SUPPORT */
 
     #if LIBSPDM_ML_DSA_SUPPORT

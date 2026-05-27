@@ -176,6 +176,15 @@ bool libspdm_validate_crypt_prng(void);
 bool libspdm_validate_crypt_mlkem(void);
 
 /**
+ * Validate Crypto MLKEM input validation paths.
+ *
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
+ *
+ **/
+bool libspdm_validate_crypt_mlkem_negative(void);
+
+/**
  * Validate Crypto MLDSA Interfaces.
  *
  * @retval  true   Validation succeeded.

@@ -13,15 +13,14 @@ jobs:
     permissions:
       security-events: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Build Fuzzers
         id: build
         uses: google/oss-fuzz/infra/cifuzz/actions/build_fuzzers@master
-        with:
-          oss-fuzz-project-name: 'libspdm'
       - name: Run Fuzzers
         uses: google/oss-fuzz/infra/cifuzz/actions/run_fuzzers@master
         with:
-          oss-fuzz-project-name: 'libspdm'
           fuzz-seconds: 600
           output-sarif: true
       - name: Upload Crash

@@ -63,6 +63,10 @@ test_spdm_requester_set_key_pair_info
 test_spdm_responder_set_key_pair_info_ack
 )
 
+if [ -x ./test_mlkem_kem_api ]; then
+    cmds+=(test_mlkem_kem_api)
+fi
+
 flag=0
 fail_list=()
 for ((i=0;i<${#cmds[*]};i++))
