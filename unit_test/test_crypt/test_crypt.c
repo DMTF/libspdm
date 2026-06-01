@@ -93,16 +93,18 @@ bool libspdm_cryptest_main(void)
         return status;
     }
 
-    #if LIBSPDM_EDDSA_SUPPORT
+    #if LIBSPDM_EDDSA_ED25519_SUPPORT
     status = libspdm_validate_crypt_x509("ed25519", sizeof("ed25519"));
     if (!status) {
         return status;
     }
+    #endif /* LIBSPDM_EDDSA_ED25519_SUPPORT */
 
+    #if LIBSPDM_EDDSA_ED448_SUPPORT
     status = libspdm_validate_crypt_x509("ed448", sizeof("ed448"));
     if (!status) {
     }
-    #endif /* LIBSPDM_EDDSA_SUPPORT */
+    #endif /* LIBSPDM_EDDSA_ED448_SUPPORT */
 
     #if LIBSPDM_SM2_DSA_SUPPORT
     status = libspdm_validate_crypt_x509("sm2", sizeof("sm2"));
