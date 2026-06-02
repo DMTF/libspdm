@@ -291,7 +291,7 @@ out:
     if (nv_name)
         Esys_Free(nv_name);
     if (nv_tr != ESYS_TR_NONE)
-        Esys_FlushContext(esys, nv_tr);
+        Esys_TR_Close(esys, &nv_tr);
     if (esys)
         Esys_Finalize(&esys);
     if (tcti)
