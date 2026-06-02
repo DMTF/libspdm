@@ -4,6 +4,35 @@ This document describes how to use TPM-backed helper APIs with libspdm for secur
 
 ---
 
+## CMake Configuration
+
+Configure TPM key handles and certificate chain NV indices at build time:
+
+```bash
+cmake -B build \
+    -D LIBSPDM_TPM_REQUESTER_SLOT_IDS="0;1" \
+    -D LIBSPDM_TPM_REQUESTER_HANDLES="0x81000011;0x81000012" \
+    -D LIBSPDM_TPM_REQUESTER_CERTCHAINS="0x1500011;0x1500012" \
+    -D LIBSPDM_TPM_RESPONDER_SLOT_IDS="0;1;4" \
+    -D LIBSPDM_TPM_RESPONDER_HANDLES="0x81000021;0x81000022;0x81000024" \
+    -D LIBSPDM_TPM_RESPONDER_CERTCHAINS="0x1500021;0x1500022;0x1500024"
+```
+
+### Configuration Parameters
+
+| Parameter | Description | Format |
+|-----------|-------------|--------|
+| `LIBSPDM_TPM_REQUESTER_SLOT_IDS` | SPDM requester slot IDs that the following requester handles/certchains map to | Semicolon-separated decimal values, 0..7 |
+| `LIBSPDM_TPM_REQUESTER_HANDLES` | TPM persistent key handles for requester | Semicolon-separated hex values |
+| `LIBSPDM_TPM_REQUESTER_CERTCHAINS` | NV indices for requester certificate chains | Semicolon-separated hex values |
+| `LIBSPDM_TPM_RESPONDER_SLOT_IDS` | SPDM responder slot IDs that the following responder handles/certchains map to | Semicolon-separated decimal values, 0..7 |
+| `LIBSPDM_TPM_RESPONDER_HANDLES` | TPM persistent key handles for responder | Semicolon-separated hex values |
+| `LIBSPDM_TPM_RESPONDER_CERTCHAINS` | NV indices for responder certificate chains | Semicolon-separated hex values |
+
+**Note:** The `*_SLOT_IDS`, `*_HANDLES`, and `*_CERTCHAINS` lists are mapped by entry position. For example, `LIBSPDM_TPM_RESPONDER_SLOT_IDS="0;1;4"` maps the first responder handle/certchain pair to slot 0, the second pair to slot 1, and the third pair to slot 4. This supports empty/non-contiguous SPDM slots.
+
+---
+
 ## Overview
 
 The TPM integration layer provides:

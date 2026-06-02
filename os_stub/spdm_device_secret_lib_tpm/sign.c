@@ -36,7 +36,7 @@ bool libspdm_requester_data_sign(
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Loading TPM device"));
     libspdm_tpm_device_init();
-    result = libspdm_tpm_get_pvt_key_handle(TPM_REQU_HANDLE, &context);
+    result = libspdm_tpm_get_pvt_key_handle(LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_0, &context);
     if (!result){
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "Failed to load requester handle"));
         return false;
@@ -70,7 +70,7 @@ bool libspdm_responder_data_sign(
     bool result = false;
 
     libspdm_tpm_device_init();
-    result = libspdm_tpm_get_pvt_key_handle(TPM_RESP_HANDLE, &context);
+    result = libspdm_tpm_get_pvt_key_handle(LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_0, &context);
     if (!result){
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "Failed to load responder handle"));
         return false;
