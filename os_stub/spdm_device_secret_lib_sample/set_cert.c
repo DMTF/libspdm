@@ -24,19 +24,28 @@
 #include "library/memlib.h"
 #include "internal/libspdm_device_secret_lib.h"
 #include "internal/libspdm_common_lib.h"
+#include "slot_management_internal.h"
 
 bool g_in_trusted_environment = false;
 bool g_set_cert_is_busy = false;
 
-#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
+/* The trusted-environment query is used both by SET_CERTIFICATE and by the SLOT_MANAGEMENT
+ * access-control checks, so it is provided when either capability is enabled. */
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP || LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
 bool libspdm_is_in_trusted_environment(void *spdm_context)
 {
     return g_in_trusted_environment;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP || LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
+/* Store or erase a raw certificate chain (concatenated DER, no spdm_cert_chain_t header) in NVM,
+ * keyed by (Bank, slot). bank_id == LIBSPDM_SLOT_MANAGEMENT_SAMPLE_NVM_LEGACY_BANK selects the
+ * legacy (no-Bank) store written by the base SET_CERTIFICATE flow; any other value is a real Bank.
+ * This is a sample storage detail, called only by libspdm_update_local_cert_chain below. */
 static bool libspdm_write_certificate_to_nvm(
     void *spdm_context,
-    uint8_t slot_id, const void * cert_chain,
+    uint8_t bank_id, uint8_t slot_id, const void * cert_chain,
     size_t cert_chain_size,
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     bool *need_reset, bool *is_busy)
@@ -53,9 +62,24 @@ static bool libspdm_write_certificate_to_nvm(
         int64_t fp_out;
     #endif
 
-        char file_name[] = "slot_id_0_cert_chain.der";
-        /*change the file name, for example: slot_id_1_cert_chain.der*/
-        file_name[8] = (char)(slot_id+'0');
+        /* The certificate store is keyed by Bank and slot. The legacy SET_CERTIFICATE flow has
+         * no Bank addressing and passes LIBSPDM_SLOT_MANAGEMENT_SAMPLE_NVM_LEGACY_BANK; for it the
+         * original per-slot file name is kept. A real BankID is included in the file name so each
+         * Bank has its own store. */
+        char legacy_file_name[] = "slot_id_0_cert_chain.der";
+        char bank_file_name[] = "bank_id_000_slot_id_0_cert_chain.der";
+        char *file_name;
+
+        if (bank_id == LIBSPDM_SLOT_MANAGEMENT_SAMPLE_NVM_LEGACY_BANK) {
+            legacy_file_name[8] = (char)(slot_id + '0');
+            file_name = legacy_file_name;
+        } else {
+            bank_file_name[8] = (char)('0' + (bank_id / 100) % 10);
+            bank_file_name[9] = (char)('0' + (bank_id / 10) % 10);
+            bank_file_name[10] = (char)('0' + bank_id % 10);
+            bank_file_name[20] = (char)(slot_id + '0');
+            file_name = bank_file_name;
+        }
 
         /*check the input parameter*/
         if ((cert_chain == NULL) ^ (cert_chain_size == 0) ) {
@@ -112,6 +136,7 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
 
 bool libspdm_update_local_cert_chain(
     void *spdm_context,
+    const uint8_t *bank_id,
     uint8_t slot_id,
     uint32_t base_hash_algo,
     uint32_t base_asym_algo,
@@ -131,14 +156,46 @@ bool libspdm_update_local_cert_chain(
     uint8_t *new_buffer;
     bool result;
     const uint8_t *new_chain_bytes;
+    uint8_t nvm_bank_id;
+    bool refresh_provision;
 
     if (slot_id >= SPDM_MAX_SLOT_COUNT) {
         return false;
     }
 
+    /* Resolve the addressed Bank into the NVM store and decide whether the in-memory
+     * local_cert_chain_provision (served by GET_CERTIFICATE / GET_DIGESTS / CHALLENGE) should be
+     * refreshed. The legacy SET_CERTIFICATE flow (bank_id == NULL) and a SLOT_MANAGEMENT write to
+     * the currently selected Bank both behave like base SET_CERTIFICATE: store in the legacy NVM
+     * file and refresh the in-memory chain. A write to a non-selected Bank is stored only in that
+     * Bank's NVM file and is not reflected in the SPDM context. */
+    if (bank_id == NULL) {
+        nvm_bank_id = LIBSPDM_SLOT_MANAGEMENT_SAMPLE_NVM_LEGACY_BANK;
+        refresh_provision = true;
+    } else {
+#if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
+        bool is_selected;
+        if (!libspdm_slot_management_sample_classify_bank(spdm_context, *bank_id, &is_selected)) {
+            /* Unknown Bank. */
+            return false;
+        }
+        if (is_selected) {
+            nvm_bank_id = LIBSPDM_SLOT_MANAGEMENT_SAMPLE_NVM_LEGACY_BANK;
+            refresh_provision = true;
+        } else {
+            nvm_bank_id = *bank_id;
+            refresh_provision = false;
+        }
+#else /* LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
+        /* Bank addressing requires SLOT_MANAGEMENT; without it there is no Bank concept. */
+        return false;
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
+    }
+
     if (cert_chain != NULL) {
         result = libspdm_write_certificate_to_nvm(
             spdm_context,
+            nvm_bank_id,
             slot_id,
             (const uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + hash_size,
             *cert_chain_size - (sizeof(spdm_cert_chain_t) + hash_size),
@@ -150,6 +207,7 @@ bool libspdm_update_local_cert_chain(
     } else {
         result = libspdm_write_certificate_to_nvm(
             spdm_context,
+            nvm_bank_id,
             slot_id,
             NULL,
             0,
@@ -162,6 +220,13 @@ bool libspdm_update_local_cert_chain(
 
     if (!result) {
         return result;
+    }
+
+    /* For a non-selected Bank the chain lives only in NVM; do not touch the slot-indexed in-memory
+     * provision (which belongs to the selected Bank). GetCertificateChain reconstructs the
+     * non-selected Bank's chain from its NVM file on demand. */
+    if (!refresh_provision) {
+        return true;
     }
 
     if (cert_chain == NULL || cert_chain_size == NULL || *cert_chain_size == 0) {
