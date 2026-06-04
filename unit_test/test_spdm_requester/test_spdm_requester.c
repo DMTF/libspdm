@@ -110,6 +110,10 @@ int libspdm_req_set_key_pair_info_test(void);
 int libspdm_req_set_key_pair_info_error_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
+int libspdm_req_slot_management_test(void);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
+
 #if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
 int libspdm_req_get_endpoint_info_test(void);
 int libspdm_req_get_endpoint_info_error_test(void);
@@ -333,6 +337,12 @@ int main(void)
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
+
+    #if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
+    if (libspdm_req_slot_management_test() != 0) {
+        return_value = 1;
+    }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
 
     #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
     if (libspdm_req_vendor_defined_request_test() != 0) {
