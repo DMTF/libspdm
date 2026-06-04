@@ -106,9 +106,10 @@ static void rsp_endpoint_info_case1(void **state)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_key_pair_id[i] = 1;
-        spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
-        spdm_context->local_context.local_cert_chain_provision[i] = data;
+        spdm_context->local_context.local_key_pair_id[spdm_context->connection_info.current_bank][i] = 1;
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][i] =
+            data_size;
+        spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] = data;
     }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
@@ -313,13 +314,14 @@ static void rsp_endpoint_info_case3(void **state)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_key_pair_id[i] = 1;
-        spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
-        spdm_context->local_context.local_cert_chain_provision[i] = data;
+        spdm_context->local_context.local_key_pair_id[spdm_context->connection_info.current_bank][i] = 1;
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][i] =
+            data_size;
+        spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] = data;
     }
 
     spdm_context->connection_info.multi_key_conn_rsp = true;
-    spdm_context->local_context.local_key_usage_bit_mask[1] =
+    spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][1] =
         SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -499,9 +501,10 @@ static void rsp_endpoint_info_case5(void **state)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_key_pair_id[i] = 1;
-        spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
-        spdm_context->local_context.local_cert_chain_provision[i] = data;
+        spdm_context->local_context.local_key_pair_id[spdm_context->connection_info.current_bank][i] = 1;
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][i] =
+            data_size;
+        spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] = data;
     }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
