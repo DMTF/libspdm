@@ -48,4 +48,5 @@ target_sources(spdm_responder_lib
         libspdm_rsp_measurement_extension_log.c
         libspdm_rsp_key_pair_info.c
         libspdm_rsp_set_key_pair_info_ack.c
+        libspdm_rsp_slot_management.c
 )
