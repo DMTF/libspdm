@@ -13,6 +13,7 @@
 #include "hal/library/responder/csrlib.h"
 #include "hal/library/responder/measlib.h"
 #include "hal/library/responder/key_pair_info.h"
+#include "hal/library/responder/slot_mgmt.h"
 #include "hal/library/responder/psklib.h"
 #include "hal/library/responder/setcertlib.h"
 #include "hal/library/requester/reqasymsignlib.h"
@@ -244,12 +245,16 @@ bool libspdm_psk_finish_rsp_opaque_data(
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
+/* The trusted-environment query is used both by SET_CERTIFICATE and by the SLOT_MANAGEMENT
+ * access-control checks, so it is provided when either capability is enabled. */
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP || LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
 bool libspdm_is_in_trusted_environment(void *spdm_context)
 {
     return false;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP || LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 uint32_t libspdm_get_cert_chain_slot_storage_size(
     void *spdm_context, uint8_t slot_id)
 {
@@ -258,6 +263,7 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
 
 bool libspdm_update_local_cert_chain(
     void *spdm_context,
+    const uint8_t *bank_id,
     uint8_t slot_id,
     uint32_t base_hash_algo,
     uint32_t base_asym_algo,
@@ -330,7 +336,9 @@ bool libspdm_generate_event_list(
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+/* The key pair read functions are also used by the SLOT_MANAGEMENT feature, so they are
+ * compiled when either capability is enabled. */
+#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP || LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
 
 /**
  * read the key pair info of the key_pair_id.
@@ -372,7 +380,8 @@ bool libspdm_read_key_pair_info(
     *total_key_pairs = 0;
     return false;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP ||
+        * LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
 bool libspdm_write_key_pair_info(
@@ -388,6 +397,73 @@ bool libspdm_write_key_pair_info(
     return false;
 }
 #endif /* #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
+
+#if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
+bool libspdm_read_slot_management_supported_subcodes(
+    void *spdm_context,
+    uint8_t *sub_code_bitmap)
+{
+    return false;
+}
+
+bool libspdm_read_slot_management_bank_info(
+    void *spdm_context,
+    uint8_t *num_bank_elements,
+    spdm_slot_management_bank_element_struct_t *bank_elements)
+{
+    return false;
+}
+
+bool libspdm_read_slot_management_bank_details(
+    void *spdm_context,
+    uint8_t bank_id,
+    uint8_t *bank_attributes,
+    uint32_t *asym_algo_capabilities,
+    uint32_t *current_asym_algo,
+    uint32_t *available_asym_algo,
+    uint32_t *pqc_asym_algo_capabilities,
+    uint32_t *current_pqc_asym_algo,
+    uint32_t *available_pqc_asym_algo,
+    uint8_t *num_slot_elements,
+    spdm_slot_management_slot_element_struct_t *slot_elements,
+    uint32_t *slot_digest_size,
+    uint8_t *slot_digests)
+{
+    return false;
+}
+
+bool libspdm_read_slot_management_certificate_chain(
+    void *spdm_context,
+    uint8_t bank_id,
+    uint8_t slot_id,
+    size_t *cert_chain_size,
+    void *cert_chain)
+{
+    return false;
+}
+
+bool libspdm_write_slot_management_bank(
+    void *spdm_context,
+    uint8_t bank_id,
+    uint8_t operation,
+    uint32_t select_asym_algo,
+    uint32_t select_pqc_asym_algo,
+    uint8_t *bank_result)
+{
+    return false;
+}
+
+bool libspdm_write_slot_management_slot(
+    void *spdm_context,
+    uint8_t bank_id,
+    uint8_t slot_id,
+    uint8_t operation,
+    bool *need_reset,
+    bool *is_busy)
+{
+    return false;
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
 
 #ifdef LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
 libspdm_return_t libspdm_generate_device_endpoint_info(
