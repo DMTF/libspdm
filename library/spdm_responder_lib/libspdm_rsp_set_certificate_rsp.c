@@ -10,7 +10,7 @@
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
 /*set_cert verify cert_chain*/
-static bool libspdm_set_cert_verify_certchain(
+bool libspdm_set_cert_verify_certchain(
     uint8_t spdm_version,
     const uint8_t *cert_chain, size_t cert_chain_size,
     uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
