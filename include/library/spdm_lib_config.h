@@ -94,6 +94,10 @@
 #define LIBSPDM_MAX_BANK_COUNT 2
 #endif
 
+#ifndef LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP 1
+#endif
+
 /* If 1 then endpoint supports sending GET_CERTIFICATE and GET_DIGESTS requests.
  * If enabled and endpoint is a Responder then LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
  * must also be enabled.
