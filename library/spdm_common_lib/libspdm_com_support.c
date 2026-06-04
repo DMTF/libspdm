@@ -47,6 +47,9 @@ const char *libspdm_get_code_str(uint8_t request_code)
     case SPDM_SET_KEY_PAIR_INFO_ACK: return "SPDM_SET_KEY_PAIR_INFO_ACK";
     case SPDM_ENDPOINT_INFO: return "SPDM_ENDPOINT_INFO";
 
+    /* SPDM response code (1.4) */
+    case SPDM_SLOT_MANAGEMENT_RESP: return "SPDM_SLOT_MANAGEMENT_RESP";
+
     /* SPDM request code (1.0) */
     case SPDM_GET_DIGESTS: return "SPDM_GET_DIGESTS";
     case SPDM_GET_CERTIFICATE: return "SPDM_GET_CERTIFICATE";
@@ -83,6 +86,9 @@ const char *libspdm_get_code_str(uint8_t request_code)
     case SPDM_GET_KEY_PAIR_INFO: return "SPDM_GET_KEY_PAIR_INFO";
     case SPDM_SET_KEY_PAIR_INFO: return "SPDM_SET_KEY_PAIR_INFO";
     case SPDM_GET_ENDPOINT_INFO: return "SPDM_GET_ENDPOINT_INFO";
+
+    /* SPDM request code (1.4) */
+    case SPDM_SLOT_MANAGEMENT: return "SPDM_SLOT_MANAGEMENT";
 
     default:
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "RequestResponseCode 0x%x not found.\n", request_code));
