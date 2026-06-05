@@ -280,6 +280,19 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         }
     }
 
+    /* Per DSP0274, a request for key generation (GenerateKeyPair) when no asymmetric algorithm
+     * has been selected yet should be answered with ERROR(OperationFailed). The algorithm is
+     * selected either by this request (DesiredAsymAlgo/DesiredPqcAsymAlgo) or already configured
+     * for the key pair (CurrentAsymAlgo/CurrentPqcAsymAlgo). */
+    if (operation == SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION) {
+        if ((desired_asym_algo == 0) && (desired_pqc_asym_algo == 0) &&
+            (current_asym_algo == 0) && (current_pqc_asym_algo == 0)) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_OPERATION_FAILED, 0,
+                                                   response_size, response);
+        }
+    }
+
     /* Per DSP0274, the value of a key pair is bound to its selected asymmetric algorithm
      * (CurrentAsymAlgo). Once a key pair is generated for a KeyPairID, a ParameterChange that
      * would change the algorithm of the generated key pair shall be rejected with
