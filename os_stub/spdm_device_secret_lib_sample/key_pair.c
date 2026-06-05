@@ -427,8 +427,8 @@ bool libspdm_read_key_pair_info(
     uint16_t *public_key_info_len,
     uint8_t *public_key_info)
 {
-    /*check*/
-    if (key_pair_id > libspdm_read_total_key_pairs(spdm_context)) {
+    /*check: KeyPairID is 1-based and indexes m_key_pair_info[key_pair_id - 1]*/
+    if ((key_pair_id == 0) || (key_pair_id > libspdm_read_total_key_pairs(spdm_context))) {
         return false;
     }
 
@@ -516,8 +516,8 @@ bool libspdm_write_key_pair_info(
     libspdm_cached_key_pair_info_data_t current_key_pair_info;
     size_t cached_key_pair_info_len;
 
-    /*check*/
-    if (key_pair_id > libspdm_read_total_key_pairs(spdm_context)) {
+    /*check: KeyPairID is 1-based and indexes m_key_pair_info[key_pair_id - 1]*/
+    if ((key_pair_id == 0) || (key_pair_id > libspdm_read_total_key_pairs(spdm_context))) {
         return false;
     }
 
