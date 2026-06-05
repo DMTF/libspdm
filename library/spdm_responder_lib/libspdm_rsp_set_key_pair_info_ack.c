@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -251,9 +251,13 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     }
     if ((desired_pqc_asym_algo != 0) &&
         ((pqc_asym_algo_capabilities | desired_pqc_asym_algo) != pqc_asym_algo_capabilities)) {
-        return libspdm_generate_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-            SPDM_SET_KEY_PAIR_INFO, response_size, response);
+        /* Per DSP0274 Table 115, the Requester shall only select from bits set in the
+         * capabilities. A DesiredPqcAsymAlgo outside PqcAsymAlgoCapabilities is the same class
+         * of malformed request as the DesiredAsymAlgo case above, so use InvalidRequest for
+         * both. */
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
     }
 
     if (((capabilities & SPDM_KEY_PAIR_CAP_SHAREABLE_CAP) == 0) &&

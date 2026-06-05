@@ -323,6 +323,55 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
+    /* Sub Case 5: DesiredPqcAsymAlgo selects a bit outside PqcAsymAlgoCapabilities. Per
+     * DSP0274 Table 115 this is the same class of malformed request as an out-of-capability
+     * DesiredAsymAlgo, so the Responder shall answer with InvalidRequest (not
+     * UnsupportedRequest). The sample HAL supports ML-DSA but not SLH-DSA for this key pair. */
+    desired_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    desired_asym_algo = 0;
+    desired_pqc_asym_algo_len = sizeof(desired_pqc_asym_algo);
+    desired_pqc_asym_algo = SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_128S;
+    desired_assoc_cert_slot_mask = 0x08;
+    set_key_pair_info_request_size =
+        sizeof(spdm_set_key_pair_info_request_t) +
+        sizeof(uint8_t) + sizeof(uint16_t) + sizeof(uint32_t) + sizeof(uint8_t) +
+        sizeof(uint8_t) + sizeof(uint32_t);
+
+    libspdm_zero_mem(set_key_pair_info_request, set_key_pair_info_request_size);
+    set_key_pair_info_request->header.spdm_version = SPDM_MESSAGE_VERSION_14;
+    set_key_pair_info_request->header.request_response_code = SPDM_SET_KEY_PAIR_INFO;
+    set_key_pair_info_request->header.param1 = SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION;
+    set_key_pair_info_request->header.param2 = 0;
+    set_key_pair_info_request->key_pair_id = key_pair_id;
+
+    ptr = (uint8_t*)(set_key_pair_info_request + 1);
+    ptr += sizeof(uint8_t);
+
+    libspdm_write_uint16(ptr, desired_key_usage);
+    ptr += sizeof(uint16_t);
+
+    libspdm_write_uint32(ptr, desired_asym_algo);
+    ptr += sizeof(uint32_t);
+
+    *ptr = desired_assoc_cert_slot_mask;
+    ptr += sizeof(uint8_t);
+
+    *ptr = desired_pqc_asym_algo_len;
+    ptr += sizeof(uint8_t);
+
+    libspdm_write_uint32(ptr, desired_pqc_asym_algo);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_key_pair_info_ack(
+        spdm_context, set_key_pair_info_request_size,
+        set_key_pair_info_request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+
     /*Before reset, change: remove an association with slot*/
     set_key_pair_info_request_size =
         sizeof(spdm_set_key_pair_info_request_t) +
