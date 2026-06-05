@@ -179,6 +179,69 @@ static void rsp_key_pair_info_case4(void **state)
     assert_int_equal(spdm_response->header.param2, SPDM_GET_KEY_PAIR_INFO);
 }
 
+/**
+ * Test 5: Successful response to get key pair info with key pair id 4 in SPDM 1.4.
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, and the response carries the
+ * SPDM 1.4 PQC tail (PqcAsymAlgoCapLen + PqcAsymAlgoCapabilities + CurrentPqcAsymAlgoLen +
+ * CurrentPqcAsymAlgo = 10 bytes) exactly, with no extra trailing bytes.
+ **/
+static void rsp_key_pair_info_case5(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_key_pair_info_response_t *spdm_response;
+    uint8_t key_pair_id;
+    uint16_t public_key_info_len;
+    const uint8_t *ptr;
+    const size_t pqc_tail_size = sizeof(uint8_t) + sizeof(uint32_t) +
+                                 sizeof(uint8_t) + sizeof(uint32_t);
+    uint8_t public_key_info_ecp256[] = {0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D,
+                                        0x02, 0x01, 0x06, 0x08, 0x2A, 0x86, 0x48, 0xCE, 0x3D,
+                                        0x03, 0x01, 0x07};
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x5;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
+
+    key_pair_id = 4;
+    public_key_info_len = sizeof(public_key_info_ecp256);
+
+    m_libspdm_get_key_pair_info_request1.header.spdm_version = SPDM_MESSAGE_VERSION_14;
+    m_libspdm_get_key_pair_info_request1.key_pair_id = key_pair_id;
+
+    response_size = sizeof(response);
+
+    status = libspdm_get_response_key_pair_info(
+        spdm_context, m_libspdm_get_key_pair_info_request1_size,
+        &m_libspdm_get_key_pair_info_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    /* The response shall be exactly the header + public key info + the 10-byte PQC tail. */
+    assert_int_equal(response_size,
+                     sizeof(spdm_key_pair_info_response_t) + public_key_info_len + pqc_tail_size);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_PAIR_INFO);
+    assert_int_equal(spdm_response->key_pair_id, key_pair_id);
+    assert_int_equal(spdm_response->public_key_info_len, public_key_info_len);
+
+    /* Verify the PQC tail length prefixes are both 4 (sizeof(uint32_t)). */
+    ptr = (const uint8_t *)spdm_response + sizeof(spdm_key_pair_info_response_t) +
+          public_key_info_len;
+    assert_int_equal(ptr[0], sizeof(uint32_t));
+    assert_int_equal(ptr[sizeof(uint8_t) + sizeof(uint32_t)], sizeof(uint32_t));
+
+    /* restore request version for subsequent runs */
+    m_libspdm_get_key_pair_info_request1.header.spdm_version = SPDM_MESSAGE_VERSION_13;
+}
+
 int libspdm_rsp_key_pair_info_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -190,6 +253,8 @@ int libspdm_rsp_key_pair_info_test(void)
         cmocka_unit_test(rsp_key_pair_info_case3),
         /* capability not set KEY_PAIR_INFO*/
         cmocka_unit_test(rsp_key_pair_info_case4),
+        /* Success Case to get key pair info in SPDM 1.4 (exact PQC tail size)*/
+        cmocka_unit_test(rsp_key_pair_info_case5),
     };
 
     libspdm_test_context_t test_context = {

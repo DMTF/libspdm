@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -142,8 +142,14 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
 
     spdm_response = response;
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_14) {
-        LIBSPDM_ASSERT(*response_size >= sizeof(spdm_key_pair_info_response_t) + sizeof(uint32_t)*4);
-        *response_size = sizeof(spdm_key_pair_info_response_t) + public_key_info_len + sizeof(uint32_t)*4;
+        /* The SPDM 1.4 tail is PqcAsymAlgoCapLen (1) + PqcAsymAlgoCapabilities (4) +
+         * CurrentPqcAsymAlgoLen (1) + CurrentPqcAsymAlgo (4) = 10 bytes. */
+        const size_t pqc_tail_size = sizeof(uint8_t) + sizeof(uint32_t) +
+                                     sizeof(uint8_t) + sizeof(uint32_t);
+        LIBSPDM_ASSERT(*response_size >= sizeof(spdm_key_pair_info_response_t) +
+                       public_key_info_len + pqc_tail_size);
+        *response_size = sizeof(spdm_key_pair_info_response_t) + public_key_info_len +
+                         pqc_tail_size;
     } else {
         LIBSPDM_ASSERT(*response_size >= sizeof(spdm_key_pair_info_response_t));
         *response_size = sizeof(spdm_key_pair_info_response_t) + public_key_info_len;
