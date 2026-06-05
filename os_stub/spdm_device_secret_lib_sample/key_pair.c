@@ -533,6 +533,7 @@ bool libspdm_write_key_pair_info(
             (cached_key_pair_info->key_pair_id == key_pair_id) &&
             (cached_key_pair_info->desired_key_usage == desired_key_usage) &&
             (cached_key_pair_info->desired_asym_algo == desired_asym_algo) &&
+            (cached_key_pair_info->desired_pqc_asym_algo == desired_pqc_asym_algo) &&
             (cached_key_pair_info->desired_assoc_cert_slot_mask == desired_assoc_cert_slot_mask)) {
             if (operation == SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION) {
                 m_key_pair_info[key_pair_id - 1].current_key_usage = 0;

@@ -555,6 +555,76 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
     free(set_key_pair_info_request);
 }
 
+/**
+ * Test 5: SET_KEY_PAIR_RESET replay where two requests differ only in DesiredPqcAsymAlgo.
+ * This exercises the device_secret HAL (libspdm_write_key_pair_info) directly, since the
+ * cached-request match that decides whether a post-reset replay is applied lives in the HAL.
+ * Expected Behavior: a replay that changes only the PQC algorithm shall not be accepted as the
+ * cached request; the correct PQC algorithm shall be applied only once the matching request is
+ * replayed.
+ **/
+static void rsp_set_key_pair_info_ack_case5(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t key_pair_id;
+    bool need_reset;
+    bool result;
+    uint16_t capabilities;
+    uint16_t key_usage_capabilities;
+    uint16_t current_key_usage;
+    uint32_t asym_algo_capabilities;
+    uint32_t current_asym_algo;
+    uint32_t pqc_asym_algo_capabilities;
+    uint32_t current_pqc_asym_algo;
+    uint8_t assoc_cert_slot_mask;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x5;
+
+    key_pair_id = 4;
+
+    /* First request: GenerateKeyPair with ML-DSA-44. With need_reset = true the HAL caches the
+     * request and reports that a reset is still required (not yet applied). */
+    need_reset = true;
+    result = libspdm_write_key_pair_info(
+        spdm_context, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
+        SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE, 0,
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_44, 0, &need_reset);
+    assert_true(result);
+    assert_true(need_reset);
+
+    /* Post-reset replay that differs only in DesiredPqcAsymAlgo (ML-DSA-65). This must NOT be
+     * treated as the cached request: the HAL caches the new request and again reports that a
+     * reset is required, rather than applying the stale ML-DSA-44 value. */
+    need_reset = true;
+    result = libspdm_write_key_pair_info(
+        spdm_context, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
+        SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE, 0,
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65, 0, &need_reset);
+    assert_true(result);
+    assert_true(need_reset);
+
+    /* Replay the ML-DSA-65 request identically: now it matches the cached request and is
+     * applied (need_reset cleared). */
+    need_reset = true;
+    result = libspdm_write_key_pair_info(
+        spdm_context, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
+        SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE, 0,
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65, 0, &need_reset);
+    assert_true(result);
+    assert_false(need_reset);
+
+    /* The applied PQC algorithm shall be ML-DSA-65 (the replayed value), not ML-DSA-44. */
+    assert_true(libspdm_read_key_pair_info(
+                    spdm_context, key_pair_id, &capabilities, &key_usage_capabilities,
+                    &current_key_usage, &asym_algo_capabilities, &current_asym_algo,
+                    &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
+                    &assoc_cert_slot_mask, NULL, NULL));
+    assert_int_equal(current_pqc_asym_algo, SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65);
+}
+
 int libspdm_rsp_set_key_pair_info_ack_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -566,6 +636,8 @@ int libspdm_rsp_set_key_pair_info_ack_test(void)
         cmocka_unit_test(rsp_set_key_pair_info_ack_case3),
         /* Success Case to set key pair info with reset, spdm 1.4*/
         cmocka_unit_test(rsp_set_key_pair_info_ack_case4),
+        /* Reset replay differing only in DesiredPqcAsymAlgo*/
+        cmocka_unit_test(rsp_set_key_pair_info_ack_case5),
     };
 
     libspdm_test_context_t test_context = {
