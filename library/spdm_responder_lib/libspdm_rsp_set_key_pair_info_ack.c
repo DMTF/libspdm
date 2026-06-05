@@ -280,6 +280,23 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         }
     }
 
+    /* Per DSP0274, the value of a key pair is bound to its selected asymmetric algorithm
+     * (CurrentAsymAlgo). Once a key pair is generated for a KeyPairID, a ParameterChange that
+     * would change the algorithm of the generated key pair shall be rejected with
+     * InvalidRequest. A key pair is considered generated here when an algorithm is already
+     * configured (CurrentAsymAlgo or CurrentPqcAsymAlgo is set). A desired algorithm of 0 means
+     * "do not change", so only a non-zero desired algorithm that differs from the current one is
+     * rejected. */
+    if (operation == SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION) {
+        if (((current_asym_algo != 0) || (current_pqc_asym_algo != 0)) &&
+            (((desired_asym_algo != 0) && (desired_asym_algo != current_asym_algo)) ||
+             ((desired_pqc_asym_algo != 0) && (desired_pqc_asym_algo != current_pqc_asym_algo)))) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+    }
+
     if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_14) {
         need_reset = libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
