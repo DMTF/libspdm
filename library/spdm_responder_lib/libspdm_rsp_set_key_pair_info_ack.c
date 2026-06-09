@@ -107,21 +107,16 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
             SPDM_SET_KEY_PAIR_INFO, response_size, response);
     }
 
-    total_key_pairs = libspdm_read_total_key_pairs(spdm_context);
-    key_pair_id = spdm_request->key_pair_id;
-    if ((key_pair_id == 0) || (key_pair_id > total_key_pairs)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
-    }
-
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_set_key_pair_info_ack_response_t));
 
     libspdm_zero_mem(response, *response_size);
 
+    total_key_pairs = 0;
+    key_pair_id = spdm_request->key_pair_id;
     result = libspdm_read_key_pair_info(
         spdm_context,
         key_pair_id,
+        &total_key_pairs,
         &capabilities,
         &key_usage_capabilities,
         &current_key_usage,
@@ -131,6 +126,11 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         &current_pqc_asym_algo,
         &assoc_cert_slot_mask,
         NULL, NULL);
+    if ((key_pair_id == 0) || (key_pair_id > total_key_pairs)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
     if (!result) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,

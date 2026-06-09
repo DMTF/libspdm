@@ -101,22 +101,21 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
             SPDM_GET_KEY_PAIR_INFO, response_size, response);
     }
 
-    total_key_pairs = libspdm_read_total_key_pairs(spdm_context);
     key_pair_id = spdm_request->key_pair_id;
-    if ((key_pair_id == 0) || (key_pair_id > total_key_pairs)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
-    }
 
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_key_pair_info_response_t));
     public_key_info_len = (uint16_t)(*response_size - sizeof(spdm_key_pair_info_response_t));
     libspdm_zero_mem(response, *response_size);
 
+    /* libspdm_read_key_pair_info() always reports total_key_pairs (even on failure), so read first
+     * and then validate the range -- identical to the SET_KEY_PAIR_INFO_ACK handler. An invalid
+     * key_pair_id (0 or > total_key_pairs) is INVALID_REQUEST; any other read failure is UNSPECIFIED. */
+    total_key_pairs = 0;
     public_key_info = (uint8_t*)response + sizeof(spdm_key_pair_info_response_t);
     result = libspdm_read_key_pair_info(
         spdm_context,
         key_pair_id,
+        &total_key_pairs,
         &capabilities,
         &key_usage_capabilities,
         &current_key_usage,
@@ -127,9 +126,14 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
         &assoc_cert_slot_mask,
         &public_key_info_len,
         public_key_info);
-    if (!result) {
+    if ((key_pair_id == 0) || (key_pair_id > total_key_pairs)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+    if (!result) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
 

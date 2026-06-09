@@ -233,8 +233,6 @@ bool libspdm_get_requester_pqc_private_key_from_raw_data(uint32_t req_pqc_asym_a
 
 /* key pairs */
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
-uint8_t libspdm_read_total_key_pairs(void *spdm_context);
-
 /* Resolve the device-global KeyPairID (1..TotalKeyPairs) that backs slot_id under the connection's
  * negotiated algorithm (pqc_asym_algo if non-zero, otherwise base_asym_algo). Slots 0/1 map to the
  * algorithm's primary key pair, slot 4 to its secondary (the multi-key example). Returns 0 if none

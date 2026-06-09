@@ -570,6 +570,7 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
     uint8_t key_pair_id;
     bool need_reset;
     bool result;
+    uint8_t total_key_pairs;
     uint16_t capabilities;
     uint16_t key_usage_capabilities;
     uint16_t current_key_usage;
@@ -618,9 +619,9 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
 
     /* The applied PQC algorithm shall be ML-DSA-65 (the replayed value), not ML-DSA-44. */
     assert_true(libspdm_read_key_pair_info(
-                    spdm_context, key_pair_id, &capabilities, &key_usage_capabilities,
-                    &current_key_usage, &asym_algo_capabilities, &current_asym_algo,
-                    &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
+                    spdm_context, key_pair_id, &total_key_pairs, &capabilities,
+                    &key_usage_capabilities, &current_key_usage, &asym_algo_capabilities,
+                    &current_asym_algo, &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                     &assoc_cert_slot_mask, NULL, NULL));
     assert_int_equal(current_pqc_asym_algo, SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65);
 }

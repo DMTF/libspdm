@@ -14,19 +14,18 @@
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
 
 /**
- * return the total key pairs number.
- * It is a fixed number per SPDM connection.
- *
- * @return the total key pairs number.
- */
-extern uint8_t libspdm_read_total_key_pairs (void *spdm_context);
-
-/**
  * read the key pair info of the key_pair_id.
  *
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  key_pair_id                Indicate which key pair ID's information to retrieve.
  *
+ * @param  total_key_pairs            Indicate the total number of key pairs on the Responder.
+ *                                    It is a fixed number per SPDM connection. This aligns with the
+ *                                    TotalKeyPairs field of the KEY_PAIR_INFO response.
+ *                                    This output shall ALWAYS be set, including on the failure path
+ *                                    (set it before any other validation), because the responder
+ *                                    uses it to range-check key_pair_id. A device with no key pairs
+ *                                    shall set it to 0.
  * @param  capabilities               Indicate the capabilities of the requested key pairs.
  * @param  key_usage_capabilities     Indicate the key usages the responder allows.
  * @param  current_key_usage          Indicate the currently configured key usage for the requested key pairs ID.
@@ -40,11 +39,14 @@ extern uint8_t libspdm_read_total_key_pairs (void *spdm_context);
  *                                    It can be NULL, if public_key_info is not required.
  *
  * @retval true  get key pair info successfully.
- * @retval false get key pair info failed.
+ * @retval false get key pair info failed. total_key_pairs shall still be set on this path so the
+ *               caller can distinguish an invalid key_pair_id (0 or > total_key_pairs ->
+ *               INVALID_REQUEST) from another read failure (-> UNSPECIFIED).
  **/
 extern bool libspdm_read_key_pair_info(
     void *spdm_context,
     uint8_t key_pair_id,
+    uint8_t *total_key_pairs,
     uint16_t *capabilities,
     uint16_t *key_usage_capabilities,
     uint16_t *current_key_usage,
