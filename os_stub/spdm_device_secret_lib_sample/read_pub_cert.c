@@ -856,6 +856,43 @@ bool libspdm_read_responder_public_certificate_chain_per_slot(
             LIBSPDM_ASSERT(false);
             return false;
         }
+    } else if (slot_id == 4) {
+        /* slot 4 uses a different leaf key than slot 0 / slot 1 (multi-key example). */
+        switch (base_asym_algo) {
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+            file = "rsa2048/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+            file = "rsa3072/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+            file = "rsa4096/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+            file = "ecp256/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+            file = "ecp384/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+            file = "ecp521/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
+            file = "sm2/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
+            file = "ed25519/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+            file = "ed448/bundle_responder.certchain4.der";
+            break;
+        default:
+            LIBSPDM_ASSERT(false);
+            return false;
+        }
     } else {
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:

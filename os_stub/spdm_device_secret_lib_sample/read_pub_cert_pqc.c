@@ -977,6 +977,58 @@ bool libspdm_read_pqc_responder_public_certificate_chain_per_slot(
             LIBSPDM_ASSERT(false);
             return false;
         }
+    } else if (slot_id == 4) {
+        /* slot 4 uses a different leaf key than slot 0 / slot 1 (multi-key example). */
+        switch (pqc_asym_algo) {
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44:
+            file = "mldsa44/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_65:
+            file = "mldsa65/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_87:
+            file = "mldsa87/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128S:
+            file = "slh-dsa-sha2-128s/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128S:
+            file = "slh-dsa-shake-128s/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128F:
+            file = "slh-dsa-sha2-128f/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128F:
+            file = "slh-dsa-shake-128f/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192S:
+            file = "slh-dsa-sha2-192s/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192S:
+            file = "slh-dsa-shake-192s/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192F:
+            file = "slh-dsa-sha2-192f/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192F:
+            file = "slh-dsa-shake-192f/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256S:
+            file = "slh-dsa-sha2-256s/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256S:
+            file = "slh-dsa-shake-256s/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256F:
+            file = "slh-dsa-sha2-256f/bundle_responder.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256F:
+            file = "slh-dsa-shake-256f/bundle_responder.certchain4.der";
+            break;
+        default:
+            LIBSPDM_ASSERT(false);
+            return false;
+        }
     } else {
         switch (pqc_asym_algo) {
         case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44:

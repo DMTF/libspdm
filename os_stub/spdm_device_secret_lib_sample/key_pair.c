@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -40,7 +40,9 @@ typedef struct {
     uint8_t public_key_info[SPDM_MAX_PUBLIC_KEY_INFO_LEN];
 } libspdm_key_pair_info_t;
 
-#define LIBSPDM_MAX_KEY_PAIR_COUNT (9 + 3)
+/* Up to (9 traditional + 3 ML-DSA) PRIMARY key pairs, each backing slots 0 and 1, plus one
+ * SECONDARY key pair per algorithm backing slot 4 (the multi-key example) -- hence x2. */
+#define LIBSPDM_MAX_KEY_PAIR_COUNT ((9 + 3) * 2)
 
 libspdm_key_pair_info_t m_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
 
@@ -100,7 +102,7 @@ void libspdm_init_key_pair_info() {
     m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     m_key_pair_info[index].asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK;
     m_key_pair_info[index].pqc_asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[index].assoc_cert_slot_mask = 0x01;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x03;
     m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA2048;
     m_key_pair_info[index].current_pqc_asym_algo = 0;
     m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_rsa);
@@ -117,7 +119,7 @@ void libspdm_init_key_pair_info() {
     m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     m_key_pair_info[index].asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK;
     m_key_pair_info[index].pqc_asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[index].assoc_cert_slot_mask = 0x02;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x03;
     m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA3072;
     m_key_pair_info[index].current_pqc_asym_algo = 0;
     m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_rsa);
@@ -134,7 +136,7 @@ void libspdm_init_key_pair_info() {
     m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     m_key_pair_info[index].asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK;
     m_key_pair_info[index].pqc_asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[index].assoc_cert_slot_mask = 0x04;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x03;
     m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA4096;
     m_key_pair_info[index].current_pqc_asym_algo = 0;
     m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_rsa);
@@ -151,7 +153,7 @@ void libspdm_init_key_pair_info() {
     m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     m_key_pair_info[index].asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK;
     m_key_pair_info[index].pqc_asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[index].assoc_cert_slot_mask = 0x08;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x03;
     m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC256;
     m_key_pair_info[index].current_pqc_asym_algo = 0;
     m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ecp256);
@@ -168,7 +170,7 @@ void libspdm_init_key_pair_info() {
     m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     m_key_pair_info[index].asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK;
     m_key_pair_info[index].pqc_asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[index].assoc_cert_slot_mask = 0x10;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x03;
     m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC384;
     m_key_pair_info[index].current_pqc_asym_algo = 0;
     m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ecp384);
@@ -185,7 +187,7 @@ void libspdm_init_key_pair_info() {
     m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     m_key_pair_info[index].asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK;
     m_key_pair_info[index].pqc_asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[index].assoc_cert_slot_mask = 0x20;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x03;
     m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC521;
     m_key_pair_info[index].current_pqc_asym_algo = 0;
     m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ecp521);
@@ -202,7 +204,7 @@ void libspdm_init_key_pair_info() {
     m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     m_key_pair_info[index].asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK;
     m_key_pair_info[index].pqc_asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[index].assoc_cert_slot_mask = 0x40;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x03;
     m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_SM2;
     m_key_pair_info[index].current_pqc_asym_algo = 0;
     m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_sm2);
@@ -219,7 +221,7 @@ void libspdm_init_key_pair_info() {
     m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     m_key_pair_info[index].asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK;
     m_key_pair_info[index].pqc_asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[index].assoc_cert_slot_mask = 0x80;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x03;
     m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED25519;
     m_key_pair_info[index].current_pqc_asym_algo = 0;
     m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ed25519);
@@ -236,7 +238,7 @@ void libspdm_init_key_pair_info() {
     m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     m_key_pair_info[index].asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK;
     m_key_pair_info[index].pqc_asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[index].assoc_cert_slot_mask = 0x00;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x03;
     m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED448;
     m_key_pair_info[index].current_pqc_asym_algo = 0;
     m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ed448);
@@ -253,7 +255,7 @@ void libspdm_init_key_pair_info() {
     m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     m_key_pair_info[index].asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK;
     m_key_pair_info[index].pqc_asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[index].assoc_cert_slot_mask = 0x00;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x03;
     m_key_pair_info[index].current_asym_algo = 0;
     m_key_pair_info[index].current_pqc_asym_algo = SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_44;
     m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_mldsa44);
@@ -269,7 +271,7 @@ void libspdm_init_key_pair_info() {
     m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     m_key_pair_info[index].asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK;
     m_key_pair_info[index].pqc_asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[index].assoc_cert_slot_mask = 0x00;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x03;
     m_key_pair_info[index].current_asym_algo = 0;
     m_key_pair_info[index].current_pqc_asym_algo = SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65;
     m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_mldsa65);
@@ -285,7 +287,7 @@ void libspdm_init_key_pair_info() {
     m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     m_key_pair_info[index].asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK;
     m_key_pair_info[index].pqc_asym_algo_capabilities = LIBSPDM_SUPPORTED_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[index].assoc_cert_slot_mask = 0x00;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x03;
     m_key_pair_info[index].current_asym_algo = 0;
     m_key_pair_info[index].current_pqc_asym_algo = SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_87;
     m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_mldsa87);
@@ -293,6 +295,22 @@ void libspdm_init_key_pair_info() {
                      public_key_info_mldsa87, sizeof(public_key_info_mldsa87));
     index++;
 #endif
+
+    /* Multi-key example: for EACH primary key pair above (one per supported algorithm, backing
+     * slots 0 and 1), append a SECONDARY key pair of the SAME algorithm that backs slot 4
+     * (bundle_responder.certchain4.der / end_responder4.key). This shows two key pairs of one
+     * algorithm backing different slots. KeyPairIDs stay contiguous 1..TotalKeyPairs: the primaries
+     * are 1..num_primary and their secondaries are num_primary+1..2*num_primary. (SlotID 4 is a
+     * NON-CONTIGUOUS slot, since slots 2 and 3 are left empty.) */
+    {
+        uint8_t num_primary = index;
+        uint8_t i;
+        for (i = 0; i < num_primary; i++) {
+            m_key_pair_info[index] = m_key_pair_info[i];
+            m_key_pair_info[index].assoc_cert_slot_mask = 0x10;
+            index++;
+        }
+    }
 
     m_total_key_pair_count = index;
 }
@@ -303,6 +321,75 @@ uint8_t libspdm_read_total_key_pairs (void *spdm_context)
         libspdm_init_key_pair_info();
     }
     return m_total_key_pair_count;
+}
+
+/* Convert a NEGOTIATE_ALGORITHMS base asymmetric algorithm (Table 113 wire bit, the encoding used
+ * by connection_info.algorithm.base_asym_algo) to the key-pair capability encoding (Table 112,
+ * the encoding stored in m_key_pair_info[].current_asym_algo). They are different bit layouts. */
+static uint32_t libspdm_base_asym_algo_to_key_pair_cap(uint32_t base_asym_algo)
+{
+    switch (base_asym_algo) {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+        return SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA2048;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+        return SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA3072;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+        return SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA4096;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        return SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC256;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+        return SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC384;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+        return SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC521;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
+        return SPDM_KEY_PAIR_ASYM_ALGO_CAP_SM2;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
+        return SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED25519;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+        return SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED448;
+    default:
+        return 0;
+    }
+}
+
+/* Return the device-global KeyPairID (1..TotalKeyPairs) for the key pair that backs (slot_id) under
+ * the connection's negotiated algorithm. The PQC bitmap (Table 114) uses the same encoding for both
+ * NEGOTIATE_ALGORITHMS and KEY_PAIR_INFO, so it is matched directly; the traditional algorithm is
+ * converted to the key-pair capability encoding first.
+ *
+ * This is how the emu and the signing path obtain a REAL, algorithm-matched, contiguous KeyPairID
+ * (per DSP0274, KeyPairIDs are 1..TotalKeyPairs without gaps and each has one fixed algorithm) --
+ * the primary key pair of the negotiated algorithm backs slots 0/1 and its secondary backs slot 4.
+ * Returns 0 if no matching key pair exists. */
+uint8_t libspdm_get_key_pair_id_by_slot(uint32_t base_asym_algo, uint32_t pqc_asym_algo,
+                                        uint8_t slot_id)
+{
+    uint8_t index;
+    uint32_t key_pair_asym_algo;
+
+    if (m_total_key_pair_count == 0) {
+        libspdm_init_key_pair_info();
+    }
+
+    key_pair_asym_algo = libspdm_base_asym_algo_to_key_pair_cap(base_asym_algo);
+
+    for (index = 0; index < m_total_key_pair_count; index++) {
+        if ((m_key_pair_info[index].assoc_cert_slot_mask & (1 << slot_id)) == 0) {
+            continue;
+        }
+        if ((pqc_asym_algo != 0) &&
+            (m_key_pair_info[index].current_pqc_asym_algo == pqc_asym_algo)) {
+            return (uint8_t)(index + 1);
+        }
+        if ((base_asym_algo != 0) &&
+            (m_key_pair_info[index].current_asym_algo == key_pair_asym_algo)) {
+            return (uint8_t)(index + 1);
+        }
+    }
+    return 0;
 }
 
 /**
