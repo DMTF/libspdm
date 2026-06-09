@@ -315,7 +315,7 @@ void libspdm_init_key_pair_info() {
     m_total_key_pair_count = index;
 }
 
-uint8_t libspdm_read_total_key_pairs (void *spdm_context)
+static uint8_t libspdm_get_total_key_pairs (void)
 {
     if (m_total_key_pair_count == 0) {
         libspdm_init_key_pair_info();
@@ -398,6 +398,7 @@ uint8_t libspdm_get_key_pair_id_by_slot(uint32_t base_asym_algo, uint32_t pqc_as
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  key_pair_id                Indicate which key pair ID's information to retrieve.
  *
+ * @param  total_key_pairs            Indicate the total number of key pairs on the Responder.
  * @param  capabilities               Indicate the capabilities of the requested key pairs.
  * @param  key_usage_capabilities     Indicate the key usages the responder allows.
  * @param  current_key_usage          Indicate the currently configured key usage for the requested key pairs ID.
@@ -416,6 +417,7 @@ uint8_t libspdm_get_key_pair_id_by_slot(uint32_t base_asym_algo, uint32_t pqc_as
 bool libspdm_read_key_pair_info(
     void *spdm_context,
     uint8_t key_pair_id,
+    uint8_t *total_key_pairs,
     uint16_t *capabilities,
     uint16_t *key_usage_capabilities,
     uint16_t *current_key_usage,
@@ -427,8 +429,10 @@ bool libspdm_read_key_pair_info(
     uint16_t *public_key_info_len,
     uint8_t *public_key_info)
 {
+    *total_key_pairs = libspdm_get_total_key_pairs();
+
     /*check: KeyPairID is 1-based and indexes m_key_pair_info[key_pair_id - 1]*/
-    if ((key_pair_id == 0) || (key_pair_id > libspdm_read_total_key_pairs(spdm_context))) {
+    if ((key_pair_id == 0) || (key_pair_id > *total_key_pairs)) {
         return false;
     }
 
@@ -517,7 +521,7 @@ bool libspdm_write_key_pair_info(
     size_t cached_key_pair_info_len;
 
     /*check: KeyPairID is 1-based and indexes m_key_pair_info[key_pair_id - 1]*/
-    if ((key_pair_id == 0) || (key_pair_id > libspdm_read_total_key_pairs(spdm_context))) {
+    if ((key_pair_id == 0) || (key_pair_id > libspdm_get_total_key_pairs())) {
         return false;
     }
 

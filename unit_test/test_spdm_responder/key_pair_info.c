@@ -124,8 +124,8 @@ static void rsp_key_pair_info_case3(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
 
-    /* key_pair_id > total_key_pairs*/
-    key_pair_id = libspdm_read_total_key_pairs(spdm_context) + 1;
+    /* key_pair_id > total_key_pairs (0xFF exceeds any possible TotalKeyPairs) */
+    key_pair_id = 0xFF;
     m_libspdm_get_key_pair_info_request1.key_pair_id = key_pair_id;
 
     response_size = sizeof(response);

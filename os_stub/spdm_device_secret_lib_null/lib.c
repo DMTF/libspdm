@@ -332,17 +332,13 @@ bool libspdm_generate_event_list(
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
 
-uint8_t libspdm_read_total_key_pairs (void *spdm_context)
-{
-    return 0;
-}
-
 /**
  * read the key pair info of the key_pair_id.
  *
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  key_pair_id                Indicate which key pair ID's information to retrieve.
  *
+ * @param  total_key_pairs            Indicate the total number of key pairs on the Responder.
  * @param  capabilities               Indicate the capabilities of the requested key pairs.
  * @param  key_usage_capabilities     Indicate the key usages the responder allows.
  * @param  current_key_usage          Indicate the currently configured key usage for the requested key pairs ID.
@@ -361,6 +357,7 @@ uint8_t libspdm_read_total_key_pairs (void *spdm_context)
 bool libspdm_read_key_pair_info(
     void *spdm_context,
     uint8_t key_pair_id,
+    uint8_t *total_key_pairs,
     uint16_t *capabilities,
     uint16_t *key_usage_capabilities,
     uint16_t *current_key_usage,
@@ -372,6 +369,7 @@ bool libspdm_read_key_pair_info(
     uint16_t *public_key_info_len,
     uint8_t *public_key_info)
 {
+    *total_key_pairs = 0;
     return false;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
