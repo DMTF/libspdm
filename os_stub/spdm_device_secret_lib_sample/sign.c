@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -191,11 +191,11 @@ bool libspdm_responder_data_sign(
         size_t private_pem_size;
 
         if (pqc_asym_algo != 0) {
-            result = libspdm_read_responder_pqc_private_key(
-                pqc_asym_algo, &private_pem, &private_pem_size);
+            result = libspdm_read_responder_pqc_private_key_ex(
+                pqc_asym_algo, key_pair_id, &private_pem, &private_pem_size);
         } else {
-            result = libspdm_read_responder_private_key(
-                base_asym_algo, &private_pem, &private_pem_size);
+            result = libspdm_read_responder_private_key_ex(
+                base_asym_algo, key_pair_id, &private_pem, &private_pem_size);
         }
         if (!result) {
             return false;
@@ -243,6 +243,9 @@ bool libspdm_responder_data_sign(
         free(private_pem);
     } else {
 #endif
+    /* RAW key mode does not support multiple keys (no per-slot raw key data); the slot-4
+     * distinct-key example is only exercised in PEM mode (g_private_key_mode = 1). RAW mode
+     * intentionally always uses the default key. */
     if (pqc_asym_algo != 0) {
         result = libspdm_get_responder_pqc_private_key_from_raw_data(pqc_asym_algo, &context);
     } else {

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -42,6 +42,15 @@
 #define LIBSPDM_TEST_CERT_MAXUINT16 2
 #define LIBSPDM_LIBSPDM_TEST_CERT_MAXUINT16_LARGER 3
 #define LIBSPDM_TEST_CERT_SMALL 4
+
+/* Multi-key example: a slot is provisioned with a DIFFERENT leaf key than slot 0 / slot 1
+ * (bundle_responder.certchain4.der, end_responder4.key). That slot is SlotID 4, with SlotIDs 2 and 3
+ * left empty, to also demonstrate a NON-CONTIGUOUS slot configuration (SlotIDs may have gaps).
+ *
+ * KeyPairIDs, in contrast, must be contiguous 1..TotalKeyPairs without gaps and each KeyPairID has
+ * one fixed algorithm (DSP0274 "Key pair info"). So the KeyPairID for slot 4 is NOT a fixed value:
+ * it is the (device-global) id of the negotiated algorithm's SECONDARY key pair. Use
+ * libspdm_get_key_pair_id_by_slot() to resolve it. */
 
 /* "LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY = 1" means use the RAW private key only
  * "LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY = 0" means controlled by g_private_key_mode
@@ -182,6 +191,11 @@ bool libspdm_read_requester_pqc_public_key(
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
 bool libspdm_read_responder_private_key(uint32_t base_asym_algo,
                                         void **data, size_t *size);
+/* Same as libspdm_read_responder_private_key, but selects the leaf key by key_pair_id so a slot
+ * provisioned with a distinct key (the negotiated algorithm's secondary key pair -> end_responder4.key) signs with
+ * that key. Any other key_pair_id uses the default end_responder.key. */
+bool libspdm_read_responder_private_key_ex(uint32_t base_asym_algo, uint8_t key_pair_id,
+                                           void **data, size_t *size);
 #endif
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
@@ -194,6 +208,10 @@ bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
 bool libspdm_read_responder_pqc_private_key(uint32_t pqc_asym_algo,
                                             void **data, size_t *size);
+/* Same as libspdm_read_responder_pqc_private_key, but selects the leaf key by key_pair_id
+ * (the negotiated algorithm's secondary key pair -> end_responder4.key). */
+bool libspdm_read_responder_pqc_private_key_ex(uint32_t pqc_asym_algo, uint8_t key_pair_id,
+                                               void **data, size_t *size);
 #endif
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
@@ -216,6 +234,13 @@ bool libspdm_get_requester_pqc_private_key_from_raw_data(uint32_t req_pqc_asym_a
 /* key pairs */
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
 uint8_t libspdm_read_total_key_pairs(void *spdm_context);
+
+/* Resolve the device-global KeyPairID (1..TotalKeyPairs) that backs slot_id under the connection's
+ * negotiated algorithm (pqc_asym_algo if non-zero, otherwise base_asym_algo). Slots 0/1 map to the
+ * algorithm's primary key pair, slot 4 to its secondary (the multi-key example). Returns 0 if none
+ * matches. */
+uint8_t libspdm_get_key_pair_id_by_slot(uint32_t base_asym_algo, uint32_t pqc_asym_algo,
+                                        uint8_t slot_id);
 #endif
 
 /* External*/

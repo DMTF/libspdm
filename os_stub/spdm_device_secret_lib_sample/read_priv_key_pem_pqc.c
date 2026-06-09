@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -70,6 +70,73 @@ bool libspdm_read_responder_pqc_private_key(uint32_t pqc_asym_algo,
         break;
     case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256F:
         file = "slh-dsa-shake-256f/end_responder.key";
+        break;
+    default:
+        LIBSPDM_ASSERT(false);
+        return false;
+    }
+    res = libspdm_read_input_file(file, data, size);
+    return res;
+}
+
+bool libspdm_read_responder_pqc_private_key_ex(uint32_t pqc_asym_algo, uint8_t key_pair_id,
+                                               void **data, size_t *size)
+{
+    bool res;
+    char *file;
+
+    /* slot 0 / slot 1 share the default leaf key; slot 4 uses a distinct leaf key
+     * (end_responder4.key) to demonstrate multiple keys. The slot-4 key pair is the negotiated
+     * algorithm's SECONDARY key pair; only it selects end_responder4.key. */
+    if (key_pair_id != libspdm_get_key_pair_id_by_slot(0, pqc_asym_algo, 4)) {
+        return libspdm_read_responder_pqc_private_key(pqc_asym_algo, data, size);
+    }
+
+    switch (pqc_asym_algo) {
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44:
+        file = "mldsa44/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_65:
+        file = "mldsa65/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_87:
+        file = "mldsa87/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128S:
+        file = "slh-dsa-sha2-128s/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128S:
+        file = "slh-dsa-shake-128s/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128F:
+        file = "slh-dsa-sha2-128f/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128F:
+        file = "slh-dsa-shake-128f/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192S:
+        file = "slh-dsa-sha2-192s/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192S:
+        file = "slh-dsa-shake-192s/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192F:
+        file = "slh-dsa-sha2-192f/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192F:
+        file = "slh-dsa-shake-192f/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256S:
+        file = "slh-dsa-sha2-256s/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256S:
+        file = "slh-dsa-shake-256s/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256F:
+        file = "slh-dsa-sha2-256f/end_responder4.key";
+        break;
+    case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256F:
+        file = "slh-dsa-shake-256f/end_responder4.key";
         break;
     default:
         LIBSPDM_ASSERT(false);
