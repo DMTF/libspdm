@@ -429,6 +429,18 @@ A pointer to a buffer to store the CSR from the Responder.
 On input, indicates the size, in bytes, of the buffer in which the CSR will be stored.
 On output, indicates the size, in bytes, of the CSR.
 
+**request_attribute**<br/>
+`GET_CSR` request attributes including the `CSRCertModel`, `CSRTrackingTag`, and `Overwrite` fields.
+Only used for SPDM 1.3 and above. Pass `0` for SPDM 1.2.
+
+**key_pair_id**<br/>
+The unique key pair number identifying the desired asymmetric key pair to associate with the slot.
+Only used for SPDM 1.3 and above. Pass `0` for SPDM 1.2.
+
+**available_csr_tracking_tag**<br/>
+On output, the available `CSRTrackingTag` when the Responder sends a `ResetRequired` error message.
+Pass `NULL` if not needed (e.g. for SPDM 1.2).
+
 ### Details
 TBD
 <br/><br/>

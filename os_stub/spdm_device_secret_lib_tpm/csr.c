@@ -151,82 +151,6 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
 
 bool libspdm_gen_csr(
     void *spdm_context,
-    uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
-    const void *request, size_t request_size,
-    uint8_t *requester_info, size_t requester_info_length,
-    uint8_t *opaque_data, uint16_t opaque_data_length,
-    size_t *csr_len, uint8_t *csr_pointer,
-    bool is_device_cert_model,
-    bool *is_busy, bool *unexpected_request)
-{
-    bool result;
-    uint8_t *cached_last_csr_request;
-    size_t cached_last_request_len;
-    uint8_t *cached_csr;
-    size_t csr_buffer_size;
-    uint8_t rsp_csr_tracking_tag;
-
-    csr_buffer_size = *csr_len;
-
-    /*device gen csr need reset*/
-    if (*need_reset) {
-        result = libspdm_read_cached_last_csr_request(&cached_last_csr_request,
-                                                      &cached_last_request_len,
-                                                      1, &rsp_csr_tracking_tag);
-
-        /*get the cached last csr request and csr*/
-        if ((result) &&
-            (cached_last_request_len == request_size) &&
-            (libspdm_consttime_is_mem_equal(cached_last_csr_request, request,
-                                            request_size)) &&
-            (libspdm_read_cached_csr(&cached_csr, csr_len)) &&
-            (*csr_len != 0)) {
-
-            /*get and save cached csr*/
-            if (csr_buffer_size < *csr_len) {
-                free(cached_csr);
-                free(cached_last_csr_request);
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                               "csr buffer is too small to store cached csr! \n"));
-                return false;
-            } else {
-                libspdm_copy_mem(csr_pointer, csr_buffer_size, cached_csr, *csr_len);
-            }
-
-            /*device don't need reset this time*/
-            *need_reset = false;
-
-            free(cached_csr);
-            free(cached_last_csr_request);
-            return true;
-        } else {
-            if (cached_last_csr_request != NULL) {
-                free(cached_last_csr_request);
-            }
-
-            /*device need reset this time: cache the last_csr_request */
-            result = libspdm_cache_last_csr_request(request, request_size, 1);
-            if (!result) {
-                return result;
-            }
-
-            /*device need reset this time*/
-            *need_reset = true;
-            return true;
-        }
-    } else {
-        result = libspdm_gen_csr_without_reset(base_hash_algo, base_asym_algo, 0,
-                                               requester_info, requester_info_length,
-                                               opaque_data, opaque_data_length,
-                                               csr_len, csr_pointer, is_device_cert_model);
-        return result;
-    }
-
-}
-
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
-bool libspdm_gen_csr_ex(
-    void *spdm_context,
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     bool *need_reset,
     const void *request, size_t request_size,
@@ -251,8 +175,71 @@ bool libspdm_gen_csr_ex(
     bool flag;
     bool is_device_cert_model;
 
-    available_csr_tracking_tag = 0;
+    is_device_cert_model =
+        (req_cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
     csr_buffer_size = *csr_len;
+
+    /* Pre-1.3 connections do not carry a CSRTrackingTag (req_csr_tracking_tag is
+     * NULL). Use the original single fixed-tag reset semantics so that the SPDM
+     * 1.2 behavior is preserved exactly. */
+    if (req_csr_tracking_tag == NULL) {
+        /*device gen csr need reset*/
+        if (*need_reset) {
+            result = libspdm_read_cached_last_csr_request(&cached_last_csr_request,
+                                                          &cached_last_request_len,
+                                                          1, &rsp_csr_tracking_tag);
+
+            /*get the cached last csr request and csr*/
+            if ((result) &&
+                (cached_last_request_len == request_size) &&
+                (libspdm_consttime_is_mem_equal(cached_last_csr_request, request,
+                                                request_size)) &&
+                (libspdm_read_cached_csr(&cached_csr, csr_len)) &&
+                (*csr_len != 0)) {
+
+                /*get and save cached csr*/
+                if (csr_buffer_size < *csr_len) {
+                    free(cached_csr);
+                    free(cached_last_csr_request);
+                    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                                   "csr buffer is too small to store cached csr! \n"));
+                    return false;
+                } else {
+                    libspdm_copy_mem(csr_pointer, csr_buffer_size, cached_csr, *csr_len);
+                }
+
+                /*device don't need reset this time*/
+                *need_reset = false;
+
+                free(cached_csr);
+                free(cached_last_csr_request);
+                return true;
+            } else {
+                if (cached_last_csr_request != NULL) {
+                    free(cached_last_csr_request);
+                }
+
+                /*device need reset this time: cache the last_csr_request */
+                result = libspdm_cache_last_csr_request(request, request_size, 1);
+                if (!result) {
+                    return result;
+                }
+
+                /*device need reset this time*/
+                *need_reset = true;
+                return true;
+            }
+        } else {
+            result = libspdm_gen_csr_without_reset(base_hash_algo, base_asym_algo, 0,
+                                                   requester_info, requester_info_length,
+                                                   opaque_data, opaque_data_length,
+                                                   csr_len, csr_pointer, is_device_cert_model);
+            return result;
+        }
+    }
+
+    /* SPDM 1.3 and higher: CSRTrackingTag based reset semantics. */
+    available_csr_tracking_tag = 0;
 
     /*device gen csr need reset*/
     if (*need_reset) {
@@ -355,11 +342,6 @@ bool libspdm_gen_csr_ex(
             }
         }
     } else {
-        if (req_cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT) {
-            is_device_cert_model = true;
-        } else {
-            is_device_cert_model = false;
-        }
         result = libspdm_gen_csr_without_reset(base_hash_algo, base_asym_algo, pqc_asym_algo,
                                                requester_info, requester_info_length,
                                                opaque_data, opaque_data_length,
@@ -367,6 +349,5 @@ bool libspdm_gen_csr_ex(
         return result;
     }
 }
-#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */

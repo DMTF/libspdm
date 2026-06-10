@@ -1343,7 +1343,6 @@ static void rsp_csr_case13(void **state)
 
     /*set csr after reset*/
     assert_true(libspdm_set_csr_after_reset());
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
     /*first get_csr: the responder need reset*/
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -1378,14 +1377,6 @@ static void rsp_csr_case13(void **state)
 
     /*check returned CSR is equal the cached CSR */
     assert_memory_equal(spdm_response + 1, cached_csr, spdm_response->csr_length);
-#else
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
-    assert_int_equal(spdm_response->header.param2, 0);
-#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
     /*clear cached req_info*/
     libspdm_test_clear_cached_last_request();
     free(m_libspdm_get_csr_request);
@@ -1407,9 +1398,7 @@ static void rsp_csr_case14(void **state)
     spdm_csr_response_t *spdm_response;
     spdm_get_csr_request_t *m_libspdm_get_csr_request;
     uint8_t cached_csr[LIBSPDM_MAX_CSR_SIZE];
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
     uint8_t index;
-#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
     libspdm_zero_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE);
 
     uint8_t *csr_pointer;
@@ -1470,7 +1459,6 @@ static void rsp_csr_case14(void **state)
 
     /*set csr after reset*/
     assert_true(libspdm_set_csr_after_reset());
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
     /*first get_csr: the responder need reset*/
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -1530,14 +1518,6 @@ static void rsp_csr_case14(void **state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
     assert_int_equal(spdm_response->header.param2, 0);
-#else
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
-    assert_int_equal(spdm_response->header.param2, 0);
-#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
     /*clear cached req_info*/
     libspdm_test_clear_cached_last_request();
     free(m_libspdm_get_csr_request);
@@ -1619,7 +1599,6 @@ static void rsp_csr_case15(void **state)
                                       m_libspdm_get_csr_request_size,
                                       m_libspdm_get_csr_request,
                                       &response_size, response);
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
     /*first get_csr: the responder need reset*/
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -1759,17 +1738,6 @@ static void rsp_csr_case15(void **state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
     assert_int_equal(spdm_response->header.param2, 1);
-
-#else
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
-    assert_int_equal(spdm_response->header.param2, 0);
-    /*set csr after reset*/
-    assert_true(libspdm_set_csr_after_reset());
-#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
     /*clear cached req_info*/
     libspdm_test_clear_cached_last_request();
     free(m_libspdm_get_csr_request);
@@ -1781,7 +1749,6 @@ static void rsp_csr_case15(void **state)
  **/
 static void rsp_csr_case16(void **state)
 {
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -1850,7 +1817,6 @@ static void rsp_csr_case16(void **state)
     /*clear cached req_info*/
     libspdm_test_clear_cached_last_request();
     free(m_libspdm_get_csr_request);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX */
 }
 
 int libspdm_rsp_csr_test(void)

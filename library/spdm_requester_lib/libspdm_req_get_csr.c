@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -238,43 +238,10 @@ libspdm_return_t libspdm_get_csr(void * spdm_context,
                                  const uint32_t *session_id,
                                  void * requester_info, uint16_t requester_info_length,
                                  void * opaque_data, uint16_t opaque_data_length,
-                                 void *csr, size_t *csr_len)
-{
-    libspdm_context_t *context;
-    size_t retry;
-    uint64_t retry_delay_time;
-    libspdm_return_t status;
-
-    context = spdm_context;
-    context->crypto_request = true;
-    retry = context->retry_times;
-    retry_delay_time = context->retry_delay_time;
-    do {
-        status = libspdm_try_get_csr(context, session_id,
-                                     requester_info, requester_info_length,
-                                     opaque_data, opaque_data_length,
-                                     csr, csr_len,
-                                     0, 0, NULL);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
-            return status;
-        }
-
-        libspdm_sleep(retry_delay_time);
-    } while (retry-- != 0);
-
-    return status;
-}
-
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
-libspdm_return_t libspdm_get_csr_ex(void * spdm_context,
-                                    const uint32_t *session_id,
-                                    void * requester_info, uint16_t requester_info_length,
-                                    void * opaque_data, uint16_t opaque_data_length,
-                                    void *csr, size_t *csr_len,
-                                    uint8_t request_attribute,
-                                    uint8_t key_pair_id,
-                                    uint8_t *available_csr_tracking_tag
-                                    )
+                                 void *csr, size_t *csr_len,
+                                 uint8_t request_attribute,
+                                 uint8_t key_pair_id,
+                                 uint8_t *available_csr_tracking_tag)
 {
     libspdm_context_t *context;
     size_t retry;
@@ -301,6 +268,5 @@ libspdm_return_t libspdm_get_csr_ex(void * spdm_context,
 
     return status;
 }
-#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
 
 #endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP*/

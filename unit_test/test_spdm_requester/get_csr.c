@@ -335,7 +335,8 @@ static void req_get_csr_case1(void **state)
     /*init req_info*/
     libspdm_gen_req_info();
 
-    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len);
+    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len,
+                             0, 0, NULL);
 
     assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
 }
@@ -364,7 +365,8 @@ static void req_get_csr_case2(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
 
-    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len);
+    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len,
+                             0, 0, NULL);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(csr_len, global_csr_len);
@@ -398,7 +400,8 @@ static void req_get_csr_case3(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
 
-    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len);
+    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len,
+                             0, 0, NULL);
 
     assert_int_equal(status, LIBSPDM_STATUS_RESET_REQUIRED_PEER);
 
@@ -406,7 +409,8 @@ static void req_get_csr_case3(void **state)
     spdm_context->connection_info.capability.flags &=
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
 
-    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len);
+    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len,
+                             0, 0, NULL);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(csr_len, global_csr_len);
@@ -447,7 +451,8 @@ static void req_get_csr_case4(void **state)
     status = libspdm_get_csr(spdm_context, NULL,
                              right_req_info, right_req_info_size,
                              m_csr_opaque_data, m_csr_opaque_data_size,
-                             (void *)&csr_form_get, &csr_len);
+                             (void *)&csr_form_get, &csr_len,
+                             0, 0, NULL);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(csr_len, global_csr_len);
@@ -455,7 +460,7 @@ static void req_get_csr_case4(void **state)
 }
 
 /**
- * Test 5: Successful response to libspdm_get_csr_ex,
+ * Test 5: Successful response to libspdm_get_csr,
  * with a reset required
  * Expected Behavior: get a LIBSPDM_STATUS_RESET_REQUIRED_PEER return code and available csr_tracking_tag
  **/
@@ -463,7 +468,6 @@ static void req_get_csr_case5(void **state)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
     libspdm_return_t status;
     uint8_t csr_form_get[LIBSPDM_MAX_CSR_SIZE] = {0};
     size_t csr_len;
@@ -471,7 +475,6 @@ static void req_get_csr_case5(void **state)
 
     csr_len = LIBSPDM_MAX_CSR_SIZE;
     reset_csr_tracking_tag = 0;
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
@@ -483,13 +486,11 @@ static void req_get_csr_case5(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
 
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
-    status = libspdm_get_csr_ex(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
-                                &csr_len, 0, 0, &reset_csr_tracking_tag);
+    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
+                             &csr_len, 0, 0, &reset_csr_tracking_tag);
 
     assert_int_equal(status, LIBSPDM_STATUS_RESET_REQUIRED_PEER);
     assert_int_equal(reset_csr_tracking_tag, 1);
-#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
 }
 
 /**
@@ -528,7 +529,8 @@ static void req_get_csr_case6(void **state)
     status = libspdm_get_csr(spdm_context, NULL,
                              right_req_info, right_req_info_size,
                              m_csr_opaque_data, m_csr_opaque_data_size,
-                             (void *)&csr_form_get, &csr_len);
+                             (void *)&csr_form_get, &csr_len,
+                             0, 0, NULL);
 
     assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 }
@@ -539,7 +541,6 @@ static void req_get_csr_case6(void **state)
  **/
 static void req_get_csr_case7(void **state)
 {
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -567,11 +568,10 @@ static void req_get_csr_case7(void **state)
     spdm_context->connection_info.algorithm.other_params_support =
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0;
 
-    status = libspdm_get_csr_ex(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
-                                &csr_len, SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE, 1, &tracking_tag);
+    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
+                             &csr_len, SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE, 1, &tracking_tag);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX */
 }
 
 int libspdm_req_get_csr_test(void)
@@ -585,7 +585,7 @@ int libspdm_req_get_csr_test(void)
         cmocka_unit_test(req_get_csr_case3),
         /* Send req_info and opaque_data Successful response to get csr */
         cmocka_unit_test(req_get_csr_case4),
-        /* Successful response to libspdm_get_csr_ex with a reset required */
+        /* Successful response to libspdm_get_csr with a reset required */
         cmocka_unit_test(req_get_csr_case5),
         /* Illegal ResetRequired error response. */
         cmocka_unit_test(req_get_csr_case6),
