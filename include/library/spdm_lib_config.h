@@ -86,13 +86,6 @@
 #define LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP 1
 #endif
 
-/* Includes SPDM 1.3 features for CSR messages. If enabled then LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
- * must also be enabled.
- */
-#ifndef LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
-#define LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX 1
-#endif
-
 /* If 1 then endpoint supports sending GET_CERTIFICATE and GET_DIGESTS requests.
  * If enabled and endpoint is a Responder then LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
  * must also be enabled.

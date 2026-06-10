@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -170,7 +170,7 @@ void libspdm_test_requester_get_csr_case1(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
 
     libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
-                    &csr_len);
+                    &csr_len, 0, 0, NULL);
 }
 
 void libspdm_test_requester_get_csr_case2(void **State)
@@ -221,7 +221,7 @@ void libspdm_test_requester_get_csr_case2(void **State)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     libspdm_get_csr(spdm_context, &session_id, NULL, 0, NULL, 0, (void *)&csr_form_get,
-                    &csr_len);
+                    &csr_len, 0, 0, NULL);
 }
 
 libspdm_test_context_t m_libspdm_requester_get_csr_test_context = {

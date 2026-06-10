@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -16,49 +16,8 @@
 /**
  * Generate a PKCS #10 certificate signing request.
  *
- * @param[in]     spdm_context    A pointer to the SPDM context.
- * @param[in]     base_hash_algo  Indicates the hash algorithm.
- * @param[in]     base_asym_algo  Indicates the signing algorithm.
- * @param[in,out] need_reset      On input, indicates the value of CERT_INSTALL_RESET_CAP.
- *                                On output, indicates whether the device needs to be reset (true)
- *                                for the GET_CSR operation to complete.
- * @param[in]      request        A pointer to the SPDM request data.
- * @param[in]      request_size   The size of SPDM request data.
- * @param[in]      requester_info         Requester info used to generate the CSR.
- * @param[in]      requester_info_length  The length, in bytes, of requester_info.
- * @param[in]      opaque_data            Requester opaque data used to generate the CSR.
- * @param[in]      opaque_data_length     The length, in bytes, of opaque_data.
- * @param[in,out]  csr_len                On input, the size, in bytes, of the buffer to store the
- *                                        CSR.
- *                                        On output, the size, in bytes, of the CSR.
- * @param[in,out]  csr_pointer            A pointer to the buffer to store the CSR.
- * @param[in]      is_device_cert_model   If true, the certificate chain is the DeviceCert model.
- *                                        If false, the certificate chain is the AliasCert model.
- * @param[out]     is_busy                If true, indicates that the CSR cannot be generated at
- *                                        this time, but it may be successful in a later call. The
- *                                        function's return value must be false if this parameter is
- *                                        true.
- * @param[out]     unexpected_request     If true, then request is different than the request that
- *                                        triggered a ResetRequired error response. The function's
- *                                        return value must be false if this parameter is true.
- *
- * @retval  true   CSR generated successfully.
- * @retval  false  Failed to generate CSR.
- **/
-extern bool libspdm_gen_csr(
-    void *spdm_context,
-    uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
-    const void *request, size_t request_size,
-    uint8_t *requester_info, size_t requester_info_length,
-    uint8_t *opaque_data, uint16_t opaque_data_length,
-    size_t *csr_len, uint8_t *csr_pointer,
-    bool is_device_cert_model, bool *is_busy, bool *unexpected_request);
-
-/**
- * Generate a PKCS #10 certificate signing request for SPDM versions 1.3 and higher.
- *
  *   Table for parameters and results when device requires a reset to process CSRs.
- *   Only valid if Responder sets CERT_INSTALL_RESET_CAP.
+ *   Only valid if Responder sets CERT_INSTALL_RESET_CAP (SPDM 1.3 and higher).
  *
  *   | Overwrite | CSRTrackingTag | Pending CSR | Reset |       Resulting Action       |
  *   |-----------| ---------------|-------------|-------|------------------------------|
@@ -72,10 +31,11 @@ extern bool libspdm_gen_csr(
  * @param[in]     spdm_context    A pointer to the SPDM context.
  * @param[in]     base_hash_algo  Indicates the hash algorithm.
  * @param[in]     base_asym_algo  Indicates the signing algorithm.
+ * @param[in]     pqc_asym_algo   Indicates the post-quantum signing algorithm (0 if unused).
  * @param[in,out] need_reset      On input, indicates the value of CERT_INSTALL_RESET_CAP.
  *                                On output, indicates whether the device needs to be reset (true)
  *                                for the GET_CSR operation to complete. If true then
- *                                req_csr_tracking_tag, on output, must be non-zero.
+ *                                req_csr_tracking_tag, on output, must be non-zero (SPDM 1.3+).
  * @param[in]      request        A pointer to the SPDM request data.
  * @param[in]      request_size   The size of SPDM request data.
  * @param[in]      requester_info         Requester info used to generate the CSR.
@@ -87,8 +47,14 @@ extern bool libspdm_gen_csr(
  *                                        On output, the size, in bytes, of the CSR.
  * @param[in,out]  csr_pointer            A pointer to the buffer to store the CSR.
  * @param[in]      req_cert_model         Indicates the desired certificate model of the CSR.
- * @param[in,out]  req_csr_tracking_tag   On input, the CSRTrackingTag of the GET_CSR request.
- *                                        On output, the CSRTrackingTag for the ResetRequired error.
+ *                                        For pre-1.3 connections this is DEVICE_CERT for the
+ *                                        DeviceCert model and ALIAS_CERT for the AliasCert model.
+ * @param[in,out]  req_csr_tracking_tag   For SPDM 1.3 and higher: on input, the CSRTrackingTag of
+ *                                        the GET_CSR request; on output, the CSRTrackingTag for the
+ *                                        ResetRequired error.
+ *                                        For pre-1.3 connections this is NULL; a single fixed
+ *                                        CSRTrackingTag is used and req_key_pair_id / overwrite
+ *                                        carry their pre-1.3 defaults (0 / false).
  * @param[in]      req_key_pair_id        Indicates the desired key pair associated with the CSR.
  * @param[in]      overwrite              If set, the Responder shall stop processing any existing
  *                                        GET_CSR request and overwrite it with this request.
@@ -103,9 +69,7 @@ extern bool libspdm_gen_csr(
  * @retval  true   CSR generated successfully.
  * @retval  false  Failed to generate CSR.
  **/
-
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
-extern bool libspdm_gen_csr_ex(
+extern bool libspdm_gen_csr(
     void *spdm_context,
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     bool *need_reset,
@@ -117,7 +81,6 @@ extern bool libspdm_gen_csr_ex(
     uint8_t *req_csr_tracking_tag,
     uint8_t req_key_pair_id,
     bool overwrite, bool *is_busy, bool *unexpected_request);
-#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
 
 #endif /* RESPONDER_CSRLIB_H */

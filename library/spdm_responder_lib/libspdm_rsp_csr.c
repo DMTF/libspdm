@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -30,6 +30,10 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
     bool is_busy;
     bool unexpected_request;
     uint8_t csr_tracking_tag;
+    uint8_t req_cert_model;
+    uint8_t key_pair_id;
+    bool overwrite;
+    uint8_t *req_csr_tracking_tag;
 
     spdm_request = request;
 
@@ -172,12 +176,11 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
     csr_tracking_tag = 0;
 
     if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
-        const bool overwrite =
+        overwrite =
             (spdm_request->header.param2 & SPDM_GET_CSR_REQUEST_ATTRIBUTES_OVERWRITE) != 0;
-        const uint8_t req_cert_model =
+        req_cert_model =
             spdm_request->header.param2 & SPDM_GET_CSR_REQUEST_ATTRIBUTES_CERT_MODEL_MASK;
-        const uint8_t key_pair_id = spdm_request->header.param1;
+        key_pair_id = spdm_request->header.param1;
 
         csr_tracking_tag =
             (spdm_request->header.param2 & SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_MASK) >>
@@ -210,34 +213,29 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
             }
         }
 
-        result = libspdm_gen_csr_ex(
-            spdm_context,
-            spdm_context->connection_info.algorithm.base_hash_algo,
-            spdm_context->connection_info.algorithm.base_asym_algo,
-            spdm_context->connection_info.algorithm.pqc_asym_algo,
-            &need_reset, request, request_size,
-            requester_info, requester_info_length,
-            opaque_data, opaque_data_length,
-            &csr_len, csr_p, req_cert_model,
-            &csr_tracking_tag, key_pair_id, overwrite,
-            &is_busy, &unexpected_request);
-#else
-        return libspdm_generate_error_response(
-            spdm_context,
-            SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
-            response_size, response);
-#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
+        req_csr_tracking_tag = &csr_tracking_tag;
     } else {
-        result = libspdm_gen_csr(
-            spdm_context,
-            spdm_context->connection_info.algorithm.base_hash_algo,
-            spdm_context->connection_info.algorithm.base_asym_algo,
-            &need_reset, request, request_size,
-            requester_info, requester_info_length,
-            opaque_data, opaque_data_length,
-            &csr_len, csr_p, is_device_cert_model,
-            &is_busy, &unexpected_request);
+        /* Pre-1.3: synthesize the SPDM 1.3 parameters. A NULL tracking tag selects
+         * the single fixed-tag (pre-1.3) reset semantics in libspdm_gen_csr(). */
+        overwrite = false;
+        key_pair_id = 0;
+        req_cert_model = is_device_cert_model ?
+                         SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT :
+                         SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
+        req_csr_tracking_tag = NULL;
     }
+
+    result = libspdm_gen_csr(
+        spdm_context,
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.pqc_asym_algo,
+        &need_reset, request, request_size,
+        requester_info, requester_info_length,
+        opaque_data, opaque_data_length,
+        &csr_len, csr_p, req_cert_model,
+        req_csr_tracking_tag, key_pair_id, overwrite,
+        &is_busy, &unexpected_request);
 
     LIBSPDM_ASSERT(!(is_busy && unexpected_request));
     LIBSPDM_ASSERT(!(is_busy || unexpected_request) || !result);
