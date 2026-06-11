@@ -41,6 +41,7 @@ target_sources(test_spdm_responder
         encap_challenge.c
         encapsulated_request.c
         encap_send_event.c
+        encap_supported_event_types.c
         event_ack.c
         supported_event_types.c
         subscribe_event_types_ack.c
