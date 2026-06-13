@@ -129,6 +129,8 @@ static libspdm_return_t send_message(
         return LIBSPDM_STATUS_SUCCESS;
     case 0x2C:
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x2D:
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -1646,6 +1648,51 @@ static libspdm_return_t receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
+    case 0x2D: {
+        /* EP_INFO_CAP_SIG negotiated: responder returns req_base_asym_alg = 0 */
+        libspdm_algorithms_response_spdm11_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_ALGORITHMS;
+        spdm_response->header.param1 = 4;
+        spdm_response->header.param2 = 0;
+        spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
+        spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
+        spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
+        spdm_response->ext_asym_sel_count = 0;
+        spdm_response->ext_hash_sel_count = 0;
+        spdm_response->struct_table[0].alg_type =
+            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE;
+        spdm_response->struct_table[0].alg_count = 0x20;
+        spdm_response->struct_table[0].alg_supported = m_libspdm_use_dhe_algo;
+        spdm_response->struct_table[1].alg_type =
+            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD;
+        spdm_response->struct_table[1].alg_count = 0x20;
+        spdm_response->struct_table[1].alg_supported = m_libspdm_use_aead_algo;
+        spdm_response->struct_table[2].alg_type =
+            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG;
+        spdm_response->struct_table[2].alg_count = 0x20;
+        spdm_response->struct_table[2].alg_supported = 0; /* req_base_asym_alg = 0 */
+        spdm_response->struct_table[3].alg_type =
+            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE;
+        spdm_response->struct_table[3].alg_count = 0x20;
+        spdm_response->struct_table[3].alg_supported = m_libspdm_use_key_schedule_algo;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                              spdm_response_size,
+                                              spdm_response, response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
     default:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
@@ -3046,6 +3093,40 @@ static void libspdm_test_requester_negotiate_algorithms_error_case43(void** stat
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 44: EP_INFO_CAP_SIG is negotiated but req_base_asym_alg in the ALGORITHMS response is 0.
+ * Expected behavior: returns with status LIBSPDM_STATUS_NEGOTIATION_FAIL.
+ **/
+static void libspdm_test_requester_negotiate_algorithms_error_case44(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2D;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->local_context.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->local_context.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
+}
+
 int libspdm_req_negotiate_algorithms_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -3092,6 +3173,7 @@ int libspdm_req_negotiate_algorithms_error_test(void)
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case41),
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case42),
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case43),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case44),
     };
 
     libspdm_test_context_t test_context = {

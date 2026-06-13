@@ -2887,6 +2887,101 @@ static void rsp_algorithms_case32(void **state)
     assert_int_equal(spdm_context->connection_info.algorithm.measurement_spec, 0);
 }
 
+/**
+ * Test 33: EP_INFO_CAP_SIG is negotiated but req_base_asym_alg negotiation results in 0.
+ * Expected behavior: returns SPDM_ERROR_CODE_INVALID_REQUEST.
+ **/
+static void rsp_algorithms_case33(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_algorithms_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x20;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->local_context.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->local_context.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
+
+    libspdm_reset_message_a(spdm_context);
+
+    /* EP_INFO_CAP_SIG on requester side; no MUT_AUTH_CAP */
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
+
+    /* request8 has req_base_asym_alg = ECDSA_ECC_NIST_P521; local has RSASSA_2048 → intersection = 0 */
+    response_size = sizeof(response);
+    status = libspdm_get_response_algorithms(
+        spdm_context,
+        m_libspdm_negotiate_algorithm_request8_size,
+        &m_libspdm_negotiate_algorithm_request8,
+        &response_size,
+        response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+}
+
+/**
+ * Test 34: EP_INFO_CAP_SIG is negotiated and req_base_asym_alg intersection is non-zero.
+ * Expected behavior: returns SPDM_ALGORITHMS (success).
+ **/
+static void rsp_algorithms_case34(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_algorithms_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x21;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->local_context.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->local_context.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
+
+    libspdm_reset_message_a(spdm_context);
+
+    /* EP_INFO_CAP_SIG on requester side; no MUT_AUTH_CAP */
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
+
+    /* request7 has req_base_asym_alg = RSASSA_2048 = m_libspdm_use_req_asym_algo → intersection != 0 */
+    response_size = sizeof(response);
+    status = libspdm_get_response_algorithms(
+        spdm_context,
+        m_libspdm_negotiate_algorithm_request7_size,
+        &m_libspdm_negotiate_algorithm_request7,
+        &response_size,
+        response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
+}
+
 int libspdm_rsp_algorithms_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -2952,6 +3047,10 @@ int libspdm_rsp_algorithms_test(void)
         cmocka_unit_test(rsp_algorithms_case31),
         /* Success Case , set MeasurementSpecification*/
         cmocka_unit_test(rsp_algorithms_case32),
+        /* EP_INFO_CAP_SIG negotiated, req_base_asym_alg intersection = 0 */
+        cmocka_unit_test(rsp_algorithms_case33),
+        /* EP_INFO_CAP_SIG negotiated, req_base_asym_alg intersection != 0, success */
+        cmocka_unit_test(rsp_algorithms_case34),
     };
 
     m_libspdm_negotiate_algorithms_request1.base_asym_algo = m_libspdm_use_asym_algo;
