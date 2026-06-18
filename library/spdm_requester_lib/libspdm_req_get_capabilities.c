@@ -354,14 +354,55 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
         }
     }
 
-    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13 &&
-        (spdm_request->header.param1 & SPDM_GET_CAPABILITIES_REQUEST_PARAM1_SUPPORTED_ALGORITHMS)) {
+    if ((spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+        (spdm_request->header.param1 & SPDM_GET_CAPABILITIES_REQUEST_PARAM1_SUPPORTED_ALGORITHMS) &&
+        (spdm_response->header.param1 & SPDM_CAPABILITIES_RESPONSE_PARAM1_SUPPORTED_ALGORITHMS)) {
+        spdm_supported_algorithms_block_t *supported_algorithms;
+        uint32_t expected_block_length;
 
-        spdm_supported_algorithms_block_t *supported_algorithms =
-            (spdm_supported_algorithms_block_t*)((uint8_t*)spdm_response + sizeof(spdm_capabilities_response_t));
+        /* Minimum size guard: must fit the fixed block header before reading length/counts. */
+        if (spdm_response_size < sizeof(spdm_capabilities_response_t) +
+            sizeof(spdm_supported_algorithms_block_t)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
+        }
+
+        supported_algorithms = (spdm_supported_algorithms_block_t *)(
+            (uint8_t *)spdm_response + sizeof(spdm_capabilities_response_t));
+
+        /* Block length sanity: must cover at least the fixed part and not exceed response. */
+        if (supported_algorithms->length < sizeof(spdm_supported_algorithms_block_t)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
+        if (supported_algorithms->length >
+            spdm_response_size - sizeof(spdm_capabilities_response_t)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
+
+        /* Length/count coherence: length must equal fixed block + all dynamic sub-arrays. */
+        expected_block_length =
+            (uint32_t)sizeof(spdm_supported_algorithms_block_t) +
+            (uint32_t)supported_algorithms->ext_asym_count * sizeof(spdm_extended_algorithm_t) +
+            (uint32_t)supported_algorithms->ext_hash_count * sizeof(spdm_extended_algorithm_t) +
+            (uint32_t)supported_algorithms->param1 *
+            sizeof(spdm_negotiate_algorithms_common_struct_table_t);
+        if (supported_algorithms->length != expected_block_length) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
 
         spdm_response_size = sizeof(spdm_capabilities_response_t) + supported_algorithms->length;
 
+    } else if ((spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+               (spdm_request->header.param1 &
+                SPDM_GET_CAPABILITIES_REQUEST_PARAM1_SUPPORTED_ALGORITHMS) &&
+               !(spdm_response->header.param1 &
+                 SPDM_CAPABILITIES_RESPONSE_PARAM1_SUPPORTED_ALGORITHMS)) {
+        /* Requester requested SupportedAlgorithms but responder cleared the bit:
+         * optional responder support - accept and treat as base CAPABILITIES size. */
+        spdm_response_size = sizeof(spdm_capabilities_response_t);
     } else if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_response_size = sizeof(spdm_capabilities_response_t);
     } else {
