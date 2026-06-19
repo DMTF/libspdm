@@ -1003,6 +1003,21 @@ bool libspdm_x509_set_cert_certificate_check(
     bool is_requester, uint8_t cert_model);
 
 /**
+ * Returns whether the given certificate contains the SPDM hardware identity OID.
+ *
+ * The hardware identity OID is required to be present in the Device
+ * Certificate CA when using the alias certificate model.
+ *
+ * @param[in]  cert       Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size  The size of the certificate data, in bytes.
+ *
+ * @retval true   The certificate contains the SPDM hardware identity OID.
+ * @retval false  The certificate does not contain the SPDM hardware identity OID
+ *                (or the extensions could not be parsed).
+ **/
+bool libspdm_contains_hardware_id_oid(const uint8_t *cert, size_t cert_size);
+
+/**
  * Return whether given certificate is a root certificate or not.
  *
  * A certificate is considered a root certificate if
