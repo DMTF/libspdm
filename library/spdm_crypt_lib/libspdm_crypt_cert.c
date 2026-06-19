@@ -1291,20 +1291,7 @@ static bool libspdm_verify_leaf_cert_spdm_eku(const uint8_t *cert, size_t cert_s
     return true;
 }
 
-/**
- * Verify leaf cert spdm defined extension
- *
- * @param[in]  cert                  Pointer to the DER-encoded certificate data.
- * @param[in]  cert_size             The size of certificate data in bytes.
- * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
- *
- * @retval  true   verify pass
- * @retval  false  verify fail,two case: 1. Unable to get get or validate extension data.
- *                                       2. hardware_identity_oid is found in AliasCert model;
- **/
-static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t cert_size,
-                                                    bool is_requester_cert,
-                                                    uint8_t cert_model)
+bool libspdm_contains_hardware_id_oid(const uint8_t *cert, size_t cert_size)
 {
     bool status;
     bool find_successful;
@@ -1332,7 +1319,7 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
     if (!status) {
         return false;
     } else if (len == 0) {
-        return true;
+        return false;
     }
 
     /*find the spdm hardware identity OID*/
@@ -1373,6 +1360,26 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
     if (ptr != spdm_extension + len) {
         return false;
     }
+
+    return find_successful;
+}
+
+/**
+ * Verify leaf cert spdm defined extension
+ *
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ *
+ * @retval  true   verify pass
+ * @retval  false  verify fail,two case: 1. Unable to get get or validate extension data.
+ *                                       2. hardware_identity_oid is found in AliasCert model;
+ **/
+static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t cert_size,
+                                                    bool is_requester_cert,
+                                                    uint8_t cert_model)
+{
+    bool find_successful = libspdm_contains_hardware_id_oid(cert, cert_size);
 
     /* Responder does not determine Requester's certificate model */
     if (!is_requester_cert) {
