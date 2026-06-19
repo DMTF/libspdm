@@ -73,11 +73,17 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     const spdm_cert_chain_t *cert_chain_header;
     size_t cert_chain_size;
     const void * cert_chain;
+    const void *full_cert_chain;
+    size_t full_cert_chain_size;
+    const void *old_local_cert_chain;
+    size_t old_local_cert_chain_size;
 
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
     spdm_request = request;
+    full_cert_chain = NULL;
+    full_cert_chain_size = 0;
 
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT(spdm_request->header.request_response_code == SPDM_SET_CERTIFICATE);
@@ -156,6 +162,11 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     root_cert_hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
+    old_local_cert_chain =
+        spdm_context->local_context.local_cert_chain_provision[slot_id];
+    old_local_cert_chain_size =
+        spdm_context->local_context.local_cert_chain_provision_size[slot_id];
+
     if (spdm_version >= SPDM_MESSAGE_VERSION_13) {
         const uint8_t key_pair_id = spdm_request->header.param2;
 
@@ -217,9 +228,13 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         }
 
         /* erase slot_id cert_chain*/
-        result = libspdm_write_certificate_to_nvm(
+        result = libspdm_update_local_cert_chain(
             spdm_context,
-            slot_id, NULL, 0, 0, 0, 0,
+            slot_id, 0, 0, 0, 0,
+            old_local_cert_chain,
+            old_local_cert_chain_size,
+            NULL, 0,
+            set_cert_model,
             &need_reset, &is_busy);
         if (!result) {
             if (is_busy) {
@@ -243,6 +258,8 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         /*point to full SPDM certificate chain*/
         cert_chain = (const void*)(spdm_request + 1);
         cert_chain_header = cert_chain;
+        full_cert_chain = cert_chain;
+        full_cert_chain_size = cert_chain_header->length;
 
         if (cert_chain_header->length < sizeof(spdm_cert_chain_t) + root_cert_hash_size) {
             return libspdm_generate_error_response(spdm_context,
@@ -286,15 +303,19 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
                                                    response_size, response);
         }
 #endif /*LIBSPDM_CERT_PARSE_SUPPORT*/
-
         /* set certificate to NV*/
-        result = libspdm_write_certificate_to_nvm(
+        result = libspdm_update_local_cert_chain(
             spdm_context,
-            slot_id, cert_chain,
-            cert_chain_size,
+            slot_id,
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.pqc_asym_algo,
+            root_cert_hash_size,
+            old_local_cert_chain,
+            old_local_cert_chain_size,
+            full_cert_chain,
+            &full_cert_chain_size,
+            set_cert_model,
             &need_reset, &is_busy);
 
         if (!result) {

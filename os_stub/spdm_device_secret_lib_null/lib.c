@@ -250,20 +250,28 @@ bool libspdm_is_in_trusted_environment(void *spdm_context)
     return false;
 }
 
-bool libspdm_write_certificate_to_nvm(
-    void *spdm_context,
-    uint8_t slot_id, const void * cert_chain,
-    size_t cert_chain_size,
-    uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
-    bool *need_reset, bool *is_busy)
-{
-    return false;
-}
-
 uint32_t libspdm_get_cert_chain_slot_storage_size(
     void *spdm_context, uint8_t slot_id)
 {
     return 0;
+}
+
+bool libspdm_update_local_cert_chain(
+    void *spdm_context,
+    uint8_t slot_id,
+    uint32_t base_hash_algo,
+    uint32_t base_asym_algo,
+    uint32_t pqc_asym_algo,
+    size_t hash_size,
+    const void *old_cert_chain,
+    size_t old_cert_chain_size,
+    const void *cert_chain,
+    size_t *cert_chain_size,
+    uint8_t cert_model,
+    bool *need_reset,
+    bool *is_busy)
+{
+    return false;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
