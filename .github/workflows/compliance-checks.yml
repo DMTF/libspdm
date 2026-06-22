@@ -14,7 +14,7 @@ jobs:
     name: Markdown Style Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Check
         # Reject any .md files with tabs in them
         run: |
@@ -41,7 +41,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install --no-install-recommends -y uncrustify
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Check
         # Run an uncrustify check. If the check indicates problems, then apply the fixes and show the diff.
         run: |
@@ -65,6 +65,6 @@ jobs:
           - name: Check Copyright Year
             script: check_copyright_date.sh
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Check
         run: ./script/${{ matrix.script }}
