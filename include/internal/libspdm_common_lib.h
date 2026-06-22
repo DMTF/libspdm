@@ -1256,6 +1256,94 @@ size_t libspdm_get_opaque_data_supported_version_data_size(libspdm_context_t *sp
 size_t libspdm_get_opaque_data_version_selection_data_size(const libspdm_context_t *spdm_context);
 
 /**
+ * Return the highest secured message version this endpoint offers in its local supported list, in
+ * version-number form (e.g. SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT), or 0 if the
+ * list is empty.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ *
+ * @return the highest locally-offered secured message version (version-number form).
+ **/
+spdm_version_number_t libspdm_local_max_secured_message_version(
+    const libspdm_context_t *spdm_context);
+
+/**
+ * Return the size in bytes of the DSP0277 1.3 AEAD limit opaque element when appended on its own,
+ * i.e. the size of a single secured-message opaque element carrying the AEADlimitOE data, with
+ * padding. This is the incremental size that the AEADlimitOE element adds to an opaque data blob
+ * that already has a general opaque data table header and at least one other element.
+ *
+ * The AEADlimitOE element is only defined for secured message version 1.3 and later; for an older
+ * secured_message_version this returns 0.
+ *
+ * @param  spdm_context            A pointer to the SPDM context.
+ * @param  secured_message_version The secured message version this opaque data targets (the
+ *                                 negotiated version for a response, or the highest locally-offered
+ *                                 version for a request).
+ *
+ * @return the size in bytes of the AEAD limit opaque element (0 if the version is older than 1.3).
+ **/
+size_t libspdm_get_opaque_data_aead_limit_element_size(const libspdm_context_t *spdm_context,
+                                                       spdm_version_number_t
+                                                       secured_message_version);
+
+/**
+ * Append the DSP0277 1.3 AEAD limit opaque element (AEADlimitOE) to an opaque data blob that was
+ * built by libspdm_build_opaque_data_supported_version_data (requester) or
+ * libspdm_build_opaque_data_version_selection_data (responder). The general opaque data table
+ * header's total_elements is incremented and the new element is written after the existing
+ * element(s).
+ *
+ * The AEADlimitOE element is only defined for secured message version 1.3 and later; for an older
+ * secured_message_version this is a no-op (nothing is appended and *data_out_size is unchanged).
+ *
+ * @param  spdm_context            A pointer to the SPDM context.
+ * @param  secured_message_version The secured message version this opaque data targets.
+ * @param  data_out_size           On input, the capacity of data_out. On output, the new total size.
+ * @param  data_out                The opaque data blob to extend in place.
+ **/
+void libspdm_append_opaque_data_aead_limit_element(libspdm_context_t *spdm_context,
+                                                   spdm_version_number_t secured_message_version,
+                                                   size_t *data_out_size, void *data_out);
+
+/**
+ * Parse the DSP0277 1.3 AEAD limit opaque element (AEADlimitOE) from received opaque data.
+ *
+ * The AEADlimitOE element is only defined for secured message version 1.3 and later. When the
+ * negotiated secured message version is older, the element is ignored (treated as absent) even if
+ * a peer included it, and the default exponent (64) is returned.
+ *
+ * @param  spdm_context            A pointer to the SPDM context.
+ * @param  secured_message_version The negotiated secured message version (version-number form).
+ * @param  data_in_size            size in bytes of data_in.
+ * @param  data_in                 The received opaque data.
+ * @param  aead_limit_exponent     On output, the peer's AeadLimitExponent. If the element is absent
+ *                                 or ignored, this is set to the default (64).
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS          parsed successfully (or absent/ignored -> default).
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD the element is malformed or the exponent is > 64.
+ **/
+libspdm_return_t libspdm_process_opaque_data_aead_limit(libspdm_context_t *spdm_context,
+                                                        spdm_version_number_t
+                                                        secured_message_version,
+                                                        size_t data_in_size, const void *data_in,
+                                                        uint8_t *aead_limit_exponent);
+
+/**
+ * Apply the negotiated AEAD limit to a session's secured-message context, setting the maximum
+ * session sequence number to min(integrator-configured cap, 2 ^ effective_exponent), where
+ * effective_exponent = min(local exponent, peer exponent). Only takes effect when the session's
+ * secured message version is >= 1.3.
+ *
+ * @param  spdm_context          A pointer to the SPDM context.
+ * @param  session_info          The session to configure.
+ * @param  peer_aead_limit_exponent  The peer's AeadLimitExponent (64 if not advertised).
+ **/
+void libspdm_apply_aead_limit_to_session(libspdm_context_t *spdm_context,
+                                         void *session_info,
+                                         uint8_t peer_aead_limit_exponent);
+
+/**
  * Return the SPDMversion field of the version number struct.
  *
  * @param  ver                Spdm version number struct.
