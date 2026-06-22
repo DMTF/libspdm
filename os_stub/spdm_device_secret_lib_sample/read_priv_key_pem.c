@@ -67,6 +67,7 @@ bool libspdm_read_responder_private_key(uint32_t base_asym_algo,
 bool libspdm_read_responder_private_key_ex(uint32_t base_asym_algo, uint8_t key_pair_id,
                                            void **data, size_t *size)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
     bool res;
     char *file;
 
@@ -114,6 +115,9 @@ bool libspdm_read_responder_private_key_ex(uint32_t base_asym_algo, uint8_t key_
     }
     res = libspdm_read_input_file(file, data, size);
     return res;
+#else
+    return libspdm_read_responder_private_key(base_asym_algo, data, size);
+#endif
 }
 #endif
 
