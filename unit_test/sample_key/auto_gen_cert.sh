@@ -292,7 +292,6 @@ cat ca.cert.der inter.cert.der end_responder.cert.der > bundle_responder.certcha
 openssl pkey -inform PEM -outform DER -in end_responder.key -out end_responder.key.der
 openssl pkcs8 -in end_responder.key.der -inform DER -topk8 -nocrypt -outform DER > end_responder.key.p8
 openssl pkey -inform PEM -outform DER -in end_requester.key -out end_requester.key.der
-openssl pkcs8 -in end_carequester.key.der -inform DER -topk8 -nocrypt -outform DER > end_requester.key.p8
 openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_requester.key.pub
 openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
 openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
