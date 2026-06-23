@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Auto gen cert script.
 # Please run: ./auto_gen_cert.sh in linux.
 # Use the openssl version in linux: openssl 3.5+
