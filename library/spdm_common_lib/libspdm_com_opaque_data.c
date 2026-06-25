@@ -308,6 +308,14 @@ bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
                     return false;
                 }
 
+                /*ensure the vendor_id and opaque_element_data_len field are within the buffer*/
+                if (total_element_len + sizeof(opaque_element_table_header_t) +
+                    opaque_element_table_header->vendor_len +
+                    sizeof(opaque_element_data_len) >
+                    data_element_size) {
+                    return false;
+                }
+
                 opaque_element_data_len = libspdm_read_uint16(
                     (const uint8_t *)(opaque_element_table_header + 1) +
                     opaque_element_table_header->vendor_len);
@@ -316,6 +324,12 @@ bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
                                       opaque_element_table_header->vendor_len +
                                       sizeof(opaque_element_data_len) +
                                       opaque_element_data_len;
+
+                /*ensure the element with padding is within the buffer before reading it*/
+                if (total_element_len + ((current_element_len + 3) & ~3) >
+                    data_element_size) {
+                    return false;
+                }
 
                 if ((current_element_len & 3) != 0) {
                     if (!libspdm_consttime_is_mem_equal(zero_padding,
@@ -330,10 +344,6 @@ bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
                 current_element_len = (current_element_len + 3) & ~3;
 
                 total_element_len += current_element_len;
-
-                if (total_element_len > data_element_size) {
-                    return false;
-                }
 
                 /*move to next element*/
                 opaque_element_table_header =
