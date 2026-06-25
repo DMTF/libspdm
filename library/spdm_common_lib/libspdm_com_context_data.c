@@ -162,7 +162,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
     size_t cert_buffer_size;
 #endif
 
-    if (spdm_context == NULL || data == NULL || data_type >= LIBSPDM_DATA_MAX) {
+    if (spdm_context == NULL || data_type >= LIBSPDM_DATA_MAX) {
         return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
