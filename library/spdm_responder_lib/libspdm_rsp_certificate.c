@@ -24,6 +24,7 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     bool use_large_cert_chain;
+    bool slot_size_requested;
     uint32_t req_msg_header_size;
     uint32_t rsp_msg_header_size;
     size_t cert_chain_size;
@@ -121,13 +122,28 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
                                                response_size, response);
     }
 
-    if (spdm_context->local_context.local_cert_chain_provision[slot_id] == NULL) {
+    /* The SlotSizeRequested attribute is only defined for SPDM 1.3 and later; in earlier
+     * versions the param2 bit is reserved and must be ignored. */
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        slot_size_requested =
+            ((spdm_request->header.param2 &
+              SPDM_GET_CERTIFICATE_REQUEST_ATTRIBUTES_SLOT_SIZE_REQUESTED) != 0);
+    } else {
+        slot_size_requested = false;
+    }
+
+    if (!slot_size_requested &&
+        (spdm_context->local_context.local_cert_chain_provision[slot_id] == NULL)) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
             0, response_size, response);
     }
 
-    cert_chain_size = spdm_context->local_context.local_cert_chain_provision_size[slot_id];
+    if (spdm_context->local_context.local_cert_chain_provision[slot_id] == NULL) {
+        cert_chain_size = 0;
+    } else {
+        cert_chain_size = spdm_context->local_context.local_cert_chain_provision_size[slot_id];
+    }
 
     if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_14) &&
         (!use_large_cert_chain) && (cert_chain_size > SPDM_MAX_CERTIFICATE_CHAIN_SIZE)) {
@@ -146,15 +162,12 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
         length = spdm_request->length;
     }
 
-    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
-        if (spdm_request->header.param2 &
-            SPDM_GET_CERTIFICATE_REQUEST_ATTRIBUTES_SLOT_SIZE_REQUESTED) {
-            offset = 0;
-            length = 0;
-        }
+    if (slot_size_requested) {
+        offset = 0;
+        length = 0;
     }
 
-    if (offset >= cert_chain_size) {
+    if (!slot_size_requested && (offset >= cert_chain_size)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
@@ -216,10 +229,14 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
         spdm_response->remainder_length = (uint16_t)remainder_length;
     }
 
-    libspdm_copy_mem((uint8_t *)spdm_response + rsp_msg_header_size,
-                     response_capacity - rsp_msg_header_size,
-                     (const uint8_t *)spdm_context->local_context
-                     .local_cert_chain_provision[slot_id] + offset, length);
+    /* A SlotSizeRequested query carries no certificate data (length == 0), and the slot may be
+     * empty (provision == NULL), so skip the copy to avoid dereferencing a NULL source. */
+    if (length != 0) {
+        libspdm_copy_mem((uint8_t *)spdm_response + rsp_msg_header_size,
+                         response_capacity - rsp_msg_header_size,
+                         (const uint8_t *)spdm_context->local_context
+                         .local_cert_chain_provision[slot_id] + offset, length);
+    }
 
     if (session_info == NULL) {
         /* Log to transcript. */
