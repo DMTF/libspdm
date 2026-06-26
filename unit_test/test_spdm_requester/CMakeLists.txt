@@ -26,6 +26,7 @@ target_sources(test_spdm_requester
         get_supported_event_types.c
         subscribe_event_types.c
         get_measurements.c
+        parse_measurement_transaction_data.c
         get_measurement_extension_log.c
         key_exchange.c
         finish.c
