@@ -17,6 +17,7 @@
 #include "library/memlib.h"
 #include "internal/libspdm_device_secret_lib.h"
 #include "internal/libspdm_common_lib.h"
+#include "library/spdm_crypt_lib.h"
 #include "library/spdm_crypt_ext_lib.h"
 #include "keys.h"
 
@@ -116,19 +117,37 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
     csr_buffer_size = *csr_len;
 
     void *cert;
+    const uint8_t *x509_ca_cert_der;
     void *x509_ca_cert;
+    size_t x509_ca_cert_len;
     size_t cert_size;
 
-    if (!libspdm_tpm_get_pvt_key_handle(TPM_RESP_HANDLE, &context)) {
-        return false;
+    context = NULL;
+    cert = NULL;
+    x509_ca_cert_der = NULL;
+    x509_ca_cert = NULL;
+    result = false;
+
+    if (!libspdm_tpm_get_pvt_key_handle(LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_0, &context)) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to load TPM responder key handle for CSR\n"));
+        goto cleanup;
     }
 
-    if (!libspdm_tpm_read_nv(TPM_RESP_CERT, &cert, &cert_size)) {
-        return false;
+    if (!libspdm_tpm_read_nv(LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_0, &cert, &cert_size)) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to read TPM responder cert chain for CSR\n"));
+        goto cleanup;
     }
 
-    if (!libspdm_x509_construct_certificate(cert, cert_size, (uint8_t**)&x509_ca_cert)) {
-        return false;
+    if (!libspdm_x509_get_cert_from_cert_chain(cert, cert_size, -1, &x509_ca_cert_der,
+                                               &x509_ca_cert_len)) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to parse TPM responder cert chain for CSR\n"));
+        goto cleanup;
+    }
+
+    if (!libspdm_x509_construct_certificate(x509_ca_cert_der, x509_ca_cert_len,
+                                            (uint8_t **)&x509_ca_cert)) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to construct X509 responder leaf cert for CSR\n"));
+        goto cleanup;
     }
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
@@ -140,10 +159,24 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
     result = libspdm_gen_x509_csr(hash_nid, asym_nid, pqc_asym_nid,
                                   requester_info, requester_info_length, !is_device_cert_model,
                                   context, subject_name, csr_len, csr_pointer, x509_ca_cert);
+    if (!result) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to generate TPM-backed X509 CSR\n"));
+    }
 
     if (csr_buffer_size < *csr_len) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"csr buffer is too small to store generated csr! \n"));
         result = false;
+    }
+
+cleanup:
+    if (context != NULL) {
+        libspdm_asym_free(base_asym_algo, context);
+    }
+    if (cert != NULL) {
+        free(cert);
+    }
+    if (x509_ca_cert != NULL) {
+        libspdm_x509_free(x509_ca_cert);
     }
 
     return result;

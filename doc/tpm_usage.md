@@ -4,6 +4,31 @@ This document describes how to use TPM-backed helper APIs with libspdm for secur
 
 ---
 
+## CMake Configuration
+
+Configure TPM key handles and certificate chain NV indices at build time:
+
+```bash
+cmake -B build \
+    -D LIBSPDM_TPM_REQUESTER_HANDLES="0x81000011;0x81000012" \
+    -D LIBSPDM_TPM_REQUESTER_CERTCHAINS="0x1500011;0x1500012" \
+    -D LIBSPDM_TPM_RESPONDER_HANDLES="0x81000021;0x81000022" \
+    -D LIBSPDM_TPM_RESPONDER_CERTCHAINS="0x1500021;0x1500022"
+```
+
+### Configuration Parameters
+
+| Parameter | Description | Format |
+|-----------|-------------|--------|
+| `LIBSPDM_TPM_REQUESTER_HANDLES` | TPM persistent key handles for requester | Semicolon-separated hex values |
+| `LIBSPDM_TPM_REQUESTER_CERTCHAINS` | NV indices for requester certificate chains | Semicolon-separated hex values |
+| `LIBSPDM_TPM_RESPONDER_HANDLES` | TPM persistent key handles for responder | Semicolon-separated hex values |
+| `LIBSPDM_TPM_RESPONDER_CERTCHAINS` | NV indices for responder certificate chains | Semicolon-separated hex values |
+
+**Note:** Multiple handles/indices support multi-key scenarios. First handle maps to slot 0, second to slot 1, etc.
+
+---
+
 ## Overview
 
 The TPM integration layer provides:
