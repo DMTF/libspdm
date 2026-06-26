@@ -326,6 +326,10 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_response(size_t transport_mess
          * of the PCIe DOE spec. DOE discovery is mandatory for all
          * implementations.
          */
+        if (transport_message_size <
+            sizeof(pci_doe_data_object_header_t) + sizeof(pci_doe_discovery_response_t)) {
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        }
         message = (uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t);
         if (vendor_id != NULL) {
             *vendor_id = *message;
