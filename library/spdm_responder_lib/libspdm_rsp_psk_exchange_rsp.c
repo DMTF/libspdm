@@ -101,6 +101,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     const void *psk_hint;
     size_t psk_hint_size;
     spdm_version_number_t secured_message_version;
+    uint8_t peer_aead_limit_exponent = SECURED_MESSAGE_AEAD_LIMIT_EXPONENT_DEFAULT;
 
     spdm_request = request;
 
@@ -311,6 +312,20 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
                                                        SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                        response_size, response);
             }
+            /* DSP0277 1.3: reserve room for this Responder's AEADlimitOE. The size helper returns 0
+             * unless the negotiated secured message version is 1.3 or later. */
+            opaque_psk_exchange_rsp_size +=
+                libspdm_get_opaque_data_aead_limit_element_size(spdm_context,
+                                                                secured_message_version);
+            /* DSP0277 1.3: read the Requester's AEAD limit (absent -> default 64). */
+            status = libspdm_process_opaque_data_aead_limit(
+                spdm_context, secured_message_version, spdm_request->opaque_length, req_opaque_data,
+                &peer_aead_limit_exponent);
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                       response_size, response);
+            }
         } else {
             /* use response buffer to temporarily store opaque data */
             rsp_opaque_data = (uint8_t *)response;
@@ -377,6 +392,14 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     }
     libspdm_session_info_set_psk_hint(session_info, psk_hint, psk_hint_size);
 
+    /* DSP0277 1.3: program the session's AEAD limit (min of local and peer) when secured message
+     * version 1.3 was negotiated. */
+    if (libspdm_get_version_from_version_number(secured_message_version) >=
+        SECURED_SPDM_VERSION_13) {
+        libspdm_apply_aead_limit_to_session(spdm_context, session_info,
+                                            peer_aead_limit_exponent);
+    }
+
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
 
@@ -426,7 +449,14 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
 
     if (opaque_psk_exchange_rsp_size != 0) {
         if (use_default_opaque_data) {
+            size_t version_selection_size =
+                libspdm_get_opaque_data_version_selection_data_size(spdm_context);
             libspdm_build_opaque_data_version_selection_data(
+                spdm_context, secured_message_version, &version_selection_size, ptr);
+            opaque_psk_exchange_rsp_size = version_selection_size;
+            /* DSP0277 1.3: advertise this Responder's own AEAD limit. The append is a no-op unless
+             * the negotiated secured message version is 1.3 or later. */
+            libspdm_append_opaque_data_aead_limit_element(
                 spdm_context, secured_message_version, &opaque_psk_exchange_rsp_size, ptr);
         } else {
             result = libspdm_psk_exchange_rsp_opaque_data(

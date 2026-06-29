@@ -335,6 +335,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     size_t transport_header_size;
     uint8_t mut_auth_requested;
     spdm_version_number_t secured_message_version;
+    uint8_t peer_aead_limit_exponent = SECURED_MESSAGE_AEAD_LIMIT_EXPONENT_DEFAULT;
 
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
@@ -507,8 +508,18 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
                          requester_opaque_data, requester_opaque_data_size);
         opaque_key_exchange_req_size = requester_opaque_data_size;
     } else {
-        opaque_key_exchange_req_size =
+        size_t supported_version_size;
+
+        spdm_version_number_t local_max_secured_version =
+            libspdm_local_max_secured_message_version(spdm_context);
+
+        supported_version_size =
             libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+        /* DSP0277 1.3: also advertise this endpoint's AEAD limit in the request opaque data when it
+         * offers secured message version 1.3 (no version is negotiated yet at request time). */
+        opaque_key_exchange_req_size = supported_version_size +
+                                       libspdm_get_opaque_data_aead_limit_element_size(
+            spdm_context, local_max_secured_version);
         LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_key_exchange_request_t) +
                         req_key_exchange_size +
                         sizeof(uint16_t) + opaque_key_exchange_req_size);
@@ -516,8 +527,11 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
         ptr += sizeof(uint16_t);
 
+        opaque_key_exchange_req_size = supported_version_size;
         libspdm_build_opaque_data_supported_version_data(
             spdm_context, &opaque_key_exchange_req_size, ptr);
+        libspdm_append_opaque_data_aead_limit_element(
+            spdm_context, local_max_secured_version, &opaque_key_exchange_req_size, ptr);
     }
     ptr += opaque_key_exchange_req_size;
 
@@ -722,6 +736,14 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
+        /* DSP0277 1.3: read the Responder's AEAD limit (absent -> default 64). */
+        status = libspdm_process_opaque_data_aead_limit(
+            spdm_context, secured_message_version, opaque_length, ptr,
+            &peer_aead_limit_exponent);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
     }
 
     if ((responder_opaque_data != NULL) && (responder_opaque_data_size != NULL)) {
@@ -749,6 +771,14 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     }
     session_info->peer_used_cert_chain_slot_id = slot_id;
     session_info->local_used_cert_chain_slot_id = *req_slot_id_param;
+
+    /* DSP0277 1.3: program the session's AEAD limit (min of local and peer) when secured message
+     * version 1.3 was negotiated. */
+    if (libspdm_get_version_from_version_number(secured_message_version) >=
+        SECURED_SPDM_VERSION_13) {
+        libspdm_apply_aead_limit_to_session(spdm_context, session_info,
+                                            peer_aead_limit_exponent);
+    }
 
     /* -=[Process Response Phase]=- */
     status = libspdm_append_message_k(spdm_context, session_info, true, spdm_request,

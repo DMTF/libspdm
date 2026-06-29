@@ -766,6 +766,13 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(uint64_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        /* This is a context-level integrator cap only. A per-session value is not settable: a
+         * session's effective cap is derived once at establishment from min(this cap, negotiated
+         * DSP0277 1.3 AEAD limit) and must not be overridden afterwards. The per-session value is
+         * read-only via get_data(LIBSPDM_DATA_LOCATION_SESSION). */
+        if (parameter->location == LIBSPDM_DATA_LOCATION_SESSION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         context->max_spdm_session_sequence_number = *(const uint64_t *)data;
         if (context->max_spdm_session_sequence_number == 0) {
             context->max_spdm_session_sequence_number = LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER;
@@ -1122,7 +1129,21 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         break;
     case LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER:
         target_data_size = sizeof(uint64_t);
-        target_data = &context->max_spdm_session_sequence_number;
+        /* When a session is addressed (LIBSPDM_DATA_LOCATION_SESSION), return that session's
+         * effective maximum sequence number, i.e. the value negotiated via the DSP0277 1.3 AEAD
+         * limit (min of the integrator-configured cap and the negotiated AEAD limit). Otherwise
+         * return the context-level integrator-configured value. */
+        if (parameter->location == LIBSPDM_DATA_LOCATION_SESSION) {
+            session_id = libspdm_read_uint32(parameter->additional_data);
+            session_info = libspdm_get_session_info_via_session_id(context, session_id);
+            if (session_info == NULL) {
+                return LIBSPDM_STATUS_INVALID_PARAMETER;
+            }
+            secured_context = session_info->secured_message_context;
+            target_data = &secured_context->max_spdm_session_sequence_number;
+        } else {
+            target_data = &context->max_spdm_session_sequence_number;
+        }
         break;
     case LIBSPDM_DATA_VCA_CACHE:
         target_data_size = context->transcript.message_a.buffer_size;
@@ -2871,10 +2892,14 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.secured_message_version.secured_message_version[2] =
         SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    context->local_context.secured_message_version.secured_message_version[3] =
+        SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.capability.st1 = SPDM_ST1_VALUE_US;
 
     context->mut_auth_cert_chain_buffer_size = 0;
 
+    /* DSP0277 1.3 AEAD limit: max_spdm_session_sequence_number is the single source of truth for
+     * the AEAD limit. The default 0xFFFFFFFFFFFFFFFF encodes the spec-default exponent of 64. */
     context->max_spdm_session_sequence_number = LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER;
 
     context->latest_session_id = INVALID_SESSION_ID;
