@@ -258,6 +258,7 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
 
 bool libspdm_update_local_cert_chain(
     void *spdm_context,
+    uint8_t bank_id,
     uint8_t slot_id,
     uint32_t base_hash_algo,
     uint32_t base_asym_algo,
