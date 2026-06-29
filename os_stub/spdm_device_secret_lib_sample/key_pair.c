@@ -18,7 +18,9 @@
 #include "internal/libspdm_device_secret_lib.h"
 #include "internal/libspdm_common_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+/* The key pair information is also consumed by the SLOT_MANAGEMENT feature, which maps one
+ * Bank per key pair, so the read path is compiled when either capability is enabled. */
+#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP || LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
 
 #define LIBSPDM_SUPPORTED_KEY_PAIR_ASYM_ALGO_CAP_MASK SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK
 
@@ -466,7 +468,8 @@ bool libspdm_read_key_pair_info(
 
     return true;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP ||
+        * LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
 
