@@ -62,6 +62,7 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
  * with the existing ones that aren't changed.
  *
  * @param[in,out]  spdm_context     A pointer to the SPDM context.
+ * @param[in]      bank_id          The bank id of the certificate chain.
  * @param[in]      slot_id          The slot id of the certificate chain.
  * @param[in]      base_hash_algo   The negotiated base hash algorithm
  *                                  (SPDM_ALGORITHMS_BASE_HASH_ALGO_*). May be
@@ -103,6 +104,7 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
  **/
 extern bool libspdm_update_local_cert_chain(
     void *spdm_context,
+    uint8_t bank_id,
     uint8_t slot_id,
     uint32_t base_hash_algo,
     uint32_t base_asym_algo,
