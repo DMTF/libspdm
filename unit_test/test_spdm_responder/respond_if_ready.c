@@ -1010,6 +1010,9 @@ static void rsp_respond_if_ready_case8(void **state) {
     libspdm_copy_mem(spdm_context->cache_spdm_request,
                      libspdm_get_scratch_buffer_cache_spdm_request_capacity(spdm_context),
                      spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
+    /* The original PSK_FINISH was in a session; the RESPOND_IF_READY arrives in that same session. */
+    spdm_context->cache_spdm_request_session_id_valid = true;
+    spdm_context->cache_spdm_request_session_id = session_id;
     spdm_context->error_data.rd_exponent = 1;
     spdm_context->error_data.rd_tm        = 1;
     spdm_context->error_data.request_code = SPDM_PSK_FINISH;
@@ -1060,6 +1063,10 @@ static void rsp_respond_if_ready_case10(void **state) {
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xA;
+    /* Connection (non-session) original request and RESPOND_IF_READY: both contexts are
+     * out-of-session. Set explicitly so the test does not depend on prior cases' state. */
+    spdm_context->cache_spdm_request_session_id_valid = false;
+    spdm_context->last_spdm_request_session_id_valid = false;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
 
     /*state for the the original request (GET_DIGESTS)*/
@@ -1123,6 +1130,10 @@ static void rsp_respond_if_ready_case11(void **state) {
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xB;
+    /* Connection (non-session) original request and RESPOND_IF_READY: both contexts are
+     * out-of-session. Set explicitly so the test does not depend on prior cases' state. */
+    spdm_context->cache_spdm_request_session_id_valid = false;
+    spdm_context->last_spdm_request_session_id_valid = false;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC;
 
     /*state for the the original request (GET_DIGESTS)*/
@@ -1188,6 +1199,10 @@ static void rsp_respond_if_ready_case12(void **state) {
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xC;
+    /* Connection (non-session) original request and RESPOND_IF_READY: both contexts are
+     * out-of-session. Set explicitly so the test does not depend on prior cases' state. */
+    spdm_context->cache_spdm_request_session_id_valid = false;
+    spdm_context->last_spdm_request_session_id_valid = false;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
 
     /*state for the the original request (GET_DIGESTS)*/
@@ -1256,6 +1271,10 @@ static void rsp_respond_if_ready_case13(void **state) {
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xD;
+    /* Connection (non-session) original request and RESPOND_IF_READY: both contexts are
+     * out-of-session. Set explicitly so the test does not depend on prior cases' state. */
+    spdm_context->cache_spdm_request_session_id_valid = false;
+    spdm_context->last_spdm_request_session_id_valid = false;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
     /*state for the the original request (GET_DIGESTS)*/
@@ -1317,6 +1336,10 @@ static void rsp_respond_if_ready_case14(void **state) {
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xE;
+    /* Connection (non-session) original request and RESPOND_IF_READY: both contexts are
+     * out-of-session. Set explicitly so the test does not depend on prior cases' state. */
+    spdm_context->cache_spdm_request_session_id_valid = false;
+    spdm_context->last_spdm_request_session_id_valid = false;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
     /*state for the the original request (GET_DIGESTS)*/
@@ -1358,6 +1381,75 @@ static void rsp_respond_if_ready_case14(void **state) {
     assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal (spdm_response->header.param2, 0);
 }
+
+/**
+ * Test 15: receiving a RESPOND_IF_READY with the correct original request code and token, but in a
+ * DIFFERENT session context than the original request. Here the original request (GET_DIGESTS) was
+ * received outside of a session, but the RESPOND_IF_READY arrives inside a session.
+ * Expected behavior: per DSP0274 the validity of RESPOND_IF_READY is defined by the original
+ * request, so a context mismatch is refused with ERROR(UnexpectedRequest); the cached response is
+ * NOT returned.
+ **/
+static void rsp_respond_if_ready_case15(void **state) {
+    libspdm_return_t status;
+    libspdm_test_context_t    *spdm_test_context;
+    libspdm_context_t  *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xF;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+
+    /*state for the the original request (GET_DIGESTS)*/
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.local_cert_chain_provision[0] = m_libspdm_local_certificate_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        sizeof(m_libspdm_local_certificate_chain);
+    libspdm_set_mem (m_libspdm_local_certificate_chain, sizeof(m_libspdm_local_certificate_chain),
+                     (uint8_t)(0xFF));
+
+    spdm_context->last_spdm_request_size = m_libspdm_get_digest_request_size;
+    libspdm_copy_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
+                     &m_libspdm_get_digest_request, m_libspdm_get_digest_request_size);
+
+    /*RESPOND_IF_READY specific data: the original GET_DIGESTS was received OUTSIDE a session.*/
+    spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
+    libspdm_copy_mem(spdm_context->cache_spdm_request,
+                     libspdm_get_scratch_buffer_cache_spdm_request_capacity(spdm_context),
+                     spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
+    spdm_context->cache_spdm_request_session_id_valid = false;
+    spdm_context->error_data.rd_exponent = 1;
+    spdm_context->error_data.rd_tm        = 1;
+    spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
+    spdm_context->error_data.token       = LIBSPDM_MY_TEST_TOKEN;
+
+    /* But the RESPOND_IF_READY arrives INSIDE a session -- a context mismatch. */
+    spdm_context->last_spdm_request_session_id_valid = true;
+    spdm_context->last_spdm_request_session_id = 0xFFFFFFFF;
+
+    /*check ERROR response*/
+    response_size = sizeof(response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_libspdm_respond_if_ready_request1_size,
+                                                   &m_libspdm_respond_if_ready_request1,
+                                                   &response_size,
+                                                   response);
+    assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal (response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal (spdm_response->header.param2, 0);
+
+    /* restore for subsequent cases */
+    spdm_context->last_spdm_request_session_id_valid = false;
+}
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 int libspdm_rsp_respond_if_ready_test(void) {
@@ -1393,6 +1485,7 @@ int libspdm_rsp_respond_if_ready_test(void) {
         cmocka_unit_test(rsp_respond_if_ready_case12),
         cmocka_unit_test(rsp_respond_if_ready_case13),
         cmocka_unit_test(rsp_respond_if_ready_case14),
+        cmocka_unit_test(rsp_respond_if_ready_case15),
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     };
