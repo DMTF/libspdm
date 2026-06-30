@@ -627,6 +627,12 @@ typedef struct {
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     void *cache_spdm_request;
     size_t cache_spdm_request_size;
+    /* Session context of the original request that triggered the ResponseNotReady flow. The validity
+     * of the RESPOND_IF_READY request is defined by that original request, so the RESPOND_IF_READY
+     * must arrive in the same session context (same in-session/out-of-session, and if in a session
+     * the same session_id). */
+    bool cache_spdm_request_session_id_valid;
+    uint32_t cache_spdm_request_session_id;
 #endif
     uint8_t current_token;
 

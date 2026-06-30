@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -31,13 +31,29 @@ libspdm_return_t libspdm_responder_handle_response_state(libspdm_context_t *spdm
         return LIBSPDM_STATUS_SUCCESS;
     #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     case LIBSPDM_RESPONSE_STATE_NOT_READY:
-        /*do not update ErrorData if a previous request has not been completed*/
+        /* Do not update ErrorData if a previous request has not been completed.
+         *
+         * Only one deferred (ResponseNotReady) request is tracked per connection. A Requester shall
+         * not have multiple outstanding requests to the same Responder within a connection (the only
+         * exceptions are GET_VERSION and the large-message / CHUNK_SEND pair). A request awaiting its
+         * RESPOND_IF_READY completion is still outstanding, so a conformant Requester will not issue
+         * another request - in another session or otherwise - until this one completes. A Responder
+         * is not required to process more than one request message at a time, even across
+         * connections, so a single context-wide cache is sufficient and conformant. */
         if (request_code != SPDM_RESPOND_IF_READY) {
             spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
             libspdm_copy_mem(spdm_context->cache_spdm_request,
                              libspdm_get_scratch_buffer_cache_spdm_request_capacity(spdm_context),
                              spdm_context->last_spdm_request,
                              spdm_context->last_spdm_request_size);
+            /* Record the session context of the original request. The validity of the
+             * RESPOND_IF_READY request is defined by the original request that caused the
+             * RESPOND_IF_READY flow, so the matching RESPOND_IF_READY must arrive in the same
+             * session context. */
+            spdm_context->cache_spdm_request_session_id_valid =
+                spdm_context->last_spdm_request_session_id_valid;
+            spdm_context->cache_spdm_request_session_id =
+                spdm_context->last_spdm_request_session_id;
             spdm_context->error_data.rd_exponent = 1;
             spdm_context->error_data.rd_tm = 1;
             spdm_context->error_data.request_code = request_code;

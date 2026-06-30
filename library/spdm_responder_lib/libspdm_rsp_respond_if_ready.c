@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -38,6 +38,24 @@ libspdm_return_t libspdm_get_response_respond_if_ready(libspdm_context_t *spdm_c
     if (request_size < sizeof(spdm_message_header_t)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+
+    /* The validity of the RESPOND_IF_READY request is defined by the original request that caused
+     * the RESPOND_IF_READY flow (the last request to which the Responder sent an ERROR message of
+     * ErrorCode=ResponseNotReady). The RESPOND_IF_READY shall therefore arrive in the same session
+     * context as that original request: the same in-session / out-of-session state, and, when in a
+     * session, the same session_id. Otherwise the cached response would be returned outside the
+     * context it belongs to. (Only one deferred request is tracked per connection; a conformant
+     * Requester does not have multiple outstanding requests to the same Responder within a
+     * connection.) */
+    if ((spdm_context->last_spdm_request_session_id_valid !=
+         spdm_context->cache_spdm_request_session_id_valid) ||
+        (spdm_context->cache_spdm_request_session_id_valid &&
+         (spdm_context->last_spdm_request_session_id !=
+          spdm_context->cache_spdm_request_session_id))) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                                                response_size, response);
     }
 
