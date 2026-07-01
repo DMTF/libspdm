@@ -552,6 +552,38 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
                          sizeof(context->local_context.local_slot_management_subcodes),
                          data, data_size);
         break;
+    case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO:
+    case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO:
+    case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO_CAPABILITIES:
+    case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO_CAPABILITIES:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (data_size != sizeof(uint32_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        data8 = parameter->additional_data[0];
+        if (data8 >= LIBSPDM_MAX_BANK_COUNT || data8 >= SPDM_MAX_BANK_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        data32 = libspdm_read_uint32((const uint8_t *)data);
+        switch (data_type) {
+        case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO:
+            context->local_context.local_bank_asym_algo[data8] = data32;
+            break;
+        case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO:
+            context->local_context.local_bank_pqc_asym_algo[data8] = data32;
+            break;
+        case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO_CAPABILITIES:
+            context->local_context.local_bank_asym_algo_capabilities[data8] = data32;
+            break;
+        case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO_CAPABILITIES:
+            context->local_context.local_bank_pqc_asym_algo_capabilities[data8] = data32;
+            break;
+        default:
+            break;
+        }
+        break;
     case LIBSPDM_DATA_LOCAL_SUPPORTED_SLOT_MASK:
         if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -1060,6 +1092,35 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         }
         target_data_size = sizeof(context->local_context.local_slot_management_subcodes);
         target_data = context->local_context.local_slot_management_subcodes;
+        break;
+    case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO:
+    case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO:
+    case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO_CAPABILITIES:
+    case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO_CAPABILITIES:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        slot_id = parameter->additional_data[0];
+        if (slot_id >= LIBSPDM_MAX_BANK_COUNT || slot_id >= SPDM_MAX_BANK_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(uint32_t);
+        switch (data_type) {
+        case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO:
+            target_data = &context->local_context.local_bank_asym_algo[slot_id];
+            break;
+        case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO:
+            target_data = &context->local_context.local_bank_pqc_asym_algo[slot_id];
+            break;
+        case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO_CAPABILITIES:
+            target_data = &context->local_context.local_bank_asym_algo_capabilities[slot_id];
+            break;
+        case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO_CAPABILITIES:
+            target_data = &context->local_context.local_bank_pqc_asym_algo_capabilities[slot_id];
+            break;
+        default:
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        }
         break;
     case LIBSPDM_DATA_PEER_PROVISIONED_SLOT_MASK:
         if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
