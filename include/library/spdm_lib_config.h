@@ -86,6 +86,18 @@
 #define LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP 1
 #endif
 
+/* SPDM 1.4 capabilities. */
+#ifndef LIBSPDM_MAX_BANK_COUNT
+/* We support up to 240 (SPDM_MAX_BANK_COUNT) banks, deafult to 2 as that seems
+ * to be a reasonable starting point.
+ */
+#define LIBSPDM_MAX_BANK_COUNT 2
+#endif
+
+#ifndef LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP 1
+#endif
+
 /* If 1 then endpoint supports sending GET_CERTIFICATE and GET_DIGESTS requests.
  * If enabled and endpoint is a Responder then LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
  * must also be enabled.

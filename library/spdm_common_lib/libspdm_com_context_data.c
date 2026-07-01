@@ -156,6 +156,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
     uint8_t mut_auth_requested;
     uint8_t root_cert_index;
     uint16_t data16;
+    uint8_t data8;
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && LIBSPDM_CERT_PARSE_SUPPORT
     bool status;
     const uint8_t *cert_buffer;
@@ -523,8 +524,65 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (slot_id >= SPDM_MAX_SLOT_COUNT) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->local_context.local_cert_chain_provision_size[slot_id] = data_size;
-        context->local_context.local_cert_chain_provision[slot_id] = data;
+        context->local_context.local_cert_chain_provision_size[context->connection_info.current_bank][slot_id] =
+            data_size;
+        context->local_context.local_cert_chain_provision[context->connection_info.current_bank][slot_id] = data;
+        break;
+    case LIBSPDM_DATA_LOCAL_CURRENT_BANK:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (data_size != sizeof(uint8_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        data8 = *(const uint8_t *)data;
+        if (data8 >= LIBSPDM_MAX_BANK_COUNT || data8 >= SPDM_MAX_BANK_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->connection_info.current_bank = data8;
+        break;
+    case LIBSPDM_DATA_LOCAL_SLOT_MANAGEMENT_SUBCODES:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (data_size != sizeof(context->local_context.local_slot_management_subcodes)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        libspdm_copy_mem(context->local_context.local_slot_management_subcodes,
+                         sizeof(context->local_context.local_slot_management_subcodes),
+                         data, data_size);
+        break;
+    case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO:
+    case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO:
+    case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO_CAPABILITIES:
+    case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO_CAPABILITIES:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (data_size != sizeof(uint32_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        data8 = parameter->additional_data[0];
+        if (data8 >= LIBSPDM_MAX_BANK_COUNT || data8 >= SPDM_MAX_BANK_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        data32 = libspdm_read_uint32((const uint8_t *)data);
+        switch (data_type) {
+        case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO:
+            context->local_context.local_bank_asym_algo[data8] = data32;
+            break;
+        case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO:
+            context->local_context.local_bank_pqc_asym_algo[data8] = data32;
+            break;
+        case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO_CAPABILITIES:
+            context->local_context.local_bank_asym_algo_capabilities[data8] = data32;
+            break;
+        case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO_CAPABILITIES:
+            context->local_context.local_bank_pqc_asym_algo_capabilities[data8] = data32;
+            break;
+        default:
+            break;
+        }
         break;
     case LIBSPDM_DATA_LOCAL_SUPPORTED_SLOT_MASK:
         if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
@@ -546,7 +604,8 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(spdm_key_pair_id_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->local_context.local_key_pair_id[slot_id] = *(const spdm_key_pair_id_t *)data;
+        context->local_context.local_key_pair_id[context->connection_info.current_bank][slot_id] =
+            *(const spdm_key_pair_id_t *)data;
         break;
     case LIBSPDM_DATA_LOCAL_CERT_INFO:
         if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
@@ -559,7 +618,8 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(spdm_certificate_info_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->local_context.local_cert_info[slot_id] = *(const spdm_certificate_info_t *)data;
+        context->local_context.local_cert_info[context->connection_info.current_bank][slot_id] =
+            *(const spdm_certificate_info_t *)data;
         break;
     case LIBSPDM_DATA_LOCAL_KEY_USAGE_BIT_MASK:
         if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
@@ -572,7 +632,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(spdm_key_usage_bit_mask_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->local_context.local_key_usage_bit_mask[slot_id] =
+        context->local_context.local_key_usage_bit_mask[context->connection_info.current_bank][slot_id] =
             libspdm_read_uint16((const uint8_t *)data);
         break;
     case LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER:
@@ -1026,6 +1086,42 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         target_data_size = sizeof(libspdm_response_state_t);
         target_data = &context->response_state;
         break;
+    case LIBSPDM_DATA_LOCAL_SLOT_MANAGEMENT_SUBCODES:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(context->local_context.local_slot_management_subcodes);
+        target_data = context->local_context.local_slot_management_subcodes;
+        break;
+    case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO:
+    case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO:
+    case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO_CAPABILITIES:
+    case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO_CAPABILITIES:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        slot_id = parameter->additional_data[0];
+        if (slot_id >= LIBSPDM_MAX_BANK_COUNT || slot_id >= SPDM_MAX_BANK_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(uint32_t);
+        switch (data_type) {
+        case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO:
+            target_data = &context->local_context.local_bank_asym_algo[slot_id];
+            break;
+        case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO:
+            target_data = &context->local_context.local_bank_pqc_asym_algo[slot_id];
+            break;
+        case LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO_CAPABILITIES:
+            target_data = &context->local_context.local_bank_asym_algo_capabilities[slot_id];
+            break;
+        case LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO_CAPABILITIES:
+            target_data = &context->local_context.local_bank_pqc_asym_algo_capabilities[slot_id];
+            break;
+        default:
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        }
+        break;
     case LIBSPDM_DATA_PEER_PROVISIONED_SLOT_MASK:
         if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -1222,15 +1318,17 @@ bool libspdm_check_context (void *spdm_context)
           SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP) != 0) &&
         (context->local_context.capability.max_spdm_msg_size != 0)) {
         for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
-            if ((context->local_context.local_cert_chain_provision_size[index] != 0) &&
-                (context->local_context.local_cert_chain_provision_size[index] +
+            if ((context->local_context.local_cert_chain_provision_size[context->connection_info.current_bank][index] !=
+                 0) &&
+                (context->local_context.local_cert_chain_provision_size[context->connection_info.current_bank][index] +
                  sizeof(spdm_certificate_response_t) >
                  context->local_context.capability.max_spdm_msg_size)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                                "max_spdm_msg_size (%d) must be greater than or "
-                               "equal to local_cert_chain_provision_size[%zu] (%zu).\n",
+                               "equal to local_cert_chain_provision_size[context->connection_info.current_bank][%zu] (%zu).\n",
                                context->local_context.capability.max_spdm_msg_size, index,
-                               context->local_context.local_cert_chain_provision_size[index]));
+                               context->local_context.local_cert_chain_provision_size[context->connection_info.
+                                                                                      current_bank][index]));
                 return false;
             }
         }
