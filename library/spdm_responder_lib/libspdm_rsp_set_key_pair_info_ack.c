@@ -342,6 +342,51 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
                                                SPDM_ERROR_CODE_RESET_REQUIRED, 0,
                                                response_size, response);
     } else {
+        /* The change has been applied without a reset. Keep the connection-level context that
+         * DIGESTS reports per slot (local_key_pair_id and local_key_usage_bit_mask) coherent with
+         * the new certificate slot association: DIGESTS returns exactly one KeyPairID and one
+         * KeyUsageMask per slot, sourced from these arrays. Re-read the key pair info to obtain the
+         * authoritative post-change association (assoc_cert_slot_mask) and current key usage, then
+         * update every slot this KeyPairID now owns, and clear every slot it no longer owns.
+         * assoc_cert_slot_mask still holds the pre-change association read above. */
+        uint8_t old_assoc_cert_slot_mask = assoc_cert_slot_mask;
+        uint8_t new_assoc_cert_slot_mask = old_assoc_cert_slot_mask;
+        uint16_t new_current_key_usage = current_key_usage;
+        uint8_t slot_index;
+
+        result = libspdm_read_key_pair_info(
+            spdm_context,
+            key_pair_id,
+            &total_key_pairs,
+            &capabilities,
+            &key_usage_capabilities,
+            &new_current_key_usage,
+            &asym_algo_capabilities,
+            &current_asym_algo,
+            &pqc_asym_algo_capabilities,
+            &current_pqc_asym_algo,
+            &new_assoc_cert_slot_mask,
+            NULL, NULL);
+        if (!result) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
+
+        for (slot_index = 0; slot_index < SPDM_MAX_SLOT_COUNT; slot_index++) {
+            if ((new_assoc_cert_slot_mask & (1 << slot_index)) != 0) {
+                /* Slot is (still) associated with this KeyPairID. */
+                spdm_context->local_context.local_key_pair_id[slot_index] = key_pair_id;
+                spdm_context->local_context.local_key_usage_bit_mask[slot_index] =
+                    new_current_key_usage;
+            } else if (((old_assoc_cert_slot_mask & (1 << slot_index)) != 0) &&
+                       (spdm_context->local_context.local_key_pair_id[slot_index] == key_pair_id)) {
+                /* Slot was associated with this KeyPairID and has now been removed. */
+                spdm_context->local_context.local_key_pair_id[slot_index] = 0;
+                spdm_context->local_context.local_key_usage_bit_mask[slot_index] = 0;
+            }
+        }
+
         spdm_response->header.spdm_version = spdm_request->header.spdm_version;
         spdm_response->header.request_response_code = SPDM_SET_KEY_PAIR_INFO_ACK;
         spdm_response->header.param1 = 0;
