@@ -312,6 +312,58 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         }
     }
 
+    /* Within one connection a certificate slot resolves to a single KeyPairID for the negotiated
+     * algorithm: DIGESTS returns exactly one KeyPairID per slot. Two different KeyPairIDs of the
+     * SAME asymmetric algorithm must therefore not both be associated with the same slot, otherwise
+     * that slot's KeyPairID would be ambiguous. Reject a request that would associate a slot which
+     * a different, same-algorithm KeyPairID already owns.
+     *
+     * DSP0274 does not define an error code for this conflict; OperationFailed is used here as a
+     * libspdm policy, consistent with the other association-conflict cases in the SET_KEY_PAIR_INFO
+     * error-handling clause. A slot shared across DIFFERENT algorithms is allowed (only one such
+     * key pair is active per connection), so the algorithm is part of the match. */
+    if (desired_assoc_cert_slot_mask != 0) {
+        uint32_t effective_asym_algo =
+            (desired_asym_algo != 0) ? desired_asym_algo : current_asym_algo;
+        uint32_t effective_pqc_asym_algo =
+            (desired_pqc_asym_algo != 0) ? desired_pqc_asym_algo : current_pqc_asym_algo;
+
+        if ((effective_asym_algo != 0) || (effective_pqc_asym_algo != 0)) {
+            uint8_t other_key_pair_id;
+
+            for (other_key_pair_id = 1; other_key_pair_id <= total_key_pairs;
+                 other_key_pair_id++) {
+                uint16_t other_capabilities;
+                uint16_t other_key_usage_capabilities;
+                uint16_t other_current_key_usage;
+                uint32_t other_asym_algo_capabilities;
+                uint32_t other_current_asym_algo;
+                uint32_t other_pqc_asym_algo_capabilities;
+                uint32_t other_current_pqc_asym_algo;
+                uint8_t other_assoc_cert_slot_mask;
+
+                if (other_key_pair_id == key_pair_id) {
+                    continue;
+                }
+                if (!libspdm_read_key_pair_info(
+                        spdm_context, other_key_pair_id, &total_key_pairs, &other_capabilities,
+                        &other_key_usage_capabilities, &other_current_key_usage,
+                        &other_asym_algo_capabilities, &other_current_asym_algo,
+                        &other_pqc_asym_algo_capabilities, &other_current_pqc_asym_algo,
+                        &other_assoc_cert_slot_mask, NULL, NULL)) {
+                    continue;
+                }
+                if ((other_current_asym_algo == effective_asym_algo) &&
+                    (other_current_pqc_asym_algo == effective_pqc_asym_algo) &&
+                    ((other_assoc_cert_slot_mask & desired_assoc_cert_slot_mask) != 0)) {
+                    return libspdm_generate_error_response(
+                        spdm_context, SPDM_ERROR_CODE_OPERATION_FAILED, 0,
+                        response_size, response);
+                }
+            }
+        }
+    }
+
     if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_14) {
         need_reset = libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
