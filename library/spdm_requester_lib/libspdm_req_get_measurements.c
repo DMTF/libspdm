@@ -461,6 +461,12 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
             }
         }
         ptr += sizeof(uint16_t);
+        if (spdm_response_size <
+            sizeof(spdm_measurements_response_t) + measurement_record_data_length +
+            SPDM_NONCE_SIZE + sizeof(uint16_t) + opaque_length) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
+        }
         if (opaque_length != 0) {
             result = libspdm_process_general_opaque_data_check(spdm_context, opaque_length, ptr);
             if (!result) {
@@ -545,7 +551,7 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
     } else {
         if (spdm_response_size <
             sizeof(spdm_measurements_response_t) +
-            measurement_record_data_length + sizeof(uint16_t)) {
+            measurement_record_data_length + SPDM_NONCE_SIZE + sizeof(uint16_t)) {
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
             goto receive_done;
         }
@@ -566,6 +572,12 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
             goto receive_done;
         }
         ptr += sizeof(uint16_t);
+        if (spdm_response_size <
+            sizeof(spdm_measurements_response_t) + measurement_record_data_length +
+            SPDM_NONCE_SIZE + sizeof(uint16_t) + opaque_length) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
+        }
         if (opaque_length != 0) {
             result = libspdm_process_general_opaque_data_check(spdm_context, opaque_length, ptr);
             if (!result) {
