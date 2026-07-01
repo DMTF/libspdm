@@ -91,7 +91,7 @@ static bool libspdm_write_certificate_to_nvm(
                 return false;
             }
         } else {
-            if ((fp_out = open(file_name, O_WRONLY | O_TRUNC)) == -1) {
+            if ((fp_out = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU)) == -1) {
                 printf("Unable to open file %s\n", file_name);
                 return false;
             }
