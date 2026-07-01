@@ -541,6 +541,17 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->connection_info.current_bank = data8;
         break;
+    case LIBSPDM_DATA_LOCAL_SLOT_MANAGEMENT_SUBCODES:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (data_size != sizeof(context->local_context.local_slot_management_subcodes)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        libspdm_copy_mem(context->local_context.local_slot_management_subcodes,
+                         sizeof(context->local_context.local_slot_management_subcodes),
+                         data, data_size);
+        break;
     case LIBSPDM_DATA_LOCAL_SUPPORTED_SLOT_MASK:
         if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -1042,6 +1053,13 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
     case LIBSPDM_DATA_RESPONSE_STATE:
         target_data_size = sizeof(libspdm_response_state_t);
         target_data = &context->response_state;
+        break;
+    case LIBSPDM_DATA_LOCAL_SLOT_MANAGEMENT_SUBCODES:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(context->local_context.local_slot_management_subcodes);
+        target_data = context->local_context.local_slot_management_subcodes;
         break;
     case LIBSPDM_DATA_PEER_PROVISIONED_SLOT_MASK:
         if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
