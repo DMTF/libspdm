@@ -626,6 +626,168 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
     assert_int_equal(current_pqc_asym_algo, SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65);
 }
 
+/**
+ * Test 7: A SET_KEY_PAIR_INFO that associates a certificate slot with a KeyPairID whose current
+ * asymmetric algorithm matches a DIFFERENT KeyPairID already associated with that same slot shall
+ * be rejected. Within one connection a slot resolves to a single KeyPairID for the negotiated
+ * algorithm (DIGESTS returns one KeyPairID per slot), so two same-algorithm KeyPairIDs must not
+ * both claim one slot. libspdm rejects this with ERROR=OperationFailed. (DSP0274 does not define an
+ * error code for this conflict; OperationFailed is a libspdm policy, consistent with the other
+ * association-conflict cases in the SET_KEY_PAIR_INFO error-handling clause.)
+ * Expected Behavior: ERROR with ErrorCode=OperationFailed.
+ **/
+static void rsp_set_key_pair_info_ack_case7(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_set_key_pair_info_ack_response_t *spdm_response;
+
+    uint8_t key_pair_id;
+    uint8_t other_key_pair_id;
+    uint8_t victim_key_pair_id;
+    uint8_t total_key_pairs;
+    uint8_t collide_slot;
+    bool found_pair;
+    size_t set_key_pair_info_request_size;
+    spdm_set_key_pair_info_request_t *set_key_pair_info_request;
+    uint8_t *ptr;
+    uint16_t desired_key_usage;
+    uint32_t desired_asym_algo;
+    uint8_t desired_assoc_cert_slot_mask;
+
+    uint16_t capabilities;
+    uint16_t key_usage_capabilities;
+    uint16_t current_key_usage;
+    uint32_t asym_algo_capabilities;
+    uint32_t current_asym_algo;
+    uint32_t pqc_asym_algo_capabilities;
+    uint32_t current_pqc_asym_algo;
+    uint8_t assoc_cert_slot_mask;
+
+    uint32_t victim_asym_algo;
+    uint32_t victim_pqc_asym_algo;
+    uint8_t victim_assoc_cert_slot_mask;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x7;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
+
+    /* Discover a KeyPairID (victim) that owns at least one slot, and another KeyPairID of the SAME
+     * current algorithm. The sample provisions a secondary key pair per algorithm, so such a pair
+     * exists; discovery keeps the test independent of the compiled algorithm set. */
+    key_pair_id = 0;
+    total_key_pairs = 0;
+    found_pair = false;
+    victim_key_pair_id = 0;
+    other_key_pair_id = 0;
+    collide_slot = 0;
+    victim_assoc_cert_slot_mask = 0;
+
+    (void)libspdm_read_key_pair_info(
+        spdm_context, 1, &total_key_pairs, &capabilities, &key_usage_capabilities,
+        &current_key_usage, &asym_algo_capabilities, &current_asym_algo,
+        &pqc_asym_algo_capabilities, &current_pqc_asym_algo, &assoc_cert_slot_mask, NULL, NULL);
+
+    for (victim_key_pair_id = 1;
+         (victim_key_pair_id <= total_key_pairs) && !found_pair;
+         victim_key_pair_id++) {
+        if (!libspdm_read_key_pair_info(
+                spdm_context, victim_key_pair_id, &total_key_pairs, &capabilities,
+                &key_usage_capabilities, &current_key_usage, &asym_algo_capabilities,
+                &victim_asym_algo, &pqc_asym_algo_capabilities, &victim_pqc_asym_algo,
+                &victim_assoc_cert_slot_mask, NULL, NULL)) {
+            continue;
+        }
+        if (victim_assoc_cert_slot_mask == 0) {
+            continue;
+        }
+        for (other_key_pair_id = 1; other_key_pair_id <= total_key_pairs; other_key_pair_id++) {
+            if (other_key_pair_id == victim_key_pair_id) {
+                continue;
+            }
+            if (!libspdm_read_key_pair_info(
+                    spdm_context, other_key_pair_id, &total_key_pairs, &capabilities,
+                    &key_usage_capabilities, &current_key_usage, &asym_algo_capabilities,
+                    &current_asym_algo, &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
+                    &assoc_cert_slot_mask, NULL, NULL)) {
+                continue;
+            }
+            if ((current_asym_algo == victim_asym_algo) &&
+                (current_pqc_asym_algo == victim_pqc_asym_algo)) {
+                uint8_t slot_index;
+                for (slot_index = 0; slot_index < SPDM_MAX_SLOT_COUNT; slot_index++) {
+                    if ((victim_assoc_cert_slot_mask & (1 << slot_index)) != 0) {
+                        collide_slot = slot_index;
+                        found_pair = true;
+                        break;
+                    }
+                }
+            }
+            if (found_pair) {
+                break;
+            }
+        }
+    }
+    victim_key_pair_id--;
+
+    /* If the build has no two key pairs of the same algorithm, there is nothing to collide. */
+    if (!found_pair) {
+        return;
+    }
+
+    key_pair_id = other_key_pair_id;
+
+    set_key_pair_info_request = malloc(sizeof(spdm_set_key_pair_info_request_t) +
+                                       sizeof(uint8_t) + sizeof(uint16_t) + sizeof(uint32_t) +
+                                       sizeof(uint8_t));
+
+    /* ParameterChange on other_key_pair_id: associate the slot already owned by victim_key_pair_id
+     * (same algorithm). Keep the algorithm unchanged (DesiredAsymAlgo = 0). */
+    desired_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    desired_asym_algo = 0;
+    desired_assoc_cert_slot_mask = (uint8_t)(1 << collide_slot);
+    set_key_pair_info_request_size =
+        sizeof(spdm_set_key_pair_info_request_t) +
+        sizeof(uint8_t) + sizeof(uint16_t) + sizeof(uint32_t) + sizeof(uint8_t);
+
+    libspdm_zero_mem(set_key_pair_info_request, set_key_pair_info_request_size);
+    set_key_pair_info_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    set_key_pair_info_request->header.request_response_code = SPDM_SET_KEY_PAIR_INFO;
+    set_key_pair_info_request->header.param1 = SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION;
+    set_key_pair_info_request->header.param2 = 0;
+    set_key_pair_info_request->key_pair_id = key_pair_id;
+
+    ptr = (uint8_t*)(set_key_pair_info_request + 1);
+    ptr += sizeof(uint8_t);
+    libspdm_write_uint16(ptr, desired_key_usage);
+    ptr += sizeof(uint16_t);
+    libspdm_write_uint32(ptr, desired_asym_algo);
+    ptr += sizeof(uint32_t);
+    *ptr = desired_assoc_cert_slot_mask;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_key_pair_info_ack(
+        spdm_context, set_key_pair_info_request_size,
+        set_key_pair_info_request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_OPERATION_FAILED);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    free(set_key_pair_info_request);
+}
+
 int libspdm_rsp_set_key_pair_info_ack_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -639,6 +801,8 @@ int libspdm_rsp_set_key_pair_info_ack_test(void)
         cmocka_unit_test(rsp_set_key_pair_info_ack_case4),
         /* Reset replay differing only in DesiredPqcAsymAlgo*/
         cmocka_unit_test(rsp_set_key_pair_info_ack_case5),
+        /* Reject same-algorithm slot collision across KeyPairIDs*/
+        cmocka_unit_test(rsp_set_key_pair_info_ack_case7),
     };
 
     libspdm_test_context_t test_context = {
