@@ -2125,6 +2125,7 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
             if (!result) {
                 libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                    spdm_session_info->session_transcript.digest_context_th);
+                spdm_session_info->session_transcript.digest_context_th = NULL;
                 return LIBSPDM_STATUS_CRYPTO_ERROR;
             }
             result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
@@ -2136,6 +2137,7 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
             if (!result) {
                 libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                    spdm_session_info->session_transcript.digest_context_th);
+                spdm_session_info->session_transcript.digest_context_th = NULL;
                 return LIBSPDM_STATUS_CRYPTO_ERROR;
             }
             if (!spdm_session_info->use_psk) {
@@ -2148,6 +2150,7 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
                     if (!result) {
                         libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                            spdm_session_info->session_transcript.digest_context_th);
+                        spdm_session_info->session_transcript.digest_context_th = NULL;
                         return LIBSPDM_STATUS_CRYPTO_ERROR;
                     }
                 }
@@ -2159,6 +2162,7 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
                 if (!result) {
                     libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                        spdm_session_info->session_transcript.digest_context_th);
+                    spdm_session_info->session_transcript.digest_context_th = NULL;
                     return LIBSPDM_STATUS_CRYPTO_ERROR;
                 }
             }
@@ -2170,6 +2174,7 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
         if (!result) {
             libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                spdm_session_info->session_transcript.digest_context_th);
+            spdm_session_info->session_transcript.digest_context_th = NULL;
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
         return LIBSPDM_STATUS_SUCCESS;
