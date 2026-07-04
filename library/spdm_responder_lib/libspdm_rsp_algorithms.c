@@ -428,7 +428,7 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
                             sizeof(uint32_t) * spdm_request->ext_asym_count +
                             sizeof(uint32_t) * spdm_request->ext_hash_count);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
-        alg_type_pre = struct_table->alg_type;
+        alg_type_pre = 0;
         for (index = 0; index < spdm_request->header.param1; index++) {
             if ((size_t)spdm_request + request_size < (size_t)struct_table) {
                 return libspdm_generate_error_response(
