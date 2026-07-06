@@ -263,16 +263,16 @@ typedef enum {
 /*
  * +--------------------------+------------------------------------------+---------+
  * | GET_VERSION              | 4                                        | 1       |
- * | VERSION {1.0 ~ 1.3}      | 6 + 2 * 4 = 14                           | 1       |
+ * | VERSION {1.0 ~ 1.4}      | 6 + 2 * 5 = 16                           | 1       |
  * +--------------------------+------------------------------------------+---------+
- * | GET_CAPABILITIES 1.3     | 20                                       | 1       |
- * | CAPABILITIES 1.3         | 20 [+ 46]                                | 1       |
+ * | GET_CAPABILITIES 1.4     | 20                                       | 1       |
+ * | CAPABILITIES 1.4         | 20 [+ 30 + 4 * 6] = 74                   | 1       |
  * +--------------------------+------------------------------------------+---------+
- * | NEGOTIATE_ALGORITHMS 1.3 | 32 + 4 * 4 = 48                          | 2       |
- * | ALGORITHMS 1.3           | 36 + 4 * 4 = 52                          | 2       |
+ * | NEGOTIATE_ALGORITHMS 1.4 | 32 + 4 * 6 = 56                          | 2       |
+ * | ALGORITHMS 1.4           | 36 + 4 * 6 = 60                          | 2       |
  * +--------------------------+------------------------------------------+---------+
  */
-#define LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE (200 + 2 * LIBSPDM_MAX_VERSION_COUNT)
+#define LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE (300)
 
 /**
  * Set an SPDM context data.
