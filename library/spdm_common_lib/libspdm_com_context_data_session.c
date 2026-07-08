@@ -70,6 +70,21 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
                            session_info->session_transcript.digest_context_th_backup);
         session_info->session_transcript.digest_context_th_backup = NULL;
     }
+    if (session_info->session_transcript.digest_context_l1l2 != NULL) {
+        libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                           session_info->session_transcript.digest_context_l1l2);
+        session_info->session_transcript.digest_context_l1l2 = NULL;
+    }
+    if (session_info->session_transcript.digest_context_il1il2 != NULL) {
+        libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                           session_info->session_transcript.digest_context_il1il2);
+        session_info->session_transcript.digest_context_il1il2 = NULL;
+    }
+    if (session_info->session_transcript.digest_context_encap_il1il2 != NULL) {
+        libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                           session_info->session_transcript.digest_context_encap_il1il2);
+        session_info->session_transcript.digest_context_encap_il1il2 = NULL;
+    }
 #endif
 
     libspdm_zero_mem (&(session_info->last_key_update_request), sizeof(spdm_key_update_request_t));
