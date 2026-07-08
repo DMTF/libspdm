@@ -243,12 +243,19 @@ libspdm_return_t libspdm_handle_error_large_response(
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    /* Fail if requester or responder does not support chunk cap */
-    if (!libspdm_is_capabilities_flag_supported(
-            spdm_context, true,
-            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
-        return LIBSPDM_STATUS_ERROR_PEER;
+    /* Fail if requester or responder does not support chunk cap. The Responder's negotiated
+     * capability flags are only known once the CAPABILITIES response has been processed
+     * (connection state AFTER_CAPABILITIES). A CAPABILITIES response that carries the Supported
+     * Algorithms Block can itself be chunked, in which case this handler runs while the state is
+     * still AFTER_VERSION; skip the check then, since the Responder returning
+     * ERROR_LARGE_RESPONSE already implies it supports chunking. */
+    if (spdm_context->connection_info.connection_state >= LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES) {
+        if (!libspdm_is_capabilities_flag_supported(
+                spdm_context, true,
+                SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
+                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
+            return LIBSPDM_STATUS_ERROR_PEER;
+        }
     }
 
     if (*inout_response_size < sizeof(spdm_error_response_t) +
@@ -286,6 +293,12 @@ libspdm_return_t libspdm_handle_error_large_response(
     large_response_size = 0;
     large_response_size_so_far = 0;
     chunk_seq_no = 0;
+
+    /* Mark that a CHUNK_GET transfer is in progress so that the response to a CHUNK_GET is not
+     * itself dispatched back into this handler by libspdm_receive_spdm_response. Per spec the
+     * response to CHUNK_GET must be CHUNK_RESPONSE; a nested ERROR_LARGE_RESPONSE would otherwise
+     * cause unbounded recursion. */
+    spdm_context->chunk_context.get.chunk_in_use = true;
 
     do {
         LIBSPDM_ASSERT(message_size >= transport_header_size);
@@ -475,6 +488,8 @@ libspdm_return_t libspdm_handle_error_large_response(
             libspdm_zero_mem(large_response, large_response_size);
         }
     }
+
+    spdm_context->chunk_context.get.chunk_in_use = false;
 
     return status;
 }
