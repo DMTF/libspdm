@@ -788,7 +788,8 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     }
 
     if (spdm_response->request_response_code == SPDM_ERROR
-        && spdm_response->param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
+        && spdm_response->param1 == SPDM_ERROR_CODE_LARGE_RESPONSE
+        && !spdm_context->chunk_context.get.chunk_in_use) {
         status = libspdm_handle_error_large_response(
             spdm_context, session_id,
             response_size, (void *)spdm_response, response_capacity, response_from_chunk);
