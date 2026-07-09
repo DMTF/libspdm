@@ -8,5 +8,5 @@ Description: @CMAKE_PROJECT_DESCRIPTION@
 Version: @CMAKE_PROJECT_VERSION@
 
 Requires:
-Cflags: -I${includedir} -I${includedir}/include
+Cflags: -I${includedir} -I${includedir}/include -I${includedir}/os_stub/include @LIBSPDM_CONFIG_CFLAGS@
 Libs: -L${libdir} -l@LIB_NAME@ -l@LIB_NAME@_platform -l@LIB_NAME@_crypto @CRYPTO_DEPS@
