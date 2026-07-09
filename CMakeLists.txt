@@ -982,7 +982,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    add_compile_options(-DLIBSPDM_DEBUG_ENABLE=0)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLIBSPDM_DEBUG_ENABLE=0")
 endif()
 
 if(ENABLE_CODEQL STREQUAL "ON")
@@ -1225,16 +1225,31 @@ else()
             endif()
         endif()
 
+        if(LIBSPDM_TPM_SUPPORT)
+            # tss2 is internal (tpm.c only, not in the .pc / no header): PRIVATE since libspdm_crypto.so's DT_NEEDED covers consumers
+            target_link_libraries(${LIB_NAME}_crypto
+                PRIVATE tss2-esys tss2-sys tss2-mu tss2-tctildr tss2-rc
+            )
+        endif()
+
         target_link_libraries(${LIB_NAME}
             PUBLIC ${LIB_NAME}_platform
             PUBLIC ${LIB_NAME}_crypto
         )
 
         install(DIRECTORY include DESTINATION include/libspdm)
+        install(DIRECTORY os_stub/include DESTINATION include/libspdm/os_stub)
+        # Propagate every libspdm configuration macro (-DLIBSPDM_*) from
+        # CMAKE_C_FLAGS to consumers via pkg-config
+        string(REGEX MATCHALL "-DLIBSPDM_[A-Za-z0-9_]+(=[^ \t]+)?" LIBSPDM_CONFIG_FLAGS "${CMAKE_C_FLAGS}")
+        string(REPLACE ";" " " LIBSPDM_CONFIG_CFLAGS "${LIBSPDM_CONFIG_FLAGS}")
         configure_file(libspdm.pc.in lib/pkgconfig/libspdm.pc @ONLY)
         install(FILES ${CMAKE_BINARY_DIR}/lib/pkgconfig/libspdm.pc DESTINATION lib/pkgconfig/)
         install(TARGETS ${LIB_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
         install(TARGETS ${LIB_NAME}_platform LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
         install(TARGETS ${LIB_NAME}_crypto LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+        # libspdm.so leaves the device-secret symbols undefined by design; the
+        # .pc file makes consumers link this static library to provide them.
+        install(TARGETS spdm_device_secret_lib_${DEVICE} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
     endif()
 endif()
