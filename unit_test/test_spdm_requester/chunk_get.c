@@ -432,6 +432,8 @@ static libspdm_return_t send_message(
         return LIBSPDM_STATUS_SUCCESS;
     } else if (spdm_test_context->case_id == 0xB) {
         return LIBSPDM_STATUS_SUCCESS;
+    } else if (spdm_test_context->case_id == 0xC) {
+        return LIBSPDM_STATUS_SUCCESS;
     } else {
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -467,6 +469,17 @@ static libspdm_return_t receive_message(
     /* Reset statics when entering case 0xB with the initial GET_CAPABILITIES request */
     if (spdm_test_context->case_id == 0xB &&
         spdm_request_header->request_response_code == SPDM_GET_CAPABILITIES) {
+        sub_rsp = NULL;
+        sub_rsp_size = 0;
+        sub_rsp_copied = 0;
+        sub_rsp_remaining = 0;
+        chunk_seq_no = 0;
+        error_large_response_sent = false;
+    }
+
+    /* Reset statics when entering case 0xC with the initial GET_DIGESTS request */
+    if (spdm_test_context->case_id == 0xC &&
+        spdm_request_header->request_response_code == SPDM_GET_DIGESTS) {
         sub_rsp = NULL;
         sub_rsp_size = 0;
         sub_rsp_copied = 0;
@@ -612,6 +625,43 @@ static libspdm_return_t receive_message(
             response_size, response);
 
         /* reset static status for next case */
+        sub_rsp = NULL;
+        sub_rsp_size = 0;
+        sub_rsp_copied = 0;
+        sub_rsp_remaining = 0;
+        chunk_seq_no = 0;
+        error_large_response_sent = false;
+
+        return LIBSPDM_STATUS_SUCCESS;
+    } else if (spdm_test_context->case_id == 0xC) {
+        /* Return a single CHUNK_RESPONSE whose declared chunk_size is larger than the
+         * number of bytes actually present in the received message. Reassembly must
+         * reject it instead of reading past the response. */
+        spdm_chunk_response_response_t* mal_rsp;
+        size_t mal_rsp_size;
+        uint32_t declared_size = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 * 2;
+
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        mal_rsp = (void*) ((uint8_t*) *response + transport_header_size);
+
+        /* Only the minimum-sized message is actually sent. */
+        mal_rsp_size = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12;
+        libspdm_zero_mem(mal_rsp, mal_rsp_size);
+
+        mal_rsp->header.spdm_version = spdm_request_header->spdm_version;
+        mal_rsp->header.request_response_code = SPDM_CHUNK_RESPONSE;
+        mal_rsp->header.param1 = SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK;
+        mal_rsp->header.param2 = chunk_handle;
+        mal_rsp->chunk_seq_no = 0;
+        /* Declared chunk_size equals the large message size, far more than is sent. */
+        mal_rsp->chunk_size = declared_size;
+        *((uint32_t*) (mal_rsp + 1)) = declared_size;
+
+        libspdm_transport_test_encode_message(
+            spdm_context, NULL, false, false,
+            mal_rsp_size, mal_rsp,
+            response_size, response);
+
         sub_rsp = NULL;
         sub_rsp_size = 0;
         sub_rsp_copied = 0;
@@ -1340,6 +1390,43 @@ static void req_chunk_get_case10(void** state)
     status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
+
+static void req_chunk_get_case12(void** state)
+{
+    /* A CHUNK_RESPONSE that declares a chunk_size larger than the bytes actually
+     * present must be rejected during reassembly, not read past the response. */
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    uint8_t slot_mask;
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xC;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP
+         | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
+
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.data_transfer_size
+        = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
+
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+
+    libspdm_set_mem(
+        m_libspdm_local_certificate_chain_test_case_4,
+        sizeof(m_libspdm_local_certificate_chain_test_case_4),
+        (uint8_t) (0xFF));
+    libspdm_reset_message_b(spdm_context);
+
+    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
+}
 #endif
 
 /* Test chunked CAPABILITIES response with Supported Algorithms Block */
@@ -1421,6 +1508,8 @@ int libspdm_req_chunk_get_test(void)
         cmocka_unit_test(req_chunk_get_case9),
         /* Reject CHUNK_RESPONSE with mismatched handle in spdm 1.4 */
         cmocka_unit_test(req_chunk_get_case10),
+        /* Reject CHUNK_RESPONSE whose chunk_size exceeds the bytes received */
+        cmocka_unit_test(req_chunk_get_case12),
 #endif
         /* Chunked CAPABILITIES response with Supported Algorithms Block */
         cmocka_unit_test(req_chunk_get_case11),

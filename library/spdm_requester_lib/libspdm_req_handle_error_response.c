@@ -463,6 +463,12 @@ libspdm_return_t libspdm_handle_error_large_response(
             }
         }
 
+        if (spdm_response->chunk_size >
+            response_size - (size_t)(chunk_ptr - (uint8_t *)spdm_response)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            break;
+        }
+
         libspdm_copy_mem(large_response + large_response_size_so_far,
                          large_response_size - large_response_size_so_far,
                          chunk_ptr, spdm_response->chunk_size);
