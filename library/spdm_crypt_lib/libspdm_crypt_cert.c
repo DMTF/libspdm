@@ -310,7 +310,6 @@ bool libspdm_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg,
 /**
  * Check the X509 DataTime is within a valid range.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
  * @param  from                         notBefore Pointer to date_time object.
  * @param  from_size                     notBefore date_time object size.
  * @param  to                           notAfter Pointer to date_time object.
@@ -363,6 +362,7 @@ static bool libspdm_internal_x509_date_time_check(const uint8_t *from,
  * This function returns the SPDM public key encryption algorithm OID len.
  *
  * @param[in]  base_asym_algo          SPDM base_asym_algo
+ * @param[in]  pqc_asym_algo           SPDM pqc_asym_algo
  *
  * @return SPDM public key encryption algorithms OID len.
  **/
@@ -547,6 +547,7 @@ static uint32_t libspdm_get_public_key_algo_OID_len(
  * This function get the SPDM public key encryption algorithm OID.
  *
  * @param[in]      base_asym_algo                 SPDM base_asym_algo
+ * @param[in]      pqc_asym_algo                  SPDM pqc_asym_algo
  * @param[in,out]  oid                            SPDM public key encryption algorithm OID
  * @param[in,out]  oid_other                      Other SPDM public key encryption algorithm OID
  *                                                because of ASN1 code for integer
@@ -827,9 +828,10 @@ static bool libspdm_get_public_key_algo_OID(
  *
  * @param[in]      cert                  Pointer to the DER-encoded certificate data.
  * @param[in]      cert_size             The size of certificate data in bytes.
- * @param[in]      base_asym_algo        SPDM base_asym_algo
  * @param[out]     oid                   cert public key encryption algorithm OID
  * @param[in]      oid_size              the buffer size for required OID
+ * @param[in]      base_asym_algo        SPDM base_asym_algo
+ * @param[in]      pqc_asym_algo         SPDM pqc_asym_algo
  *
  * @retval  true   get public key oid from cert successfully
  * @retval  false  get public key oid from cert fail
@@ -1033,6 +1035,7 @@ static bool libspdm_get_public_key_oid(
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
+ * @param[in]  pqc_asym_algo         SPDM pqc_asym_algo
  *
  * @retval  true   verify pass
  * @retval  false  verify fail
@@ -1370,6 +1373,7 @@ bool libspdm_contains_hardware_id_oid(const uint8_t *cert, size_t cert_size)
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
  *
  * @retval  true   verify pass
  * @retval  false  verify fail,two case: 1. Unable to get get or validate extension data.
@@ -1400,6 +1404,7 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
+ * @param[in]  pqc_asym_algo         SPDM pqc_asym_algo
  * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
  * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
  * @param[in]  set_cert              Is the function verifying a set certificate operation.
