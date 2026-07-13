@@ -164,14 +164,14 @@ static libspdm_return_t libspdm_try_get_key_pair_info(libspdm_context_t *spdm_co
         goto receive_done;
     }
 
-    if ((spdm_response->key_pair_id != key_pair_id) ||
-        (spdm_response->key_pair_id > (spdm_response->total_key_pairs))) {
-        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    if (spdm_response_size < sizeof(spdm_key_pair_info_response_t)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
 
-    if (spdm_response_size < sizeof(spdm_key_pair_info_response_t)) {
-        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    if ((spdm_response->key_pair_id != key_pair_id) ||
+        (spdm_response->key_pair_id > (spdm_response->total_key_pairs))) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
 

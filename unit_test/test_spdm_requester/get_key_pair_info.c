@@ -29,6 +29,7 @@ static libspdm_return_t send_message(
     case 0x1:
     case 0x2:
     case 0x3:
+    case 0x4:
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -213,6 +214,30 @@ static libspdm_return_t receive_message(
         ptr[1] = 0x00;
         ptr[2] = 0x00;
         ptr[3] = 0x00;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
+    case 0x4: {
+        spdm_key_pair_info_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        /* Truncated response carrying only the SPDM header. total_key_pairs and
+         * key_pair_id are absent. */
+        spdm_response_size = sizeof(spdm_message_header_t);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.request_response_code = SPDM_KEY_PAIR_INFO;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -729,6 +754,58 @@ static void req_get_key_pair_info_case3(void **state)
     assert_int_equal(current_pqc_asym_algo, SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_44);
 }
 
+/**
+ * Test 4: Response truncated to the SPDM header, so total_key_pairs and key_pair_id
+ *         are not present.
+ * Expected Behavior: rejected with LIBSPDM_STATUS_INVALID_MSG_SIZE, without reading
+ *                    the absent fields.
+ **/
+static void req_get_key_pair_info_case4(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    uint8_t key_pair_id;
+    uint8_t associated_slot_id;
+    uint8_t total_key_pairs;
+    uint16_t capabilities;
+    uint16_t key_usage_capabilities;
+    uint16_t current_key_usage;
+    uint32_t asym_algo_capabilities;
+    uint32_t current_asym_algo;
+    uint32_t pqc_asym_algo_capabilities;
+    uint32_t current_pqc_asym_algo;
+    uint16_t public_key_info_len;
+    uint8_t assoc_cert_slot_mask;
+    uint8_t public_key_info[SPDM_MAX_PUBLIC_KEY_INFO_LEN];
+
+    key_pair_id = 1;
+    associated_slot_id = 1;
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x4;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
+
+    spdm_context->connection_info.peer_key_pair_id[associated_slot_id] = key_pair_id;
+    public_key_info_len = SPDM_MAX_PUBLIC_KEY_INFO_LEN;
+
+    status = libspdm_get_key_pair_info(spdm_context, NULL, key_pair_id, &total_key_pairs,
+                                       &capabilities, &key_usage_capabilities, &current_key_usage,
+                                       &asym_algo_capabilities, &current_asym_algo,
+                                       &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
+                                       &assoc_cert_slot_mask, &public_key_info_len,
+                                       public_key_info);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
+}
+
 int libspdm_req_get_key_pair_info_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -738,6 +815,8 @@ int libspdm_req_get_key_pair_info_test(void)
         cmocka_unit_test(req_get_key_pair_info_case2),
         /* SPDM 1.4 oversized PQC length uses raw_len for cursor advancement */
         cmocka_unit_test(req_get_key_pair_info_case3),
+        /* Header-only response is rejected before reading the body fields */
+        cmocka_unit_test(req_get_key_pair_info_case4),
     };
 
     libspdm_test_context_t test_context = {
