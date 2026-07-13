@@ -2,8 +2,17 @@ cmake_minimum_required(VERSION 3.5)
 
 project("libspdm" C)
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION.md CMAKE_INPUT_PROJECT_VERSION)
-string(REPLACE " " "_" CMAKE_PROJECT_VERSION ${CMAKE_INPUT_PROJECT_VERSION})
-string(REGEX REPLACE "[ ]*[A-Za-z]+[ ]*[A-Za-z ]+" "" PROJECT_VERSION ${CMAKE_INPUT_PROJECT_VERSION})
+string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" PROJECT_VERSION ${CMAKE_INPUT_PROJECT_VERSION})
+set(CMAKE_PROJECT_VERSION ${PROJECT_VERSION})
+
+# VERSION.md tags unreleased entries as "(pending and unreleased)". Mark the
+# produced artifacts (shared libs/pkg-config 'Version' field) as a pre-release
+# with an "-alpha" suffix so an unreleased build is distinguishable from
+# tagged release of the same X.Y.Z.
+if(CMAKE_INPUT_PROJECT_VERSION MATCHES "pending and unreleased")
+    set(PROJECT_VERSION "${PROJECT_VERSION}-alpha")
+    set(CMAKE_PROJECT_VERSION ${PROJECT_VERSION})
+endif()
 
 #
 # Build Configuration Macro Definition
