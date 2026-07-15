@@ -91,7 +91,16 @@ static libspdm_return_t libspdm_storage_secured_message_decode(
     libspdm_error_struct_t spdm_error;
     uint32_t spdm_msg_offset;
     spdm_storage_secured_message_descriptor *descriptor;
-    uint8_t num_descriptors = ((uint8_t *)(*message))[0];
+    uint8_t num_descriptors;
+
+    /* The num descriptors byte and the single supported descriptor are read
+     * below, so the decrypted message must be at least that large before any
+     * field is dereferenced. */
+    if (*message_size < LIBSPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE) {
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    }
+
+    num_descriptors = ((uint8_t *)(*message))[0];
 
     /* Check for invalid message with no descriptors (DSP0286 Table 8) */
     if (num_descriptors == 0) {
@@ -365,6 +374,10 @@ libspdm_return_t libspdm_transport_storage_decode_message(
          */
         /* Expecting a secured message */
         if (*session_id != NULL) {
+            if (transport_message_size <
+                LIBSPDM_STORAGE_SECURED_MESSAGE_HEADER_RESERVED_BYTES + sizeof(uint32_t)) {
+                return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            }
             **session_id =
                 *((uint32_t *)(((uint8_t *)transport_message) +
                                LIBSPDM_STORAGE_SECURED_MESSAGE_HEADER_RESERVED_BYTES));
