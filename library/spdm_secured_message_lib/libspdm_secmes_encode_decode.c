@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -532,7 +532,7 @@ libspdm_return_t libspdm_decode_secured_message(
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
         plain_text_size = enc_msg_header->application_data_length;
-        if (plain_text_size > cipher_text_size) {
+        if (plain_text_size + sizeof(spdm_secured_message_cipher_header_t) > cipher_text_size) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return LIBSPDM_STATUS_INVALID_MSG_SIZE;
