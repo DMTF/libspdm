@@ -1919,6 +1919,58 @@ static void req_get_digests_case29(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 30: DIGESTS is added to message_d only if GET_DIGESTS immediately follows the VCA. A
+ * non-GET_DIGESTS request closes the window; reset_message_d reopens it.
+ **/
+static void req_get_digests_case30(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t slot_mask;
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    /* Reuse the multi-key single-slot DIGESTS mock responses registered for case_id 0x1A. */
+    spdm_test_context->case_id = 0x1A;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    libspdm_set_mem(m_libspdm_local_certificate_chain,
+                    sizeof(m_libspdm_local_certificate_chain),
+                    (uint8_t)(0xFF));
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    libspdm_reset_message_b(spdm_context);
+    libspdm_reset_message_d(spdm_context);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
+
+    /* Sub Case 1: GET_MEASUREMENTS after VCA closes the window, so the DIGESTS is not added. */
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_MEASUREMENTS);
+    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->transcript.message_d.buffer_size, 0);
+
+    /* Sub Case 2: reset_message_d reopens the window, so an immediate DIGESTS is captured again. */
+    libspdm_reset_message_d(spdm_context);
+    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(
+        spdm_context->transcript.message_d.buffer_size,
+        sizeof(spdm_digest_response_t) + sizeof(spdm_key_pair_id_t) +
+        sizeof(spdm_certificate_info_t) + sizeof(spdm_key_usage_bit_mask_t) +
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
+}
+
 int libspdm_req_get_digests_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1951,6 +2003,7 @@ int libspdm_req_get_digests_test(void)
         cmocka_unit_test(req_get_digests_case27),
         cmocka_unit_test(req_get_digests_case28),
         cmocka_unit_test(req_get_digests_case29),
+        cmocka_unit_test(req_get_digests_case30),
     };
 
     libspdm_test_context_t test_context = {
