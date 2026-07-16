@@ -155,6 +155,10 @@ typedef struct {
     /* multi-key negotiated result */
     bool multi_key_conn_req;
     bool multi_key_conn_rsp;
+
+    /* Sticky: set once a non-GET_DIGESTS request is processed after NEGOTIATED. A DIGESTS is added
+     * to message_d only when this is false (DIGESTS immediately follows the VCA). */
+    bool digest_transcript_window_closed;
 } libspdm_connection_info_t;
 
 typedef struct {

@@ -1248,6 +1248,8 @@ void libspdm_reset_message_a(libspdm_context_t *spdm_context)
 void libspdm_reset_message_d(libspdm_context_t *spdm_context)
 {
     libspdm_reset_managed_buffer(&spdm_context->transcript.message_d);
+    /* Restarting the DIGESTS transcript reopens the "immediately follows VCA" window. */
+    spdm_context->connection_info.digest_transcript_window_closed = false;
 }
 
 void libspdm_reset_message_b(libspdm_context_t *spdm_context)
@@ -1450,6 +1452,12 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
     libspdm_context_t *spdm_context;
 
     spdm_context = context;
+    /* Close the DIGESTS transcript window once a non-GET_DIGESTS request is processed after
+     * NEGOTIATED (the state check excludes the VCA messages). */
+    if ((request_code != SPDM_GET_DIGESTS) &&
+        (spdm_context->connection_info.connection_state >= LIBSPDM_CONNECTION_STATE_NEGOTIATED)) {
+        spdm_context->connection_info.digest_transcript_window_closed = true;
+    }
     /**
      * Any request other than SPDM_GET_MEASUREMENTS resets L1/L2
      */
@@ -1510,6 +1518,10 @@ libspdm_return_t libspdm_append_message_a(libspdm_context_t *spdm_context, const
 libspdm_return_t libspdm_append_message_d(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size)
 {
+    /* Window closed: the GET_DIGESTS did not immediately follow the VCA, so no DIGESTS is added. */
+    if (spdm_context->connection_info.digest_transcript_window_closed) {
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     /* Only the first message D after VCA in connection counts  */
     if (libspdm_get_managed_buffer_size(&spdm_context->transcript.message_d) != 0) {
         return LIBSPDM_STATUS_SUCCESS;
