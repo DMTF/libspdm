@@ -1367,6 +1367,9 @@ void libspdm_reset_message_encap_d(void *session_info)
 
     spdm_session_info = session_info;
     libspdm_reset_managed_buffer(&spdm_session_info->session_transcript.message_encap_d);
+    /* Restarting the encapsulated DIGESTS transcript reopens the "first encapsulated response"
+     * window. */
+    spdm_session_info->session_transcript.encap_digest_window_closed = false;
 }
 
 void libspdm_reset_message_f(libspdm_context_t *spdm_context, void *session_info)
@@ -1505,6 +1508,27 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
         break;
     default:
         break;
+    }
+}
+
+void libspdm_reset_message_buffer_via_encap_request_code(void *context, void *session_info,
+                                                         uint8_t request_code)
+{
+    libspdm_session_info_t *spdm_session_info;
+
+    /* The encapsulated flow only affects the session transcript. */
+    if (session_info == NULL) {
+        return;
+    }
+    spdm_session_info = session_info;
+
+    /* Close the encapsulated DIGESTS window if the first encapsulated request is not GET_DIGESTS.
+     * Enforced here (not from a fixed local sequence) so it holds for whatever order the peer drives,
+     * for both the Requester and Responder encapsulated flows. */
+    if ((request_code != SPDM_GET_DIGESTS) &&
+        (libspdm_get_managed_buffer_size(
+             &spdm_session_info->session_transcript.message_encap_d) == 0)) {
+        spdm_session_info->session_transcript.encap_digest_window_closed = true;
     }
 }
 
@@ -2024,6 +2048,10 @@ libspdm_return_t libspdm_append_message_encap_d(void *session_info,
     libspdm_session_info_t *spdm_session_info;
 
     spdm_session_info = session_info;
+    /* Window closed: the encapsulated DIGESTS is not the first encap response, so it is not added. */
+    if (spdm_session_info->session_transcript.encap_digest_window_closed) {
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     /* Only the first message EncapD in current session counts  */
     if (libspdm_get_managed_buffer_size(&spdm_session_info->session_transcript.message_encap_d) !=
         0) {

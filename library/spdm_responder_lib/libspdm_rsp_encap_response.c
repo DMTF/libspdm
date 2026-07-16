@@ -130,6 +130,13 @@ static libspdm_return_t libspdm_process_encapsulated_response(
     need_continue = false;
 
     if (spdm_context->encap_context.current_request_op_code != 0) {
+        libspdm_session_info_t *session_info = NULL;
+        if (spdm_context->encap_context.session_id != INVALID_SESSION_ID) {
+            session_info = libspdm_get_session_info_via_session_id(
+                spdm_context, spdm_context->encap_context.session_id);
+        }
+        libspdm_reset_message_buffer_via_encap_request_code(
+            spdm_context, session_info, spdm_context->encap_context.current_request_op_code);
         status = libspdm_get_encap_struct_via_op_code(
             spdm_context->encap_context.current_request_op_code, &encap_response_struct);
         LIBSPDM_ASSERT(status == LIBSPDM_STATUS_SUCCESS);

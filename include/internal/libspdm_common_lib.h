@@ -446,6 +446,9 @@ typedef struct {
 
 typedef struct {
     libspdm_message_d_managed_buffer_t message_encap_d;
+    /* Sticky: set once a non-GET_DIGESTS encapsulated request is processed first. An encapsulated
+     * DIGESTS is added to message_encap_d only when this is false (it is the first encap response). */
+    bool encap_digest_window_closed;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_message_k_managed_buffer_t message_k;
     libspdm_message_f_managed_buffer_t message_f;
@@ -877,6 +880,17 @@ void libspdm_init_managed_buffer(void *managed_buffer, size_t max_buffer_size);
  */
 void libspdm_reset_message_buffer_via_request_code(void *context, void *session_info,
                                                    uint8_t request_code);
+
+/**
+ * Reset message buffer according to an encapsulated request code. Encapsulated-flow counterpart to
+ * libspdm_reset_message_buffer_via_request_code.
+ *
+ * @param  context                        A pointer to the SPDM context.
+ * @param  session_info                   A pointer to the SPDM session context.
+ * @param  request_code                   The encapsulated SPDM request code.
+ */
+void libspdm_reset_message_buffer_via_encap_request_code(void *context, void *session_info,
+                                                         uint8_t request_code);
 
 /**
  * This function initializes the session info.

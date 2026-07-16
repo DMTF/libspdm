@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -83,6 +83,7 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
  * @param  encap_response       A pointer to a destination buffer to store the response.
  **/
 static libspdm_return_t libspdm_process_encapsulated_request(libspdm_context_t *spdm_context,
+                                                             libspdm_session_info_t *session_info,
                                                              size_t encap_request_size,
                                                              void *encap_request,
                                                              size_t *encap_response_size,
@@ -98,6 +99,9 @@ static libspdm_return_t libspdm_process_encapsulated_request(libspdm_context_t *
             spdm_requester->request_response_code,
             encap_response_size, encap_response);
     }
+
+    libspdm_reset_message_buffer_via_encap_request_code(
+        spdm_context, session_info, spdm_requester->request_response_code);
 
     get_encap_response_func = libspdm_get_encap_response_func_via_request_code(
         spdm_requester->request_response_code);
@@ -165,6 +169,7 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
                        (mut_auth_requested ==
                         SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS));
     } else {
+        session_info = NULL;
         LIBSPDM_ASSERT(mut_auth_requested == 0);
     }
 
@@ -333,7 +338,7 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             spdm_request_size - sizeof(spdm_deliver_encapsulated_response_request_t);
 
         status = libspdm_process_encapsulated_request(
-            spdm_context, encapsulated_request_size,
+            spdm_context, session_info, encapsulated_request_size,
             encapsulated_request, &encapsulated_response_size,
             encapsulated_response);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
