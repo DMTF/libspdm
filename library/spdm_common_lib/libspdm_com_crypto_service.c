@@ -1459,7 +1459,7 @@ bool libspdm_verify_endpoint_info_signature(libspdm_context_t *spdm_context,
                 spdm_context->connection_info.algorithm.pqc_asym_algo,
                 spdm_context->connection_info.algorithm.base_hash_algo,
                 context, il1il2_hash, il1il2_hash_size, sign_data, sign_data_size);
-            if (slot_id == 0xFF) {
+            if (slot_id == 0xF) {
                 libspdm_pqc_asym_free(
                     spdm_context->connection_info.algorithm.pqc_asym_algo, context);
             }
@@ -1504,7 +1504,7 @@ bool libspdm_verify_endpoint_info_signature(libspdm_context_t *spdm_context,
                 spdm_context->connection_info.algorithm.req_pqc_asym_alg,
                 spdm_context->connection_info.algorithm.base_hash_algo,
                 context, il1il2_hash, il1il2_hash_size, sign_data, sign_data_size);
-            if (slot_id == 0xFF) {
+            if (slot_id == 0xF) {
                 libspdm_req_pqc_asym_free(
                     spdm_context->connection_info.algorithm.req_pqc_asym_alg, context);
             }
