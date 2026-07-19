@@ -263,7 +263,7 @@ static libspdm_return_t libspdm_try_vendor_send_request_receive_response(
     response_ptr = spdm_response->vendor_plus_request + spdm_response->vendor_id_len;
     if (use_large_payload) {
         response_ptr += sizeof(uint16_t);
-        response_size = *((uint32_t*)response_ptr);
+        response_size = libspdm_read_uint32(response_ptr);
         if (spdm_response_size < response_size +
             sizeof(spdm_vendor_defined_response_msg_t) +
             spdm_response->vendor_id_len + sizeof(uint16_t) + sizeof(uint32_t)) {
@@ -272,7 +272,7 @@ static libspdm_return_t libspdm_try_vendor_send_request_receive_response(
         }
         response_ptr += sizeof(uint32_t);
     } else {
-        response_size = *((uint16_t*)response_ptr);
+        response_size = libspdm_read_uint16(response_ptr);
 
         if (spdm_response_size < response_size +
             sizeof(spdm_vendor_defined_response_msg_t) +
