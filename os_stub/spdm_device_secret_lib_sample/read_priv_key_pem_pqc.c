@@ -79,8 +79,8 @@ bool libspdm_read_responder_pqc_private_key(uint32_t pqc_asym_algo,
     return res;
 }
 
-bool libspdm_read_responder_pqc_private_key_ex(uint32_t pqc_asym_algo, uint8_t key_pair_id,
-                                               void **data, size_t *size)
+bool libspdm_read_responder_pqc_private_key_ex(void *spdm_context, uint32_t pqc_asym_algo,
+                                               uint8_t key_pair_id, void **data, size_t *size)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
     bool res;
@@ -92,7 +92,7 @@ bool libspdm_read_responder_pqc_private_key_ex(uint32_t pqc_asym_algo, uint8_t k
      * multi-key connection) uses the default key: the lookup also returns 0 when no key pair
      * of the algorithm backs slot 4, as for SLH-DSA. */
     if ((key_pair_id == 0) ||
-        (key_pair_id != libspdm_get_key_pair_id_by_slot(0, pqc_asym_algo, 4))) {
+        (key_pair_id != libspdm_get_key_pair_id_by_slot(spdm_context, 0, pqc_asym_algo, 4))) {
         return libspdm_read_responder_pqc_private_key(pqc_asym_algo, data, size);
     }
 
@@ -215,8 +215,8 @@ bool libspdm_read_requester_pqc_private_key(uint32_t req_pqc_asym_alg,
     return res;
 }
 
-bool libspdm_read_requester_pqc_private_key_ex(uint32_t req_pqc_asym_alg, uint8_t key_pair_id,
-                                               void **data, size_t *size)
+bool libspdm_read_requester_pqc_private_key_ex(void *spdm_context, uint32_t req_pqc_asym_alg,
+                                               uint8_t key_pair_id, void **data, size_t *size)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
     bool res;
@@ -228,7 +228,7 @@ bool libspdm_read_requester_pqc_private_key_ex(uint32_t req_pqc_asym_alg, uint8_
      * multi-key connection) uses the default key: the lookup also returns 0 when no key pair
      * of the algorithm backs slot 4, as for SLH-DSA. */
     if ((key_pair_id == 0) ||
-        (key_pair_id != libspdm_get_key_pair_id_by_slot(0, req_pqc_asym_alg, 4))) {
+        (key_pair_id != libspdm_get_key_pair_id_by_slot(spdm_context, 0, req_pqc_asym_alg, 4))) {
         return libspdm_read_requester_pqc_private_key(req_pqc_asym_alg, data, size);
     }
 
