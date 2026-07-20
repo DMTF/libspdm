@@ -364,8 +364,8 @@ static uint32_t libspdm_base_asym_algo_to_key_pair_cap(uint32_t base_asym_algo)
  * (per DSP0274, KeyPairIDs are 1..TotalKeyPairs without gaps and each has one fixed algorithm) --
  * the primary key pair of the negotiated algorithm backs slots 0/1 and its secondary backs slot 4.
  * Returns 0 if no matching key pair exists. */
-uint8_t libspdm_get_key_pair_id_by_slot(uint32_t base_asym_algo, uint32_t pqc_asym_algo,
-                                        uint8_t slot_id)
+uint8_t libspdm_get_key_pair_id_by_slot(void *spdm_context, uint32_t base_asym_algo,
+                                        uint32_t pqc_asym_algo, uint8_t slot_id)
 {
     uint8_t index;
     uint32_t key_pair_asym_algo;
