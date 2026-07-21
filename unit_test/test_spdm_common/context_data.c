@@ -1715,6 +1715,51 @@ static void libspdm_test_process_opaque_data_case22(void **state)
     assert_int_equal (status, true);
 }
 
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+/**
+ * Test 23: libspdm_reset_context releases the peer leaf certificate public key.
+ * Expected Behavior: after a parsed leaf public key is stored for a slot,
+ * reset_context frees it and clears the slot, so it is not orphaned when the
+ * connection is re-established (reset_context runs on every GET_VERSION).
+ **/
+static void libspdm_test_reset_context_leaf_key_case23(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+    bool result;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x17;
+
+    spdm_context->local_context.is_requester = true;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
+
+    result = libspdm_get_leaf_cert_public_key_from_cert_chain(
+        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, data, data_size,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    assert_true(result);
+    assert_non_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+
+    libspdm_reset_context(spdm_context);
+
+    assert_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+
+    free(data);
+}
+#endif /* !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) */
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -1766,6 +1811,11 @@ int libspdm_common_context_data_test_main(void)
 
         /* Successful response V1.2 for multi element */
         cmocka_unit_test(libspdm_test_process_opaque_data_case22),
+
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+        /* reset_context frees the stored peer leaf certificate public key */
+        cmocka_unit_test(libspdm_test_reset_context_leaf_key_case23),
+#endif
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);
