@@ -98,6 +98,12 @@
 #define LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP 1
 #endif
 
+#ifndef LIBSPDM_MAX_KEY_PAIR_COUNT
+/* Up to (9 traditional + 3 ML-DSA) PRIMARY key pairs, each backing slots 0 and 1, plus one
+ * SECONDARY key pair per algorithm backing slot 4 (the multi-key example) -- hence x2. */
+#define LIBSPDM_MAX_KEY_PAIR_COUNT ((9 + 3) * 2)
+#endif
+
 /* If 1 then endpoint supports sending GET_CERTIFICATE and GET_DIGESTS requests.
  * If enabled and endpoint is a Responder then LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
  * must also be enabled.

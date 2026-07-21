@@ -34,6 +34,7 @@ void libspdm_test_responder_set_key_pair_info_ack(void **State)
         m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     response_size = sizeof(response);
     libspdm_get_response_set_key_pair_info_ack(spdm_context,

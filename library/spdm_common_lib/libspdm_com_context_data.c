@@ -866,6 +866,28 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->connection_info.multi_key_conn_rsp = *(const bool *)data;
         break;
+    case LIBSPDM_DATA_TOTAL_KEY_PAIRS:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (data_size != sizeof(uint8_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->local_context.total_key_pairs = *(const uint8_t *)data;
+        break;
+    case LIBSPDM_DATA_LOCAL_KEY_PAIR_INFO:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        data8 = parameter->additional_data[0];
+        if ((data8 == 0) || (data8 > LIBSPDM_MAX_KEY_PAIR_COUNT)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (data_size != sizeof(libspdm_key_pair_info_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->local_context.local_key_pair_info[data8 - 1] = data;
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
@@ -881,7 +903,7 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
     libspdm_context_t *context;
     libspdm_secured_message_context_t *secured_context = NULL;
     size_t target_data_size;
-    void *target_data;
+    const void *target_data;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
     uint8_t slot_id;
@@ -1253,6 +1275,28 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         }
         target_data_size = sizeof(bool);
         target_data = &context->connection_info.multi_key_conn_rsp;
+        break;
+    case LIBSPDM_DATA_TOTAL_KEY_PAIRS:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(uint8_t);
+        target_data = &context->local_context.total_key_pairs;
+        break;
+    case LIBSPDM_DATA_LOCAL_KEY_PAIR_INFO:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        /* This is actually KeyPairID, but re-use the slot_id variable */
+        slot_id = parameter->additional_data[0];
+        if ((slot_id == 0) || (slot_id > LIBSPDM_MAX_KEY_PAIR_COUNT)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (context->local_context.local_key_pair_info[slot_id - 1] == NULL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(libspdm_key_pair_info_t);
+        target_data = context->local_context.local_key_pair_info[slot_id - 1];
         break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
