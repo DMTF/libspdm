@@ -11,76 +11,47 @@
 #include "internal/libspdm_lib_config.h"
 #include "industry_standard/spdm.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
-
-/**
- * read the key pair info of the key_pair_id.
- *
- * @param  spdm_context               A pointer to the SPDM context.
- * @param  key_pair_id                Indicate which key pair ID's information to retrieve.
- *
- * @param  total_key_pairs            Indicate the total number of key pairs on the Responder.
- *                                    It is a fixed number per SPDM connection. This aligns with the
- *                                    TotalKeyPairs field of the KEY_PAIR_INFO response.
- *                                    This output shall ALWAYS be set, including on the failure path
- *                                    (set it before any other validation), because the responder
- *                                    uses it to range-check key_pair_id. A device with no key pairs
- *                                    shall set it to 0.
- * @param  capabilities               Indicate the capabilities of the requested key pairs.
- * @param  key_usage_capabilities     Indicate the key usages the responder allows.
- * @param  current_key_usage          Indicate the currently configured key usage for the requested key pairs ID.
- * @param  asym_algo_capabilities     Indicate the asymmetric algorithms the Responder supports for this key pair ID.
- * @param  current_asym_algo          Indicate the currently configured asymmetric algorithm for this key pair ID.
- * @param  assoc_cert_slot_mask       This field is a bit mask representing the currently associated certificate slots.
- * @param  public_key_info_len        On input, indicate the size in bytes of the destination buffer to store.
- *                                    On output, indicate the size in bytes of the public_key_info.
- *                                    It can be NULL, if public_key_info is not required.
- * @param  public_key_info            A pointer to a destination buffer to store the public_key_info.
- *                                    It can be NULL, if public_key_info is not required.
- *
- * @retval true  get key pair info successfully.
- * @retval false get key pair info failed. total_key_pairs shall still be set on this path so the
- *               caller can distinguish an invalid key_pair_id (0 or > total_key_pairs ->
- *               INVALID_REQUEST) from another read failure (-> UNSPECIFIED).
- **/
-extern bool libspdm_read_key_pair_info(
-    void *spdm_context,
-    uint8_t key_pair_id,
-    uint8_t *total_key_pairs,
-    uint16_t *capabilities,
-    uint16_t *key_usage_capabilities,
-    uint16_t *current_key_usage,
-    uint32_t *asym_algo_capabilities,
-    uint32_t *current_asym_algo,
-    uint32_t *pqc_asym_algo_capabilities,
-    uint32_t *current_pqc_asym_algo,
-    uint8_t *assoc_cert_slot_mask,
-    uint16_t *public_key_info_len,
-    uint8_t *public_key_info);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
+typedef struct {
+    uint16_t capabilities;
+    uint16_t key_usage_capabilities;
+    uint16_t current_key_usage;
+    uint32_t asym_algo_capabilities;
+    uint32_t current_asym_algo;
+    uint32_t pqc_asym_algo_capabilities;
+    uint32_t current_pqc_asym_algo;
+    uint16_t public_key_info_len;
+    uint8_t assoc_cert_slot_mask;
+    uint8_t public_key_info[SPDM_MAX_PUBLIC_KEY_INFO_LEN];
+} libspdm_key_pair_info_t;
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
+
 /**
- * write the key pair info of the key_pair_id.
+ * Apply a validated SET_KEY_PAIR_INFO Operation (Erase/Generate/ChangeParameter) to key_pair_id
+ * and write the result to non-volatile memory, similar to libspdm_update_local_cert_chain() for
+ * SET_CERTIFICATE.
  *
- * @param  spdm_context                 A pointer to the SPDM context.
- * @param  key_pair_id                  Indicate which key pair ID's information to retrieve.
+ * If a reset isn't required (or once it has happened), it is the implementation's responsibility
+ * to update LIBSPDM_DATA_LOCAL_KEY_PAIR_INFO (via libspdm_set_data()) so libspdm uses the new
+ * value.
  *
- * @param  key_pair_id                  Indicate which key pair ID's information to retrieve.
- * @param  operation                    Set key pair info operation: change/erase/generate.
- * @param  desired_key_usage            Indicate the desired key usage for the requested key pair ID.
- * @param  desired_asym_algo            Indicate the desired asymmetric algorithm for the requested key pair ID.
- * @param  desired_assoc_cert_slot_mask Indicate the desired certificate slot association for the requested key pair ID.
- * @param  need_reset                   For input, for SPDM 1.4+, it gives the value of SET_KEY_PAIR_RESET_CAP:
- *                                                  If true, then device needs to be reset to complete the set_key_pair_info.
- *                                                  If false, the device doesn`t need to be reset to complete the set_key_pair_info.
- *                                                 for SPDM 1.3, it will always be false.
- *                                       For output, it specifies whether the device needs to be reset to complete the set_key_pair_info or not.
+ * @param[in,out]  spdm_context                  A pointer to the SPDM context.
+ * @param[in]      key_pair_id                   Indicates which key pair ID to update. KeyPairID
+ *                                                is 1-based.
+ * @param[in]      operation                     SPDM_SET_KEY_PAIR_INFO_*_OPERATION.
+ * @param[in]      desired_key_usage             Indicate the desired key usage for the key pair.
+ * @param[in]      desired_asym_algo             Indicate the desired asymmetric algorithm.
+ * @param[in]      desired_pqc_asym_algo         Indicate the desired PQC asymmetric algorithm.
+ * @param[in]      desired_assoc_cert_slot_mask  Indicate the desired certificate slot
+ *                                                association.
+ * @param[in,out]  need_reset                    On input, the value of SET_KEY_PAIR_RESET_CAP.
+ *                                                On output, whether the device needs to be reset
+ *                                                to complete the SET_KEY_PAIR_INFO operation.
  *
- * @retval true  set key pair info successfully.
- * @retval false set key pair info failed.
+ * @retval true   the operation was applied and written to non-volatile memory successfully.
+ * @retval false  the operation could not be applied.
  **/
-extern bool libspdm_write_key_pair_info(
+extern bool libspdm_update_local_key_pair_info(
     void *spdm_context,
     uint8_t key_pair_id,
     uint8_t operation,
@@ -88,7 +59,8 @@ extern bool libspdm_write_key_pair_info(
     uint32_t desired_asym_algo,
     uint32_t desired_pqc_asym_algo,
     uint8_t desired_assoc_cert_slot_mask,
-    bool * need_reset);
+    bool *need_reset);
+
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
 
 #endif /* RESPONDER_KEY_PAIR_INFO_H */

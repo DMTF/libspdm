@@ -31,6 +31,7 @@ void libspdm_test_responder_key_pair_info(void **State)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     response_size = sizeof(response);
     libspdm_get_response_key_pair_info(spdm_context,

@@ -20,9 +20,9 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
+    const libspdm_key_pair_info_t *key_pair_info;
     uint16_t capabilities;
     uint16_t key_usage_capabilities;
-    uint16_t current_key_usage;
     uint32_t asym_algo_capabilities;
     uint32_t current_asym_algo;
     uint32_t pqc_asym_algo_capabilities;
@@ -111,31 +111,27 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
 
     libspdm_zero_mem(response, *response_size);
 
-    total_key_pairs = 0;
     key_pair_id = spdm_request->key_pair_id;
-    result = libspdm_read_key_pair_info(
-        spdm_context,
-        key_pair_id,
-        &total_key_pairs,
-        &capabilities,
-        &key_usage_capabilities,
-        &current_key_usage,
-        &asym_algo_capabilities,
-        &current_asym_algo,
-        &pqc_asym_algo_capabilities,
-        &current_pqc_asym_algo,
-        &assoc_cert_slot_mask,
-        NULL, NULL);
+    total_key_pairs = spdm_context->local_context.total_key_pairs;
     if ((key_pair_id == 0) || (key_pair_id > total_key_pairs)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    if (!result) {
+
+    key_pair_info = spdm_context->local_context.local_key_pair_info[key_pair_id - 1];
+    if (key_pair_info == NULL) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
+    capabilities = key_pair_info->capabilities;
+    key_usage_capabilities = key_pair_info->key_usage_capabilities;
+    asym_algo_capabilities = key_pair_info->asym_algo_capabilities;
+    current_asym_algo = key_pair_info->current_asym_algo;
+    pqc_asym_algo_capabilities = key_pair_info->pqc_asym_algo_capabilities;
+    current_pqc_asym_algo = key_pair_info->current_pqc_asym_algo;
+    assoc_cert_slot_mask = key_pair_info->assoc_cert_slot_mask;
 
     operation = spdm_request->header.param1;
 
@@ -333,29 +329,20 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
 
             for (other_key_pair_id = 1; other_key_pair_id <= total_key_pairs;
                  other_key_pair_id++) {
-                uint16_t other_capabilities;
-                uint16_t other_key_usage_capabilities;
-                uint16_t other_current_key_usage;
-                uint32_t other_asym_algo_capabilities;
-                uint32_t other_current_asym_algo;
-                uint32_t other_pqc_asym_algo_capabilities;
-                uint32_t other_current_pqc_asym_algo;
-                uint8_t other_assoc_cert_slot_mask;
+                const libspdm_key_pair_info_t *other_key_pair_info;
 
                 if (other_key_pair_id == key_pair_id) {
                     continue;
                 }
-                if (!libspdm_read_key_pair_info(
-                        spdm_context, other_key_pair_id, &total_key_pairs, &other_capabilities,
-                        &other_key_usage_capabilities, &other_current_key_usage,
-                        &other_asym_algo_capabilities, &other_current_asym_algo,
-                        &other_pqc_asym_algo_capabilities, &other_current_pqc_asym_algo,
-                        &other_assoc_cert_slot_mask, NULL, NULL)) {
+                other_key_pair_info =
+                    spdm_context->local_context.local_key_pair_info[other_key_pair_id - 1];
+                if (other_key_pair_info == NULL) {
                     continue;
                 }
-                if ((other_current_asym_algo == effective_asym_algo) &&
-                    (other_current_pqc_asym_algo == effective_pqc_asym_algo) &&
-                    ((other_assoc_cert_slot_mask & desired_assoc_cert_slot_mask) != 0)) {
+                if ((other_key_pair_info->current_asym_algo == effective_asym_algo) &&
+                    (other_key_pair_info->current_pqc_asym_algo == effective_pqc_asym_algo) &&
+                    ((other_key_pair_info->assoc_cert_slot_mask &
+                      desired_assoc_cert_slot_mask) != 0)) {
                     return libspdm_generate_error_response(
                         spdm_context, SPDM_ERROR_CODE_OPERATION_FAILED, 0,
                         response_size, response);
@@ -371,15 +358,10 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     } else {
         need_reset = false;
     }
-    result = libspdm_write_key_pair_info(
-        spdm_context,
-        key_pair_id,
-        operation,
-        desired_key_usage,
-        desired_asym_algo,
-        desired_pqc_asym_algo,
-        desired_assoc_cert_slot_mask,
-        &need_reset);
+
+    result = libspdm_update_local_key_pair_info(
+        spdm_context, key_pair_id, operation, desired_key_usage, desired_asym_algo,
+        desired_pqc_asym_algo, desired_assoc_cert_slot_mask, &need_reset);
     if (!result) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_OPERATION_FAILED, 0,
@@ -397,20 +379,19 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         /* Update context with new key pair information if a reset is not needed. Re-read the key
          * pair info so the authoritative post-write association and key usage are used (the device
          * may normalize or apply defaults on a successful write). */
-        uint8_t new_assoc_cert_slot_mask = 0;
-        uint16_t new_current_key_usage = 0;
+        const libspdm_key_pair_info_t *new_key_pair_info;
+        uint8_t new_assoc_cert_slot_mask;
+        uint16_t new_current_key_usage;
         uint8_t slot_index;
 
-        result = libspdm_read_key_pair_info(
-            spdm_context, key_pair_id, &total_key_pairs, &capabilities, &key_usage_capabilities,
-            &new_current_key_usage, &asym_algo_capabilities, &current_asym_algo,
-            &pqc_asym_algo_capabilities, &current_pqc_asym_algo, &new_assoc_cert_slot_mask,
-            NULL, NULL);
-        if (!result) {
+        new_key_pair_info = spdm_context->local_context.local_key_pair_info[key_pair_id - 1];
+        if (new_key_pair_info == NULL) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                    response_size, response);
         }
+        new_assoc_cert_slot_mask = new_key_pair_info->assoc_cert_slot_mask;
+        new_current_key_usage = new_key_pair_info->current_key_usage;
 
         for (slot_index = 0; slot_index < SPDM_MAX_SLOT_COUNT; slot_index++) {
             if ((new_assoc_cert_slot_mask & (1 << slot_index)) != 0) {

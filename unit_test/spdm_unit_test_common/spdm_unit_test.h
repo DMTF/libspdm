@@ -222,6 +222,8 @@ typedef enum
 void libspdm_force_error (libspdm_error_target_t target);
 void libspdm_release_error (libspdm_error_target_t target);
 
+void libspdm_test_provision_key_pair_info(void *spdm_context);
+
 void generate_dmtf_event_group(void *buffer, uint8_t *total_bytes, uint32_t attributes,
                                bool inc_event_lost, bool inc_meas_changed,
                                bool inc_meas_pre_update, bool inc_cert_changed);

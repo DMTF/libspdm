@@ -107,6 +107,10 @@ typedef struct {
     spdm_certificate_info_t local_cert_info[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
     spdm_key_usage_bit_mask_t local_key_usage_bit_mask[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
     uint8_t local_slot_management_subcodes[8];
+
+    uint8_t total_key_pairs;
+    const libspdm_key_pair_info_t *local_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
+
     uint32_t local_bank_asym_algo[LIBSPDM_MAX_BANK_COUNT];
     uint32_t local_bank_pqc_asym_algo[LIBSPDM_MAX_BANK_COUNT];
     uint32_t local_bank_asym_algo_capabilities[LIBSPDM_MAX_BANK_COUNT];
