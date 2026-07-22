@@ -7,6 +7,7 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
 #include "internal/libspdm_requester_lib.h"
+#include "hal/library/responder/slot_mgmt.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
 
@@ -40,6 +41,24 @@ uint32_t bank_asym_algo_capabilities =
     SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC384 |
     SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC521;
 uint32_t zero = 0;
+
+bool libspdm_write_slot_management_manage_bank(
+    void *spdm_context,
+    uint8_t bank_id,
+    uint32_t select_asym_algo,
+    uint32_t select_pqc_asym_algo)
+{
+    /* It's our responsibility to store the updates
+     * select_asym_algo and select_pqc_asym_algo values into non-volatile
+     * storage, so that when libspdm is started again the values are preserved.
+     *
+     * We don't actually do that though, as this is just a sample device, so just
+     * pretend we did. libspdm will update it's internal copy while running, so
+     * everything will work fine.
+     */
+
+    return true;
+}
 
 /* The sample device_secret_lib stores runtime-provisioned certificate chains in NVM files named
  * "bank_id_NNN_slot_id_M_cert_chain.der" (SLOT_MANAGEMENT SetCertificate/Erase) and

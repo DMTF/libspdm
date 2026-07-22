@@ -357,3 +357,14 @@ libspdm_return_t libspdm_generate_device_endpoint_info(
     return LIBSPDM_STATUS_UNSUPPORTED_CAP;
 }
 #endif /* #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
+
+#if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
+bool libspdm_write_slot_management_manage_bank(
+    void *spdm_context,
+    uint8_t bank_id,
+    uint32_t select_asym_algo,
+    uint32_t select_pqc_asym_algo)
+{
+    return false;
+}
+#endif

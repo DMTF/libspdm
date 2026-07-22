@@ -5,6 +5,7 @@
  **/
 
 #include "internal/libspdm_responder_lib.h"
+#include "hal/library/responder/slot_mgmt.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
 
@@ -781,8 +782,12 @@ static libspdm_return_t libspdm_get_response_slot_management_manage_bank(
         spdm_context->local_context.local_key_usage_bit_mask[bank_id][slot_id] = 0;
     }
 
-    spdm_context->local_context.local_bank_asym_algo[bank_id] = select_asym_algo;
-    spdm_context->local_context.local_bank_pqc_asym_algo[bank_id] = select_pqc_asym_algo;
+    if (!libspdm_write_slot_management_manage_bank(spdm_context, req_struct->slot_address.bank_id,
+                                                   select_asym_algo, select_pqc_asym_algo)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
 
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
@@ -791,6 +796,10 @@ static libspdm_return_t libspdm_get_response_slot_management_manage_bank(
                                                SPDM_ERROR_CODE_RESET_REQUIRED, 0,
                                                response_size, response);
     }
+
+    /* We don't update our internal state if a reset is required. */
+    spdm_context->local_context.local_bank_asym_algo[bank_id] = select_asym_algo;
+    spdm_context->local_context.local_bank_pqc_asym_algo[bank_id] = select_pqc_asym_algo;
 
     return libspdm_slot_management_generate_empty_response(
         spdm_context, spdm_request->header.spdm_version, spdm_request->header.param1,
