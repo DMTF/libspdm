@@ -477,3 +477,35 @@ bool libspdm_check_for_space(const uint8_t *ptr, const uint8_t *end_ptr, size_t 
 
     return ((uintptr_t)(end_ptr - ptr) >= increment);
 }
+
+uint8_t libspdm_get_supported_slot_mask(libspdm_context_t *spdm_context)
+{
+    int i;
+    uint8_t ret = 0;
+
+    for (i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
+        if (spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] !=
+            NULL) {
+            ret |= 1 << i;
+        }
+    }
+
+    return ret;
+}
+
+spdm_key_pair_id_t libspdm_get_key_pair_id(libspdm_context_t *spdm_context, uint8_t slot_id)
+{
+    uint8_t i;
+
+    for (i = 0; i < LIBSPDM_MAX_KEY_PAIR_COUNT; i++) {
+        if (spdm_context->local_context.local_key_pair_info[i] == NULL) {
+            break;
+        }
+
+        if ((1 << slot_id) & spdm_context->local_context.local_key_pair_info[i]->assoc_cert_slot_mask) {
+            return i + 1;
+        }
+    }
+
+    return 0;
+}

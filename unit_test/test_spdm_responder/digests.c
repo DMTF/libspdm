@@ -538,10 +538,7 @@ static void rsp_digests_case10(void **state)
                                                        sizeof(spdm_certificate_info_t) *
                                                        slot_count);
     for (uint8_t index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
-        assert_memory_equal((void *)&key_pair_id[index],
-                            (void *)&spdm_context->local_context.local_key_pair_id[
-                                index],
-                            sizeof(spdm_key_pair_id_t));
+        assert_int_equal(key_pair_id[index], libspdm_get_key_pair_id(spdm_context, index));
         assert_memory_equal((void *)&cert_info[index],
                             (void *)&spdm_context->local_context.local_cert_info[spdm_context->connection_info.
                                                                                  current_bank][index],

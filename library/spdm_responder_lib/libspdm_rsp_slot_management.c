@@ -216,8 +216,7 @@ static bool libspdm_slot_management_compute_bank_details(
         slot_elements[count].slot_id = slot_id;
         slot_elements[count].slot_attributes =
             SPDM_SLOT_MANAGEMENT_SLOT_ATTRIBUTE_PROVISIONED;
-        slot_elements[count].key_pair_id =
-            spdm_context->local_context.local_key_pair_id[slot_id];
+        slot_elements[count].key_pair_id = libspdm_get_key_pair_id(spdm_context, slot_id);
         slot_elements[count].certificate_info =
             spdm_context->local_context.local_cert_info[bank_id][slot_id];
         slot_elements[count].key_usage =
@@ -777,7 +776,6 @@ static libspdm_return_t libspdm_get_response_slot_management_manage_bank(
      * settings."
      */
     for (slot_id = 0; slot_id < SPDM_MAX_SLOT_COUNT; slot_id++) {
-        spdm_context->local_context.local_key_pair_id[slot_id] = 0;
         spdm_context->local_context.local_cert_info[bank_id][slot_id] = 0;
         spdm_context->local_context.local_key_usage_bit_mask[bank_id][slot_id] = 0;
     }

@@ -45,14 +45,7 @@ If Requester's `MULTI_KEY_CAP` is non-zero then both `ENCAP_CAP` and `CERT_CAP` 
 1. If Requester's `MULTI_KEY_CAP == 1` then skip to Step 2. If `MULTI_KEY_CAP == 2` then call
    `libspdm_get_data` with `LIBSPDM_DATA_MULTI_KEY_CONN_REQ` to determine whether the connection
    utilizes multikey (`true`) or not (`false`). If it is `true` then continue to Step 2.
-2. Call `libspdm_set_data` with `LIBSPDM_DATA_LOCAL_KEY_PAIR_ID` and
-   `LIBSPDM_DATA_LOCAL_KEY_USAGE_BIT_MASK` to map `KeyPairID`s with certificate slots for the
-    negotiated asymmetric cryptography algorithm (`ReqBaseAsymAlg` or `ReqPqcAsymAlg`) and to
-    specify the messages a key can be associated with.
-    - If `MULTI_KEY_CAP == 1` and the Requester supports only one asymmetric cryptography
-      algorithm for signing then this step can be performed before the connection is
-      established.
-3. Calls to `libspdm_requester_data_sign` then specify the `KeyPairID`.
+2. Calls to `libspdm_requester_data_sign` then specify the `KeyPairID`.
 
 ## Multikey Flow for Responder
 
@@ -63,14 +56,7 @@ If Requester's `MULTI_KEY_CAP` is non-zero then both `ENCAP_CAP` and `CERT_CAP` 
    `LIBSPDM_CONNECTION_STATE_NEGOTIATED`, call `libspdm_get_data` with
    `LIBSPDM_DATA_MULTI_KEY_CONN_RSP` to determine whether the connection utilizes multikey (`true`)
    or not (`false`). If it is `true` then continue to Step 2.
-2. Call `libspdm_set_data` with `LIBSPDM_DATA_LOCAL_KEY_PAIR_ID` and
-   `LIBSPDM_DATA_LOCAL_KEY_USAGE_BIT_MASK` to map `KeyPairID`s with certificate slots for the
-    negotiated asymmetric cryptography algorithm (`BaseAsymSel` or `PqcAsymSel`) and to specify
-    the messages a key can be associated with.
-    - If `MULTI_KEY_CAP == 1` and the Responder supports only one asymmetric cryptography
-      algorithm for signing then this step can be performed before the connection is
-      established.
-3. Calls to `libspdm_responder_data_sign` then specify the `KeyPairID`.
+2. Calls to `libspdm_responder_data_sign` then specify the `KeyPairID`.
 
 ### Requester Sign / Responder Verify Flow
 

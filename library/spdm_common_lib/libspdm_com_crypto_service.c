@@ -27,7 +27,7 @@ uint8_t libspdm_slot_id_to_key_pair_id (
         }
     }
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
-    return context->local_context.local_key_pair_id[slot_id];
+    return libspdm_get_key_pair_id(spdm_context, slot_id);
 }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT

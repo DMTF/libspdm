@@ -108,7 +108,6 @@ static void rsp_endpoint_info_case1(void **state)
         return;
     }
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_key_pair_id[i] = 1;
         spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][i] =
             data_size;
         spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] = data;
@@ -313,14 +312,16 @@ static void rsp_endpoint_info_case3(void **state)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
+    libspdm_test_provision_key_pair_info(spdm_context);
+
     session_info = NULL;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
         return;
     }
+    libspdm_set_slot_use_for_key_pairs(spdm_context, 1 << 1);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_key_pair_id[i] = 1;
         spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][i] =
             data_size;
         spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] = data;
@@ -503,13 +504,15 @@ static void rsp_endpoint_info_case5(void **state)
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
+    libspdm_test_provision_key_pair_info(spdm_context);
+
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
         return;
     }
+    libspdm_set_slot_use_for_key_pairs(spdm_context, 1 << 1);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_key_pair_id[i] = 1;
         spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][i] =
             data_size;
         spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] = data;
