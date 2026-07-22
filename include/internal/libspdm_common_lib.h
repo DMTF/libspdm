@@ -101,9 +101,7 @@ typedef struct {
     /* My Certificate */
     const void *local_cert_chain_provision[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
     size_t local_cert_chain_provision_size[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
-    uint8_t local_supported_slot_mask;
     uint8_t cert_slot_reset_mask;
-    spdm_key_pair_id_t local_key_pair_id[SPDM_MAX_SLOT_COUNT];
     spdm_certificate_info_t local_cert_info[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
     spdm_key_usage_bit_mask_t local_key_usage_bit_mask[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
     uint8_t local_slot_management_subcodes[8];
@@ -2104,5 +2102,20 @@ bool libspdm_parse_and_send_event(libspdm_context_t *context, uint32_t session_i
  * @retval false There is not enough space in the buffer.
  */
 bool libspdm_check_for_space(const uint8_t *ptr, const uint8_t *end_ptr, size_t increment);
+
+/**
+ * Return the supported slot mask for the current bank
+ *
+ * @param  spdm_context          A pointer to the SPDM context.
+ */
+uint8_t libspdm_get_supported_slot_mask(libspdm_context_t *spdm_context);
+
+/**
+ * Return the KeyPairID associated with the current slot, 0 if there are none.
+ *
+ * @param  spdm_context    A pointer to the SPDM context.
+ * @param  slot_id         The slot ID to use
+ */
+spdm_key_pair_id_t libspdm_get_key_pair_id(libspdm_context_t *spdm_context, uint8_t slot_id);
 
 #endif /* SPDM_COMMON_LIB_INTERNAL_H */

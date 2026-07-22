@@ -584,29 +584,6 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             break;
         }
         break;
-    case LIBSPDM_DATA_LOCAL_SUPPORTED_SLOT_MASK:
-        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        if (data_size != sizeof(uint8_t)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        context->local_context.local_supported_slot_mask = *(const uint8_t *)data;
-        break;
-    case LIBSPDM_DATA_LOCAL_KEY_PAIR_ID:
-        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        slot_id = parameter->additional_data[0];
-        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        if (data_size != sizeof(spdm_key_pair_id_t)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        context->local_context.local_key_pair_id[slot_id] =
-            *(const spdm_key_pair_id_t *)data;
-        break;
     case LIBSPDM_DATA_LOCAL_CERT_INFO:
         if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;

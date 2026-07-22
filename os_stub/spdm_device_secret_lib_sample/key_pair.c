@@ -27,9 +27,10 @@
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65 | \
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_87)
 
+libspdm_key_pair_info_t local_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
+
 void libspdm_test_provision_key_pair_info(void *spdm_context)
 {
-    static libspdm_key_pair_info_t local_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
     libspdm_data_parameter_t parameter;
     uint8_t i;
 #if (LIBSPDM_RSA_SSA_SUPPORT || LIBSPDM_RSA_PSS_SUPPORT)
@@ -345,6 +346,33 @@ static uint32_t libspdm_base_asym_algo_to_key_pair_cap(uint32_t base_asym_algo)
         return SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED448;
     default:
         return 0;
+    }
+}
+
+void libspdm_set_slot_use_for_key_pairs(void *spdm_context, uint8_t slot_mask)
+{
+    libspdm_data_parameter_t parameter;
+    uint8_t total_key_pairs;
+    size_t data_size;
+
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+    data_size = sizeof(total_key_pairs);
+    if ((libspdm_get_data(spdm_context, LIBSPDM_DATA_TOTAL_KEY_PAIRS, &parameter,
+                          &total_key_pairs, &data_size) != LIBSPDM_STATUS_SUCCESS)) {
+        return;
+    }
+
+    if (total_key_pairs == 0) {
+        return;
+    }
+
+    for (int i = 0; i < total_key_pairs; i++) {
+        /* Skip the slot 4 secondary key pairs (see above) */
+        if ((local_key_pair_info[i].assoc_cert_slot_mask & 0x10) != 0) {
+            continue;
+        }
+        local_key_pair_info[i].assoc_cert_slot_mask = slot_mask;
     }
 }
 
