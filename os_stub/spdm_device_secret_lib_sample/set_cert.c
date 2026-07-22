@@ -295,8 +295,18 @@ set_cert:
     }
 
     if (key_pair_id != 0) {
-        status = libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_KEY_PAIR_ID,
-                                  &parameter, &key_pair_id, sizeof(key_pair_id));
+        libspdm_key_pair_info_t key_pair_info;
+        size_t key_pair_info_size;
+
+        key_pair_info_size = sizeof(key_pair_info);
+        parameter.additional_data[0] = key_pair_id;
+        status = libspdm_get_data(spdm_context, LIBSPDM_DATA_LOCAL_KEY_PAIR_INFO, &parameter,
+                                  &key_pair_info, &key_pair_info_size);
+        if (status == LIBSPDM_STATUS_SUCCESS) {
+            key_pair_info.assoc_cert_slot_mask |= (uint8_t)(1 << slot_id);
+            status = libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_KEY_PAIR_INFO, &parameter,
+                                      &key_pair_info, sizeof(key_pair_info));
+        }
         LIBSPDM_ASSERT(status == LIBSPDM_STATUS_SUCCESS);
     }
 

@@ -884,7 +884,7 @@ static void rsp_set_certificate_rsp_case11(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     slot_id = 1;
     key_pair_id = 3;
-    spdm_context->local_context.local_key_pair_id[slot_id] = 0;
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |=
@@ -929,9 +929,22 @@ static void rsp_set_certificate_rsp_case11(void **state)
     assert_int_equal(response_size, sizeof(spdm_set_certificate_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_CERTIFICATE_RSP);
-    assert_int_equal(spdm_context->local_context.local_key_pair_id[slot_id], key_pair_id);
+    {
+        libspdm_data_parameter_t parameter;
+        libspdm_key_pair_info_t key_pair_info;
+        size_t key_pair_info_size;
 
-    spdm_context->local_context.local_key_pair_id[slot_id] = 0;
+        libspdm_zero_mem(&parameter, sizeof(parameter));
+        parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+        parameter.additional_data[0] = key_pair_id;
+        key_pair_info_size = sizeof(key_pair_info);
+        assert_int_equal(libspdm_get_data(spdm_context, LIBSPDM_DATA_LOCAL_KEY_PAIR_INFO,
+                                          &parameter, &key_pair_info,
+                                          &key_pair_info_size), LIBSPDM_STATUS_SUCCESS);
+        assert_true((key_pair_info.assoc_cert_slot_mask & (1 << slot_id)) != 0);
+    }
+
+    libspdm_test_provision_key_pair_info(spdm_context);
     free(cert_chain);
     free(m_libspdm_set_certificate_request);
 }

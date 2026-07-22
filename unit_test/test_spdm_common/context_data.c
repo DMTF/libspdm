@@ -2986,8 +2986,6 @@ static const libspdm_test_data_item_t m_libspdm_test_wrong_size_items[] = {
     { LIBSPDM_DATA_ALGO_PRIORITY_PQC_FIRST, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint32_t), 0 },
     { LIBSPDM_DATA_CONNECTION_STATE, LIBSPDM_DATA_LOCATION_CONNECTION, sizeof(uint8_t), 0 },
     { LIBSPDM_DATA_RESPONSE_STATE, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint8_t), 0 },
-    { LIBSPDM_DATA_LOCAL_SUPPORTED_SLOT_MASK, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint16_t), 0 },
-    { LIBSPDM_DATA_LOCAL_KEY_PAIR_ID, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint16_t), 0 },
     { LIBSPDM_DATA_LOCAL_CERT_INFO, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint16_t), 0 },
     { LIBSPDM_DATA_LOCAL_KEY_USAGE_BIT_MASK, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint8_t), 0 },
     { LIBSPDM_DATA_HEARTBEAT_PERIOD, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint16_t), 0 },
@@ -3041,10 +3039,6 @@ static const libspdm_test_data_item_t m_libspdm_test_set_wrong_location_items[] 
 #endif /* LIBSPDM_CERT_PARSE_SUPPORT */
     { LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, LIBSPDM_DATA_LOCATION_CONNECTION, sizeof(uint64_t),
       0 },
-    { LIBSPDM_DATA_LOCAL_SUPPORTED_SLOT_MASK, LIBSPDM_DATA_LOCATION_CONNECTION, sizeof(uint8_t),
-      0 },
-    { LIBSPDM_DATA_LOCAL_KEY_PAIR_ID, LIBSPDM_DATA_LOCATION_CONNECTION,
-      sizeof(spdm_key_pair_id_t), 0 },
     { LIBSPDM_DATA_LOCAL_CERT_INFO, LIBSPDM_DATA_LOCATION_CONNECTION,
       sizeof(spdm_certificate_info_t), 0 },
     { LIBSPDM_DATA_LOCAL_KEY_USAGE_BIT_MASK, LIBSPDM_DATA_LOCATION_CONNECTION,
@@ -3065,7 +3059,6 @@ static const libspdm_test_data_item_t m_libspdm_test_set_wrong_location_items[] 
 /* Items that libspdm_set_data stores per slot, with the slot ID in additional_data[0]. */
 static const libspdm_test_data_item_t m_libspdm_test_set_slot_items[] = {
     { LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint64_t), 0 },
-    { LIBSPDM_DATA_LOCAL_KEY_PAIR_ID, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(spdm_key_pair_id_t), 0 },
     { LIBSPDM_DATA_LOCAL_CERT_INFO, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(spdm_certificate_info_t),
       0 },
     { LIBSPDM_DATA_LOCAL_KEY_USAGE_BIT_MASK, LIBSPDM_DATA_LOCATION_LOCAL,
@@ -3159,8 +3152,6 @@ static const libspdm_test_data_item_t m_libspdm_test_write_only_items[] = {
     { LIBSPDM_DATA_ALGO_PRIORITY_PQC_FIRST, LIBSPDM_DATA_LOCATION_LOCAL, 0, 0 },
     { LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, LIBSPDM_DATA_LOCATION_LOCAL, 0, 0 },
     { LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, LIBSPDM_DATA_LOCATION_LOCAL, 0, 0 },
-    { LIBSPDM_DATA_LOCAL_SUPPORTED_SLOT_MASK, LIBSPDM_DATA_LOCATION_LOCAL, 0, 0 },
-    { LIBSPDM_DATA_LOCAL_KEY_PAIR_ID, LIBSPDM_DATA_LOCATION_LOCAL, 0, 0 },
     { LIBSPDM_DATA_LOCAL_CERT_INFO, LIBSPDM_DATA_LOCATION_LOCAL, 0, 0 },
     { LIBSPDM_DATA_LOCAL_KEY_USAGE_BIT_MASK, LIBSPDM_DATA_LOCATION_LOCAL, 0, 0 },
     { LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER, LIBSPDM_DATA_LOCATION_CONNECTION, 0, 0 },
@@ -3301,11 +3292,6 @@ static void libspdm_test_set_data_local_items_case36(void **state)
                                 &local_context->algorithm.kem_alg);
     libspdm_test_set_local_item(spdm_context, LIBSPDM_DATA_ALGO_PRIORITY_PQC_FIRST, 0,
                                 sizeof(bool), true, &local_context->algorithm.pqc_first);
-    libspdm_test_set_local_item(spdm_context, LIBSPDM_DATA_LOCAL_SUPPORTED_SLOT_MASK, 0,
-                                sizeof(uint8_t), 0x03, &local_context->local_supported_slot_mask);
-    libspdm_test_set_local_item(spdm_context, LIBSPDM_DATA_LOCAL_KEY_PAIR_ID, 1,
-                                sizeof(spdm_key_pair_id_t), 2,
-                                &local_context->local_key_pair_id[1]);
     libspdm_test_set_local_item(spdm_context, LIBSPDM_DATA_LOCAL_CERT_INFO, 1,
                                 sizeof(spdm_certificate_info_t), 1,
                                 &local_context->local_cert_info[0][1]);
