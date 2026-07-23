@@ -155,9 +155,7 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
                 key_pair_id[slot_index] = libspdm_get_key_pair_id(spdm_context, index);
                 cert_info[slot_index] =
                     spdm_context->local_context.local_cert_info[spdm_context->connection_info.current_bank][index];
-                key_usage_bit_mask[slot_index] =
-                    spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][
-                        index];
+                key_usage_bit_mask[slot_index] = libspdm_get_key_usage_mask(spdm_context, index);
             }
             slot_index++;
             if (!result) {

@@ -517,7 +517,7 @@ static void req_encap_endpoint_info_err_case8(void **state)
 
 /**
  * Test 9: Error case, signature was required, multi_key_conn_rsp is set
- *         but local_key_usage_bit_mask[context->connection_info.current_bank][slot_id] not meet requirement
+ *         but local_key_usage_bit_mask not meet requirement
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
 static void req_encap_endpoint_info_err_case9(void **state)
@@ -573,10 +573,8 @@ static void req_encap_endpoint_info_err_case9(void **state)
 
     session_info = NULL;
     spdm_context->connection_info.multi_key_conn_rsp = true;
-    /* no initialization for spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][0] */
-    for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][i] = 0;
-    }
+
+    libspdm_set_key_usage_for_key_pairs(spdm_context, 0);
 
     libspdm_reset_message_encap_e(spdm_context, session_info);
     response_size = sizeof(response);

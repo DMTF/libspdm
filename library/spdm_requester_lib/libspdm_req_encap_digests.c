@@ -110,8 +110,7 @@ libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
                 key_pair_id[slot_index] = libspdm_get_key_pair_id(spdm_context, index);
                 cert_info[slot_index] =
                     context->local_context.local_cert_info[context->connection_info.current_bank][index];
-                key_usage_bit_mask[slot_index] =
-                    context->local_context.local_key_usage_bit_mask[context->connection_info.current_bank][index];
+                key_usage_bit_mask[slot_index] = libspdm_get_key_usage_mask(context, index);
             }
             slot_index++;
             if (!result) {

@@ -367,10 +367,7 @@ static void req_encap_digests_case6(void **state)
                             (void *)&spdm_context->local_context.local_cert_info[spdm_context->connection_info.
                                                                                  current_bank][index],
                             sizeof(spdm_certificate_info_t));
-        assert_memory_equal((void *)&key_usage_bit_mask[index],
-                            (void *)&spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.
-                                                                                          current_bank][index],
-                            sizeof(spdm_key_usage_bit_mask_t));
+        assert_int_equal(key_usage_bit_mask[index], libspdm_get_key_usage_mask(spdm_context, index));
     }
 }
 

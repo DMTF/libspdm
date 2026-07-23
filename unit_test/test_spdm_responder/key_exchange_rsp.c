@@ -122,9 +122,7 @@ static int rsp_key_exchange_rsp_setup(void **state)
      * sets either field, so restore the values libspdm_init_context leaves them at. */
     spdm_context = libspdm_get_test_context()->spdm_context;
     spdm_context->connection_info.multi_key_conn_rsp = false;
-    for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
-        spdm_context->local_context.local_key_usage_bit_mask[0][index] = 0;
-    }
+    libspdm_set_key_usage_for_key_pairs(spdm_context, 0);
     /* A test that starts an encapsulated flow leaves the response state set. */
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     /* A test that negotiates Heartbeat leaves the HeartbeatPeriod set. */
@@ -1868,9 +1866,9 @@ static void rsp_key_exchange_rsp_case21(void **state)
      * the SlotID fields in KEY_EXCHANGE and KEY_EXCHANGE_RSP shall not specify this certificate slot */
     slot_id = 0;
     m_libspdm_key_exchange_request10.header.param2 = slot_id;
-    spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][slot_id] =
-        SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE |
-        SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE;
+    libspdm_set_key_usage_for_key_pairs(spdm_context,
+                                        SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE |
+                                        SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE);
 
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request10.random_data);
     m_libspdm_key_exchange_request10.req_session_id = 0xFFFF;
