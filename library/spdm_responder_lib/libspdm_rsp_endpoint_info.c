@@ -158,8 +158,7 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
         }
 
         if (spdm_context->connection_info.multi_key_conn_rsp && slot_id != 0xF) {
-            if ((spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][
-                     slot_id]
+            if ((libspdm_get_key_usage_mask(spdm_context, slot_id)
                  &
                  SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE) == 0) {
                 return libspdm_generate_error_response(

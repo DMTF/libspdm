@@ -327,9 +327,9 @@ static void rsp_endpoint_info_case3(void **state)
         spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] = data;
     }
 
+
     spdm_context->connection_info.multi_key_conn_rsp = true;
-    spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][1] =
-        SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE;
+    libspdm_set_key_usage_for_key_pairs(spdm_context, SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[1].buffer_size = data_size;

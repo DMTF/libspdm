@@ -1199,9 +1199,8 @@ static void rsp_challenge_auth_case19(void **state)
      * SlotID fields in CHALLENGE and CHALLENGE_AUTH shall not specify this certificate slot. */
     slot_id = 0;
     m_libspdm_challenge_request8.header.param1 = slot_id;
-    spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][slot_id] =
-        SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
-        SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE;
+    libspdm_set_key_usage_for_key_pairs(spdm_context,
+                                        SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE | SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE);
 
     libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_challenge_request8.nonce);
 

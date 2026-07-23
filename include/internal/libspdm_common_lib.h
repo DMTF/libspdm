@@ -103,7 +103,6 @@ typedef struct {
     size_t local_cert_chain_provision_size[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
     uint8_t cert_slot_reset_mask;
     spdm_certificate_info_t local_cert_info[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
-    spdm_key_usage_bit_mask_t local_key_usage_bit_mask[LIBSPDM_MAX_BANK_COUNT][SPDM_MAX_SLOT_COUNT];
     uint8_t local_slot_management_subcodes[8];
 
     uint8_t total_key_pairs;
@@ -2117,5 +2116,13 @@ uint8_t libspdm_get_supported_slot_mask(libspdm_context_t *spdm_context);
  * @param  slot_id         The slot ID to use
  */
 spdm_key_pair_id_t libspdm_get_key_pair_id(libspdm_context_t *spdm_context, uint8_t slot_id);
+
+/**
+ * Return the KeyUsageMask associated with the current slot, 0 if there are none.
+ *
+ * @param  spdm_context    A pointer to the SPDM context.
+ * @param  slot_id         The slot ID to use
+ */
+uint16_t libspdm_get_key_usage_mask(libspdm_context_t *spdm_context, uint8_t slot_id);
 
 #endif /* SPDM_COMMON_LIB_INTERNAL_H */

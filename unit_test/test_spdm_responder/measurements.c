@@ -2530,9 +2530,8 @@ static void rsp_measurements_case36(void **state)
      * the SlotID fields in GET_MEASUREMENTS and MEASUREMENTS shall not specify this certificate slot. */
     slot_id = 0;
     spdm_request->slot_id_param = slot_id;
-    spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][slot_id] =
-        SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
-        SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE;
+    libspdm_set_key_usage_for_key_pairs(spdm_context,
+                                        SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE | SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE);
     requester_context = ((uint8_t *)spdm_request) + sizeof(spdm_get_measurements_request_t);
     libspdm_set_mem(requester_context, SPDM_REQ_CONTEXT_SIZE, 0xAA);
     request_size = sizeof(spdm_get_measurements_request_t) + SPDM_REQ_CONTEXT_SIZE;

@@ -598,20 +598,6 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         context->local_context.local_cert_info[context->connection_info.current_bank][slot_id] =
             *(const spdm_certificate_info_t *)data;
         break;
-    case LIBSPDM_DATA_LOCAL_KEY_USAGE_BIT_MASK:
-        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        slot_id = parameter->additional_data[0];
-        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        if (data_size != sizeof(spdm_key_usage_bit_mask_t)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        context->local_context.local_key_usage_bit_mask[context->connection_info.current_bank][slot_id] =
-            libspdm_read_uint16((const uint8_t *)data);
-        break;
     case LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER:
         if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;

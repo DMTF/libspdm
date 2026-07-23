@@ -768,7 +768,7 @@ void libspdm_test_responder_endpoint_info_err_case12(void **state)
 
 /**
  * Test 13: Error case, signature was required, multi_key_conn_rsp is set
- *          but local_key_usage_bit_mask[context->connection_info.current_bank][slot_id] not meet requirement
+ *          but local_key_usage_bit_mask not meet requirement
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
 void libspdm_test_responder_endpoint_info_err_case13(void **state)
@@ -809,8 +809,7 @@ void libspdm_test_responder_endpoint_info_err_case13(void **state)
     }
 
     spdm_context->connection_info.multi_key_conn_rsp = true;
-    /* no initialization for spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank] */
-    spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][1] = 0;
+    libspdm_set_key_usage_for_key_pairs(spdm_context, 0);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[1].buffer_size = data_size;
