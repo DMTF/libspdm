@@ -509,3 +509,14 @@ spdm_key_pair_id_t libspdm_get_key_pair_id(libspdm_context_t *spdm_context, uint
 
     return 0;
 }
+
+uint16_t libspdm_get_key_usage_mask(libspdm_context_t *spdm_context, uint8_t slot_id)
+{
+    spdm_key_pair_id_t key_offset = libspdm_get_key_pair_id(spdm_context, slot_id);
+
+    if (key_offset) {
+        return spdm_context->local_context.local_key_pair_info[key_offset - 1]->current_key_usage;
+    } else {
+        return 0;
+    }
+}

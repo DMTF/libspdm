@@ -370,12 +370,6 @@ void libspdm_test_responder_challenge_case8(void **State)
         spdm_context->transcript.message_m.max_buffer_size;
 #endif
 
-    for (uint8_t i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][i] =
-            SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
-            SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE;
-    }
-
     response_size = sizeof(response);
     libspdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                         spdm_test_context->test_buffer, &response_size, response);

@@ -376,6 +376,29 @@ void libspdm_set_slot_use_for_key_pairs(void *spdm_context, uint8_t slot_mask)
     }
 }
 
+void libspdm_set_key_usage_for_key_pairs(void *spdm_context, uint8_t key_usage)
+{
+    libspdm_data_parameter_t parameter;
+    uint8_t total_key_pairs;
+    size_t data_size;
+
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+    data_size = sizeof(total_key_pairs);
+    if ((libspdm_get_data(spdm_context, LIBSPDM_DATA_TOTAL_KEY_PAIRS, &parameter,
+                          &total_key_pairs, &data_size) != LIBSPDM_STATUS_SUCCESS)) {
+        return;
+    }
+
+    if (total_key_pairs == 0) {
+        return;
+    }
+
+    for (int i = 0; i < total_key_pairs; i++) {
+        local_key_pair_info[i].current_key_usage = key_usage;
+    }
+}
+
 /* Return the device-global KeyPairID (1..TotalKeyPairs) for the key pair that backs (slot_id) under
  * the connection's negotiated algorithm. The PQC bitmap (Table 114) uses the same encoding for both
  * NEGOTIATE_ALGORITHMS and KEY_PAIR_INFO, so it is matched directly; the traditional algorithm is

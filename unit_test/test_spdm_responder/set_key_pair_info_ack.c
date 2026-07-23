@@ -748,10 +748,6 @@ static void rsp_set_key_pair_info_ack_case6(void **state)
      * keeps the case independent of which algorithm key_pair_id 4 maps to in the build. */
     slot_id = 2;
 
-    /* Seed the per-slot context with sentinels that differ from what a coherent sync must write,
-     * so the assertions below are meaningful. */
-    spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][slot_id] = 0;
-
     response_size = sizeof(response);
 
     /* Step 1: ParameterChange associating the slot with key_pair_id 4 and KeyExUse. Do not change
@@ -789,7 +785,7 @@ static void rsp_set_key_pair_info_ack_case6(void **state)
 
     /* The newly associated slot must now report this KeyPairID and its current key usage. */
     assert_int_equal(libspdm_get_key_pair_id(spdm_context, slot_id), key_pair_id);
-    assert_int_equal(spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][slot_id],
+    assert_int_equal(libspdm_get_key_usage_mask(spdm_context, slot_id),
                      SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE);
 
     /* Step 2: ParameterChange removing the slot association (empty mask). */
@@ -823,7 +819,7 @@ static void rsp_set_key_pair_info_ack_case6(void **state)
 
     /* The removed slot must be cleared, since this KeyPairID owned it in the context. */
     assert_int_equal(libspdm_get_key_pair_id(spdm_context, slot_id), 0);
-    assert_int_equal(spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][slot_id], 0);
+    assert_int_equal(libspdm_get_key_usage_mask(spdm_context, slot_id), 0);
 
     free(set_key_pair_info_request);
 }

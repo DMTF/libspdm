@@ -31,7 +31,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     uint8_t key_pair_id;
     uint8_t total_key_pairs;
     bool result;
-    uint32_t prev_key_id[SPDM_MAX_SLOT_COUNT];
+
     uint16_t desired_key_usage;
     uint32_t desired_asym_algo;
     uint8_t desired_assoc_cert_slot_mask;
@@ -359,10 +359,6 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         need_reset = false;
     }
 
-    for (uint8_t slot_index = 0; slot_index < SPDM_MAX_SLOT_COUNT; slot_index++) {
-        prev_key_id[slot_index] = libspdm_get_key_pair_id(spdm_context, slot_index);
-    }
-
     result = libspdm_update_local_key_pair_info(
         spdm_context, key_pair_id, operation, desired_key_usage, desired_asym_algo,
         desired_pqc_asym_algo, desired_assoc_cert_slot_mask, &need_reset);
@@ -380,35 +376,6 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
                                                SPDM_ERROR_CODE_RESET_REQUIRED, 0,
                                                response_size, response);
     } else {
-        /* Update context with new key pair information if a reset is not needed. Re-read the key
-         * pair info so the authoritative post-write association and key usage are used (the device
-         * may normalize or apply defaults on a successful write). */
-        const libspdm_key_pair_info_t *new_key_pair_info;
-        uint8_t new_assoc_cert_slot_mask;
-        uint16_t new_current_key_usage;
-        uint8_t slot_index;
-
-        new_key_pair_info = spdm_context->local_context.local_key_pair_info[key_pair_id - 1];
-        if (new_key_pair_info == NULL) {
-            return libspdm_generate_error_response(spdm_context,
-                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
-                                                   response_size, response);
-        }
-        new_assoc_cert_slot_mask = new_key_pair_info->assoc_cert_slot_mask;
-        new_current_key_usage = new_key_pair_info->current_key_usage;
-
-        for (slot_index = 0; slot_index < SPDM_MAX_SLOT_COUNT; slot_index++) {
-            if ((new_assoc_cert_slot_mask & (1 << slot_index)) != 0) {
-                /* Slot is (still) associated with this KeyPairID. */
-                spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][slot_index] =
-                    new_current_key_usage;
-            } else if (libspdm_get_key_pair_id(spdm_context, slot_index) != prev_key_id[slot_index]) {
-                /* Context still points at this KeyPairID but the slot is no longer in the
-                 * authoritative mask (removed or stale); clear it. */
-                spdm_context->local_context.local_key_usage_bit_mask[spdm_context->connection_info.current_bank][slot_index] = 0;
-            }
-        }
-
         spdm_response->header.spdm_version = spdm_request->header.spdm_version;
         spdm_response->header.request_response_code = SPDM_SET_KEY_PAIR_INFO_ACK;
         spdm_response->header.param1 = 0;

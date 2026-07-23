@@ -224,6 +224,7 @@ void libspdm_release_error (libspdm_error_target_t target);
 
 void libspdm_test_provision_key_pair_info(void *spdm_context);
 void libspdm_set_slot_use_for_key_pairs(void *spdm_context, uint8_t slot_mask);
+void libspdm_set_key_usage_for_key_pairs(void *spdm_context, uint8_t key_usage);
 
 void generate_dmtf_event_group(void *buffer, uint8_t *total_bytes, uint32_t attributes,
                                bool inc_event_lost, bool inc_meas_changed,
