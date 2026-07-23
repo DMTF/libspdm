@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -256,6 +256,14 @@ void libspdm_init_get_endpoint_info_encap_state(void *spdm_context, uint32_t ses
 #endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
 #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+/**
+ * This function initializes the GET_SUPPORTED_EVENT_TYPES encapsulated state.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  session_id    Session ID in which the encapsulated request will be sent.
+ **/
+void libspdm_init_get_supported_event_types_encap_state(void *spdm_context, uint32_t session_id);
+
 /**
  * This function initializes the SEND_EVENT encapsulated state.
  *
