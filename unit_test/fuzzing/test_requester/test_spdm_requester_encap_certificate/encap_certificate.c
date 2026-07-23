@@ -53,8 +53,9 @@ void libspdm_test_requester_encap_certificate(void **State)
         return;
     }
 
-    spdm_context->local_context.local_cert_chain_provision[slot_id] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[slot_id] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][slot_id] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][slot_id] =
+        data_size;
 
     response_size = sizeof(response);
     libspdm_get_encap_response_certificate(spdm_context, request_size,

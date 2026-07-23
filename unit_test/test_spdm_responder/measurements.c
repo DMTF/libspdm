@@ -1034,8 +1034,9 @@ static void rsp_measurements_case18(void **state)
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
-        spdm_context->local_context.local_cert_chain_provision[i] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][i] =
+            data_size;
+        spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] = data;
     }
 
     response_size = sizeof(response);
@@ -1457,8 +1458,9 @@ static void rsp_measurements_case26(void **state)
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
-        spdm_context->local_context.local_cert_chain_provision[i] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][i] =
+            data_size;
+        spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] = data;
     }
 
     response_size = sizeof(response);
@@ -1537,8 +1539,9 @@ static void rsp_measurements_case27(void **state)
                           libspdm_secret_lib_meas_opaque_data_size +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
-        spdm_context->local_context.local_cert_chain_provision[i] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][i] =
+            data_size;
+        spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] = data;
     }
 
     response_size = sizeof(response);
@@ -2512,8 +2515,9 @@ static void rsp_measurements_case36(void **state)
         return;
     }
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
-        spdm_context->local_context.local_cert_chain_provision[i] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][i] =
+            data_size;
+        spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] = data;
     }
 
     spdm_request = (void *)request;
@@ -2526,9 +2530,8 @@ static void rsp_measurements_case36(void **state)
      * the SlotID fields in GET_MEASUREMENTS and MEASUREMENTS shall not specify this certificate slot. */
     slot_id = 0;
     spdm_request->slot_id_param = slot_id;
-    spdm_context->local_context.local_key_usage_bit_mask[slot_id] =
-        SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
-        SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE;
+    libspdm_set_key_usage_for_key_pairs(spdm_context,
+                                        SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE | SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE);
     requester_context = ((uint8_t *)spdm_request) + sizeof(spdm_get_measurements_request_t);
     libspdm_set_mem(requester_context, SPDM_REQ_CONTEXT_SIZE, 0xAA);
     request_size = sizeof(spdm_get_measurements_request_t) + SPDM_REQ_CONTEXT_SIZE;

@@ -44,6 +44,7 @@ static void rsp_set_key_pair_info_ack_case1(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     key_pair_id = 4;
 
@@ -157,36 +158,9 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     key_pair_id = 4;
-
-    /*set responder need reset, spdm 1.4 */
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_RESET_CAP;
-
-    /*Before reset, change: remove an association with slot*/
-    set_key_pair_info_request_size =
-        sizeof(spdm_set_key_pair_info_request_t) +
-        sizeof(uint8_t) + sizeof(uint16_t) + sizeof(uint32_t) + sizeof(uint8_t) +
-        sizeof(uint8_t);
-
-    libspdm_zero_mem(set_key_pair_info_request, set_key_pair_info_request_size);
-    set_key_pair_info_request->header.spdm_version = SPDM_MESSAGE_VERSION_14;
-    set_key_pair_info_request->header.request_response_code = SPDM_SET_KEY_PAIR_INFO;
-    set_key_pair_info_request->header.param1 = SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION;
-    set_key_pair_info_request->header.param2 = 0;
-    set_key_pair_info_request->key_pair_id = key_pair_id;
-
-    response_size = sizeof(response);
-    status = libspdm_get_response_set_key_pair_info_ack(
-        spdm_context, set_key_pair_info_request_size,
-        set_key_pair_info_request, &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
-    assert_int_equal(spdm_response->header.param2, 0);
 
     /* Sub Case 1: If KeyPairErase is set, all fields after the KeyPairID field in this request should not exist. */
     desired_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
@@ -372,7 +346,7 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
-    /*Before reset, change: remove an association with slot*/
+    /*change: remove an association with slot*/
     set_key_pair_info_request_size =
         sizeof(spdm_set_key_pair_info_request_t) +
         sizeof(uint8_t) + sizeof(uint16_t) + sizeof(uint32_t) + sizeof(uint8_t) +
@@ -390,11 +364,9 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
         spdm_context, set_key_pair_info_request_size,
         set_key_pair_info_request, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    assert_int_equal(response_size, sizeof(spdm_set_key_pair_info_ack_response_t));
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
-    assert_int_equal(spdm_response->header.param2, 0);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
 }
 
 /**
@@ -435,16 +407,13 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
     spdm_context->local_context.capability.flags = 0; /* clear flags */
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     key_pair_id = 4;
 
-    /*set responder need reset, spdm 1.4 */
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_RESET_CAP;
-
     response_size = sizeof(response);
 
-    /*Before reset, change: remove an association with slot*/
+    /*change: remove an association with slot*/
     set_key_pair_info_request_size =
         sizeof(spdm_set_key_pair_info_request_t) +
         sizeof(uint8_t) + sizeof(uint16_t) + sizeof(uint32_t) + sizeof(uint8_t) +
@@ -461,45 +430,22 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
         spdm_context, set_key_pair_info_request_size,
         set_key_pair_info_request, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
-    assert_int_equal(spdm_response->header.param2, 0);
-
-    /*After reset, change: remove an association with slot*/
-    status = libspdm_get_response_set_key_pair_info_ack(
-        spdm_context, set_key_pair_info_request_size,
-        set_key_pair_info_request, &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_set_key_pair_info_ack_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
 
-    /*Before reset, erase: erase the keyusage and asymalgo*/
+    /*erase: erase the keyusage and asymalgo*/
     set_key_pair_info_request->header.param1 = SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION;
     set_key_pair_info_request_size = sizeof(spdm_set_key_pair_info_request_t);
     status = libspdm_get_response_set_key_pair_info_ack(
         spdm_context, set_key_pair_info_request_size,
         set_key_pair_info_request, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
-    assert_int_equal(spdm_response->header.param2, 0);
-
-    /*After reset, erase: erase the keyusage and asymalgo*/
-    status = libspdm_get_response_set_key_pair_info_ack(
-        spdm_context, set_key_pair_info_request_size,
-        set_key_pair_info_request, &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_set_key_pair_info_ack_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
 
-
-    /*Before reset, generate: generate a new key pair*/
+    /*generate: generate a new key pair*/
     desired_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
     desired_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC256;
     desired_pqc_asym_algo_len = sizeof(desired_pqc_asym_algo);
@@ -513,7 +459,7 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
     libspdm_zero_mem(set_key_pair_info_request, set_key_pair_info_request_size);
     set_key_pair_info_request->header.spdm_version = SPDM_MESSAGE_VERSION_14;
     set_key_pair_info_request->header.request_response_code = SPDM_SET_KEY_PAIR_INFO;
-    set_key_pair_info_request->header.param1 = SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION;
+    set_key_pair_info_request->header.param1 = SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION;
     set_key_pair_info_request->header.param2 = 0;
     set_key_pair_info_request->key_pair_id = key_pair_id;
 
@@ -538,17 +484,6 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
         spdm_context, set_key_pair_info_request_size,
         set_key_pair_info_request, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
-    assert_int_equal(spdm_response->header.param2, 0);
-
-    /*After reset, generate: generate a new key pair*/
-    status = libspdm_get_response_set_key_pair_info_ack(
-        spdm_context, set_key_pair_info_request_size,
-        set_key_pair_info_request, &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_set_key_pair_info_ack_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
@@ -557,7 +492,7 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
 
 /**
  * Test 5: SET_KEY_PAIR_RESET replay where two requests differ only in DesiredPqcAsymAlgo.
- * This exercises the device_secret HAL (libspdm_write_key_pair_info) directly, since the
+ * This exercises the device_secret HAL (libspdm_update_local_key_pair_info) directly, since the
  * cached-request match that decides whether a post-reset replay is applied lives in the HAL.
  * Expected Behavior: a replay that changes only the PQC algorithm shall not be accepted as the
  * cached request; the correct PQC algorithm shall be applied only once the matching request is
@@ -570,26 +505,19 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
     uint8_t key_pair_id;
     bool need_reset;
     bool result;
-    uint8_t total_key_pairs;
-    uint16_t capabilities;
-    uint16_t key_usage_capabilities;
-    uint16_t current_key_usage;
-    uint32_t asym_algo_capabilities;
-    uint32_t current_asym_algo;
-    uint32_t pqc_asym_algo_capabilities;
-    uint32_t current_pqc_asym_algo;
-    uint8_t assoc_cert_slot_mask;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
+
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     key_pair_id = 4;
 
     /* First request: GenerateKeyPair with ML-DSA-44. With need_reset = true the HAL caches the
      * request and reports that a reset is still required (not yet applied). */
     need_reset = true;
-    result = libspdm_write_key_pair_info(
+    result = libspdm_update_local_key_pair_info(
         spdm_context, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
         SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE, 0,
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_44, 0, &need_reset);
@@ -600,7 +528,7 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
      * treated as the cached request: the HAL caches the new request and again reports that a
      * reset is required, rather than applying the stale ML-DSA-44 value. */
     need_reset = true;
-    result = libspdm_write_key_pair_info(
+    result = libspdm_update_local_key_pair_info(
         spdm_context, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
         SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE, 0,
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65, 0, &need_reset);
@@ -610,21 +538,169 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
     /* Replay the ML-DSA-65 request identically: now it matches the cached request and is
      * applied (need_reset cleared). */
     need_reset = true;
-    result = libspdm_write_key_pair_info(
+    result = libspdm_update_local_key_pair_info(
         spdm_context, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
         SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE, 0,
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65, 0, &need_reset);
     assert_true(result);
-    assert_false(need_reset);
+    assert_true(need_reset);
 
-    /* The applied PQC algorithm shall be ML-DSA-65 (the replayed value), not ML-DSA-44. */
-    assert_true(libspdm_read_key_pair_info(
-                    spdm_context, key_pair_id, &total_key_pairs, &capabilities,
-                    &key_usage_capabilities, &current_key_usage, &asym_algo_capabilities,
-                    &current_asym_algo, &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
-                    &assoc_cert_slot_mask, NULL, NULL));
-    assert_int_equal(current_pqc_asym_algo, SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65);
+    assert_int_equal(
+        spdm_context->local_context.local_key_pair_info[key_pair_id - 1]->current_pqc_asym_algo,
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65);
 }
+
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+/**
+ * Test 6: Cross-state consistency between SET_KEY_PAIR_INFO and GET_DIGESTS.
+ * Per DSP0274, DIGESTS.KeyPairID[SlotID] is the KeyPairID whose AssocCertSlotMask includes
+ * SlotID, and DIGESTS.KeyUsageMask[SlotID] is that same key pair's CurrentKeyUsage. This must
+ * stay true after SET_KEY_PAIR_INFO changes a key pair's AssocCertSlotMask, both for a slot the
+ * key pair loses and for a slot it (re)gains.
+ * Expected Behavior: after CHANGE_OPERATION drops Slot 1 from KeyPairID 4's AssocCertSlotMask,
+ * GET_DIGESTS reports KeyPairID = 0 and KeyUsageMask = 0 for Slot 1 while Slot 0 is unaffected;
+ * after a second CHANGE_OPERATION restores Slot 1, GET_DIGESTS again reports KeyPairID = 4 and
+ * KeyUsageMask = CurrentKeyUsage for Slot 1.
+ **/
+static void rsp_set_key_pair_info_ack_case6(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_set_key_pair_info_ack_response_t *spdm_response;
+    spdm_digest_response_t *digest_response;
+
+    uint8_t key_pair_id;
+    size_t set_key_pair_info_request_size;
+    spdm_set_key_pair_info_request_t *set_key_pair_info_request;
+    uint8_t request_buf[sizeof(spdm_set_key_pair_info_request_t) +
+                        sizeof(uint8_t) + sizeof(uint16_t) + sizeof(uint32_t) + sizeof(uint8_t)];
+    uint8_t *ptr;
+
+    static uint8_t local_certificate_chain[SPDM_MAX_SLOT_COUNT][LIBSPDM_MAX_HASH_SIZE];
+    uint32_t hash_size;
+
+    spdm_get_digest_request_t digest_request = {
+        { SPDM_MESSAGE_VERSION_13, SPDM_GET_DIGESTS, },
+    };
+
+    set_key_pair_info_request = (spdm_set_key_pair_info_request_t *)request_buf;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x6;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->last_spdm_request_session_id_valid = false;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+
+    libspdm_test_provision_key_pair_info(spdm_context);
+
+    /* KeyPairID 4 (the first ECC P256 key pair provisioned by
+     * libspdm_test_provision_key_pair_info()) starts with AssocCertSlotMask = 0x03 (Slot 0/1),
+     * same as every other primary key pair, so Slot 0/1 do not uniquely identify it. Re-point it
+     * at Slot 5/6 instead, which no other provisioned key pair claims by default, so this test's
+     * GET_DIGESTS assertions are unambiguous. CurrentKeyUsage stays KEY_EX_USE throughout. */
+    key_pair_id = 4;
+
+    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_set_mem(local_certificate_chain, sizeof(local_certificate_chain), (uint8_t)0xFF);
+    for (uint8_t slot_id = 5; slot_id <= 6; slot_id++) {
+        spdm_context->local_context
+        .local_cert_chain_provision[spdm_context->connection_info.current_bank][slot_id] =
+            local_certificate_chain[slot_id];
+        spdm_context->local_context
+        .local_cert_chain_provision_size[spdm_context->connection_info.current_bank][slot_id] =
+            hash_size;
+    }
+
+    /* CHANGE_OPERATION: move KeyPairID 4's AssocCertSlotMask from Slot 0/1 to Slot 5/6. */
+    set_key_pair_info_request_size = sizeof(request_buf);
+    libspdm_zero_mem(set_key_pair_info_request, set_key_pair_info_request_size);
+    set_key_pair_info_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    set_key_pair_info_request->header.request_response_code = SPDM_SET_KEY_PAIR_INFO;
+    set_key_pair_info_request->header.param1 = SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION;
+    set_key_pair_info_request->header.param2 = 0;
+    set_key_pair_info_request->key_pair_id = key_pair_id;
+    ptr = (uint8_t *)(set_key_pair_info_request + 1);
+    ptr += sizeof(uint8_t);
+    libspdm_write_uint16(ptr, 0); /* DesiredKeyUsage: unchanged */
+    ptr += sizeof(uint16_t);
+    libspdm_write_uint32(ptr, 0); /* DesiredAsymAlgo: unchanged */
+    ptr += sizeof(uint32_t);
+    *ptr = (1 << 5) | (1 << 6); /* DesiredAssocCertSlotMask: Slot 5 and Slot 6 */
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_key_pair_info_ack(
+        spdm_context, set_key_pair_info_request_size,
+        set_key_pair_info_request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
+
+    /* Baseline: both slots report KeyPairID 4 and its CurrentKeyUsage. */
+    libspdm_reset_message_d(spdm_context);
+    response_size = sizeof(response);
+    status = libspdm_get_response_digests(spdm_context, sizeof(digest_request), &digest_request,
+                                          &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    digest_response = (void *)response;
+    assert_int_equal(digest_response->header.request_response_code, SPDM_DIGESTS);
+    assert_int_equal(libspdm_get_key_pair_id(spdm_context, 5), key_pair_id);
+    assert_int_equal(libspdm_get_key_pair_id(spdm_context, 6), key_pair_id);
+    assert_int_equal(libspdm_get_key_usage_mask(spdm_context, 5), SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE);
+    assert_int_equal(libspdm_get_key_usage_mask(spdm_context, 6), SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE);
+
+    /* CHANGE_OPERATION: drop Slot 6 from KeyPairID 4's AssocCertSlotMask (keep Slot 5). */
+    *ptr = (1 << 5);
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_key_pair_info_ack(
+        spdm_context, set_key_pair_info_request_size,
+        set_key_pair_info_request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
+
+    /* GET_DIGESTS must now show Slot 6 as unowned, without disturbing Slot 5. */
+    libspdm_reset_message_d(spdm_context);
+    response_size = sizeof(response);
+    status = libspdm_get_response_digests(spdm_context, sizeof(digest_request), &digest_request,
+                                          &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(libspdm_get_key_pair_id(spdm_context, 5), key_pair_id);
+    assert_int_equal(libspdm_get_key_pair_id(spdm_context, 6), 0);
+    assert_int_equal(libspdm_get_key_usage_mask(spdm_context, 5), SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE);
+    assert_int_equal(libspdm_get_key_usage_mask(spdm_context, 6), 0);
+
+    /* CHANGE_OPERATION: restore Slot 6 to KeyPairID 4's AssocCertSlotMask. */
+    *ptr = (1 << 5) | (1 << 6);
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_key_pair_info_ack(
+        spdm_context, set_key_pair_info_request_size,
+        set_key_pair_info_request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
+
+    /* GET_DIGESTS must report Slot 6's KeyUsageMask as KeyPairID 4's CurrentKeyUsage again. */
+    libspdm_reset_message_d(spdm_context);
+    response_size = sizeof(response);
+    status = libspdm_get_response_digests(spdm_context, sizeof(digest_request), &digest_request,
+                                          &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(libspdm_get_key_pair_id(spdm_context, 6), key_pair_id);
+    assert_int_equal(libspdm_get_key_usage_mask(spdm_context, 6), SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE);
+}
+#endif
 
 int libspdm_rsp_set_key_pair_info_ack_test(void)
 {
@@ -639,6 +715,11 @@ int libspdm_rsp_set_key_pair_info_ack_test(void)
         cmocka_unit_test(rsp_set_key_pair_info_ack_case4),
         /* Reset replay differing only in DesiredPqcAsymAlgo*/
         cmocka_unit_test(rsp_set_key_pair_info_ack_case5),
+        /* Cross-state consistency: SET_KEY_PAIR_INFO AssocCertSlotMask/CurrentKeyUsage vs
+         * GET_DIGESTS KeyPairID/KeyUsageMask */
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+        cmocka_unit_test(rsp_set_key_pair_info_ack_case6),
+#endif
     };
 
     libspdm_test_context_t test_context = {

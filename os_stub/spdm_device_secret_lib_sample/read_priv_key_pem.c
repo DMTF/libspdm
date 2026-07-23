@@ -64,8 +64,8 @@ bool libspdm_read_responder_private_key(uint32_t base_asym_algo,
     return res;
 }
 
-bool libspdm_read_responder_private_key_ex(uint32_t base_asym_algo, uint8_t key_pair_id,
-                                           void **data, size_t *size)
+bool libspdm_read_responder_private_key_ex(void *spdm_context, uint32_t base_asym_algo,
+                                           uint8_t key_pair_id, void **data, size_t *size)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
     bool res;
@@ -74,7 +74,7 @@ bool libspdm_read_responder_private_key_ex(uint32_t base_asym_algo, uint8_t key_
     /* slot 0 / slot 1 share the default leaf key; slot 4 uses a distinct leaf key
      * (end_responder4.key) to demonstrate multiple keys. The slot-4 key pair is the negotiated
      * algorithm's SECONDARY key pair; only it selects end_responder4.key. */
-    if (key_pair_id != libspdm_get_key_pair_id_by_slot(base_asym_algo, 0, 4)) {
+    if (key_pair_id != libspdm_get_key_pair_id_by_slot(spdm_context, base_asym_algo, 0, 4)) {
         return libspdm_read_responder_private_key(base_asym_algo, data, size);
     }
 
