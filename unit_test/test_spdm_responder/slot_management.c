@@ -1679,6 +1679,216 @@ static void rsp_slot_management_case17(void **state)
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP && LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+/**
+ * Test 18: Cross-state consistency between SET_KEY_PAIR_INFO and SLOT_MANAGEMENT GetBankDetails
+ * / GET_DIGESTS. Per DSP0274, a SlotElement's KeyPairID is the KeyPairID whose AssocCertSlotMask
+ * includes that SlotID, and its KeyUsage is that key pair's CurrentKeyUsage; this holds for both
+ * SLOT_MANAGEMENT GetBankDetails and GET_DIGESTS, and must stay true after SET_KEY_PAIR_INFO
+ * changes a key pair's AssocCertSlotMask.
+ * Expected Behavior: after CHANGE_OPERATION moves KeyPairID 4's AssocCertSlotMask onto Slot 5/6,
+ * both GetBankDetails and GET_DIGESTS report KeyPairID 4 / CurrentKeyUsage for Slot 5 and Slot 6.
+ * After a second CHANGE_OPERATION drops Slot 6, both still list Slot 6 (it keeps its
+ * certificate), but now with KeyPairID = 0 and KeyUsage = 0.
+ **/
+static void rsp_slot_management_case18(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_slot_management_response_t *spdm_response;
+    spdm_slot_management_bank_details_struct_t *resp_struct;
+    spdm_set_key_pair_info_ack_response_t *ack_response;
+    spdm_digest_response_t *digest_response;
+    uint8_t request_buffer[sizeof(spdm_slot_management_request_t) +
+                           sizeof(spdm_slot_management_slot_address_struct_t)];
+    spdm_slot_management_request_t *request;
+    spdm_slot_management_slot_address_struct_t *slot_address;
+    uint8_t set_key_pair_info_request_buf[sizeof(spdm_set_key_pair_info_request_t) +
+                                          sizeof(uint8_t) + sizeof(uint16_t) +
+                                          sizeof(uint32_t) + sizeof(uint8_t) +
+                                          sizeof(uint8_t) + sizeof(uint32_t)];
+    spdm_set_key_pair_info_request_t *set_key_pair_info_request;
+    uint8_t *ptr;
+    uint8_t *assoc_cert_slot_mask_ptr;
+    uint8_t key_pair_id;
+    uint8_t bank_id;
+    static uint8_t local_certificate_chain[SPDM_MAX_SLOT_COUNT][LIBSPDM_MAX_HASH_SIZE];
+    uint32_t hash_size;
+    spdm_get_digest_request_t digest_request = {
+        { SPDM_MESSAGE_VERSION_14, SPDM_GET_DIGESTS, },
+    };
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x12;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->last_spdm_request_session_id_valid = false;
+    spdm_context->local_context.capability.ext_flags |=
+        SPDM_GET_CAPABILITIES_EXTENDED_RESPONSE_FLAGS_SLOT_MGMT_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
+
+    /* libspdm_slot_management_test_setup() already provisioned Bank 0 (current_bank) with
+     * Slot 0/1 certificate chains; add Slot 5/6 for this test. KeyPairID 4 (the first ECC P256
+     * key pair libspdm_test_provision_key_pair_info() provisions) starts with AssocCertSlotMask
+     * = 0x03 (Slot 0/1), same as every other primary key pair, so re-point it at Slot 5/6 (which
+     * no other provisioned key pair claims by default) to make the assertions below unambiguous. */
+    bank_id = spdm_context->connection_info.current_bank;
+    key_pair_id = 4;
+    libspdm_test_provision_key_pair_info(spdm_context);
+
+    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_set_mem(local_certificate_chain, sizeof(local_certificate_chain), (uint8_t)0xFF);
+    spdm_context->local_context.local_cert_chain_provision[bank_id][5] =
+        local_certificate_chain[5];
+    spdm_context->local_context.local_cert_chain_provision_size[bank_id][5] = hash_size;
+    spdm_context->local_context.local_cert_chain_provision[bank_id][6] =
+        local_certificate_chain[6];
+    spdm_context->local_context.local_cert_chain_provision_size[bank_id][6] = hash_size;
+
+    set_key_pair_info_request = (void *)set_key_pair_info_request_buf;
+    libspdm_zero_mem(set_key_pair_info_request_buf, sizeof(set_key_pair_info_request_buf));
+    set_key_pair_info_request->header.spdm_version = SPDM_MESSAGE_VERSION_14;
+    set_key_pair_info_request->header.request_response_code = SPDM_SET_KEY_PAIR_INFO;
+    set_key_pair_info_request->header.param1 = SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION;
+    set_key_pair_info_request->key_pair_id = key_pair_id;
+    ptr = (uint8_t *)(set_key_pair_info_request + 1);
+    ptr += sizeof(uint8_t);
+    libspdm_write_uint16(ptr, 0); /* DesiredKeyUsage: unchanged */
+    ptr += sizeof(uint16_t);
+    libspdm_write_uint32(ptr, 0); /* DesiredAsymAlgo: unchanged */
+    ptr += sizeof(uint32_t);
+    assoc_cert_slot_mask_ptr = ptr;
+    *ptr = (1 << 5) | (1 << 6); /* DesiredAssocCertSlotMask: Slot 5 and Slot 6 */
+    ptr += sizeof(uint8_t);
+    *ptr = sizeof(uint32_t); /* DesiredPqcAsymAlgoLen (SPDM 1.4+ field), value stays 0 */
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_key_pair_info_ack(
+        spdm_context, sizeof(set_key_pair_info_request_buf), set_key_pair_info_request,
+        &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    ack_response = (void *)response;
+    assert_int_equal(ack_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
+
+    /* Common helper: fetch GetBankDetails for `bank_id` and return the SlotElement for `slot_id`
+     * (which must exist -- Slot 5/6 always have a provisioned certificate in this test). */
+    #define GET_BANK_DETAILS_SLOT_ELEMENT(slot_id_, out_element_) \
+        do { \
+            size_t offset; \
+            uint8_t pqc_cap_len; \
+            uint8_t current_pqc_len; \
+            uint8_t available_pqc_len; \
+            const spdm_slot_management_slot_element_struct_t *slot_element; \
+            uint8_t slot_index; \
+            bool found = false; \
+            libspdm_zero_mem(request_buffer, sizeof(request_buffer)); \
+            request = (void *)request_buffer; \
+            request->header.spdm_version = SPDM_MESSAGE_VERSION_14; \
+            request->header.request_response_code = SPDM_SLOT_MANAGEMENT; \
+            request->header.param1 = SPDM_SLOT_MANAGEMENT_SUBCODE_GET_BANK_DETAILS; \
+            request->mgmt_struct_offset = sizeof(spdm_slot_management_request_t); \
+            slot_address = (void *)(request_buffer + sizeof(spdm_slot_management_request_t)); \
+            slot_address->req_length = SPDM_SLOT_MANAGEMENT_SLOT_ADDRESS_REQ_LENGTH; \
+            slot_address->bank_id = bank_id; \
+            response_size = sizeof(response); \
+            status = libspdm_get_response_slot_management( \
+                spdm_context, sizeof(request_buffer), request_buffer, &response_size, response); \
+            assert_int_equal(status, LIBSPDM_STATUS_SUCCESS); \
+            spdm_response = (void *)response; \
+            assert_int_equal(spdm_response->header.request_response_code, \
+                             SPDM_SLOT_MANAGEMENT_RESP); \
+            resp_struct = (void *)((uint8_t *)spdm_response + spdm_response->mgmt_struct_offset); \
+            offset = sizeof(spdm_slot_management_bank_details_struct_t); \
+            pqc_cap_len = ((const uint8_t *)resp_struct)[offset]; \
+            offset += 1 + pqc_cap_len; \
+            current_pqc_len = ((const uint8_t *)resp_struct)[offset]; \
+            offset += 1 + current_pqc_len; \
+            available_pqc_len = ((const uint8_t *)resp_struct)[offset]; \
+            offset += 1 + available_pqc_len; \
+            offset += 4; /* reserved */ \
+            for (slot_index = 0; slot_index < resp_struct->num_slot_elements; slot_index++) { \
+                slot_element = (const void *)((const uint8_t *)resp_struct + offset); \
+                if (slot_element->slot_id == (slot_id_)) { \
+                    (out_element_) = *slot_element; \
+                    found = true; \
+                } \
+                offset += sizeof(spdm_slot_management_slot_element_struct_t) + hash_size; \
+            } \
+            assert_true(found); \
+        } while (0)
+
+    {
+        spdm_slot_management_slot_element_struct_t slot5_element;
+        spdm_slot_management_slot_element_struct_t slot6_element;
+
+        GET_BANK_DETAILS_SLOT_ELEMENT(5, slot5_element);
+        GET_BANK_DETAILS_SLOT_ELEMENT(6, slot6_element);
+        assert_int_equal(slot5_element.key_pair_id, key_pair_id);
+        assert_int_equal(slot5_element.key_usage, SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE);
+        assert_int_equal(slot6_element.key_pair_id, key_pair_id);
+        assert_int_equal(slot6_element.key_usage, SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE);
+    }
+
+    /* GET_DIGESTS shall agree with GetBankDetails for the same Bank/slots. */
+    libspdm_reset_message_d(spdm_context);
+    response_size = sizeof(response);
+    status = libspdm_get_response_digests(spdm_context, sizeof(digest_request), &digest_request,
+                                          &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    digest_response = (void *)response;
+    assert_int_equal(digest_response->header.request_response_code, SPDM_DIGESTS);
+    assert_int_equal(libspdm_get_key_pair_id(spdm_context, 5), key_pair_id);
+    assert_int_equal(libspdm_get_key_pair_id(spdm_context, 6), key_pair_id);
+    assert_int_equal(libspdm_get_key_usage_mask(spdm_context, 5), SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE);
+    assert_int_equal(libspdm_get_key_usage_mask(spdm_context, 6), SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE);
+
+    /* CHANGE_OPERATION: drop Slot 6 from KeyPairID 4's AssocCertSlotMask (keep Slot 5). Slot 6
+     * keeps its provisioned certificate, so it remains a SlotElement/DIGESTS entry, now unowned. */
+    *assoc_cert_slot_mask_ptr = (1 << 5);
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_key_pair_info_ack(
+        spdm_context, sizeof(set_key_pair_info_request_buf), set_key_pair_info_request,
+        &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    ack_response = (void *)response;
+    assert_int_equal(ack_response->header.request_response_code, SPDM_SET_KEY_PAIR_INFO_ACK);
+
+    {
+        spdm_slot_management_slot_element_struct_t slot5_element;
+        spdm_slot_management_slot_element_struct_t slot6_element;
+
+        GET_BANK_DETAILS_SLOT_ELEMENT(5, slot5_element);
+        GET_BANK_DETAILS_SLOT_ELEMENT(6, slot6_element);
+        assert_int_equal(slot5_element.key_pair_id, key_pair_id);
+        assert_int_equal(slot5_element.key_usage, SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE);
+        assert_int_equal(slot6_element.key_pair_id, 0);
+        assert_int_equal(slot6_element.key_usage, 0);
+    }
+    #undef GET_BANK_DETAILS_SLOT_ELEMENT
+
+    libspdm_reset_message_d(spdm_context);
+    response_size = sizeof(response);
+    status = libspdm_get_response_digests(spdm_context, sizeof(digest_request), &digest_request,
+                                          &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(libspdm_get_key_pair_id(spdm_context, 5), key_pair_id);
+    assert_int_equal(libspdm_get_key_pair_id(spdm_context, 6), 0);
+    assert_int_equal(libspdm_get_key_usage_mask(spdm_context, 5), SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE);
+    assert_int_equal(libspdm_get_key_usage_mask(spdm_context, 6), 0);
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
+
 int libspdm_rsp_slot_management_test(void)
 {
     /* Every case runs libspdm_slot_management_test_setup first, which clears any runtime
@@ -1699,7 +1909,7 @@ int libspdm_rsp_slot_management_test(void)
         cmocka_unit_test_setup(rsp_slot_management_case6, libspdm_slot_management_test_setup),
         /* Success case for GetCertificateChain */
         cmocka_unit_test_setup(rsp_slot_management_case7, libspdm_slot_management_test_setup),
-        /* Success case for ManageBank (+ consistency with GET_KEY_PAIR_INFO) */
+        /* Success case for ManageBank ConfigAlgo, and Bank algorithm uniqueness */
         cmocka_unit_test_setup(rsp_slot_management_case8, libspdm_slot_management_test_setup),
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
         /* Success case for ManageSlot (Erase) */
@@ -1729,6 +1939,11 @@ int libspdm_rsp_slot_management_test(void)
         /* ManageSlot Erase with CERT_INSTALL_RESET_CAP -> ResetRequired */
         cmocka_unit_test_setup(rsp_slot_management_case17, libspdm_slot_management_test_setup),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
+#if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP && LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+        /* Cross-state consistency: SET_KEY_PAIR_INFO AssocCertSlotMask/CurrentKeyUsage vs
+         * SLOT_MANAGEMENT GetBankDetails and GET_DIGESTS KeyPairID/KeyUsage */
+        cmocka_unit_test_setup(rsp_slot_management_case18, libspdm_slot_management_test_setup),
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
     };
 
     libspdm_test_context_t test_context = {
