@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -158,6 +158,8 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     size_t message_size;
     size_t transport_header_size;
     spdm_version_number_t secured_message_version;
+    spdm_version_number_t local_max_secured_version;
+    uint8_t peer_aead_limit_exponent = SECURED_MESSAGE_AEAD_LIMIT_EXPONENT_DEFAULT;
 
     LIBSPDM_ASSERT(measurement_hash_type == SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH ||
                    measurement_hash_type == SPDM_PSK_EXCHANGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH ||
@@ -257,13 +259,20 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         spdm_request->context_length = (uint16_t)requester_context_in_size;
     }
 
+    /* No secured message version is negotiated yet at request time, so the AEADlimitOE element is
+     * gated on the highest secured message version this endpoint offers. */
+    local_max_secured_version = libspdm_local_max_secured_message_version(spdm_context);
+
     if (requester_opaque_data != NULL) {
         LIBSPDM_ASSERT(requester_opaque_data_size <= SPDM_MAX_OPAQUE_DATA_SIZE);
 
         opaque_psk_exchange_req_size = (uint16_t)requester_opaque_data_size;
     } else {
+        /* DSP0277 1.3: also advertise this endpoint's AEAD limit in the request opaque data. */
         opaque_psk_exchange_req_size =
-            libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+            libspdm_get_opaque_data_supported_version_data_size(spdm_context) +
+            libspdm_get_opaque_data_aead_limit_element_size(spdm_context,
+                                                            local_max_secured_version);
     }
 
     LIBSPDM_ASSERT(spdm_request_size >= sizeof(spdm_psk_exchange_request_t) + psk_hint_size +
@@ -309,8 +318,14 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         libspdm_copy_mem(ptr, opaque_psk_exchange_req_size,
                          requester_opaque_data, opaque_psk_exchange_req_size);
     } else {
+        size_t supported_version_size =
+            libspdm_get_opaque_data_supported_version_data_size(spdm_context);
         libspdm_build_opaque_data_supported_version_data(
-            spdm_context, &opaque_psk_exchange_req_size, ptr);
+            spdm_context, &supported_version_size, ptr);
+        /* opaque_psk_exchange_req_size holds the reserved opaque data capacity (supported version +
+         * AEAD limit); it is the capacity passed to the append below. */
+        libspdm_build_opaque_data_aead_limit_element(
+            spdm_context, local_max_secured_version, &opaque_psk_exchange_req_size, ptr);
     }
     ptr += opaque_psk_exchange_req_size;
 
@@ -405,6 +420,14 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
+        /* DSP0277 1.3: read the Responder's AEAD limit (absent -> default 64). */
+        status = libspdm_process_opaque_data_aead_limit(
+            spdm_context, secured_message_version, spdm_response->opaque_length, ptr,
+            &peer_aead_limit_exponent);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
     }
 
     spdm_response_size = sizeof(spdm_psk_exchange_response_t) +
@@ -478,6 +501,14 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     libspdm_session_info_set_psk_hint(session_info,
                                       psk_hint,
                                       psk_hint_size);
+
+    /* DSP0277 1.3: program the session's AEAD limit (min of local and peer) when secured message
+     * version 1.3 was negotiated. */
+    if (libspdm_get_version_from_version_number(secured_message_version) >=
+        SECURED_SPDM_VERSION_13) {
+        libspdm_apply_aead_limit_to_session(spdm_context, session_info,
+                                            peer_aead_limit_exponent);
+    }
 
     /* Cache session data*/
 
