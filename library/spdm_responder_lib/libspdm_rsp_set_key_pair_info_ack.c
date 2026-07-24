@@ -394,6 +394,39 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
                                                SPDM_ERROR_CODE_RESET_REQUIRED, 0,
                                                response_size, response);
     } else {
+        /* Update context with new key pair information if a reset is not needed. */
+        uint8_t old_assoc_cert_slot_mask = assoc_cert_slot_mask;
+        uint8_t new_assoc_cert_slot_mask;
+        uint16_t new_current_key_usage;
+        uint8_t slot_index;
+
+        if (operation == SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION) {
+            new_current_key_usage = 0;
+            new_assoc_cert_slot_mask = 0;
+        } else if (operation == SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION) {
+            new_current_key_usage = desired_key_usage;
+            new_assoc_cert_slot_mask = desired_assoc_cert_slot_mask;
+        } else {
+            /* SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION */
+            new_current_key_usage =
+                (desired_key_usage != 0) ? desired_key_usage : current_key_usage;
+            new_assoc_cert_slot_mask = desired_assoc_cert_slot_mask;
+        }
+
+        for (slot_index = 0; slot_index < SPDM_MAX_SLOT_COUNT; slot_index++) {
+            if ((new_assoc_cert_slot_mask & (1 << slot_index)) != 0) {
+                /* Slot is (still) associated with this KeyPairID. */
+                spdm_context->local_context.local_key_pair_id[slot_index] = key_pair_id;
+                spdm_context->local_context.local_key_usage_bit_mask[slot_index] =
+                    new_current_key_usage;
+            } else if (((old_assoc_cert_slot_mask & (1 << slot_index)) != 0) &&
+                       (spdm_context->local_context.local_key_pair_id[slot_index] == key_pair_id)) {
+                /* Slot was associated with this KeyPairID and has now been removed. */
+                spdm_context->local_context.local_key_pair_id[slot_index] = 0;
+                spdm_context->local_context.local_key_usage_bit_mask[slot_index] = 0;
+            }
+        }
+
         spdm_response->header.spdm_version = spdm_request->header.spdm_version;
         spdm_response->header.request_response_code = SPDM_SET_KEY_PAIR_INFO_ACK;
         spdm_response->header.param1 = 0;
