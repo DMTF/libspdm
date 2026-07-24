@@ -24,3 +24,81 @@ accordingly.
 
 If `KEY_UPDATE` is not sent before the maximum sequence number is reached, the SPDM session will be
 terminated.
+
+## Negotiated AEAD limit (DSP0277 1.3)
+
+[DSP0277](https://www.dmtf.org/dsp/DSP0277) version 1.3 defines a Secured Message opaque data
+element `AEADlimitOE` (`SMDataID` = 2) that carries a 1-byte `AeadLimitExponent`. The AEAD limit is
+`2 ^ AeadLimitExponent` messages, and `AeadLimitExponent` shall not exceed 64. When the element is
+absent, the default exponent is 64 (i.e. the full 64-bit sequence number space).
+
+This element is exchanged in the opaque data of the Session-Secrets-Exchange request and response
+(`KEY_EXCHANGE` / `KEY_EXCHANGE_RSP` and `PSK_EXCHANGE` / `PSK_EXCHANGE_RSP`), and both the Requester
+and the Responder populate it.
+
+Opaque data elements are not ordered, so `AEADlimitOE` is parsed regardless of where it appears
+relative to the version-selection / supported-version elements. However, the element is only defined
+for secured message version 1.3 and later, so it is tied to the negotiated secured message version:
+
+* The Requester advertises `AEADlimitOE` whenever its local secured message version list includes
+  1.3 (it does not yet know which version the Responder will select).
+* The Responder advertises `AEADlimitOE` only when it selects secured message version 1.3 or later.
+* When the negotiated secured message version is older than 1.3, a received `AEADlimitOE` is ignored
+  (treated as absent, default exponent 64) even if the peer included it.
+
+### Single source of truth
+
+There is exactly one Integrator-settable knob for the AEAD limit:
+`LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER` (set with `LIBSPDM_DATA_LOCATION_LOCAL`). There is no
+separate "exponent" setting; the value advertised on the wire is *derived* from this cap, so the two
+can never disagree.
+
+`LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER` is the maximum sequence number that *is* allowed
+(inclusive): a message using it is permitted, and the next one is rejected. It is therefore
+`AeadLimit - 1`, where the DSP0277 `AeadLimit` is the first sequence number that is not allowed. A
+cap of `2 ^ e` messages is stored as `(2 ^ e) - 1`. The `AeadLimitExponent` this endpoint advertises
+is the inverse:
+
+```
+AeadLimitExponent = floor(log2(max_spdm_session_sequence_number + 1))
+```
+
+* The default cap `0xFFFFFFFFFFFFFFFF` maps to exponent 64 (the spec default), and avoids computing
+  `2 ^ 64` (which does not fit in a 64-bit value).
+* A power-of-two-minus-one cap (e.g. `0xFFFFFFFF` -> 32, `0xFFFFFF` -> 24) maps to its exact
+  exponent.
+* A cap that is not of the form `2 ^ e - 1` rounds the advertised exponent *down* to the nearest
+  representable AEAD limit, i.e. the advertised limit is always `<=` the configured cap (the safe
+  direction).
+
+The sequence number is checked with `sequence_number > max_spdm_session_sequence_number` so the cap
+value itself is usable. The all-ones cap `0xFFFFFFFFFFFFFFFF` is a special case: the 64-bit counter
+cannot represent `max + 1`, so it is rejected at the all-ones value itself, which prevents the
+sequence number from wrapping back to `0` and reusing an IV.
+
+### Establishment and enforcement
+
+Once the session is established, each endpoint sets the session's effective maximum sequence number
+to the minimum of:
+
+* its own configured cap (`LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER`), and
+* the peer's advertised maximum allowed sequence number, `(2 ^ peer_AeadLimitExponent) - 1`, i.e. one
+  below its AEAD limit of `2 ^ peer_AeadLimitExponent` messages.
+
+So neither side's limit is ever raised by the other. The effective maximum sequence number is itself
+usable; the session is terminated when the sequence number would *exceed* it (or, for the all-ones
+special case, when it reaches it) unless a `KEY_UPDATE` (which resets the sequence number) is
+performed first.
+
+### Reading the negotiated value
+
+The Integrator can read the per-session effective maximum sequence number by calling
+`libspdm_get_data` with `LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER` and
+`LIBSPDM_DATA_LOCATION_SESSION` (with the session ID in `additional_data`). The same data ID with
+`LIBSPDM_DATA_LOCATION_LOCAL` returns the global Integrator-configured cap. The advertised exponent,
+if needed, is `floor(log2(value + 1))`.
+
+The per-session maximum sequence number is read-only. It is derived once, at session establishment,
+from `min(configured cap, peer AEAD limit)` and is owned by the negotiation result. `libspdm_set_data`
+with `LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER` and `LIBSPDM_DATA_LOCATION_SESSION` is rejected;
+only the context-level (`LIBSPDM_DATA_LOCATION_LOCAL`) cap is settable.

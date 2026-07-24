@@ -1760,6 +1760,626 @@ static void libspdm_test_reset_context_leaf_key_case23(void **state)
 }
 #endif /* !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) */
 
+/* DSP0277 1.3 AEAD limit: build the supported-version opaque data then append AEADlimitOE, and
+ * verify the round-trip parse recovers the advertised exponent. */
+static void libspdm_test_aead_limit_build_parse_case24(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t opaque_data_size;
+    size_t element_size;
+    uint8_t *opaque_data_ptr;
+    uint8_t aead_limit_exponent;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x18;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    /* Local secured message version list includes 1.3, so AEADlimitOE is emitted. */
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 4;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
+        SECURED_SPDM_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[1] =
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[2] =
+        SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[3] =
+        SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    /* Advertise a non-default exponent by setting the single-source-of-truth cap to 2^32 - 1, which
+     * the builder encodes as exponent 32. The cap is the maximum allowed sequence number =
+     * AeadLimit - 1 = 2^exponent - 1. */
+    spdm_context->max_spdm_session_sequence_number = (((uint64_t)1 << 32) - 1);
+
+    element_size = libspdm_get_opaque_data_aead_limit_element_size(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT);
+    assert_int_not_equal(element_size, 0);
+
+    /* The element size is 0 for a sub-1.3 version. */
+    assert_int_equal(libspdm_get_opaque_data_aead_limit_element_size(
+                         spdm_context, SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT),
+                     0);
+
+    opaque_data_size = libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    opaque_data_ptr = malloc(opaque_data_size + element_size);
+    assert_ptr_not_equal(opaque_data_ptr, NULL);
+
+    libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_data_size,
+                                                     opaque_data_ptr);
+    /* opaque_data_size now becomes the total buffer capacity for the append. */
+    opaque_data_size += element_size;
+    libspdm_build_opaque_data_aead_limit_element(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            &opaque_data_size, opaque_data_ptr);
+
+    aead_limit_exponent = 0;
+    status = libspdm_process_opaque_data_aead_limit(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            opaque_data_size, opaque_data_ptr, &aead_limit_exponent);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(aead_limit_exponent, 32);
+
+    free(opaque_data_ptr);
+}
+
+/* DSP0277 1.3 AEAD limit: an exponent > 64 must be rejected, and an absent element must default to
+ * 64. */
+static void libspdm_test_aead_limit_invalid_and_default_case25(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t opaque_data_size;
+    size_t element_size;
+    uint8_t *opaque_data_ptr;
+    uint8_t aead_limit_exponent;
+    secured_message_opaque_element_aead_limit_t *aead_element;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x19;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 4;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
+        SECURED_SPDM_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[1] =
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[2] =
+        SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[3] =
+        SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    /* Default cap (all-ones) encodes the default exponent of 64. */
+    spdm_context->max_spdm_session_sequence_number = LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER;
+
+    element_size = libspdm_get_opaque_data_aead_limit_element_size(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT);
+    assert_int_not_equal(element_size, 0);
+
+    /* Build a valid blob with the AEADlimitOE present. */
+    opaque_data_size = libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    opaque_data_ptr = malloc(opaque_data_size + element_size);
+    assert_ptr_not_equal(opaque_data_ptr, NULL);
+
+    libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_data_size,
+                                                     opaque_data_ptr);
+    /* opaque_data_size now becomes the total buffer capacity for the append. */
+    opaque_data_size += element_size;
+    libspdm_build_opaque_data_aead_limit_element(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            &opaque_data_size, opaque_data_ptr);
+
+    /* Corrupt the exponent so it exceeds the max (64). The AEADlimitOE element follows the
+     * element table header which is the last element in the blob. */
+    aead_element = (secured_message_opaque_element_aead_limit_t *)
+                   (opaque_data_ptr + opaque_data_size -
+                    sizeof(secured_message_opaque_element_aead_limit_t));
+    /* Account for the padding bytes (element_size rounds up to a multiple of 4). */
+    aead_element = (secured_message_opaque_element_aead_limit_t *)
+                   ((uint8_t *)aead_element -
+                    (element_size - (sizeof(secured_message_opaque_element_table_header_t) +
+                                     sizeof(secured_message_opaque_element_aead_limit_t))));
+    assert_int_equal(aead_element->sm_data_id,
+                     SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_AEAD_LIMIT);
+    aead_element->aead_limit_exponent = SECURED_MESSAGE_AEAD_LIMIT_EXPONENT_MAX + 1;
+
+    status = libspdm_process_opaque_data_aead_limit(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            opaque_data_size, opaque_data_ptr, &aead_limit_exponent);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+
+    free(opaque_data_ptr);
+
+    /* A blob without the AEADlimitOE element must default the exponent to 64. */
+    opaque_data_size = libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    opaque_data_ptr = malloc(opaque_data_size);
+    assert_ptr_not_equal(opaque_data_ptr, NULL);
+
+    libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_data_size,
+                                                     opaque_data_ptr);
+
+    aead_limit_exponent = 0;
+    status = libspdm_process_opaque_data_aead_limit(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            opaque_data_size, opaque_data_ptr, &aead_limit_exponent);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(aead_limit_exponent, SECURED_MESSAGE_AEAD_LIMIT_EXPONENT_DEFAULT);
+
+    free(opaque_data_ptr);
+}
+
+/* DSP0277 1.3 AEAD limit: applying the limit to a session sets the session's max sequence number to
+ * min(local cap, peer AEAD limit), and the integrator's smaller pre-set cap is never raised. The
+ * local limit's single source of truth is max_spdm_session_sequence_number. */
+static void libspdm_test_aead_limit_apply_to_session_case26(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_data_parameter_t parameter;
+    uint16_t req_id;
+    uint16_t rsp_id;
+    uint32_t session_id;
+    void *session_info;
+    uint64_t max_seq;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1A;
+
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+
+    /* Local cap = 2^40 - 1 (encodes local exponent 40), peer exponent 30. The peer's maximum allowed
+     * sequence number is 2^30 - 1, so the effective session cap is min(2^40 - 1, 2^30 - 1) =
+     * 2^30 - 1. The cap is the maximum allowed sequence number = AeadLimit - 1 = 2^exponent - 1. */
+    spdm_context->max_spdm_session_sequence_number = (((uint64_t)1 << 40) - 1);
+
+    req_id = libspdm_allocate_req_session_id(spdm_context, false);
+    rsp_id = libspdm_allocate_rsp_session_id(spdm_context, false);
+    session_id = libspdm_generate_session_id(req_id, rsp_id);
+    session_info = libspdm_assign_session_id(spdm_context, session_id,
+                                             SECURED_SPDM_VERSION_13 <<
+                                             SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    assert_ptr_not_equal(session_info, NULL);
+
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_SESSION;
+    libspdm_copy_mem(parameter.additional_data, sizeof(parameter.additional_data),
+                     &session_id, sizeof(session_id));
+
+    libspdm_apply_aead_limit_to_session(spdm_context, session_info, 30);
+
+    /* Read back the negotiated effective max sequence number per session via get_data. */
+    max_seq = 0;
+    data_size = sizeof(max_seq);
+    assert_int_equal(libspdm_get_data(spdm_context,
+                                      LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER,
+                                      &parameter, &max_seq, &data_size),
+                     LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(max_seq, (((uint64_t)1 << 30) - 1));
+
+    /* A smaller local cap must never be raised by the peer's AEAD limit. With local cap 0xFFFF and
+     * peer exponent 30 (2^30), the effective cap stays 0xFFFF. */
+    spdm_context->max_spdm_session_sequence_number = 0xFFFF;
+    libspdm_apply_aead_limit_to_session(spdm_context, session_info, 30);
+    max_seq = 0;
+    data_size = sizeof(max_seq);
+    assert_int_equal(libspdm_get_data(spdm_context,
+                                      LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER,
+                                      &parameter, &max_seq, &data_size),
+                     LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(max_seq, 0xFFFF);
+
+    /* A per-session set of the max sequence number is not allowed: the session cap is owned by the
+     * negotiated AEAD limit and must not be overridden. */
+    max_seq = 0x1000;
+    assert_int_not_equal(libspdm_set_data(spdm_context,
+                                          LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER,
+                                          &parameter, &max_seq, sizeof(max_seq)),
+                         LIBSPDM_STATUS_SUCCESS);
+
+    libspdm_free_session_id(spdm_context, session_id);
+}
+
+/* DSP0277 1.3 AEAD limit: the advertised AeadLimitExponent is derived from the single source of
+ * truth, max_spdm_session_sequence_number (= floor(log2(max + 1)), with the all-ones cap mapping
+ * to the default exponent 64 since max + 1 = 2^64 is not representable). */
+static void libspdm_test_aead_limit_set_data_case27(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t opaque_data_size;
+    size_t element_size;
+    uint8_t *opaque_data_ptr;
+    uint8_t aead_limit_exponent;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1B;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 4;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
+        SECURED_SPDM_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[1] =
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[2] =
+        SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[3] =
+        SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    element_size = libspdm_get_opaque_data_aead_limit_element_size(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT);
+    assert_int_not_equal(element_size, 0);
+
+    /* A cap that is not of the form 2^e - 1 (here 0xFFFFFE, i.e. 2^24 - 2) rounds down to the nearest
+     * representable AEAD limit 2^23, advertising exponent 23 (<= the configured cap, the safe
+     * direction). floor(log2(0xFFFFFE + 1)) = floor(log2(0xFFFFFF)) = 23. */
+    spdm_context->max_spdm_session_sequence_number = 0xFFFFFE;
+    opaque_data_size = libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    opaque_data_ptr = malloc(opaque_data_size + element_size);
+    assert_ptr_not_equal(opaque_data_ptr, NULL);
+    libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_data_size,
+                                                     opaque_data_ptr);
+    /* opaque_data_size now becomes the total buffer capacity for the append. */
+    opaque_data_size += element_size;
+    libspdm_build_opaque_data_aead_limit_element(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            &opaque_data_size, opaque_data_ptr);
+    aead_limit_exponent = 0;
+    status = libspdm_process_opaque_data_aead_limit(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            opaque_data_size, opaque_data_ptr, &aead_limit_exponent);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(aead_limit_exponent, 23);
+    free(opaque_data_ptr);
+
+    /* The all-ones default cap advertises the default exponent of 64. */
+    spdm_context->max_spdm_session_sequence_number = LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER;
+    opaque_data_size = libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    opaque_data_ptr = malloc(opaque_data_size + element_size);
+    assert_ptr_not_equal(opaque_data_ptr, NULL);
+    libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_data_size,
+                                                     opaque_data_ptr);
+    /* opaque_data_size now becomes the total buffer capacity for the append. */
+    opaque_data_size += element_size;
+    libspdm_build_opaque_data_aead_limit_element(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            &opaque_data_size, opaque_data_ptr);
+    aead_limit_exponent = 0;
+    status = libspdm_process_opaque_data_aead_limit(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            opaque_data_size, opaque_data_ptr, &aead_limit_exponent);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(aead_limit_exponent, SECURED_MESSAGE_AEAD_LIMIT_EXPONENT_DEFAULT);
+    free(opaque_data_ptr);
+}
+
+#pragma pack(1)
+/* A general opaque data table (SPDM 1.2 format) with the AEADlimitOE element placed BEFORE the
+ * version-selection element, to exercise order-independent parsing. */
+typedef struct {
+    spdm_general_opaque_data_table_header_t opaque_header;
+    secured_message_opaque_element_table_header_t aead_limit_header;
+    secured_message_opaque_element_aead_limit_t aead_limit_opaque;
+    uint8_t aead_limit_align[1];
+    secured_message_opaque_element_table_header_t ver_sel_header;
+    secured_message_opaque_element_version_selection_t ver_sel_opaque;
+} test_aead_first_opaque_data_table_t;
+#pragma pack()
+
+/* DSP0277 1.3 AEAD limit: opaque data elements may appear in any order. Verify that AEADlimitOE is
+ * still parsed correctly when it precedes the version-selection element, and that version-selection
+ * parsing is likewise unaffected by the ordering. */
+static void libspdm_test_aead_limit_element_order_case28(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    test_aead_first_opaque_data_table_t opaque_data;
+    spdm_version_number_t secured_message_version;
+    uint8_t aead_limit_exponent;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1C;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 4;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
+        SECURED_SPDM_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[1] =
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[2] =
+        SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[3] =
+        SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    libspdm_zero_mem(&opaque_data, sizeof(opaque_data));
+    opaque_data.opaque_header.total_elements = 2;
+
+    /* Element 1: AEADlimitOE (placed first). */
+    opaque_data.aead_limit_header.id = SPDM_REGISTRY_ID_DMTF;
+    opaque_data.aead_limit_header.vendor_len = 0;
+    opaque_data.aead_limit_header.opaque_element_data_len =
+        sizeof(secured_message_opaque_element_aead_limit_t);
+    opaque_data.aead_limit_opaque.sm_data_version =
+        SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
+    opaque_data.aead_limit_opaque.sm_data_id =
+        SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_AEAD_LIMIT;
+    opaque_data.aead_limit_opaque.aead_limit_exponent = 50;
+
+    /* Element 2: version-selection (placed second). */
+    opaque_data.ver_sel_header.id = SPDM_REGISTRY_ID_DMTF;
+    opaque_data.ver_sel_header.vendor_len = 0;
+    opaque_data.ver_sel_header.opaque_element_data_len =
+        sizeof(secured_message_opaque_element_version_selection_t);
+    opaque_data.ver_sel_opaque.sm_data_version =
+        SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
+    opaque_data.ver_sel_opaque.sm_data_id =
+        SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION;
+    opaque_data.ver_sel_opaque.selected_version =
+        SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    /* AEADlimitOE is found even though it precedes version-selection (negotiated version 1.3). */
+    aead_limit_exponent = 0;
+    status = libspdm_process_opaque_data_aead_limit(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            sizeof(opaque_data), &opaque_data, &aead_limit_exponent);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(aead_limit_exponent, 50);
+
+    /* The AEADlimitOE element is only defined for secured message version 1.3. With an older
+     * negotiated version (1.2) the element must be ignored and the default exponent (64) returned,
+     * even though the element is physically present. */
+    aead_limit_exponent = 0;
+    status = libspdm_process_opaque_data_aead_limit(
+        spdm_context, SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            sizeof(opaque_data), &opaque_data, &aead_limit_exponent);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(aead_limit_exponent, SECURED_MESSAGE_AEAD_LIMIT_EXPONENT_DEFAULT);
+
+    /* version-selection is also found regardless of the AEADlimitOE ordering. */
+    secured_message_version = 0;
+    status = libspdm_process_opaque_data_version_selection_data(spdm_context, sizeof(opaque_data),
+                                                                &opaque_data,
+                                                                &secured_message_version);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(libspdm_get_version_from_version_number(secured_message_version),
+                     SECURED_SPDM_VERSION_13);
+}
+
+/* DSP0277 1.3 AEAD limit: peer-supports vs. peer-does-not-support, using a non-power-of-two local
+ * cap. With local cap 0xFF00FF:
+ *   - peer does not support (absent element -> exponent 64): the session cap stays 0xFF00FF.
+ *   - peer supports and advertises a tighter limit: the session cap is reduced to the peer's
+ *     (rounded-down) AEAD limit, never raised. */
+static void libspdm_test_aead_limit_peer_support_case29(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_data_parameter_t parameter;
+    uint16_t req_id;
+    uint16_t rsp_id;
+    uint32_t session_id;
+    void *session_info;
+    uint64_t max_seq;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1D;
+
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+
+    /* Non-power-of-two local cap. */
+    spdm_context->max_spdm_session_sequence_number = 0xFF00FF;
+
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_SESSION;
+
+    /* Case 1: peer does NOT support AEAD limit. The message paths gate the apply on negotiated
+     * secured message version >= 1.3, so for an older session the apply is never called and the
+     * session cap is simply inherited from the context cap (0xFF00FF). */
+    req_id = libspdm_allocate_req_session_id(spdm_context, false);
+    rsp_id = libspdm_allocate_rsp_session_id(spdm_context, false);
+    session_id = libspdm_generate_session_id(req_id, rsp_id);
+    session_info = libspdm_assign_session_id(spdm_context, session_id,
+                                             SECURED_SPDM_VERSION_12 <<
+                                             SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    assert_ptr_not_equal(session_info, NULL);
+    libspdm_copy_mem(parameter.additional_data, sizeof(parameter.additional_data),
+                     &session_id, sizeof(session_id));
+    max_seq = 0;
+    data_size = sizeof(max_seq);
+    assert_int_equal(libspdm_get_data(spdm_context,
+                                      LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER,
+                                      &parameter, &max_seq, &data_size),
+                     LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(max_seq, 0xFF00FF);
+    libspdm_free_session_id(spdm_context, session_id);
+
+    /* Case 2: peer supports but advertises the default (absent element -> exponent 64). Even on a
+     * 1.3 session, the negotiated cap is unchanged (min(0xFF00FF, 2^64 - 1) = 0xFF00FF). */
+    req_id = libspdm_allocate_req_session_id(spdm_context, false);
+    rsp_id = libspdm_allocate_rsp_session_id(spdm_context, false);
+    session_id = libspdm_generate_session_id(req_id, rsp_id);
+    session_info = libspdm_assign_session_id(spdm_context, session_id,
+                                             SECURED_SPDM_VERSION_13 <<
+                                             SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    assert_ptr_not_equal(session_info, NULL);
+    libspdm_copy_mem(parameter.additional_data, sizeof(parameter.additional_data),
+                     &session_id, sizeof(session_id));
+    libspdm_apply_aead_limit_to_session(spdm_context, session_info,
+                                        SECURED_MESSAGE_AEAD_LIMIT_EXPONENT_DEFAULT);
+    max_seq = 0;
+    data_size = sizeof(max_seq);
+    assert_int_equal(libspdm_get_data(spdm_context,
+                                      LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER,
+                                      &parameter, &max_seq, &data_size),
+                     LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(max_seq, 0xFF00FF);
+
+    /* Case 3: peer supports and advertises a tighter limit (exponent 23 -> AeadLimit 2^23, max
+     * allowed sequence number 2^23 - 1 = 0x7FFFFF). The session cap is reduced to
+     * min(0xFF00FF, 0x7FFFFF) = 0x7FFFFF. */
+    libspdm_apply_aead_limit_to_session(spdm_context, session_info, 23);
+    max_seq = 0;
+    data_size = sizeof(max_seq);
+    assert_int_equal(libspdm_get_data(spdm_context,
+                                      LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER,
+                                      &parameter, &max_seq, &data_size),
+                     LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(max_seq, 0x7FFFFF);
+    libspdm_free_session_id(spdm_context, session_id);
+}
+
+/* DSP0277 1.3 AEAD limit: boundary semantics across exponents. AeadLimit = 2^AeadLimitExponent is
+ * the first sequence number that is NOT allowed, so the maximum allowed sequence number (which is
+ * what max_spdm_session_sequence_number stores) is AeadLimit - 1 = 2^exponent - 1:
+ *   - exponent 0  -> AeadLimit 1     -> max 0            (only sequence number 0 is usable: one msg).
+ *   - exponent 1  -> AeadLimit 2     -> max 1            (sequence numbers 0 and 1 are usable).
+ *   - exponent 63 -> AeadLimit 2^63  -> max 2^63 - 1     (the largest exponent below the 2^64 clamp).
+ *   - exponent 64 -> AeadLimit 2^64  -> max 2^64 - 1     (not representable as AeadLimit; the maximum
+ *                                                         allowed value is the all-ones cap, which is
+ *                                                         also the spec default).
+ * The exponent is also round-tripped through the builder. */
+static void libspdm_test_aead_limit_small_exponent_case30(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_data_parameter_t parameter;
+    uint16_t req_id;
+    uint16_t rsp_id;
+    uint32_t session_id;
+    void *session_info;
+    uint64_t max_seq;
+    size_t data_size;
+    size_t opaque_data_size;
+    size_t element_size;
+    uint8_t *opaque_data_ptr;
+    uint8_t aead_limit_exponent;
+    size_t index;
+    uint8_t exponent;
+    uint64_t expected_max;
+    const uint8_t test_exponents[] = {0, 1, 63, 64};
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1E;
+
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+
+    /* The local cap is the default (all-ones), so the effective session cap is driven entirely by
+     * the peer's advertised exponent: min(all-ones, 2^exponent) = 2^exponent. */
+    spdm_context->max_spdm_session_sequence_number = LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER;
+
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_SESSION;
+
+    /* Each exponent negotiates a session cap of exactly 2^exponent - 1 (the maximum allowed sequence
+     * number, one below the AEAD limit). */
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(test_exponents); index++) {
+        exponent = test_exponents[index];
+        req_id = libspdm_allocate_req_session_id(spdm_context, false);
+        rsp_id = libspdm_allocate_rsp_session_id(spdm_context, false);
+        session_id = libspdm_generate_session_id(req_id, rsp_id);
+        session_info = libspdm_assign_session_id(spdm_context, session_id,
+                                                 SECURED_SPDM_VERSION_13 <<
+                                                 SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+        assert_ptr_not_equal(session_info, NULL);
+        libspdm_copy_mem(parameter.additional_data, sizeof(parameter.additional_data),
+                         &session_id, sizeof(session_id));
+
+        libspdm_apply_aead_limit_to_session(spdm_context, session_info, exponent);
+
+        /* AeadLimit 2^64 is not representable; exponent 64's maximum allowed value is the all-ones
+         * cap. */
+        expected_max = (exponent >= 64) ? LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER :
+                       (((uint64_t)1 << exponent) - 1);
+
+        max_seq = 0;
+        data_size = sizeof(max_seq);
+        assert_int_equal(libspdm_get_data(spdm_context,
+                                          LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER,
+                                          &parameter, &max_seq, &data_size),
+                         LIBSPDM_STATUS_SUCCESS);
+        assert_int_equal(max_seq, expected_max);
+
+        libspdm_free_session_id(spdm_context, session_id);
+    }
+
+    /* Builder round-trip for small exponents: a local cap of 2^exponent must advertise exponent. */
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 4;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
+        SECURED_SPDM_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[1] =
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[2] =
+        SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[3] =
+        SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    element_size = libspdm_get_opaque_data_aead_limit_element_size(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT);
+    assert_int_not_equal(element_size, 0);
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(test_exponents); index++) {
+        exponent = test_exponents[index];
+        /* A local cap of 2^exponent - 1 advertises exponent; exponent 64's limit (2^64) is
+         * represented by the all-ones cap. */
+        spdm_context->max_spdm_session_sequence_number =
+            (exponent >= 64) ? LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER :
+            (((uint64_t)1 << exponent) - 1);
+
+        opaque_data_size = libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+        opaque_data_ptr = malloc(opaque_data_size + element_size);
+        assert_ptr_not_equal(opaque_data_ptr, NULL);
+        libspdm_build_opaque_data_supported_version_data(spdm_context, &opaque_data_size,
+                                                         opaque_data_ptr);
+        /* opaque_data_size now becomes the total buffer capacity for the append. */
+        opaque_data_size += element_size;
+        libspdm_build_opaque_data_aead_limit_element(
+            spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                &opaque_data_size, opaque_data_ptr);
+
+        aead_limit_exponent = 0xFF;
+        status = libspdm_process_opaque_data_aead_limit(
+            spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                opaque_data_size, opaque_data_ptr, &aead_limit_exponent);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+        assert_int_equal(aead_limit_exponent, exponent);
+
+        free(opaque_data_ptr);
+    }
+}
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -1816,6 +2436,21 @@ int libspdm_common_context_data_test_main(void)
         /* reset_context frees the stored peer leaf certificate public key */
         cmocka_unit_test(libspdm_test_reset_context_leaf_key_case23),
 #endif
+
+        /* DSP0277 1.3 AEAD limit: build + append AEADlimitOE then parse it back. */
+        cmocka_unit_test(libspdm_test_aead_limit_build_parse_case24),
+        /* DSP0277 1.3 AEAD limit: reject exponent > 64, absent element defaults to 64. */
+        cmocka_unit_test(libspdm_test_aead_limit_invalid_and_default_case25),
+        /* DSP0277 1.3 AEAD limit: apply min(local, peer) limit to a session. */
+        cmocka_unit_test(libspdm_test_aead_limit_apply_to_session_case26),
+        /* DSP0277 1.3 AEAD limit: set_data validates the exponent. */
+        cmocka_unit_test(libspdm_test_aead_limit_set_data_case27),
+        /* DSP0277 1.3 AEAD limit: parse is order-independent (AEADlimitOE before version-sel). */
+        cmocka_unit_test(libspdm_test_aead_limit_element_order_case28),
+        /* DSP0277 1.3 AEAD limit: peer-supports vs peer-does-not-support with a non-pow2 cap. */
+        cmocka_unit_test(libspdm_test_aead_limit_peer_support_case29),
+        /* DSP0277 1.3 AEAD limit: exponent boundary semantics (exp 0, 1, 63, 64). */
+        cmocka_unit_test(libspdm_test_aead_limit_small_exponent_case30),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);
