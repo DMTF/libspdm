@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -51,12 +51,13 @@
  *                AssociatedData           AeadTag
  */
 
-/* 3 means SPDM secured message version 1.0, 1.1, 1.2 */
-#define SECURED_SPDM_MAX_VERSION_COUNT 3
+/* 4 means SPDM secured message version 1.0, 1.1, 1.2, 1.3 */
+#define SECURED_SPDM_MAX_VERSION_COUNT 4
 /* the DSP0277 specification version */
 #define SECURED_SPDM_VERSION_10 0x10
 #define SECURED_SPDM_VERSION_11 0x11
 #define SECURED_SPDM_VERSION_12 0x12
+#define SECURED_SPDM_VERSION_13 0x13
 
 typedef struct {
     uint32_t session_id;
@@ -127,6 +128,20 @@ typedef struct {
     uint8_t version_count;
     /*spdm_version_number_t   versions_list[version_count];*/
 } secured_message_opaque_element_supported_version_t;
+
+/* DSP0277 1.3 AEAD limit data (Table 10). Added in secured message version 1.3. */
+#define SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_AEAD_LIMIT 0x2
+
+/* AeadLimitExponent shall be <= 64; AeadLimit = 2 ^ AeadLimitExponent.
+ * When the AEAD limit data is absent, the exponent is interpreted as 64. */
+#define SECURED_MESSAGE_AEAD_LIMIT_EXPONENT_MAX 64
+#define SECURED_MESSAGE_AEAD_LIMIT_EXPONENT_DEFAULT 64
+
+typedef struct {
+    uint8_t sm_data_version; /* SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION*/
+    uint8_t sm_data_id; /* SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_AEAD_LIMIT*/
+    uint8_t aead_limit_exponent; /* <= 64; AeadLimit = 2 ^ aead_limit_exponent*/
+} secured_message_opaque_element_aead_limit_t;
 
 #pragma pack()
 

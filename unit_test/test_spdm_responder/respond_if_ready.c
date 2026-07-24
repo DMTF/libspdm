@@ -669,7 +669,11 @@ static void rsp_respond_if_ready_case5(void **state) {
     assert_int_equal (response_size,
                       sizeof(spdm_key_exchange_response_t) + dhe_key_size + 2 +
                       libspdm_get_opaque_data_version_selection_data_size(
-                          spdm_context) + libspdm_get_asym_signature_size (
+                          spdm_context) +
+                      libspdm_get_opaque_data_aead_limit_element_size(
+                          spdm_context,
+                          SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT) +
+                      libspdm_get_asym_signature_size (
                           m_libspdm_use_asym_algo) +
                       libspdm_get_hash_size (m_libspdm_use_hash_algo));
     assert_int_equal (libspdm_secured_message_get_session_state (spdm_context->session_info[0].
@@ -902,7 +906,11 @@ static void rsp_respond_if_ready_case7(void **state) {
     assert_int_equal (response_size,
                       sizeof(spdm_psk_exchange_response_t) + LIBSPDM_PSK_CONTEXT_LENGTH +
                       libspdm_get_opaque_data_version_selection_data_size(
-                          spdm_context) + libspdm_get_hash_size (m_libspdm_use_hash_algo));
+                          spdm_context) +
+                      libspdm_get_opaque_data_aead_limit_element_size(
+                          spdm_context,
+                          SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT) +
+                      libspdm_get_hash_size (m_libspdm_use_hash_algo));
     assert_int_equal (libspdm_secured_message_get_session_state (spdm_context->session_info[0].
                                                                  secured_message_context),
                       LIBSPDM_SESSION_STATE_HANDSHAKING);
