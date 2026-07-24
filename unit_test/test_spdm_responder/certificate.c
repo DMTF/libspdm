@@ -1282,6 +1282,62 @@ static void rsp_certificate_case19(void **state)
     free(data);
 }
 
+/**
+ * Test 20: SlotSizeRequested query against an empty slot (no certificate chain provisioned).
+ * A SlotSizeRequested query returns only a size and is independent of whether the slot holds a
+ * certificate chain, so it must not be rejected for an empty slot.
+ * Expected Behavior: SUCCESS with portion_length 0 and a remainder_length equal to the slot
+ * storage size: the maximum provisioning size when SET_CERT_CAP is supported (case 1), otherwise
+ * 0 because the slot is empty (case 3).
+ **/
+static void rsp_certificate_case20(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_certificate_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 20;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+
+    /* Empty slot: no certificate chain is provisioned. */
+    spdm_context->local_context.cert_slot_reset_mask = 0;
+    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+
+    m_libspdm_get_certificate_request5.header.param1 = 0;
+    m_libspdm_get_certificate_request5.header.param2 =
+        SPDM_GET_CERTIFICATE_REQUEST_ATTRIBUTES_SLOT_SIZE_REQUESTED;
+    m_libspdm_get_certificate_request5.length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+    m_libspdm_get_certificate_request5.offset = 0xFF;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_certificate(
+        spdm_context, m_libspdm_get_certificate_request5_size,
+        &m_libspdm_get_certificate_request5, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_certificate_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CERTIFICATE);
+    assert_int_equal(spdm_response->header.param1, 0);
+    assert_int_equal(spdm_response->portion_length, 0);
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
+    /* Case 1: SET_CERT_CAP supported -> maximum provisioning size for the slot. */
+    assert_int_equal(spdm_response->remainder_length, SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
+#else
+    /* Case 3: no SET_CERT_CAP and the slot is empty -> size 0. */
+    assert_int_equal(spdm_response->remainder_length, 0);
+#endif
+}
+
 int libspdm_rsp_certificate_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1323,6 +1379,8 @@ int libspdm_rsp_certificate_test(void)
         /* check request attributes and response attributes*/
         cmocka_unit_test(rsp_certificate_case18),
         cmocka_unit_test(rsp_certificate_case19),
+        /* SlotSizeRequested against an empty slot */
+        cmocka_unit_test(rsp_certificate_case20),
     };
 
     libspdm_test_context_t test_context = {
