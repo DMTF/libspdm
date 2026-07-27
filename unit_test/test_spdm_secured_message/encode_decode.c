@@ -73,7 +73,8 @@ static void initialize_secured_message_context(void)
 static void libspdm_test_secured_message_encode_case1(void **state)
 {
     libspdm_return_t status;
-    uint8_t app_message[16];
+    uint8_t app_message_buffer[sizeof(spdm_secured_message_cipher_header_t) + 16];
+    uint8_t *app_message = app_message_buffer + sizeof(spdm_secured_message_cipher_header_t);
     size_t secured_message_size = sizeof(m_secured_message);
     const uint32_t session_id = 0x00112233;
     uint8_t *ptr;
@@ -86,7 +87,8 @@ static void libspdm_test_secured_message_encode_case1(void **state)
 
     status = libspdm_encode_secured_message(
         &m_secured_message_context, session_id, true,
-        sizeof(app_message), app_message, &secured_message_size, &m_secured_message,
+        sizeof(app_message_buffer) - sizeof(spdm_secured_message_cipher_header_t),
+        app_message, &secured_message_size, &m_secured_message,
         &m_secured_message_callbacks);
 
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
@@ -122,7 +124,8 @@ static void libspdm_test_secured_message_encode_case1(void **state)
 static void libspdm_test_secured_message_encode_case2(void **state)
 {
     libspdm_return_t status;
-    uint8_t app_message[16];
+    uint8_t app_message_buffer[sizeof(spdm_secured_message_cipher_header_t) + 16];
+    uint8_t *app_message = app_message_buffer + sizeof(spdm_secured_message_cipher_header_t);
     size_t secured_message_size = sizeof(m_secured_message);
     const uint32_t session_id = 0x00112233;
     uint8_t *ptr;
@@ -136,7 +139,8 @@ static void libspdm_test_secured_message_encode_case2(void **state)
 
     status = libspdm_encode_secured_message(
         &m_secured_message_context, session_id, true,
-        sizeof(app_message), app_message, &secured_message_size, &m_secured_message,
+        sizeof(app_message_buffer) - sizeof(spdm_secured_message_cipher_header_t),
+        app_message, &secured_message_size, &m_secured_message,
         &m_secured_message_callbacks);
 
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
@@ -177,7 +181,8 @@ static void libspdm_test_secured_message_encode_case2(void **state)
 static void libspdm_test_secured_message_encode_case3(void **state)
 {
     libspdm_return_t status;
-    uint8_t app_message[16];
+    uint8_t app_message_buffer[sizeof(spdm_secured_message_cipher_header_t) + 16];
+    uint8_t *app_message = app_message_buffer + sizeof(spdm_secured_message_cipher_header_t);
     size_t secured_message_size = sizeof(m_secured_message);
     const uint32_t session_id = 0x00112233;
     uint8_t *ptr;
@@ -192,7 +197,8 @@ static void libspdm_test_secured_message_encode_case3(void **state)
 
     status = libspdm_encode_secured_message(
         &m_secured_message_context, session_id, true,
-        sizeof(app_message), app_message, &secured_message_size, &m_secured_message,
+        sizeof(app_message_buffer) - sizeof(spdm_secured_message_cipher_header_t),
+        app_message, &secured_message_size, &m_secured_message,
         &m_secured_message_callbacks);
 
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
@@ -228,7 +234,8 @@ static void libspdm_test_secured_message_encode_case3(void **state)
 static void libspdm_test_secured_message_encode_case4(void **state)
 {
     libspdm_return_t status;
-    uint8_t app_message[16];
+    uint8_t app_message_buffer[sizeof(spdm_secured_message_cipher_header_t) + 16];
+    uint8_t *app_message = app_message_buffer + sizeof(spdm_secured_message_cipher_header_t);
     size_t secured_message_size = sizeof(m_secured_message);
     const uint32_t session_id = 0x00112233;
     uint8_t *ptr;
@@ -244,7 +251,8 @@ static void libspdm_test_secured_message_encode_case4(void **state)
 
     status = libspdm_encode_secured_message(
         &m_secured_message_context, session_id, true,
-        sizeof(app_message), app_message, &secured_message_size, &m_secured_message,
+        sizeof(app_message_buffer) - sizeof(spdm_secured_message_cipher_header_t),
+        app_message, &secured_message_size, &m_secured_message,
         &m_secured_message_callbacks);
 
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
@@ -588,7 +596,8 @@ static void libspdm_test_secured_message_encode_case8(void **state)
  **/
 static void libspdm_test_secured_message_encode_case9(void **state) {
     libspdm_return_t status;
-    uint8_t encode_app_message[16];
+    uint8_t encode_buffer[sizeof(spdm_secured_message_cipher_header_t) + 16];
+    uint8_t *encode_app_message = encode_buffer + sizeof(spdm_secured_message_cipher_header_t);
     size_t secured_message_size = sizeof(m_secured_message);
     libspdm_secured_message_context_t encode_secured_message_context;
 
@@ -609,7 +618,8 @@ static void libspdm_test_secured_message_encode_case9(void **state) {
     libspdm_zero_mem(m_secured_message, sizeof(m_secured_message));
     status = libspdm_encode_secured_message(
         &encode_secured_message_context, session_id, true,
-        sizeof(encode_app_message), encode_app_message, &secured_message_size, m_secured_message,
+        sizeof(encode_buffer) - sizeof(spdm_secured_message_cipher_header_t),
+        encode_app_message, &secured_message_size, m_secured_message,
         &m_secured_message_callbacks);
 
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
@@ -664,7 +674,8 @@ static void libspdm_test_secured_message_encode_case9(void **state) {
 static void libspdm_test_secured_message_encode_case10(void **state)
 {
     libspdm_return_t status;
-    uint8_t encode_app_message[16];
+    uint8_t encode_buffer[sizeof(spdm_secured_message_cipher_header_t) + 16];
+    uint8_t *encode_app_message = encode_buffer + sizeof(spdm_secured_message_cipher_header_t);
     size_t secured_message_size = sizeof(m_secured_message);
     libspdm_secured_message_context_t encode_secured_message_context;
 
@@ -686,7 +697,8 @@ static void libspdm_test_secured_message_encode_case10(void **state)
     libspdm_zero_mem(m_secured_message, sizeof(m_secured_message));
     status = libspdm_encode_secured_message(
         &encode_secured_message_context, session_id, true,
-        sizeof(encode_app_message), encode_app_message, &secured_message_size, m_secured_message,
+        sizeof(encode_buffer) - sizeof(spdm_secured_message_cipher_header_t),
+        encode_app_message, &secured_message_size, m_secured_message,
         &m_secured_message_callbacks);
 
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
