@@ -23,7 +23,7 @@ uint32_t libspdm_tcp_get_max_random_number_count(void)
 spdm_version_number_t libspdm_tcp_get_secured_spdm_version(
     spdm_version_number_t secured_message_version)
 {
-    return SECURED_SPDM_VERSION_12;
+    return SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 }
 
 /**
