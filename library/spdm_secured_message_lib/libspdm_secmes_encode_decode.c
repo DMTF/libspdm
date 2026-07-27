@@ -100,7 +100,8 @@ libspdm_return_t libspdm_encode_secured_message(
     secured_spdm_version = spdm_secured_message_callbacks->get_secured_spdm_version(
         secured_message_context->secured_message_version);
     version = (uint8_t)(secured_spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT);
-    if (version > SECURED_SPDM_VERSION_12) {
+    /* Only check the major version. The minor version is not checked. */
+    if ((version >> 4) != (SECURED_SPDM_VERSION_10 >> 4)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
@@ -346,7 +347,8 @@ libspdm_return_t libspdm_decode_secured_message(
     secured_spdm_version = spdm_secured_message_callbacks->get_secured_spdm_version(
         secured_message_context->secured_message_version);
     version = (uint8_t)(secured_spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT);
-    if (version > SECURED_SPDM_VERSION_12) {
+    /* Only check the major version. The minor version is not checked. */
+    if ((version >> 4) != (SECURED_SPDM_VERSION_10 >> 4)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 

@@ -30,14 +30,18 @@ static uint32_t get_max_random_number_count(void)
     return 0;
 }
 
+static uint8_t m_secured_spdm_version = SECURED_SPDM_VERSION_11;
+
 static spdm_version_number_t get_secured_spdm_version(spdm_version_number_t secured_message_version)
 {
-    return SECURED_SPDM_VERSION_11;
+    return (spdm_version_number_t)m_secured_spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT;
 }
 
 static void initialize_secured_message_context(void)
 {
-    m_secured_message_context.secured_message_version = SECURED_SPDM_VERSION_11;
+    m_secured_spdm_version = SECURED_SPDM_VERSION_11;
+    m_secured_message_context.secured_message_version =
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     m_secured_message_context.aead_cipher_suite = SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM;
     m_secured_message_context.session_type = LIBSPDM_SESSION_TYPE_ENC_MAC;
     m_secured_message_context.session_state = LIBSPDM_SESSION_STATE_ESTABLISHED;
@@ -956,6 +960,136 @@ static void libspdm_test_secured_message_encode_case13(void **state)
     assert_int_equal(LIBSPDM_STATUS_INVALID_MSG_SIZE, status);
 }
 
+/**
+ * Test 14: A higher minor version with the same major version is accepted.
+ **/
+static void libspdm_test_secured_message_encode_case14(void **state)
+{
+    libspdm_return_t status;
+    uint8_t app_message_buffer[sizeof(spdm_secured_message_cipher_header_t) + 16];
+    uint8_t *app_message = app_message_buffer + sizeof(spdm_secured_message_cipher_header_t);
+    size_t secured_message_size = sizeof(m_secured_message);
+    const uint32_t session_id = 0x00112233;
+
+    initialize_secured_message_context();
+    /* Major version 1, minor version 15. */
+    m_secured_spdm_version = 0x1f;
+
+    for (uint8_t index = 0; index < 16; index++) {
+        app_message[index] = index;
+    }
+
+    status = libspdm_encode_secured_message(
+        &m_secured_message_context, session_id, true,
+        sizeof(app_message_buffer) - sizeof(spdm_secured_message_cipher_header_t),
+        app_message, &secured_message_size, &m_secured_message,
+        &m_secured_message_callbacks);
+
+    assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
+}
+
+/**
+ * Test 15: A higher major version is rejected.
+ **/
+static void libspdm_test_secured_message_encode_case15(void **state)
+{
+    libspdm_return_t status;
+    uint8_t app_message[16];
+    size_t secured_message_size = sizeof(m_secured_message);
+    const uint32_t session_id = 0x00112233;
+
+    initialize_secured_message_context();
+    /* Major version 2, minor version 0. */
+    m_secured_spdm_version = 0x20;
+
+    for (uint8_t index = 0; index < 16; index++) {
+        app_message[index] = index;
+    }
+
+    status = libspdm_encode_secured_message(
+        &m_secured_message_context, session_id, true,
+        sizeof(app_message), app_message, &secured_message_size, &m_secured_message,
+        &m_secured_message_callbacks);
+
+    assert_int_equal(LIBSPDM_STATUS_UNSUPPORTED_CAP, status);
+}
+
+/**
+ * Test 16: A higher minor version with the same major version is accepted on decode.
+ **/
+static void libspdm_test_secured_message_decode_case16(void **state)
+{
+    libspdm_return_t status;
+    uint8_t encode_buffer[sizeof(spdm_secured_message_cipher_header_t) + 16];
+    uint8_t *encode_app_message = encode_buffer + sizeof(spdm_secured_message_cipher_header_t);
+    size_t secured_message_size = sizeof(m_secured_message);
+    libspdm_secured_message_context_t encode_secured_message_context;
+    void *decode_app_message = m_app_message;
+    size_t decode_app_message_size = sizeof(m_app_message);
+    libspdm_secured_message_context_t decode_secured_message_context;
+    const uint32_t session_id = 0x00112233;
+
+    initialize_secured_message_context();
+    /* Major version 1, minor version 15. */
+    m_secured_spdm_version = 0x1f;
+
+    libspdm_copy_mem(&encode_secured_message_context, sizeof(encode_secured_message_context),
+                     &m_secured_message_context, sizeof(m_secured_message_context));
+    encode_secured_message_context.sequence_number_endian =
+        LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE;
+
+    for (uint8_t index = 0; index < 16; index++) {
+        encode_app_message[index] = index;
+    }
+
+    libspdm_zero_mem(m_secured_message, sizeof(m_secured_message));
+    status = libspdm_encode_secured_message(
+        &encode_secured_message_context, session_id, true,
+        sizeof(encode_buffer) - sizeof(spdm_secured_message_cipher_header_t),
+        encode_app_message, &secured_message_size, m_secured_message,
+        &m_secured_message_callbacks);
+    assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
+
+    libspdm_copy_mem(&decode_secured_message_context, sizeof(decode_secured_message_context),
+                     &m_secured_message_context, sizeof(m_secured_message_context));
+    decode_secured_message_context.sequence_number_endian =
+        LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE;
+
+    status = libspdm_decode_secured_message(
+        &decode_secured_message_context, session_id, true,
+        sizeof(m_secured_message), m_secured_message, &decode_app_message_size, &decode_app_message,
+        &m_secured_message_callbacks);
+
+    assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
+
+    for (int index = 0; index < 16; index++) {
+        assert_int_equal(index, ((uint8_t *)decode_app_message)[index]);
+    }
+}
+
+/**
+ * Test 17: A higher major version is rejected on decode.
+ **/
+static void libspdm_test_secured_message_decode_case17(void **state)
+{
+    libspdm_return_t status;
+    size_t app_message_size = sizeof(m_app_message);
+    void *app_message = m_app_message;
+    const uint32_t session_id = 0x00112233;
+
+    initialize_secured_message_context();
+    /* Major version 2, minor version 0. */
+    m_secured_spdm_version = 0x20;
+
+    libspdm_zero_mem(m_secured_message, sizeof(m_secured_message));
+    status = libspdm_decode_secured_message(
+        &m_secured_message_context, session_id, true,
+        sizeof(m_secured_message), m_secured_message, &app_message_size, &app_message,
+        &m_secured_message_callbacks);
+
+    assert_int_equal(LIBSPDM_STATUS_UNSUPPORTED_CAP, status);
+}
+
 libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -979,6 +1113,10 @@ int libspdm_secured_message_encode_decode_test_main(void)
         cmocka_unit_test(libspdm_test_secured_message_encode_case11),
         cmocka_unit_test(libspdm_test_secured_message_encode_case12),
         cmocka_unit_test(libspdm_test_secured_message_encode_case13),
+        cmocka_unit_test(libspdm_test_secured_message_encode_case14),
+        cmocka_unit_test(libspdm_test_secured_message_encode_case15),
+        cmocka_unit_test(libspdm_test_secured_message_decode_case16),
+        cmocka_unit_test(libspdm_test_secured_message_decode_case17),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);
