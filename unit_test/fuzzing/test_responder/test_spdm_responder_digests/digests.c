@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -37,6 +37,8 @@ void libspdm_test_responder_digests_case1(void **State)
         m_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_local_certificate_chain);
+    /* SupportedSlotMask shall cover the populated slot. */
+    spdm_context->local_context.local_supported_slot_mask = 0x01;
     libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain),
                     (uint8_t)(0xFF));
 
