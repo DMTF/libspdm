@@ -30,16 +30,13 @@ static uint32_t get_max_random_number_count(void)
     return 0;
 }
 
-static uint8_t m_secured_spdm_version = SECURED_SPDM_VERSION_11;
-
 static spdm_version_number_t get_secured_spdm_version(spdm_version_number_t secured_message_version)
 {
-    return (spdm_version_number_t)m_secured_spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    return secured_message_version;
 }
 
 static void initialize_secured_message_context(void)
 {
-    m_secured_spdm_version = SECURED_SPDM_VERSION_11;
     m_secured_message_context.secured_message_version =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     m_secured_message_context.aead_cipher_suite = SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM;
@@ -985,7 +982,7 @@ static void libspdm_test_secured_message_encode_case14(void **state)
 
     initialize_secured_message_context();
     /* Major version 1, minor version 15. */
-    m_secured_spdm_version = 0x1f;
+    m_secured_message_context.secured_message_version = 0x1f << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     for (uint8_t index = 0; index < 16; index++) {
         app_message[index] = index;
@@ -1012,7 +1009,7 @@ static void libspdm_test_secured_message_encode_case15(void **state)
 
     initialize_secured_message_context();
     /* Major version 2, minor version 0. */
-    m_secured_spdm_version = 0x20;
+    m_secured_message_context.secured_message_version = 0x20 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     for (uint8_t index = 0; index < 16; index++) {
         app_message[index] = index;
@@ -1043,7 +1040,7 @@ static void libspdm_test_secured_message_decode_case16(void **state)
 
     initialize_secured_message_context();
     /* Major version 1, minor version 15. */
-    m_secured_spdm_version = 0x1f;
+    m_secured_message_context.secured_message_version = 0x1f << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     libspdm_copy_mem(&encode_secured_message_context, sizeof(encode_secured_message_context),
                      &m_secured_message_context, sizeof(m_secured_message_context));
@@ -1091,7 +1088,7 @@ static void libspdm_test_secured_message_decode_case17(void **state)
 
     initialize_secured_message_context();
     /* Major version 2, minor version 0. */
-    m_secured_spdm_version = 0x20;
+    m_secured_message_context.secured_message_version = 0x20 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     libspdm_zero_mem(m_secured_message, sizeof(m_secured_message));
     status = libspdm_decode_secured_message(
