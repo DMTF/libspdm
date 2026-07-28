@@ -29,8 +29,8 @@ target_sources(spdm_responder_lib
         libspdm_rsp_event_ack.c
         libspdm_rsp_finish_rsp.c
         libspdm_rsp_handle_response_state.c
-        libspdm_rsp_heartbeat.c
-        libspdm_rsp_key_exchange.c
+        libspdm_rsp_heartbeat_ack.c
+        libspdm_rsp_key_exchange_rsp.c
         libspdm_rsp_key_update_ack.c
         libspdm_rsp_measurements.c
         libspdm_rsp_psk_exchange_rsp.c
