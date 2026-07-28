@@ -58,10 +58,10 @@ target_sources(test_spdm_requester
         error_test/get_digests_err.c
         error_test/key_exchange_err.c
         error_test/get_measurements_err.c
-        error_test/get_event_types_err.c
+        error_test/get_supported_event_types_err.c
         error_test/subscribe_event_types_err.c
         error_test/send_event_err.c
-        error_test/vendor_request_err.c
+        error_test/vendor_defined_request_err.c
         error_test/get_key_pair_info_err.c
         error_test/set_key_pair_info_err.c
         error_test/encap_event_ack_err.c
