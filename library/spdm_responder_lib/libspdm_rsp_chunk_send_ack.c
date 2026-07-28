@@ -45,7 +45,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
         return libspdm_generate_error_response(
             spdm_context,
-            SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+            SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, SPDM_CHUNK_SEND,
             response_size, response);
     }
 
