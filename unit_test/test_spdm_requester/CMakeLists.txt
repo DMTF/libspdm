@@ -50,6 +50,7 @@ target_sources(test_spdm_requester
         vendor_defined_request.c
         get_key_pair_info.c
         set_key_pair_info.c
+        slot_management.c
         get_endpoint_info.c
         send_event.c
         error_test/get_version_err.c

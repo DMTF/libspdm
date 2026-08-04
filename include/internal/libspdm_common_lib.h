@@ -20,6 +20,7 @@
 #include "hal/library/responder/measlib.h"
 #include "hal/library/responder/keyexlib.h"
 #include "hal/library/responder/key_pair_info.h"
+#include "hal/library/responder/slot_mgmt.h"
 #include "hal/library/responder/psklib.h"
 #include "hal/library/responder/setcertlib.h"
 #include "hal/library/endpointinfolib.h"
