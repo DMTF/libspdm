@@ -5,12 +5,16 @@ file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION.md CMAKE_INPUT_PROJECT_VERSION)
 string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" PROJECT_VERSION ${CMAKE_INPUT_PROJECT_VERSION})
 set(CMAKE_PROJECT_VERSION ${PROJECT_VERSION})
 
-# VERSION.md tags unreleased entries as "(pending and unreleased)". Mark the
-# produced artifacts (shared libs/pkg-config 'Version' field) as a pre-release
-# with an "-alpha" suffix so an unreleased build is distinguishable from
-# tagged release of the same X.Y.Z.
+# VERSION.md tags in-progress entries with a lifecycle marker. Reflect that in
+# the produced artifacts (shared lib SONAME / pkg-config 'Version' field) so a
+# build is distinguishable from a tagged release of the same X.Y.Z:
+#   "(pending and unreleased)" -> X.Y.Z-alpha
+#   "(release candidate)"      -> X.Y.Z-rc
 if(CMAKE_INPUT_PROJECT_VERSION MATCHES "pending and unreleased")
     set(PROJECT_VERSION "${PROJECT_VERSION}-alpha")
+    set(CMAKE_PROJECT_VERSION ${PROJECT_VERSION})
+elseif(CMAKE_INPUT_PROJECT_VERSION MATCHES "release candidate")
+    set(PROJECT_VERSION "${PROJECT_VERSION}-rc")
     set(CMAKE_PROJECT_VERSION ${PROJECT_VERSION})
 endif()
 
