@@ -181,6 +181,8 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
             }
             break;
         default:
+            LIBSPDM_ASSERT(false);
+            libspdm_release_sender_buffer(spdm_context);
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (spdm_context->connection_info.multi_key_conn_rsp) {
