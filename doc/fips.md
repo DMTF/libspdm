@@ -27,10 +27,10 @@ libspdm integrator is expected to choose crypto module and support CMVP.
 | SM3 (*) | [GB/T 32905-2016, GM/T 0004-2012](http://www.gmbz.org.cn/main/postDetail.html?id=20241118111047), [ISO/IEC 10118-3:2018](https://www.iso.org/standard/67116.html) | KAT | not FIPS approved yet |
 | SM4-GCM (*) | [GB/T 32907-2016, GM/T 0002-2012](http://www.gmbz.org.cn/main/postDetail.html?id=20250123174734), [ISO/IEC 18033-3:2010/Amd 1:2021](https://www.iso.org/standard/81564.html), [rfc8998](https://tools.ietf.org/html/rfc8998) | KAT | not FIPS approved yet |
 | SM2-digital-signature (\*) <br> SM2-key-exchange (\*) | [GB/T 32918-2016, GM/T 0003-2012](http://www.gmbz.org.cn/main/postDetail.html?id=20241118111410), [ISO/IEC 14888-3:2018](https://www.iso.org/standard/76382.html) | KAT | not FIPS approved yet |
-| SPDM-Key-Schedule (*) | [DMTF-DSP0274](https://www.dmtf.org/dsp/DSP0274)          | KAT  | not FIPS approved yet |
 | ML-KEM              | [NIST.FIPS.203](https://doi.org/10.6028/NIST.FIPS.203)   | KAT  | ML-KEM-1024 |
 | ML-DSA              | [NIST.FIPS.204](https://doi.org/10.6028/NIST.FIPS.204)   | KAT  | ML-DSA-87 |
 | SLH-DSA             | [NIST.FIPS.205](https://doi.org/10.6028/NIST.FIPS.205)  | KAT  | SLH-DSA-SHA2-128s |
+| SPDM-Key-Schedule   | [DMTF-DSP0274](https://www.dmtf.org/dsp/DSP0274)          | KAT  | No self-test. API ready for external CAVP test. |
 
 The test maybe Known Answer Test (KAT) or Pairwise Consistency Test (PCT).
 
