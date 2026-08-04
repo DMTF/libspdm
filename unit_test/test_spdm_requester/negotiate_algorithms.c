@@ -1563,12 +1563,60 @@ static void req_negotiate_algorithms_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
+/**
+ * Test 4: requester receives a NEGOTIATE_ALGORITHMS error response with error code
+ * InvalidRequest.
+ * Expected behavior: libspdm_negotiate_algorithms() returns LIBSPDM_STATUS_ERROR_PEER.
+ **/
 static void req_negotiate_algorithms_case4(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x4;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    libspdm_reset_message_a(spdm_context);
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 }
 
+/**
+ * Test 5: requester receives a NEGOTIATE_ALGORITHMS error response with error code Busy, and
+ * the context has no retries configured.
+ * Expected behavior: libspdm_negotiate_algorithms() returns LIBSPDM_STATUS_BUSY_PEER without
+ * retrying.
+ **/
 static void req_negotiate_algorithms_case5(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x5;
+    spdm_context->retry_times = 0;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    libspdm_reset_message_a(spdm_context);
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
 }
 
 static void req_negotiate_algorithms_case6(void **state)
@@ -1601,8 +1649,34 @@ static void req_negotiate_algorithms_case6(void **state)
 #endif
 }
 
+/**
+ * Test 7: requester receives a NEGOTIATE_ALGORITHMS error response with error code
+ * RequestResynch.
+ * Expected behavior: libspdm_negotiate_algorithms() returns LIBSPDM_STATUS_RESYNCH_PEER and
+ * the connection state is reset to NotStarted.
+ **/
 static void req_negotiate_algorithms_case7(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x7;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    libspdm_reset_message_a(spdm_context);
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
+    assert_int_equal(spdm_context->connection_info.connection_state,
+                     LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 }
 
 static void req_negotiate_algorithms_case8(void **state)
@@ -1613,8 +1687,34 @@ static void req_negotiate_algorithms_case9(void **state)
 {
 }
 
+/**
+ * Test 10: requester supports measurement capabilities and requests a non-zero measurement
+ * specification, but the responder selects a measurement_hash_algo of 0 (i.e. no algorithm
+ * in common).
+ * Expected behavior: libspdm_negotiate_algorithms() returns LIBSPDM_STATUS_NEGOTIATION_FAIL.
+ **/
 static void req_negotiate_algorithms_case10(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xA;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
+    spdm_context->local_context.algorithm.measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+    libspdm_reset_message_a(spdm_context);
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
 }
 
 static void req_negotiate_algorithms_case11(void **state)
