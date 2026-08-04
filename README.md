@@ -6,7 +6,7 @@
 
    The SPDM and secured message libraries follow :
 
-   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.2.pdf), version [1.1.4](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.4.pdf), version [1.2.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.3.pdf), version [1.3.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.3.2.pdf), and version [1.4.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.4.0.pdf))
+   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.2.pdf), version [1.1.4](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.4.pdf), version [1.2.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.3.pdf), version [1.3.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.3.2.pdf), and version [1.4.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.4.1.pdf))
 
    [DSP0277](https://www.dmtf.org/dsp/DSP0277)  Secured Messages using SPDM Specification (version [1.0.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.0.1.pdf), version [1.1.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.1.1.pdf), version [1.2.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.2.0.pdf), and version [1.3.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.3.0.pdf))
 
