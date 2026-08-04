@@ -78,11 +78,35 @@ static void rsp_version_case1(void **state)
 }
 
 /**
- * Test 2:
- * Expected behavior:
+ * Test 2: receiving a GET_VERSION request that is smaller than the minimum allowed size.
+ * Expected behavior: the responder refuses the GET_VERSION message and produces an ERROR
+ * message indicating the InvalidRequest.
  **/
 static void rsp_version_case2(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_version(spdm_context,
+                                          sizeof(spdm_get_version_request_t) - 1,
+                                          &m_libspdm_get_version_request1,
+                                          &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 /**
@@ -192,10 +216,43 @@ static void rsp_version_case6(void **state)
 }
 
 /**
- * Test 7: can be populated with new test.
+ * Test 7: receiving a GET_VERSION request while the responder still has a valid session ID
+ * from a previous exchange (i.e. GET_VERSION is received unexpectedly mid-session).
+ * Expected behavior: the responder refuses the GET_VERSION message and produces an ERROR
+ * message indicating the UnexpectedRequest.
  **/
 static void rsp_version_case7(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x7;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->last_spdm_request_session_id_valid = true;
+    spdm_context->last_spdm_request_session_id = 0xFFFFFFFF;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_version(spdm_context,
+                                          m_libspdm_get_version_request1_size,
+                                          &m_libspdm_get_version_request1,
+                                          &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+    assert_int_equal(spdm_context->connection_info.connection_state,
+                     LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
+
+    /* restore shared context state so that subsequent tests in this group are unaffected */
+    spdm_context->last_spdm_request_session_id_valid = false;
 }
 
 /**

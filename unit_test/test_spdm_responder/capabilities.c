@@ -735,16 +735,117 @@ static void rsp_capabilities_case9(void **state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_CAPABILITIES);
 }
 
+/**
+ * Test 10: receiving a GET_CAPABILITIES request with an SPDM version that the responder does
+ * not support.
+ * Expected behavior: the responder refuses the GET_CAPABILITIES message and produces an ERROR
+ * message indicating the VersionMismatch.
+ **/
 static void rsp_capabilities_case10(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xA;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = 0x99;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(
+        spdm_context, sizeof(spdm_message_header_t), &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_VERSION_MISMATCH);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
+/**
+ * Test 11: receiving a GET_CAPABILITIES request in SPDM version 1.2 that is smaller than the
+ * minimum allowed size for that version.
+ * Expected behavior: the responder refuses the GET_CAPABILITIES message and produces an ERROR
+ * message indicating the InvalidRequest.
+ **/
 static void rsp_capabilities_case11(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xB;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(
+        spdm_context, sizeof(spdm_get_capabilities_request_t) - 1, &request, &response_size,
+        response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
+/**
+ * Test 12: receiving a GET_CAPABILITIES request in SPDM version 1.1 that is smaller than the
+ * minimum allowed size for that version.
+ * Expected behavior: the responder refuses the GET_CAPABILITIES message and produces an ERROR
+ * message indicating the InvalidRequest.
+ **/
 static void rsp_capabilities_case12(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+    size_t v11_min_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xC;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+
+    v11_min_size = sizeof(spdm_get_capabilities_request_t) -
+                   sizeof(request.data_transfer_size) - sizeof(request.max_spdm_msg_size);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(
+        spdm_context, v11_min_size - 1, &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 static void rsp_capabilities_case13(void **state)
@@ -973,8 +1074,56 @@ static void rsp_capabilities_case20(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
+/**
+ * Test 21: receiving a correct GET_CAPABILITIES from the requester. Buffer A already has
+ * arbitrary data (e.g. the transcript of the prior GET_VERSION/VERSION exchange).
+ * Expected behavior: the responder accepts the request, produces a valid CAPABILITIES
+ * response message, and buffer A is extended (not reset) with the exchanged GET_CAPABILITIES
+ * and CAPABILITIES messages appended after the pre-existing data.
+ **/
 static void rsp_capabilities_case21(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_capabilities_response_t *spdm_response;
+    size_t prior_buffer_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x15;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    /*filling buffer A with arbitrary data, simulating a prior GET_VERSION/VERSION exchange*/
+    libspdm_set_mem(spdm_context->transcript.message_a.buffer, 10, (uint8_t)0xFF);
+    spdm_context->transcript.message_a.buffer_size = 10;
+    prior_buffer_size = spdm_context->transcript.message_a.buffer_size;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(
+        spdm_context, m_libspdm_get_capabilities_request1_size,
+        &m_libspdm_get_capabilities_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_capabilities_response_t) -
+                     sizeof(spdm_response->data_transfer_size) -
+                     sizeof(spdm_response->max_spdm_msg_size));
+    spdm_response = (void *)response;
+    assert_int_equal(m_libspdm_get_capabilities_request1.header.spdm_version,
+                     spdm_response->header.spdm_version);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CAPABILITIES);
+
+    assert_int_equal(spdm_context->transcript.message_a.buffer_size,
+                     prior_buffer_size + m_libspdm_get_capabilities_request1_size +
+                     response_size);
+    assert_memory_equal(
+        spdm_context->transcript.message_a.buffer + prior_buffer_size,
+        &m_libspdm_get_capabilities_request1, m_libspdm_get_capabilities_request1_size);
+    assert_memory_equal(
+        spdm_context->transcript.message_a.buffer + prior_buffer_size +
+        m_libspdm_get_capabilities_request1_size,
+        response, response_size);
 }
 
 static void rsp_capabilities_case22(void **state)
