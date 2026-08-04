@@ -29,6 +29,8 @@ int libspdm_req_get_measurements_test(void);
 int libspdm_req_get_measurements_error_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
+int libspdm_req_parse_measurement_transaction_data_test(void);
+
 #if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
 int libspdm_req_get_measurement_extension_log_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP*/
@@ -137,6 +139,10 @@ int main(void)
         return_value = 1;
     }
     if (libspdm_req_negotiate_algorithms_error_test() != 0) {
+        return_value = 1;
+    }
+
+    if (libspdm_req_parse_measurement_transaction_data_test() != 0) {
         return_value = 1;
     }
 
