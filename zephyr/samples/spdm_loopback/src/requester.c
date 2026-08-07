@@ -22,6 +22,13 @@
 
 #include "spdm_loopback.h"
 
+/*
+ * Application payload exchanged over the secured session.
+ * The responder in responder.c must agree on APP_REQUEST / APP_REPLY.
+ */
+#define APP_REQUEST "ping"
+#define APP_REPLY   "pong"
+
 void *requester_spdm_context;
 void *requester_scratch;
 
@@ -82,8 +89,12 @@ static void configure_requester(void *ctx)
     libspdm_set_data(ctx, LIBSPDM_DATA_CAPABILITY_CT_EXPONENT, &parameter,
                      &u8, sizeof(u8));
 
+    /* Requester capabilities: pair the responder side. */
     u32 = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |
-          SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP;
+          SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
+          SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+          SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+          SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     libspdm_set_data(ctx, LIBSPDM_DATA_CAPABILITY_FLAGS, &parameter,
                      &u32, sizeof(u32));
 
@@ -213,4 +224,48 @@ void requester_thread_main(void *a, void *b, void *c)
     }
 
     printk("[requester] *** SPDM authenticated handshake PASSED ***\n");
+
+    /*
+     * Open an encrypted SPDM session, send the request as a single
+     * AEAD-protected application message, check the reply, then close the
+     * session.
+     */
+    {
+        uint32_t session_id = 0;
+        uint8_t heartbeat_period = 0;
+        uint8_t reply[64];
+        size_t reply_size = sizeof(reply);
+
+        status = libspdm_start_session(
+            requester_spdm_context, false /* use_psk */, NULL, 0,
+            SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+            0 /* slot_id */, 0 /* session_policy */,
+            &session_id, &heartbeat_period, NULL);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            printk("[requester] KEY_EXCHANGE/FINISH failed: 0x%x\n", status);
+            return;
+        }
+
+        status = libspdm_send_receive_data(
+            requester_spdm_context, &session_id, true /* is_app_message */,
+            APP_REQUEST, sizeof(APP_REQUEST) - 1, reply, &reply_size);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            printk("[requester] app message exchange failed: 0x%x\n", status);
+            libspdm_stop_session(requester_spdm_context, session_id, 0);
+            return;
+        }
+
+        if (reply_size != sizeof(APP_REPLY) - 1 ||
+            memcmp(reply, APP_REPLY, reply_size) != 0) {
+            printk("[requester] unexpected reply (%zu bytes)\n", reply_size);
+            libspdm_stop_session(requester_spdm_context, session_id, 0);
+            return;
+        }
+        printk("[requester] sent \"%s\", received \"%s\"\n",
+               APP_REQUEST, APP_REPLY);
+
+        libspdm_stop_session(requester_spdm_context, session_id, 0);
+    }
+
+    printk("[requester] *** SPDM session ping/pong PASSED ***\n");
 }

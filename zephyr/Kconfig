@@ -60,6 +60,67 @@ config LIBSPDM_TRANSPORT_MCTP
 	bool "MCTP transport binding"
 	default y
 
+config LIBSPDM_TRANSPORT_MCTP_LIBMCTP
+	bool "Carry the libspdm MCTP transport over Zephyr libmctp"
+	depends on LIBSPDM_TRANSPORT_MCTP
+	depends on MCTP
+	default y if MCTP
+	help
+	  Build the MCTP IO layer (zephyr/src/mctp_io.c). It
+	  implements libspdm's device_send_message /
+	  device_receive_message / buffer hooks on top of a Zephyr
+	  libmctp instance, and registers libspdm's MCTP transport
+	  codec. The application is still responsible for creating the
+	  libmctp context, registering a binding (I3C, I2C, serial,
+	  ...), and pairing the MCTP IO with the libspdm context.
+
+config LIBSPDM_MCTP_BUFFER_SIZE
+	int "MCTP transport buffer size (bytes)"
+	depends on LIBSPDM_TRANSPORT_MCTP_LIBMCTP
+	default 4224
+	range 512 65536
+	help
+	  Size of the sender and receiver buffers owned by each
+	  MCTP IO instance. Must fit the largest SPDM transport
+	  message (SPDM payload + the 1-byte MCTP message-type byte
+	  + transport alignment). 4224 is large enough for the
+	  default LIBSPDM_DATA_TRANSFER_SIZE of 4096 plus headroom.
+
+	  The lower bound has to clear the MCTP transport framing
+	  (LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE +
+	  LIBSPDM_MCTP_TRANSPORT_TAIL_SIZE = 60 bytes), and this value
+	  is multiplied by LIBSPDM_MCTP_RX_QUEUE_DEPTH to size the
+	  RX pool, so the upper bound is a sanity cap on that
+	  product rather than a protocol limit. mctp_io.h enforces both
+	  ends with BUILD_ASSERT.
+
+config LIBSPDM_MCTP_RX_QUEUE_DEPTH
+	int "MCTP RX queue depth"
+	depends on LIBSPDM_TRANSPORT_MCTP_LIBMCTP
+	default 2
+	range 1 8
+	help
+	  Number of in-flight RX slots between the libmctp rx
+	  callback and device_receive_message(). Each slot costs one
+	  LIBSPDM_MCTP_BUFFER_SIZE block in the RX pool. One
+	  is enough for strict request/response traffic; raise it if
+	  the dispatcher may briefly fall behind the producer.
+
+config LIBSPDM_MCTP_MAX_CONTEXTS
+	int "Maximum number of libspdm contexts served"
+	depends on LIBSPDM_TRANSPORT_MCTP_LIBMCTP
+	default 2
+	range 1 8
+	help
+	  Upper bound on the number of (spdm_context, MCTP IO)
+	  associations tracked at once. 2 covers a single app that
+	  drives one requester and one responder; raise this if you
+	  register more than that.
+
+module = LIBSPDM_MCTP
+module-str = libspdm MCTP IO
+source "subsys/logging/Kconfig.template.log_config"
+
 endmenu
 
 menu "Wall clock"

@@ -22,6 +22,47 @@
 
 #include "spdm_loopback.h"
 
+/*
+ * Application payload exchanged over the secured session. The requester
+ * (requester.c) must agree on APP_REQUEST / APP_REPLY.
+ */
+#define APP_REQUEST "ping"
+#define APP_REPLY   "pong"
+
+/*
+ * Application-message handler. libspdm calls this for every message
+ * that arrives inside a secured session with is_app_message == true.
+ * This sample implements a trivial request/reply protocol: it answers
+ * the request "ping" with "pong".
+ */
+static libspdm_return_t app_message_handler(
+    void *spdm_context, const uint32_t *session_id, bool is_app_message,
+    size_t request_size, const void *request,
+    size_t *response_size, void *response)
+{
+    (void)spdm_context;
+
+    /* Only answer application messages inside a secured session; let
+     * libspdm's default handler deal with everything else. */
+    if (!is_app_message || session_id == NULL) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
+    if (request_size == sizeof(APP_REQUEST) - 1 &&
+        memcmp(request, APP_REQUEST, request_size) == 0) {
+        printk("[responder] received secured app request \"%s\", replying \"%s\"\n",
+               APP_REQUEST, APP_REPLY);
+        if (*response_size < sizeof(APP_REPLY) - 1) {
+            return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+        }
+        memcpy(response, APP_REPLY, sizeof(APP_REPLY) - 1);
+        *response_size = sizeof(APP_REPLY) - 1;
+        return LIBSPDM_STATUS_SUCCESS;
+    }
+
+    return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+}
+
 void *responder_spdm_context;
 void *responder_scratch;
 
@@ -74,7 +115,11 @@ static void configure_responder(void *ctx)
                      &u8, sizeof(u8));
 
     u32 = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP |
-          SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+          SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP |
+          SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+          SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
+          SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+          SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP;
     libspdm_set_data(ctx, LIBSPDM_DATA_CAPABILITY_FLAGS, &parameter,
                      &u32, sizeof(u32));
 
@@ -138,6 +183,13 @@ void responder_thread_main(void *a, void *b, void *c)
     }
     libspdm_set_scratch_buffer(responder_spdm_context,
                                responder_scratch, scratch_size);
+
+    /* Hook in the application-message dispatcher: libspdm invokes
+     * app_message_handler() whenever a secured message lands with
+     * is_app_message set.
+     */
+    libspdm_register_get_response_func(responder_spdm_context,
+                                       app_message_handler);
 
     printk("[responder] ready, scratch=%zu bytes\n", scratch_size);
 

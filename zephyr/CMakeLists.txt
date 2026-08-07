@@ -227,3 +227,9 @@ if(CONFIG_LIBSPDM_SECRET_LIB_SAMPLE)
   zephyr_library_sources(${SECRET_LIB_SAMPLE_SRCS})
 endif()
 
+# ----------------------------------------------------------------------------
+# libspdm MCTP transport over Zephyr libmctp (optional)
+# ----------------------------------------------------------------------------
+if(CONFIG_LIBSPDM_TRANSPORT_MCTP_LIBMCTP)
+  zephyr_library_sources(${CMAKE_CURRENT_LIST_DIR}/src/mctp_io.c)
+endif()

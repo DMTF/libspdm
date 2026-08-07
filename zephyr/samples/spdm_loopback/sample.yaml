@@ -14,4 +14,4 @@ tests:
     harness_config:
       type: one_line
       regex:
-        - "SPDM authenticated handshake PASSED"
+        - "SPDM session ping/pong PASSED"

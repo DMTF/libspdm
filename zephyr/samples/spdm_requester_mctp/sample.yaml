@@ -1,0 +1,10 @@
+sample:
+  description: libspdm SPDM requester over MCTP
+  name: libspdm requester
+tests:
+  sample.lib.libspdm.requester.build:
+    build_only: true
+    tags: libspdm i3c mctp
+    platform_allow: npcx4m8f_evb
+    integration_platforms:
+      - npcx4m8f_evb

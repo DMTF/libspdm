@@ -52,6 +52,13 @@ Expected output
    [responder] received a request and sent a response
    [requester] CHALLENGE_AUTH ok
    [requester] *** SPDM authenticated handshake PASSED ***
+   [responder] received a request and sent a response
+   [responder] received a request and sent a response
+   [responder] received secured app request "ping", replying "pong"
+   [responder] received a request and sent a response
+   [requester] sent "ping", received "pong"
+   [responder] received a request and sent a response
+   [requester] *** SPDM session ping/pong PASSED ***
    [responder] no more requests, exiting
 
    libspdm Zephyr loopback demo: main exiting
