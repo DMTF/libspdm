@@ -179,6 +179,45 @@ static void rsp_version_case4(void **state)
 }
 
 /**
+ * Test 5: transcript message A cannot fit the incoming GET_VERSION request.
+ * Expected behavior: the responder returns an ERROR message with code Unspecified and does
+ * not retain transcript data.
+ **/
+static void rsp_version_case5(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    size_t max_buffer_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x5;
+    max_buffer_size = spdm_context->transcript.message_a.max_buffer_size;
+    spdm_context->transcript.message_a.max_buffer_size =
+        sizeof(spdm_get_version_request_t) - 1;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_version(spdm_context,
+                                          m_libspdm_get_version_request1_size,
+                                          &m_libspdm_get_version_request1,
+                                          &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSPECIFIED);
+    assert_int_equal(spdm_response->header.param2, 0);
+    assert_int_equal(spdm_context->transcript.message_a.buffer_size, 0);
+
+    spdm_context->transcript.message_a.max_buffer_size = max_buffer_size;
+}
+
+/**
  * Test 6: receiving a GET_VERSION message in SPDM version 1.1 (in the header), but correct
  * 1.0-version format.
  * Expected behavior: the responder refuses the GET_VERSION message, produces an
@@ -308,6 +347,45 @@ static void rsp_version_case8(void **state)
 #endif
 }
 
+/**
+ * Test 9: transcript message A can fit GET_VERSION but not the VERSION response.
+ * Expected behavior: the responder returns an ERROR message with code Unspecified and
+ * resets transcript message A.
+ **/
+static void rsp_version_case9(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    size_t max_buffer_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x9;
+    max_buffer_size = spdm_context->transcript.message_a.max_buffer_size;
+    spdm_context->transcript.message_a.max_buffer_size =
+        sizeof(spdm_get_version_request_t);
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_version(spdm_context,
+                                          m_libspdm_get_version_request1_size,
+                                          &m_libspdm_get_version_request1,
+                                          &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSPECIFIED);
+    assert_int_equal(spdm_response->header.param2, 0);
+    assert_int_equal(spdm_context->transcript.message_a.buffer_size, 0);
+
+    spdm_context->transcript.message_a.max_buffer_size = max_buffer_size;
+}
+
 int libspdm_rsp_version_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -318,12 +396,16 @@ int libspdm_rsp_version_test(void)
         cmocka_unit_test(rsp_version_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(rsp_version_case4),
+        /* transcript.message_a cannot fit GET_VERSION */
+        cmocka_unit_test(rsp_version_case5),
         /* Invalid request*/
         cmocka_unit_test(rsp_version_case6),
         /* Invalid request*/
         cmocka_unit_test(rsp_version_case7),
         /* Buffer verification*/
         cmocka_unit_test(rsp_version_case8),
+        /* transcript.message_a cannot fit VERSION */
+        cmocka_unit_test(rsp_version_case9),
     };
 
     libspdm_test_context_t test_context = {

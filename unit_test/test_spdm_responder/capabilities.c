@@ -1371,6 +1371,529 @@ static void rsp_capabilities_case28(void **state)
                      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY);
 }
 
+/**
+ * Test 29: receiving an SPDM 1.0 GET_CAPABILITIES request that is smaller than
+ * the fixed message header.
+ * Expected behavior: the responder refuses the request with InvalidRequest.
+ **/
+static void rsp_capabilities_case29(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1D;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(spdm_context, sizeof(spdm_message_header_t) - 1,
+                                               &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+}
+
+/**
+ * Test 30: receiving an SPDM 1.1 GET_CAPABILITIES request with reserved PSK_CAP bits.
+ * Expected behavior: the responder refuses the request with InvalidRequest.
+ **/
+static void rsp_capabilities_case30(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+    size_t v11_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1E;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+    request.flags = (2u << 10);
+    v11_size = sizeof(request) - sizeof(request.data_transfer_size) -
+               sizeof(request.max_spdm_msg_size);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(spdm_context, v11_size,
+                                               &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+}
+
+/**
+ * Test 31: receiving an SPDM 1.3 request with EVENT_CAP but no session capability.
+ * Expected behavior: the responder refuses the request with InvalidRequest.
+ **/
+static void rsp_capabilities_case31(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1F;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+    request.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EVENT_CAP |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    request.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+    request.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(spdm_context, sizeof(request),
+                                               &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+}
+
+/**
+ * Test 32: receiving an SPDM 1.1 request with CERT_CAP but no CHAL_CAP or KEY_EX_CAP.
+ * Expected behavior: the responder refuses the request with InvalidRequest.
+ **/
+static void rsp_capabilities_case32(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+    size_t v11_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x20;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+    request.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    v11_size = sizeof(request) - sizeof(request.data_transfer_size) -
+               sizeof(request.max_spdm_msg_size);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(spdm_context, v11_size,
+                                               &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+}
+
+/**
+ * Test 33: receiving an SPDM 1.3 request with CERT_CAP but no usable follow-on capability.
+ * Expected behavior: the responder refuses the request with InvalidRequest.
+ **/
+static void rsp_capabilities_case33(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x21;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+    request.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    request.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+    request.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(spdm_context, sizeof(request),
+                                               &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+}
+
+/**
+ * Test 34: receiving an SPDM 1.3 request without certificates but with CHAL_CAP.
+ * Expected behavior: the responder refuses the request with InvalidRequest.
+ **/
+static void rsp_capabilities_case34(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x22;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+    request.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    request.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+    request.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(spdm_context, sizeof(request),
+                                               &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+}
+
+/**
+ * Test 35: receiving an SPDM 1.3 request without certificates but with EP_INFO_CAP.
+ * Expected behavior: the responder refuses the request with InvalidRequest.
+ **/
+static void rsp_capabilities_case35(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x23;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+    request.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    request.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+    request.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(spdm_context, sizeof(request),
+                                               &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+}
+
+/**
+ * Test 36: receiving an SPDM 1.3 request with MUT_AUTH_CAP but neither CHAL_CAP nor KEY_EX_CAP.
+ * Expected behavior: the responder refuses the request with InvalidRequest.
+ **/
+static void rsp_capabilities_case36(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x24;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+    request.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    request.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+    request.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(spdm_context, sizeof(request),
+                                               &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+}
+
+/**
+ * Test 37: receiving an SPDM 1.3 request with reserved EP_INFO_CAP value.
+ * Expected behavior: the responder refuses the request with InvalidRequest.
+ **/
+static void rsp_capabilities_case37(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x25;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+    request.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |
+                    (3u << 22) |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    request.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+    request.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(spdm_context, sizeof(request),
+                                               &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+}
+
+/**
+ * Test 38: receiving an SPDM 1.3 request with MULTI_KEY_CAP but no CERT_CAP.
+ * Expected behavior: the responder refuses the request with InvalidRequest.
+ **/
+static void rsp_capabilities_case38(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x26;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+    request.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    request.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+    request.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(spdm_context, sizeof(request),
+                                               &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+}
+
+/**
+ * Test 39: receiving an SPDM 1.3 request that asks for SupportedAlgorithms without CHUNK_CAP.
+ * Expected behavior: the responder refuses the request with InvalidRequest.
+ **/
+static void rsp_capabilities_case39(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x27;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+    request.header.param1 = SPDM_GET_CAPABILITIES_REQUEST_PARAM1_SUPPORTED_ALGORITHMS;
+    request.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    request.data_transfer_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+    request.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(spdm_context, sizeof(request),
+                                               &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+}
+
+/**
+ * Test 40: receiving a valid SPDM 1.4 request for SupportedAlgorithms including PQC/KEM data.
+ * Expected behavior: the responder returns CAPABILITIES with the extended algorithm block.
+ **/
+static void rsp_capabilities_case40(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_capabilities_response_t *spdm_response;
+    spdm_get_capabilities_request_t request;
+    spdm_supported_algorithms_block_t *supported_algorithms;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x28;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_14;
+    request.header.request_response_code = SPDM_GET_CAPABILITIES;
+    request.header.param1 = SPDM_GET_CAPABILITIES_REQUEST_PARAM1_SUPPORTED_ALGORITHMS;
+    request.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG |
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY;
+    request.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+    request.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+    request.ext_flags = 0;
+
+    spdm_context->local_context.algorithm.measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+    spdm_context->local_context.algorithm.other_params_support = 0;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.pqc_asym_algo =
+        SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44;
+    spdm_context->local_context.algorithm.mel_spec = SPDM_MEL_SPECIFICATION_DMTF;
+    spdm_context->local_context.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->local_context.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->local_context.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
+    spdm_context->local_context.algorithm.req_pqc_asym_alg =
+        SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44;
+    spdm_context->local_context.algorithm.kem_alg = SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512;
+    spdm_context->local_context.capability.flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP |
+                                                   SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP_ONLY |
+                                                   SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP |
+                                                   SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP |
+                                                   SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EP_INFO_CAP_SIG;
+    spdm_context->local_context.capability.ext_flags = 0;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(spdm_context, sizeof(request),
+                                               &request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_true(response_size > sizeof(spdm_capabilities_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CAPABILITIES);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_CAPABILITIES_RESPONSE_PARAM1_SUPPORTED_ALGORITHMS);
+    assert_int_equal(spdm_context->connection_info.capability.ext_flags, 0);
+    supported_algorithms = (void *)(response + sizeof(spdm_capabilities_response_t));
+    assert_int_equal(supported_algorithms->param1, 6);
+}
+
+/**
+ * Test 41: message A is already full before processing a valid request.
+ * Expected behavior: the responder returns an ERROR response with code Unspecified.
+ **/
+static void rsp_capabilities_case41(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x29;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->transcript.message_a.buffer_size =
+        spdm_context->transcript.message_a.max_buffer_size;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(
+        spdm_context, m_libspdm_get_capabilities_request1_size,
+        &m_libspdm_get_capabilities_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSPECIFIED);
+
+    spdm_context->transcript.message_a.buffer_size = 0;
+}
+
+/**
+ * Test 42: message A has room for the request but not the response.
+ * Expected behavior: the responder returns an ERROR response with code Unspecified.
+ **/
+static void rsp_capabilities_case42(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2A;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->transcript.message_a.buffer_size =
+        spdm_context->transcript.message_a.max_buffer_size -
+        m_libspdm_get_capabilities_request1_size;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(
+        spdm_context, m_libspdm_get_capabilities_request1_size,
+        &m_libspdm_get_capabilities_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSPECIFIED);
+
+    spdm_context->transcript.message_a.buffer_size = 0;
+}
+
 int libspdm_rsp_capabilities_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1428,6 +1951,20 @@ int libspdm_rsp_capabilities_test(void)
         cmocka_unit_test(rsp_capabilities_case27),
         /* Success Case, GET_CAPABILITIES with param1[0] set and CHUNK_CAP enabled */
         cmocka_unit_test(rsp_capabilities_case28),
+        cmocka_unit_test(rsp_capabilities_case29),
+        cmocka_unit_test(rsp_capabilities_case30),
+        cmocka_unit_test(rsp_capabilities_case31),
+        cmocka_unit_test(rsp_capabilities_case32),
+        cmocka_unit_test(rsp_capabilities_case33),
+        cmocka_unit_test(rsp_capabilities_case34),
+        cmocka_unit_test(rsp_capabilities_case35),
+        cmocka_unit_test(rsp_capabilities_case36),
+        cmocka_unit_test(rsp_capabilities_case37),
+        cmocka_unit_test(rsp_capabilities_case38),
+        cmocka_unit_test(rsp_capabilities_case39),
+        cmocka_unit_test(rsp_capabilities_case40),
+        cmocka_unit_test(rsp_capabilities_case41),
+        cmocka_unit_test(rsp_capabilities_case42),
     };
 
     libspdm_test_context_t test_context = {
