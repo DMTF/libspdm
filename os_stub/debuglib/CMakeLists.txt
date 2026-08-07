@@ -8,7 +8,14 @@ target_include_directories(debuglib
         ${LIBSPDM_DIR}/include/hal
 )
 
-target_sources(debuglib
-    PRIVATE
-        debuglib.c
-)
+if(CMAKE_SYSTEM_NAME STREQUAL "Zephyr")
+    target_sources(debuglib
+        PRIVATE
+            debuglib_zephyr.c
+    )
+else()
+    target_sources(debuglib
+        PRIVATE
+            debuglib.c
+    )
+endif()
