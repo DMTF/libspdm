@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2025 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -69,10 +69,10 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
         }
         session_state = libspdm_secured_message_get_session_state(
             session_info->secured_message_context);
-        if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
+        if ((session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) &&
+            (session_state != LIBSPDM_SESSION_STATE_HANDSHAKING)) {
             return libspdm_generate_error_response(
-                spdm_context,
-                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                spdm_context, SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                 response_size, response);
         }
         session_id = &session_info->session_id;
