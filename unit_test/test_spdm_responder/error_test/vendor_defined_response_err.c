@@ -521,6 +521,81 @@ static void libspdm_test_responder_vendor_cmds_err_case7(void **state)
     assert_int_equal(response->header.param2, 0);
 }
 
+/**
+ * Test 8: Sending a vendor defined request in a session with NOT_STARTED state.
+ * Expected behavior: Responder replies with UnexpectedRequest.
+ **/
+static void libspdm_test_responder_vendor_cmds_err_case8(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_vendor_request_test request;
+    uint8_t request_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE] = {0};
+    uint8_t response_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE] = {0};
+    size_t response_size;
+    spdm_error_response_t *response;
+    libspdm_session_info_t *session_info;
+    uint32_t session_id;
+    uint8_t *request_ptr;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x8;
+
+    set_standard_state(spdm_context);
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    spdm_context->last_spdm_request_session_id_valid = true;
+    spdm_context->last_spdm_request_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_NOT_STARTED);
+
+    status = libspdm_register_vendor_callback_func(spdm_context,
+                                                   libspdm_vendor_response_func_err_test);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    request.header.request_response_code = SPDM_VENDOR_DEFINED_REQUEST;
+    request.header.param1 = 0;
+    request.header.param2 = 0;
+    request.standard_id = SPDM_REGISTRY_ID_IANA;
+    request.vendor_id_len = 4;
+    request.vendor_id[0] = 33;
+
+    /* copy header of request structure to buffer */
+    libspdm_copy_mem(request_buffer, sizeof(request_buffer), &request,
+                     sizeof(request.header) + 3 + request.vendor_id_len);
+    /* write the request data len to the correct offset in the request_buffer */
+    request_ptr = request_buffer + sizeof(request.header) + 3 + request.vendor_id_len;
+    libspdm_write_uint16(request_ptr, VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE);
+    /* set the request data to the correct offset in the request_buffer */
+    request_ptr += sizeof(uint16_t);
+    libspdm_set_mem(request_ptr, VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE, 0xAA);
+
+    response_size = sizeof(response_buffer);
+
+    status = libspdm_get_vendor_defined_response(spdm_context, sizeof(request),
+                                                 request_buffer, &response_size, response_buffer);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+
+    response = (spdm_error_response_t *)response_buffer;
+
+    assert_int_equal(response->header.spdm_version, SPDM_MESSAGE_VERSION_11);
+    assert_int_equal(response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(response->header.param2, 0);
+}
+
 int libspdm_rsp_vendor_defined_response_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -531,6 +606,7 @@ int libspdm_rsp_vendor_defined_response_error_test(void)
         cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case5),
         cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case6),
         cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case7),
+        cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case8),
     };
 
     libspdm_test_context_t test_context = {
