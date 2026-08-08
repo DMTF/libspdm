@@ -12,7 +12,8 @@ This sample exercises the libspdm Zephyr module's MCTP transport
 binding. It implements an SPDM requester that communicates with a responder
 over MCTP. The sample demonstrates how to set up the SPDM requester, send
 requests, and handle responses using the libspdm API. The MCTP transport is
-over an I3C bus. It was tested on a NPCX4.
+over an I3C or I2C+GPIO bus. The I3C was tested on a NPCX4 and the
+I2C+GPIO was tested on a FRDM-MCXN947 board.
 
 Wiring
 ******

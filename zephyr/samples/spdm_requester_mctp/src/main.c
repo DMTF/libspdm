@@ -8,7 +8,7 @@
  * SPDM requester sample over MCTP.
  *
  * Pair this sample with samples/spdm_responder_mctp flashed onto a
- * second board on the same I3C bus.
+ * second board on the same bus.
  */
 #include <stdint.h>
 #include <stdlib.h>
@@ -18,7 +18,13 @@
 #include <zephyr/logging/log.h>
 
 #include <libmctp.h>
+#if defined(CONFIG_MCTP_I3C_CONTROLLER)
 #include <zephyr/pmci/mctp/mctp_i3c_controller.h>
+#elif defined(CONFIG_MCTP_I2C_GPIO_CONTROLLER)
+#include <zephyr/pmci/mctp/mctp_i2c_gpio_controller.h>
+#else
+#error "no supported MCTP controller binding selected (I3C or I2C+GPIO)"
+#endif
 
 #include "library/spdm_common_lib.h"
 #include "library/spdm_requester_lib.h"
@@ -45,7 +51,17 @@ LOG_MODULE_REGISTER(spdm_requester_mctp, LOG_LEVEL_INF);
 #define LOCAL_EID 20U
 #define PEER_EID  11U
 
-MCTP_I3C_CONTROLLER_DT_DEFINE(mctp_i3c_ctrl, DT_NODELABEL(mctp_i3c));
+/*
+ * The MCTP bus binding is selected per board: MCTP over I3C on
+ * npcx4m8f_evb, MCTP over I2C+GPIO on frdm_mcxn947. Both expose a
+ * struct mctp_binding at .binding, so the rest of the sample is
+ * transport agnostic.
+ */
+#if defined(CONFIG_MCTP_I3C_CONTROLLER)
+MCTP_I3C_CONTROLLER_DT_DEFINE(mctp_ctrl, DT_NODELABEL(mctp_i3c));
+#else /* CONFIG_MCTP_I2C_GPIO_CONTROLLER */
+MCTP_I2C_GPIO_CONTROLLER_DT_DEFINE(mctp_ctrl, DT_NODELABEL(mctp_i2c));
+#endif
 
 static struct libspdm_zephyr_mctp_io spdm_io;
 
@@ -166,7 +182,7 @@ int main(void)
 
     mctp_ctx = mctp_init();
     __ASSERT_NO_MSG(mctp_ctx != NULL);
-    mctp_register_bus(mctp_ctx, &mctp_i3c_ctrl.binding, LOCAL_EID);
+    mctp_register_bus(mctp_ctx, &mctp_ctrl.binding, LOCAL_EID);
 
     rc = libspdm_zephyr_mctp_io_init(&spdm_io, mctp_ctx, PEER_EID);
     if (rc != 0) {

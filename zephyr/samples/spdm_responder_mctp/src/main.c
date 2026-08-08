@@ -6,8 +6,7 @@
 
 /*
  * SPDM responder sample over MCTP. Pairs with
- * samples/spdm_requester_mctp flashed onto a second board on the same
- * I3C bus.
+ * samples/spdm_requester_mctp flashed onto a second board on the same bus.
  */
 
 #include <stdint.h>
@@ -18,7 +17,13 @@
 #include <zephyr/logging/log.h>
 
 #include <libmctp.h>
+#if defined(CONFIG_MCTP_I3C_TARGET)
 #include <zephyr/pmci/mctp/mctp_i3c_target.h>
+#elif defined(CONFIG_MCTP_I2C_GPIO_TARGET)
+#include <zephyr/pmci/mctp/mctp_i2c_gpio_target.h>
+#else
+#error "no supported MCTP target binding selected (I3C or I2C+GPIO)"
+#endif
 
 #include "library/spdm_common_lib.h"
 #include "library/spdm_responder_lib.h"
@@ -35,7 +40,11 @@
 
 LOG_MODULE_REGISTER(spdm_responder_mctp, LOG_LEVEL_INF);
 
-MCTP_I3C_TARGET_DT_DEFINE(mctp_i3c_tgt, DT_NODELABEL(mctp_i3c));
+#if defined(CONFIG_MCTP_I3C_TARGET)
+MCTP_I3C_TARGET_DT_DEFINE(mctp_tgt, DT_NODELABEL(mctp_i3c));
+#else /* CONFIG_MCTP_I2C_GPIO_TARGET */
+MCTP_I2C_GPIO_TARGET_DT_DEFINE(mctp_tgt, DT_NODELABEL(mctp_i2c));
+#endif
 
 /*
  * Application payload exchanged over the secured session. The requester
@@ -78,7 +87,6 @@ static libspdm_return_t app_message_handler(
 
     return LIBSPDM_STATUS_UNSUPPORTED_CAP;
 }
-
 
 static struct libspdm_zephyr_mctp_io spdm_io;
 
@@ -197,14 +205,14 @@ int main(void)
     size_t scratch_size;
     libspdm_return_t status;
     int rc;
-    uint8_t local_eid = mctp_i3c_tgt.endpoint_id;
+    uint8_t local_eid = mctp_tgt.endpoint_id;
 
     LOG_INF("SPDM responder on %s", CONFIG_BOARD_TARGET);
     LOG_INF("local EID=%u", local_eid);
 
     mctp_ctx = mctp_init();
     __ASSERT_NO_MSG(mctp_ctx != NULL);
-    mctp_register_bus(mctp_ctx, &mctp_i3c_tgt.binding, local_eid);
+    mctp_register_bus(mctp_ctx, &mctp_tgt.binding, local_eid);
 
     rc = libspdm_zephyr_mctp_io_init(&spdm_io, mctp_ctx, 0);
     if (rc != 0) {
