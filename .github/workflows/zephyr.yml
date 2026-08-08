@@ -1,0 +1,108 @@
+name: Zephyr (twister)
+
+# Builds and runs the Zephyr loopback sample under twister on
+# qemu_x86_64.
+
+on:
+  push:
+    branches:
+      - main
+      - zephyr-port
+    paths:
+      - 'zephyr/**'
+      - 'os_stub/**'
+      - 'library/**'
+      - 'include/**'
+      - '.github/workflows/zephyr.yml'
+  pull_request:
+    branches:
+      - main
+      - zephyr-port
+    paths:
+      - 'zephyr/**'
+      - 'os_stub/**'
+      - 'library/**'
+      - 'include/**'
+      - '.github/workflows/zephyr.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  twister:
+    runs-on: ubuntu-latest
+    # Pin to a recent Zephyr CI image. Bump when Zephyr v4.x rolls
+    # forward. The image ships west, the Zephyr SDK, and all build
+    # dependencies, so no SDK install step is needed.
+    container:
+      image: ghcr.io/zephyrproject-rtos/ci:v0.27.4
+      options: '--entrypoint /bin/bash'
+    env:
+      CMAKE_PREFIX_PATH: /opt/toolchains
+      ZEPHYR_BASE: /workdir/zephyrproject/zephyr
+      ZEPHYR_TOOLCHAIN_VARIANT: zephyr
+    steps:
+      - name: Checkout libspdm (as Zephyr module)
+        uses: actions/checkout@v4
+        with:
+          path: libspdm
+          submodules: recursive
+
+      - name: Initialise an ad-hoc west workspace pointing at Zephyr v4.4
+        # We don't depend on libspdm being listed in any upstream
+        # west.yml — we just create a one-off workspace whose manifest
+        # is the file written below.
+        run: |
+          mkdir -p /workdir/zephyrproject
+          cd /workdir/zephyrproject
+          cat > west.yml <<'EOF'
+          manifest:
+            remotes:
+              - name: zephyrproject-rtos
+                url-base: https://github.com/zephyrproject-rtos
+            projects:
+              - name: zephyr
+                remote: zephyrproject-rtos
+                revision: v4.4.0
+                import:
+                  name-allowlist:
+                    - cmsis
+                    - cmsis_6
+                    - hal_nuvoton
+                    - hal_nxp
+                    - hal_x86
+                    - libmctp
+                    - mbedtls
+                    - picolibc
+                    - segger
+                    - tinycrypt
+            self:
+              path: manifest
+          EOF
+          mkdir -p manifest
+          cp west.yml manifest/west.yml
+          west init -l manifest
+          west update --narrow -o=--depth=1
+
+      - name: Run twister on the libspdm samples
+        run: |
+          cd /workdir/zephyrproject
+          export ZEPHYR_EXTRA_MODULES="${GITHUB_WORKSPACE}/libspdm"
+          $ZEPHYR_BASE/scripts/twister \
+            -p qemu_x86_64 \
+            -p mps2/an521/cpu0 \
+            -p npcx4m8f_evb \
+            -p frdm_mcxn947/mcxn947/cpu0 \
+            -T "${GITHUB_WORKSPACE}/libspdm/zephyr/samples" \
+            --inline-logs \
+            -v
+
+      - name: Upload twister artefacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twister-out
+          path: /workdir/zephyrproject/twister-out
+          if-no-files-found: ignore
