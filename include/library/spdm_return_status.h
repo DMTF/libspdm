@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -52,7 +52,8 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_SOURCE_RNG 0x06
 
 #define LIBSPDM_STATUS_CONSTRUCT(severity, source, code) \
-    ((libspdm_return_t)(((severity) << 28) | ((source) << 16) | (code)))
+    ((libspdm_return_t) \
+     (((uint32_t)(severity) << 28) | ((uint32_t)(source) << 16) | (uint32_t)(code)))
 
 /* Success status is always 0x00000000. */
 #define LIBSPDM_STATUS_SUCCESS \
