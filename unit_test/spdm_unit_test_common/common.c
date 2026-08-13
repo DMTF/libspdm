@@ -138,6 +138,7 @@ int libspdm_unit_test_group_teardown(void **state)
     LIBSPDM_ASSERT (!m_sender_buffer_acquired && !m_receiver_buffer_acquired);
 
     spdm_test_context = *state;
+    libspdm_test_free_key_pair_info(spdm_test_context->spdm_context);
     free(spdm_test_context->spdm_context);
     free(spdm_test_context->scratch_buffer);
     spdm_test_context->spdm_context = NULL;

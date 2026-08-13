@@ -184,4 +184,6 @@ void libspdm_dump_hex(const uint8_t *buffer, size_t buffer_size);
 
 void libspdm_test_provision_key_pair_info(void *spdm_context);
 
+void libspdm_test_free_key_pair_info(void *spdm_context);
+
 #endif

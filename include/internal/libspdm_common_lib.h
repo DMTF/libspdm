@@ -22,6 +22,7 @@
 #include "hal/library/responder/key_pair_info.h"
 #include "hal/library/responder/psklib.h"
 #include "hal/library/responder/setcertlib.h"
+#include "hal/library/responder/slot_mgmt.h"
 #include "hal/library/endpointinfolib.h"
 #include "hal/library/eventlib.h"
 #include "hal/library/cryptlib.h"
@@ -106,12 +107,9 @@ typedef struct {
     uint8_t local_slot_management_subcodes[8];
 
     uint8_t total_key_pairs;
-    const libspdm_key_pair_info_t *local_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
+    libspdm_key_pair_info_t local_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
 
-    uint32_t local_bank_asym_algo[LIBSPDM_MAX_BANK_COUNT];
-    uint32_t local_bank_pqc_asym_algo[LIBSPDM_MAX_BANK_COUNT];
-    uint32_t local_bank_asym_algo_capabilities[LIBSPDM_MAX_BANK_COUNT];
-    uint32_t local_bank_pqc_asym_algo_capabilities[LIBSPDM_MAX_BANK_COUNT];
+    libspdm_slot_info_t local_bank_info[LIBSPDM_MAX_BANK_COUNT];
     /* My raw public key (slot_id - 0xFF) */
     const void *local_public_key_provision;
     size_t local_public_key_provision_size;

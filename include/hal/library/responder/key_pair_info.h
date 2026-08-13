@@ -21,7 +21,7 @@ typedef struct {
     uint32_t current_pqc_asym_algo;
     uint16_t public_key_info_len;
     uint8_t assoc_cert_slot_mask;
-    uint8_t public_key_info[SPDM_MAX_PUBLIC_KEY_INFO_LEN];
+    uint8_t *public_key_info;
 } libspdm_key_pair_info_t;
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP

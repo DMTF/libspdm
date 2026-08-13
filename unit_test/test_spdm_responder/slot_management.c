@@ -76,6 +76,7 @@ static int libspdm_slot_management_test_setup(void **state)
     uint16_t bank_id;
     uint8_t slot_id;
     libspdm_data_parameter_t parameter;
+    libspdm_slot_info_t local_bank_info;
     libspdm_test_context_t *spdm_test_context = *state;
     libspdm_context_t *spdm_context = spdm_test_context->spdm_context;
 
@@ -134,30 +135,27 @@ static int libspdm_slot_management_test_setup(void **state)
 
     /* Bank 0: current = ECC256 */
     parameter.additional_data[0] = 0;
-    (void)libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO,
-                           &parameter, &bank0_asym_algo, sizeof(bank0_asym_algo));
-    (void)libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO,
-                           &parameter, &zero, sizeof(zero));
-    (void)libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO_CAPABILITIES,
-                           &parameter, &bank_asym_algo_capabilities,
-                           sizeof(bank_asym_algo_capabilities));
-    (void)libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO_CAPABILITIES,
-                           &parameter, &zero, sizeof(zero));
+
+    local_bank_info.local_bank_asym_algo = bank0_asym_algo;
+    local_bank_info.local_bank_pqc_asym_algo = 0;
+    local_bank_info.local_bank_asym_algo_capabilities = bank_asym_algo_capabilities;
+    local_bank_info.local_bank_pqc_asym_algo_capabilities = 0;
+
+    assert_int_equal(libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK,
+                                      &parameter, &local_bank_info, sizeof(local_bank_info)), LIBSPDM_STATUS_SUCCESS);
 
     /* Bank 1: current = ECC384 */
     if (LIBSPDM_MAX_BANK_COUNT > 1) {
         parameter.additional_data[0] = 1;
-        (void)libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO,
-                               &parameter, &bank1_asym_algo, sizeof(bank1_asym_algo));
-        (void)libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO,
-                               &parameter, &zero, sizeof(zero));
-        (void)libspdm_set_data(spdm_context,
-                               LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO_CAPABILITIES,
-                               &parameter, &bank_asym_algo_capabilities,
-                               sizeof(bank_asym_algo_capabilities));
-        (void)libspdm_set_data(spdm_context,
-                               LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO_CAPABILITIES,
-                               &parameter, &zero, sizeof(zero));
+
+        local_bank_info.local_bank_asym_algo = bank1_asym_algo;
+        local_bank_info.local_bank_pqc_asym_algo = 0;
+        local_bank_info.local_bank_asym_algo_capabilities = bank_asym_algo_capabilities;
+        local_bank_info.local_bank_pqc_asym_algo_capabilities = 0;
+
+        assert_int_equal(libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK,
+                                          &parameter, &local_bank_info, sizeof(local_bank_info)),
+                         LIBSPDM_STATUS_SUCCESS);
     }
 
     return 0;

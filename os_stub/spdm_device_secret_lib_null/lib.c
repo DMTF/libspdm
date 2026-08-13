@@ -368,3 +368,7 @@ bool libspdm_write_slot_management_manage_bank(
     return false;
 }
 #endif
+
+void libspdm_test_free_key_pair_info(void *spdm_context)
+{
+}

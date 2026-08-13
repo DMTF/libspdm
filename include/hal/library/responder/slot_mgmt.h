@@ -11,6 +11,13 @@
 #include "internal/libspdm_lib_config.h"
 #include "industry_standard/spdm.h"
 
+typedef struct {
+    uint32_t local_bank_asym_algo;
+    uint32_t local_bank_pqc_asym_algo;
+    uint32_t local_bank_asym_algo_capabilities;
+    uint32_t local_bank_pqc_asym_algo_capabilities;
+} libspdm_slot_info_t;
+
 #if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
 
 /**

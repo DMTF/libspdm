@@ -114,7 +114,7 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
                                                response_size, response);
     }
 
-    key_pair_info = spdm_context->local_context.local_key_pair_info[key_pair_id - 1];
+    key_pair_info = &spdm_context->local_context.local_key_pair_info[key_pair_id - 1];
     if (key_pair_info == NULL) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,

@@ -152,8 +152,8 @@ static bool libspdm_slot_management_compute_bank_details(
         }
     }
     if (!bank_exists) {
-        if ((spdm_context->local_context.local_bank_asym_algo_capabilities[bank_id] != 0) ||
-            (spdm_context->local_context.local_bank_pqc_asym_algo_capabilities[bank_id] != 0)) {
+        if ((spdm_context->local_context.local_bank_info[bank_id].local_bank_asym_algo_capabilities != 0) ||
+            (spdm_context->local_context.local_bank_info[bank_id].local_bank_pqc_asym_algo_capabilities != 0)) {
             bank_exists = true;
         }
     }
@@ -173,12 +173,12 @@ static bool libspdm_slot_management_compute_bank_details(
         *bank_attributes |= SPDM_SLOT_MANAGEMENT_BANK_ATTRIBUTE_SELECTED;
     }
 
-    *current_asym_algo = spdm_context->local_context.local_bank_asym_algo[bank_id];
-    *current_pqc_asym_algo = spdm_context->local_context.local_bank_pqc_asym_algo[bank_id];
+    *current_asym_algo = spdm_context->local_context.local_bank_info[bank_id].local_bank_asym_algo;
+    *current_pqc_asym_algo = spdm_context->local_context.local_bank_info[bank_id].local_bank_pqc_asym_algo;
     *asym_algo_capabilities =
-        spdm_context->local_context.local_bank_asym_algo_capabilities[bank_id];
+        spdm_context->local_context.local_bank_info[bank_id].local_bank_asym_algo_capabilities;
     *pqc_asym_algo_capabilities =
-        spdm_context->local_context.local_bank_pqc_asym_algo_capabilities[bank_id];
+        spdm_context->local_context.local_bank_info[bank_id].local_bank_pqc_asym_algo_capabilities;
 
     /* AvailableAsymAlgo / AvailablePqcAsymAlgo are this Bank's Capabilities with any algorithm
      * already assigned to ANOTHER Bank cleared (DSP0274 Table 151): an algorithm a different Bank
@@ -189,9 +189,9 @@ static bool libspdm_slot_management_compute_bank_details(
         if (other_bank == bank_id) {
             continue;
         }
-        other_asym_algo |= spdm_context->local_context.local_bank_asym_algo[other_bank];
+        other_asym_algo |= spdm_context->local_context.local_bank_info[other_bank].local_bank_asym_algo;
         other_pqc_asym_algo |=
-            spdm_context->local_context.local_bank_pqc_asym_algo[other_bank];
+            spdm_context->local_context.local_bank_info[other_bank].local_bank_pqc_asym_algo;
     }
     *available_asym_algo = *asym_algo_capabilities & ~other_asym_algo;
     *available_pqc_asym_algo = *pqc_asym_algo_capabilities & ~other_pqc_asym_algo;
@@ -752,8 +752,8 @@ static libspdm_return_t libspdm_get_response_slot_management_manage_bank(
                                                response_size, response);
     }
 
-    if ((select_asym_algo == spdm_context->local_context.local_bank_asym_algo[bank_id]) &&
-        (select_pqc_asym_algo == spdm_context->local_context.local_bank_pqc_asym_algo[bank_id])) {
+    if ((select_asym_algo == spdm_context->local_context.local_bank_info[bank_id].local_bank_asym_algo) &&
+        (select_pqc_asym_algo == spdm_context->local_context.local_bank_info[bank_id].local_bank_pqc_asym_algo)) {
         return libspdm_slot_management_generate_empty_response(
             spdm_context, spdm_request->header.spdm_version, spdm_request->header.param1,
             response_size, response);
@@ -794,8 +794,8 @@ static libspdm_return_t libspdm_get_response_slot_management_manage_bank(
     }
 
     /* We don't update our internal state if a reset is required. */
-    spdm_context->local_context.local_bank_asym_algo[bank_id] = select_asym_algo;
-    spdm_context->local_context.local_bank_pqc_asym_algo[bank_id] = select_pqc_asym_algo;
+    spdm_context->local_context.local_bank_info[bank_id].local_bank_asym_algo = select_asym_algo;
+    spdm_context->local_context.local_bank_info[bank_id].local_bank_pqc_asym_algo = select_pqc_asym_algo;
 
     return libspdm_slot_management_generate_empty_response(
         spdm_context, spdm_request->header.spdm_version, spdm_request->header.param1,
