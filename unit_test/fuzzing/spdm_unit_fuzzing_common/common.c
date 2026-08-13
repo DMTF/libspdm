@@ -107,6 +107,7 @@ size_t libspdm_unit_test_group_teardown(void **State)
 
     spdm_test_context = *State;
 
+    libspdm_test_free_key_pair_info(spdm_test_context->spdm_context);
     libspdm_deinit_context(spdm_test_context->spdm_context);
 
     free(spdm_test_context->spdm_context);

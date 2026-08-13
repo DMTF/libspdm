@@ -60,6 +60,11 @@ bool libspdm_write_slot_management_manage_bank(
     return true;
 }
 
+/* Certificate chains provisioned by libspdm_slot_management_test_setup() itself. The suite owns
+ * and frees these; they are tracked separately from the context because the context may instead
+ * point at a HAL-installed chain (owned by the HAL). */
+static void *m_slot_management_provisioned_chains[SPDM_MAX_SLOT_COUNT];
+
 /* The sample device_secret_lib stores runtime-provisioned certificate chains in NVM files named
  * "bank_id_NNN_slot_id_M_cert_chain.der" (SLOT_MANAGEMENT SetCertificate/Erase) and
  * "slot_id_M_cert_chain.der" (base SET_CERTIFICATE). Those files persist across test runs, so a
@@ -76,6 +81,7 @@ static int libspdm_slot_management_test_setup(void **state)
     uint16_t bank_id;
     uint8_t slot_id;
     libspdm_data_parameter_t parameter;
+    libspdm_slot_info_t local_bank_info;
     libspdm_test_context_t *spdm_test_context = *state;
     libspdm_context_t *spdm_context = spdm_test_context->spdm_context;
 
@@ -89,15 +95,19 @@ static int libspdm_slot_management_test_setup(void **state)
         }
     }
 
-    /* Free any cert chains a previous test left provisioned, then reset every (Bank, slot) entry
-     * so the per-test state starts clean. */
+    /* Free the chains this suite provisioned itself, then reset every (Bank, slot) context
+     * entry so the per-test state starts clean. Chains installed through the HAL (the sample
+     * device's set_cert.c) are owned by the HAL, which also keeps an alias in
+     * m_libspdm_installed_cert_chain[] and frees it the next time the slot is written, so they
+     * must not be freed here. */
+    for (slot_id = 0; slot_id < SPDM_MAX_SLOT_COUNT; slot_id++) {
+        free(m_slot_management_provisioned_chains[slot_id]);
+        m_slot_management_provisioned_chains[slot_id] = NULL;
+    }
     for (bank_id = 0; bank_id < LIBSPDM_MAX_BANK_COUNT; bank_id++) {
         for (slot_id = 0; slot_id < SPDM_MAX_SLOT_COUNT; slot_id++) {
-            if (spdm_context->local_context.local_cert_chain_provision[bank_id][slot_id] !=
-                NULL) {
-                spdm_context->local_context.local_cert_chain_provision[bank_id][slot_id] = NULL;
-                spdm_context->local_context.local_cert_chain_provision_size[bank_id][slot_id] = 0;
-            }
+            spdm_context->local_context.local_cert_chain_provision[bank_id][slot_id] = NULL;
+            spdm_context->local_context.local_cert_chain_provision_size[bank_id][slot_id] = 0;
         }
     }
 
@@ -119,6 +129,7 @@ static int libspdm_slot_management_test_setup(void **state)
         }
         spdm_context->local_context.local_cert_chain_provision[0][slot_id] = cert_chain_data;
         spdm_context->local_context.local_cert_chain_provision_size[0][slot_id] = cert_chain_size;
+        m_slot_management_provisioned_chains[slot_id] = cert_chain_data;
     }
 
     slot_id = 0;
@@ -134,30 +145,48 @@ static int libspdm_slot_management_test_setup(void **state)
 
     /* Bank 0: current = ECC256 */
     parameter.additional_data[0] = 0;
-    (void)libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO,
-                           &parameter, &bank0_asym_algo, sizeof(bank0_asym_algo));
-    (void)libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO,
-                           &parameter, &zero, sizeof(zero));
-    (void)libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO_CAPABILITIES,
-                           &parameter, &bank_asym_algo_capabilities,
-                           sizeof(bank_asym_algo_capabilities));
-    (void)libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO_CAPABILITIES,
-                           &parameter, &zero, sizeof(zero));
+
+    local_bank_info.local_bank_asym_algo = bank0_asym_algo;
+    local_bank_info.local_bank_pqc_asym_algo = 0;
+    local_bank_info.local_bank_asym_algo_capabilities = bank_asym_algo_capabilities;
+    local_bank_info.local_bank_pqc_asym_algo_capabilities = 0;
+
+    assert_int_equal(libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK,
+                                      &parameter, &local_bank_info, sizeof(local_bank_info)), LIBSPDM_STATUS_SUCCESS);
 
     /* Bank 1: current = ECC384 */
     if (LIBSPDM_MAX_BANK_COUNT > 1) {
         parameter.additional_data[0] = 1;
-        (void)libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO,
-                               &parameter, &bank1_asym_algo, sizeof(bank1_asym_algo));
-        (void)libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO,
-                               &parameter, &zero, sizeof(zero));
-        (void)libspdm_set_data(spdm_context,
-                               LIBSPDM_DATA_LOCAL_BANK_ASYM_ALGO_CAPABILITIES,
-                               &parameter, &bank_asym_algo_capabilities,
-                               sizeof(bank_asym_algo_capabilities));
-        (void)libspdm_set_data(spdm_context,
-                               LIBSPDM_DATA_LOCAL_BANK_PQC_ASYM_ALGO_CAPABILITIES,
-                               &parameter, &zero, sizeof(zero));
+
+        local_bank_info.local_bank_asym_algo = bank1_asym_algo;
+        local_bank_info.local_bank_pqc_asym_algo = 0;
+        local_bank_info.local_bank_asym_algo_capabilities = bank_asym_algo_capabilities;
+        local_bank_info.local_bank_pqc_asym_algo_capabilities = 0;
+
+        assert_int_equal(libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_BANK,
+                                          &parameter, &local_bank_info, sizeof(local_bank_info)),
+                         LIBSPDM_STATUS_SUCCESS);
+    }
+
+    return 0;
+}
+
+static int libspdm_slot_management_test_teardown(void **state)
+{
+    libspdm_test_context_t *spdm_test_context = *state;
+    libspdm_context_t *spdm_context = spdm_test_context->spdm_context;
+    uint8_t bank_id;
+    uint8_t slot_id;
+
+    for (slot_id = 0; slot_id < SPDM_MAX_SLOT_COUNT; slot_id++) {
+        free(m_slot_management_provisioned_chains[slot_id]);
+        m_slot_management_provisioned_chains[slot_id] = NULL;
+    }
+    for (bank_id = 0; bank_id < LIBSPDM_MAX_BANK_COUNT; bank_id++) {
+        for (slot_id = 0; slot_id < SPDM_MAX_SLOT_COUNT; slot_id++) {
+            spdm_context->local_context.local_cert_chain_provision[bank_id][slot_id] = NULL;
+            spdm_context->local_context.local_cert_chain_provision_size[bank_id][slot_id] = 0;
+        }
     }
 
     return 0;
@@ -1889,53 +1918,71 @@ int libspdm_rsp_slot_management_test(void)
      * and does not leak slot state into later cases or later runs. */
     const struct CMUnitTest test_cases[] = {
         /* Success case for SupportedSubCodes */
-        cmocka_unit_test_setup(rsp_slot_management_case1, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case1, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
         /* SLOT_MGMT_CAP not set */
-        cmocka_unit_test_setup(rsp_slot_management_case2, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case2, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
         /* Unsupported SubCode */
-        cmocka_unit_test_setup(rsp_slot_management_case3, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case3, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
         /* Connection version < 1.4 */
-        cmocka_unit_test_setup(rsp_slot_management_case4, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case4, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
         /* Success case for GetBankInfo */
-        cmocka_unit_test_setup(rsp_slot_management_case5, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case5, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
         /* Success case for GetBankDetails */
-        cmocka_unit_test_setup(rsp_slot_management_case6, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case6, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
         /* Success case for GetCertificateChain */
-        cmocka_unit_test_setup(rsp_slot_management_case7, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case7, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
         /* Success case for ManageBank ConfigAlgo, and Bank algorithm uniqueness */
-        cmocka_unit_test_setup(rsp_slot_management_case8, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case8, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
         /* Success case for ManageSlot (Erase) */
-        cmocka_unit_test_setup(rsp_slot_management_case9, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case9, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
         /* Success case for GetCSR */
-        cmocka_unit_test_setup(rsp_slot_management_case10, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case10, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
         /* Success case for SetCertificate */
-        cmocka_unit_test_setup(rsp_slot_management_case11, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case11, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
         /* Valid-but-unadvertised SubCode -> UnsupportedRequest */
-        cmocka_unit_test_setup(rsp_slot_management_case12, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case12, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
         /* GetBankDetails BankID=0xFF (all Banks) -> UnsupportedRequest */
-        cmocka_unit_test_setup(rsp_slot_management_case13, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case13, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
         /* Access control for slots 1-7 (ManageSlot Erase) */
-        cmocka_unit_test_setup(rsp_slot_management_case14, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case14, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
         /* Malformed request negatives (MgmtStructOffset, SlotAddress.ReqLength) */
-        cmocka_unit_test_setup(rsp_slot_management_case15, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case15, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
         /* SetCertificate then GetCertificateChain reflects the provisioned chain */
-        cmocka_unit_test_setup(rsp_slot_management_case16, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case16, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
         /* ManageSlot Erase with CERT_INSTALL_RESET_CAP -> ResetRequired */
-        cmocka_unit_test_setup(rsp_slot_management_case17, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case17, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP && LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         /* Cross-state consistency: SET_KEY_PAIR_INFO AssocCertSlotMask/CurrentKeyUsage vs
          * SLOT_MANAGEMENT GetBankDetails and GET_DIGESTS KeyPairID/KeyUsage */
-        cmocka_unit_test_setup(rsp_slot_management_case18, libspdm_slot_management_test_setup),
+        cmocka_unit_test_setup_teardown(rsp_slot_management_case18, libspdm_slot_management_test_setup,
+                                        libspdm_slot_management_test_teardown),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
     };
 

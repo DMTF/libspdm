@@ -155,6 +155,7 @@ int libspdm_unit_test_group_teardown(void **state)
 
     spdm_test_context = *state;
 
+    libspdm_test_free_key_pair_info(spdm_test_context->spdm_context);
     libspdm_deinit_context(spdm_test_context->spdm_context);
 
     free(spdm_test_context->spdm_context);

@@ -27,6 +27,34 @@
 
 libspdm_key_pair_info_t local_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
 
+void libspdm_test_free_key_pair_info(void *spdm_context)
+{
+    libspdm_data_parameter_t parameter;
+    uint8_t total_key_pairs;
+    size_t data_size;
+
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+    data_size = sizeof(total_key_pairs);
+    if ((libspdm_get_data(spdm_context, LIBSPDM_DATA_TOTAL_KEY_PAIRS, &parameter,
+                          &total_key_pairs, &data_size) != LIBSPDM_STATUS_SUCCESS)) {
+        return;
+    }
+
+    /* Divide by 2 as libspdm_test_provision_key_pair_info() creates duplicate
+     * secondary key pairs that share the same buffer.
+     */
+    total_key_pairs /= 2;
+
+    for (int i = 0; i < total_key_pairs; i++) {
+        if (local_key_pair_info[i].public_key_info && local_key_pair_info[i].public_key_info_len) {
+            free(local_key_pair_info[i].public_key_info);
+            local_key_pair_info[i].public_key_info_len = 0;
+            local_key_pair_info[i].public_key_info = NULL;
+        }
+    }
+}
+
 void libspdm_test_provision_key_pair_info(void *spdm_context)
 {
     libspdm_data_parameter_t parameter;
@@ -106,6 +134,8 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
 #endif
     uint8_t index = 0;
 
+    libspdm_test_free_key_pair_info(spdm_context);
+
     libspdm_zero_mem(local_key_pair_info, sizeof(local_key_pair_info));
 
     /*provisioned key pair info*/
@@ -121,6 +151,7 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
     local_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA2048;
     local_key_pair_info[index].current_pqc_asym_algo = 0;
     local_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_rsa);
+    local_key_pair_info[index].public_key_info = malloc(local_key_pair_info[index].public_key_info_len);
     libspdm_copy_mem(local_key_pair_info[index].public_key_info,
                      local_key_pair_info[index].public_key_info_len,
                      public_key_info_rsa, local_key_pair_info[index].public_key_info_len);
@@ -138,6 +169,7 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
     local_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA3072;
     local_key_pair_info[index].current_pqc_asym_algo = 0;
     local_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_rsa);
+    local_key_pair_info[index].public_key_info = malloc(local_key_pair_info[index].public_key_info_len);
     libspdm_copy_mem(local_key_pair_info[index].public_key_info,
                      local_key_pair_info[index].public_key_info_len,
                      public_key_info_rsa, local_key_pair_info[index].public_key_info_len);
@@ -155,6 +187,7 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
     local_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA4096;
     local_key_pair_info[index].current_pqc_asym_algo = 0;
     local_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_rsa);
+    local_key_pair_info[index].public_key_info = malloc(local_key_pair_info[index].public_key_info_len);
     libspdm_copy_mem(local_key_pair_info[index].public_key_info,
                      local_key_pair_info[index].public_key_info_len,
                      public_key_info_rsa, local_key_pair_info[index].public_key_info_len);
@@ -172,6 +205,7 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
     local_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC256;
     local_key_pair_info[index].current_pqc_asym_algo = 0;
     local_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ecp256);
+    local_key_pair_info[index].public_key_info = malloc(local_key_pair_info[index].public_key_info_len);
     libspdm_copy_mem(local_key_pair_info[index].public_key_info,
                      local_key_pair_info[index].public_key_info_len,
                      public_key_info_ecp256, local_key_pair_info[index].public_key_info_len);
@@ -189,6 +223,7 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
     local_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC384;
     local_key_pair_info[index].current_pqc_asym_algo = 0;
     local_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ecp384);
+    local_key_pair_info[index].public_key_info = malloc(local_key_pair_info[index].public_key_info_len);
     libspdm_copy_mem(local_key_pair_info[index].public_key_info,
                      local_key_pair_info[index].public_key_info_len,
                      public_key_info_ecp384, local_key_pair_info[index].public_key_info_len);
@@ -206,6 +241,7 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
     local_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC521;
     local_key_pair_info[index].current_pqc_asym_algo = 0;
     local_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ecp521);
+    local_key_pair_info[index].public_key_info = malloc(local_key_pair_info[index].public_key_info_len);
     libspdm_copy_mem(local_key_pair_info[index].public_key_info,
                      local_key_pair_info[index].public_key_info_len,
                      public_key_info_ecp521, local_key_pair_info[index].public_key_info_len);
@@ -223,6 +259,7 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
     local_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_SM2;
     local_key_pair_info[index].current_pqc_asym_algo = 0;
     local_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_sm2);
+    local_key_pair_info[index].public_key_info = malloc(local_key_pair_info[index].public_key_info_len);
     libspdm_copy_mem(local_key_pair_info[index].public_key_info,
                      local_key_pair_info[index].public_key_info_len,
                      public_key_info_sm2, local_key_pair_info[index].public_key_info_len);
@@ -240,6 +277,7 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
     local_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED25519;
     local_key_pair_info[index].current_pqc_asym_algo = 0;
     local_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ed25519);
+    local_key_pair_info[index].public_key_info = malloc(local_key_pair_info[index].public_key_info_len);
     libspdm_copy_mem(local_key_pair_info[index].public_key_info,
                      local_key_pair_info[index].public_key_info_len,
                      public_key_info_ed25519, local_key_pair_info[index].public_key_info_len);
@@ -257,6 +295,7 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
     local_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED448;
     local_key_pair_info[index].current_pqc_asym_algo = 0;
     local_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ed448);
+    local_key_pair_info[index].public_key_info = malloc(local_key_pair_info[index].public_key_info_len);
     libspdm_copy_mem(local_key_pair_info[index].public_key_info,
                      local_key_pair_info[index].public_key_info_len,
                      public_key_info_ed448, local_key_pair_info[index].public_key_info_len);
@@ -274,6 +313,7 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
     local_key_pair_info[index].current_asym_algo = 0;
     local_key_pair_info[index].current_pqc_asym_algo = SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_44;
     local_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_mldsa44);
+    local_key_pair_info[index].public_key_info = malloc(local_key_pair_info[index].public_key_info_len);
     libspdm_copy_mem(local_key_pair_info[index].public_key_info,
                      local_key_pair_info[index].public_key_info_len,
                      public_key_info_mldsa44, sizeof(public_key_info_mldsa44));
@@ -291,6 +331,7 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
     local_key_pair_info[index].current_asym_algo = 0;
     local_key_pair_info[index].current_pqc_asym_algo = SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65;
     local_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_mldsa65);
+    local_key_pair_info[index].public_key_info = malloc(local_key_pair_info[index].public_key_info_len);
     libspdm_copy_mem(local_key_pair_info[index].public_key_info,
                      local_key_pair_info[index].public_key_info_len,
                      public_key_info_mldsa65, sizeof(public_key_info_mldsa65));
@@ -308,6 +349,7 @@ void libspdm_test_provision_key_pair_info(void *spdm_context)
     local_key_pair_info[index].current_asym_algo = 0;
     local_key_pair_info[index].current_pqc_asym_algo = SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_87;
     local_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_mldsa87);
+    local_key_pair_info[index].public_key_info = malloc(local_key_pair_info[index].public_key_info_len);
     libspdm_copy_mem(local_key_pair_info[index].public_key_info,
                      local_key_pair_info[index].public_key_info_len,
                      public_key_info_mldsa87, sizeof(public_key_info_mldsa87));
@@ -424,6 +466,14 @@ void libspdm_set_key_usage_for_key_pairs(void *spdm_context, uint8_t key_usage)
 
     for (int i = 0; i < total_key_pairs; i++) {
         local_key_pair_info[i].current_key_usage = key_usage;
+    }
+
+    for (uint8_t i = 0; i < total_key_pairs; i++) {
+        libspdm_zero_mem(&parameter, sizeof(parameter));
+        parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+        parameter.additional_data[0] = i + 1;
+        libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_KEY_PAIR_INFO, &parameter,
+                         &local_key_pair_info[i], sizeof(local_key_pair_info[i]));
     }
 }
 

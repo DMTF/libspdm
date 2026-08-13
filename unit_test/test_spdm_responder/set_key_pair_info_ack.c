@@ -546,7 +546,7 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
     assert_true(need_reset);
 
     assert_int_equal(
-        spdm_context->local_context.local_key_pair_info[key_pair_id - 1]->current_pqc_asym_algo,
+        spdm_context->local_context.local_key_pair_info[key_pair_id - 1].current_pqc_asym_algo,
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65);
 }
 
@@ -764,7 +764,7 @@ static void rsp_set_key_pair_info_ack_case7(void **state)
          (victim_key_pair_id <= total_key_pairs) && !found_pair;
          victim_key_pair_id++) {
         const libspdm_key_pair_info_t *victim_key_pair_info =
-            spdm_context->local_context.local_key_pair_info[victim_key_pair_id - 1];
+            &spdm_context->local_context.local_key_pair_info[victim_key_pair_id - 1];
         if (victim_key_pair_info == NULL) {
             continue;
         }
@@ -781,7 +781,7 @@ static void rsp_set_key_pair_info_ack_case7(void **state)
                 continue;
             }
             other_key_pair_info =
-                spdm_context->local_context.local_key_pair_info[other_key_pair_id - 1];
+                &spdm_context->local_context.local_key_pair_info[other_key_pair_id - 1];
             if (other_key_pair_info == NULL) {
                 continue;
             }
