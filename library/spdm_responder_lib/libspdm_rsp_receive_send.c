@@ -16,7 +16,7 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         libspdm_get_spdm_response_func get_response_func;
     } libspdm_get_response_struct_t;
 
-    libspdm_get_response_struct_t get_response_struct[] = {
+    static const libspdm_get_response_struct_t get_response_struct[] = {
         { SPDM_GET_VERSION, libspdm_get_response_version },
         { SPDM_GET_CAPABILITIES, libspdm_get_response_capabilities },
         { SPDM_NEGOTIATE_ALGORITHMS, libspdm_get_response_algorithms },
