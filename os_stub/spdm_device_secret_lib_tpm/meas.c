@@ -415,7 +415,9 @@ libspdm_return_t libspdm_measurement_collection(
     if ((measurement_hash_algo == SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) ||
         ((request_attribute & SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED) !=
          0)) {
-        use_bit_stream = true;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "raw bitstream measurements are not supported by TPM measurement collection\n"));
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
     if (measurements_index ==
