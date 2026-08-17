@@ -1,0 +1,147 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      matrix:
+        branch: [ "scarthgap" ]
+        machine: [ "qemux86-64", "qemuarm64" ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            build-essential chrpath cpio debianutils diffstat file \
+            gawk gcc git iputils-ping libacl1 liblz4-tool locales \
+            python3 python3-git python3-jinja2 python3-pexpect python3-pip \
+            python3-subunit socat texinfo unzip wget xz-utils zstd python3-websockets
+
+      - name: Setup Yocto
+        run: |
+          git clone -b ${{matrix.branch}} --depth 1 https://git.yoctoproject.org/poky
+          git -C poky clone -b ${{matrix.branch}} --depth 1 https://git.openembedded.org/meta-openembedded
+
+      - name: Configure Build Environment
+        run: |
+          source poky/oe-init-build-env poky/build
+
+          bitbake-layers add-layer ../meta-openembedded/meta-oe
+          bitbake-layers add-layer ../meta-openembedded/meta-python
+          bitbake-layers add-layer ../meta-openembedded/meta-networking
+
+          cat >> conf/local.conf << 'EOF'
+          MACHINE = "${{matrix.machine}}"
+          BB_NUMBER_THREADS = "4"
+          PARALLEL_MAKE = "-j 4"
+
+          # Use local libspdm source
+          INHERIT += "externalsrc"
+          EXTERNALSRC:pn-libspdm = "${TOPDIR}/../../libspdm"
+          EXTERNALSRC_BUILD:pn-libspdm = "${EXTERNALSRC:pn-libspdm}/build"
+
+          # Enable sstate cache
+          BB_HASHSERVE_UPSTREAM = "wss://hashserv.yoctoproject.org/ws"
+          SSTATE_MIRRORS ?= "file://.* http://sstate.yoctoproject.org/all/PATH;downloadfilename=PATH"
+          BB_HASHSERVE = "auto"
+          BB_SIGNATURE_HANDLER = "OEEquivHash"
+          EOF
+
+      - name: Configure libspdm Recipe
+        run: |
+          mkdir -p poky/meta-openembedded/meta-oe/recipes-support/libspdm
+          cat > poky/meta-openembedded/meta-oe/recipes-support/libspdm/libspdm_git.bb << 'EOF'
+          SUMMARY = "DMTF's Reference Implementation of SPDM"
+          DESCRIPTION = "libspdm is a reference implementation of the DMTF’s Security Protocols and \
+          Data Models (SPDM). This is used to enable authentication, attestation and key exchange to \
+          assist in providing infrastructure security enablement"
+          HOMEPAGE = "https://github.com/DMTF/libspdm"
+          BUGTRACKER = "https://github.com/DMTF/libspdm/issues"
+          LICENSE = "BSD-3-Clause"
+          LIC_FILES_CHKSUM = "file://LICENSE.md;md5=8f9b59a81a88da8e812af43728b72dd7"
+
+          DEPENDS = "openssl"
+
+          SRC_URI = "git://github.com/DMTF/libspdm.git;branch=main;protocol=https"
+          SRCREV = "f55cf6d48ec69b4ac60a63903e9c6a2cb0fd155d"
+
+          inherit cmake
+
+          LIBSPDM_CFLAGS = "\
+           	${OECMAKE_C_FLAGS} \
+           	-DLIBSPDM_ENABLE_CAPABILITY_EVENT_CAP=0 \
+           	-DLIBSPDM_ENABLE_CAPABILITY_MEL_CAP=0 \
+           	-DLIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP=0 \
+           	-DLIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP=0 \
+           	-DLIBSPDM_HAL_PASS_SPDM_CONTEXT=1 \
+                              -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=0 \
+           	"
+
+          LIBSPDM_CFLAGS:append:toolchain-gcc = " -fPIE"
+
+          def get_spdm_multiarch(bb, d):
+              target_arch = d.getVar('TARGET_ARCH')
+              multiarch_options = {
+                  "x86_64":  "x64",
+                  "i586":    "ia32",
+                  "i686":    "ia32",
+                  "arm":     "arm",
+                  "aarch64": "aarch64",
+                  "riscv32": "riscv32",
+                  "riscv64": "riscv64",
+                  "ppc64le": "ppc64le",
+                  "powerpc64le": "ppc64le",
+              }
+
+              if target_arch in multiarch_options :
+                  return multiarch_options[target_arch]
+
+              bb.error("unsupported architecture '%s'" % target_arch)
+
+          EXTRA_OECMAKE += "\
+              -DARCH=${@get_spdm_multiarch(bb, d)} \
+             	-DTOOLCHAIN=NONE \
+             	-DTARGET=Release \
+             	-DCRYPTO=openssl \
+             	-DENABLE_BINARY_BUILD=1 \
+             	-DCOMPILED_LIBCRYPTO_PATH=${libdir} \
+             	-DCOMPILED_LIBSSL_PATH=${libdir} \
+             	-DDISABLE_TESTS=1 \
+             	-DDISABLE_EDDSA=1 \
+             	-DCMAKE_C_FLAGS='${LIBSPDM_CFLAGS}' \
+             	"
+
+            do_install () {
+                install -d ${D}/${libdir}
+                install -m 0644 lib/* ${D}/${libdir}/
+
+                install -d ${D}/${includedir}/${BPN}/
+                cp -rf ${S}/include/* ${D}/${includedir}/${BPN}/
+
+                install -d ${D}/${includedir}/${BPN}/os_stub/spdm_crypt_ext_lib
+                cp -rf ${S}/os_stub/spdm_crypt_ext_lib/*.h ${D}/${includedir}/${BPN}/os_stub/spdm_crypt_ext_lib/
+            }
+          EOF
+
+      - name: Build libspdm
+        run: |
+          source poky/oe-init-build-env poky/build
+          bitbake libspdm
+
+      - name: Run Tests
+        run: |
+          # TODO
+          # Can do automated qemu based testing ?
