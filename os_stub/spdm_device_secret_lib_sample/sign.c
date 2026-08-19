@@ -192,10 +192,10 @@ bool libspdm_responder_data_sign(
 
         if (pqc_asym_algo != 0) {
             result = libspdm_read_responder_pqc_private_key_ex(
-                pqc_asym_algo, key_pair_id, &private_pem, &private_pem_size);
+                spdm_context, pqc_asym_algo, key_pair_id, &private_pem, &private_pem_size);
         } else {
             result = libspdm_read_responder_private_key_ex(
-                base_asym_algo, key_pair_id, &private_pem, &private_pem_size);
+                spdm_context, base_asym_algo, key_pair_id, &private_pem, &private_pem_size);
         }
         if (!result) {
             return false;

@@ -46,6 +46,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     uint8_t *ptr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     size_t sig_size;
+    libspdm_context_t *context = spdm_context;
 
     spdm_test_context = libspdm_get_test_context();
     test_message_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -64,9 +65,12 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                                                          NULL, NULL)) {
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
-    ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision_size[0] =
+    ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision_size[context->connection_info.
+                                                                                       current_bank][0] =
         data_size;
-    ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision[0] = data;
+    ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision[context->connection_info.current_bank]
+    [0]
+        = data;
     ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
     ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
@@ -79,8 +83,10 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     ptr = (void *)(spdm_response + 1);
     libspdm_hash_all(
         m_libspdm_use_hash_algo,
-        ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision[0],
-        ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision_size[0], ptr);
+        ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision[context->connection_info.
+                                                                                      current_bank][0],
+        ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision_size[context->connection_info.
+                                                                                           current_bank][0], ptr);
     free(data);
     ptr += libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);

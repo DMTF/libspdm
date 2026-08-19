@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -15,7 +15,7 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
 {
     const spdm_get_digest_request_t *spdm_request;
     spdm_digest_response_t *spdm_response;
-    size_t index;
+    uint8_t index;
     bool no_local_cert_chain;
     uint32_t hash_size;
     uint8_t *digest;
@@ -100,7 +100,7 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
     no_local_cert_chain = true;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (spdm_context->local_context
-            .local_cert_chain_provision[index] != NULL) {
+            .local_cert_chain_provision[spdm_context->connection_info.current_bank][index] != NULL) {
             no_local_cert_chain = false;
         }
     }
@@ -132,7 +132,7 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
     spdm_response->header.param2 = 0;
 
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
-        spdm_response->header.param1 = spdm_context->local_context.local_supported_slot_mask;
+        spdm_response->header.param1 = libspdm_get_supported_slot_mask(spdm_context);
     }
 
     digest = (void *)(spdm_response + 1);
@@ -146,16 +146,16 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
     slot_index = 0;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (spdm_context->local_context
-            .local_cert_chain_provision[index] != NULL) {
+            .local_cert_chain_provision[spdm_context->connection_info.current_bank][index] != NULL) {
             spdm_response->header.param2 |= (1 << index);
             result = libspdm_generate_cert_chain_hash(spdm_context, index,
                                                       &digest[hash_size * slot_index]);
             if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
                 spdm_context->connection_info.multi_key_conn_rsp) {
-                key_pair_id[slot_index] = spdm_context->local_context.local_key_pair_id[index];
-                cert_info[slot_index] = spdm_context->local_context.local_cert_info[index];
-                key_usage_bit_mask[slot_index] =
-                    spdm_context->local_context.local_key_usage_bit_mask[index];
+                key_pair_id[slot_index] = libspdm_get_key_pair_id(spdm_context, index);
+                cert_info[slot_index] =
+                    spdm_context->local_context.local_cert_info[spdm_context->connection_info.current_bank][index];
+                key_usage_bit_mask[slot_index] = libspdm_get_key_usage_mask(spdm_context, index);
             }
             slot_index++;
             if (!result) {

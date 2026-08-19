@@ -133,7 +133,8 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     }
 
     if (!slot_size_requested &&
-        (spdm_context->local_context.local_cert_chain_provision[slot_id] == NULL)) {
+        (spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][slot_id] ==
+         NULL)) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
             0, response_size, response);
@@ -142,7 +143,9 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     if (spdm_context->local_context.local_cert_chain_provision[slot_id] == NULL) {
         cert_chain_size = 0;
     } else {
-        cert_chain_size = spdm_context->local_context.local_cert_chain_provision_size[slot_id];
+        cert_chain_size =
+            spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][
+                slot_id];
     }
 
     if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_14) &&
@@ -206,7 +209,8 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     spdm_response->header.param2 = 0;
     if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
         spdm_context->connection_info.multi_key_conn_rsp) {
-        spdm_response->header.param2 = spdm_context->local_context.local_cert_info[slot_id];
+        spdm_response->header.param2 =
+            spdm_context->local_context.local_cert_info[spdm_context->connection_info.current_bank][slot_id];
     }
     if (use_large_cert_chain) {
         spdm_response->header.param1 |= SPDM_CERTIFICATE_RESPONSE_LARGE_CERT_CHAIN;
@@ -235,7 +239,8 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
         libspdm_copy_mem((uint8_t *)spdm_response + rsp_msg_header_size,
                          response_capacity - rsp_msg_header_size,
                          (const uint8_t *)spdm_context->local_context
-                         .local_cert_chain_provision[slot_id] + offset, length);
+                         .local_cert_chain_provision[spdm_context->connection_info.current_bank][slot_id] + offset,
+                         length);
     }
 
     if (session_info == NULL) {
