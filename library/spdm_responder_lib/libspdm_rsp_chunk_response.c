@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -214,6 +214,7 @@ libspdm_return_t libspdm_get_response_chunk_get(
         get_info->chunk_seq_no = 0;
         get_info->large_message = NULL;
         get_info->large_message_size = 0;
+        get_info->large_message_capacity = 0;
         get_info->chunk_bytes_transferred = 0;
 
         spdm_response->header.param1 |= SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK;

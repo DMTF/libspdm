@@ -609,6 +609,7 @@ static libspdm_return_t libspdm_handle_large_request(
         send_info->chunk_bytes_transferred = 0;
         send_info->large_message = NULL;
         send_info->large_message_size = 0;
+        send_info->large_message_capacity = 0;
     }
 
     return status;

@@ -653,8 +653,31 @@ static void req_chunk_send_case3(void** state)
 static void req_chunk_send_case4(void** state)
 {
     libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    void* scratch_buffer;
+    size_t scratch_buffer_size;
+    uint8_t* large_message;
+    uint32_t large_message_capacity;
+    size_t index;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+
     status = libspdm_test_requester_chunk_send_generic_test_case(state, 4);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+    assert_null(spdm_context->chunk_context.send.large_message);
+    assert_int_equal(spdm_context->chunk_context.send.large_message_size, 0);
+    assert_int_equal(spdm_context->chunk_context.send.large_message_capacity, 0);
+
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+    large_message = (uint8_t*)scratch_buffer +
+                    libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    large_message_capacity = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
+    for (index = 0; index < large_message_capacity; index++) {
+        assert_int_equal(large_message[index], 0);
+    }
 }
 
 static void req_chunk_send_case5(void** state)
@@ -688,8 +711,31 @@ static void req_chunk_send_case8(void** state)
 static void req_chunk_send_case9(void** state)
 {
     libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    void* scratch_buffer;
+    size_t scratch_buffer_size;
+    uint8_t* large_message;
+    uint32_t large_message_capacity;
+    size_t index;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+
     status = libspdm_test_requester_chunk_send_generic_test_case(state, 9);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+    assert_null(spdm_context->chunk_context.send.large_message);
+    assert_int_equal(spdm_context->chunk_context.send.large_message_size, 0);
+    assert_int_equal(spdm_context->chunk_context.send.large_message_capacity, 0);
+
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+    large_message = (uint8_t*)scratch_buffer +
+                    libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    large_message_capacity = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
+    for (index = 0; index < large_message_capacity; index++) {
+        assert_int_equal(large_message[index], 0);
+    }
 }
 
 static void req_chunk_send_case10(void** state)
