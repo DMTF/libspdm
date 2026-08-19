@@ -682,6 +682,7 @@ response_dispatched:
             get_info->chunk_handle++;
             get_info->chunk_seq_no = 0;
             get_info->chunk_bytes_transferred = 0;
+            get_info->large_message_capacity = large_buffer_size;
 
             libspdm_zero_mem(large_buffer, large_buffer_size);
 

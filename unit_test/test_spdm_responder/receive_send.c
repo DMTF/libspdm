@@ -165,6 +165,8 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
     chunk_handle = *(uint8_t*)(spdm_response + 1);
     assert_int_equal(chunk_handle, spdm_context->chunk_context.get.chunk_handle);
     assert_int_equal(spdm_context->chunk_context.get.chunk_in_use, true);
+    assert_int_equal(spdm_context->chunk_context.get.large_message_capacity,
+                     spdm_context->connection_info.capability.max_spdm_msg_size);
     libspdm_release_sender_buffer(spdm_context);
 
     free(data);
@@ -250,6 +252,8 @@ void libspdm_test_responder_receive_send_rsp_case2(void** state)
     chunk_handle = *(uint8_t*)(spdm_response + 1);
     assert_int_equal(chunk_handle, spdm_context->chunk_context.get.chunk_handle);
     assert_int_equal(spdm_context->chunk_context.get.chunk_in_use, true);
+    assert_int_equal(spdm_context->chunk_context.get.large_message_capacity,
+                     spdm_context->connection_info.capability.max_spdm_msg_size);
     libspdm_release_sender_buffer(spdm_context);
 }
 
@@ -328,6 +332,8 @@ void libspdm_test_responder_receive_send_rsp_case3(void** state)
     chunk_handle = *(uint8_t*)(spdm_response + 1);
     assert_int_equal(chunk_handle, spdm_context->chunk_context.get.chunk_handle);
     assert_int_equal(spdm_context->chunk_context.get.chunk_in_use, true);
+    assert_int_equal(spdm_context->chunk_context.get.large_message_capacity,
+                     spdm_context->connection_info.capability.max_spdm_msg_size);
     libspdm_release_sender_buffer(spdm_context);
 }
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
