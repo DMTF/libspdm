@@ -805,6 +805,7 @@ static void rsp_chunk_response_case12(void** state)
     spdm_context->chunk_context.get.chunk_seq_no = chunk_seq_no;
     spdm_context->chunk_context.get.large_message = scratch_buffer;
     spdm_context->chunk_context.get.large_message_size = total_chunk_size;
+    spdm_context->chunk_context.get.large_message_capacity = scratch_buffer_size;
     spdm_context->chunk_context.get.chunk_bytes_transferred = first_chunk_size + second_chunk_size;
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
@@ -835,6 +836,18 @@ static void rsp_chunk_response_case12(void** state)
     chunk_ptr = (uint8_t*) (spdm_response + 1);
     for (i = 0; i < spdm_response->chunk_size; i++) {
         assert_int_equal(chunk_ptr[i], 3);
+    }
+
+    assert_false(spdm_context->chunk_context.get.chunk_in_use);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_handle,
+                     (uint8_t)(chunk_handle + 1));
+    assert_int_equal(spdm_context->chunk_context.get.chunk_seq_no, 0);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_bytes_transferred, 0);
+    assert_null(spdm_context->chunk_context.get.large_message);
+    assert_int_equal(spdm_context->chunk_context.get.large_message_size, 0);
+    assert_int_equal(spdm_context->chunk_context.get.large_message_capacity, 0);
+    for (i = 0; i < total_chunk_size; i++) {
+        assert_int_equal(((uint8_t*)scratch_buffer)[i], 0);
     }
 }
 

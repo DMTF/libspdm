@@ -555,11 +555,16 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
             if (get_response_func == libspdm_get_response_version) {
                 /* GET_VERSION is allowed to interrupt chunk transfer.
                  * Reset chunk get context and proceed normally. */
+                if (context->chunk_context.get.large_message != NULL) {
+                    libspdm_zero_mem(context->chunk_context.get.large_message,
+                                     context->chunk_context.get.large_message_capacity);
+                }
                 context->chunk_context.get.chunk_in_use = false;
                 context->chunk_context.get.chunk_handle++;
                 context->chunk_context.get.chunk_seq_no = 0;
                 context->chunk_context.get.large_message = NULL;
                 context->chunk_context.get.large_message_size = 0;
+                context->chunk_context.get.large_message_capacity = 0;
                 context->chunk_context.get.chunk_bytes_transferred = 0;
             } else {
                 /* Reject with UnexpectedRequest without terminating
@@ -576,11 +581,16 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
             if (get_response_func == libspdm_get_response_version) {
                 /* GET_VERSION is allowed to interrupt chunk transfer.
                  * Reset chunk send context and proceed normally. */
+                if (context->chunk_context.send.large_message != NULL) {
+                    libspdm_zero_mem(context->chunk_context.send.large_message,
+                                     context->chunk_context.send.large_message_capacity);
+                }
                 context->chunk_context.send.chunk_in_use = false;
                 context->chunk_context.send.chunk_handle = 0;
                 context->chunk_context.send.chunk_seq_no = 0;
                 context->chunk_context.send.large_message = NULL;
                 context->chunk_context.send.large_message_size = 0;
+                context->chunk_context.send.large_message_capacity = 0;
                 context->chunk_context.send.chunk_bytes_transferred = 0;
             } else {
                 /* Reject with UnexpectedRequest without terminating
@@ -670,6 +680,7 @@ response_dispatched:
             get_info->chunk_handle++;
             get_info->chunk_seq_no = 0;
             get_info->chunk_bytes_transferred = 0;
+            get_info->large_message_capacity = large_buffer_size;
 
             libspdm_zero_mem(large_buffer, large_buffer_size);
 

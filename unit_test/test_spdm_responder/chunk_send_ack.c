@@ -169,6 +169,12 @@ static void rsp_chunk_send_ack_case0(void** state)
     uint32_t bytes_sent;
     uint32_t bytes_total;
 
+    void *scratch_buffer;
+    size_t scratch_buffer_size;
+    uint8_t *large_message;
+    size_t large_message_capacity;
+    size_t i;
+
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0;
@@ -255,6 +261,21 @@ static void rsp_chunk_send_ack_case0(void** state)
     assert_int_equal(algorithms_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
     assert_int_equal(algorithms_response->header.request_response_code, SPDM_ALGORITHMS);
     assert_int_equal(algorithms_response->header.param1, 4);
+
+    /* Verify the completion cleanup fully reset large_message state and
+     * scrubbed the scratch buffer, so the consumed large request does not linger. */
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+    assert_null(spdm_context->chunk_context.send.large_message);
+    assert_int_equal(spdm_context->chunk_context.send.large_message_size, 0);
+    assert_int_equal(spdm_context->chunk_context.send.large_message_capacity, 0);
+
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+    large_message = (uint8_t *)scratch_buffer +
+                    libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    large_message_capacity = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
+    for (i = 0; i < large_message_capacity; i++) {
+        assert_int_equal(large_message[i], 0);
+    }
 }
 
 /**
@@ -1189,6 +1210,7 @@ void libspdm_test_responder_chunk_send_ack_reset_send_state(libspdm_context_t* s
     send_info->chunk_bytes_transferred = 0;
     send_info->large_message = NULL;
     send_info->large_message_size = 0;
+    send_info->large_message_capacity = 0;
 }
 
 /**
@@ -1214,14 +1236,31 @@ static void rsp_chunk_send_ack_case13(void** state)
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
 
+    void *scratch_buffer;
+    size_t scratch_buffer_size;
+    uint8_t *large_message;
+    size_t large_message_capacity;
+    size_t i;
+
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 13;
 
     libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
+
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+    large_message = (uint8_t *)scratch_buffer +
+                    libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    large_message_capacity = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
+    libspdm_set_mem(large_message, large_message_capacity, 0xa5);
+
     spdm_context->chunk_context.send.chunk_in_use = true;
     spdm_context->chunk_context.send.chunk_handle = (uint8_t) spdm_test_context->case_id;
     spdm_context->chunk_context.send.chunk_seq_no = 0;
+    spdm_context->chunk_context.send.large_message = large_message;
+    spdm_context->chunk_context.send.large_message_capacity = large_message_capacity;
+    spdm_context->chunk_context.send.large_message_size = large_message_capacity;
+    spdm_context->chunk_context.send.chunk_bytes_transferred = large_message_capacity;
 
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
@@ -1265,6 +1304,13 @@ static void rsp_chunk_send_ack_case13(void** state)
     assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(error_response->header.param2, 0);
+
+    assert_null(spdm_context->chunk_context.send.large_message);
+    assert_int_equal(spdm_context->chunk_context.send.large_message_size, 0);
+    assert_int_equal(spdm_context->chunk_context.send.large_message_capacity, 0);
+    for (i = 0; i < large_message_capacity; i++) {
+        assert_int_equal(large_message[i], 0);
+    }
 
     libspdm_test_responder_chunk_send_ack_reset_send_state(spdm_context);
 }
@@ -1921,6 +1967,12 @@ static void rsp_chunk_send_ack_case22(void** state)
     uint32_t bytes_sent;
     uint32_t bytes_total;
 
+    void *scratch_buffer;
+    size_t scratch_buffer_size;
+    uint8_t *large_message;
+    size_t large_message_capacity;
+    size_t i;
+
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 22;
@@ -2014,6 +2066,19 @@ static void rsp_chunk_send_ack_case22(void** state)
     assert_int_equal(algorithms_response->header.spdm_version, SPDM_MESSAGE_VERSION_14);
     assert_int_equal(algorithms_response->header.request_response_code, SPDM_ALGORITHMS);
     assert_int_equal(algorithms_response->header.param1, 4);
+
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+    assert_null(spdm_context->chunk_context.send.large_message);
+    assert_int_equal(spdm_context->chunk_context.send.large_message_size, 0);
+    assert_int_equal(spdm_context->chunk_context.send.large_message_capacity, 0);
+
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+    large_message = (uint8_t *)scratch_buffer +
+                    libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    large_message_capacity = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
+    for (i = 0; i < large_message_capacity; i++) {
+        assert_int_equal(large_message[i], 0);
+    }
 }
 
 int libspdm_rsp_chunk_send_ack_test(void)
