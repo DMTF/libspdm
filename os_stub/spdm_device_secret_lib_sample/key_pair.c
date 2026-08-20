@@ -42,7 +42,9 @@ typedef struct {
 
 /* Up to (9 traditional + 3 ML-DSA) PRIMARY key pairs, each backing slots 0 and 1, plus one
  * SECONDARY key pair per algorithm backing slot 4 (the multi-key example) -- hence x2. */
+#ifndef LIBSPDM_MAX_KEY_PAIR_COUNT
 #define LIBSPDM_MAX_KEY_PAIR_COUNT ((9 + 3) * 2)
+#endif
 
 libspdm_key_pair_info_t m_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
 
