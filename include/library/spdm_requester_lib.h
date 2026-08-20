@@ -470,6 +470,204 @@ libspdm_return_t libspdm_set_key_pair_info(void *spdm_context, const uint32_t *s
                                            );
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
+/**
+ * This function sends SLOT_MANAGEMENT with the SupportedSubCodes SubCode to retrieve the
+ * bit map of SLOT_MANAGEMENT SubCodes supported by the Responder.
+ *
+ * @param  spdm_context     A pointer to the SPDM context.
+ * @param  session_id       Indicates if it is a secured message protected via SPDM session.
+ *                          If session_id is NULL, it is a normal message.
+ *                          If session_id is not NULL, it is a secured message.
+ * @param  sub_code_bitmap  A pointer to a 8-byte destination buffer to store the supported
+ *                          SubCodes bit map. The bit position corresponds to the SubCode value.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS  the supported SubCodes were retrieved successfully.
+ **/
+libspdm_return_t libspdm_slot_management_get_supported_subcodes(void *spdm_context,
+                                                                const uint32_t *session_id,
+                                                                uint8_t *sub_code_bitmap);
+
+/**
+ * This function sends SLOT_MANAGEMENT with the GetBankInfo SubCode to retrieve the array
+ * of BankElements describing the Banks supported by the Responder.
+ *
+ * @param  spdm_context       A pointer to the SPDM context.
+ * @param  session_id         Indicates if it is a secured message protected via SPDM session.
+ *                            If session_id is NULL, it is a normal message.
+ * @param  num_bank_elements  On input, the capacity of the bank_elements array.
+ *                            On output, the number of BankElements returned.
+ * @param  bank_elements      A pointer to a destination array to store the BankElements.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS  the BankInfo was retrieved successfully.
+ **/
+libspdm_return_t libspdm_slot_management_get_bank_info(
+    void *spdm_context, const uint32_t *session_id,
+    uint8_t *num_bank_elements,
+    spdm_slot_management_bank_element_struct_t *bank_elements);
+
+/**
+ * This function sends SLOT_MANAGEMENT with the GetBankDetails SubCode to retrieve detailed
+ * information about the slots in one specified Bank.
+ *
+ * @param  spdm_context             A pointer to the SPDM context.
+ * @param  session_id               Indicates if it is a secured message protected via SPDM
+ *                                  session. If session_id is NULL, it is a normal message.
+ * @param  bank_id                  The Bank to retrieve details for.
+ * @param  bank_attributes          A pointer to store the Bank attributes. It can be NULL.
+ * @param  asym_algo_capabilities   A pointer to store the asymmetric algorithm capabilities.
+ *                                  It can be NULL.
+ * @param  current_asym_algo        A pointer to store the currently configured asymmetric
+ *                                  algorithm. It can be NULL.
+ * @param  available_asym_algo      A pointer to store the available asymmetric algorithms.
+ *                                  It can be NULL.
+ * @param  pqc_asym_algo_capabilities  A pointer to store the PQC asymmetric algorithm
+ *                                  capabilities. It can be NULL. The Responder may report this
+ *                                  field with any length; only the leading bytes that fit in a
+ *                                  uint32_t are returned.
+ * @param  current_pqc_asym_algo    A pointer to store the currently configured PQC asymmetric
+ *                                  algorithm. It can be NULL. See pqc_asym_algo_capabilities for
+ *                                  the field-length handling.
+ * @param  available_pqc_asym_algo  A pointer to store the available PQC asymmetric algorithms.
+ *                                  It can be NULL. See pqc_asym_algo_capabilities for the
+ *                                  field-length handling.
+ * @param  num_slot_elements        A pointer to store the number of SlotElements returned.
+ *                                  It can be NULL.
+ * @param  slot_elements_size       On input, the capacity in bytes of the slot_elements
+ *                                  buffer. On output, the number of bytes written. It can be
+ *                                  NULL if slot_elements is NULL.
+ * @param  slot_elements            A pointer to a destination buffer to store the raw
+ *                                  SlotElement array. It can be NULL.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS  the BankDetails was retrieved successfully.
+ **/
+libspdm_return_t libspdm_slot_management_get_bank_details(
+    void *spdm_context, const uint32_t *session_id,
+    uint8_t bank_id,
+    uint8_t *bank_attributes,
+    uint32_t *asym_algo_capabilities,
+    uint32_t *current_asym_algo,
+    uint32_t *available_asym_algo,
+    uint32_t *pqc_asym_algo_capabilities,
+    uint32_t *current_pqc_asym_algo,
+    uint32_t *available_pqc_asym_algo,
+    uint16_t *num_slot_elements,
+    size_t *slot_elements_size,
+    void *slot_elements);
+
+/**
+ * This function sends SLOT_MANAGEMENT with the GetCertificateChain SubCode to retrieve an
+ * individual certificate chain.
+ *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  session_id        Indicates if it is a secured message protected via SPDM session.
+ *                           If session_id is NULL, it is a normal message.
+ * @param  bank_id           The Bank that contains the slot.
+ * @param  slot_id           The slot to retrieve the certificate chain from.
+ * @param  cert_chain_size   On input, the capacity in bytes of the cert_chain buffer.
+ *                           On output, the number of bytes written.
+ * @param  cert_chain        A pointer to a destination buffer to store the certificate chain.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS  the certificate chain was retrieved successfully.
+ **/
+libspdm_return_t libspdm_slot_management_get_certificate_chain(
+    void *spdm_context, const uint32_t *session_id,
+    uint8_t bank_id, uint8_t slot_id,
+    size_t *cert_chain_size,
+    void *cert_chain);
+
+/**
+ * This function sends SLOT_MANAGEMENT with the ManageBank SubCode to configure the asymmetric
+ * algorithm of a Bank.
+ *
+ * @param  spdm_context           A pointer to the SPDM context.
+ * @param  session_id             Indicates if it is a secured message protected via SPDM
+ *                                session. If session_id is NULL, it is a normal message.
+ * @param  bank_id                The Bank to configure.
+ * @param  operation              The Bank management operation (e.g. ConfigAlgo).
+ * @param  select_asym_algo       The asymmetric algorithm to configure for the Bank.
+ * @param  select_pqc_asym_algo   The PQC asymmetric algorithm to configure for the Bank.
+ *                                At most one of the two algorithm parameters may be set.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS  the Bank was configured successfully.
+ **/
+libspdm_return_t libspdm_slot_management_manage_bank(
+    void *spdm_context, const uint32_t *session_id,
+    uint8_t bank_id, uint8_t operation,
+    uint32_t select_asym_algo, uint32_t select_pqc_asym_algo);
+
+/**
+ * This function sends SLOT_MANAGEMENT with the ManageSlot SubCode to perform a management
+ * operation on a slot in a Bank.
+ *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  session_id        Indicates if it is a secured message protected via SPDM session.
+ *                           If session_id is NULL, it is a normal message.
+ * @param  bank_id           The Bank that contains the slot.
+ * @param  slot_id           The slot to operate on.
+ * @param  operation         The slot management operation (e.g. Erase).
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS  the slot operation completed successfully.
+ **/
+libspdm_return_t libspdm_slot_management_manage_slot(
+    void *spdm_context, const uint32_t *session_id,
+    uint8_t bank_id, uint8_t slot_id, uint8_t operation);
+
+/**
+ * This function sends SLOT_MANAGEMENT with the GetCSR SubCode to read a certificate signing
+ * request from a Bank+slot. This mirrors libspdm_get_csr_ex, with the added ability to
+ * address a Bank.
+ *
+ * @param  spdm_context           A pointer to the SPDM context.
+ * @param  session_id             Indicates if it is a secured message protected via SPDM
+ *                                session. If session_id is NULL, it is a normal message.
+ * @param  bank_id                The Bank to generate the CSR for.
+ * @param  slot_id                The slot to generate the CSR for.
+ * @param  key_pair_id            The key pair ID to use in generating the CSR.
+ * @param  request_attributes     The GetCSR request attributes (CSRCertModel, CSRTrackingTag,
+ *                                Overwrite).
+ * @param  requester_info         Requester info to generate the CSR.
+ * @param  requester_info_length  The length of requester_info.
+ * @param  opaque_data            Opaque data from the requester.
+ * @param  opaque_data_length     The length of opaque_data.
+ * @param  csr                    A pointer to a destination buffer to store the CSR.
+ * @param  csr_len                On input, the capacity in bytes of the csr buffer.
+ *                                On output, the number of bytes written.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS  the CSR was retrieved successfully.
+ **/
+libspdm_return_t libspdm_slot_management_get_csr(
+    void *spdm_context, const uint32_t *session_id,
+    uint8_t bank_id, uint8_t slot_id, uint8_t key_pair_id, uint8_t request_attributes,
+    void *requester_info, uint16_t requester_info_length,
+    void *opaque_data, uint16_t opaque_data_length,
+    void *csr, size_t *csr_len);
+
+/**
+ * This function sends SLOT_MANAGEMENT with the SetCertificate SubCode to write a certificate
+ * chain to a Bank+slot. This mirrors libspdm_set_certificate, with the added ability to
+ * address a Bank.
+ *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  session_id        Indicates if it is a secured message protected via SPDM session.
+ *                           If session_id is NULL, it is a normal message.
+ * @param  bank_id           The Bank to write the certificate chain to.
+ * @param  slot_id           The slot to write the certificate chain to.
+ * @param  key_pair_id       The KeyPairID to associate with the slot. If MULTI_KEY_CONN_RSP is
+ *                           false, the value shall be zero; otherwise it shall be non-zero.
+ * @param  cert_attributes   The SetCertificate attributes (certificate model in Bit[2:0]).
+ * @param  cert_chain        The certificate chain to set. It is a full SPDM certificate chain,
+ *                           including Length and Root Cert Hash.
+ * @param  cert_chain_size   The size of the certificate chain to set.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS  the certificate chain was set successfully.
+ **/
+libspdm_return_t libspdm_slot_management_set_certificate(
+    void *spdm_context, const uint32_t *session_id,
+    uint8_t bank_id, uint8_t slot_id, uint8_t key_pair_id, uint8_t cert_attributes,
+    const void *cert_chain, size_t cert_chain_size);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
+
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 /**
  * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH

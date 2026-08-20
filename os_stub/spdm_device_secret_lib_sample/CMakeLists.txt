@@ -31,6 +31,7 @@ target_sources(spdm_device_secret_lib_sample
         read_special_cert.c
         set_cert.c
         sign.c
+        slot_management.c
 )
 
 if ((ARCH STREQUAL "arm") OR (ARCH STREQUAL "aarch64"))
