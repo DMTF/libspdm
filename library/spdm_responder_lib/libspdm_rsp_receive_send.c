@@ -9,111 +9,99 @@
 
 libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_t request_code)
 {
-    size_t index;
+    switch (request_code) {
+    case SPDM_GET_VERSION: return libspdm_get_response_version;
+    case SPDM_GET_CAPABILITIES: return libspdm_get_response_capabilities;
+    case SPDM_NEGOTIATE_ALGORITHMS: return libspdm_get_response_algorithms;
 
-    typedef struct {
-        uint8_t request_response_code;
-        libspdm_get_spdm_response_func get_response_func;
-    } libspdm_get_response_struct_t;
+    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+    case SPDM_GET_DIGESTS: return libspdm_get_response_digests;
+    case SPDM_GET_CERTIFICATE: return libspdm_get_response_certificate;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
 
-    libspdm_get_response_struct_t get_response_struct[] = {
-        { SPDM_GET_VERSION, libspdm_get_response_version },
-        { SPDM_GET_CAPABILITIES, libspdm_get_response_capabilities },
-        { SPDM_NEGOTIATE_ALGORITHMS, libspdm_get_response_algorithms },
+    #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+    case SPDM_CHALLENGE: return libspdm_get_response_challenge_auth;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-        { SPDM_GET_DIGESTS, libspdm_get_response_digests },
-        { SPDM_GET_CERTIFICATE, libspdm_get_response_certificate },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
+    #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+    case SPDM_GET_MEASUREMENTS: return libspdm_get_response_measurements;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
-        { SPDM_CHALLENGE, libspdm_get_response_challenge_auth },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
+    #if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
+    case SPDM_GET_MEASUREMENT_EXTENSION_LOG: return libspdm_get_response_measurement_extension_log;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP */
 
-        #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
-        { SPDM_GET_MEASUREMENTS, libspdm_get_response_measurements },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
+    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    case SPDM_KEY_EXCHANGE: return libspdm_get_response_key_exchange;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
-        { SPDM_GET_MEASUREMENT_EXTENSION_LOG, libspdm_get_response_measurement_extension_log },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP */
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
+    case SPDM_PSK_EXCHANGE: return libspdm_get_response_psk_exchange;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
-        { SPDM_KEY_EXCHANGE, libspdm_get_response_key_exchange },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
+    #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+    case SPDM_GET_ENCAPSULATED_REQUEST: return libspdm_get_response_encapsulated_request;
+    case SPDM_DELIVER_ENCAPSULATED_RESPONSE: return libspdm_get_response_encapsulated_response_ack;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
-        #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
-        { SPDM_PSK_EXCHANGE, libspdm_get_response_psk_exchange },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
+    #if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    case SPDM_RESPOND_IF_READY: return libspdm_get_response_respond_if_ready;
+    #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
-        #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
-        { SPDM_GET_ENCAPSULATED_REQUEST, libspdm_get_response_encapsulated_request },
-        { SPDM_DELIVER_ENCAPSULATED_RESPONSE, libspdm_get_response_encapsulated_response_ack },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
+    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+    case SPDM_FINISH: return libspdm_get_response_finish;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
-        #if LIBSPDM_RESPOND_IF_READY_SUPPORT
-        { SPDM_RESPOND_IF_READY, libspdm_get_response_respond_if_ready },
-        #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
+    case SPDM_PSK_FINISH: return libspdm_get_response_psk_finish;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
-        { SPDM_FINISH, libspdm_get_response_finish },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
+    #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
+    case SPDM_END_SESSION: return libspdm_get_response_end_session;
+    case SPDM_HEARTBEAT: return libspdm_get_response_heartbeat;
+    case SPDM_KEY_UPDATE: return libspdm_get_response_key_update;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
-        { SPDM_PSK_FINISH, libspdm_get_response_psk_finish },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
+    #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
+    case SPDM_GET_ENDPOINT_INFO: return libspdm_get_response_endpoint_info;
+    #endif /*LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP*/
 
-        #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
-        { SPDM_END_SESSION, libspdm_get_response_end_session },
-        { SPDM_HEARTBEAT, libspdm_get_response_heartbeat },
-        { SPDM_KEY_UPDATE, libspdm_get_response_key_update },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
+    #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
+    case SPDM_GET_CSR: return libspdm_get_response_csr;
+    #endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
-        { SPDM_GET_ENDPOINT_INFO, libspdm_get_response_endpoint_info },
-        #endif /*LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP*/
+    #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
+    case SPDM_SET_CERTIFICATE: return libspdm_get_response_set_certificate;
+    #endif /*LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
-        { SPDM_GET_CSR, libspdm_get_response_csr },
-        #endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP*/
+    #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+    case SPDM_GET_KEY_PAIR_INFO: return libspdm_get_response_key_pair_info;
+    #endif /*LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
-        { SPDM_SET_CERTIFICATE, libspdm_get_response_set_certificate },
-        #endif /*LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP*/
+    #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
+    case SPDM_SET_KEY_PAIR_INFO: return libspdm_get_response_set_key_pair_info_ack;
+    #endif /*LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
-        { SPDM_GET_KEY_PAIR_INFO, libspdm_get_response_key_pair_info },
-        #endif /*LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP*/
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+    case SPDM_CHUNK_GET: return libspdm_get_response_chunk_get;
+    case SPDM_CHUNK_SEND: return libspdm_get_response_chunk_send;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
-        #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
-        { SPDM_SET_KEY_PAIR_INFO, libspdm_get_response_set_key_pair_info_ack },
-        #endif /*LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP*/
+    #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+    case SPDM_GET_SUPPORTED_EVENT_TYPES: return libspdm_get_response_supported_event_types;
+    case SPDM_SUBSCRIBE_EVENT_TYPES: return libspdm_get_response_subscribe_event_types_ack;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
-        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-        { SPDM_CHUNK_GET, libspdm_get_response_chunk_get},
-        { SPDM_CHUNK_SEND, libspdm_get_response_chunk_send},
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+    #if LIBSPDM_EVENT_RECIPIENT_SUPPORT
+    case SPDM_SEND_EVENT: return libspdm_get_response_event_ack;
+    #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
 
-        #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
-        { SPDM_GET_SUPPORTED_EVENT_TYPES, libspdm_get_response_supported_event_types },
-        { SPDM_SUBSCRIBE_EVENT_TYPES, libspdm_get_response_subscribe_event_types_ack },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
+    #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+    case SPDM_VENDOR_DEFINED_REQUEST: return libspdm_get_vendor_defined_response;
+    #endif /*LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES*/
 
-        #if LIBSPDM_EVENT_RECIPIENT_SUPPORT
-        { SPDM_SEND_EVENT, libspdm_get_response_event_ack },
-        #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
-
-        #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
-        { SPDM_VENDOR_DEFINED_REQUEST, libspdm_get_vendor_defined_response },
-        #endif /*LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES*/
-    };
-
-    for (index = 0; index < LIBSPDM_ARRAY_SIZE(get_response_struct); index++) {
-        if (request_code == get_response_struct[index].request_response_code) {
-            return get_response_struct[index].get_response_func;
-        }
+    default: return NULL;
     }
-    return NULL;
 }
 
 /**
