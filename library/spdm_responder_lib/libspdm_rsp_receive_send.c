@@ -853,7 +853,7 @@ response_dispatched:
     status = LIBSPDM_STATUS_SUCCESS;
 done:
     if (session_id != NULL) {
-        /* clean plain text in stratch buffer */
+        /* clean plain text in scratch buffer */
         libspdm_zero_mem (my_response, my_response_size);
     }
     libspdm_zero_mem (context->last_spdm_request,
