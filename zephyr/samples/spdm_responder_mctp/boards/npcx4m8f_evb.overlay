@@ -1,0 +1,43 @@
+/**
+ *  Copyright Notice:
+ *  Copyright 2026 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
+
+/* Connect I3C to requester board:
+ *  - I3C1_SCL (to I3C SCL pin on the requester board)
+ *  - I3C1_SDA (to I3C SDA pin on the requester board)
+ *  - GND (to GND pin on the requester board)
+
+ * Note that there are different form factors of the board, so the actual pin
+ * numbers may vary. Check the relevant schematics for details.
+ */
+&rctl {
+	status = "okay";
+};
+
+&i3c0 {
+	status = "okay";
+	i3c-scl-hz = <7500000>;
+	i3c-od-scl-hz = <1500000>;
+
+	bcr = <0x06>;
+	tgt-pid = <0x0000020a 0x00000011>;
+};
+
+&pcc {
+	clock-frequency = <DT_FREQ_M(90)>;
+	core-prescaler = <3>;
+	apb1-prescaler = <6>;
+	apb2-prescaler = <6>;
+	apb3-prescaler = <6>;
+	apb4-prescaler = <3>;
+};
+
+/ {
+	mctp_i3c: mctp_i3c {
+		compatible = "zephyr,mctp-i3c-target";
+		i3c = <&i3c0>;
+		endpoint-id = <11>;
+	};
+};

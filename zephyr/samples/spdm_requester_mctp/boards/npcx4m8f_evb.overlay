@@ -1,0 +1,48 @@
+/**
+ *  Copyright Notice:
+ *  Copyright 2026 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
+
+/* Connect I3C to responder board:
+ *  - I3C1_SCL (to I3C SCL pin on the responder board)
+ *  - I3C1_SDA (to I3C SDA pin on the responder board)
+ *  - GND (to GND pin on the responder board)
+
+ * Note that there are different form factors of the board, so the actual pin
+ * numbers may vary. Check the relevant schematics for details.
+ */
+&rctl {
+	status = "okay";
+};
+
+&i3c0 {
+	status = "okay";
+	i3c-scl-hz = <7500000>;
+	i3c-od-scl-hz = <1500000>;
+
+	bcr = <0x67>;
+
+	mctp_endpoint0: mctp_endpoint0@20a00000011 {
+		compatible = "zephyr,mctp-i3c-endpoint";
+		reg = <0x0000 0x020a 0x00000011>;
+		status = "okay";
+	};
+};
+
+&pcc {
+	clock-frequency = <DT_FREQ_M(90)>;
+	core-prescaler = <3>;
+	apb1-prescaler = <6>;
+	apb2-prescaler = <6>;
+	apb3-prescaler = <6>;
+	apb4-prescaler = <3>;
+};
+
+/ {
+	mctp_i3c: mctp_i3c {
+		compatible = "zephyr,mctp-i3c-controller";
+		endpoints = <&mctp_endpoint0>;
+		endpoint-ids = <11>;
+	};
+};

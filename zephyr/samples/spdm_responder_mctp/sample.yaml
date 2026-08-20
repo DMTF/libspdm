@@ -1,0 +1,16 @@
+sample:
+  description: libspdm SPDM responder over MCTP
+  name: libspdm responder
+tests:
+  sample.lib.libspdm.responder_mctp.i3c.build:
+    build_only: true
+    tags: libspdm i3c mctp
+    platform_allow: npcx4m8f_evb
+    integration_platforms:
+      - npcx4m8f_evb
+  sample.lib.libspdm.responder_mctp.i2c_gpio.build:
+    build_only: true
+    tags: libspdm i2c mctp
+    platform_allow: frdm_mcxn947/mcxn947/cpu0
+    integration_platforms:
+      - frdm_mcxn947/mcxn947/cpu0
