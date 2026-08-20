@@ -1,0 +1,99 @@
+name: TPM Unit Tests
+
+on:
+  push:
+    paths-ignore:
+      - '**/*.md'
+      - 'doc/**'
+    branches:
+      - main
+      - release-2.3
+      - release-3.8
+  pull_request:
+    paths-ignore:
+      - 'doc/**'
+      - '**/*.md'
+    branches:
+      - main
+      - release-2.3
+      - release-3.8
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# All tpm2-tools and tpm2-openssl commands must be routed to the swtpm
+# instance started in the "Start swtpm" step below.
+env:
+  TPM2TOOLS_TCTI: swtpm:port=2321
+  TPM2OPENSSL_TCTI: swtpm:port=2321
+  OPENSSL_MODULES: /usr/lib/x86_64-linux-gnu/ossl-modules/
+
+jobs:
+  unit_test_tpm:
+    # swtpm and tpm2-openssl are only packaged for Linux in GitHub-hosted runners.
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - Debug
+          - Release
+        configurations:
+          # Full capability set — mirrors the first configuration row in build.yml.
+          - "-DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_PSK_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_CSR_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_EVENT_CAP=1 -DLIBSPDM_RESPOND_IF_READY_SUPPORT=1 -DLIBSPDM_SEND_GET_CERTIFICATE_SUPPORT=1 -DLIBSPDM_SEND_CHALLENGE_SUPPORT=1 -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=1 -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=1 -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=1 -DLIBSPDM_PASS_SESSION_ID=1 -DLIBSPDM_SET_CERT_CSR_PARAMS=1"
+          # hash/transcript variants — covers the transcript-data and FIPS paths.
+          - "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=0 -DLIBSPDM_FIPS_MODE=0"
+          - "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1 -DLIBSPDM_FIPS_MODE=1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install TPM dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            tpm2-openssl \
+            tpm2-tools \
+            swtpm \
+            swtpm-tools \
+            libtss2-dev \
+            libglib2.0-dev
+
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=3" \
+            cmake \
+              -DARCH=x64 \
+              -DTOOLCHAIN=GCC \
+              -DTARGET=${{ matrix.target }} \
+              -DCRYPTO=openssl \
+              -DLIBSPDM_TPM_SUPPORT=ON \
+              -DDEVICE=tpm \
+              ..
+          make -j$(nproc)
+
+      - name: Start swtpm and provision TPM keys
+        run: |
+          script/setup-tpm.sh \
+            --start-swtpm \
+            --cleanup \
+            --key-algorithm=ecc \
+            --hash-algorithm=256
+
+      - name: Test Requester (TPM)
+        run: |
+          cd build/bin
+          ./test_spdm_requester
+
+      - name: Test Responder (TPM)
+        run: |
+          cd build/bin
+          ./test_spdm_responder

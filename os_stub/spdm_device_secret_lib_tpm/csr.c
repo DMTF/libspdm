@@ -22,6 +22,144 @@
 #include "keys.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
+static bool libspdm_tpm_get_responder_handle_by_slot(uint8_t slot_id, const char **handle)
+{
+    switch (slot_id) {
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_0
+    case 0:
+        *handle = LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_0;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_1
+    case 1:
+        *handle = LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_1;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_2
+    case 2:
+        *handle = LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_2;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_3
+    case 3:
+        *handle = LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_3;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_4
+    case 4:
+        *handle = LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_4;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_5
+    case 5:
+        *handle = LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_5;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_6
+    case 6:
+        *handle = LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_6;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_7
+    case 7:
+        *handle = LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_7;
+        return true;
+#endif
+    default:
+        return false;
+    }
+}
+
+static bool libspdm_tpm_get_responder_certchain_index_by_slot(uint8_t slot_id,
+                                                              uint32_t *chain_index)
+{
+    switch (slot_id) {
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_0
+    case 0:
+        *chain_index = LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_0;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_1
+    case 1:
+        *chain_index = LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_1;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_2
+    case 2:
+        *chain_index = LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_2;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_3
+    case 3:
+        *chain_index = LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_3;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_4
+    case 4:
+        *chain_index = LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_4;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_5
+    case 5:
+        *chain_index = LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_5;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_6
+    case 6:
+        *chain_index = LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_6;
+        return true;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_7
+    case 7:
+        *chain_index = LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_7;
+        return true;
+#endif
+    default:
+        return false;
+    }
+}
+
+static bool libspdm_tpm_get_responder_slot_by_key_pair_id(void *spdm_context,
+                                                          uint32_t base_asym_algo,
+                                                          uint32_t pqc_asym_algo,
+                                                          uint8_t key_pair_id,
+                                                          uint8_t *slot_id)
+{
+    if (key_pair_id == 0) {
+        *slot_id = 0;
+        return true;
+    }
+
+#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+    {
+        uint8_t index;
+        libspdm_context_t *context;
+
+        context = spdm_context;
+        if (context != NULL) {
+            for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
+                if (((LIBSPDM_TPM_RESPONDER_SUPPORTED_SLOT_MASK & (1u << index)) != 0) &&
+                    (context->local_context.local_key_pair_id[index] == key_pair_id)) {
+                    *slot_id = index;
+                    return true;
+                }
+            }
+        }
+
+        for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
+            if (((LIBSPDM_TPM_RESPONDER_SUPPORTED_SLOT_MASK & (1u << index)) != 0) &&
+                (key_pair_id == libspdm_get_key_pair_id_by_slot(base_asym_algo, pqc_asym_algo,
+                                                                index))) {
+                *slot_id = index;
+                return true;
+            }
+        }
+    }
+#endif
+
+    return false;
+}
+
 bool libspdm_read_cached_last_csr_request(uint8_t **last_csr_request,
                                           size_t *last_csr_request_len,
                                           uint8_t req_csr_tracking_tag,
@@ -100,8 +238,10 @@ bool libspdm_read_cached_csr(uint8_t **csr_pointer, size_t *csr_len)
     return res;
 }
 
-bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_algo,
+bool libspdm_gen_csr_without_reset(void *spdm_context,
+                                   uint32_t base_hash_algo, uint32_t base_asym_algo,
                                    uint32_t pqc_asym_algo,
+                                   uint8_t req_key_pair_id,
                                    uint8_t *requester_info, size_t requester_info_length,
                                    uint8_t *opaque_data, uint16_t opaque_data_length,
                                    size_t *csr_len, uint8_t *csr_pointer,
@@ -113,6 +253,9 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
     size_t pqc_asym_nid;
     void *context;
     size_t csr_buffer_size;
+    uint8_t slot_id;
+    const char *key_handle;
+    uint32_t chain_index;
 
     csr_buffer_size = *csr_len;
 
@@ -128,12 +271,33 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
     x509_ca_cert = NULL;
     result = false;
 
-    if (!libspdm_tpm_get_pvt_key_handle(LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_0, &context)) {
+    if (pqc_asym_algo != 0) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "TPM-backed PQC CSR generation is not supported\n"));
+        goto cleanup;
+    }
+
+    if (!libspdm_tpm_get_responder_slot_by_key_pair_id(spdm_context, base_asym_algo,
+                                                       pqc_asym_algo, req_key_pair_id,
+                                                       &slot_id) ||
+        !libspdm_tpm_get_responder_handle_by_slot(slot_id, &key_handle) ||
+        !libspdm_tpm_get_responder_certchain_index_by_slot(slot_id, &chain_index)) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "failed to resolve TPM responder slot for CSR key_pair_id %d\n",
+                       req_key_pair_id));
+        goto cleanup;
+    }
+
+    if (!libspdm_tpm_device_init()) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to initialize TPM device for CSR\n"));
+        goto cleanup;
+    }
+
+    if (!libspdm_tpm_get_pvt_key_handle((void *)key_handle, &context)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to load TPM responder key handle for CSR\n"));
         goto cleanup;
     }
 
-    if (!libspdm_tpm_read_nv(LIBSPDM_TPM_HANDLE_RESPONDER_CERTCHAIN_SLOT_0, &cert, &cert_size)) {
+    if (!libspdm_tpm_read_nv(chain_index, &cert, &cert_size)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to read TPM responder cert chain for CSR\n"));
         goto cleanup;
     }
@@ -263,7 +427,8 @@ bool libspdm_gen_csr(
                 return true;
             }
         } else {
-            result = libspdm_gen_csr_without_reset(base_hash_algo, base_asym_algo, 0,
+            result = libspdm_gen_csr_without_reset(spdm_context, base_hash_algo,
+                                                   base_asym_algo, 0, req_key_pair_id,
                                                    requester_info, requester_info_length,
                                                    opaque_data, opaque_data_length,
                                                    csr_len, csr_pointer, is_device_cert_model);
@@ -375,7 +540,9 @@ bool libspdm_gen_csr(
             }
         }
     } else {
-        result = libspdm_gen_csr_without_reset(base_hash_algo, base_asym_algo, pqc_asym_algo,
+        result = libspdm_gen_csr_without_reset(spdm_context, base_hash_algo,
+                                               base_asym_algo, pqc_asym_algo,
+                                               req_key_pair_id,
                                                requester_info, requester_info_length,
                                                opaque_data, opaque_data_length,
                                                csr_len, csr_pointer, is_device_cert_model);

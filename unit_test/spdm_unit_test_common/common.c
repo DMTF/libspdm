@@ -6,6 +6,10 @@
 
 #include "spdm_unit_test.h"
 
+#if LIBSPDM_TPM_SUPPORT
+bool libspdm_tpm_device_init(void);
+#endif
+
 static libspdm_test_context_t *m_spdm_test_context;
 
 static uint8_t m_send_receive_buffer[LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE];
@@ -82,6 +86,12 @@ int libspdm_unit_test_group_setup(void **state)
 {
     libspdm_test_context_t *spdm_test_context;
     void *spdm_context;
+
+#if LIBSPDM_TPM_SUPPORT
+    if (!libspdm_tpm_device_init()) {
+        return -1;
+    }
+#endif
 
     spdm_test_context = m_spdm_test_context;
     spdm_test_context->spdm_context = (void *)malloc(libspdm_get_context_size());
