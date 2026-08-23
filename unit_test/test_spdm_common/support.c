@@ -1,3 +1,9 @@
+/**
+ *  Copyright Notice:
+ *  Copyright 2023-2024 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
+
 #include "spdm_unit_test.h"
 #include "internal/libspdm_common_lib.h"
 
