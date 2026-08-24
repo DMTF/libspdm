@@ -136,9 +136,25 @@ void libspdm_internal_dump_hex(const uint8_t *data, size_t size)
 }
 #endif /* LIBSPDM_DEBUG_PRINT_ENABLE */
 
+uint16_t libspdm_read_uint16(const uint8_t *buffer)
+{
+    return (uint16_t)
+           ((uint16_t)buffer[0] |
+            ((uint16_t)buffer[1] << 8));
+}
+
+void libspdm_write_uint16(uint8_t *buffer, uint16_t value)
+{
+    buffer[0] = (uint8_t)(value & 0xFF);
+    buffer[1] = (uint8_t)((value >> 8) & 0xFF);
+}
+
 uint32_t libspdm_read_uint24(const uint8_t *buffer)
 {
-    return (uint32_t)(buffer[0] | buffer[1] << 8 | buffer[2] << 16);
+    return (uint32_t)
+           ((uint32_t)buffer[0] |
+            ((uint32_t)buffer[1] << 8) |
+            ((uint32_t)buffer[2] << 16));
 }
 
 void libspdm_write_uint24(uint8_t *buffer, uint32_t value)
@@ -148,20 +164,13 @@ void libspdm_write_uint24(uint8_t *buffer, uint32_t value)
     buffer[2] = (uint8_t)((value >> 16) & 0xFF);
 }
 
-uint16_t libspdm_read_uint16(const uint8_t *buffer)
-{
-    return (uint16_t)(buffer[0] | buffer[1] << 8);
-}
-
-void libspdm_write_uint16(uint8_t *buffer, uint16_t value)
-{
-    buffer[0] = (uint8_t)(value & 0xFF);
-    buffer[1] = (uint8_t)((value >> 8) & 0xFF);
-}
-
 uint32_t libspdm_read_uint32(const uint8_t *buffer)
 {
-    return (uint32_t)(buffer[0] | buffer[1] << 8 | buffer[2] << 16 | buffer[3] << 24);
+    return (uint32_t)
+           ((uint32_t)buffer[0] |
+            ((uint32_t)buffer[1] << 8) |
+            ((uint32_t)buffer[2] << 16) |
+            ((uint32_t)buffer[3] << 24));
 }
 
 void libspdm_write_uint32(uint8_t *buffer, uint32_t value)
@@ -174,14 +183,15 @@ void libspdm_write_uint32(uint8_t *buffer, uint32_t value)
 
 uint64_t libspdm_read_uint64(const uint8_t *buffer)
 {
-    return (uint64_t)(buffer[0]) |
-           ((uint64_t)(buffer[1]) << 8) |
-           ((uint64_t)(buffer[2]) << 16) |
-           ((uint64_t)(buffer[3]) << 24) |
-           ((uint64_t)(buffer[4]) << 32) |
-           ((uint64_t)(buffer[5]) << 40) |
-           ((uint64_t)(buffer[6]) << 48) |
-           ((uint64_t)(buffer[7]) << 56);
+    return (uint64_t)
+           ((uint64_t)buffer[0] |
+            ((uint64_t)buffer[1] << 8) |
+            ((uint64_t)buffer[2] << 16) |
+            ((uint64_t)buffer[3] << 24) |
+            ((uint64_t)buffer[4] << 32) |
+            ((uint64_t)buffer[5] << 40) |
+            ((uint64_t)buffer[6] << 48) |
+            ((uint64_t)buffer[7] << 56));
 }
 
 void libspdm_write_uint64(uint8_t *buffer, uint64_t value)
