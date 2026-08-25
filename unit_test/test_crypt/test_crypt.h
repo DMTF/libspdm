@@ -25,6 +25,12 @@
 #include "hal/library/cryptlib.h"
 #include "spdm_crypt_ext_lib/cryptlib_ext.h"
 
+/* mbedtls does not evaluate X.509 nameConstraints (see Mbed-TLS/mbedtls#8759),
+ * so its regression test is skipped for CRYPTO=mbedtls builds. */
+#ifndef LIBSPDM_SKIP_NAME_CONSTRAINTS_CHECK
+#define LIBSPDM_SKIP_NAME_CONSTRAINTS_CHECK 0
+#endif
+
 bool libspdm_read_input_file(const char *file_name, void **file_data, size_t *file_size);
 
 size_t libspdm_ascii_str_len(const char *string);
@@ -93,6 +99,26 @@ bool libspdm_validate_crypt_rsa_2(void);
  *
  **/
 bool libspdm_validate_crypt_x509(char *Path, size_t len);
+
+/**
+ * Validate that libspdm_x509_verify_cert_chain() rejects a chain that violates
+ * the root's pathLenConstraint.
+ *
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
+ *
+ **/
+bool libspdm_validate_crypt_x509_verify_cert_chain_pathlen_constraints(void);
+
+/**
+ * Validate that libspdm_x509_verify_cert_chain() rejects a chain that violates
+ * the root's dNSName nameConstraints.
+ *
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
+ *
+ **/
+bool libspdm_validate_crypt_x509_verify_cert_chain_name_constraints(void);
 
 /**
  * Validate Crypto DH Interfaces.
