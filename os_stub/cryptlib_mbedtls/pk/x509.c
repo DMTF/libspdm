@@ -724,65 +724,92 @@ bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
 bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_length,
                                     const uint8_t *cert_chain, size_t cert_chain_length)
 {
-    size_t asn1_len;
-    size_t preceding_cert_len;
-    const uint8_t *preceding_cert;
-    size_t current_cert_len;
-    const unsigned char *current_cert;
-    const unsigned char *tmp_ptr;
     int ret;
-    bool verify_flag;
+    mbedtls_x509_crt chain;
+    mbedtls_x509_crt ca;
+    uint32_t v_flag = 0;
+    mbedtls_x509_crt_profile profile = { 0 };
+    size_t count;
+    size_t i;
+    const uint8_t *cert;
+    size_t cert_len;
+    bool result;
 
-    verify_flag = false;
-    preceding_cert = root_cert;
-    preceding_cert_len = root_cert_length;
+    libspdm_copy_mem(&profile, sizeof(profile),
+                     &mbedtls_x509_crt_profile_default,
+                     sizeof(mbedtls_x509_crt_profile));
 
-    current_cert = (const unsigned char *)cert_chain;
+    mbedtls_x509_crt_init(&chain);
+    mbedtls_x509_crt_init(&ca);
+    result = false;
 
+    /* Count certificates in the chain. */
+    count = 0;
+    while (libspdm_x509_get_cert_from_cert_chain(cert_chain, cert_chain_length,
+                                                 (int32_t)count, &cert, &cert_len)) {
+        count++;
+    }
+    if (count == 0) {
+        goto done;
+    }
 
-    /* Get Current certificate from certificates buffer and Verify with preceding cert*/
+    /* If the chain's first certificate duplicates root_cert, root_cert must
+     * itself be a valid self-signed CA; otherwise a non-CA cert could be
+     * smuggled in as an implicit trust anchor. */
+    if (!libspdm_x509_get_cert_from_cert_chain(cert_chain, cert_chain_length, 0,
+                                               &cert, &cert_len)) {
+        goto done;
+    }
+    if ((cert_len == root_cert_length) &&
+        libspdm_consttime_is_mem_equal(cert, root_cert, root_cert_length) &&
+        !libspdm_is_root_certificate(root_cert, root_cert_length)) {
+        goto done;
+    }
 
-    do {
-        tmp_ptr = current_cert;
-        ret = mbedtls_asn1_get_tag(
-            &tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
-            MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE);
+    /* Reject trailing bytes after the last certificate. */
+    if (!libspdm_x509_get_cert_from_cert_chain(cert_chain, cert_chain_length,
+                                               (int32_t)(count - 1), &cert, &cert_len)) {
+        goto done;
+    }
+    if ((size_t)(cert - cert_chain) + cert_len != cert_chain_length) {
+        goto done;
+    }
+
+    /* Build a single leaf-first chain so the whole path is validated at once,
+    * letting the profile enforce pathLenConstraint across the entire path. */
+    ret = 0;
+    for (i = count; i > 0; i--) {
+        if (!libspdm_x509_get_cert_from_cert_chain(cert_chain, cert_chain_length,
+                                                   (int32_t)(i - 1), &cert, &cert_len)) {
+            ret = -1;
+            break;
+        }
+        ret = wrapper_mbedtls_x509_crt_parse_der(&chain, cert, cert_len);
         if (ret != 0) {
-            if (current_cert < cert_chain + cert_chain_length) {
-                verify_flag = false;
-            }
             break;
         }
+    }
+    if (ret != 0) {
+        goto done;
+    }
 
-        current_cert_len = asn1_len + (tmp_ptr - current_cert);
+    ret = wrapper_mbedtls_x509_crt_parse_der(&ca, root_cert, root_cert_length);
+    if (ret != 0) {
+        goto done;
+    }
 
-        if (current_cert + current_cert_len > cert_chain + cert_chain_length) {
-            verify_flag = false;
-            break;
-        }
+    ret = mbedtls_x509_crt_verify_with_profile(&chain, &ca, NULL, &profile,
+                                               NULL, &v_flag, NULL, NULL);
+    result = (ret == 0);
 
-        if (libspdm_x509_verify_cert(current_cert, current_cert_len,
-                                     preceding_cert,
-                                     preceding_cert_len) == false) {
-            verify_flag = false;
-            break;
-        } else {
-            verify_flag = true;
-        }
-
-
-        /* Save preceding certificate*/
-
-        preceding_cert = current_cert;
-        preceding_cert_len = current_cert_len;
+    /* mbedtls does not evaluate nameConstraints (Mbed-TLS/mbedtls#8759)
+     * please be aware of the limitation. */
 
 
-        /* Move current certificate to next;*/
-
-        current_cert = current_cert + current_cert_len;
-    } while (true);
-
-    return verify_flag;
+done:
+    mbedtls_x509_crt_free(&chain);
+    mbedtls_x509_crt_free(&ca);
+    return result;
 }
 
 /**
