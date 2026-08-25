@@ -16,6 +16,7 @@
 #include "library/malloclib.h"
 #include "library/debuglib.h"
 #include "library/cryptlib.h"
+#include "library/spdm_crypt_lib.h"
 #include "spdm_crypt_ext_lib/cryptlib_ext.h"
 
 /* We should always add mbedtls/build_info.h here

@@ -2012,100 +2012,115 @@ bool libspdm_x509_get_tbs_cert(const uint8_t *cert, size_t cert_size,
 bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_length,
                                     const uint8_t *cert_chain, size_t cert_chain_length)
 {
-    const uint8_t *tmp_ptr;
-    size_t length;
-    uint32_t asn1_tag;
-    uint32_t obj_class;
-    const uint8_t *current_cert;
-    size_t current_cert_len;
-    const uint8_t *preceding_cert;
-    size_t preceding_cert_len;
-    bool verify_flag;
-    int32_t ret;
-    uint8_t *root_ptr;
-    uint8_t *chain_ptr;
-    size_t root_obj_len;
-    size_t chain_obj_len;
-    uint8_t *end;
+    bool result;
+    X509 *root_x509;
+    X509 *leaf_x509;
+    STACK_OF(X509) *untrusted;
+    X509_STORE *store;
+    X509_STORE_CTX *ctx;
+    const unsigned char *p;
+    const uint8_t *cur;
+    const uint8_t *chain_end;
+    const uint8_t *first_cert;
+    size_t first_cert_len;
 
-    preceding_cert = root_cert;
-    preceding_cert_len = root_cert_length;
+    result = false;
+    root_x509 = NULL;
+    leaf_x509 = NULL;
+    untrusted = NULL;
+    store = NULL;
+    ctx = NULL;
+    cur = cert_chain;
+    chain_end = cert_chain + cert_chain_length;
 
-    current_cert = cert_chain;
-    length = 0;
-    current_cert_len = 0;
-
-    root_ptr = (uint8_t*)(size_t)root_cert;
-    end = root_ptr + root_cert_length;
-    verify_flag = libspdm_asn1_get_tag(
-        &root_ptr, end, &root_obj_len,
-        LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
-    if (!verify_flag) {
-        return false;
+    p = root_cert;
+    root_x509 = d2i_X509(NULL, &p, (long)root_cert_length);
+    if (root_x509 == NULL) {
+        goto done;
     }
 
-    chain_ptr = (uint8_t*)(size_t)cert_chain;
-    end = chain_ptr + cert_chain_length;
-    verify_flag = libspdm_asn1_get_tag(
-        &chain_ptr, end, &chain_obj_len,
-        LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
-    if (!verify_flag) {
-        return false;
+    /* If the chain's first certificate duplicates root_cert, root_cert must
+     * itself be a valid self-signed CA; otherwise a non-CA cert could be
+     * smuggled in as an implicit trust anchor. */
+    if (!libspdm_x509_get_cert_from_cert_chain(cert_chain, cert_chain_length, 0,
+                                               &first_cert, &first_cert_len)) {
+        goto done;
+    }
+    if ((first_cert_len == root_cert_length) &&
+        libspdm_consttime_is_mem_equal(first_cert, root_cert, root_cert_length) &&
+        !libspdm_is_root_certificate(root_cert, root_cert_length)) {
+        goto done;
     }
 
-    /*only self_signed cert is accepted when these two cert are same*/
-    if ((chain_obj_len == root_obj_len) &&
-        (libspdm_consttime_is_mem_equal(root_ptr, chain_ptr, root_obj_len)) &&
-        (!libspdm_is_root_certificate(root_cert, root_cert_length))) {
-        return false;
+    /* cert_chain is DER certs in root->...->leaf order: every cert but the last
+     * is an untrusted intermediate for a single full-path verification. */
+    untrusted = sk_X509_new_null();
+    if (untrusted == NULL) {
+        goto done;
     }
-
-    verify_flag = false;
-    while (true) {
-        tmp_ptr = current_cert;
-        ret = ASN1_get_object(
-            (const uint8_t **)&tmp_ptr, (long *)&length,
-            (int *)&asn1_tag, (int *)&obj_class,
-            (long)(cert_chain_length + cert_chain - tmp_ptr));
-        if (asn1_tag != V_ASN1_SEQUENCE || ret & OPENSSL_ASN1_ERROR_MASK) {
-            if (current_cert < cert_chain + cert_chain_length) {
-                verify_flag = false;
+    while (cur < chain_end) {
+        const unsigned char *q = cur;
+        X509 *c = d2i_X509(NULL, &q, (long)(chain_end - cur));
+        if (c == NULL) {
+            goto done;
+        }
+        if (leaf_x509 != NULL) {
+            if (!sk_X509_push(untrusted, leaf_x509)) {
+                X509_free(leaf_x509);
+                leaf_x509 = NULL; /* avoid double free at done */
+                X509_free(c);
+                goto done;
             }
-            break;
         }
-
-
-        /* Calculate current_cert length;*/
-
-        current_cert_len = tmp_ptr - current_cert + length;
-        if (current_cert + current_cert_len > cert_chain + cert_chain_length) {
-            verify_flag = false;
-            break;
-        }
-
-
-        /* Verify current_cert with preceding cert;*/
-
-        verify_flag =
-            libspdm_x509_verify_cert(current_cert, current_cert_len,
-                                     preceding_cert, preceding_cert_len);
-        if (verify_flag == false) {
-            break;
-        }
-
-
-        /* move Current cert to Preceding cert*/
-
-        preceding_cert_len = current_cert_len;
-        preceding_cert = current_cert;
-
-
-        /* Move to next*/
-
-        current_cert = current_cert + current_cert_len;
+        leaf_x509 = c;
+        cur = q;
+    }
+    if (leaf_x509 == NULL) {
+        goto done;
     }
 
-    return verify_flag;
+    store = X509_STORE_new();
+    if ((store == NULL) || !X509_STORE_add_cert(store, root_x509)) {
+        goto done;
+    }
+
+    /* SPDM defines a root certificate as "typically" self-signed, not
+     * mandatorily so, and a complete chain's first cert may either be a Root
+     * Certificate itself or be signed by one acting as the trust anchor.
+     * Allow partial chains so a non-self-signed but trusted root_cert (e.g. from
+     * peer_root_cert_provision) still verifies; pathLenConstraint / nameConstraints
+     * are still enforced over the full untrusted+leaf path below it. */
+    X509_STORE_set_flags(store, X509_V_FLAG_PARTIAL_CHAIN);
+#if OPENSSL_IGNORE_CRITICAL
+    X509_STORE_set_flags(store, X509_V_FLAG_IGNORE_CRITICAL);
+#endif
+#ifndef OPENSSL_CHECK_TIME
+    X509_STORE_set_flags(store, X509_V_FLAG_NO_CHECK_TIME);
+#endif
+
+    ctx = X509_STORE_CTX_new();
+    if ((ctx == NULL) || !X509_STORE_CTX_init(ctx, store, leaf_x509, untrusted)) {
+        goto done;
+    }
+    result = (X509_verify_cert(ctx) == 1);
+
+done:
+    if (ctx != NULL) {
+        X509_STORE_CTX_free(ctx);
+    }
+    if (store != NULL) {
+        X509_STORE_free(store);
+    }
+    if (untrusted != NULL) {
+        sk_X509_pop_free(untrusted, X509_free);
+    }
+    if (leaf_x509 != NULL) {
+        X509_free(leaf_x509);
+    }
+    if (root_x509 != NULL) {
+        X509_free(root_x509);
+    }
+    return result;
 }
 
 /**
