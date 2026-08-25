@@ -78,6 +78,18 @@ bool libspdm_cryptest_main(void)
         return status;
     }
 
+    status = libspdm_validate_crypt_x509_verify_cert_chain_pathlen_constraints();
+    if (!status) {
+        return status;
+    }
+
+    #if !LIBSPDM_SKIP_NAME_CONSTRAINTS_CHECK
+    status = libspdm_validate_crypt_x509_verify_cert_chain_name_constraints();
+    if (!status) {
+        return status;
+    }
+    #endif /* !LIBSPDM_SKIP_NAME_CONSTRAINTS_CHECK */
+
     status = libspdm_validate_crypt_x509("ecp384", sizeof("ecp384"));
     if (!status) {
         return status;

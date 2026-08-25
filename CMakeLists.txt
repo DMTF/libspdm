@@ -236,6 +236,8 @@ if(CRYPTO STREQUAL "mbedtls")
     add_definitions(-DLIBSPDM_ML_KEM_512_SUPPORT=0)
     add_definitions(-DLIBSPDM_ML_KEM_768_SUPPORT=0)
     add_definitions(-DLIBSPDM_ML_KEM_1024_SUPPORT=0)
+    # mbedtls does not evaluate X.509 nameConstraints (Mbed-TLS/mbedtls#8759).
+    add_definitions(-DLIBSPDM_SKIP_NAME_CONSTRAINTS_CHECK=1)
 elseif(CRYPTO STREQUAL "openssl")
     message("CRYPTO = openssl")
     add_definitions(-DLIBSPDM_SM2_KEY_EXCHANGE_P256_SUPPORT=0)
