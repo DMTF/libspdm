@@ -53,7 +53,7 @@ libspdm_return_t my_test_get_response_func2(
  * Test 1: Test Responder Receive Send flow triggers chunk get mode
  * if response buffer is larger than requester data_transfer_size.
  **/
-void libspdm_test_responder_receive_send_rsp_case1(void** state)
+static void libspdm_test_responder_receive_send_rsp_case1(void** state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     /* This test case is partially copied from test_requester_get_measurement_case4 */
@@ -181,7 +181,7 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
  * Test 2: Test Responder Receive Send flow triggers chunk get mode
  * if response message size is larger than responder sending transmit buffer size.
  **/
-void libspdm_test_responder_receive_send_rsp_case2(void** state)
+static void libspdm_test_responder_receive_send_rsp_case2(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -259,7 +259,7 @@ void libspdm_test_responder_receive_send_rsp_case2(void** state)
  * Test 3: Test Responder Receive Send flow triggers chunk get mode
  * if response message size is larger than responder sending transmit buffer size.
  **/
-void libspdm_test_responder_receive_send_rsp_case3(void** state)
+static void libspdm_test_responder_receive_send_rsp_case3(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -337,7 +337,7 @@ void libspdm_test_responder_receive_send_rsp_case3(void** state)
  * if response buffer is larger than requester max_spdm_msg_size.
  * expect: SPDM_ERROR_CODE_RESPONSE_TOO_LARGE
  **/
-void libspdm_test_responder_receive_send_rsp_case4(void** state)
+static void libspdm_test_responder_receive_send_rsp_case4(void** state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     /* This test case is partially copied from test_requester_get_measurement_case4 */
@@ -465,7 +465,7 @@ void libspdm_test_responder_receive_send_rsp_case4(void** state)
  * request should be rejected with UnexpectedRequest error, and
  * the chunk transfer sequence should NOT be terminated.
  **/
-void libspdm_test_responder_receive_send_rsp_case5(void** state)
+static void libspdm_test_responder_receive_send_rsp_case5(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -546,7 +546,7 @@ void libspdm_test_responder_receive_send_rsp_case5(void** state)
  * should be allowed to interrupt: the chunk transfer should be
  * terminated and GET_VERSION processed normally.
  **/
-void libspdm_test_responder_receive_send_rsp_case6(void** state)
+static void libspdm_test_responder_receive_send_rsp_case6(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -618,7 +618,7 @@ void libspdm_test_responder_receive_send_rsp_case6(void** state)
  * request should be rejected with UnexpectedRequest error, and
  * the chunk transfer sequence should NOT be terminated.
  **/
-void libspdm_test_responder_receive_send_rsp_case7(void** state)
+static void libspdm_test_responder_receive_send_rsp_case7(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -696,7 +696,7 @@ void libspdm_test_responder_receive_send_rsp_case7(void** state)
  * should be allowed to interrupt: the chunk send transfer should be
  * terminated and GET_VERSION processed normally.
  **/
-void libspdm_test_responder_receive_send_rsp_case8(void** state)
+static void libspdm_test_responder_receive_send_rsp_case8(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
