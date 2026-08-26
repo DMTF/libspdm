@@ -145,7 +145,7 @@ void libspdm_test_responder_chunk_send_ack_setup_algo_state(libspdm_context_t* s
 }
 
 /* Test sending large NegAlg Request in multiple chunks. */
-void libspdm_test_responder_chunk_send_ack_rsp_case0(void** state)
+static void rsp_chunk_send_ack_case0(void** state)
 {
     libspdm_return_t status;
 
@@ -261,7 +261,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case0(void** state)
  * Test 1: Responder receives a CHUNK_SEND request without chunk capabilities.
  * Expected Behavior: Returns ERROR response message with an error code.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case1(void** state)
+static void rsp_chunk_send_ack_case1(void** state)
 {
     libspdm_return_t status;
 
@@ -339,7 +339,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case1(void** state)
  * Expected Behavior: Returns ERROR response message
  * with request_response_code as error code.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case2(void** state)
+static void rsp_chunk_send_ack_case2(void** state)
 {
     libspdm_return_t status;
 
@@ -416,7 +416,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case2(void** state)
  * Expected Behavior: Returns ERROR response message
  * with SPDM_ERROR_CODE_UNEXPECTED_REQUEST error code.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case3(void** state)
+static void rsp_chunk_send_ack_case3(void** state)
 {
     libspdm_return_t status;
 
@@ -495,7 +495,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case3(void** state)
  * Expected Behavior: Returns ERROR response message
  * with SPDM_ERROR_CODE_INVALID_REQUEST error code.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case4(void** state)
+static void rsp_chunk_send_ack_case4(void** state)
 {
     libspdm_return_t status;
 
@@ -570,7 +570,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case4(void** state)
  * Expected Behavior: Returns ERROR response message
  * with SPDM_ERROR_CODE_UNSUPPORTED_REQUEST error code.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case5(void** state)
+static void rsp_chunk_send_ack_case5(void** state)
 {
     libspdm_return_t status;
 
@@ -644,7 +644,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case5(void** state)
  * Expected Behavior: Returns ERROR response message
  * with SPDM_ERROR_CODE_VERSION_MISMATCH error code.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case6(void** state)
+static void rsp_chunk_send_ack_case6(void** state)
 {
     libspdm_return_t status;
 
@@ -717,7 +717,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case6(void** state)
 /**
  * Test 7: Responder gets chunk send when chunk get already in use.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case7(void** state)
+static void rsp_chunk_send_ack_case7(void** state)
 {
     libspdm_return_t status;
 
@@ -793,7 +793,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case7(void** state)
 /**
  * Test 8: First request has bad sequence number.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case8(void** state)
+static void rsp_chunk_send_ack_case8(void** state)
 {
     libspdm_return_t status;
 
@@ -870,7 +870,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case8(void** state)
 /**
  * Test 9: First request has chunk size too large.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case9(void** state)
+static void rsp_chunk_send_ack_case9(void** state)
 {
     libspdm_return_t status;
 
@@ -949,7 +949,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case9(void** state)
 /**
  * Test 10: First request has size larger than data transfer size.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case10(void** state)
+static void rsp_chunk_send_ack_case10(void** state)
 {
     libspdm_return_t status;
 
@@ -1027,7 +1027,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case10(void** state)
 /**
  * Test 11: First request has LAST CHUNK bit set.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case11(void** state)
+static void rsp_chunk_send_ack_case11(void** state)
 {
     libspdm_return_t status;
 
@@ -1103,7 +1103,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case11(void** state)
 /**
  * Test 12: First request has LAST CHUNK bit set.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case12(void** state)
+static void rsp_chunk_send_ack_case12(void** state)
 {
     libspdm_return_t status;
 
@@ -1194,7 +1194,7 @@ void libspdm_test_responder_chunk_send_ack_reset_send_state(libspdm_context_t* s
 /**
  * Test 13: Request has bad sequence number.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case13(void** state)
+static void rsp_chunk_send_ack_case13(void** state)
 {
     libspdm_return_t status;
 
@@ -1272,7 +1272,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case13(void** state)
 /**
  * Test 14: Request has bad chunk handle.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case14(void** state)
+static void rsp_chunk_send_ack_case14(void** state)
 {
     libspdm_return_t status;
 
@@ -1349,7 +1349,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case14(void** state)
 /**
  * Test 15: Request has size larger than data transfer size.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case15(void** state)
+static void rsp_chunk_send_ack_case15(void** state)
 {
     libspdm_return_t status;
 
@@ -1428,7 +1428,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case15(void** state)
 /**
  * Test 16: Request has chunk size + transferred size > large message size
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case16(void** state)
+static void rsp_chunk_send_ack_case16(void** state)
 {
     libspdm_return_t status;
 
@@ -1505,7 +1505,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case16(void** state)
 /**
  * Test 17: Request has LAST_CHUNK indicated before all bytes transferred.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case17(void** state)
+static void rsp_chunk_send_ack_case17(void** state)
 {
     libspdm_return_t status;
 
@@ -1582,7 +1582,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case17(void** state)
 /**
  * Test 18: Request missing LAST_CHUNK after all bytes transferred.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case18(void** state)
+static void rsp_chunk_send_ack_case18(void** state)
 {
     libspdm_return_t status;
 
@@ -1659,7 +1659,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case18(void** state)
 /**
  *  Test 19: Request missing LAST_CHUNK when request size != data transfer size.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case19(void** state)
+static void rsp_chunk_send_ack_case19(void** state)
 {
     libspdm_return_t status;
 
@@ -1739,7 +1739,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case19(void** state)
 /**
  *  Test 20: Request chunk seq wrapped.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case20(void** state)
+static void rsp_chunk_send_ack_case20(void** state)
 {
     libspdm_return_t status;
 
@@ -1820,7 +1820,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case20(void** state)
 /**
  *  Test 21: Request size exceed max chunk seq no.
  **/
-void libspdm_test_responder_chunk_send_ack_rsp_case21(void** state)
+static void rsp_chunk_send_ack_case21(void** state)
 {
     libspdm_return_t status;
 
@@ -1897,7 +1897,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case21(void** state)
 
 
 /* Test sending large NegAlg Request in multiple chunks, spdm 1.4 */
-void libspdm_test_responder_chunk_send_ack_rsp_case22(void** state)
+static void rsp_chunk_send_ack_case22(void** state)
 {
     libspdm_return_t status;
 
@@ -2020,54 +2020,54 @@ int libspdm_rsp_chunk_send_ack_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Responder sent multiple chunks and processed correctly */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case0),
+        cmocka_unit_test(rsp_chunk_send_ack_case0),
         /* Responder has no response flag chunk cap */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case1),
+        cmocka_unit_test(rsp_chunk_send_ack_case1),
         /* Responder has bad response state */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case2),
+        cmocka_unit_test(rsp_chunk_send_ack_case2),
         /* Responder has connection state <= NOT_START */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case3),
+        cmocka_unit_test(rsp_chunk_send_ack_case3),
         /* Request has wrong size */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case4),
+        cmocka_unit_test(rsp_chunk_send_ack_case4),
         /* Request has SPDM version less than 1.2*/
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case5),
+        cmocka_unit_test(rsp_chunk_send_ack_case5),
         /* Request has SPDM version not matching connection */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case6),
+        cmocka_unit_test(rsp_chunk_send_ack_case6),
         /* Responder is already in chunking mode */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case7),
+        cmocka_unit_test(rsp_chunk_send_ack_case7),
 
         /* First request has bad sequence number */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case8),
+        cmocka_unit_test(rsp_chunk_send_ack_case8),
         /* First request has chunk size too large */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case9),
+        cmocka_unit_test(rsp_chunk_send_ack_case9),
         /* First request has size larger than data transfer size */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case10),
+        cmocka_unit_test(rsp_chunk_send_ack_case10),
         /* Large message size larger than max SPDM message size. */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case11),
+        cmocka_unit_test(rsp_chunk_send_ack_case11),
         /* First request has LAST CHUNK bit set. */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case12),
+        cmocka_unit_test(rsp_chunk_send_ack_case12),
 
         /* Request has bad sequence number */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case13),
+        cmocka_unit_test(rsp_chunk_send_ack_case13),
         /* Request has bad chunk handle */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case14),
+        cmocka_unit_test(rsp_chunk_send_ack_case14),
         /* Request has chunk size too large for request*/
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case15),
+        cmocka_unit_test(rsp_chunk_send_ack_case15),
         /* Request has chunk size + transferred size > large message size */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case16),
+        cmocka_unit_test(rsp_chunk_send_ack_case16),
         /* Request has LAST_CHUNK indicated before all bytes transferred. */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case17),
+        cmocka_unit_test(rsp_chunk_send_ack_case17),
         /* Request missing LAST_CHUNK after all bytes transferred. */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case18),
+        cmocka_unit_test(rsp_chunk_send_ack_case18),
         /* Request missing LAST_CHUNK when request size != data transfer size. */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case19),
+        cmocka_unit_test(rsp_chunk_send_ack_case19),
         /* Request chunk seq wrapped. */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case20),
+        cmocka_unit_test(rsp_chunk_send_ack_case20),
         /* Request size exceed max chunk seq no. */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case21),
+        cmocka_unit_test(rsp_chunk_send_ack_case21),
 
         /* Responder sent multiple chunks and processed correctly, spdm 1.4 */
-        cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case22),
+        cmocka_unit_test(rsp_chunk_send_ack_case22),
     };
 
     libspdm_test_context_t test_context = {

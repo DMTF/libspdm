@@ -91,7 +91,7 @@ void libspdm_secured_message_set_request_finished_key(
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void rsp_finish_rsp_case1(void **state)
+static void rsp_finish_rsp_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -191,7 +191,7 @@ void rsp_finish_rsp_case1(void **state)
  * Test 2:
  * Expected behavior:
  **/
-void rsp_finish_rsp_case2(void **state)
+static void rsp_finish_rsp_case2(void **state)
 {
 }
 
@@ -201,7 +201,7 @@ void rsp_finish_rsp_case2(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the Busy state.
  **/
-void rsp_finish_rsp_case3(void **state)
+static void rsp_finish_rsp_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -307,7 +307,7 @@ void rsp_finish_rsp_case3(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the NeedResynch state.
  **/
-void rsp_finish_rsp_case4(void **state)
+static void rsp_finish_rsp_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -414,7 +414,7 @@ void rsp_finish_rsp_case4(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the ResponseNotReady state.
  **/
-void rsp_finish_rsp_case5(void **state)
+static void rsp_finish_rsp_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -528,7 +528,7 @@ void rsp_finish_rsp_case5(void **state)
  * Expected behavior: the responder rejects the request, and produces an
  * ERROR message indicating the UnexpectedRequest.
  **/
-void rsp_finish_rsp_case6(void **state)
+static void rsp_finish_rsp_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -627,7 +627,7 @@ void rsp_finish_rsp_case6(void **state)
     free(data1);
 }
 
-void rsp_finish_rsp_case7(void **state)
+static void rsp_finish_rsp_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -752,7 +752,7 @@ void rsp_finish_rsp_case7(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void rsp_finish_rsp_case8(void **state)
+static void rsp_finish_rsp_case8(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -908,7 +908,7 @@ void rsp_finish_rsp_case8(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the UnsupportedRequest.
  **/
-void rsp_finish_rsp_case9(void **state)
+static void rsp_finish_rsp_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1015,7 +1015,7 @@ void rsp_finish_rsp_case9(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the UnsupportedRequest.
  **/
-void rsp_finish_rsp_case10(void **state)
+static void rsp_finish_rsp_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1119,7 +1119,7 @@ void rsp_finish_rsp_case10(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the DecryptError.
  **/
-void rsp_finish_rsp_case11(void **state)
+static void rsp_finish_rsp_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1205,7 +1205,7 @@ void rsp_finish_rsp_case11(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the DecryptError.
  **/
-void rsp_finish_rsp_case12(void **state)
+static void rsp_finish_rsp_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1295,7 +1295,7 @@ void rsp_finish_rsp_case12(void **state)
  * Test 13:
  * Expected behavior:
  **/
-void rsp_finish_rsp_case13(void **state)
+static void rsp_finish_rsp_case13(void **state)
 {
 }
 
@@ -1305,7 +1305,7 @@ void rsp_finish_rsp_case13(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the InvalidRequest.
  **/
-void rsp_finish_rsp_case14(void **state)
+static void rsp_finish_rsp_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1410,7 +1410,7 @@ void rsp_finish_rsp_case14(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the DecryptError.
  **/
-void rsp_finish_rsp_case15(void **state)
+static void rsp_finish_rsp_case15(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -1557,7 +1557,7 @@ void rsp_finish_rsp_case15(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the DecryptError.
  **/
-void rsp_finish_rsp_case16(void **state)
+static void rsp_finish_rsp_case16(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -1703,7 +1703,7 @@ void rsp_finish_rsp_case16(void **state)
  * Expected behavior: the responder accepts the request and produces a valid FINISH
  * response message, and buffer F receives the exchanged FINISH and FINISH_RSP messages.
  **/
-void rsp_finish_rsp_case17(void **state)
+static void rsp_finish_rsp_case17(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1812,7 +1812,7 @@ void rsp_finish_rsp_case17(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void rsp_finish_rsp_case18(void **state)
+static void rsp_finish_rsp_case18(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -1950,7 +1950,7 @@ void rsp_finish_rsp_case18(void **state)
  * SlotID in FINISH request message is 10, but it shall be 0xFF or between 0 and 7 inclusive.
  * Expected behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST.
  **/
-void rsp_finish_rsp_case19(void **state)
+static void rsp_finish_rsp_case19(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2107,7 +2107,7 @@ void rsp_finish_rsp_case19(void **state)
  * SlotID in FINISH request message is 3, but it shall match the value 0 in final ENCAPSULATED_RESPONSE_ACK.EncapsulatedRequest.
  * Expected behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST.
  **/
-void rsp_finish_rsp_case20(void **state)
+static void rsp_finish_rsp_case20(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2265,7 +2265,7 @@ void rsp_finish_rsp_case20(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void rsp_finish_rsp_case21(void **state)
+static void rsp_finish_rsp_case21(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2369,7 +2369,7 @@ void rsp_finish_rsp_case21(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void rsp_finish_rsp_case22(void **state)
+static void rsp_finish_rsp_case22(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -2525,7 +2525,7 @@ void rsp_finish_rsp_case22(void **state)
  * Big-Endian Sign. Little-Endian Verify.
  * Expecting signature to fail.
  **/
-void rsp_finish_rsp_case23(void** state)
+static void rsp_finish_rsp_case23(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -2683,7 +2683,7 @@ void rsp_finish_rsp_case23(void** state)
  * Big-Endian Sign. Big-Endian Verify.
  * Expecting signature to PASS.
  **/
-void rsp_finish_rsp_case24(void** state)
+static void rsp_finish_rsp_case24(void** state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -2843,7 +2843,7 @@ void rsp_finish_rsp_case24(void** state)
  * Big Endian Sign. Big or Little Endian Verify.
  * Expecting signature to PASS.
  **/
-void rsp_finish_rsp_case25(void** state)
+static void rsp_finish_rsp_case25(void** state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -3001,7 +3001,7 @@ void rsp_finish_rsp_case25(void** state)
  * Sign as Little Endian, Verify as Little.
  * Expecting signature to PASS.
  **/
-void rsp_finish_rsp_case26(void** state)
+static void rsp_finish_rsp_case26(void** state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -3165,7 +3165,7 @@ void rsp_finish_rsp_case26(void** state)
  * Sign as Little Endian, Verify as Big.
  * Expecting signature to FAIL.
  **/
-void rsp_finish_rsp_case27(void** state)
+static void rsp_finish_rsp_case27(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -3327,7 +3327,7 @@ void rsp_finish_rsp_case27(void** state)
  * Sign as Little Endian, Verify as Big Or Little.
  * Expecting signature to PASS.
  **/
-void rsp_finish_rsp_case28(void** state)
+static void rsp_finish_rsp_case28(void** state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -3492,7 +3492,7 @@ void rsp_finish_rsp_case28(void** state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message, and The ResponderVerifyData field is absent.
  **/
-void rsp_finish_rsp_case29(void **state)
+static void rsp_finish_rsp_case29(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3600,7 +3600,7 @@ void rsp_finish_rsp_case29(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void rsp_finish_rsp_case30(void **state)
+static void rsp_finish_rsp_case30(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3716,7 +3716,7 @@ void rsp_finish_rsp_case30(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message with integrator defined opaque data in the response.
  **/
-void rsp_finish_rsp_case31(void **state)
+static void rsp_finish_rsp_case31(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
