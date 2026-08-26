@@ -42,7 +42,7 @@ static libspdm_return_t receive_message(
  * Test 1: message could not be sent
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-void libspdm_test_requester_get_key_pair_info_error_case1(void **state)
+static void req_get_key_pair_info_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -87,7 +87,7 @@ int libspdm_req_get_key_pair_info_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(libspdm_test_requester_get_key_pair_info_error_case1),
+        cmocka_unit_test(req_get_key_pair_info_err_case1),
     };
 
     libspdm_test_context_t test_context = {

@@ -60,7 +60,7 @@ static void set_standard_state(libspdm_context_t *spdm_context)
  * Test 1: Requester has not set EVENT_CAP.
  * Expected Behavior: Requester returns SPDM_ERROR_CODE_UNSUPPORTED_REQUEST.
  **/
-static void test_encap_subscribe_event_types_ack_err_case1(void **state)
+static void req_encap_subscribe_event_types_ack_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -107,7 +107,7 @@ static void test_encap_subscribe_event_types_ack_err_case1(void **state)
  * Test 2: Size of SUBSCRIBE_EVENT_TYPES is not the correct size.
  * Expected Behavior: Requester returns SPDM_ERROR_CODE_INVALID_REQUEST.
  **/
-static void test_encap_subscribe_event_types_ack_err_case2(void **state)
+static void req_encap_subscribe_event_types_ack_err_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -154,7 +154,7 @@ static void test_encap_subscribe_event_types_ack_err_case2(void **state)
  * Test 3: Connection version does not support SUBSCRIBE_EVENT_TYPES.
  * Expected Behavior: Requester returns SPDM_ERROR_CODE_UNSUPPORTED_REQUEST.
  **/
-static void test_encap_subscribe_event_types_ack_err_case3(void **state)
+static void req_encap_subscribe_event_types_ack_err_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -202,7 +202,7 @@ static void test_encap_subscribe_event_types_ack_err_case3(void **state)
  * Test 4: Message SPDMVersion does not match the connection's version.
  * Expected Behavior: Requester returns SPDM_ERROR_CODE_VERSION_MISMATCH.
  **/
-static void test_encap_subscribe_event_types_ack_err_case4(void **state)
+static void req_encap_subscribe_event_types_ack_err_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -247,7 +247,7 @@ static void test_encap_subscribe_event_types_ack_err_case4(void **state)
  * Test 5: Call to libspdm_event_subscribe fails.
  * Expected Behavior: Requester returns SPDM_ERROR_CODE_INVALID_REQUEST.
  **/
-static void test_encap_subscribe_event_types_ack_err_case5(void **state)
+static void req_encap_subscribe_event_types_ack_err_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -294,11 +294,11 @@ static void test_encap_subscribe_event_types_ack_err_case5(void **state)
 int libspdm_req_encap_subscribe_event_types_ack_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(test_encap_subscribe_event_types_ack_err_case1),
-        cmocka_unit_test(test_encap_subscribe_event_types_ack_err_case2),
-        cmocka_unit_test(test_encap_subscribe_event_types_ack_err_case3),
-        cmocka_unit_test(test_encap_subscribe_event_types_ack_err_case4),
-        cmocka_unit_test(test_encap_subscribe_event_types_ack_err_case5),
+        cmocka_unit_test(req_encap_subscribe_event_types_ack_err_case1),
+        cmocka_unit_test(req_encap_subscribe_event_types_ack_err_case2),
+        cmocka_unit_test(req_encap_subscribe_event_types_ack_err_case3),
+        cmocka_unit_test(req_encap_subscribe_event_types_ack_err_case4),
+        cmocka_unit_test(req_encap_subscribe_event_types_ack_err_case5),
     };
 
     libspdm_test_context_t test_context = {

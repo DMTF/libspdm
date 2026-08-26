@@ -156,7 +156,7 @@ static libspdm_return_t receive_message(
  *         subscribe_list.
  * Expected Behavior: Returns LIBSPDM_STATUS_INVALID_PARAMETER.
  **/
-static void libspdm_test_requester_subscribe_event_types_err_case1(void **state)
+static void req_subscribe_event_types_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -184,7 +184,7 @@ static void libspdm_test_requester_subscribe_event_types_err_case1(void **state)
  * Test 2: Test invalid state with SPDM version less than 1.3.
  * Expected Behavior: Returns LIBSPDM_STATUS_UNSUPPORTED_CAP.
  **/
-static void libspdm_test_requester_subscribe_event_types_err_case2(void **state)
+static void req_subscribe_event_types_err_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -209,7 +209,7 @@ static void libspdm_test_requester_subscribe_event_types_err_case2(void **state)
  *         types using the AllEventTypes attribute.
  * Expected Behavior: Returns LIBSPDM_STATUS_UNSUPPORTED_CAP.
  **/
-static void libspdm_test_requester_subscribe_event_types_err_case3(void **state)
+static void req_subscribe_event_types_err_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -239,9 +239,9 @@ int libspdm_req_subscribe_event_types_error_test(void)
     };
 
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_requester_subscribe_event_types_err_case1),
-        cmocka_unit_test(libspdm_test_requester_subscribe_event_types_err_case2),
-        cmocka_unit_test(libspdm_test_requester_subscribe_event_types_err_case3)
+        cmocka_unit_test(req_subscribe_event_types_err_case1),
+        cmocka_unit_test(req_subscribe_event_types_err_case2),
+        cmocka_unit_test(req_subscribe_event_types_err_case3)
     };
 
     libspdm_setup_test_context(&test_context);

@@ -1698,7 +1698,7 @@ static libspdm_return_t receive_message(
     }
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case1(void **state)
+static void req_negotiate_algorithms_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1727,7 +1727,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case1(void **state
  * Test 2: Unable to acquire sender buffer.
  * Expected behavior: returns with status LIBSPDM_STATUS_ACQUIRE_FAIL.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case2(void **state)
+static void req_negotiate_algorithms_err_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1752,7 +1752,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case2(void **state
     assert_int_equal(status, LIBSPDM_STATUS_ACQUIRE_FAIL);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case3(void **state)
+static void req_negotiate_algorithms_err_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1777,7 +1777,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case3(void **state
 #endif
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case4(void **state)
+static void req_negotiate_algorithms_err_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1802,7 +1802,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case4(void **state
 #endif
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case5(void **state)
+static void req_negotiate_algorithms_err_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1831,7 +1831,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case5(void **state
  * Test 6: Unable to acquire receiver buffer.
  * Expected behavior: returns with status LIBSPDM_STATUS_ACQUIRE_FAIL.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case6(void **state)
+static void req_negotiate_algorithms_err_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1856,7 +1856,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case6(void **state
     assert_int_equal(status, LIBSPDM_STATUS_ACQUIRE_FAIL);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case7(void **state)
+static void req_negotiate_algorithms_err_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1883,7 +1883,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case7(void **state
 #endif
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case8(void **state)
+static void req_negotiate_algorithms_err_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1909,7 +1909,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case8(void **state
  * Test 9: Unable to receive response from Responder.
  * Expected behavior: returns with status LIBSPDM_STATUS_RECEIVE_FAIL.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case9(void **state)
+static void req_negotiate_algorithms_err_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1931,7 +1931,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case9(void **state
     assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case10(void **state)
+static void req_negotiate_algorithms_err_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1960,7 +1960,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case10(void **stat
     assert_int_equal( spdm_context->connection_info.algorithm.measurement_hash_algo, 0);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case11(void **state)
+static void req_negotiate_algorithms_err_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1988,7 +1988,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case11(void **stat
     assert_int_equal(spdm_context->connection_info.algorithm.base_asym_algo, 0);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case12(void **state)
+static void req_negotiate_algorithms_err_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2014,7 +2014,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case12(void **stat
     assert_int_equal(spdm_context->connection_info.algorithm.base_hash_algo, 0);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case13(void **state) {
+static void req_negotiate_algorithms_err_case13(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2035,7 +2035,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case13(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case14(void **state) {
+static void req_negotiate_algorithms_err_case14(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2056,7 +2056,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case14(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case15(void **state) {
+static void req_negotiate_algorithms_err_case15(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2077,7 +2077,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case15(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case16(void **state) {
+static void req_negotiate_algorithms_err_case16(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2098,7 +2098,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case16(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case17(void **state) {
+static void req_negotiate_algorithms_err_case17(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2119,7 +2119,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case17(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case18(void **state) {
+static void req_negotiate_algorithms_err_case18(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2140,7 +2140,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case18(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case19(void **state) {
+static void req_negotiate_algorithms_err_case19(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2161,7 +2161,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case19(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case20(void **state) {
+static void req_negotiate_algorithms_err_case20(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2182,7 +2182,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case20(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case21(void **state)
+static void req_negotiate_algorithms_err_case21(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -2208,7 +2208,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case21(void **stat
  * Test 22: Request/response code is not equal to ALGORITHMS response.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case22(void **state)
+static void req_negotiate_algorithms_err_case22(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2234,7 +2234,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case22(void **stat
  * Test 23: The upper four bits of AlgCount is not equal to 2.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case23(void **state)
+static void req_negotiate_algorithms_err_case23(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2280,7 +2280,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case23(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case24(void **state) {
+static void req_negotiate_algorithms_err_case24(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2325,7 +2325,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case24(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case25(void **state) {
+static void req_negotiate_algorithms_err_case25(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2370,7 +2370,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case25(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case26(void **state) {
+static void req_negotiate_algorithms_err_case26(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2415,7 +2415,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case26(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case27(void **state) {
+static void req_negotiate_algorithms_err_case27(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2460,7 +2460,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case27(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case28(void **state) {
+static void req_negotiate_algorithms_err_case28(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2505,7 +2505,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case28(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case29(void **state) {
+static void req_negotiate_algorithms_err_case29(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2550,7 +2550,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case29(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case30(void **state) {
+static void req_negotiate_algorithms_err_case30(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2595,7 +2595,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case30(void **stat
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case31(void **state) {
+static void req_negotiate_algorithms_err_case31(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2644,7 +2644,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case31(void **stat
  * Test 32: Length field is incorrect.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_SIZE.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case32(void **state)
+static void req_negotiate_algorithms_err_case32(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2670,7 +2670,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case32(void **stat
  * Test 33: Non-zero ext_alg_count.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case33(void **state)
+static void req_negotiate_algorithms_err_case33(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2692,7 +2692,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case33(void **stat
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_error_case34(void **state)
+static void req_negotiate_algorithms_err_case34(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2741,7 +2741,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case34(void **stat
  * Test 35: MeasurementSpecificationSel has exactly one bit set to an illegal value.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case35(void **state)
+static void req_negotiate_algorithms_err_case35(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2768,7 +2768,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case35(void **stat
  * Test 36: MeasurementSpecificationSel has more than one bit set.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case36(void **state)
+static void req_negotiate_algorithms_err_case36(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2794,7 +2794,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case36(void **stat
  * Test 37: Incorrect SPDM version in response.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case37(void **state)
+static void req_negotiate_algorithms_err_case37(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2820,7 +2820,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case37(void **stat
  * Test 38: Reserved alg_type value.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case38(void **state)
+static void req_negotiate_algorithms_err_case38(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2870,7 +2870,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case38(void **stat
  * Test 39: AlgType shall monotonically increase for subsequent entries. Redundant alg_type value.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case39(void** state)
+static void req_negotiate_algorithms_err_case39(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -2920,7 +2920,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case39(void** stat
  * Test 40: AlgType shall monotonically increase for subsequent entries. Decreasing alg_type value.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case40(void** state)
+static void req_negotiate_algorithms_err_case40(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -2971,7 +2971,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case40(void** stat
  * OtherParamsSelection has more than one bit set.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case41(void **state)
+static void req_negotiate_algorithms_err_case41(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2997,7 +2997,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case41(void **stat
  * Test 42: AlgType shall between DHE and KEY_SCHEDULE. Use value smaller than DHE.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case42(void** state)
+static void req_negotiate_algorithms_err_case42(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -3047,7 +3047,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case42(void** stat
  * Test 43: AlgType shall between DHE and KEY_SCHEDULE. Use value bigger than KEY_SCHEDULE.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case43(void** state)
+static void req_negotiate_algorithms_err_case43(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -3097,7 +3097,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case43(void** stat
  * Test 44: EP_INFO_CAP_SIG is negotiated but req_base_asym_alg in the ALGORITHMS response is 0.
  * Expected behavior: returns with status LIBSPDM_STATUS_NEGOTIATION_FAIL.
  **/
-static void libspdm_test_requester_negotiate_algorithms_error_case44(void **state)
+static void req_negotiate_algorithms_err_case44(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3130,50 +3130,50 @@ static void libspdm_test_requester_negotiate_algorithms_error_case44(void **stat
 int libspdm_req_negotiate_algorithms_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case1),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case2),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case3),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case4),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case5),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case6),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case7),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case8),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case9),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case10),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case11),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case12),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case13),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case14),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case15),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case16),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case17),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case18),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case19),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case20),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case21),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case22),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case23),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case24),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case25),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case26),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case27),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case28),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case29),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case30),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case31),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case32),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case33),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case34),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case35),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case36),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case37),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case38),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case39),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case40),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case41),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case42),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case43),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case44),
+        cmocka_unit_test(req_negotiate_algorithms_err_case1),
+        cmocka_unit_test(req_negotiate_algorithms_err_case2),
+        cmocka_unit_test(req_negotiate_algorithms_err_case3),
+        cmocka_unit_test(req_negotiate_algorithms_err_case4),
+        cmocka_unit_test(req_negotiate_algorithms_err_case5),
+        cmocka_unit_test(req_negotiate_algorithms_err_case6),
+        cmocka_unit_test(req_negotiate_algorithms_err_case7),
+        cmocka_unit_test(req_negotiate_algorithms_err_case8),
+        cmocka_unit_test(req_negotiate_algorithms_err_case9),
+        cmocka_unit_test(req_negotiate_algorithms_err_case10),
+        cmocka_unit_test(req_negotiate_algorithms_err_case11),
+        cmocka_unit_test(req_negotiate_algorithms_err_case12),
+        cmocka_unit_test(req_negotiate_algorithms_err_case13),
+        cmocka_unit_test(req_negotiate_algorithms_err_case14),
+        cmocka_unit_test(req_negotiate_algorithms_err_case15),
+        cmocka_unit_test(req_negotiate_algorithms_err_case16),
+        cmocka_unit_test(req_negotiate_algorithms_err_case17),
+        cmocka_unit_test(req_negotiate_algorithms_err_case18),
+        cmocka_unit_test(req_negotiate_algorithms_err_case19),
+        cmocka_unit_test(req_negotiate_algorithms_err_case20),
+        cmocka_unit_test(req_negotiate_algorithms_err_case21),
+        cmocka_unit_test(req_negotiate_algorithms_err_case22),
+        cmocka_unit_test(req_negotiate_algorithms_err_case23),
+        cmocka_unit_test(req_negotiate_algorithms_err_case24),
+        cmocka_unit_test(req_negotiate_algorithms_err_case25),
+        cmocka_unit_test(req_negotiate_algorithms_err_case26),
+        cmocka_unit_test(req_negotiate_algorithms_err_case27),
+        cmocka_unit_test(req_negotiate_algorithms_err_case28),
+        cmocka_unit_test(req_negotiate_algorithms_err_case29),
+        cmocka_unit_test(req_negotiate_algorithms_err_case30),
+        cmocka_unit_test(req_negotiate_algorithms_err_case31),
+        cmocka_unit_test(req_negotiate_algorithms_err_case32),
+        cmocka_unit_test(req_negotiate_algorithms_err_case33),
+        cmocka_unit_test(req_negotiate_algorithms_err_case34),
+        cmocka_unit_test(req_negotiate_algorithms_err_case35),
+        cmocka_unit_test(req_negotiate_algorithms_err_case36),
+        cmocka_unit_test(req_negotiate_algorithms_err_case37),
+        cmocka_unit_test(req_negotiate_algorithms_err_case38),
+        cmocka_unit_test(req_negotiate_algorithms_err_case39),
+        cmocka_unit_test(req_negotiate_algorithms_err_case40),
+        cmocka_unit_test(req_negotiate_algorithms_err_case41),
+        cmocka_unit_test(req_negotiate_algorithms_err_case42),
+        cmocka_unit_test(req_negotiate_algorithms_err_case43),
+        cmocka_unit_test(req_negotiate_algorithms_err_case44),
     };
 
     libspdm_test_context_t test_context = {
