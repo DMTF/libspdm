@@ -580,7 +580,7 @@ static void rsp_encap_get_certificate_case5(void **state)
     m_libspdm_local_certificate_chain_size = 0;
 }
 
-int spdm_rsp_encap_get_certificate_test(void)
+int libspdm_rsp_encap_get_certificate_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/

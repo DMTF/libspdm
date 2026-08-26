@@ -56,7 +56,7 @@ int libspdm_rsp_respond_if_ready_test (void);
 int libspdm_rsp_key_exchange_rsp_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
-int libspdm_rsp_finish_test(void);
+int libspdm_rsp_finish_rsp_test(void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 int libspdm_rsp_psk_exchange_rsp_test(void);
@@ -72,8 +72,8 @@ int libspdm_rsp_end_session_ack_test(void);
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
-int spdm_rsp_encap_get_digests_test(void);
-int spdm_rsp_encap_get_certificate_test(void);
+int libspdm_rsp_encap_get_digests_test(void);
+int libspdm_rsp_encap_get_certificate_test(void);
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 #if LIBSPDM_SEND_CHALLENGE_SUPPORT
 int libspdm_rsp_encap_challenge_test(void);
@@ -207,7 +207,7 @@ int main(void)
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
-    if (libspdm_rsp_finish_test() != 0) {
+    if (libspdm_rsp_finish_rsp_test() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
@@ -239,10 +239,10 @@ int main(void)
     #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
     #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
-    if (spdm_rsp_encap_get_digests_test() != 0) {
+    if (libspdm_rsp_encap_get_digests_test() != 0) {
         return_value = 1;
     }
-    if (spdm_rsp_encap_get_certificate_test() != 0) {
+    if (libspdm_rsp_encap_get_certificate_test() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */

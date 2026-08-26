@@ -3845,7 +3845,7 @@ void rsp_finish_rsp_case31(void **state)
     free(data1);
 }
 
-int libspdm_rsp_finish_test(void)
+int libspdm_rsp_finish_rsp_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/

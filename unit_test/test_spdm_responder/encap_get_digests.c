@@ -453,7 +453,7 @@ static void rsp_encap_get_digests_case7(void **state)
     }
 }
 
-int spdm_rsp_encap_get_digests_test(void)
+int libspdm_rsp_encap_get_digests_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
