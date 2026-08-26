@@ -310,7 +310,7 @@ static void req_get_key_pair_info_case1(void **state)
  * Test 2: The collection of multiple sub-cases for invalid combination.
  * Expected Behavior: get a LIBSPDM_STATUS_INVALID_MSG_FIELD return code
  **/
-void req_get_key_pair_info_case2(void **state)
+static void req_get_key_pair_info_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;

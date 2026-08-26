@@ -13,7 +13,7 @@
 static uint8_t m_libspdm_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
 static uint8_t m_libspdm_dummy_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
 
-void libspdm_secured_message_set_response_data_encryption_key(
+static void libspdm_secured_message_set_response_data_encryption_key(
     void *spdm_secured_message_context, const void *key, size_t key_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
@@ -25,7 +25,7 @@ void libspdm_secured_message_set_response_data_encryption_key(
                      key, secured_message_context->aead_key_size);
 }
 
-void libspdm_secured_message_set_response_data_salt(
+static void libspdm_secured_message_set_response_data_salt(
     void *spdm_secured_message_context, const void *salt,
     size_t salt_size)
 {

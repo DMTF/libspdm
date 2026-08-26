@@ -18,7 +18,7 @@ static const uint8_t m_libspdm_zero_buffer[LIBSPDM_MAX_HASH_SIZE] = {0};
 
 static libspdm_th_managed_buffer_t th_curr;
 
-void libspdm_secured_message_set_response_finished_key(
+static void libspdm_secured_message_set_response_finished_key(
     void *spdm_secured_message_context, const void *key, size_t key_size)
 {
     libspdm_secured_message_context_t *secured_message_context;

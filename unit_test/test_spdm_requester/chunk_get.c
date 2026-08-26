@@ -33,14 +33,9 @@ static uint8_t m_libspdm_local_certificate_chain_test_case_4[LIBSPDM_MAX_CERT_CH
  * unit tests requests and responses hardcode for each test case. */
 #define CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE (42)
 
-/* Loading the target expiration certificate chain and saving root certificate hash
- * "rsa3072_Expiration/bundle_responder.certchain.der"*/
-bool libspdm_libspdm_read_responder_public_certificate_chain_expiration(
-    void** data, size_t* size, void** hash, size_t* hash_size);
-
 #define CHUNK_GET_UNIT_TEST_CHUNK_HANDLE (10)
 
-void libspdm_requester_chunk_get_test_case1_build_certificates_response(
+static void libspdm_requester_chunk_get_test_case1_build_certificates_response(
     void *context, void *response, size_t *response_size,
     size_t sub_cert_index, size_t *sub_cert_count)
 {
@@ -93,7 +88,7 @@ void libspdm_requester_chunk_get_test_case1_build_certificates_response(
     *response_size = sizeof(spdm_certificate_response_t) + sub_cert_portion_length;
 }
 
-void libspdm_requester_chunk_get_test_case2_build_measurements_response(
+static void libspdm_requester_chunk_get_test_case2_build_measurements_response(
     void* context, void* response, size_t* response_size)
 {
     libspdm_context_t* spdm_context;
@@ -153,7 +148,7 @@ void libspdm_requester_chunk_get_test_case2_build_measurements_response(
     *ptr = 0;
 }
 
-void libspdm_requester_chunk_get_test_case3_build_challenge_response(
+static void libspdm_requester_chunk_get_test_case3_build_challenge_response(
     void* context, void* response, size_t* response_size)
 {
     libspdm_context_t* spdm_context;
@@ -227,7 +222,7 @@ void libspdm_requester_chunk_get_test_case3_build_challenge_response(
     ptr += sig_size;
 }
 
-void libspdm_requester_chunk_get_test_case4_build_digest_response(
+static void libspdm_requester_chunk_get_test_case4_build_digest_response(
     void* context, void* response, size_t* response_size)
 {
     libspdm_context_t *spdm_context;
@@ -261,7 +256,7 @@ void libspdm_requester_chunk_get_test_case4_build_digest_response(
     spdm_response->header.param2 |= (0xFF << 0);
 }
 
-void libspdm_requester_chunk_get_test_case5_case6_build_vendor_response(
+static void libspdm_requester_chunk_get_test_case5_case6_build_vendor_response(
     void* context, void* response, size_t* response_size)
 {
     spdm_vendor_defined_response_msg_t *spdm_response;
@@ -284,7 +279,7 @@ void libspdm_requester_chunk_get_test_case5_case6_build_vendor_response(
     spdm_response->len = 2;
 }
 
-void libspdm_requester_chunk_get_test_case8_build_digest_response(
+static void libspdm_requester_chunk_get_test_case8_build_digest_response(
     void* context, void* response, size_t* response_size)
 {
     /* this is referenced from case 4, but use spdm 1.4 */
@@ -320,7 +315,7 @@ void libspdm_requester_chunk_get_test_case8_build_digest_response(
     spdm_response->header.param2 |= (0xFF << 0);
 }
 
-void libspdm_requester_chunk_get_test_case11_build_capabilities_response(
+static void libspdm_requester_chunk_get_test_case11_build_capabilities_response(
     void *context, void *response, size_t *response_size)
 {
     spdm_capabilities_response_t *spdm_response;

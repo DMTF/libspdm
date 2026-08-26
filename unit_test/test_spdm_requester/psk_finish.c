@@ -19,7 +19,7 @@ static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
 static void libspdm_secured_message_set_dummy_finished_key( void *spdm_secured_message_context) {
 }
 
-void libspdm_secured_message_set_response_handshake_encryption_key(
+static void libspdm_secured_message_set_response_handshake_encryption_key(
     void *spdm_secured_message_context, const void *key, size_t key_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
@@ -32,7 +32,7 @@ void libspdm_secured_message_set_response_handshake_encryption_key(
                      key, secured_message_context->aead_key_size);
 }
 
-void libspdm_secured_message_set_response_handshake_salt(
+static void libspdm_secured_message_set_response_handshake_salt(
     void *spdm_secured_message_context, const void *salt,
     size_t salt_size)
 {

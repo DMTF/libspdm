@@ -7569,7 +7569,7 @@ static void req_key_exchange_case31(void **state)
     free(data);
 }
 
-void req_key_exchange_case32(void **state)
+static void req_key_exchange_case32(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;

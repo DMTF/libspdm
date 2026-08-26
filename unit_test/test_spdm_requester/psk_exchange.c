@@ -19,9 +19,9 @@ static uint8_t m_libspdm_zero_filled_buffer[LIBSPDM_MAX_HASH_SIZE];
 
 static libspdm_th_managed_buffer_t th_curr;
 
-size_t libspdm_test_get_psk_exchange_request_size(const void *spdm_context,
-                                                  const void *buffer,
-                                                  size_t buffer_size)
+static size_t libspdm_test_get_psk_exchange_request_size(const void *spdm_context,
+                                                         const void *buffer,
+                                                         size_t buffer_size)
 {
     const spdm_psk_exchange_request_t *spdm_request;
     size_t message_size;
