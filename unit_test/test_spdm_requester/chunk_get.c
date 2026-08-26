@@ -93,7 +93,7 @@ static void libspdm_requester_chunk_get_test_case2_build_measurements_response(
 {
     libspdm_context_t* spdm_context;
     spdm_measurements_response_t* meas_rsp = NULL;
-    spdm_measurement_block_dmtf_t* measurment_block;
+    spdm_measurement_block_dmtf_t* measurement_block;
 
     spdm_context = (libspdm_context_t*) context;
     /* This is get measurements test case 20, but changed to SPDM version 1.2
@@ -118,25 +118,25 @@ static void libspdm_requester_chunk_get_test_case2_build_measurements_response(
     libspdm_write_uint32(meas_rsp->measurement_record_length,
                          2 * ((uint32_t) (sizeof(spdm_measurement_block_dmtf_t) +
                                           libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo))));
-    measurment_block = (void*) (meas_rsp + 1);
+    measurement_block = (void*) (meas_rsp + 1);
     libspdm_set_mem(
-        measurment_block,
+        measurement_block,
         2 * (sizeof(spdm_measurement_block_dmtf_t) +
              libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)), 1);
-    measurment_block->measurement_block_common_header.index = 1;
-    measurment_block->measurement_block_common_header.measurement_specification =
+    measurement_block->measurement_block_common_header.index = 1;
+    measurement_block->measurement_block_common_header.measurement_specification =
         SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-    measurment_block->measurement_block_common_header.measurement_size =
+    measurement_block->measurement_block_common_header.measurement_size =
         (uint16_t) (sizeof(spdm_measurement_block_dmtf_header_t) +
                     libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-    measurment_block =
-        (void*) (((uint8_t*) measurment_block) +
+    measurement_block =
+        (void*) (((uint8_t*) measurement_block) +
                  (sizeof(spdm_measurement_block_dmtf_t) +
                   libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-    measurment_block->measurement_block_common_header.index = 2;
-    measurment_block->measurement_block_common_header.measurement_specification =
+    measurement_block->measurement_block_common_header.index = 2;
+    measurement_block->measurement_block_common_header.measurement_specification =
         SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-    measurment_block->measurement_block_common_header.measurement_size =
+    measurement_block->measurement_block_common_header.measurement_size =
         (uint16_t) (sizeof(spdm_measurement_block_dmtf_header_t) +
                     libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
     ptr = (uint8_t*) meas_rsp + *response_size - SPDM_NONCE_SIZE - sizeof(uint16_t);

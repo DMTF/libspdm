@@ -428,8 +428,8 @@ static libspdm_return_t receive_message(
         uint8_t *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         size_t sig_size;
-        size_t measurment_sig_size;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        size_t measurement_sig_size;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -439,14 +439,14 @@ static libspdm_return_t receive_message(
         ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        measurment_sig_size =
+        measurement_sig_size =
             SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         spdm_response_size = sizeof(spdm_measurements_response_t) +
                              sizeof(spdm_measurement_block_dmtf_t) +
                              libspdm_get_measurement_hash_size(
             m_libspdm_use_measurement_hash_algo) +
-                             measurment_sig_size;
+                             measurement_sig_size;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -459,17 +459,17 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
+        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurement_sig_size);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
         libspdm_write_uint16(ptr, 0);
@@ -510,8 +510,8 @@ static libspdm_return_t receive_message(
         uint8_t *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         size_t sig_size;
-        size_t measurment_sig_size;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        size_t measurement_sig_size;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -521,14 +521,14 @@ static libspdm_return_t receive_message(
         ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        measurment_sig_size =
+        measurement_sig_size =
             SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         spdm_response_size = sizeof(spdm_measurements_response_t) +
                              sizeof(spdm_measurement_block_dmtf_t) +
                              libspdm_get_measurement_hash_size(
             m_libspdm_use_measurement_hash_algo) +
-                             measurment_sig_size;
+                             measurement_sig_size;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -541,17 +541,17 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
+        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurement_sig_size);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
         libspdm_write_uint16(ptr, 0);
@@ -655,8 +655,8 @@ static libspdm_return_t receive_message(
             uint8_t *ptr;
             uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
             size_t sig_size;
-            size_t measurment_sig_size;
-            spdm_measurement_block_dmtf_t *measurment_block;
+            size_t measurement_sig_size;
+            spdm_measurement_block_dmtf_t *measurement_block;
             size_t spdm_response_size;
             size_t transport_header_size;
 
@@ -667,14 +667,14 @@ static libspdm_return_t receive_message(
             ((libspdm_context_t *)spdm_context)
             ->connection_info.algorithm
             .measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-            measurment_sig_size =
+            measurement_sig_size =
                 SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
                 libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
             spdm_response_size = sizeof(spdm_measurements_response_t) +
                                  sizeof(spdm_measurement_block_dmtf_t) +
                                  libspdm_get_measurement_hash_size(
                 m_libspdm_use_measurement_hash_algo) +
-                                 measurment_sig_size;
+                                 measurement_sig_size;
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -688,19 +688,19 @@ static libspdm_return_t receive_message(
                 (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                            libspdm_get_measurement_hash_size(
                                m_libspdm_use_measurement_hash_algo)));
-            measurment_block = (void *)(spdm_response + 1);
-            libspdm_set_mem(measurment_block,
+            measurement_block = (void *)(spdm_response + 1);
+            libspdm_set_mem(measurement_block,
                             sizeof(spdm_measurement_block_dmtf_t) +
                             libspdm_get_measurement_hash_size(
                                 m_libspdm_use_measurement_hash_algo),
                             1);
-            measurment_block->measurement_block_common_header
+            measurement_block->measurement_block_common_header
             .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-            measurment_block->measurement_block_common_header
+            measurement_block->measurement_block_common_header
             .measurement_size = (uint16_t)(
                 sizeof(spdm_measurement_block_dmtf_header_t) +
                 libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-            ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
+            ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurement_sig_size);
             libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
             ptr += SPDM_NONCE_SIZE;
             libspdm_write_uint16(ptr, 0);
@@ -819,7 +819,7 @@ static libspdm_return_t receive_message(
 
     case 0xB: {
         spdm_measurements_response_t *spdm_response;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
         uint8_t *ptr;
@@ -842,13 +842,13 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -871,8 +871,8 @@ static libspdm_return_t receive_message(
         spdm_measurements_response_t *spdm_response;
         uint8_t *ptr;
         size_t sig_size;
-        size_t measurment_sig_size;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        size_t measurement_sig_size;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -883,14 +883,14 @@ static libspdm_return_t receive_message(
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
 
-        measurment_sig_size =
+        measurement_sig_size =
             SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         spdm_response_size = sizeof(spdm_measurements_response_t) +
                              sizeof(spdm_measurement_block_dmtf_t) +
                              libspdm_get_measurement_hash_size(
             m_libspdm_use_measurement_hash_algo) +
-                             measurment_sig_size;
+                             measurement_sig_size;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -903,17 +903,17 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
+        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurement_sig_size);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
         libspdm_write_uint16(ptr, 0);
@@ -934,8 +934,8 @@ static libspdm_return_t receive_message(
         uint8_t *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         size_t sig_size;
-        size_t measurment_sig_size;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        size_t measurement_sig_size;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -945,14 +945,14 @@ static libspdm_return_t receive_message(
         ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        measurment_sig_size =
+        measurement_sig_size =
             SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         spdm_response_size = sizeof(spdm_measurements_response_t) +
                              sizeof(spdm_measurement_block_dmtf_t) +
                              libspdm_get_measurement_hash_size(
             m_libspdm_use_measurement_hash_algo) +
-                             measurment_sig_size;
+                             measurement_sig_size;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -965,17 +965,17 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
+        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurement_sig_size);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
         libspdm_write_uint16(ptr, 0);
@@ -1007,7 +1007,7 @@ static libspdm_return_t receive_message(
 
     case 0xE: {
         spdm_measurements_response_t *spdm_response;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -1034,13 +1034,13 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -1057,8 +1057,8 @@ static libspdm_return_t receive_message(
         uint8_t *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         size_t sig_size;
-        size_t measurment_sig_size;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        size_t measurement_sig_size;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -1068,14 +1068,14 @@ static libspdm_return_t receive_message(
         ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        measurment_sig_size =
+        measurement_sig_size =
             SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         spdm_response_size = sizeof(spdm_measurements_response_t) +
                              sizeof(spdm_measurement_block_dmtf_t) +
                              libspdm_get_measurement_hash_size(
             m_libspdm_use_measurement_hash_algo) +
-                             measurment_sig_size;
+                             measurement_sig_size;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1088,17 +1088,17 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
+        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurement_sig_size);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
         libspdm_write_uint16(ptr, 0);
@@ -1141,7 +1141,7 @@ static libspdm_return_t receive_message(
         static size_t sub_index0x11 = 0;
 
         spdm_measurements_response_t *spdm_response;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
         spdm_response_size = sizeof(spdm_measurements_response_t);
@@ -1167,15 +1167,15 @@ static libspdm_return_t receive_message(
                 (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                            libspdm_get_measurement_hash_size(
                                m_libspdm_use_measurement_hash_algo)));
-            measurment_block = (void *)(spdm_response + 1);
-            libspdm_set_mem(measurment_block,
+            measurement_block = (void *)(spdm_response + 1);
+            libspdm_set_mem(measurement_block,
                             sizeof(spdm_measurement_block_dmtf_t) +
                             libspdm_get_measurement_hash_size(
                                 m_libspdm_use_measurement_hash_algo),
                             1);
-            measurment_block->measurement_block_common_header
+            measurement_block->measurement_block_common_header
             .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-            measurment_block->measurement_block_common_header
+            measurement_block->measurement_block_common_header
             .measurement_size = (uint16_t)(
                 sizeof(spdm_measurement_block_dmtf_header_t) +
                 libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -1196,15 +1196,15 @@ static libspdm_return_t receive_message(
                 (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                            libspdm_get_measurement_hash_size(
                                m_libspdm_use_measurement_hash_algo)));
-            measurment_block = (void *)(spdm_response + 1);
-            libspdm_set_mem(measurment_block,
+            measurement_block = (void *)(spdm_response + 1);
+            libspdm_set_mem(measurement_block,
                             sizeof(spdm_measurement_block_dmtf_t) +
                             libspdm_get_measurement_hash_size(
                                 m_libspdm_use_measurement_hash_algo),
                             1);
-            measurment_block->measurement_block_common_header
+            measurement_block->measurement_block_common_header
             .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-            measurment_block->measurement_block_common_header
+            measurement_block->measurement_block_common_header
             .measurement_size = (uint16_t)(
                 sizeof(spdm_measurement_block_dmtf_header_t) +
                 libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -1220,7 +1220,7 @@ static libspdm_return_t receive_message(
 
     case 0x12: {
         spdm_measurements_response_t *spdm_response;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         uint8_t *large_spdm_response;
         size_t spdm_response_size;
         size_t transport_header_size;
@@ -1243,13 +1243,13 @@ static libspdm_return_t receive_message(
         spdm_response->number_of_blocks = 0xFF;
         libspdm_write_uint24(spdm_response->measurement_record_length,
                              (uint32_t)(LIBSPDM_LARGE_MEASUREMENT_SIZE));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block, LIBSPDM_LARGE_MEASUREMENT_SIZE, 1);
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block, LIBSPDM_LARGE_MEASUREMENT_SIZE, 1);
         for (count = 0; count < spdm_response->number_of_blocks; count++) {
-            measurment_block->measurement_block_common_header.index = (uint8_t)(count + 1);
-            measurment_block->measurement_block_common_header
+            measurement_block->measurement_block_common_header.index = (uint8_t)(count + 1);
+            measurement_block->measurement_block_common_header
             .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-            measurment_block->measurement_block_common_header
+            measurement_block->measurement_block_common_header
             .measurement_size = 0xFFFF;
             spdm_response_size += (size_t)(
                 sizeof(spdm_measurement_block_common_header_t) +
@@ -1273,7 +1273,7 @@ static libspdm_return_t receive_message(
 
     case 0x13: {
         spdm_measurements_response_t *spdm_response;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -1296,14 +1296,14 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header.index = 1;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header.index = 1;
+        measurement_block->measurement_block_common_header
         .measurement_specification = 0x00000001 | 0x00000002;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -1317,7 +1317,7 @@ static libspdm_return_t receive_message(
 
     case 0x14: {
         spdm_measurements_response_t *spdm_response;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -1340,14 +1340,14 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header.index = 1;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header.index = 1;
+        measurement_block->measurement_block_common_header
         .measurement_specification = 0x00000004 | 0x00000002;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -1361,7 +1361,7 @@ static libspdm_return_t receive_message(
 
     case 0x15: {
         spdm_measurements_response_t *spdm_response;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -1384,14 +1384,14 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header.index = 1;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header.index = 1;
+        measurement_block->measurement_block_common_header
         .measurement_specification = (uint8_t)(m_libspdm_use_measurement_spec << 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -1405,7 +1405,7 @@ static libspdm_return_t receive_message(
 
     case 0x16: {
         spdm_measurements_response_t *spdm_response;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
         uint8_t *ptr;
@@ -1428,13 +1428,13 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -1454,7 +1454,7 @@ static libspdm_return_t receive_message(
     case 0x17: {
         spdm_measurements_response_t *spdm_response;
         uint8_t *ptr;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -1478,13 +1478,13 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -1510,7 +1510,7 @@ static libspdm_return_t receive_message(
     case 0x18: {
         spdm_measurements_response_t *spdm_response;
         uint8_t *ptr;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -1535,13 +1535,13 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -1569,8 +1569,8 @@ static libspdm_return_t receive_message(
         uint8_t *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         size_t sig_size;
-        size_t measurment_sig_size;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        size_t measurement_sig_size;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
         uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE;
@@ -1581,13 +1581,13 @@ static libspdm_return_t receive_message(
         ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        measurment_sig_size =
+        measurement_sig_size =
             SPDM_NONCE_SIZE + sizeof(uint16_t) + opaque_size_test +
             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         spdm_response_size = sizeof(spdm_measurements_response_t) +
                              sizeof(spdm_measurement_block_dmtf_t) +
                              libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo) + measurment_sig_size;
+            m_libspdm_use_measurement_hash_algo) + measurement_sig_size;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1600,17 +1600,17 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
+        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurement_sig_size);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
@@ -1655,8 +1655,8 @@ static libspdm_return_t receive_message(
         uint8_t *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         size_t sig_size;
-        size_t measurment_sig_size;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        size_t measurement_sig_size;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
         size_t MissingBytes;
@@ -1671,7 +1671,7 @@ static libspdm_return_t receive_message(
         ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        measurment_sig_size =
+        measurement_sig_size =
             SPDM_NONCE_SIZE + sizeof(uint16_t) +
             (opaque_size_test - MissingBytes) +
             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
@@ -1679,7 +1679,7 @@ static libspdm_return_t receive_message(
                              sizeof(spdm_measurement_block_dmtf_t) +
                              libspdm_get_measurement_hash_size(
             m_libspdm_use_measurement_hash_algo) +
-                             measurment_sig_size;
+                             measurement_sig_size;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1692,17 +1692,17 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
+        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurement_sig_size);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
@@ -1746,8 +1746,8 @@ static libspdm_return_t receive_message(
         uint8_t *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         size_t sig_size;
-        size_t measurment_sig_size;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        size_t measurement_sig_size;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
         size_t MissingBytes;
@@ -1762,7 +1762,7 @@ static libspdm_return_t receive_message(
         ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        measurment_sig_size =
+        measurement_sig_size =
             SPDM_NONCE_SIZE + sizeof(uint16_t) +
             (opaque_size_test - MissingBytes) +
             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
@@ -1770,7 +1770,7 @@ static libspdm_return_t receive_message(
                              sizeof(spdm_measurement_block_dmtf_t) +
                              libspdm_get_measurement_hash_size(
             m_libspdm_use_measurement_hash_algo) +
-                             measurment_sig_size;
+                             measurement_sig_size;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1783,17 +1783,17 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
+        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurement_sig_size);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
@@ -1837,8 +1837,8 @@ static libspdm_return_t receive_message(
         uint8_t *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         size_t sig_size;
-        size_t measurment_sig_size;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        size_t measurement_sig_size;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
         uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE / 2;
@@ -1852,14 +1852,14 @@ static libspdm_return_t receive_message(
         ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        measurment_sig_size =
+        measurement_sig_size =
             SPDM_NONCE_SIZE + sizeof(uint16_t) + opaque_size_test +
             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         spdm_response_size = sizeof(spdm_measurements_response_t) +
                              sizeof(spdm_measurement_block_dmtf_t) +
                              libspdm_get_measurement_hash_size(
             m_libspdm_use_measurement_hash_algo) +
-                             measurment_sig_size;
+                             measurement_sig_size;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -1872,17 +1872,17 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
+        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurement_sig_size);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
 
@@ -1924,7 +1924,7 @@ static libspdm_return_t receive_message(
     case 0x1D: {
         spdm_measurements_response_t *spdm_response;
         uint8_t *ptr;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
         uint16_t opaque_size_test = SPDM_MAX_OPAQUE_DATA_SIZE / 2;
@@ -1950,13 +1950,13 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -1982,7 +1982,7 @@ static libspdm_return_t receive_message(
     case 0x1E: {
         spdm_measurements_response_t *spdm_response;
         uint8_t *ptr;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
         uint16_t opaque_size_test = 0xFFFF;
@@ -2008,13 +2008,13 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -2039,7 +2039,7 @@ static libspdm_return_t receive_message(
     case 0x1F: {
         spdm_measurements_response_t *spdm_response;
         uint8_t *ptr;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
         uint16_t opaque_size_test = 0xFFFF;
@@ -2064,13 +2064,13 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -2095,7 +2095,7 @@ static libspdm_return_t receive_message(
 
     case 0x20: {
         spdm_measurements_response_t *spdm_response;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
         uint8_t *ptr;
@@ -2118,27 +2118,27 @@ static libspdm_return_t receive_message(
                              2 * ((uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                                              libspdm_get_measurement_hash_size(
                                                  m_libspdm_use_measurement_hash_algo))));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         2 * (sizeof(spdm_measurement_block_dmtf_t) +
                              libspdm_get_measurement_hash_size(
                                  m_libspdm_use_measurement_hash_algo)),
                         1);
-        measurment_block->measurement_block_common_header.index = 1;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header.index = 1;
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-        measurment_block =
-            (void *)(((uint8_t *)measurment_block) +
+        measurement_block =
+            (void *)(((uint8_t *)measurement_block) +
                      (sizeof(spdm_measurement_block_dmtf_t) +
                       libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block->measurement_block_common_header.index = 2;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header.index = 2;
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
@@ -2194,8 +2194,8 @@ static libspdm_return_t receive_message(
         uint8_t *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         size_t sig_size;
-        size_t measurment_sig_size;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        size_t measurement_sig_size;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
         uint32_t session_id;
@@ -2210,14 +2210,14 @@ static libspdm_return_t receive_message(
         ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        measurment_sig_size =
+        measurement_sig_size =
             SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         spdm_response_size = sizeof(spdm_measurements_response_t) +
                              sizeof(spdm_measurement_block_dmtf_t) +
                              libspdm_get_measurement_hash_size(
             m_libspdm_use_measurement_hash_algo) +
-                             measurment_sig_size;
+                             measurement_sig_size;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -2230,17 +2230,17 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
+        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurement_sig_size);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
         libspdm_write_uint16(ptr, 0);
@@ -2293,7 +2293,7 @@ static libspdm_return_t receive_message(
 
     case 0x23: {
         spdm_measurements_response_t *spdm_response;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        spdm_measurement_block_dmtf_t *measurement_block;
         uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
         size_t temp_buf_size;
         uint8_t* temp_buf_ptr;
@@ -2317,14 +2317,14 @@ static libspdm_return_t receive_message(
                              (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                                         libspdm_get_measurement_hash_size(
                                             m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo),
                         1);
-        measurment_block->measurement_block_common_header.measurement_specification =
+        measurement_block->measurement_block_common_header.measurement_specification =
             SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header.measurement_size =
+        measurement_block->measurement_block_common_header.measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo));
 
@@ -2351,8 +2351,8 @@ static libspdm_return_t receive_message(
         uint8_t *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         size_t sig_size;
-        size_t measurment_sig_size;
-        spdm_measurement_block_dmtf_t *measurment_block;
+        size_t measurement_sig_size;
+        spdm_measurement_block_dmtf_t *measurement_block;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -2362,14 +2362,14 @@ static libspdm_return_t receive_message(
         ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        measurment_sig_size =
+        measurement_sig_size =
             SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         spdm_response_size = sizeof(spdm_measurements_response_t) +
                              sizeof(spdm_measurement_block_dmtf_t) +
                              libspdm_get_measurement_hash_size(
             m_libspdm_use_measurement_hash_algo) +
-                             measurment_sig_size;
+                             measurement_sig_size;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -2382,17 +2382,17 @@ static libspdm_return_t receive_message(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo)));
-        measurment_block = (void *)(spdm_response + 1);
-        libspdm_set_mem(measurment_block,
+        measurement_block = (void *)(spdm_response + 1);
+        libspdm_set_mem(measurement_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_specification = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
+        measurement_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
                        libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo));
-        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
+        ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurement_sig_size);
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         ptr += SPDM_NONCE_SIZE;
         libspdm_write_uint16(ptr, 0);
