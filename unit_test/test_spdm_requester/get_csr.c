@@ -48,7 +48,7 @@ static uint8_t right_req_info[LIBSPDM_MAX_REQ_INFO_BUFFER_SIZE];
 static uint16_t right_req_info_size;
 
 /*gen right_req_info*/
-void libspdm_gen_req_info() {
+static void libspdm_gen_req_info() {
     uint8_t *req_info_p;
     void *req_info_pkinfo;
     size_t req_info_pkinfo_len;
@@ -90,7 +90,7 @@ void libspdm_gen_req_info() {
     free(req_info_pkinfo);
 }
 
-bool libspdm_read_requester_gen_csr(void **csr_data, size_t *csr_len)
+static bool libspdm_read_requester_gen_csr(void **csr_data, size_t *csr_len)
 {
     char *file;
     bool res;
@@ -105,7 +105,7 @@ bool libspdm_read_requester_gen_csr(void **csr_data, size_t *csr_len)
 }
 
 /*ensure that cached.csr exists in test_csr at the beginning*/
-void libspdm_clear_cached_csr()
+static void libspdm_clear_cached_csr()
 {
     char *new_name = "test_csr/cached.csr";
     char *file_name = "test_csr/cached.staging";

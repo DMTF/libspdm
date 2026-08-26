@@ -24,7 +24,7 @@ static uint32_t m_libspdm_chunk_response_chunk_seq_no_14 = 0;
  * unit tests requests and responses hardcode for each test case. */
 #define CHUNK_SEND_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE (42)
 
-void libspdm_requester_chunk_send_test_case1_build_algorithms_response(
+static void libspdm_requester_chunk_send_test_case1_build_algorithms_response(
     void* context, void* response, size_t* response_size)
 {
     spdm_algorithms_response_t* spdm_response;
@@ -46,7 +46,7 @@ void libspdm_requester_chunk_send_test_case1_build_algorithms_response(
     spdm_response->ext_hash_sel_count = 0;
 }
 
-void libspdm_requester_chunk_send_test_case15_build_algorithms_response(
+static void libspdm_requester_chunk_send_test_case15_build_algorithms_response(
     void* context, void* response, size_t* response_size)
 {
     spdm_algorithms_response_t* spdm_response;
@@ -509,7 +509,7 @@ static libspdm_return_t receive_message(
     return LIBSPDM_STATUS_RECEIVE_FAIL;
 }
 
-libspdm_return_t libspdm_test_requester_chunk_send_generic_test_case(
+static libspdm_return_t libspdm_test_requester_chunk_send_generic_test_case(
     void** state, uint32_t case_id)
 {
     /* Copied from Neg. Algorithms test case 2 */
@@ -578,7 +578,7 @@ libspdm_return_t libspdm_test_requester_chunk_send_generic_test_case(
 }
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
-libspdm_return_t libspdm_test_requester_chunk_send_vendor_specific_test_case(
+static libspdm_return_t libspdm_test_requester_chunk_send_vendor_specific_test_case(
     void** state, uint32_t case_id)
 {
     /* Use vendor specific request to generate a large request. */
