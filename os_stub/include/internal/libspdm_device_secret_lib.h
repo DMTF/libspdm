@@ -40,7 +40,7 @@
 /* for cert test */
 #define LIBSPDM_TEST_CERT_MAXINT16 1
 #define LIBSPDM_TEST_CERT_MAXUINT16 2
-#define LIBSPDM_LIBSPDM_TEST_CERT_MAXUINT16_LARGER 3
+#define LIBSPDM_TEST_CERT_MAXUINT16_LARGER 3
 #define LIBSPDM_TEST_CERT_SMALL 4
 
 /* Multi-key example: a slot is provisioned with a DIFFERENT leaf key than slot 0 / slot 1
