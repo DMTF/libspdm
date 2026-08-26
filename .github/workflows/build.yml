@@ -121,12 +121,12 @@ jobs:
     steps:
       - name: Toolchain Setup - VS2019 (x64)
         if: matrix.toolchain == 'VS2019' && matrix.arch == 'x64'
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: TheMrMilchmann/setup-msvc-dev@v4
         with:
           arch: x64
       - name: Toolchain Setup - VS2019 (x86)
         if: matrix.toolchain == 'VS2019' && matrix.arch == 'ia32'
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: TheMrMilchmann/setup-msvc-dev@v4
         with:
           arch: x86
       - name:  Toolchain Setup - Clang
