@@ -103,7 +103,7 @@ size_t m_libspdm_get_endpoint_info_request_err7_size =
  * Expected Behavior: generate an ERROR_RESPONSE with code
  *                    SPDM_ERROR_CODE_UNSUPPORTED_REQUEST
  **/
-void libspdm_test_responder_endpoint_info_err_case1(void **state)
+static void rsp_endpoint_info_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -157,7 +157,7 @@ void libspdm_test_responder_endpoint_info_err_case1(void **state)
  * Test 2: Force response_state = SPDM_RESPONSE_STATE_BUSY when asked GET_ENDPOINT_INFO
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_BUSY
  **/
-void libspdm_test_responder_endpoint_info_err_case2(void **state)
+static void rsp_endpoint_info_err_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -212,7 +212,7 @@ void libspdm_test_responder_endpoint_info_err_case2(void **state)
  * Test 3: Force response_state = SPDM_RESPONSE_STATE_NEED_RESYNC when asked GET_ENDPOINT_INFO
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_REQUEST_RESYNCH
  **/
-void libspdm_test_responder_endpoint_info_err_case3(void **state)
+static void rsp_endpoint_info_err_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -268,7 +268,7 @@ void libspdm_test_responder_endpoint_info_err_case3(void **state)
  * Test 4: Force response_state = SPDM_RESPONSE_STATE_NOT_READY when asked GET_ENDPOINT_INFO
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_RESPONSE_NOT_READY
  **/
-void libspdm_test_responder_endpoint_info_err_case4(void **state)
+static void rsp_endpoint_info_err_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -330,7 +330,7 @@ void libspdm_test_responder_endpoint_info_err_case4(void **state)
  * Test 5: Simulate wrong `connection_state` when asked `GET_ENDPOINT_INFO`
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_UNEXPECTED_REQUEST
  **/
-void libspdm_test_responder_endpoint_info_err_case5(void **state)
+static void rsp_endpoint_info_err_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -386,7 +386,7 @@ void libspdm_test_responder_endpoint_info_err_case5(void **state)
  * Test 6: Error Case: Responder does not support EP_INFO_CAP
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_UNSUPPORTED_REQUEST
  **/
-void libspdm_test_responder_endpoint_info_err_case6(void **state)
+static void rsp_endpoint_info_err_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -438,7 +438,7 @@ void libspdm_test_responder_endpoint_info_err_case6(void **state)
  * Test 7: Error Case: Request contains mismatch version
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_responder_endpoint_info_err_case7(void **state)
+static void rsp_endpoint_info_err_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -492,7 +492,7 @@ void libspdm_test_responder_endpoint_info_err_case7(void **state)
  * Test 8: Error Case: Signature was required, but responder only support EP_INFO_CAP_NO_SIG
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_UNSUPPORTED_REQUEST
  **/
-void libspdm_test_responder_endpoint_info_err_case8(void **state)
+static void rsp_endpoint_info_err_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -546,7 +546,7 @@ void libspdm_test_responder_endpoint_info_err_case8(void **state)
  * Test 9: Error Case: Signature was required, but there is no nonce in request
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_responder_endpoint_info_err_case9(void **state)
+static void rsp_endpoint_info_err_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -599,7 +599,7 @@ void libspdm_test_responder_endpoint_info_err_case9(void **state)
  * Test 10: Error Case: Request contains invalid slot_id
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_responder_endpoint_info_err_case10(void **state)
+static void rsp_endpoint_info_err_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -654,7 +654,7 @@ void libspdm_test_responder_endpoint_info_err_case10(void **state)
  *          but local_cert_chain_provision[slot_id] == NULL
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_responder_endpoint_info_err_case11(void **state)
+static void rsp_endpoint_info_err_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -714,7 +714,7 @@ void libspdm_test_responder_endpoint_info_err_case11(void **state)
  *          but local_public_key_provision == NULL
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_responder_endpoint_info_err_case12(void **state)
+static void rsp_endpoint_info_err_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -771,7 +771,7 @@ void libspdm_test_responder_endpoint_info_err_case12(void **state)
  *          but local_key_usage_bit_mask[slot_id] not meet requirement
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_responder_endpoint_info_err_case13(void **state)
+static void rsp_endpoint_info_err_case13(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -860,7 +860,7 @@ void libspdm_test_responder_endpoint_info_err_case13(void **state)
  * Test 14: Error case, invalid sub_code
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_responder_endpoint_info_err_case14(void **state)
+static void rsp_endpoint_info_err_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -913,22 +913,22 @@ void libspdm_test_responder_endpoint_info_err_case14(void **state)
 int libspdm_rsp_endpoint_info_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case1),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case2),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case3),
+        cmocka_unit_test(rsp_endpoint_info_err_case1),
+        cmocka_unit_test(rsp_endpoint_info_err_case2),
+        cmocka_unit_test(rsp_endpoint_info_err_case3),
         #if LIBSPDM_RESPOND_IF_READY_SUPPORT
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case4),
+        cmocka_unit_test(rsp_endpoint_info_err_case4),
         #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case5),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case6),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case7),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case8),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case9),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case10),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case11),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case12),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case13),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case14),
+        cmocka_unit_test(rsp_endpoint_info_err_case5),
+        cmocka_unit_test(rsp_endpoint_info_err_case6),
+        cmocka_unit_test(rsp_endpoint_info_err_case7),
+        cmocka_unit_test(rsp_endpoint_info_err_case8),
+        cmocka_unit_test(rsp_endpoint_info_err_case9),
+        cmocka_unit_test(rsp_endpoint_info_err_case10),
+        cmocka_unit_test(rsp_endpoint_info_err_case11),
+        cmocka_unit_test(rsp_endpoint_info_err_case12),
+        cmocka_unit_test(rsp_endpoint_info_err_case13),
+        cmocka_unit_test(rsp_endpoint_info_err_case14),
     };
 
     libspdm_test_context_t test_context = {

@@ -31,7 +31,7 @@ libspdm_return_t get_endpoint_info_callback_in_err (
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
  *                    with an empty transcript.message_e
  **/
-void libspdm_test_responder_encap_get_endpoint_info_err_case1(void **state)
+static void rsp_encap_get_endpoint_info_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -122,7 +122,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case1(void **state)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  *                    with an empty transcript.message_e
  **/
-void libspdm_test_responder_encap_get_endpoint_info_err_case2(void **state)
+static void rsp_encap_get_endpoint_info_err_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -289,7 +289,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case2(void **state)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  *                    with an empty transcript.message_e
  **/
-void libspdm_test_responder_encap_get_endpoint_info_err_case3(void **state)
+static void rsp_encap_get_endpoint_info_err_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -380,7 +380,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case3(void **state)
  * Test 4: Error case, request no signature but get response with signature
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-void libspdm_test_responder_encap_get_endpoint_info_err_case4(void **state)
+static void rsp_encap_get_endpoint_info_err_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -485,7 +485,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case4(void **state)
  * Test 5: Error case, get incorrect response when request no signature
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-void libspdm_test_responder_encap_get_endpoint_info_err_case5(void **state)
+static void rsp_encap_get_endpoint_info_err_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -559,15 +559,15 @@ int libspdm_rsp_encap_get_endpoint_info_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Get an error response */
-        cmocka_unit_test(libspdm_test_responder_encap_get_endpoint_info_err_case1),
+        cmocka_unit_test(rsp_encap_get_endpoint_info_err_case1),
         /* Get an incorrect response */
-        cmocka_unit_test(libspdm_test_responder_encap_get_endpoint_info_err_case2),
+        cmocka_unit_test(rsp_encap_get_endpoint_info_err_case2),
         /* Request signature but get response without signature */
-        cmocka_unit_test(libspdm_test_responder_encap_get_endpoint_info_err_case3),
+        cmocka_unit_test(rsp_encap_get_endpoint_info_err_case3),
         /* Request no signature but get response with signature */
-        cmocka_unit_test(libspdm_test_responder_encap_get_endpoint_info_err_case4),
+        cmocka_unit_test(rsp_encap_get_endpoint_info_err_case4),
         /* Request no signature and get incorrect response */
-        cmocka_unit_test(libspdm_test_responder_encap_get_endpoint_info_err_case5),
+        cmocka_unit_test(rsp_encap_get_endpoint_info_err_case5),
     };
 
     libspdm_test_context_t test_context = {

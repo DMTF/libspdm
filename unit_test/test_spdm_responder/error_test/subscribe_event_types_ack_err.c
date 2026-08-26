@@ -58,7 +58,7 @@ static void set_standard_state(libspdm_context_t *spdm_context)
  * Test 1: Responder does not support event mechanism.
  * Expected Behavior: Returns SPDM_ERROR_CODE_UNSUPPORTED_REQUEST.
  **/
-static void libspdm_test_responder_subscribe_event_types_ack_err_case1(void **state)
+static void rsp_subscribe_event_types_ack_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -101,7 +101,7 @@ static void libspdm_test_responder_subscribe_event_types_ack_err_case1(void **st
  * Test 2: Negotiated version is less than 1.3.
  * Expected Behavior: Returns SPDM_ERROR_CODE_UNSUPPORTED_REQUEST.
  **/
-static void libspdm_test_responder_subscribe_event_types_ack_err_case2(void **state)
+static void rsp_subscribe_event_types_ack_err_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -145,7 +145,7 @@ static void libspdm_test_responder_subscribe_event_types_ack_err_case2(void **st
  *         connection's negotiated version.
  * Expected Behavior: Responder returns SPDM_ERROR_CODE_VERSION_MISMATCH.
  **/
-static void libspdm_test_responder_subscribe_event_types_ack_err_case3(void **state)
+static void rsp_subscribe_event_types_ack_err_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -189,7 +189,7 @@ static void libspdm_test_responder_subscribe_event_types_ack_err_case3(void **st
  * Test 4: Invalid combination of SubscribeEventGroupCount (!= 0) and SubscribeListLen (== 0).
  * Expected Behavior: Responder returns SPDM_ERROR_CODE_INVALID_REQUEST.
  **/
-static void libspdm_test_responder_subscribe_event_types_ack_err_case4(void **state)
+static void rsp_subscribe_event_types_ack_err_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -234,7 +234,7 @@ static void libspdm_test_responder_subscribe_event_types_ack_err_case4(void **st
  * Test 5: Call to libspdm_event_subscribe fails.
  * Expected Behavior: Responder returns SPDM_ERROR_CODE_INVALID_REQUEST.
  **/
-static void libspdm_test_responder_subscribe_event_types_ack_err_case5(void **state)
+static void rsp_subscribe_event_types_ack_err_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -282,11 +282,11 @@ static void libspdm_test_responder_subscribe_event_types_ack_err_case5(void **st
 int libspdm_rsp_subscribe_event_types_ack_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_responder_subscribe_event_types_ack_err_case1),
-        cmocka_unit_test(libspdm_test_responder_subscribe_event_types_ack_err_case2),
-        cmocka_unit_test(libspdm_test_responder_subscribe_event_types_ack_err_case3),
-        cmocka_unit_test(libspdm_test_responder_subscribe_event_types_ack_err_case4),
-        cmocka_unit_test(libspdm_test_responder_subscribe_event_types_ack_err_case5),
+        cmocka_unit_test(rsp_subscribe_event_types_ack_err_case1),
+        cmocka_unit_test(rsp_subscribe_event_types_ack_err_case2),
+        cmocka_unit_test(rsp_subscribe_event_types_ack_err_case3),
+        cmocka_unit_test(rsp_subscribe_event_types_ack_err_case4),
+        cmocka_unit_test(rsp_subscribe_event_types_ack_err_case5),
     };
 
     libspdm_test_context_t m_test_context = {
