@@ -611,7 +611,7 @@ int libspdm_rsp_vendor_defined_response_error_test(void)
 
     libspdm_test_context_t test_context = {
         LIBSPDM_TEST_CONTEXT_VERSION,
-        true,
+        false,
     };
 
     libspdm_setup_test_context(&test_context);
