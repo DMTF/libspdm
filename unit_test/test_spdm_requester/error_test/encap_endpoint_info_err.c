@@ -102,7 +102,7 @@ size_t m_libspdm_get_endpoint_info_request_err7_size =
  * Expected Behavior: generate an ERROR_RESPONSE with code
  *                    SPDM_ERROR_CODE_UNSUPPORTED_REQUEST
  **/
-void libspdm_test_requester_encap_endpoint_info_err_case1(void **state)
+static void req_encap_endpoint_info_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -154,7 +154,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case1(void **state)
  * Test 2: Error Case: Requester does not support EP_INFO_CAP
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_UNSUPPORTED_REQUEST
  **/
-void libspdm_test_requester_encap_endpoint_info_err_case2(void **state)
+static void req_encap_endpoint_info_err_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -203,7 +203,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case2(void **state)
  * Test 3: Error Case: Request contains mismatch version
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_requester_encap_endpoint_info_err_case3(void **state)
+static void req_encap_endpoint_info_err_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -254,7 +254,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case3(void **state)
  * Test 4: Error Case: Signature was required, but responder only support EP_INFO_CAP_NO_SIG
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_UNSUPPORTED_REQUEST
  **/
-void libspdm_test_requester_encap_endpoint_info_err_case4(void **state)
+static void req_encap_endpoint_info_err_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -305,7 +305,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case4(void **state)
  * Test 5: Error Case: Signature was required, but there is no nonce in request
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_requester_encap_endpoint_info_err_case5(void **state)
+static void req_encap_endpoint_info_err_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -355,7 +355,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case5(void **state)
  * Test 6: Error Case: Request contains invalid slot_id
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_requester_encap_endpoint_info_err_case6(void **state)
+static void req_encap_endpoint_info_err_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -407,7 +407,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case6(void **state)
  *         but local_cert_chain_provision[slot_id] == NULL
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_requester_encap_endpoint_info_err_case7(void **state)
+static void req_encap_endpoint_info_err_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -465,7 +465,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case7(void **state)
  *         but local_public_key_provision == NULL
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_requester_encap_endpoint_info_err_case8(void **state)
+static void req_encap_endpoint_info_err_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -520,7 +520,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case8(void **state)
  *         but local_key_usage_bit_mask[slot_id] not meet requirement
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_requester_encap_endpoint_info_err_case9(void **state)
+static void req_encap_endpoint_info_err_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -610,7 +610,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case9(void **state)
  * Test 10: Error case, invalid sub_code
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_requester_encap_endpoint_info_err_case10(void **state)
+static void req_encap_endpoint_info_err_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -661,27 +661,27 @@ int libspdm_req_encap_endpoint_info_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Connection version is lower than 1.3 */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case1),
+        cmocka_unit_test(req_encap_endpoint_info_err_case1),
         /* Requester does not support EP_INFO_CAP */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case2),
+        cmocka_unit_test(req_encap_endpoint_info_err_case2),
         /* Request contains mismatch version */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case3),
+        cmocka_unit_test(req_encap_endpoint_info_err_case3),
         /* Signature was required, but responder only support EP_INFO_CAP_NO_SIG */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case4),
+        cmocka_unit_test(req_encap_endpoint_info_err_case4),
         /* Signature was required, but there is no nonce in request */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case5),
+        cmocka_unit_test(req_encap_endpoint_info_err_case5),
         /* Request contains invalid slot_id */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case6),
+        cmocka_unit_test(req_encap_endpoint_info_err_case6),
         /* Signature was required but local_cert_chain_provision[slot_id] == NULL */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case7),
+        cmocka_unit_test(req_encap_endpoint_info_err_case7),
         /* Signature was required, slot_id == 0xF but local_public_key_provision == NULL */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case8),
+        cmocka_unit_test(req_encap_endpoint_info_err_case8),
         /* Signature was required, multi_key_conn_rsp is set but
          * local_key_usage_bit_mask[slot_id] not meet requirement
          */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case9),
+        cmocka_unit_test(req_encap_endpoint_info_err_case9),
         /* Invalid sub_code */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_err_case10),
+        cmocka_unit_test(req_encap_endpoint_info_err_case10),
     };
 
     libspdm_test_context_t test_context = {

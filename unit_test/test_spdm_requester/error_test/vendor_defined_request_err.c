@@ -296,7 +296,7 @@ static libspdm_return_t receive_message(
  * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_PARAMETER
  * due to invalid length of data field in the response
  **/
-static void libspdm_test_requester_vendor_cmds_err_case1(void **state)
+static void req_vendor_defined_request_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -349,7 +349,7 @@ static void libspdm_test_requester_vendor_cmds_err_case1(void **state)
  *         Get a response with invalid header.param1
  * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD
  **/
-static void libspdm_test_requester_vendor_cmds_err_case2(void **state)
+static void req_vendor_defined_request_err_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -401,7 +401,7 @@ static void libspdm_test_requester_vendor_cmds_err_case2(void **state)
  *         Get a response with invalid header.param1
  * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_SIZE
  **/
-static void libspdm_test_requester_vendor_cmds_err_case3(void **state)
+static void req_vendor_defined_request_err_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -453,7 +453,7 @@ static void libspdm_test_requester_vendor_cmds_err_case3(void **state)
  *         Get a response with invalid header.param1
  * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD
  **/
-static void libspdm_test_requester_vendor_cmds_err_case4(void **state)
+static void req_vendor_defined_request_err_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -503,10 +503,10 @@ static void libspdm_test_requester_vendor_cmds_err_case4(void **state)
 int libspdm_req_vendor_defined_request_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_requester_vendor_cmds_err_case1),
-        cmocka_unit_test(libspdm_test_requester_vendor_cmds_err_case2),
-        cmocka_unit_test(libspdm_test_requester_vendor_cmds_err_case3),
-        cmocka_unit_test(libspdm_test_requester_vendor_cmds_err_case4),
+        cmocka_unit_test(req_vendor_defined_request_err_case1),
+        cmocka_unit_test(req_vendor_defined_request_err_case2),
+        cmocka_unit_test(req_vendor_defined_request_err_case3),
+        cmocka_unit_test(req_vendor_defined_request_err_case4),
     };
 
     libspdm_test_context_t test_context = {

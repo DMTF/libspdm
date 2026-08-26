@@ -855,7 +855,7 @@ static libspdm_return_t receive_message(
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
  *                    with an empty transcript.message_e
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case1(void **state)
+static void req_get_endpoint_info_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -939,7 +939,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case1(void **state)
  * Test 2: Error case, connection version is lower than 1.3
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case2(void **state)
+static void req_get_endpoint_info_err_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1025,7 +1025,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case2(void **state)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
  *                    with an empty transcript.message_e
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case3(void **state)
+static void req_get_endpoint_info_err_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1111,7 +1111,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case3(void **state)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
  *                    with an empty transcript.message_e
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case4(void **state)
+static void req_get_endpoint_info_err_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1198,7 +1198,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case4(void **state)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
  *                    with an empty transcript.message_e
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case5(void **state)
+static void req_get_endpoint_info_err_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1286,7 +1286,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case5(void **state)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
  *                    with an empty transcript.message_e
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case6(void **state)
+static void req_get_endpoint_info_err_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1375,7 +1375,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case6(void **state)
  * Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case7(void **state)
+static void req_get_endpoint_info_err_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1479,7 +1479,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case7(void **state)
  * Test 8: Error case, response with wrong response code
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case8(void **state)
+static void req_get_endpoint_info_err_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1564,7 +1564,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case8(void **state)
  * Test 9: Error case, response with wrong version
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case9(void **state)
+static void req_get_endpoint_info_err_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1649,7 +1649,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case9(void **state)
  * Test 10: Error case, response without signature
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case10(void **state)
+static void req_get_endpoint_info_err_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1734,7 +1734,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case10(void **state)
  * Test 11: Error case, response with invalid signature (random)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case11(void **state)
+static void req_get_endpoint_info_err_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1819,7 +1819,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case11(void **state)
  * Test 12: Error case, response with invalid signature (all bytes are 0)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case12(void **state)
+static void req_get_endpoint_info_err_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1904,7 +1904,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case12(void **state)
  * Test 13: Error case, response with wrong ep_info_length
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case13(void **state)
+static void req_get_endpoint_info_err_case13(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1989,7 +1989,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case13(void **state)
  * Test 14: Error case, responder capability flag is NO_SIG but request signature
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case14(void **state)
+static void req_get_endpoint_info_err_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2074,7 +2074,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case14(void **state)
  * Test 15: Error case, request no signature but slot id not 0
  * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case15(void **state)
+static void req_get_endpoint_info_err_case15(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2112,7 +2112,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case15(void **state)
  * Test 16: Error case, request no signature but responder's slot id not 0
  * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case16(void **state)
+static void req_get_endpoint_info_err_case16(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2150,7 +2150,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case16(void **state)
  * Test 17: Error case, request no signature and response with wrong ep_info_length
  * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case17(void **state)
+static void req_get_endpoint_info_err_case17(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2188,7 +2188,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case17(void **state)
  * Test 18: Error case, request no signature but response with signature
  * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case18(void **state)
+static void req_get_endpoint_info_err_case18(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2226,7 +2226,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case18(void **state)
  * Test 19: Error case, response with wrong slot_id
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case19(void **state)
+static void req_get_endpoint_info_err_case19(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2311,7 +2311,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case19(void **state)
  * Test 20: Error case, input buffer ep_info_length too small.
  * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty transcript.message_e
  **/
-static void libspdm_test_requester_get_endpoint_info_err_case20(void **state)
+static void req_get_endpoint_info_err_case20(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2394,26 +2394,26 @@ static void libspdm_test_requester_get_endpoint_info_err_case20(void **state)
 int libspdm_req_get_endpoint_info_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case1),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case2),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case3),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case4),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case5),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case6),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case7),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case8),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case9),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case10),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case11),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case12),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case13),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case14),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case15),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case16),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case17),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case18),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case19),
-        cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case20),
+        cmocka_unit_test(req_get_endpoint_info_err_case1),
+        cmocka_unit_test(req_get_endpoint_info_err_case2),
+        cmocka_unit_test(req_get_endpoint_info_err_case3),
+        cmocka_unit_test(req_get_endpoint_info_err_case4),
+        cmocka_unit_test(req_get_endpoint_info_err_case5),
+        cmocka_unit_test(req_get_endpoint_info_err_case6),
+        cmocka_unit_test(req_get_endpoint_info_err_case7),
+        cmocka_unit_test(req_get_endpoint_info_err_case8),
+        cmocka_unit_test(req_get_endpoint_info_err_case9),
+        cmocka_unit_test(req_get_endpoint_info_err_case10),
+        cmocka_unit_test(req_get_endpoint_info_err_case11),
+        cmocka_unit_test(req_get_endpoint_info_err_case12),
+        cmocka_unit_test(req_get_endpoint_info_err_case13),
+        cmocka_unit_test(req_get_endpoint_info_err_case14),
+        cmocka_unit_test(req_get_endpoint_info_err_case15),
+        cmocka_unit_test(req_get_endpoint_info_err_case16),
+        cmocka_unit_test(req_get_endpoint_info_err_case17),
+        cmocka_unit_test(req_get_endpoint_info_err_case18),
+        cmocka_unit_test(req_get_endpoint_info_err_case19),
+        cmocka_unit_test(req_get_endpoint_info_err_case20),
     };
 
     libspdm_test_context_t test_context = {
