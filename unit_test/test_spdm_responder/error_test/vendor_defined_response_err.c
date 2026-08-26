@@ -69,7 +69,7 @@ static libspdm_return_t libspdm_vendor_response_func_err_test(
  * Test 1: Sending a vendor defined request with one parameter NULL
  * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_PARAMETER
  **/
-static void libspdm_test_responder_vendor_cmds_err_case1(void **state)
+static void rsp_vendor_defined_response_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -127,7 +127,7 @@ static void libspdm_test_responder_vendor_cmds_err_case1(void **state)
  * Test 2: Responder does not support VDMs.
  * Expected behavior: Responder replies with UnsupportedRequest.
  **/
-static void libspdm_test_responder_vendor_cmds_err_case2(void **state)
+static void rsp_vendor_defined_response_err_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -186,7 +186,7 @@ static void libspdm_test_responder_vendor_cmds_err_case2(void **state)
  * Expected behavior: Responder replies with InvalidRequest.
  **/
 
-static void libspdm_test_responder_vendor_cmds_err_case3(void **state)
+static void rsp_vendor_defined_response_err_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -255,7 +255,7 @@ static void libspdm_test_responder_vendor_cmds_err_case3(void **state)
  * Test 4: When payload requested, request size mismatch.
  * Expected behavior: Responder replies with InvalidRequest.
  **/
-static void libspdm_test_responder_vendor_cmds_err_case4(void **state)
+static void rsp_vendor_defined_response_err_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -321,7 +321,7 @@ static void libspdm_test_responder_vendor_cmds_err_case4(void **state)
  * Test 5: When payload requested, request payload size mismatch.
  * Expected behavior: Responder replies with InvalidRequest.
  **/
-static void libspdm_test_responder_vendor_cmds_err_case5(void **state)
+static void rsp_vendor_defined_response_err_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -387,7 +387,7 @@ static void libspdm_test_responder_vendor_cmds_err_case5(void **state)
  * Test 6: When Large payload requested, request size mismatch.
  * Expected behavior: Responder replies with InvalidRequest.
  **/
-static void libspdm_test_responder_vendor_cmds_err_case6(void **state)
+static void rsp_vendor_defined_response_err_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -456,7 +456,7 @@ static void libspdm_test_responder_vendor_cmds_err_case6(void **state)
  * Test 7: When Large payload requested, request payload size mismatch.
  * Expected behavior: Responder replies with InvalidRequest.
  **/
-static void libspdm_test_responder_vendor_cmds_err_case7(void **state)
+static void rsp_vendor_defined_response_err_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -525,7 +525,7 @@ static void libspdm_test_responder_vendor_cmds_err_case7(void **state)
  * Test 8: Sending a vendor defined request in a session with NOT_STARTED state.
  * Expected behavior: Responder replies with UnexpectedRequest.
  **/
-static void libspdm_test_responder_vendor_cmds_err_case8(void **state)
+static void rsp_vendor_defined_response_err_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -599,14 +599,14 @@ static void libspdm_test_responder_vendor_cmds_err_case8(void **state)
 int libspdm_rsp_vendor_defined_response_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case1),
-        cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case2),
-        cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case3),
-        cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case4),
-        cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case5),
-        cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case6),
-        cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case7),
-        cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case8),
+        cmocka_unit_test(rsp_vendor_defined_response_err_case1),
+        cmocka_unit_test(rsp_vendor_defined_response_err_case2),
+        cmocka_unit_test(rsp_vendor_defined_response_err_case3),
+        cmocka_unit_test(rsp_vendor_defined_response_err_case4),
+        cmocka_unit_test(rsp_vendor_defined_response_err_case5),
+        cmocka_unit_test(rsp_vendor_defined_response_err_case6),
+        cmocka_unit_test(rsp_vendor_defined_response_err_case7),
+        cmocka_unit_test(rsp_vendor_defined_response_err_case8),
     };
 
     libspdm_test_context_t test_context = {

@@ -56,7 +56,7 @@ static void set_standard_state(libspdm_context_t *spdm_context)
 /**
  * Test 1: Induce an error from libspdm_generate_event_list.
  **/
-static void test_responder_encap_send_event_err_case1(void **state)
+static void rsp_encap_send_event_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -80,7 +80,7 @@ static void test_responder_encap_send_event_err_case1(void **state)
 /**
  * Test 2: Encapsulated EVENT_ACK is not the negotiated version.
  **/
-static void test_responder_encap_send_event_err_case2(void **state)
+static void rsp_encap_send_event_err_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -113,8 +113,8 @@ static void test_responder_encap_send_event_err_case2(void **state)
 int libspdm_rsp_encap_send_event_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(test_responder_encap_send_event_err_case1),
-        cmocka_unit_test(test_responder_encap_send_event_err_case2),
+        cmocka_unit_test(rsp_encap_send_event_err_case1),
+        cmocka_unit_test(rsp_encap_send_event_err_case2),
     };
 
     libspdm_test_context_t test_context = {

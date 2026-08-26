@@ -58,7 +58,7 @@ static void set_standard_state(libspdm_context_t *spdm_context)
  * Test 1: Responder has not set EVENT_CAP.
  * Expected Behavior: Responder returns SPDM_ERROR_CODE_UNSUPPORTED_REQUEST.
  **/
-static void libspdm_test_responder_supported_event_types_err_case1(void **state)
+static void rsp_supported_event_types_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -99,7 +99,7 @@ static void libspdm_test_responder_supported_event_types_err_case1(void **state)
  * Test 2: Negotiated SPDM version does not support GET_SUPPORTED_EVENT_TYPES request message.
  * Expected Behavior: Responder returns SPDM_ERROR_CODE_UNSUPPORTED_REQUEST.
  **/
-static void libspdm_test_responder_supported_event_types_err_case2(void **state)
+static void rsp_supported_event_types_err_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -141,7 +141,7 @@ static void libspdm_test_responder_supported_event_types_err_case2(void **state)
  * Test 3: Size of GET_SUPPORTED_EVENT_TYPES request message is incorrect.
  * Expected Behavior: Responder returns SPDM_ERROR_CODE_INVALID_REQUEST.
  **/
-static void libspdm_test_responder_supported_event_types_err_case3(void **state)
+static void rsp_supported_event_types_err_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -183,7 +183,7 @@ static void libspdm_test_responder_supported_event_types_err_case3(void **state)
  *         connection's negotiated version.
  * Expected Behavior: Responder returns SPDM_ERROR_CODE_VERSION_MISMATCH.
  **/
-static void libspdm_test_responder_supported_event_types_err_case4(void **state)
+static void rsp_supported_event_types_err_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -222,7 +222,7 @@ static void libspdm_test_responder_supported_event_types_err_case4(void **state)
  * Test 5: Call to libspdm_event_get_types fails.
  * Expected Behavior: Responder returns SPDM_ERROR_CODE_UNSPECIFIED.
  **/
-static void libspdm_test_responder_supported_event_types_err_case5(void **state)
+static void rsp_supported_event_types_err_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -264,11 +264,11 @@ static void libspdm_test_responder_supported_event_types_err_case5(void **state)
 int libspdm_rsp_supported_event_types_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_responder_supported_event_types_err_case1),
-        cmocka_unit_test(libspdm_test_responder_supported_event_types_err_case2),
-        cmocka_unit_test(libspdm_test_responder_supported_event_types_err_case3),
-        cmocka_unit_test(libspdm_test_responder_supported_event_types_err_case4),
-        cmocka_unit_test(libspdm_test_responder_supported_event_types_err_case5),
+        cmocka_unit_test(rsp_supported_event_types_err_case1),
+        cmocka_unit_test(rsp_supported_event_types_err_case2),
+        cmocka_unit_test(rsp_supported_event_types_err_case3),
+        cmocka_unit_test(rsp_supported_event_types_err_case4),
+        cmocka_unit_test(rsp_supported_event_types_err_case5),
     };
 
     libspdm_test_context_t test_context = {
