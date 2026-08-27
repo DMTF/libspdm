@@ -5,10 +5,10 @@ expanded in subsequent versions of the specification into multiple flows with di
 characteristics. At a high level these flows can be categorized as
 
 - Mutual Authentication
-    - `GET_DIGEST` and `GET_CERTIFICATE`.
+    - `GET_DIGESTS` and `GET_CERTIFICATE`.
     - The deprecated basic mutual authentication flow also includes `CHALLENGE`.
 - Certificate Retrieval
-    - `GET_DIGEST` and `GET_CERTIFICATE` outside of the mutual authentication flow.
+    - `GET_DIGESTS` and `GET_CERTIFICATE` outside of the mutual authentication flow.
 - Secure Session Management
     - `KEY_UPDATE` and `END_SESSION`.
 - Events
@@ -49,7 +49,7 @@ outside of a secure session. For example, libspdm should be able to accommodate 
 Integrator may
 - Evaluate the `CHALLENGE.Context` or `KEY_EXCHANGE.OpaqueData` fields to determine whether to
   proceed with mutual authentication.
-- Specify whether to issue `GET_DIGESTS` and/or `GET_CERTIFICATE` or not.
+- Specify whether to issue `GET_DIGESTS` and/or `GET_CERTIFICATE`.
 - Specify the Requester's certificate slot.
     - For session-based mutual authentication the certificate slot is specified either in
       `KEY_EXCHANGE_RSP` or `ENCAPSULATED_RESPONSE_ACK`.
@@ -58,8 +58,7 @@ Integrator may
 
 ### Secure Session Management
 
-For `KEY_UPDATE` Integrator may specify `UpdateKey` or `UpdateAllKeys`. Presumably libspdm would
-automatically follow that up with `VerifyNewKey`.
+For `KEY_UPDATE` Integrator may specify `UpdateKey` or `UpdateAllKeys`.
 
 For `END_SESSION` there is nothing for the Integrator to specify, as the Negotiated State Clearing
 Indicator does not apply to the Requester as it does not have `CACHE_CAP`.
@@ -84,31 +83,37 @@ enforced by both the Requester and Responder.
 
 If the Responder signals for mutual authentication in its `CHALLENGE_AUTH` response then the next
 request from the Requester must be `GET_ENCAPSULATED_REQUEST`. After that the encapsulated requests
-from the Responder are limited to `GET_DIGESTS`, `GET_CERTIFICATE`, and `CHALLENGE`. The Responder
-can terminate the flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2` or sending an `ERROR`
-response. Once the encapsulated `CHALLENGE_AUTH` response is returned to the Responder, then it
-must terminate the encapsulated flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2`.
+from the Responder are limited to
+- `GET_DIGESTS` and `GET_CERTIFICATE` if the Requester's `CERT_CAP` is set.
+- `CHALLENGE`.
+
+The Responder can terminate the flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2` or sending an
+`ERROR` response. Once the encapsulated `CHALLENGE_AUTH` response is returned to the Responder, then
+it must terminate the encapsulated flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2`. All messages
+must be sent outside of a session.
 
 ### Session-based Mutual Authentication
 
 If the Responder signals for mutual authentication in its `KEY_EXCHANGE_RSP` then the next request
 from the Requester depends on the value of `MutAuthRequested`. If
 - Bit 0 is set then the next request must be `FINISH` and there is no encapsulated flow.
+    - This is the only legal option if the Requester's `PUB_KEY_ID_CAP` is set.
 - Bit 1 is set then the next request must be `GET_ENCAPSULATED_REQUEST`.
 - Bit 2 is set then the next request must be `DELIVER_ENCAPSULATED_RESPONSE` with
   `EncapsulatedResponse` delivering the Requester's `DIGESTS` response.
 
-Within the encapsulated flow the encapsulated requests are limited to `GET_DIGESTS` and
-`GET_CERTIFICATE`. The Responder can terminate the flow by clearing
-`ENCAPSULATED_RESPONSE_ACK.Param2` or sending an `ERROR` response.
+If the Requester has set `CERT_CAP` then within the encapsulated flow the encapsulated requests are
+limited to `GET_DIGESTS` and `GET_CERTIFICATE`. The Responder can terminate the flow by clearing
+`ENCAPSULATED_RESPONSE_ACK.Param2` or sending an `ERROR` response. All messages must be sent within
+the same session.
 
 ### Requester-initiated Encapsulated Flow
 
 The Requester-initiated encapsulated flow begins with the Requester sending
 `GET_ENCAPSULATED_REQUEST`. If outside of a session then the following encapsulated requests are
 legal.
-- `GET_CERTIFICATE`
 - `GET_DIGESTS`
+- `GET_CERTIFICATE`
 - `GET_ENDPOINT_INFO`
 
 Within a session the above encapsulated requests are all legal, with the addition of the following
@@ -141,29 +146,44 @@ Example encapsulated state management handler:
 /* libspdm receives a GET_ENCAPSULATED_REQUEST or DELIVER_ENCAPSULATED_RESPONSE message and calls
  * into libspdm_encap_state_handler. */
 
-libspdm_return_t libspdm_encap_state_handler (void *spdm_context,
-                                              uint32_t *session_id,
-                                              libspdm_encap_flow_type_t encap_flow_type, ...)
+libspdm_return_t libspdm_encap_state_handler(
+    void *spdm_context,
+    const uint32_t *session_id,
+    libspdm_encap_flow_type_t encap_flow_type,
+    uint8_t last_request_code,
+    bool *terminate_flow,
+    size_t *encap_request_size,
+    void *encap_request)
 {
     /* Integrator can use a pointer in libspdm_session_info or non-session spdm_context to access
      * Integrator-defined state related to the encapsulated flow. */
 
     switch (state) {
     case a:
-    /* Get digests. Information can be retrieved via LIBSPDM_DATA_PEER_* and libspdm_get_data. */
-    return libspdm_encap_get_digest(..., session_id);
-
+        /* Get digests. Information can be retrieved via LIBSPDM_DATA_PEER_* and
+         * libspdm_get_data. */
+        return libspdm_get_encap_request_get_digests(spdm_context, session_id,
+                                                     encap_request_size, encap_request);
     case b:
-    /* Get certificate chain from certificate slot 5. */
-    return libspdm_encap_get_certificate(..., session_id, 5);
-
+        /* Get certificate chain from certificate slot 5. */
+        return libspdm_get_encap_request_get_certificate(spdm_context, session_id, 5,
+                                                         encap_request_size, encap_request);
     case c:
-    /* Get endpoint information using certificate slot 5. */
-    return libspdm_encap_get_endpoint_info(..., session_id, ..., 5, ...);
-
+        /* Get endpoint information using certificate slot 5, with signature requested. */
+        return libspdm_get_encap_request_get_endpoint_info(
+            spdm_context, session_id,
+            SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+            5,
+            SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
+            encap_request_size, encap_request);
     case d:
-    /* Terminate encapsulated flow. */
-    return libspdm_encap_terminate_flow(..., session_id);
+        /* Send events. */
+        return libspdm_get_encap_request_send_event(spdm_context, *session_id,
+                                                    encap_request_size, encap_request);
+    case e:
+        /* Terminate encapsulated flow. */
+        *terminate_flow = true;
+        return LIBSPDM_STATUS_SUCCESS;
     }
 }
 ```
@@ -174,3 +194,6 @@ When multiple encapsulated `GET_CERTIFICATE` requests are issued to retrieve a s
 chain, then libspdm handles the multiple `ENCAPSULATED_RESPONSE` and `DELIVER_ENCAPSULATED_RESPONSE`
 messages. Once the entire certificate chain has been retrieved then libspdm calls
 `libspdm_encap_state_handler`.
+
+When an encapsulated `KEY_UPDATE` request with `UpdateKey` or `UpdateAllKeys` is issued, libspdm
+will handle sending the subsequent `KEY_UPDATE` with `VerifyNewKey`.
