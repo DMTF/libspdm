@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -41,7 +41,8 @@ extern bool libspdm_challenge_opaque_data(
     void *opaque_data,
     size_t *opaque_data_size);
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_SEND_CHALLENGE_SUPPORT)
 /**
  * Queries whether basic mutual authentication should be initiated or not.
  *
@@ -62,7 +63,7 @@ extern bool libspdm_challenge_start_mut_auth(
     uint8_t slot_id,
     size_t request_context_size,
     const void *request_context);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (..) */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
 
 /**

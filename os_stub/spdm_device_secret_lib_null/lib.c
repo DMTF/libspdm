@@ -94,7 +94,8 @@ bool libspdm_encap_challenge_opaque_data(
     return false;
 }
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_SEND_CHALLENGE_SUPPORT)
 bool libspdm_challenge_start_mut_auth(
     void *spdm_context,
     spdm_version_number_t spdm_version,
@@ -104,7 +105,7 @@ bool libspdm_challenge_start_mut_auth(
 {
     return false;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (..) */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP

@@ -511,7 +511,8 @@ libspdm_return_t libspdm_handle_encap_error_response_main(uint8_t error_code)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
-#if LIBSPDM_SEND_CHALLENGE_SUPPORT
+#if (LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_SEND_CHALLENGE_SUPPORT)
 void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
 {
     spdm_context->encap_context.session_id = INVALID_SESSION_ID;
@@ -553,7 +554,7 @@ void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
 
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 }
-#endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP) && (..) */
 
 void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context, uint8_t mut_auth_requested)
 {

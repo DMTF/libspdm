@@ -165,7 +165,8 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
     spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
     auth_attribute = (uint8_t)(slot_id & 0xF);
 
-    #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+    #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_SEND_CHALLENGE_SUPPORT)
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         if (libspdm_is_capabilities_flag_supported(
                 spdm_context, false,
@@ -192,7 +193,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
             }
         }
     }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+    #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (..) */
 
     spdm_response->header.param1 = auth_attribute;
 
