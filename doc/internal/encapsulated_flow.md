@@ -103,7 +103,9 @@ from the Requester depends on the value of `MutAuthRequested`. If
   `EncapsulatedResponse` delivering the Requester's `DIGESTS` response.
 
 If the Requester has set `CERT_CAP` then within the encapsulated flow the encapsulated requests are
-limited to `GET_DIGESTS` and `GET_CERTIFICATE`. The Responder can terminate the flow by clearing
+limited to `GET_DIGESTS` and `GET_CERTIFICATE`. If either Bit 1 or Bit 2 of `MutAuthRequested` is
+set then the Integrator can specify the Requester's `SlotID` to be used for signature generation
+in the `FINISH` request. The Responder can terminate the flow by clearing
 `ENCAPSULATED_RESPONSE_ACK.Param2` or sending an `ERROR` response. All messages must be sent within
 the same session.
 
@@ -181,6 +183,12 @@ libspdm_return_t libspdm_encap_state_handler(
         return libspdm_get_encap_request_send_event(spdm_context, *session_id,
                                                     encap_request_size, encap_request);
     case e:
+        /* Designate certificate slot 5 for session-based mutual authentication. libspdm conveys
+         * it in the final ENCAPSULATED_RESPONSE_ACK. */
+        libspdm_set_encap_req_slot_id(spdm_context, session_id, 5);
+        *terminate_flow = true;
+        return LIBSPDM_STATUS_SUCCESS;
+    case f:
         /* Terminate encapsulated flow. */
         *terminate_flow = true;
         return LIBSPDM_STATUS_SUCCESS;
