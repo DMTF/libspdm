@@ -778,6 +778,31 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
 libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_context,
                                                       size_t request_size, const void *request,
                                                       size_t *response_size, void *response);
+
+#if LIBSPDM_CERT_PARSE_SUPPORT
+/**
+ * Verify that a certificate chain meets the requirements for the requested certificate model and
+ * key pair (the SET_CERTIFICATE content check, DSP0274). The SLOT_MANAGEMENT SetCertificate SubCode
+ * reuses this so its validation is identical to base SET_CERTIFICATE.
+ *
+ * @param  spdm_version     The negotiated SPDM version.
+ * @param  cert_chain       The certificate chain (DER certificates, without the spdm_cert_chain_t
+ *                          header and root hash).
+ * @param  cert_chain_size  Size, in bytes, of cert_chain.
+ * @param  base_asym_algo   The negotiated base asymmetric algorithm.
+ * @param  pqc_asym_algo    The negotiated PQC asymmetric algorithm (0 if unused).
+ * @param  base_hash_algo   The negotiated base hash algorithm.
+ * @param  cert_model       The certificate model of the chain.
+ *
+ * @retval true   The certificate chain is valid.
+ * @retval false  The certificate chain failed verification.
+ **/
+bool libspdm_set_cert_verify_certchain(
+    uint8_t spdm_version,
+    const uint8_t *cert_chain, size_t cert_chain_size,
+    uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+    uint8_t cert_model);
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
@@ -1010,6 +1035,12 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
                                                             size_t *response_size,
                                                             void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
+
+#if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
+libspdm_return_t libspdm_get_response_slot_management(libspdm_context_t *spdm_context,
+                                                      size_t request_size, const void *request,
+                                                      size_t *response_size, void *response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
 
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP

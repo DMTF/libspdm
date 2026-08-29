@@ -44,6 +44,10 @@ int libspdm_rsp_set_key_pair_info_ack_test(void);
 int libspdm_rsp_set_key_pair_info_ack_error_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP*/
 
+#if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
+int libspdm_rsp_slot_management_test(void);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
+
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
 #if (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP || LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP || \
      LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP || LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || \
@@ -189,6 +193,12 @@ int main(void)
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP*/
+
+    #if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
+    if (libspdm_rsp_slot_management_test() != 0) {
+        return_value = 1;
+    }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
 
     #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     #if (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP || LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP || \

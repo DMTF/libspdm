@@ -11,7 +11,9 @@
 #include "internal/libspdm_lib_config.h"
 #include "industry_standard/spdm.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+/* The key pair read functions are also used by the SLOT_MANAGEMENT feature, which maps one
+ * Bank per key pair, so they are exposed when either capability is enabled. */
+#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP || LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
 
 /**
  * read the key pair info of the key_pair_id.
@@ -57,7 +59,8 @@ extern bool libspdm_read_key_pair_info(
     uint8_t *assoc_cert_slot_mask,
     uint16_t *public_key_info_len,
     uint8_t *public_key_info);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP ||
+        * LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
 /**
