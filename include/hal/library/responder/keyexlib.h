@@ -80,9 +80,11 @@ extern bool libspdm_finish_rsp_opaque_data(
  * @param  session_id    Secure session identifier.
  * @param  spdm_version  Indicates the negotiated version.
  * @param  slot_id       The certificate slot within the KEY_EXCHANGE request.
- * @param  req_slot_id   The certificate slot within the KEY_EXCHANGE_RSP response.
- *                       This value can be non-zero only when
- *                       SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED is returned.
+ * @param  req_slot_id   The certificate slot within the KEY_EXCHANGE_RSP response. When
+ *                       SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED is returned this shall be
+ *                       0xF if the Requester's public key was provisioned to the Responder, and
+ *                       between 0 and 7 inclusive otherwise. For every other return value it
+ *                       shall be 0, as the slot is conveyed by the encapsulated flow.
  *
  * @param  session_policy  Policy for the session. A bitmask whose values are
  *                         SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_*.
