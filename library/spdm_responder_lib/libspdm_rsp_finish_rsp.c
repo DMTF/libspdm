@@ -596,6 +596,14 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context, si
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   spdm_request->header.request_response_code);
 
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_reset_message_f(spdm_context, session_info);
+#else
+    if (session_info->session_transcript.message_f_initialized) {
+        libspdm_reset_message_f(spdm_context, session_info);
+    }
+#endif
+
     status = libspdm_append_message_f(spdm_context, session_info, false, request,
                                       request_size - (signature_size + hmac_size));
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
