@@ -95,6 +95,39 @@ extern bool g_generate_key_exchange_opaque_data;
 extern bool g_event_all_subscribe;
 extern bool g_event_all_unsubscribe;
 
+static int rsp_key_exchange_rsp_setup(void **state)
+{
+    libspdm_key_exchange_request_mine_t *const requests[] = {
+        &m_libspdm_key_exchange_request1, &m_libspdm_key_exchange_request2,
+        &m_libspdm_key_exchange_request3, &m_libspdm_key_exchange_request4,
+        &m_libspdm_key_exchange_request5, &m_libspdm_key_exchange_request6,
+        &m_libspdm_key_exchange_request7, &m_libspdm_key_exchange_request8,
+        &m_libspdm_key_exchange_request9, &m_libspdm_key_exchange_request10,
+    };
+    libspdm_context_t *spdm_context;
+    size_t index;
+
+    /* SessionPolicy is the only request field that a test writes and a later user of the same
+     * request does not write before sending it. */
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(requests); index++) {
+        requests[index]->session_policy = 0;
+    }
+
+    /* A test that turns on multi-key, or that narrows a slot's key usage, is the only one that
+     * sets either field, so restore the values libspdm_init_context leaves them at. */
+    spdm_context = libspdm_get_test_context()->spdm_context;
+    spdm_context->connection_info.multi_key_conn_rsp = false;
+    for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
+        spdm_context->local_context.local_key_usage_bit_mask[index] = 0;
+    }
+
+    g_key_exchange_start_mut_auth = 0;
+    g_mandatory_mut_auth = false;
+    g_generate_key_exchange_opaque_data = false;
+
+    return 0;
+}
+
 static void rsp_key_exchange_rsp_case1(void **state)
 {
     libspdm_return_t status;
@@ -1994,8 +2027,6 @@ static void rsp_key_exchange_rsp_case23(void **state)
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSPECIFIED);
     assert_int_equal(spdm_response->header.param2, 0);
 
-    g_key_exchange_start_mut_auth = 0;
-    g_mandatory_mut_auth = false;
     free(data1);
 }
 
@@ -2078,8 +2109,6 @@ static void rsp_key_exchange_rsp_case24(void **state)
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_POLICY);
     assert_int_equal(spdm_response->header.param2, 0);
 
-    g_mandatory_mut_auth = false;
-    g_key_exchange_start_mut_auth = 0;
     free(data1);
 }
 
@@ -2183,7 +2212,6 @@ static void rsp_key_exchange_rsp_case25(void **state)
     assert_int_equal(opaque_length,
                      libspdm_get_opaque_data_version_selection_data_size(spdm_context));
 
-    g_generate_key_exchange_opaque_data = false;
     free(data1);
 }
 
@@ -2191,51 +2219,51 @@ int libspdm_rsp_key_exchange_rsp_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
-        cmocka_unit_test(rsp_key_exchange_rsp_case1),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case1, rsp_key_exchange_rsp_setup),
         /* Bad request size*/
-        cmocka_unit_test(rsp_key_exchange_rsp_case2),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case2, rsp_key_exchange_rsp_setup),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(rsp_key_exchange_rsp_case3),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case3, rsp_key_exchange_rsp_setup),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(rsp_key_exchange_rsp_case4),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case4, rsp_key_exchange_rsp_setup),
         #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(rsp_key_exchange_rsp_case5),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case5, rsp_key_exchange_rsp_setup),
         #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
-        cmocka_unit_test(rsp_key_exchange_rsp_case6),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case6, rsp_key_exchange_rsp_setup),
         /* Buffer reset*/
-        cmocka_unit_test(rsp_key_exchange_rsp_case7),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case7, rsp_key_exchange_rsp_setup),
         /* TCB measurement hash requested */
-        cmocka_unit_test(rsp_key_exchange_rsp_case8),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case8, rsp_key_exchange_rsp_setup),
         /* All measurement hash requested */
-        cmocka_unit_test(rsp_key_exchange_rsp_case9),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case9, rsp_key_exchange_rsp_setup),
         /* Reserved value in Measurement summary. Error + Invalid */
-        cmocka_unit_test(rsp_key_exchange_rsp_case10),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case10, rsp_key_exchange_rsp_setup),
         /* TCB measurement hash requested, measurement flag not set */
-        cmocka_unit_test(rsp_key_exchange_rsp_case11),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case11, rsp_key_exchange_rsp_setup),
         /* Request previously provisioned public key, slot 0xFF */
-        cmocka_unit_test(rsp_key_exchange_rsp_case14),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case14, rsp_key_exchange_rsp_setup),
         /* HANDSHAKE_IN_THE_CLEAR set for requester and responder */
-        cmocka_unit_test(rsp_key_exchange_rsp_case15),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case15, rsp_key_exchange_rsp_setup),
         /* Buffer verification*/
-        cmocka_unit_test(rsp_key_exchange_rsp_case16),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case16, rsp_key_exchange_rsp_setup),
         /* Successful response V1.2*/
-        cmocka_unit_test(rsp_key_exchange_rsp_case17),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case17, rsp_key_exchange_rsp_setup),
         /* Invalid SlotID in KEY_EXCHANGE request message*/
-        cmocka_unit_test(rsp_key_exchange_rsp_case18),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case18, rsp_key_exchange_rsp_setup),
         /* Only OpaqueDataFmt1 is supported, Bytes not aligned*/
-        cmocka_unit_test(rsp_key_exchange_rsp_case19),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case19, rsp_key_exchange_rsp_setup),
         /* OpaqueData only supports OpaqueDataFmt1, Success Case */
-        cmocka_unit_test(rsp_key_exchange_rsp_case20),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case20, rsp_key_exchange_rsp_setup),
         /* The key usage bit mask is not set, failed Case*/
-        cmocka_unit_test(rsp_key_exchange_rsp_case21),
-        cmocka_unit_test(rsp_key_exchange_rsp_case22),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case21, rsp_key_exchange_rsp_setup),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case22, rsp_key_exchange_rsp_setup),
         /* The Responder requires mutual authentication, but the Requester does not support it */
-        cmocka_unit_test(rsp_key_exchange_rsp_case23),
-        cmocka_unit_test(rsp_key_exchange_rsp_case24),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case23, rsp_key_exchange_rsp_setup),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case24, rsp_key_exchange_rsp_setup),
         /* The Responder using integrator defined opaque data */
-        cmocka_unit_test(rsp_key_exchange_rsp_case25),
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case25, rsp_key_exchange_rsp_setup),
     };
 
     libspdm_test_context_t test_context = {
