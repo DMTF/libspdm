@@ -1,0 +1,61 @@
+name: RISC-V Build and Test
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04-riscv
+        toolchain:
+          - GCC
+        crypto:
+          - mbedtls
+          - openssl
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Build
+        run: |
+          mkdir build
+          cd build
+          cmake --version
+          cmake -E env CFLAGS="-DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=3" cmake -DARCH=riscv64 -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=Debug -DCRYPTO=${{ matrix.crypto }} ..
+          make copy_sample_key
+          make copy_seed
+          make -j`nproc`
+      - name: Test Requester
+        run: |
+          cd build/bin
+          ./test_spdm_requester
+      - name: Test Responder
+        run: |
+          cd build/bin
+          ./test_spdm_responder
+      - name: Test Common
+        run: |
+          cd build/bin
+          ./test_spdm_common
+      - name: Test SPDM Crypt
+        run: |
+          cd build/bin
+          ./test_spdm_crypt
+      - name: Test Crypt
+        run: |
+          cd build/bin
+          ./test_crypt
+      - name: Test Secured Message
+        run: |
+          cd build/bin
+          ./test_spdm_secured_message
