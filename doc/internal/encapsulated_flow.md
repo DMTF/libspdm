@@ -24,23 +24,32 @@ requirements around them, and outlines an API pattern to support them.
 
 ## Encapsulated Flow Initiation
 
-The encapsulated flow can be explicitly initiated by the Responder via mutual authentication. In
-this document this is termed as being Responder-initiated. The Requester-initiated encapsulated flow
-begins with the Requester sending `GET_ENCAPSULATED_REQUEST` to the Responder outside of mutual
-authentication. Reasons for the Requester to initiate the encapsulated flow include periodicity, or
-the Responder may possess an out-of-band (non-SPDM) mechanism to the Requester.
+The encapsulated flow can be explicitly initiated by the Responder via mutual authentication. The
+Requester-initiated encapsulated flow begins with the Requester sending `GET_ENCAPSULATED_REQUEST`
+to the Responder outside of mutual authentication. Reasons for the Requester to initiate the
+encapsulated flow include periodicity, or the Responder may possess an out-of-band (non-SPDM)
+mechanism to the Requester.
 
 ## Encapsulated Flow Independence
 
-It shall be possible, where applicable, for the Integrator to specify an individual secure session
-for the encapsulated flow or have it outside of a secure session. For libspdm this translates to
-having an encapsulated context for each secure session and the non-session context. In addition,
-libspdm should support arbitrary and interleaved encapsulated messages between secure sessions and
-outside of a secure session. For example, libspdm should be able to accommodate the sequence
+It shall be possible, where applicable, for the Integrator to specify an individual session for the
+encapsulated flow or have it outside of a session. For libspdm this translates to having an
+encapsulated context for each session and the non-session context. In addition, libspdm should
+support arbitrary and interleaved encapsulated messages between sessions and outside of a session.
+For example, libspdm should be able to accommodate the sequence
 1. `GET_ENCAPSULATED_REQUEST` / `ENCAPSULATED_REQUEST` in `Session1`.
 2. `GET_ENCAPSULATED_REQUEST` / `ENCAPSULATED_REQUEST` in `Session2`.
 3. `DELIVER_ENCAPSULATED_RESPONSE` / `ENCAPSULATED_RESPONSE_ACK` in `Session1`.
 4. `DELIVER_ENCAPSULATED_RESPONSE` / `ENCAPSULATED_RESPONSE_ACK` in `Session2`.
+
+Note that this independence is not possible for session-based mutual authentication when both
+endpoints have set `HANDSHAKE_IN_THE_CLEAR_CAP`, as the encapsulated messages are sent outside of a
+session. In this case, when the Responder signals for the encapsulated flow then the next
+non-session message must be
+- `GET_ENCAPSULATED_REQUEST` if `MutAuthRequested` bit 1 is set.
+- `DELIVER_ENCAPSULATED_RESPONSE` if `MutAuthRequested` bit 2 is set.
+
+In this case, the Requester can also issue `GET_VERSION`.
 
 ## Control and Decision Points
 
@@ -106,8 +115,12 @@ If the Requester has set `CERT_CAP` then within the encapsulated flow the encaps
 limited to `GET_DIGESTS` and `GET_CERTIFICATE`. If either Bit 1 or Bit 2 of `MutAuthRequested` is
 set then the Integrator can specify the Requester's `SlotID` to be used for signature generation
 in the `FINISH` request. The Responder can terminate the flow by clearing
-`ENCAPSULATED_RESPONSE_ACK.Param2` or sending an `ERROR` response. All messages must be sent within
-the same session.
+`ENCAPSULATED_RESPONSE_ACK.Param2` or sending an `ERROR` response.
+
+All messages must be sent within the same session, unless both endpoints have set
+`HANDSHAKE_IN_THE_CLEAR_CAP`, in which case they are sent outside of a session. If both endpoints
+have set `HANDSHAKE_IN_THE_CLEAR_CAP` then, when the encapsulated handler is called by libspdm
+during the handshake phase, the inferred `session_id` is passed to the Integrator.
 
 ### Requester-initiated Encapsulated Flow
 
@@ -128,6 +141,26 @@ encapsulated requests.
 
 The Responder can terminate the flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2` or sending an
 `ERROR` response.
+
+### Requester Issuance of Encapsulated `ERROR` Message
+
+If the Requester delivers an encapsulated `ERROR` message to the Responder, then the handler is
+called with the value of the `error_code` parameter equal to `ERROR.ErrorCode`. In this state, the
+Integrator must acknowledge the error by setting the value of `terminate_flow` to `true`, which is
+enforced in libspdm with a `LIBSPDM_ASSERT`. When control returns to libspdm then it automatically
+terminates the encapsulated flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2`.
+
+The value of the `error_code` parameter is `0` for non-`ERROR` messages.
+
+#### Requester Issuance of Encapsulated `ResponseNotReady`
+
+If the Requester delivers an encapsulated `ResponseNotReady` error message to the Responder, then
+the Responder must terminate the encapsulated flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2`.
+Within that channel, if it is inside a session then the next request message must be
+`GET_ENCAPSULATED_REQUEST`; if it is outside a session then the next message can be either
+`GET_VERSION` or `GET_ENCAPSULATED_REQUEST`. When `GET_ENCAPSULATED_REQUEST` is received then
+libspdm automatically sends an encapsulated `RESPOND_IF_READY` request to resume the encapsulated
+flow.
 
 ## Basic Design and State Management
 
@@ -153,10 +186,24 @@ libspdm_return_t libspdm_encap_state_handler(
     const uint32_t *session_id,
     libspdm_encap_flow_type_t encap_flow_type,
     uint8_t last_request_code,
+    uint8_t error_code,
     bool *terminate_flow,
     size_t *encap_request_size,
     void *encap_request)
 {
+    if (error_code != 0) {
+        /* The Requester returned an encapsulated ERROR in response to last_request_code. The flow
+         * terminates either way, but for ResponseNotReady libspdm reissues the outstanding request
+         * with RESPOND_IF_READY, so the Integrator retains the state belonging to this flow. */
+        if (error_code != SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
+            /* Release the Integrator-defined state associated with this flow. */
+        }
+
+        *terminate_flow = true;
+
+        return LIBSPDM_STATUS_SUCCESS;
+    }
+
     /* Integrator can use a pointer in libspdm_session_info or non-session spdm_context to access
      * Integrator-defined state related to the encapsulated flow. */
 
@@ -182,12 +229,21 @@ libspdm_return_t libspdm_encap_state_handler(
         /* Send events. */
         return libspdm_get_encap_request_send_event(spdm_context, *session_id,
                                                     encap_request_size, encap_request);
-    case e:
+    case e: {
         /* Designate certificate slot 5 for session-based mutual authentication. libspdm conveys
          * it in the final ENCAPSULATED_RESPONSE_ACK. */
-        libspdm_set_encap_req_slot_id(spdm_context, session_id, 5);
+        libspdm_data_parameter_t parameter;
+        uint8_t slot_id = 5;
+
+        libspdm_zero_mem(&parameter, sizeof(parameter));
+        parameter.location = LIBSPDM_DATA_LOCATION_SESSION;
+        libspdm_write_uint32(parameter.additional_data, *session_id);
+
+        libspdm_set_data(spdm_context, LIBSPDM_DATA_SESSION_ENCAP_REQ_SLOT_ID, &parameter,
+                         &slot_id, sizeof(slot_id));
         *terminate_flow = true;
         return LIBSPDM_STATUS_SUCCESS;
+    }
     case f:
         /* Terminate encapsulated flow. */
         *terminate_flow = true;
