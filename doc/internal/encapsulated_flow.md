@@ -140,7 +140,9 @@ encapsulated requests.
 - `END_SESSION`
 
 The Responder can terminate the flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2` or sending an
-`ERROR` response.
+`ERROR` response. If the Responder has no encapsulated request messages for the Requester then
+either `UnexpectedRequest` (SPDM 1.1/1.2) or `NoPendingRequests` (SPDM 1.3+) is returned to the
+Requester.
 
 ### Requester Issuance of Encapsulated `ERROR` Message
 
