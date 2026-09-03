@@ -1949,6 +1949,7 @@ static void rsp_key_exchange_rsp_case22(void **state)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 static void rsp_key_exchange_rsp_case23(void **state)
 {
     libspdm_return_t status;
@@ -2111,6 +2112,7 @@ static void rsp_key_exchange_rsp_case24(void **state)
 
     free(data1);
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
 /**
  * Test 25: Successful response to a valid KEY_EXCHANGE request.
@@ -2259,9 +2261,11 @@ int libspdm_rsp_key_exchange_rsp_test(void)
         /* The key usage bit mask is not set, failed Case*/
         cmocka_unit_test_setup(rsp_key_exchange_rsp_case21, rsp_key_exchange_rsp_setup),
         cmocka_unit_test_setup(rsp_key_exchange_rsp_case22, rsp_key_exchange_rsp_setup),
+        #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
         /* The Responder requires mutual authentication, but the Requester does not support it */
         cmocka_unit_test_setup(rsp_key_exchange_rsp_case23, rsp_key_exchange_rsp_setup),
         cmocka_unit_test_setup(rsp_key_exchange_rsp_case24, rsp_key_exchange_rsp_setup),
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
         /* The Responder using integrator defined opaque data */
         cmocka_unit_test_setup(rsp_key_exchange_rsp_case25, rsp_key_exchange_rsp_setup),
     };
