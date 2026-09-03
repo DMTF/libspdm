@@ -26,7 +26,9 @@ static spdm_deliver_encapsulated_response_request_t m_libspdm_m_deliver_encapsul
 static size_t m_libspdm_m_deliver_encapsulated_response_request_t1_size =
     sizeof(m_libspdm_m_deliver_encapsulated_response_request_t1);
 
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
 
 static spdm_deliver_encapsulated_response_request_t m_libspdm_m_deliver_encapsulated_response_request_t2 =
 {
@@ -572,6 +574,7 @@ static void rsp_encapsulated_request_case8(void **State)
 }
 #endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 static void rsp_encapsulated_response_ack_case1(void **State)
 {
     libspdm_return_t status;
@@ -753,6 +756,7 @@ static void rsp_encapsulated_response_ack_case2(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
 
 static void rsp_encapsulated_response_ack_case3(void **State)
 {
@@ -952,6 +956,7 @@ static void rsp_encapsulated_response_ack_case6(void **State)
     assert_int_equal(spdm_response_requester->header.param2, 0);
 }
 
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 static void rsp_encapsulated_response_ack_case7(void **State)
 {
     libspdm_return_t status;
@@ -1148,6 +1153,7 @@ static void rsp_encapsulated_response_ack_case8(void **State)
                      m_libspdm_m_deliver_encapsulated_response_request_t2.header.param1);
     free(data);
 }
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
 
 /**
  * Test 9: In an encapsulated request flow, a Responder issue an encapsulated request that can take up to CT time to
