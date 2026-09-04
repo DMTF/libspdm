@@ -1237,6 +1237,276 @@ static void rsp_encapsulated_response_ack_case9(void **State)
                      m_libspdm_m_deliver_encapsulated_response_request_t2.header.param1);
 }
 
+/**
+ * Test: libspdm_init_key_update_encap_state initializes the encap_context
+ * for a KEY_UPDATE encapsulated flow without a session (session_id ==
+ * INVALID_SESSION_ID).
+ **/
+static void rsp_init_encap_state_case1(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1;
+
+    spdm_context->encap_context.current_request_op_code = SPDM_KEY_UPDATE;
+    spdm_context->encap_context.request_id = 5;
+    spdm_context->encap_context.last_encap_request_size = 8;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+
+    libspdm_init_key_update_encap_state(spdm_context);
+
+    assert_int_equal(spdm_context->encap_context.current_request_op_code, 0);
+    assert_int_equal(spdm_context->encap_context.request_id, 0);
+    assert_int_equal(spdm_context->encap_context.last_encap_request_size, 0);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP);
+    assert_int_equal(spdm_context->encap_context.request_op_code_count, 1);
+    assert_int_equal(spdm_context->encap_context.request_op_code_sequence[0], SPDM_KEY_UPDATE);
+    assert_int_equal(spdm_context->encap_context.session_id, INVALID_SESSION_ID);
+}
+
+/**
+ * Test: libspdm_init_key_update_encap_state_with_session initializes the
+ * encap_context for a KEY_UPDATE encapsulated flow associated with a
+ * specific session.
+ **/
+static void rsp_init_encap_state_case2(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2;
+
+    session_id = 0x11223344;
+
+    libspdm_init_key_update_encap_state_with_session(spdm_context, session_id);
+
+    assert_int_equal(spdm_context->encap_context.current_request_op_code, 0);
+    assert_int_equal(spdm_context->encap_context.request_op_code_sequence[0], SPDM_KEY_UPDATE);
+    assert_int_equal(spdm_context->encap_context.session_id, session_id);
+}
+
+#if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
+/**
+ * Test: libspdm_init_get_endpoint_info_encap_state initializes the
+ * encap_context for a GET_ENDPOINT_INFO encapsulated flow.
+ **/
+static void rsp_init_encap_state_case3(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x3;
+
+    session_id = 0x55667788;
+
+    libspdm_init_get_endpoint_info_encap_state(spdm_context, session_id);
+
+    assert_int_equal(spdm_context->encap_context.current_request_op_code, 0);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP);
+    assert_int_equal(spdm_context->encap_context.request_op_code_count, 1);
+    assert_int_equal(spdm_context->encap_context.request_op_code_sequence[0],
+                     SPDM_GET_ENDPOINT_INFO);
+    assert_int_equal(spdm_context->encap_context.session_id, session_id);
+}
+#endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
+
+#if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+/**
+ * Test: libspdm_init_send_event_encap_state initializes the encap_context
+ * for a SEND_EVENT encapsulated flow. This requires a valid session_id.
+ **/
+static void rsp_init_encap_state_case4(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x4;
+
+    session_id = 0x99AABBCC;
+
+    libspdm_init_send_event_encap_state(spdm_context, session_id);
+
+    assert_int_equal(spdm_context->encap_context.current_request_op_code, 0);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP);
+    assert_int_equal(spdm_context->encap_context.request_op_code_count, 1);
+    assert_int_equal(spdm_context->encap_context.request_op_code_sequence[0], SPDM_SEND_EVENT);
+    assert_int_equal(spdm_context->encap_context.session_id, session_id);
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
+
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if LIBSPDM_SEND_CHALLENGE_SUPPORT
+/**
+ * Test: libspdm_init_basic_mut_auth_encap_state initializes the
+ * encap_context for the "GET_DIGESTS/GET_CERTIFICATE/CHALLENGE" sequence
+ * when the requester's public key is not directly known (req_slot_id !=
+ * 0xFF, PUB_KEY_ID_CAP not negotiated).
+ **/
+static void rsp_init_basic_mut_auth_encap_state_case1(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t cert_chain_buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1;
+
+    spdm_context->connection_info.capability.flags &=
+        ~(uint32_t)SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP;
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->mut_auth_cert_chain_buffer = cert_chain_buffer;
+    spdm_context->mut_auth_cert_chain_buffer_max_size = sizeof(cert_chain_buffer);
+
+    libspdm_init_basic_mut_auth_encap_state(spdm_context);
+
+    assert_int_equal(spdm_context->encap_context.session_id, INVALID_SESSION_ID);
+    assert_int_equal(spdm_context->encap_context.current_request_op_code, 0);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP);
+    assert_int_equal(spdm_context->encap_context.request_op_code_count, 3);
+    assert_int_equal(spdm_context->encap_context.request_op_code_sequence[0], SPDM_GET_DIGESTS);
+    assert_int_equal(spdm_context->encap_context.request_op_code_sequence[1],
+                     SPDM_GET_CERTIFICATE);
+    assert_int_equal(spdm_context->encap_context.request_op_code_sequence[2], SPDM_CHALLENGE);
+}
+
+/**
+ * Test: libspdm_init_basic_mut_auth_encap_state initializes the
+ * encap_context for the "CHALLENGE only" sequence when the requester's
+ * public key is directly known (req_slot_id == 0xFF, PUB_KEY_ID_CAP
+ * negotiated).
+ **/
+static void rsp_init_basic_mut_auth_encap_state_case2(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2;
+
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP;
+    spdm_context->encap_context.req_slot_id = 0xFF;
+
+    libspdm_init_basic_mut_auth_encap_state(spdm_context);
+
+    assert_int_equal(spdm_context->encap_context.session_id, INVALID_SESSION_ID);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP);
+    assert_int_equal(spdm_context->encap_context.request_op_code_count, 1);
+    assert_int_equal(spdm_context->encap_context.request_op_code_sequence[0], SPDM_CHALLENGE);
+}
+#endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
+
+/**
+ * Test: libspdm_init_mut_auth_encap_state with
+ * MUT_AUTH_REQUESTED_WITH_GET_DIGESTS sets current_request_op_code to
+ * SPDM_GET_DIGESTS directly (no GET_ENCAPSULATED_REQUEST round trip
+ * needed for the first request), and queues the GET_DIGESTS/GET_CERTIFICATE
+ * sequence.
+ **/
+static void rsp_init_mut_auth_encap_state_case1(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t cert_chain_buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1;
+
+    spdm_context->connection_info.capability.flags &=
+        ~(uint32_t)SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP;
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->mut_auth_cert_chain_buffer = cert_chain_buffer;
+    spdm_context->mut_auth_cert_chain_buffer_max_size = sizeof(cert_chain_buffer);
+
+    libspdm_init_mut_auth_encap_state(
+        spdm_context, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS);
+
+    assert_int_equal(spdm_context->encap_context.session_id, INVALID_SESSION_ID);
+    assert_int_equal(spdm_context->encap_context.current_request_op_code, SPDM_GET_DIGESTS);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP);
+    assert_int_equal(spdm_context->encap_context.request_op_code_count, 2);
+    assert_int_equal(spdm_context->encap_context.request_op_code_sequence[0], SPDM_GET_DIGESTS);
+    assert_int_equal(spdm_context->encap_context.request_op_code_sequence[1],
+                     SPDM_GET_CERTIFICATE);
+}
+
+/**
+ * Test: libspdm_init_mut_auth_encap_state with
+ * MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST queues the GET_DIGESTS/
+ * GET_CERTIFICATE sequence, requiring a GET_ENCAPSULATED_REQUEST round
+ * trip for the first request (current_request_op_code stays 0).
+ **/
+static void rsp_init_mut_auth_encap_state_case2(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t cert_chain_buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2;
+
+    spdm_context->connection_info.capability.flags &=
+        ~(uint32_t)SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP;
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->mut_auth_cert_chain_buffer = cert_chain_buffer;
+    spdm_context->mut_auth_cert_chain_buffer_max_size = sizeof(cert_chain_buffer);
+
+    libspdm_init_mut_auth_encap_state(
+        spdm_context, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST);
+
+    assert_int_equal(spdm_context->encap_context.current_request_op_code, 0);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP);
+    assert_int_equal(spdm_context->encap_context.request_op_code_count, 2);
+    assert_int_equal(spdm_context->encap_context.request_op_code_sequence[0], SPDM_GET_DIGESTS);
+    assert_int_equal(spdm_context->encap_context.request_op_code_sequence[1],
+                     SPDM_GET_CERTIFICATE);
+}
+
+/**
+ * Test: libspdm_init_mut_auth_encap_state with MUT_AUTH_REQUESTED (basic,
+ * no encapsulation) and PUB_KEY_ID_CAP negotiated results in an empty
+ * op-code sequence and leaves response_state untouched (no encapsulation
+ * needed).
+ **/
+static void rsp_init_mut_auth_encap_state_case3(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x3;
+
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP;
+    spdm_context->encap_context.req_slot_id = 0xFF;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+
+    libspdm_init_mut_auth_encap_state(spdm_context,
+                                      SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED);
+
+    assert_int_equal(spdm_context->encap_context.request_op_code_count, 0);
+    /* response_state is only changed to PROCESSING_ENCAP if encapsulation is required. */
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NORMAL);
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+
 int libspdm_rsp_encapsulated_request_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1285,6 +1555,32 @@ int libspdm_rsp_encapsulated_request_test(void)
 #endif
         /*When the Requester delivers an encapsulated ERROR message with a ResponseNotReady error code*/
         cmocka_unit_test(rsp_encapsulated_response_ack_case9),
+        /* libspdm_init_key_update_encap_state: no session */
+        cmocka_unit_test(rsp_init_encap_state_case1),
+        /* libspdm_init_key_update_encap_state_with_session */
+        cmocka_unit_test(rsp_init_encap_state_case2),
+#if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
+        /* libspdm_init_get_endpoint_info_encap_state */
+        cmocka_unit_test(rsp_init_encap_state_case3),
+#endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
+#if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+        /* libspdm_init_send_event_encap_state */
+        cmocka_unit_test(rsp_init_encap_state_case4),
+#endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if LIBSPDM_SEND_CHALLENGE_SUPPORT
+        /* libspdm_init_basic_mut_auth_encap_state: GET_DIGESTS/GET_CERTIFICATE/CHALLENGE */
+        cmocka_unit_test(rsp_init_basic_mut_auth_encap_state_case1),
+        /* libspdm_init_basic_mut_auth_encap_state: CHALLENGE only (PUB_KEY_ID_CAP) */
+        cmocka_unit_test(rsp_init_basic_mut_auth_encap_state_case2),
+#endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
+        /* libspdm_init_mut_auth_encap_state: MUT_AUTH_REQUESTED_WITH_GET_DIGESTS */
+        cmocka_unit_test(rsp_init_mut_auth_encap_state_case1),
+        /* libspdm_init_mut_auth_encap_state: MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST */
+        cmocka_unit_test(rsp_init_mut_auth_encap_state_case2),
+        /* libspdm_init_mut_auth_encap_state: MUT_AUTH_REQUESTED (no encapsulation) */
+        cmocka_unit_test(rsp_init_mut_auth_encap_state_case3),
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
     };
 
     libspdm_test_context_t test_context = {
