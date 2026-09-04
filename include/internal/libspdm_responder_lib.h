@@ -672,25 +672,6 @@ libspdm_return_t libspdm_get_response_event_ack(
  **/
 libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_t request_code);
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
-/**
- * This function initializes the mut_auth encapsulated state.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  mut_auth_requested             Indicate of the mut_auth_requested through KEY_EXCHANGE response.
- **/
-void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context, uint8_t mut_auth_requested);
-
-#if LIBSPDM_SEND_CHALLENGE_SUPPORT
-/**
- * This function initializes the basic_mut_auth encapsulated state.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- **/
-void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context);
-#endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
-#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
-
 /**
  * This function handles the encap error response.
  *

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -90,7 +90,8 @@ bool libspdm_encap_challenge_opaque_data(
     return true;
 }
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_SEND_CHALLENGE_SUPPORT)
 bool libspdm_challenge_start_mut_auth(
     void *spdm_context,
     spdm_version_number_t spdm_version,
@@ -100,5 +101,5 @@ bool libspdm_challenge_start_mut_auth(
 {
     return g_start_basic_mut_auth;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
