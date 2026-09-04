@@ -8,7 +8,13 @@ target_include_directories(platform_lib
         ${LIBSPDM_DIR}/include/hal
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND (NOT TOOLCHAIN STREQUAL "ARM_DS2022") AND (NOT TOOLCHAIN STREQUAL "RISCV_XPACK")  AND (NOT TOOLCHAIN STREQUAL "ARM_GNU_BARE_METAL"))
+if(CMAKE_SYSTEM_NAME STREQUAL "Zephyr")
+    target_sources(platform_lib
+        PRIVATE
+        time_zephyr.c
+        watchdog.c
+    )
+elseif(CMAKE_SYSTEM_NAME MATCHES "Linux" AND (NOT TOOLCHAIN STREQUAL "ARM_DS2022") AND (NOT TOOLCHAIN STREQUAL "RISCV_XPACK")  AND (NOT TOOLCHAIN STREQUAL "ARM_GNU_BARE_METAL"))
     target_sources(platform_lib
         PRIVATE
         time_unix.c
