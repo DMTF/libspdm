@@ -128,7 +128,7 @@ The expected step is as follows:
 2) The integrator invokes `libspdm_fips_run_selftest()` to trigger self-test.
 3) If fail, then return.
 
-```
+```C
 #if LIBSPDM_FIPS_MODE
     m_fips_selftest_context = (void *)malloc(libspdm_get_fips_selftest_context_size());
     if (m_fips_selftest_context == NULL) {
