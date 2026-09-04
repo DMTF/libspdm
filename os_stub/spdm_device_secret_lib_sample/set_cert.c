@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -112,6 +112,7 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
 
 bool libspdm_update_local_cert_chain(
     void *spdm_context,
+    const uint8_t *bank_id,
     uint8_t slot_id,
     uint32_t base_hash_algo,
     uint32_t base_asym_algo,
@@ -131,6 +132,10 @@ bool libspdm_update_local_cert_chain(
     uint8_t *new_buffer;
     bool result;
     const uint8_t *new_chain_bytes;
+
+    /* This sample has no Bank-addressed certificate store; bank_id is ignored and the chain is
+     * stored as in the legacy SET_CERTIFICATE flow. */
+    (void)bank_id;
 
     if (slot_id >= SPDM_MAX_SLOT_COUNT) {
         return false;
