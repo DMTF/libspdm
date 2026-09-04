@@ -89,6 +89,7 @@ libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request10 = {
 size_t m_libspdm_key_exchange_request10_size = sizeof(m_libspdm_key_exchange_request10);
 
 extern uint8_t g_key_exchange_start_mut_auth;
+extern uint8_t g_key_exchange_req_slot_id;
 extern bool g_mandatory_mut_auth;
 extern bool g_generate_key_exchange_opaque_data;
 
@@ -120,8 +121,11 @@ static int rsp_key_exchange_rsp_setup(void **state)
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         spdm_context->local_context.local_key_usage_bit_mask[index] = 0;
     }
+    /* A test that starts an encapsulated flow leaves the response state set. */
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
     g_key_exchange_start_mut_auth = 0;
+    g_key_exchange_req_slot_id = 0;
     g_mandatory_mut_auth = false;
     g_generate_key_exchange_opaque_data = false;
 
@@ -2217,6 +2221,462 @@ static void rsp_key_exchange_rsp_case25(void **state)
     free(data1);
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+/**
+ * Test 26: the Responder requests session-based mutual authentication with MUT_AUTH_REQUESTED
+ * (bit 0) and a non-zero ReqSlotID. This is legal when the Responder already possesses the
+ * Requester's certificate chain, so no encapsulated flow is needed to retrieve it.
+ * Expected behavior: KEY_EXCHANGE_RSP conveys the slot to the Requester, and the slot is recorded
+ * in the session so that FINISH is verified against the correct certificate chain.
+ **/
+static void rsp_key_exchange_rsp_case26(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_key_exchange_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t dhe_key_size;
+    void *dhe_context;
+    size_t opaque_key_exchange_req_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1A;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        return;
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+
+    libspdm_reset_message_a(spdm_context);
+    g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    g_mandatory_mut_auth = false;
+    /* The Responder already has the Requester's chain in a slot other than 0. */
+    g_key_exchange_req_slot_id = 1;
+
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
+    m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
+    m_libspdm_key_exchange_request1.reserved = 0;
+    ptr = m_libspdm_key_exchange_request1.exchange_data;
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
+                                  false);
+    libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    ptr += dhe_key_size;
+    libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
+    ptr += sizeof(uint16_t);
+    libspdm_build_opaque_data_supported_version_data(
+        spdm_context, &opaque_key_exchange_req_size, ptr);
+    ptr += opaque_key_exchange_req_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_key_exchange(
+        spdm_context, m_libspdm_key_exchange_request1_size,
+        &m_libspdm_key_exchange_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
+    assert_int_equal(spdm_response->mut_auth_requested,
+                     SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED);
+    /* The slot is conveyed to the Requester ... */
+    assert_int_equal(spdm_response->req_slot_id_param, 1);
+
+    /* ... and recorded in the session, so FINISH verifies against the right chain. */
+    session_info = libspdm_get_session_info_via_session_id(
+        spdm_context, spdm_context->latest_session_id);
+    assert_non_null(session_info);
+    assert_int_equal(session_info->peer_used_cert_chain_slot_id, 1);
+
+    free(data1);
+}
+
+/**
+ * Test 27: the Requester's PUB_KEY_ID_CAP is set and the Integrator requests session-based mutual
+ * authentication with MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST (bit 1). The Requester has no
+ * certificate slots, so there is nothing for the encapsulated flow to retrieve.
+ * Expected behavior: Responder returns ERROR(Unspecified).
+ **/
+static void rsp_key_exchange_rsp_case27(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t dhe_key_size;
+    void *dhe_context;
+    size_t opaque_key_exchange_req_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1B;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        return;
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+
+    libspdm_reset_message_a(spdm_context);
+    g_key_exchange_start_mut_auth =
+        SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
+    g_mandatory_mut_auth = false;
+
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
+    m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
+    m_libspdm_key_exchange_request1.reserved = 0;
+    ptr = m_libspdm_key_exchange_request1.exchange_data;
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
+                                  false);
+    libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    ptr += dhe_key_size;
+    libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
+    ptr += sizeof(uint16_t);
+    libspdm_build_opaque_data_supported_version_data(
+        spdm_context, &opaque_key_exchange_req_size, ptr);
+    ptr += opaque_key_exchange_req_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_key_exchange(
+        spdm_context, m_libspdm_key_exchange_request1_size,
+        &m_libspdm_key_exchange_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSPECIFIED);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    free(data1);
+}
+
+/**
+ * Test 28: the Integrator returns a MutAuthRequested value that is not one of the three legal
+ * values. The specification allows at most one of Bit 0, Bit 1, or Bit 2 to be set.
+ * Expected behavior: Responder returns ERROR(Unspecified) for every illegal value.
+ **/
+static void rsp_key_exchange_rsp_case28(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t dhe_key_size;
+    void *dhe_context;
+    size_t opaque_key_exchange_req_size;
+    size_t index;
+    /* Multiple bits set, then the reserved-bit singletons. A pure "at most one bit" test would
+    * accept the latter, so they are what distinguishes the whitelist from a popcount check. */
+    const uint8_t illegal_values[] = {0x03, 0x05, 0x06, 0x07, 0x08, 0x10, 0x80, 0xFF};
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1C;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    /* Tests in this group share one context and no per-test setup runs, so assign the
+     * capability flags rather than OR into whatever a previous test left behind. In particular
+     * PUB_KEY_ID_CAP, which an earlier test sets, would reject every value except
+     * MUT_AUTH_REQUESTED and mask what this test is checking. */
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        return;
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+
+    g_mandatory_mut_auth = false;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(illegal_values); index++) {
+        g_key_exchange_start_mut_auth = illegal_values[index];
+
+        libspdm_reset_message_a(spdm_context);
+
+        libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+                                  m_libspdm_key_exchange_request1.random_data);
+        m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
+        m_libspdm_key_exchange_request1.reserved = 0;
+        ptr = m_libspdm_key_exchange_request1.exchange_data;
+        dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+        dhe_context = libspdm_dhe_new(spdm_context->connection_info.version,
+                                      m_libspdm_use_dhe_algo, false);
+        libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+        ptr += dhe_key_size;
+        libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+        opaque_key_exchange_req_size =
+            libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
+        ptr += sizeof(uint16_t);
+        libspdm_build_opaque_data_supported_version_data(
+            spdm_context, &opaque_key_exchange_req_size, ptr);
+        ptr += opaque_key_exchange_req_size;
+
+        response_size = sizeof(response);
+        status = libspdm_get_response_key_exchange(
+            spdm_context, m_libspdm_key_exchange_request1_size,
+            &m_libspdm_key_exchange_request1, &response_size, response);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+        assert_int_equal(response_size, sizeof(spdm_error_response_t));
+        spdm_response = (void *)response;
+        assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+        assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSPECIFIED);
+        assert_int_equal(spdm_response->header.param2, 0);
+    }
+
+    free(data1);
+}
+
+/**
+ * Test 29: the SlotIDParam that the Integrator returns alongside MutAuthRequested. It shall be
+ * 0xF when the Requester's public key was provisioned to the Responder, 0 through 7 when the
+ * Requester has a certificate chain, and 0 for the encapsulated flows, which convey the slot in
+ * the final ENCAPSULATED_RESPONSE_ACK instead.
+ * Expected behavior: a legal value is returned in KEY_EXCHANGE_RSP and recorded in the session;
+ * an illegal one is rejected with ERROR(Unspecified).
+ **/
+static void rsp_key_exchange_rsp_case29(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_key_exchange_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t dhe_key_size;
+    void *dhe_context;
+    size_t opaque_key_exchange_req_size;
+    size_t index;
+    size_t session_index;
+    const struct {
+        bool pub_key_id_cap;
+        uint8_t mut_auth_requested;
+        uint8_t req_slot_id;
+        bool legal;
+        /* The slot recorded in the session. Only checked when legal. */
+        uint8_t peer_slot;
+    } cases[] = {
+        /* The Requester has a certificate chain, so the slot shall be 0 through 7. */
+        { false, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED, 0, true, 0 },
+        { false, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED, SPDM_MAX_SLOT_COUNT - 1, true,
+          SPDM_MAX_SLOT_COUNT - 1 },
+        { false, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED, SPDM_MAX_SLOT_COUNT, false, 0 },
+        { false, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED, 0xF, false, 0 },
+        /* The Requester's public key was provisioned, so the slot shall be 0xF. libspdm records
+         * that as 0xFF. */
+        { true, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED, 0xF, true, 0xFF },
+        { true, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED, 0, false, 0 },
+        /* The encapsulated flows convey the slot separately, so SlotIDParam shall be 0. */
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+        /* The accepted row starts an encapsulated flow, which the Responder only supports when
+         * it is built with LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP. */
+        { false, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST, 0, true, 0 },
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
+        { false, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST, 1, false, 0 },
+        { false, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS, 1, false, 0 },
+    };
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1D;
+
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        return;
+    }
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(cases); index++) {
+        /* Release every session so that the loop does not exhaust them, and clear the
+         * encapsulated state that a preceding row starts, which would otherwise answer the next
+         * row with ERROR(RequestInFlight). */
+        for (session_index = 0; session_index < LIBSPDM_MAX_SESSION_COUNT; session_index++) {
+            libspdm_session_info_init(spdm_context, &spdm_context->session_info[session_index],
+                                      INVALID_SESSION_ID, 0, false);
+        }
+        spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+
+        spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+        spdm_context->connection_info.capability.flags |=
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+        if (cases[index].pub_key_id_cap) {
+            spdm_context->connection_info.capability.flags |=
+                SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP;
+        } else {
+            spdm_context->connection_info.capability.flags &=
+                ~(uint32_t)SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP;
+        }
+        spdm_context->local_context.capability.flags |=
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP |
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP |
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+        spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+        spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+        spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+        spdm_context->connection_info.algorithm.measurement_hash_algo =
+            m_libspdm_use_measurement_hash_algo;
+        spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+        spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+        spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+        spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                                SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_context->local_context.local_cert_chain_provision[0] = data1;
+        spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+        spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+
+        libspdm_reset_message_a(spdm_context);
+        g_key_exchange_start_mut_auth = cases[index].mut_auth_requested;
+        g_key_exchange_req_slot_id = cases[index].req_slot_id;
+        g_mandatory_mut_auth = false;
+
+        libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+                                  m_libspdm_key_exchange_request1.random_data);
+        m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
+        m_libspdm_key_exchange_request1.reserved = 0;
+        ptr = m_libspdm_key_exchange_request1.exchange_data;
+        dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+        dhe_context = libspdm_dhe_new(spdm_context->connection_info.version,
+                                      m_libspdm_use_dhe_algo, false);
+        libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+        ptr += dhe_key_size;
+        libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+        opaque_key_exchange_req_size =
+            libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+        libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
+        ptr += sizeof(uint16_t);
+        libspdm_build_opaque_data_supported_version_data(
+            spdm_context, &opaque_key_exchange_req_size, ptr);
+        ptr += opaque_key_exchange_req_size;
+
+        response_size = sizeof(response);
+        status = libspdm_get_response_key_exchange(
+            spdm_context, m_libspdm_key_exchange_request1_size,
+            &m_libspdm_key_exchange_request1, &response_size, response);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+        spdm_response = (void *)response;
+
+        if (cases[index].legal) {
+            assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
+            session_info = libspdm_get_session_info_via_session_id(
+                spdm_context, spdm_context->latest_session_id);
+            assert_non_null(session_info);
+            assert_int_equal(session_info->peer_used_cert_chain_slot_id, cases[index].peer_slot);
+        } else {
+            assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+            assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSPECIFIED);
+            assert_int_equal(spdm_response->header.param2, 0);
+        }
+    }
+
+    free(data1);
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+
 int libspdm_rsp_key_exchange_rsp_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -2268,6 +2728,16 @@ int libspdm_rsp_key_exchange_rsp_test(void)
         #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
         /* The Responder using integrator defined opaque data */
         cmocka_unit_test_setup(rsp_key_exchange_rsp_case25, rsp_key_exchange_rsp_setup),
+        #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+        /* MUT_AUTH_REQUESTED (bit 0) with a non-zero ReqSlotID is recorded in the session */
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case26, rsp_key_exchange_rsp_setup),
+        /* Only MUT_AUTH_REQUESTED (bit 0) is legal when the Requester's PUB_KEY_ID_CAP is set */
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case27, rsp_key_exchange_rsp_setup),
+        /* MutAuthRequested values that are not one of the three legal values */
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case28, rsp_key_exchange_rsp_setup),
+        /* SlotIDParam values that go with each MutAuthRequested value */
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case29, rsp_key_exchange_rsp_setup),
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
     };
 
     libspdm_test_context_t test_context = {

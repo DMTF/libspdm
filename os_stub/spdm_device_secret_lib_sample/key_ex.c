@@ -9,6 +9,7 @@
 
 uint8_t g_key_exchange_start_mut_auth = 0;
 bool g_mandatory_mut_auth = false;
+uint8_t g_key_exchange_req_slot_id = 0;
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 bool g_generate_key_exchange_opaque_data = false;
@@ -103,7 +104,7 @@ extern uint8_t libspdm_key_exchange_start_mut_auth(
     const void *opaque_data,
     bool *mandatory_mut_auth)
 {
-    *req_slot_id = 0;
+    *req_slot_id = g_key_exchange_req_slot_id;
     *mandatory_mut_auth = g_mandatory_mut_auth;
 
     return g_key_exchange_start_mut_auth;

@@ -564,6 +564,8 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                                                 req_opaque_data,
                                                 &mandatory_mut_auth);
         if (mut_auth_requested != 0) {
+            const bool req_pub_key_id_cap = libspdm_is_capabilities_flag_supported(
+                spdm_context, false, SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0);
             const bool req_mut_auth_cap = libspdm_is_capabilities_flag_supported(
                 spdm_context, false, SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP, 0);
             const bool req_encap_cap = libspdm_is_capabilities_flag_supported(
@@ -573,6 +575,40 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                  SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) ||
                 (mut_auth_requested ==
                  SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS);
+
+            switch (mut_auth_requested) {
+            case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED:
+            case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST:
+            case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS:
+                break;
+            default:
+                libspdm_free_session_id(spdm_context, session_id);
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                       response_size, response);
+            }
+
+            if (req_pub_key_id_cap &&
+                (mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED)) {
+                libspdm_free_session_id(spdm_context, session_id);
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                       response_size, response);
+            }
+            if (!need_encap) {
+                if (req_pub_key_id_cap ?
+                    (req_slot_id != 0xf) : (req_slot_id >= SPDM_MAX_SLOT_COUNT)) {
+                    libspdm_free_session_id(spdm_context, session_id);
+                    return libspdm_generate_error_response(spdm_context,
+                                                           SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                           response_size, response);
+                }
+            } else if (req_slot_id != 0) {
+                libspdm_free_session_id(spdm_context, session_id);
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                       response_size, response);
+            }
 
             /* If Integrator requires mutual authentication but Requester does not support mutual
              * authentication, or Integrator requires the encapsulated mutual authentication flow
@@ -595,6 +631,13 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             if (!need_encap) {
                 spdm_response->mut_auth_requested = mut_auth_requested;
                 spdm_response->req_slot_id_param = req_slot_id;
+                /* There is no encapsulated flow to retrieve the Requester's certificate chain,
+                 * so the Responder already possesses it. Record the slot that the Requester is
+                 * being told to sign FINISH with, as FINISH verification reads it.
+                 * SlotIDParam carries 0xF for a provisioned public key, which libspdm
+                 * records as 0xFF. */
+                session_info->peer_used_cert_chain_slot_id =
+                    req_pub_key_id_cap ? 0xFF : req_slot_id;
             } else if (need_encap && req_encap_cap) {
                 spdm_response->mut_auth_requested = mut_auth_requested;
                 session_info->peer_used_cert_chain_slot_id = req_slot_id;
