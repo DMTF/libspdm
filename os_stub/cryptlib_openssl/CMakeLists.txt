@@ -51,7 +51,6 @@ if(ENABLE_BINARY_BUILD STREQUAL "1")
     target_link_libraries(cryptlib_openssl PUBLIC ssl crypto memlib)
 else()
     target_link_libraries(cryptlib_openssl PUBLIC openssllib memlib)
-target_link_libraries(cryptlib_openssl PUBLIC openssllib memlib)
 endif()
 
 if (LIBSPDM_TPM_SUPPORT)

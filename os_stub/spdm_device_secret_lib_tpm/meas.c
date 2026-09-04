@@ -133,7 +133,7 @@ size_t libspdm_fill_measurement_image_hash_block (
                    (uint16_t)hash_size);
 
     buffer = (uint8_t*)(measurement_block + 1);
-    buffer_size = 0;
+    buffer_size = hash_size;
     if (!libspdm_tpm_read_pcr(measurement_hash_algo, measurements_index, buffer, &buffer_size)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to read pcr from TPM"));
         return 0;
@@ -415,7 +415,9 @@ libspdm_return_t libspdm_measurement_collection(
     if ((measurement_hash_algo == SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) ||
         ((request_attribute & SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED) !=
          0)) {
-        use_bit_stream = true;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "raw bitstream measurements are not supported by TPM measurement collection\n"));
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
     if (measurements_index ==

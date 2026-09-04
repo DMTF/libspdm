@@ -175,7 +175,7 @@ bool libspdm_tpm_device_init();
  * @retval true   Private key context was successfully retrieved.
  * @retval false  Failed to retrieve private key context.
  */
-bool libspdm_tpm_get_pvt_key_handle(void *handle, void **context);
+bool libspdm_tpm_get_pvt_key_handle(const void *handle, void **context);
 
 /**
  * Retrieve a TPM-backed public key context.
@@ -192,7 +192,7 @@ bool libspdm_tpm_get_pvt_key_handle(void *handle, void **context);
  * @retval true   Public key context was successfully retrieved.
  * @retval false  Failed to retrieve public key context.
  */
-bool libspdm_tpm_get_pub_key_handle(void *handle, void **context);
+bool libspdm_tpm_get_pub_key_handle(const void *handle, void **context);
 
 /**
  * Read a TPM Platform Configuration Register (PCR) value.
