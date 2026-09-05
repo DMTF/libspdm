@@ -2533,6 +2533,19 @@ static void rsp_measurements_case36(void **state)
     libspdm_set_mem(requester_context, SPDM_REQ_CONTEXT_SIZE, 0xAA);
     request_size = sizeof(spdm_get_measurements_request_t) + SPDM_REQ_CONTEXT_SIZE;
 
+    /* Simulate a measurement transcript left over from an earlier, unrelated GET_MEASUREMENTS
+     * exchange on this context. The key_usage_bit_mask error path must reset it, otherwise a
+     * subsequent legitimate GET_MEASUREMENTS would sign over a polluted L1/L2 transcript. */
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_append_managed_buffer(&spdm_context->transcript.message_m, requester_context,
+                                  SPDM_REQ_CONTEXT_SIZE);
+    assert_int_not_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#else
+    spdm_context->transcript.digest_context_l1l2 =
+        libspdm_hash_new(spdm_context->connection_info.algorithm.base_hash_algo);
+    assert_non_null(spdm_context->transcript.digest_context_l1l2);
+#endif
+
     response_size = sizeof(response);
     status = libspdm_get_response_measurements(
         spdm_context, request_size,
@@ -2543,6 +2556,12 @@ static void rsp_measurements_case36(void **state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#else
+    assert_null(spdm_context->transcript.digest_context_l1l2);
+#endif
 }
 
 int libspdm_rsp_measurements_test(void)
