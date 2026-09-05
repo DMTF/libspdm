@@ -216,7 +216,7 @@ bool libspdm_read_requester_public_certificate_chain(
 {
     return get_certificate_chain(LIBSPDM_TPM_HANDLE_REQUESTER_CERTCHAIN_SLOT_0, base_hash_algo, req_base_asym_alg, data,
                                  size, hash,
-                                 hash_size, false, true);
+                                 hash_size, true, true);
 }
 
 bool libspdm_read_responder_certificate(uint32_t base_asym_algo,

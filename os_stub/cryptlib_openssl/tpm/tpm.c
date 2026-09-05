@@ -19,31 +19,44 @@
 #include "internal/libspdm_crypt_lib.h"
 
 #include "../key_context.h"
+#include "tpm_internal.h"
 
 bool g_tpm_device_initialized = false;
+static OSSL_PROVIDER *g_tpm_provider = NULL;
+static OSSL_PROVIDER *g_default_provider = NULL;
+static OSSL_PROVIDER *g_legacy_provider = NULL;
 
 static libspdm_key_context *create_key_context(EVP_PKEY *pkey)
 {
     libspdm_key_context *context = (libspdm_key_context *)malloc(sizeof(libspdm_key_context));
+    if (context == NULL) {
+        EVP_PKEY_free(pkey);
+        return NULL;
+    }
     context->evp_pkey = pkey;
     return context;
 }
 
 bool libspdm_tpm_device_init()
 {
-    OSSL_PROVIDER *tpm_provider = NULL;
-
     if (g_tpm_device_initialized)
         return true;
 
-    tpm_provider = OSSL_PROVIDER_load(NULL, "tpm2");
-    if (tpm_provider == NULL){
+    g_tpm_provider = OSSL_PROVIDER_load(NULL, "tpm2");
+    if (g_tpm_provider == NULL){
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to load tpm2\n"));
         return false;
     }
 
-    OSSL_PROVIDER_load(NULL, "default");
-    OSSL_PROVIDER_load(NULL, "legacy");
+    g_default_provider = OSSL_PROVIDER_load(NULL, "default");
+    if (g_default_provider == NULL) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to load default OpenSSL provider\n"));
+        OSSL_PROVIDER_unload(g_tpm_provider);
+        g_tpm_provider = NULL;
+        return false;
+    }
+
+    g_legacy_provider = OSSL_PROVIDER_load(NULL, "legacy");
 
     g_tpm_device_initialized = true;
     return true;
@@ -53,6 +66,8 @@ static bool get_keyinfo(const char *handle, void **context, int keyinfo_type)
 {
     OSSL_STORE_CTX *store_ctx = NULL;
     OSSL_STORE_INFO *info = NULL;
+
+    *context = NULL;
 
     /* handle must look like: "tpm2tss:0x81010002" */
     store_ctx = OSSL_STORE_open_ex(handle, NULL, "provider=tpm2", NULL, NULL, NULL, NULL, NULL);
@@ -75,6 +90,7 @@ static bool get_keyinfo(const char *handle, void **context, int keyinfo_type)
                 *context = OSSL_STORE_INFO_get1_CERT(info);
                 break;
             }
+            OSSL_STORE_INFO_free(info);
             break;
         }
         OSSL_STORE_INFO_free(info);
@@ -90,23 +106,39 @@ static bool get_keyinfo(const char *handle, void **context, int keyinfo_type)
     return true;
 }
 
-bool libspdm_tpm_get_pvt_key_handle(void *handle, void **context)
+bool libspdm_tpm_get_pvt_key_handle(const void *handle, void **context)
 {
     EVP_PKEY *pkey = NULL;
+
+    if ((handle == NULL) || (context == NULL)) {
+        return false;
+    }
+
     if (!get_keyinfo((const char *)handle, (void **)&pkey, OSSL_STORE_INFO_PKEY)){
         return false;
     }
     *context = create_key_context(pkey);
+    if (*context == NULL) {
+        return false;
+    }
     return true;
 }
 
-bool libspdm_tpm_get_pub_key_handle(void *handle, void **context)
+bool libspdm_tpm_get_pub_key_handle(const void *handle, void **context)
 {
     EVP_PKEY *pkey = NULL;
+
+    if ((handle == NULL) || (context == NULL)) {
+        return false;
+    }
+
     if (!get_keyinfo((const char *)handle, (void **)&pkey, OSSL_STORE_INFO_PUBKEY)){
         return false;
     }
     *context = create_key_context(pkey);
+    if (*context == NULL) {
+        return false;
+    }
     return true;
 }
 
@@ -115,6 +147,8 @@ bool libspdm_tpm_read_pcr(uint32_t hash_algo, uint32_t index, void *buffer, size
     TSS2_RC result;
     TSS2_TCTI_CONTEXT *tcti_context = NULL;
     ESYS_CONTEXT *context = NULL;
+    size_t buffer_size;
+    size_t digest_size;
 
     TPML_PCR_SELECTION sel = {
         .count = 1,
@@ -126,27 +160,54 @@ bool libspdm_tpm_read_pcr(uint32_t hash_algo, uint32_t index, void *buffer, size
         }
     };
 
+    if ((buffer == NULL) || (size == NULL)) {
+        return false;
+    }
+
+    if ((index == 0) || (index > 24)) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "unsupported PCR index %d\n", index));
+        return false;
+    }
+
+    buffer_size = *size;
+    digest_size = 0;
     *size = 0;
     switch (hash_algo)
     {
     case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256:
-    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_256:
-    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SM3_256:
         sel.pcrSelections[0].hash = TPM2_ALG_SHA256;
-        *size = 32;
+        digest_size = 32;
+        break;
+    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_256:
+        sel.pcrSelections[0].hash = TPM2_ALG_SHA3_256;
+        digest_size = 32;
+        break;
+    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SM3_256:
+        sel.pcrSelections[0].hash = TPM2_ALG_SM3_256;
+        digest_size = 32;
         break;
     case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_384:
-    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_384:
         sel.pcrSelections[0].hash = TPM2_ALG_SHA384;
-        *size = 48;
+        digest_size = 48;
+        break;
+    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_384:
+        sel.pcrSelections[0].hash = TPM2_ALG_SHA3_384;
+        digest_size = 48;
         break;
     case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_512:
-    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_512:
         sel.pcrSelections[0].hash = TPM2_ALG_SHA512;
-        *size = 64;
+        digest_size = 64;
+        break;
+    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_512:
+        sel.pcrSelections[0].hash = TPM2_ALG_SHA3_512;
+        digest_size = 64;
         break;
     default:
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "unsupported measurement hash algo %d\n", hash_algo));
+        return false;
+    }
+    *size = digest_size;
+    if (buffer_size < digest_size) {
         return false;
     }
     sel.pcrSelections[0].pcrSelect[(index - 1) / 8] |= 1 << ((index - 1) % 8);
@@ -170,9 +231,21 @@ bool libspdm_tpm_read_pcr(uint32_t hash_algo, uint32_t index, void *buffer, size
         goto cleanup_esys;
     }
 
-    memcpy(buffer, values->digests[0].buffer, *size);
+    if ((values == NULL) || (values->count == 0) ||
+        (values->digests[0].size != digest_size)) {
+        result = TSS2_ESYS_RC_MALFORMED_RESPONSE;
+        goto cleanup_esys;
+    }
+
+    memcpy(buffer, values->digests[0].buffer, digest_size);
 
 cleanup_esys:
+    if (out != NULL) {
+        Esys_Free(out);
+    }
+    if (values != NULL) {
+        Esys_Free(values);
+    }
     Esys_Finalize(&context);
 
 cleanup_tcti:
@@ -180,6 +253,21 @@ cleanup_tcti:
 
 finish:
     return result == TSS2_RC_SUCCESS;
+}
+
+bool libspdm_tpm_copy_nv_chunk(uint8_t *buffer, size_t buffer_size,
+                               size_t *offset, const uint8_t *chunk,
+                               size_t chunk_size, size_t requested_size)
+{
+    if ((buffer == NULL) || (offset == NULL) || (chunk == NULL) ||
+        (chunk_size == 0) || (chunk_size > requested_size) ||
+        (*offset > buffer_size) || (chunk_size > buffer_size - *offset)) {
+        return false;
+    }
+
+    memcpy(buffer + *offset, chunk, chunk_size);
+    *offset += chunk_size;
+    return true;
 }
 
 bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size)
@@ -195,7 +283,11 @@ bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size)
 
     UINT16 nv_size;
     UINT32 max_nv_buf;
-    UINT16 offset = 0;
+    size_t offset = 0;
+
+    if ((buffer == NULL) || (size == NULL)) {
+        return false;
+    }
 
     *buffer = NULL;
     *size = 0;
@@ -244,18 +336,31 @@ bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size)
     if (rc != TSS2_RC_SUCCESS)
         goto out;
 
-    max_nv_buf = cap->data.tpmProperties.tpmProperty[0].value;
-
-    *buffer = malloc(nv_size);
-    if (!*buffer)
+    if ((cap == NULL) || (cap->capability != TPM2_CAP_TPM_PROPERTIES) ||
+        (cap->data.tpmProperties.count != 1) ||
+        (cap->data.tpmProperties.tpmProperty[0].property != TPM2_PT_NV_BUFFER_MAX)) {
+        rc = TSS2_ESYS_RC_MALFORMED_RESPONSE;
         goto out;
+    }
+
+    max_nv_buf = cap->data.tpmProperties.tpmProperty[0].value;
+    if ((max_nv_buf == 0) || (max_nv_buf > TPM2_MAX_NV_BUFFER_SIZE)) {
+        rc = TSS2_ESYS_RC_MALFORMED_RESPONSE;
+        goto out;
+    }
+
+    *buffer = malloc((nv_size == 0) ? 1 : nv_size);
+    if (!*buffer) {
+        rc = TSS2_ESYS_RC_MEMORY;
+        goto out;
+    }
 
     while (offset < nv_size)
     {
         TPM2B_MAX_NV_BUFFER *chunk = NULL;
-        UINT16 to_read = (nv_size - offset > max_nv_buf)
-                             ? max_nv_buf
-                             : nv_size - offset;
+        UINT16 to_read = (UINT16)(((size_t)nv_size - offset > max_nv_buf)
+                                  ? max_nv_buf
+                                  : (size_t)nv_size - offset);
 
         rc = Esys_NV_Read(
             esys,
@@ -265,18 +370,20 @@ bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size)
             ESYS_TR_NONE,
             ESYS_TR_NONE,
             to_read,
-            offset,
+            (UINT16)offset,
             &chunk);
         if (rc != TSS2_RC_SUCCESS){
             Esys_Free(chunk);
             goto out;
         }
 
-        memcpy((uint8_t *)(*buffer) + offset,
-               chunk->buffer,
-               chunk->size);
-
-        offset += chunk->size;
+        if ((chunk == NULL) ||
+            !libspdm_tpm_copy_nv_chunk(*buffer, nv_size, &offset,
+                                       chunk->buffer, chunk->size, to_read)) {
+            Esys_Free(chunk);
+            rc = TSS2_ESYS_RC_MALFORMED_RESPONSE;
+            goto out;
+        }
         Esys_Free(chunk);
     }
 
@@ -284,6 +391,11 @@ bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size)
     rc = TSS2_RC_SUCCESS;
 
 out:
+    if (rc != TSS2_RC_SUCCESS && *buffer != NULL) {
+        free(*buffer);
+        *buffer = NULL;
+        *size = 0;
+    }
     if (cap)
         Esys_Free(cap);
     if (nv_pub)
