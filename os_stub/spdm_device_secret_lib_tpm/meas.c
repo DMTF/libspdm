@@ -110,7 +110,11 @@ size_t libspdm_fill_measurement_image_hash_block (
     hash_size = libspdm_get_measurement_hash_size(measurement_hash_algo);
 
     if (use_bit_stream) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "use_bit_stream for image_hash_block for TMP device is not supported"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "use_bit_stream for image_hash_block for TPM device is not supported"));
+        return 0;
+    }
+
+    if (measurements_index == 0) {
         return 0;
     }
 
@@ -133,14 +137,14 @@ size_t libspdm_fill_measurement_image_hash_block (
                    (uint16_t)hash_size);
 
     buffer = (uint8_t*)(measurement_block + 1);
-    buffer_size = 0;
-    if (!libspdm_tpm_read_pcr(measurement_hash_algo, measurements_index, buffer, &buffer_size)) {
+    buffer_size = hash_size;
+    if (!libspdm_tpm_read_pcr(measurement_hash_algo, (uint32_t)(measurements_index - 1), buffer, &buffer_size)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to read pcr from TPM"));
         return 0;
     }
 
     if (buffer_size != hash_size) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "hash_size (%d) != buffer_size (%d)\n", hash_size, buffer_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "hash_size (%d) != buffer_size (%d)\n", (int)hash_size, (int)buffer_size));
         return 0;
     }
 

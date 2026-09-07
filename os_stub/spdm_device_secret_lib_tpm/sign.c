@@ -22,6 +22,46 @@
 #include "keys.h"
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
+static const char *get_requester_key_handle(uint8_t slot_id)
+{
+    switch (slot_id) {
+#ifdef LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_0
+    case 0:
+        return LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_0;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_1
+    case 1:
+        return LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_1;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_2
+    case 2:
+        return LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_2;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_3
+    case 3:
+        return LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_3;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_4
+    case 4:
+        return LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_4;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_5
+    case 5:
+        return LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_5;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_6
+    case 6:
+        return LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_6;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_7
+    case 7:
+        return LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_7;
+#endif
+    default:
+        return NULL;
+    }
+}
+
 bool libspdm_requester_data_sign(
     void *spdm_context,
     spdm_version_number_t spdm_version,
@@ -33,12 +73,21 @@ bool libspdm_requester_data_sign(
 {
     void *context = NULL;
     bool result = false;
+    const char *key_handle = NULL;
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Loading TPM device"));
-    libspdm_tpm_device_init();
-    result = libspdm_tpm_get_pvt_key_handle(LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_0, &context);
+    if (!libspdm_tpm_device_init()) {
+        return false;
+    }
+
+    key_handle = get_requester_key_handle(key_pair_id);
+    if (key_handle == NULL) {
+        key_handle = LIBSPDM_TPM_HANDLE_REQUESTER_HANDLE_SLOT_0;
+    }
+
+    result = libspdm_tpm_get_pvt_key_handle(key_handle, &context);
     if (!result){
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "Failed to load requester handle"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "Failed to load requester handle %s\n", key_handle));
         return false;
     }
 
@@ -57,6 +106,46 @@ bool libspdm_requester_data_sign(
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (...) */
 
+static const char *get_responder_key_handle(uint8_t slot_id)
+{
+    switch (slot_id) {
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_0
+    case 0:
+        return LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_0;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_1
+    case 1:
+        return LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_1;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_2
+    case 2:
+        return LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_2;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_3
+    case 3:
+        return LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_3;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_4
+    case 4:
+        return LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_4;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_5
+    case 5:
+        return LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_5;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_6
+    case 6:
+        return LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_6;
+#endif
+#ifdef LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_7
+    case 7:
+        return LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_7;
+#endif
+    default:
+        return NULL;
+    }
+}
+
 bool libspdm_responder_data_sign(
     void *spdm_context,
     spdm_version_number_t spdm_version,
@@ -68,11 +157,20 @@ bool libspdm_responder_data_sign(
 {
     void *context = NULL;
     bool result = false;
+    const char *key_handle = NULL;
 
-    libspdm_tpm_device_init();
-    result = libspdm_tpm_get_pvt_key_handle(LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_0, &context);
+    if (!libspdm_tpm_device_init()) {
+        return false;
+    }
+
+    key_handle = get_responder_key_handle(key_pair_id);
+    if (key_handle == NULL) {
+        key_handle = LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_0;
+    }
+
+    result = libspdm_tpm_get_pvt_key_handle(key_handle, &context);
     if (!result){
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "Failed to load responder handle"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "Failed to load responder handle %s\n", key_handle));
         return false;
     }
 

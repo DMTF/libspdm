@@ -57,39 +57,39 @@ bool g_private_key_mode = 1;
 #endif
 
 #if LIBSPDM_ECDSA_SUPPORT
-uint8_t m_libspdm_ec256_responder_private_key[] = {};
-uint8_t m_libspdm_ec256_responder_public_key[] = {};
-uint8_t m_libspdm_ec384_responder_private_key[] = {};
-uint8_t m_libspdm_ec384_responder_public_key[] = {};
-uint8_t m_libspdm_ec521_responder_private_key[] = {};
-uint8_t m_libspdm_ec521_responder_public_key[] = {};
-uint8_t m_libspdm_ec256_requester_private_key[] = {};
-uint8_t m_libspdm_ec256_requester_public_key[] = {};
-uint8_t m_libspdm_ec384_requester_private_key[] = {};
-uint8_t m_libspdm_ec384_requester_public_key[] = {};
-uint8_t m_libspdm_ec521_requester_private_key[] = {};
-uint8_t m_libspdm_ec521_requester_public_key[] = {};
+uint8_t m_libspdm_ec256_responder_private_key[1] = {0};
+uint8_t m_libspdm_ec256_responder_public_key[1] = {0};
+uint8_t m_libspdm_ec384_responder_private_key[1] = {0};
+uint8_t m_libspdm_ec384_responder_public_key[1] = {0};
+uint8_t m_libspdm_ec521_responder_private_key[1] = {0};
+uint8_t m_libspdm_ec521_responder_public_key[1] = {0};
+uint8_t m_libspdm_ec256_requester_private_key[1] = {0};
+uint8_t m_libspdm_ec256_requester_public_key[1] = {0};
+uint8_t m_libspdm_ec384_requester_private_key[1] = {0};
+uint8_t m_libspdm_ec384_requester_public_key[1] = {0};
+uint8_t m_libspdm_ec521_requester_private_key[1] = {0};
+uint8_t m_libspdm_ec521_requester_public_key[1] = {0};
 #endif /*LIBSPDM_ECDSA_SUPPORT*/
 
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
-uint8_t m_libspdm_rsa2048_res_n[] = {};
-uint8_t m_libspdm_rsa2048_res_e[] = {};
-uint8_t m_libspdm_rsa2048_res_d[] = {};
-uint8_t m_libspdm_rsa3072_res_n[] = {};
-uint8_t m_libspdm_rsa3072_res_e[] = {};
-uint8_t m_libspdm_rsa3072_res_d[] = {};
-uint8_t m_libspdm_rsa4096_res_n[] = {};
-uint8_t m_libspdm_rsa4096_res_e[] = {};
-uint8_t m_libspdm_rsa4096_res_d[] = {};
-uint8_t m_libspdm_rsa2048_req_n[] = {};
-uint8_t m_libspdm_rsa2048_req_e[] = {};
-uint8_t m_libspdm_rsa2048_req_d[] = {};
-uint8_t m_libspdm_rsa3072_req_n[] = {};
-uint8_t m_libspdm_rsa3072_req_e[] = {};
-uint8_t m_libspdm_rsa3072_req_d[] = {};
-uint8_t m_libspdm_rsa4096_req_n[] = {};
-uint8_t m_libspdm_rsa4096_req_e[] = {};
-uint8_t m_libspdm_rsa4096_req_d[] = {};
+uint8_t m_libspdm_rsa2048_res_n[1] = {0};
+uint8_t m_libspdm_rsa2048_res_e[1] = {0};
+uint8_t m_libspdm_rsa2048_res_d[1] = {0};
+uint8_t m_libspdm_rsa3072_res_n[1] = {0};
+uint8_t m_libspdm_rsa3072_res_e[1] = {0};
+uint8_t m_libspdm_rsa3072_res_d[1] = {0};
+uint8_t m_libspdm_rsa4096_res_n[1] = {0};
+uint8_t m_libspdm_rsa4096_res_e[1] = {0};
+uint8_t m_libspdm_rsa4096_res_d[1] = {0};
+uint8_t m_libspdm_rsa2048_req_n[1] = {0};
+uint8_t m_libspdm_rsa2048_req_e[1] = {0};
+uint8_t m_libspdm_rsa2048_req_d[1] = {0};
+uint8_t m_libspdm_rsa3072_req_n[1] = {0};
+uint8_t m_libspdm_rsa3072_req_e[1] = {0};
+uint8_t m_libspdm_rsa3072_req_d[1] = {0};
+uint8_t m_libspdm_rsa4096_req_n[1] = {0};
+uint8_t m_libspdm_rsa4096_req_e[1] = {0};
+uint8_t m_libspdm_rsa4096_req_d[1] = {0};
 #endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
 bool libspdm_get_responder_private_key_from_raw_data(uint32_t base_asym_algo,

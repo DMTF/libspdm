@@ -291,6 +291,7 @@ bool libspdm_gen_csr(
         if (*req_csr_tracking_tag == 0) {
             if (available_csr_tracking_tag == 0) {
                 /*no available tracking tag*/
+                free(cached_last_csr_request);
                 *is_busy = true;
                 return false;
             } else {
@@ -302,6 +303,7 @@ bool libspdm_gen_csr(
                 flag = true;
             } else {
                 /*unexpected*/
+                free(cached_last_csr_request);
                 return false;
             }
         }
