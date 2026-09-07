@@ -24,7 +24,7 @@ bool libspdm_read_pqc_responder_root_public_certificate(
     uint32_t base_hash_algo, uint32_t pqc_asym_algo, void **data, size_t *size,
     void **hash, size_t *hash_size) {
     /* TPM API need no changes for pqc support */
-    return libspdm_read_requester_root_public_certificate(
+    return libspdm_read_responder_root_public_certificate(
         base_hash_algo, pqc_asym_algo, data, size, hash, hash_size);
 }
 
@@ -33,7 +33,6 @@ bool libspdm_read_pqc_responder_root_public_certificate_slot(
     void **data, size_t *size, void **hash, size_t *hash_size) {
     return libspdm_read_responder_root_public_certificate_slot(
         slot_id, base_hash_algo, pqc_asym_algo, data, size, hash, hash_size);
-    ;
 }
 
 bool libspdm_read_pqc_requester_root_public_certificate(

@@ -4,7 +4,6 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#include <complex.h>
 #include <openssl/err.h>
 #include <tss2/tss2_common.h>
 #include <tss2/tss2_esys.h>
@@ -24,7 +23,16 @@ bool g_tpm_device_initialized = false;
 
 static libspdm_key_context *create_key_context(EVP_PKEY *pkey)
 {
-    libspdm_key_context *context = (libspdm_key_context *)malloc(sizeof(libspdm_key_context));
+    libspdm_key_context *context;
+
+    if (pkey == NULL) {
+        return NULL;
+    }
+
+    context = (libspdm_key_context *)malloc(sizeof(libspdm_key_context));
+    if (context == NULL) {
+        return NULL;
+    }
     context->evp_pkey = pkey;
     return context;
 }
@@ -54,7 +62,12 @@ static bool get_keyinfo(const char *handle, void **context, int keyinfo_type)
     OSSL_STORE_CTX *store_ctx = NULL;
     OSSL_STORE_INFO *info = NULL;
 
-    /* handle must look like: "tpm2tss:0x81010002" */
+    if (handle == NULL || context == NULL) {
+        return false;
+    }
+    *context = NULL;
+
+    /* handle must look like: "handle:0x81010002" or "tpm2tss:0x81010002" */
     store_ctx = OSSL_STORE_open_ex(handle, NULL, "provider=tpm2", NULL, NULL, NULL, NULL, NULL);
     if (!store_ctx){
         return false;
@@ -75,6 +88,7 @@ static bool get_keyinfo(const char *handle, void **context, int keyinfo_type)
                 *context = OSSL_STORE_INFO_get1_CERT(info);
                 break;
             }
+            OSSL_STORE_INFO_free(info);
             break;
         }
         OSSL_STORE_INFO_free(info);
@@ -83,38 +97,62 @@ static bool get_keyinfo(const char *handle, void **context, int keyinfo_type)
     OSSL_STORE_close(store_ctx);
 
     if (*context == NULL){
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "no keyinfo %d foun on handle %s\n", keyinfo_type, handle));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "no keyinfo %d found on handle %s\n", keyinfo_type, handle));
         return false;
     }
 
     return true;
 }
 
-bool libspdm_tpm_get_pvt_key_handle(void *handle, void **context)
+bool libspdm_tpm_get_pvt_key_handle(const void *handle, void **context)
 {
     EVP_PKEY *pkey = NULL;
+
+    if (context == NULL) {
+        return false;
+    }
+    *context = NULL;
+
     if (!get_keyinfo((const char *)handle, (void **)&pkey, OSSL_STORE_INFO_PKEY)){
         return false;
     }
     *context = create_key_context(pkey);
+    if (*context == NULL) {
+        EVP_PKEY_free(pkey);
+        return false;
+    }
     return true;
 }
 
-bool libspdm_tpm_get_pub_key_handle(void *handle, void **context)
+bool libspdm_tpm_get_pub_key_handle(const void *handle, void **context)
 {
     EVP_PKEY *pkey = NULL;
+
+    if (context == NULL) {
+        return false;
+    }
+    *context = NULL;
+
     if (!get_keyinfo((const char *)handle, (void **)&pkey, OSSL_STORE_INFO_PUBKEY)){
         return false;
     }
     *context = create_key_context(pkey);
+    if (*context == NULL) {
+        EVP_PKEY_free(pkey);
+        return false;
+    }
     return true;
 }
 
 bool libspdm_tpm_read_pcr(uint32_t hash_algo, uint32_t index, void *buffer, size_t *size)
 {
-    TSS2_RC result;
+    TSS2_RC result = 1;
     TSS2_TCTI_CONTEXT *tcti_context = NULL;
     ESYS_CONTEXT *context = NULL;
+    TPML_PCR_SELECTION *out = NULL;
+    TPML_DIGEST *values = NULL;
+    size_t digest_size = 0;
+    UINT32 uc;
 
     TPML_PCR_SELECTION sel = {
         .count = 1,
@@ -126,34 +164,44 @@ bool libspdm_tpm_read_pcr(uint32_t hash_algo, uint32_t index, void *buffer, size
         }
     };
 
-    *size = 0;
+    if (buffer == NULL || size == NULL) {
+        return false;
+    }
+
+    if (index >= 24) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "invalid PCR index %u (max 23)\n", index));
+        return false;
+    }
+
     switch (hash_algo)
     {
     case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256:
     case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_256:
     case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SM3_256:
         sel.pcrSelections[0].hash = TPM2_ALG_SHA256;
-        *size = 32;
+        digest_size = 32;
         break;
     case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_384:
     case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_384:
         sel.pcrSelections[0].hash = TPM2_ALG_SHA384;
-        *size = 48;
+        digest_size = 48;
         break;
     case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_512:
     case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_512:
         sel.pcrSelections[0].hash = TPM2_ALG_SHA512;
-        *size = 64;
+        digest_size = 64;
         break;
     default:
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "unsupported measurement hash algo %d\n", hash_algo));
         return false;
     }
-    sel.pcrSelections[0].pcrSelect[(index - 1) / 8] |= 1 << ((index - 1) % 8);
 
-    UINT32 uc;
-    TPML_PCR_SELECTION *out = NULL;
-    TPML_DIGEST *values = NULL;
+    if (*size < digest_size) {
+        *size = digest_size;
+        return false;
+    }
+
+    sel.pcrSelections[0].pcrSelect[index / 8] |= (uint8_t)(1 << (index % 8));
 
     const char *tssconf = getenv("TPM2TOOLS_TCTI");
     if ((result = Tss2_TctiLdr_Initialize(tssconf, &tcti_context)) != TSS2_RC_SUCCESS){
@@ -170,9 +218,21 @@ bool libspdm_tpm_read_pcr(uint32_t hash_algo, uint32_t index, void *buffer, size
         goto cleanup_esys;
     }
 
-    memcpy(buffer, values->digests[0].buffer, *size);
+    if (values == NULL || values->count == 0 || values->digests[0].size < digest_size) {
+        result = 1;
+        goto cleanup_esys;
+    }
+
+    memcpy(buffer, values->digests[0].buffer, digest_size);
+    *size = digest_size;
 
 cleanup_esys:
+    if (out != NULL) {
+        Esys_Free(out);
+    }
+    if (values != NULL) {
+        Esys_Free(values);
+    }
     Esys_Finalize(&context);
 
 cleanup_tcti:
@@ -184,7 +244,7 @@ finish:
 
 bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size)
 {
-    TSS2_RC rc;
+    TSS2_RC rc = 1;
     TSS2_TCTI_CONTEXT *tcti = NULL;
     ESYS_CONTEXT *esys = NULL;
     ESYS_TR nv_tr = ESYS_TR_NONE;
@@ -196,6 +256,10 @@ bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size)
     UINT16 nv_size;
     UINT32 max_nv_buf;
     UINT16 offset = 0;
+
+    if (buffer == NULL || size == NULL) {
+        return false;
+    }
 
     *buffer = NULL;
     *size = 0;
@@ -230,6 +294,10 @@ bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size)
         goto out;
 
     nv_size = nv_pub->nvPublic.dataSize;
+    if (nv_size == 0) {
+        rc = 1;
+        goto out;
+    }
 
     rc = Esys_GetCapability(
         esys,
@@ -244,11 +312,18 @@ bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size)
     if (rc != TSS2_RC_SUCCESS)
         goto out;
 
-    max_nv_buf = cap->data.tpmProperties.tpmProperty[0].value;
+    if (cap != NULL && cap->data.tpmProperties.count > 0 &&
+        cap->data.tpmProperties.tpmProperty[0].value > 0) {
+        max_nv_buf = cap->data.tpmProperties.tpmProperty[0].value;
+    } else {
+        max_nv_buf = 1024;
+    }
 
     *buffer = malloc(nv_size);
-    if (!*buffer)
+    if (!*buffer) {
+        rc = 1;
         goto out;
+    }
 
     while (offset < nv_size)
     {
@@ -272,6 +347,12 @@ bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size)
             goto out;
         }
 
+        if (chunk == NULL || chunk->size == 0) {
+            rc = 1;
+            Esys_Free(chunk);
+            goto out;
+        }
+
         memcpy((uint8_t *)(*buffer) + offset,
                chunk->buffer,
                chunk->size);
@@ -284,6 +365,11 @@ bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size)
     rc = TSS2_RC_SUCCESS;
 
 out:
+    if (rc != TSS2_RC_SUCCESS && *buffer != NULL) {
+        free(*buffer);
+        *buffer = NULL;
+        *size = 0;
+    }
     if (cap)
         Esys_Free(cap);
     if (nv_pub)
