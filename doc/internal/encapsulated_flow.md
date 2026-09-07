@@ -126,13 +126,13 @@ during the handshake phase, the inferred `session_id` is passed to the Integrato
 
 The Requester-initiated encapsulated flow begins with the Requester sending
 `GET_ENCAPSULATED_REQUEST`. If outside of a session then the following encapsulated requests are
-legal.
+legal:
 - `GET_DIGESTS`
 - `GET_CERTIFICATE`
 - `GET_ENDPOINT_INFO`
 
 Within a session the above encapsulated requests are all legal, with the addition of the following
-encapsulated requests.
+encapsulated requests:
 - `GET_SUPPORTED_EVENT_TYPES`
 - `SUBSCRIBE_EVENT_TYPES`
 - `SEND_EVENT`
@@ -181,9 +181,9 @@ For encapsulated requests that originate from the Integrator the basic flow is
 Example encapsulated state management handler:
 ```C
 /* libspdm receives a GET_ENCAPSULATED_REQUEST or DELIVER_ENCAPSULATED_RESPONSE message and calls
- * into libspdm_encap_state_handler. */
+ * into encap_flow_handler. */
 
-libspdm_return_t libspdm_encap_state_handler(
+libspdm_return_t encap_flow_handler(
     void *spdm_context,
     const uint32_t *session_id,
     libspdm_encap_flow_type_t encap_flow_type,
@@ -216,16 +216,20 @@ libspdm_return_t libspdm_encap_state_handler(
         return libspdm_get_encap_request_get_digests(spdm_context, session_id,
                                                      encap_request_size, encap_request);
     case b:
-        /* Get certificate chain from certificate slot 5. */
+        /* Get certificate chain from certificate slot 5. libspdm writes it into cert_chain, whose
+         * size is then read with libspdm_get_encap_payload_size. */
         return libspdm_get_encap_request_get_certificate(spdm_context, session_id, 5,
+                                                         sizeof(cert_chain), cert_chain,
                                                          encap_request_size, encap_request);
     case c:
-        /* Get endpoint information using certificate slot 5, with signature requested. */
+        /* Get endpoint information using certificate slot 5, with signature requested. libspdm
+         * writes it into ep_info, whose size is then read with libspdm_get_encap_payload_size. */
         return libspdm_get_encap_request_get_endpoint_info(
             spdm_context, session_id,
             SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
             5,
             SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
+            sizeof(ep_info), ep_info,
             encap_request_size, encap_request);
     case d:
         /* Send events. */
@@ -259,7 +263,7 @@ libspdm_return_t libspdm_encap_state_handler(
 When multiple encapsulated `GET_CERTIFICATE` requests are issued to retrieve a single certificate
 chain, then libspdm handles the multiple `ENCAPSULATED_RESPONSE` and `DELIVER_ENCAPSULATED_RESPONSE`
 messages. Once the entire certificate chain has been retrieved then libspdm calls
-`libspdm_encap_state_handler`.
+`encap_flow_handler()`.
 
 When an encapsulated `KEY_UPDATE` request with `UpdateKey` or `UpdateAllKeys` is issued, libspdm
 will handle sending the subsequent `KEY_UPDATE` with `VerifyNewKey`.
