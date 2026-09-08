@@ -28,7 +28,6 @@ void spdm_device_release_sender_buffer (
     LIBSPDM_ASSERT (m_send_receive_buffer_acquired);
     LIBSPDM_ASSERT (msg_buf_ptr == m_send_receive_buffer);
     m_send_receive_buffer_acquired = false;
-    return;
 }
 
 libspdm_return_t spdm_device_acquire_receiver_buffer (
@@ -47,7 +46,6 @@ void spdm_device_release_receiver_buffer (
     LIBSPDM_ASSERT (m_send_receive_buffer_acquired);
     LIBSPDM_ASSERT (msg_buf_ptr == m_send_receive_buffer);
     m_send_receive_buffer_acquired = false;
-    return;
 }
 
 libspdm_test_context_t *libspdm_get_test_context(void)
