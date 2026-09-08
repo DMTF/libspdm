@@ -300,7 +300,7 @@ static libspdm_return_t libspdm_try_get_key_pair_info(libspdm_context_t *spdm_co
     }
 
     if (*public_key_info_len < spdm_response->public_key_info_len) {
-        status = LIBSPDM_STATUS_BUFFER_FULL;
+        status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
         goto receive_done;
     }
     *public_key_info_len = spdm_response->public_key_info_len;

@@ -169,6 +169,7 @@ static libspdm_return_t send_message(
     case 0x7:
     case 0x8:
     case 0x9:
+    case 0xA:
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -650,6 +651,41 @@ static libspdm_return_t receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
+    case 0xA:
+    {
+        spdm_measurement_extension_log_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+        spdm_measurement_extension_log_dmtf_t *spdm_mel;
+
+        spdm_mel = (spdm_measurement_extension_log_dmtf_t *)m_libspdm_mel_test;
+
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.request_response_code = SPDM_MEASUREMENT_EXTENSION_LOG;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        /* The entire MEL is delivered in a single response. */
+        spdm_response->portion_length = LIBSPDM_MAX_MEL_BLOCK_LEN;
+        spdm_response->remainder_length = 0;
+
+        libspdm_copy_mem(spdm_response + 1,
+                         (size_t)(*response) + *response_size - (size_t)(spdm_response + 1),
+                         (uint8_t *)spdm_mel,
+                         LIBSPDM_MAX_MEL_BLOCK_LEN);
+
+        spdm_response_size = sizeof(spdm_measurement_extension_log_response_t) +
+                             LIBSPDM_MAX_MEL_BLOCK_LEN;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
     default:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
@@ -997,6 +1033,44 @@ static void req_get_measurement_extension_log_case9(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 10: The Requester's MEL buffer is smaller than the MEASUREMENT_EXTENSION_LOG response's
+ * PortionLength.
+ * Expected Behavior: get a LIBSPDM_STATUS_BUFFER_TOO_SMALL return code
+ **/
+static void req_get_measurement_extension_log_case10(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t spdm_mel_size;
+    uint8_t spdm_mel[LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xA;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
+
+    libspdm_reset_message_b(spdm_context);
+    libspdm_zero_mem(spdm_mel, sizeof(spdm_mel));
+
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+
+    /* Case 0xA responds with a PortionLength of LIBSPDM_MAX_MEL_BLOCK_LEN. */
+    spdm_mel_size = LIBSPDM_MAX_MEL_BLOCK_LEN - 1;
+
+    status = libspdm_get_measurement_extension_log(spdm_context, NULL, &spdm_mel_size, spdm_mel);
+    assert_int_equal(status, LIBSPDM_STATUS_BUFFER_TOO_SMALL);
+}
+
 int libspdm_req_get_measurement_extension_log_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1018,7 +1092,8 @@ int libspdm_req_get_measurement_extension_log_test(void)
         cmocka_unit_test(req_get_measurement_extension_log_case8),
         /* Failed response , The total MEL length is larger than SPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE*/
         cmocka_unit_test(req_get_measurement_extension_log_case9),
-
+        /* Failed response , The caller's MEL buffer is smaller than the portion length*/
+        cmocka_unit_test(req_get_measurement_extension_log_case10),
     };
 
     libspdm_test_context_t test_context = {
