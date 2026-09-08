@@ -56,6 +56,7 @@ int libspdm_req_get_encapsulated_request_test(void);
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 int libspdm_req_encap_digests_test(void);
 int libspdm_req_encap_certificate_test(void);
+int libspdm_req_encap_certificate_error_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 int libspdm_req_encap_challenge_auth_test(void);
@@ -231,6 +232,9 @@ int main(void)
         return_value = 1;
     }
     if (libspdm_req_encap_certificate_test() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_req_encap_certificate_error_test() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
