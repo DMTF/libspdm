@@ -90,7 +90,7 @@ libspdm_return_t libspdm_get_encap_response_certificate(void *spdm_context,
 
     if (context->local_context.local_cert_chain_provision[slot_id] == NULL) {
         return libspdm_generate_encap_error_response(
-            context, SPDM_ERROR_CODE_UNSPECIFIED,
+            context, SPDM_ERROR_CODE_INVALID_REQUEST,
             0, response_size, response);
     }
 
