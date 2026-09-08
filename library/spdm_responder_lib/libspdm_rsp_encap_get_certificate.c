@@ -252,8 +252,8 @@ libspdm_return_t libspdm_process_encap_response_certificate(
                               rsp_msg_portion_length);
 
     if (cert_chain_buffer_size + rsp_msg_portion_length > cert_chain_buffer_max_size) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_chain_buffer full\n"));
-        return LIBSPDM_STATUS_BUFFER_FULL;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_chain buffer too small\n"));
+        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
     }
 
     libspdm_copy_mem(cert_chain_buffer + cert_chain_buffer_size,

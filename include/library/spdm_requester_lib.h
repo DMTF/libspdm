@@ -95,6 +95,8 @@ libspdm_return_t libspdm_get_digest(void *spdm_context, const uint32_t *session_
  *         The Responder returned a RequestResynch error message.
  * @retval LIBSPDM_STATUS_BUFFER_FULL
  *         The buffer used to store transcripts is exhausted.
+ * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL
+ *         The cert_chain buffer is too small to hold the certificate chain.
  * @retval LIBSPDM_STATUS_VERIF_FAIL
  *         Verification of the certificate chain failed.
  * @retval LIBSPDM_STATUS_INVALID_CERT

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -216,7 +216,7 @@ static libspdm_return_t libspdm_try_get_measurement_extension_log(libspdm_contex
 
         if (mel_size_internal + spdm_response->portion_length > mel_capacity) {
             libspdm_release_receiver_buffer (spdm_context);
-            status = LIBSPDM_STATUS_BUFFER_FULL;
+            status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
             goto done;
         }
 

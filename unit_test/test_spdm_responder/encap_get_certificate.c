@@ -580,6 +580,93 @@ static void rsp_encap_get_certificate_case5(void **state)
     m_libspdm_local_certificate_chain_size = 0;
 }
 
+/**
+ * Test 6: The Responder's Integrator registered, through libspdm_register_cert_chain_buffer(),
+ * a certificate chain buffer that is smaller than the CERTIFICATE response's PortionLength.
+ * Expected Behavior: returns a status of LIBSPDM_STATUS_BUFFER_TOO_SMALL and the buffer is left
+ *                    untouched.
+ **/
+static void rsp_encap_get_certificate_case6(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    bool need_continue;
+    spdm_certificate_response_t *spdm_response;
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t temp_buf_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+    uint16_t portion_length;
+    uint16_t remainder_length;
+    size_t spdm_response_size;
+    void *saved_cert_chain_buffer;
+    size_t saved_cert_chain_buffer_max_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x6;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+
+    if (!libspdm_read_responder_public_certificate_chain(
+            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+            &m_libspdm_local_certificate_chain,
+            &m_libspdm_local_certificate_chain_size, NULL, NULL)) {
+        assert(false);
+    }
+
+    portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+    remainder_length =
+        (uint16_t)(m_libspdm_local_certificate_chain_size - LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+
+    temp_buf_size = sizeof(spdm_certificate_response_t) + portion_length;
+    spdm_response_size = temp_buf_size;
+    spdm_response = (void *)temp_buf;
+
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    spdm_response->header.request_response_code = SPDM_CERTIFICATE;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
+    spdm_response->portion_length = portion_length;
+    spdm_response->remainder_length = remainder_length;
+    libspdm_copy_mem(spdm_response + 1,
+                     sizeof(temp_buf) - sizeof(*spdm_response),
+                     (uint8_t *)m_libspdm_local_certificate_chain,
+                     portion_length);
+
+    /* This is the configuration of rsp_encap_get_certificate_case5 Sub Case 6, which succeeds,
+     * except that the registered buffer cannot hold the first portion. */
+    spdm_context->connection_info.multi_key_conn_req = false;
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->connection_info.peer_cert_info[0] = 0;
+    libspdm_reset_message_mut_b(spdm_context);
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
+
+    saved_cert_chain_buffer = spdm_context->mut_auth_cert_chain_buffer;
+    saved_cert_chain_buffer_max_size = spdm_context->mut_auth_cert_chain_buffer_max_size;
+    spdm_context->mut_auth_cert_chain_buffer = cert_chain;
+    spdm_context->mut_auth_cert_chain_buffer_max_size = portion_length - 1;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+
+    status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
+                                                        spdm_response,
+                                                        &need_continue);
+
+    assert_int_equal(status, LIBSPDM_STATUS_BUFFER_TOO_SMALL);
+    assert_int_equal(spdm_context->mut_auth_cert_chain_buffer_size, 0);
+
+    spdm_context->mut_auth_cert_chain_buffer = saved_cert_chain_buffer;
+    spdm_context->mut_auth_cert_chain_buffer_max_size = saved_cert_chain_buffer_max_size;
+
+    free(m_libspdm_local_certificate_chain);
+    m_libspdm_local_certificate_chain = NULL;
+    m_libspdm_local_certificate_chain_size = 0;
+}
+
 int libspdm_rsp_encap_get_certificate_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -596,6 +683,8 @@ int libspdm_rsp_encap_get_certificate_test(void)
         cmocka_unit_test(rsp_encap_get_certificate_case4),
         /* check request attributes and response attributes*/
         cmocka_unit_test(rsp_encap_get_certificate_case5),
+        /* The Integrator's certificate chain buffer is too small*/
+        cmocka_unit_test(rsp_encap_get_certificate_case6),
     };
 
     libspdm_test_context_t test_context = {
