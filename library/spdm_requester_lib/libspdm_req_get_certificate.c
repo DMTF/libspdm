@@ -435,13 +435,6 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
             goto done;
         }
 
-        if (cert_chain_size_internal + rsp_msg_portion_length > cert_chain_capacity) {
-            libspdm_release_receiver_buffer (spdm_context);
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_chain_buffer full\n"));
-            status = LIBSPDM_STATUS_BUFFER_FULL;
-            goto done;
-        }
-
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Certificate (offset 0x%x, size 0x%x):\n",
                        req_msg_offset, rsp_msg_portion_length));
         LIBSPDM_INTERNAL_DUMP_HEX((uint8_t *)spdm_response + rsp_msg_header_size,
