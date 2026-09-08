@@ -50,7 +50,7 @@ void libspdm_test_transport_storage_decode_message(void **state)
     message = (uint8_t *)transport_message + sizeof(libspdm_storage_transport_virtual_header_t);
 
     ret = libspdm_transport_storage_encode_message(
-        state,
+        spdm_test_context->spdm_context,
         NULL,
         is_app_message,
         is_request_message,
@@ -61,7 +61,7 @@ void libspdm_test_transport_storage_decode_message(void **state)
     LIBSPDM_ASSERT(ret == LIBSPDM_STATUS_SUCCESS);
 
     ret = libspdm_transport_storage_decode_message(
-        state,
+        spdm_test_context->spdm_context,
         &session_id,
         &dec_is_app_message,
         is_request_message,
