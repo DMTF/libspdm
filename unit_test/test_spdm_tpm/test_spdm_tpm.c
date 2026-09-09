@@ -9,7 +9,12 @@
 #include "library/spdm_crypt_lib.h"
 #include "library/spdm_crypt_ext_lib.h"
 #include "internal/libspdm_device_secret_lib.h"
+#include "internal/libspdm_common_lib.h"
+#include "hal/library/responder/measlib.h"
+#include "industry_standard/spdm_secured_message.h"
 #include "keys.h"
+
+extern size_t libspdm_secret_lib_meas_opaque_data_size;
 
 extern size_t libspdm_fill_measurement_image_hash_block(
     bool use_bit_stream,
@@ -216,6 +221,57 @@ static void test_spdm_tpm_cert_slot_validation(void **state)
     assert_false(status);
 }
 
+void test_spdm_tpm_quote_validation(void **state)
+{
+    uint8_t buffer[512];
+    size_t size = sizeof(buffer);
+    bool status;
+
+    /* libspdm_tpm_quote with NULL quote_buffer_size */
+    status = libspdm_tpm_quote(
+        LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_0,
+        SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256,
+        NULL, 0, NULL, 0, buffer, NULL);
+    assert_false(status);
+
+    /* libspdm_tpm_quote with invalid hash algorithm */
+    size = sizeof(buffer);
+    status = libspdm_tpm_quote(
+        LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_0,
+        0xFFFFFFFF, NULL, 0, NULL, 0, buffer, &size);
+    assert_false(status);
+
+    /* libspdm_tpm_quote with invalid key handle string */
+    size = sizeof(buffer);
+    status = libspdm_tpm_quote(
+        "invalid_handle",
+        SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256,
+        NULL, 0, NULL, 0, buffer, &size);
+    assert_false(status);
+
+    /* libspdm_tpm_verify_quote with NULL parameters */
+    status = libspdm_tpm_verify_quote(
+        NULL,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+        SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+        buffer, sizeof(buffer), NULL, 0);
+    assert_false(status);
+
+    status = libspdm_tpm_verify_quote(
+        (void *)1,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+        SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+        NULL, sizeof(buffer), NULL, 0);
+    assert_false(status);
+
+    status = libspdm_tpm_verify_quote(
+        (void *)1,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+        SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+        buffer, 0, NULL, 0);
+    assert_false(status);
+}
+
 /* --------------------------------------------------------------------------
  * Live TPM Simulator Tests (gated by TPM2TOOLS_TCTI)
  * -------------------------------------------------------------------------- */
@@ -401,6 +457,84 @@ static void test_spdm_tpm_live_sign_and_verify(void **state)
     free(cert_data);
 }
 
+void test_spdm_tpm_live_quote(void **state)
+{
+    uint8_t quote_buf[1024];
+    size_t quote_size = sizeof(quote_buf);
+    uint8_t pcr_indices[] = {0, 1};
+    uint8_t nonce[32];
+    uint8_t bad_nonce[32];
+    void *cert_data = NULL;
+    size_t cert_size = 0;
+    void *pub_key_ctx = NULL;
+    bool status;
+    size_t i;
+
+    if (!is_tpm_available()) {
+        print_message("[SKIPPED] TPM simulator not running (TPM2TOOLS_TCTI not set)\n");
+        return;
+    }
+
+    for (i = 0; i < sizeof(nonce); i++) {
+        nonce[i] = (uint8_t)(0xA0 + i);
+        bad_nonce[i] = (uint8_t)(0xB0 + i);
+    }
+
+    /* Perform TPM2 quote directly */
+    status = libspdm_tpm_quote(
+        LIBSPDM_TPM_HANDLE_RESPONDER_HANDLE_SLOT_0,
+        SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256,
+        pcr_indices, 2,
+        nonce, sizeof(nonce),
+        quote_buf, &quote_size);
+    assert_true(status);
+    assert_true(quote_size > 0);
+
+    /* Read responder certificate to obtain public key */
+    status = libspdm_read_responder_certificate(
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+        &cert_data, &cert_size);
+    assert_true(status);
+    assert_non_null(cert_data);
+
+    status = libspdm_asym_get_public_key_from_x509(
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+        cert_data, cert_size, &pub_key_ctx);
+    assert_true(status);
+    assert_non_null(pub_key_ctx);
+
+    /* Verify quote with matching nonce */
+    status = libspdm_tpm_verify_quote(
+        pub_key_ctx,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+        SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256,
+        quote_buf, quote_size,
+        nonce, sizeof(nonce));
+    assert_true(status);
+
+    /* Verification must fail with wrong nonce */
+    status = libspdm_tpm_verify_quote(
+        pub_key_ctx,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+        SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256,
+        quote_buf, quote_size,
+        bad_nonce, sizeof(bad_nonce));
+    assert_false(status);
+
+    /* Verification must fail with tampered quote buffer */
+    quote_buf[quote_size - 1] ^= 0xFF;
+    status = libspdm_tpm_verify_quote(
+        pub_key_ctx,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+        SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256,
+        quote_buf, quote_size,
+        nonce, sizeof(nonce));
+    assert_false(status);
+
+    libspdm_asym_free(SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, pub_key_ctx);
+    free(cert_data);
+}
+
 /* --------------------------------------------------------------------------
  * Main Test Runner
  * -------------------------------------------------------------------------- */
@@ -416,6 +550,7 @@ static int libspdm_spdm_tpm_test_main(void)
         cmocka_unit_test(test_spdm_tpm_security_stubs),
         cmocka_unit_test(test_spdm_tpm_meas_validation),
         cmocka_unit_test(test_spdm_tpm_cert_slot_validation),
+        cmocka_unit_test(test_spdm_tpm_quote_validation),
 
         /* Live TPM tests */
         cmocka_unit_test(test_tpm_live_read_pcr),
@@ -423,6 +558,7 @@ static int libspdm_spdm_tpm_test_main(void)
         cmocka_unit_test(test_spdm_tpm_live_read_certchain),
         cmocka_unit_test(test_spdm_tpm_live_fill_meas_block),
         cmocka_unit_test(test_spdm_tpm_live_sign_and_verify),
+        cmocka_unit_test(test_spdm_tpm_live_quote),
     };
 
     return cmocka_run_group_tests(test_cases, NULL, NULL);

@@ -232,6 +232,63 @@ bool libspdm_tpm_read_pcr(uint32_t hash_algo, uint32_t index, void *buffer, size
  */
 bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size);
 
+/**
+ * Generate a TPM 2.0 Quote over specified PCRs.
+ *
+ * This function performs a TPM2_Quote operation using the specified signing key,
+ * qualifying data (nonce), and PCR selection. The resulting quote is serialized
+ * containing the marshaled TPM2B_ATTEST structure followed by the marshaled
+ * TPMT_SIGNATURE structure.
+ *
+ * @param[in]      key_handle_str     TPM key handle string (e.g. "handle:0x81000021" or NULL for default).
+ * @param[in]      hash_algo          SPDM measurement hash algo used for the PCR bank.
+ * @param[in]      pcr_indices        Array of PCR indices to include in quote (0..23).
+ * @param[in]      pcr_count          Number of PCR indices in pcr_indices (or 0 for all active PCRs).
+ * @param[in]      nonce              Qualifying data / nonce buffer.
+ * @param[in]      nonce_size         Size in bytes of nonce buffer.
+ * @param[out]     quote_buffer       Destination buffer to receive marshaled quote (attest + signature).
+ * @param[in,out]  quote_buffer_size  On input, capacity of quote_buffer; on output, size used or required.
+ *
+ * @retval true   Quote was successfully generated.
+ * @retval false  Failed to generate quote.
+ */
+bool libspdm_tpm_quote(
+    const void *key_handle_str,
+    uint32_t hash_algo,
+    const uint8_t *pcr_indices,
+    size_t pcr_count,
+    const uint8_t *nonce,
+    size_t nonce_size,
+    void *quote_buffer,
+    size_t *quote_buffer_size);
+
+/**
+ * Verify a TPM 2.0 Quote against a public key and expected qualifying data.
+ *
+ * Unmarshals TPM2B_ATTEST and TPMT_SIGNATURE, verifies the attestation header,
+ * verifies that the qualifying data matches expected_nonce, and cryptographically
+ * verifies the signature against the public key context.
+ *
+ * @param[in]  pub_key_context      Asymmetric public key context for the quote signing key.
+ * @param[in]  base_asym_algo       SPDM base_asym_algo of the signing key (e.g. ECDSA P256).
+ * @param[in]  hash_algo            SPDM base_hash_algo used for signature verification.
+ * @param[in]  quote_buffer         Buffer containing marshaled quote (attest + signature).
+ * @param[in]  quote_buffer_size    Size in bytes of quote_buffer.
+ * @param[in]  expected_nonce       Expected qualifying data / nonce.
+ * @param[in]  expected_nonce_size  Size of expected_nonce.
+ *
+ * @retval true   Quote is authentic and valid.
+ * @retval false  Verification failed.
+ */
+bool libspdm_tpm_verify_quote(
+    const void *pub_key_context,
+    uint32_t base_asym_algo,
+    uint32_t hash_algo,
+    const void *quote_buffer,
+    size_t quote_buffer_size,
+    const uint8_t *expected_nonce,
+    size_t expected_nonce_size);
+
 #endif /* LIBSPDM_TPM_SUPPORT */
 
 #endif /* SPDM_CRYPT_EXT_LIB_H */
