@@ -74,7 +74,7 @@ void libspdm_get_local_cert_chain_buffer(void *spdm_context,
     context = spdm_context;
 
     LIBSPDM_ASSERT(context->local_context.local_cert_chain_provision[slot_id] != NULL);
-    LIBSPDM_ASSERT(context->local_context.local_cert_chain_provision_size != 0);
+    LIBSPDM_ASSERT(context->local_context.local_cert_chain_provision_size[slot_id] != 0);
 
     *cert_chain_buffer = context->local_context.local_cert_chain_provision[slot_id];
     *cert_chain_buffer_size = context->local_context.local_cert_chain_provision_size[slot_id];
