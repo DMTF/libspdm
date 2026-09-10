@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -36,7 +36,7 @@ extern void libspdm_copy_mem(void *dst_buf, size_t dst_len,
 /**
  * Fills a target buffer with a byte value.
  *
- * @param  buffer    The memory to set.
+ * @param  buffer    The memory to set. It shall be non-NULL.
  * @param  length    The number of bytes to set.
  * @param  value     The value with which to fill length bytes of buffer.
  **/
@@ -46,6 +46,7 @@ extern void libspdm_set_mem(void *buffer, size_t length, uint8_t value);
  * Fills a target buffer with zeros.
  *
  * @param  buffer      The pointer to the target buffer to fill with zeros.
+ *                     It shall be non-NULL.
  * @param  length      The number of bytes in buffer to fill with zeros.
  **/
 extern void libspdm_zero_mem(void *buffer, size_t length);
@@ -54,7 +55,7 @@ extern void libspdm_zero_mem(void *buffer, size_t length);
  * Compares the contents of two buffers in constant time.
  *
  * For a given length, the time to complete the comparison is always the same regardless of the
- * contents of the two buffers.
+ * contents of the two buffers. The source and destination buffers shall be non-NULL.
  *
  * @param  destination_buffer  A pointer to the destination buffer to compare.
  * @param  source_buffer       A pointer to the source buffer to compare.
