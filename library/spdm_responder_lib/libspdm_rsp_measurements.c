@@ -103,7 +103,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
     uint8_t *fill_response_ptr;
     size_t request_context_size;
     const void *request_context;
-    const uint32_t *session_id_ptr;
+    const uint32_t *session_id;
 
     spdm_request = request;
 
@@ -112,9 +112,9 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
 
     if (!spdm_context->last_spdm_request_session_id_valid) {
         session_info = NULL;
-        session_id_ptr = NULL;
+        session_id = NULL;
     } else {
-        session_id_ptr = &spdm_context->last_spdm_request_session_id;
+        session_id = &spdm_context->last_spdm_request_session_id;
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context,
             spdm_context->last_spdm_request_session_id);
@@ -280,7 +280,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
 
     status = libspdm_measurement_collection(
         spdm_context,
-        session_id_ptr,
+        session_id,
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.measurement_spec,
         spdm_context->connection_info.algorithm.measurement_hash_algo,
@@ -336,7 +336,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
 
         ret = libspdm_measurement_opaque_data(
             spdm_context,
-            session_id_ptr,
+            session_id,
             spdm_context->connection_info.version,
             spdm_context->connection_info.algorithm.measurement_spec,
             spdm_context->connection_info.algorithm.measurement_hash_algo,
