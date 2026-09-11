@@ -1,0 +1,152 @@
+# Copyright Notice:
+# Copyright 2026 DMTF. All rights reserved.
+# License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+
+menuconfig LIBSPDM
+	bool "libspdm: DMTF SPDM library"
+	help
+	  Enable the libspdm reference implementation of DMTF SPDM
+	  (Security Protocol and Data Model). When enabled, the libspdm
+	  static library is built and made available to the application.
+
+if LIBSPDM
+
+config LIBSPDM_REQUESTER
+	bool "Build SPDM requester role"
+	default y
+
+config LIBSPDM_RESPONDER
+	bool "Build SPDM responder role"
+	default y
+
+choice LIBSPDM_CRYPTO_BACKEND
+	prompt "Crypto backend"
+	default LIBSPDM_CRYPTO_MBEDTLS
+
+config LIBSPDM_CRYPTO_MBEDTLS
+	bool "mbedTLS (libspdm's bundled 3.6.5 LTS)"
+	help
+	  Use the mbedTLS 3.6.5 LTS tree that libspdm carries as a git
+	  submodule under libspdm/os_stub/mbedtlslib/mbedtls as the
+	  libspdm crypto backend.
+	  Zephyr's own mbedTLS module (which ships v4.x + TF-PSA-Crypto)
+	  is intentionally NOT used because mbedTLS 4 removed the legacy
+	  mbedtls_*_C API surface that libspdm's cryptlib_mbedtls relies
+	  on. See zephyr/CMakeLists.txt for the build wiring.
+
+config LIBSPDM_CRYPTO_NULL
+	bool "Null crypto (compile-only, will fail at runtime)"
+
+endchoice
+
+config LIBSPDM_SECRET_LIB_SAMPLE
+	bool "Build the sample device-secret library"
+	default y
+	help
+	  Builds os_stub/spdm_device_secret_lib_sample.
+
+	  This is demo scaffolding built around the DMTF sample keys, not
+	  a production secret store. It expects the application to
+	  provide the file-oriented hooks libspdm declares in
+	  os_stub/include/internal/libspdm_device_secret_lib.h
+	  (libspdm_read_input_file, libspdm_write_output_file,
+	  libspdm_dump_hex_str) plus the SetCert hooks, exactly as
+	  spdm-emu does on a hosted OS. The integration layer that
+	  wraps this module is expected to carry them; see the
+	  spdm-zephyr repository for reference implementations.
+
+menu "Transports"
+
+config LIBSPDM_TRANSPORT_MCTP
+	bool "MCTP transport binding"
+	default y
+	help
+	  Build library/spdm_transport_mctp_lib. This is only the
+	  message codec; moving the encoded messages over a real bus
+	  is the integrator's job, through libspdm's
+	  device_send_message / device_receive_message hooks.
+
+endmenu
+
+menu "Crypto backend options"
+
+config LIBSPDM_MBEDTLS_PLATFORM_TIME_ALT
+	bool "Integrator supplies the mbedTLS platform time hooks"
+	depends on LIBSPDM_CRYPTO_MBEDTLS
+	default y
+	help
+	  Build the vendored mbedTLS with MBEDTLS_PLATFORM_TIME_ALT and
+	  MBEDTLS_PLATFORM_MS_TIME_ALT set. Zephyr has no hosted time(),
+	  so mbedtls_time() and mbedtls_ms_time() must come from
+	  outside this module; the build will fail to link if nothing
+	  defines them. Where the wall clock ultimately comes from (an
+	  RTC, SNTP, a secure time service) is platform policy, which is
+	  why it is not answered here. See the spdm-zephyr repository
+	  for an implementation.
+
+	  Say n only if you have arranged for a hosted time() to exist.
+
+endmenu
+
+menu "Debug"
+
+config LIBSPDM_DEBUG_ENABLE
+	bool "Enable libspdm debug prints and asserts"
+	default y if DEBUG
+
+endmenu
+
+menu "Sizing"
+
+config LIBSPDM_MAX_SESSION_COUNT
+	int "Maximum concurrent SPDM sessions"
+	default 1
+	range 1 16
+	help
+	  Number of SPDM sessions the responder/requester can hold open
+	  at once. Each session costs the bulk of a transcript buffer
+	  plus AEAD state (tens of KiB), so the default is 1: enough for
+	  the samples and for the common "one authenticated link" case.
+
+config LIBSPDM_MAX_CERT_CHAIN_SIZE
+	int "Maximum certificate chain size (bytes)"
+	default 2048
+	range 512 16384
+	help
+	  Largest DER certificate chain that can be sent or received.
+	  2 KiB holds an ECDSA-P256 leaf plus CA; libspdm's own default
+	  of 4 KiB is sized for RSA-4096 chains.
+
+config LIBSPDM_MAX_KEY_PAIR_COUNT
+	int "Maximum key pairs exposed by the device-secret library"
+	default 2
+	range 1 16
+	help
+	  Size of the m_key_pair_info[] table in libspdm's sample
+	  device-secret library, which reports one entry per enabled
+	  traditional asymmetric algorithm (doubled for its multi-key
+	  example). The port enables ECDSA-P256 only, so 2 entries
+	  (1 primary + 1 secondary) fit exactly; a value of 1 makes the
+	  sample library trip -Warray-bounds. Raise this together with
+	  the set of enabled asym algorithms.
+
+config LIBSPDM_MAX_PUBLIC_KEY_INFO_LEN
+	int "Maximum SubjectPublicKeyInfo length (bytes)"
+	default 1024
+	range 256 65535
+	help
+	  Upper bound on a DER SubjectPublicKeyInfo carried in
+	  GET_KEY_PAIR_INFO. The SPDM spec ceiling of 65535 would give a
+	  1.5 MiB m_key_pair_info[] array in the sample device-secret
+	  library and a 64 KiB stack frame in the requester handler,
+	  which no typical Zephyr target can afford. 1 KiB is comfortably
+	  above any traditional asymmetric SPKI (RSA-4096 is ~550 bytes).
+
+endmenu
+
+# When LIBSPDM_CRYPTO_MBEDTLS=y, libspdm builds the mbedTLS 3.6.5
+# submodule it already carries (see zephyr/CMakeLists.txt), with
+# libspdm's pre-curated MBEDTLS_CONFIG_FILE. No Kconfig knobs are
+# needed.
+
+endif # LIBSPDM

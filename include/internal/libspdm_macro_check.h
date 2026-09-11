@@ -114,6 +114,10 @@
     #error LIBSPDM_MAX_SESSION_COUNT must be less than 65536.
 #endif
 
+#if ((LIBSPDM_MAX_PUBLIC_KEY_INFO_LEN) == 0) || ((LIBSPDM_MAX_PUBLIC_KEY_INFO_LEN) > 65535)
+    #error LIBSPDM_MAX_PUBLIC_KEY_INFO_LEN must be between 1 and 65535 inclusive.
+#endif
+
 #if LIBSPDM_FIPS_MODE
 #if (LIBSPDM_ASYM_ALGO_SUPPORT) && !LIBSPDM_FIPS_ASYM_ALGO_SUPPORT
     #error ASYM algo is cleared after FIPS enforcement.

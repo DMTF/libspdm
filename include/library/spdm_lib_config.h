@@ -427,6 +427,14 @@
 
 #endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
+/* This value specifies the maximum size, in bytes, of the PublicKeyInfo field of the KEY_PAIR_INFO
+ * response that an endpoint supports. The default, is the same used by the SPDM specification,
+ * (SPDM_MAX_PUBLIC_KEY_INFO_LEN) but that value is not meant to be configured by the Integrator.
+ */
+#ifndef LIBSPDM_MAX_PUBLIC_KEY_INFO_LEN
+#define LIBSPDM_MAX_PUBLIC_KEY_INFO_LEN 65535
+#endif
+
 /* If 1 then endpoint supports parsing X.509 certificate chains. */
 #ifndef LIBSPDM_CERT_PARSE_SUPPORT
 #define LIBSPDM_CERT_PARSE_SUPPORT 1
