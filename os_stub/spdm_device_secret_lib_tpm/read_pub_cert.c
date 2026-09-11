@@ -33,8 +33,25 @@ static bool get_root_certificate_from_chain(uint32_t chain_index, uint32_t base_
     size_t output_cert_chain_size;
     size_t digest_size;
 
+    if (data == NULL || size == NULL) {
+        return false;
+    }
+    *data = NULL;
+    *size = 0;
+    if (hash != NULL) {
+        *hash = NULL;
+    }
+    if (hash_size != NULL) {
+        *hash_size = 0;
+    }
+
     if (!libspdm_tpm_device_init())
         return false;
+
+    digest_size = libspdm_get_hash_size(base_hash_algo);
+    if (digest_size == 0) {
+        return false;
+    }
 
     result = libspdm_tpm_read_nv(chain_index, &cert_chain_data, &cert_chain_size);
     if (!result)
@@ -47,8 +64,6 @@ static bool get_root_certificate_from_chain(uint32_t chain_index, uint32_t base_
         free(cert_chain_data);
         return false;
     }
-
-    digest_size = libspdm_get_hash_size(base_hash_algo);
 
     /* Create cert chain with just root cert */
     output_cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + root_cert_len;
@@ -92,7 +107,12 @@ static bool get_leaf_certificate_from_chain(uint32_t chain_index, uint32_t base_
     size_t cert_chain_size;
     const uint8_t *leaf_cert;
     size_t leaf_cert_len;
-    int32_t cert_count;
+
+    if (data == NULL || size == NULL) {
+        return false;
+    }
+    *data = NULL;
+    *size = 0;
 
     if (!libspdm_tpm_device_init())
         return false;
@@ -101,17 +121,9 @@ static bool get_leaf_certificate_from_chain(uint32_t chain_index, uint32_t base_
     if (!result)
         return false;
 
-    /* Get certificate count */
-    cert_count = libspdm_x509_get_cert_from_cert_chain(cert_chain_data, cert_chain_size, -1,
-                                                       NULL, NULL);
-    if (cert_count <= 0) {
-        free(cert_chain_data);
-        return false;
-    }
-
     /* Extract leaf certificate (last in chain) */
     result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data, cert_chain_size,
-                                                   cert_count - 1, &leaf_cert, &leaf_cert_len);
+                                                   -1, &leaf_cert, &leaf_cert_len);
     if (!result) {
         free(cert_chain_data);
         return false;
@@ -144,12 +156,28 @@ static bool get_certificate_chain(uint32_t index, uint32_t base_hash_algo, uint3
     size_t cert_chain_size;
     size_t digest_size;
 
+    if (data == NULL || size == NULL) {
+        return false;
+    }
+    *data = NULL;
+    *size = 0;
+    if (hash != NULL) {
+        *hash = NULL;
+    }
+    if (hash_size != NULL) {
+        *hash_size = 0;
+    }
+
     if (!libspdm_tpm_read_nv(index, &cert, &cert_size)){
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "failed to read nv index %d\n", index));
         return false;
     }
 
     digest_size = libspdm_get_hash_size(base_hash_algo);
+    if (digest_size == 0) {
+        free(cert);
+        return false;
+    }
 
     cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + cert_size;
     cert_chain = (void *)malloc(cert_chain_size);
@@ -216,14 +244,13 @@ bool libspdm_read_requester_public_certificate_chain(
 {
     return get_certificate_chain(LIBSPDM_TPM_HANDLE_REQUESTER_CERTCHAIN_SLOT_0, base_hash_algo, req_base_asym_alg, data,
                                  size, hash,
-                                 hash_size, false, true);
+                                 hash_size, true, true);
 }
 
 bool libspdm_read_responder_certificate(uint32_t base_asym_algo,
                                         void **data, size_t *size)
 {
-    if (base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256){
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "unsupported asym algo %d\n", base_asym_algo));
+    if (base_asym_algo == 0) {
         return false;
     }
 

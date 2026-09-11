@@ -1,0 +1,61 @@
+name: TPM Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tpm-unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - Debug
+          - Release
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libtss2-dev \
+            tpm2-tools \
+            tpm2-openssl \
+            swtpm \
+            swtpm-tools
+
+      - name: Configure CMake
+        run: |
+          cmake -B build_${{ matrix.target }} \
+            -DARCH=x64 \
+            -DTOOLCHAIN=GCC \
+            -DTARGET=${{ matrix.target }} \
+            -DCRYPTO=openssl \
+            -DDEVICE=tpm \
+            -DLIBSPDM_TPM_SUPPORT=ON
+
+      - name: Build
+        run: |
+          make -C build_${{ matrix.target }} -j$(nproc) test_spdm_tpm
+
+      - name: Run TPM Live & Offline Unit Tests
+        run: |
+          ./unit_test/test_spdm_tpm/run_tpm_test.sh ./build_${{ matrix.target }}/bin/test_spdm_tpm
+
+      - name: Run TPM Standalone Offline Validation Tests
+        run: |
+          ./build_${{ matrix.target }}/bin/test_spdm_tpm
