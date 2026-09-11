@@ -811,18 +811,19 @@ bool libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size,
         goto done;
     }
 
-    if (*serial_number_size < (size_t)asn1_integer->length) {
-        *serial_number_size = (size_t)asn1_integer->length;
+    if (*serial_number_size < (size_t)ASN1_STRING_length(asn1_integer)) {
+        *serial_number_size = (size_t)ASN1_STRING_length(asn1_integer);
         status = false;
         goto done;
     }
 
     if (serial_number != NULL) {
         libspdm_copy_mem(serial_number, *serial_number_size,
-                         asn1_integer->data, (size_t)asn1_integer->length);
+                         ASN1_STRING_get0_data(asn1_integer),
+                         (size_t)ASN1_STRING_length(asn1_integer));
         status = true;
     }
-    *serial_number_size = (size_t)asn1_integer->length;
+    *serial_number_size = (size_t)ASN1_STRING_length(asn1_integer);
 
 done:
 
@@ -1061,6 +1062,21 @@ done:
     return status;
 }
 
+/* A date_time object is the DER encoding of an ASN1_TIME. Its size is not given to
+ * libspdm_x509_compare_date_time, so recover it from the TLV header, whose length is always in the
+ * short form for a time value. */
+static bool libspdm_asn1_time_der_size(const uint8_t *der, size_t *der_size)
+{
+    if ((der[0] != V_ASN1_UTCTIME) && (der[0] != V_ASN1_GENERALIZEDTIME)) {
+        return false;
+    }
+    if ((der[1] & 0x80) != 0) {
+        return false;
+    }
+    *der_size = 2 + (size_t)der[1];
+    return true;
+}
+
 /**
  * Retrieve the Validity from one X.509 certificate
  *
@@ -1092,6 +1108,8 @@ bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
     const ASN1_TIME *t_time;
     size_t t_size;
     size_t f_size;
+    uint8_t *ptr;
+    int ret;
 
     /* Check input parameters.*/
     if (cert == NULL || from_size == NULL || to_size == NULL ||
@@ -1128,33 +1146,46 @@ bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
         goto done;
     }
 
-    f_size = sizeof(ASN1_TIME) + f_time->length;
+    ret = i2d_ASN1_TIME(f_time, NULL);
+    if (ret <= 0) {
+        *from_size = 0;
+        *to_size = 0;
+        res = false;
+        goto done;
+    }
+    f_size = (size_t)ret;
     if (*from_size < f_size) {
         *from_size = f_size;
         res = false;
         goto done;
     }
     if (from != NULL) {
-        libspdm_copy_mem(from, *from_size, f_time, sizeof(ASN1_TIME));
-        ((ASN1_TIME *)from)->data = from + sizeof(ASN1_TIME);
-        libspdm_copy_mem(from + sizeof(ASN1_TIME),
-                         *from_size - sizeof(ASN1_TIME),
-                         f_time->data, f_time->length);
+        ptr = from;
+        if (i2d_ASN1_TIME(f_time, &ptr) <= 0) {
+            res = false;
+            goto done;
+        }
     }
     *from_size = f_size;
 
-    t_size = sizeof(ASN1_TIME) + t_time->length;
+    ret = i2d_ASN1_TIME(t_time, NULL);
+    if (ret <= 0) {
+        *to_size = 0;
+        res = false;
+        goto done;
+    }
+    t_size = (size_t)ret;
     if (*to_size < t_size) {
         *to_size = t_size;
         res = false;
         goto done;
     }
     if (to != NULL) {
-        libspdm_copy_mem(to, *to_size, t_time, sizeof(ASN1_TIME));
-        ((ASN1_TIME *)to)->data = to + sizeof(ASN1_TIME);
-        libspdm_copy_mem(to + sizeof(ASN1_TIME),
-                         *to_size - sizeof(ASN1_TIME),
-                         t_time->data, t_time->length);
+        ptr = to;
+        if (i2d_ASN1_TIME(t_time, &ptr) <= 0) {
+            res = false;
+            goto done;
+        }
     }
     *to_size = t_size;
 
@@ -1199,6 +1230,7 @@ bool libspdm_x509_set_date_time(const char *date_time_str, void *date_time, size
     int32_t ret;
     ASN1_TIME *dt;
     size_t d_size;
+    uint8_t *ptr;
 
     dt = NULL;
     status = false;
@@ -1215,19 +1247,23 @@ bool libspdm_x509_set_date_time(const char *date_time_str, void *date_time, size
         goto cleanup;
     }
 
-    d_size = sizeof(ASN1_TIME) + dt->length;
+    ret = i2d_ASN1_TIME(dt, NULL);
+    if (ret <= 0) {
+        status = false;
+        goto cleanup;
+    }
+    d_size = (size_t)ret;
     if (*date_time_size < d_size) {
         *date_time_size = d_size;
         status = false;
         goto cleanup;
     }
     if (date_time != NULL) {
-        libspdm_copy_mem(date_time, *date_time_size, dt, sizeof(ASN1_TIME));
-        ((ASN1_TIME *)date_time)->data =
-            (uint8_t *)date_time + sizeof(ASN1_TIME);
-        libspdm_copy_mem((uint8_t *)date_time + sizeof(ASN1_TIME),
-                         *date_time_size - sizeof(ASN1_TIME),
-                         dt->data, dt->length);
+        ptr = date_time;
+        if (i2d_ASN1_TIME(dt, &ptr) <= 0) {
+            status = false;
+            goto cleanup;
+        }
     }
     *date_time_size = d_size;
     status = true;
@@ -1257,7 +1293,45 @@ cleanup:
  **/
 int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_time2)
 {
-    return (int32_t)ASN1_TIME_compare(date_time1, date_time2);
+    ASN1_TIME *t1;
+    ASN1_TIME *t2;
+    const uint8_t *ptr;
+    size_t size;
+    int32_t ret;
+
+    if ((date_time1 == NULL) || (date_time2 == NULL)) {
+        return -2;
+    }
+
+    t1 = NULL;
+    t2 = NULL;
+    ret = -2;
+
+    ptr = date_time1;
+    if (!libspdm_asn1_time_der_size(ptr, &size)) {
+        goto done;
+    }
+    t1 = d2i_ASN1_TIME(NULL, &ptr, (long)size);
+    if (t1 == NULL) {
+        goto done;
+    }
+
+    ptr = date_time2;
+    if (!libspdm_asn1_time_der_size(ptr, &size)) {
+        goto done;
+    }
+    t2 = d2i_ASN1_TIME(NULL, &ptr, (long)size);
+    if (t2 == NULL) {
+        goto done;
+    }
+
+    ret = (int32_t)ASN1_TIME_compare(t1, t2);
+
+done:
+    ASN1_TIME_free(t1);
+    ASN1_TIME_free(t2);
+
+    return ret;
 }
 
 /**
