@@ -1,0 +1,1430 @@
+# Implements "Tier 1 - Pull Request / Push Coverage" from
+# doc/internal/continuous_integration.md.
+#
+# The matrix is an explicit list of tuples rather than a cross product with
+# exclusions, because Tier 1 "need not be exhaustive in [its] combinations".
+# The coverage rules it is built to satisfy are recorded at the bottom of this
+# file so a reviewer can audit the list against the document.
+
+name: Tier 1 Build and Test
+
+on:
+  pull_request:
+    branches:
+      - main
+      - release-2.3
+      - release-3.8
+    paths-ignore:
+      - 'doc/**'
+      - '**/*.md'
+  push:
+    branches:
+      - main
+      - release-2.3
+      - release-3.8
+    paths-ignore:
+      - 'doc/**'
+      - '**/*.md'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  # Basic unit tests per doc/internal/continuous_integration.md. Every job runs
+  # each of these that its build produced. Extended unit tests are added per
+  # job via matrix.extra_tests, in the configurations that satisfy their
+  # requirement.
+  UNIT_TESTS: >-
+    test_spdm_requester
+    test_spdm_responder
+    test_spdm_crypt
+    test_spdm_secured_message
+    test_spdm_common
+    test_crypt
+
+  # Applied to every job.
+  #   CHECK_MACRO      enforces include/internal/libspdm_macro_check.h at
+  #                    compile time, so an illegal configuration fails loudly
+  #                    instead of building something subtly wrong.
+  #   ASSERT_CONFIG=3  makes a failing assert exit rather than deadloop.
+  BASE_CFLAGS: -DLIBSPDM_CHECK_MACRO=1 -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=3
+
+jobs:
+  # posix, windows-msvc and mingw repeat most of their steps. That is deliberate.
+  # The alternative is one job family whose platform-specific steps are selected
+  # with `if:`, and GitHub has no way to hide work it skips
+  # (https://github.com/orgs/community/discussions/18001).
+  posix:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux-x64-gcc-mbedtls-debug
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+
+          - name: linux-x64-clang-openssl-release
+            os: ubuntu-latest
+            arch: x64
+            toolchain: CLANG
+            crypto: openssl
+            target: Release
+
+          - name: linux-aarch64-gcc-mbedtls-debug
+            os: ubuntu-24.04-arm
+            arch: aarch64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+
+          - name: macos-aarch64-clang-openssl-release
+            os: macos-latest
+            arch: aarch64
+            toolchain: CLANG
+            crypto: openssl
+            target: Release
+
+          - name: linux-x64-gcc-openssl-release
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: openssl
+            target: Release
+
+          - name: linux-x64-clang-mbedtls-debug
+            os: ubuntu-latest
+            arch: x64
+            toolchain: CLANG
+            crypto: mbedtls
+            target: Debug
+
+          # macOS builds OpenSSL as darwin64-arm64 and Linux as linux-aarch64,
+          # which are different assembly. macos-aarch64-clang-openssl-release
+          # satisfies aarch64 x OpenSSL in letter; this covers the Linux arm64
+          # crypto path in fact.
+          - name: linux-aarch64-gcc-openssl-release
+            os: ubuntu-24.04-arm
+            arch: aarch64
+            toolchain: GCC
+            crypto: openssl
+            target: Release
+
+          # gcc x OpenSSL is otherwise Release only, so the asserts that Debug
+          # enables are never exercised against the OpenSSL backend.
+          - name: linux-x64-gcc-openssl-debug
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: openssl
+            target: Debug
+
+          # aarch64 is otherwise GCC only. Debug x OpenSSL is also new for arm64.
+          - name: linux-aarch64-clang-openssl-debug
+            os: ubuntu-24.04-arm
+            arch: aarch64
+            toolchain: CLANG
+            crypto: openssl
+            target: Debug
+
+          # macOS is otherwise OpenSSL and Release only.
+          - name: macos-aarch64-clang-mbedtls-debug
+            os: macos-latest
+            arch: aarch64
+            toolchain: CLANG
+            crypto: mbedtls
+            target: Debug
+
+          # == Configuration sweep ============================================
+          # Coarse macros, swept on the cheapest platform unless the macro's
+          # domain depends on the crypto backend.
+
+          - name: config-fips
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+            cflags: -DLIBSPDM_FIPS_MODE=1
+            extra_tests: test_spdm_fips
+
+          - name: config-record-transcript
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+            cflags: -DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1
+
+          - name: config-no-debug
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Release
+            cflags: -DLIBSPDM_DEBUG_ENABLE=0
+
+          # Keeps CERT/CHAL/MEAS/KEY_EX, drops the optional capabilities.
+          # EVENT_RECIPIENT_SUPPORT must go off with ENCAP_CAP or the macro
+          # check rejects the configuration.
+          - name: config-minimal-caps
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_PSK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CSR_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_EVENT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=0
+              -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=0
+              -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=0
+
+          - name: config-shared-lib
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+            cmake_extra: -DBUILD_LINUX_SHARED_LIB=1
+
+          # Mbed TLS pins all 18 PQC macros to 0, so this configuration is
+          # inert there and must run against OpenSSL.
+          - name: config-classical-crypto
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: openssl
+            target: Debug
+            cflags: >-
+              -DLIBSPDM_ML_DSA_44_SUPPORT=0 -DLIBSPDM_ML_DSA_65_SUPPORT=0 -DLIBSPDM_ML_DSA_87_SUPPORT=0
+              -DLIBSPDM_SLH_DSA_SHA2_128S_SUPPORT=0 -DLIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT=0
+              -DLIBSPDM_SLH_DSA_SHA2_128F_SUPPORT=0 -DLIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT=0
+              -DLIBSPDM_SLH_DSA_SHA2_192S_SUPPORT=0 -DLIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT=0
+              -DLIBSPDM_SLH_DSA_SHA2_192F_SUPPORT=0 -DLIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT=0
+              -DLIBSPDM_SLH_DSA_SHA2_256S_SUPPORT=0 -DLIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT=0
+              -DLIBSPDM_SLH_DSA_SHA2_256F_SUPPORT=0 -DLIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT=0
+              -DLIBSPDM_ML_KEM_512_SUPPORT=0 -DLIBSPDM_ML_KEM_768_SUPPORT=0 -DLIBSPDM_ML_KEM_1024_SUPPORT=0
+
+          # == Pass/fail signal for a build that produces no tests ============
+
+          - name: config-disable-tests
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+            cmake_extra: -DDISABLE_TESTS=1
+            expect_tests: 'false'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+          # Nothing after this step needs to talk to the remote, and the jobs
+          # run build scripts from the pull request's own tree.
+          persist-credentials: false
+      # OpenSSL is an ExternalProject with its own CFLAGS, so no LIBSPDM_*
+      # macro reaches it: one entry serves every configuration on a given
+      # platform. Measured at ~100 MB on POSIX and ~344 MB on Windows, so
+      # caching the tree wholesale is affordable and avoids maintaining a
+      # list of which paths have consumers -- the Windows DLL lives in the
+      # build tree, not the install tree, which such a list would miss.
+      - name: OpenSSL revision
+        id: ossl
+        shell: bash
+        run: |
+          echo "sha=$(git -C os_stub/openssllib/openssl rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "image=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
+
+      # Exact key only. A near-miss would pair stamps from one revision with
+      # an install tree from another, so restore-keys would be worse than a
+      # miss. The key omits TARGET and the macros because neither changes
+      # what OpenSSL builds.
+      - name: Cache OpenSSL build
+        if: matrix.crypto == 'openssl'
+        uses: actions/cache@v6
+        with:
+          path: build/os_stub/openssllib
+          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.image }}-${{ steps.ossl.outputs.sha }}
+
+      - name: Configure
+        shell: bash
+        env:
+          CFLAGS: ${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}
+        run: |
+          # The CLANG toolchain archives static libraries with llvm-ar,
+          # which is not present on the stock Linux image.
+          if [ "${{ matrix.toolchain }}" = "CLANG" ] && [ "${{ runner.os }}" = "Linux" ]; then
+            sudo apt-get update
+            sudo apt-get install --no-install-recommends -y llvm
+          fi
+
+          cmake -B build \
+            -DARCH=${{ matrix.arch }} \
+            -DTOOLCHAIN=${{ matrix.toolchain }} \
+            -DTARGET=${{ matrix.target }} \
+            -DCRYPTO=${{ matrix.crypto }} \
+            ${{ matrix.cmake_extra }}
+
+      - name: Build
+        shell: bash
+        run: |
+          # Discover the core count rather than assuming it, so the build keeps
+          # pace if runner specs change. A bare `--parallel` means an unbounded
+          # -j, which exhausts the smaller runners.
+          jobs=$(getconf _NPROCESSORS_ONLN 2>/dev/null || nproc 2>/dev/null || echo 2)
+          echo "Building with --parallel $jobs"
+
+          # copy_sample_key stages certificates into build/bin, which only
+          # exists when unit tests are built.
+          if [ "${{ matrix.expect_tests }}" != "false" ]; then
+            cmake --build build --target copy_sample_key
+          fi
+          cmake --build build --parallel "$jobs"
+
+      # Implements "For any configuration, run all basic unit tests", plus any
+      # extended unit test whose requirement this configuration satisfies.
+      # Each test is bounded so a hang fails the job instead of stalling it.
+      # One step per test, so the Actions UI shows a separate pass/fail entry
+      # for each. A single looping step buries later tests below the log
+      # viewer's truncation point. The shared runner keeps the binary lookup
+      # and the timeout guard in one place rather than in six copies.
+      - name: Prepare test runner
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: |
+          cat > run_test.sh <<'RUNNER'
+          #!/usr/bin/env bash
+          set -uo pipefail
+          t="$1"
+
+          exe=""
+          if [ -x "build/bin/$t" ]; then
+            exe="$t"
+          elif [ -x "build/bin/$t.exe" ]; then
+            exe="$t.exe"
+          fi
+
+          # Basic unit tests require no additional configuration, so a missing
+          # one means coverage was lost rather than legitimately skipped.
+          if [ -z "$exe" ]; then
+            echo "::error::$t was not built"
+            echo "- \`$t\`: **not built**" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+            exit 1
+          fi
+
+          # macOS has no GNU timeout; fall back to gtimeout, then to perl.
+          if command -v timeout >/dev/null 2>&1; then
+            ( cd build/bin && timeout 600 "./$exe" )
+          elif command -v gtimeout >/dev/null 2>&1; then
+            ( cd build/bin && gtimeout 600 "./$exe" )
+          else
+            ( cd build/bin && perl -e 'alarm shift; exec @ARGV' 600 "./$exe" )
+          fi
+          rc=$?
+
+          if [ "$rc" -eq 0 ]; then
+            echo "- \`$t\`: pass" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          else
+            echo "- \`$t\`: **FAIL** (exit $rc)" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+            echo "::error::$t failed with exit $rc"
+          fi
+          exit $rc
+          RUNNER
+          chmod +x run_test.sh
+          echo "### ${{ matrix.name }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Test Requester
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_requester
+
+      - name: Test Responder
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_responder
+
+      - name: Test Common
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_common
+
+      - name: Test SPDM Crypt
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_crypt
+
+      - name: Test Crypt
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_crypt
+
+      - name: Test Secured Message
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_secured_message
+
+      # Extended unit test: runs only where its requirement is satisfied.
+      - name: Test FIPS
+        if: contains(matrix.extra_tests, 'test_spdm_fips')
+        shell: bash
+        run: ./run_test.sh test_spdm_fips
+
+      # DISABLE_TESTS gates 87 test subdirectories, so this checks that nothing
+      # test-shaped was produced, and that libraries still were -- otherwise an
+      # empty build tree would satisfy the check vacuously.
+      - name: Verify no tests were built
+        if: matrix.expect_tests == 'false'
+        shell: bash
+        run: |
+          # build/bin does not exist when tests are disabled. Redirecting find's
+          # stderr hides the message but not its exit status, which pipefail
+          # propagates and set -e turns into a silent step failure, so test for
+          # the directory instead of relying on 2>/dev/null.
+          if [ -d build/bin ]; then
+            stray=$(find build/bin -maxdepth 1 -name 'test_*' | wc -l)
+          else
+            stray=0
+          fi
+          if [ -d build ]; then
+            libs=$(find build -type f \( -name '*.a' -o -name '*.lib' \) | wc -l)
+          else
+            libs=0
+          fi
+          echo "DISABLE_TESTS check: $stray test artifacts under build/bin, $libs libraries built"
+          {
+            echo "### ${{ matrix.name }}"
+            echo ""
+            echo "DISABLE_TESTS: $stray test artifacts, $libs libraries"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$stray" -ne 0 ]; then
+            echo "::error::DISABLE_TESTS was set but build/bin holds $stray test artifacts"
+            exit 1
+          fi
+          if [ "$libs" -eq 0 ]; then
+            echo "::error::DISABLE_TESTS build produced no libraries; the check would pass vacuously"
+            exit 1
+          fi
+      # Reproducer, generated from the job's own variables so that it cannot
+      # drift from what actually ran. The script restores the source tree but
+      # not the toolchain, so the compiler identity is recorded in the header:
+      # identical source can produce different diagnostics on different
+      # compiler versions.
+      - name: Generate reproducer
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p repro
+
+          # A failed configure leaves no build tree, and this step runs on
+          # always(). "ls ... | head" exits non-zero there, which pipefail and
+          # set -e turn into a silent step failure, losing the reproducer in
+          # exactly the case that most needs one.
+          ccfile=""
+          if [ -d build/CMakeFiles ]; then
+            ccfile=$(find build/CMakeFiles -name CMakeCCompiler.cmake -print -quit)
+          fi
+          cid=$(sed -n 's/^set(CMAKE_C_COMPILER_ID "\(.*\)")/\1/p' "$ccfile" 2>/dev/null || true)
+          cver=$(sed -n 's/^set(CMAKE_C_COMPILER_VERSION "\(.*\)")/\1/p' "$ccfile" 2>/dev/null || true)
+          compiler="${cid:-unknown} ${cver:-unknown}"
+          image="${ImageOS:-unknown} ${ImageVersion:-unknown}"
+
+          # The image label identifies the runner build, not what is actually
+          # underneath it. Record the distro and kernel too, so a reader can
+          # tell how far their machine differs from the one that failed.
+          if [ -r /etc/os-release ]; then
+            osname=$(grep -m1 '^PRETTY_NAME=' /etc/os-release | cut -d= -f2- | tr -d '"' || true)
+          elif command -v sw_vers >/dev/null 2>&1; then
+            osname="$(sw_vers -productName) $(sw_vers -productVersion)"
+          else
+            osname=$(cmd //c ver 2>/dev/null | tr -d '[:cntrl:]' | grep -m1 Windows || true)
+          fi
+          kernel=$(uname -srm 2>/dev/null)
+          url="${{ github.server_url }}/${{ github.repository }}"
+          run_url="$url/actions/runs/${{ github.run_id }}"
+
+          # On a pull_request event github.sha is the ephemeral merge commit
+          # under refs/pull/N/merge, which a plain clone does not fetch. Fetch
+          # that ref explicitly so the script checks out what CI actually built.
+          pr="${{ github.event.pull_request.number }}"
+          if [ -n "$pr" ]; then
+            fetch_ref="git fetch origin refs/pull/$pr/merge"
+            checkout_ref="git checkout FETCH_HEAD"
+          else
+            fetch_ref=""
+            checkout_ref="git checkout ${{ github.sha }}"
+          fi
+
+          # Informational: the checkout above already pins these, but recording
+          # them lets a reader verify the tree is what the job built.
+          pins=$(git submodule status 2>/dev/null | awk '{print $2" "$1}' || true)
+
+          header="Reproduces: ${{ matrix.name }}
+          Run:        $run_url
+          Runner:     ${{ matrix.os }} (image $image)
+          OS:         ${osname:-unknown}
+          Kernel:     ${kernel:-unknown}
+          Compiler:   $compiler
+          NOTE: this restores the source tree, not the toolchain. If your
+                compiler differs from the one above, a non-reproduction is
+                inconclusive rather than a refutation."
+
+          if [ "${{ runner.os }}" = "Windows" ] && [ -z "${{ matrix.shell }}" ]; then
+            f=repro/repro.bat
+            { echo "@echo off"
+              echo "$header" | sed 's/^/REM /'
+              echo "REM Run from a Visual Studio Developer Command Prompt for ${{ matrix.msvc_arch }}."
+              echo
+              echo "git clone $url.git libspdm-repro || exit /b 1"
+              echo "cd libspdm-repro || exit /b 1"
+              if [ -n "$fetch_ref" ]; then echo "$fetch_ref || exit /b 1"; fi
+              echo "$checkout_ref || exit /b 1"
+              echo "git submodule update --init --recursive || exit /b 1"
+              echo "$pins" | sed 's/^/REM pinned: /'
+              echo
+              echo "set CFLAGS=${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}"
+              echo "cmake -B build -G \"${{ matrix.generator }}\" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }} || exit /b 1"
+              echo "cmake --build build --target copy_sample_key"
+              echo "cmake --build build || exit /b 1"
+              echo
+              echo "cd build\\bin"
+              for t in $UNIT_TESTS ${{ matrix.extra_tests }}; do echo "if exist $t.exe $t.exe"; done
+            } > "$f"
+          else
+            f=repro/repro.sh
+            { echo "#!/usr/bin/env bash"
+              echo "$header" | sed 's/^/# /'
+              if [ -n "${{ matrix.shell }}" ]; then
+                echo "# Run inside an MSYS2 MINGW64 shell."
+              fi
+              echo "set -euo pipefail"
+              echo
+              echo "git clone $url.git libspdm-repro"
+              echo "cd libspdm-repro"
+              if [ -n "$fetch_ref" ]; then echo "$fetch_ref"; fi
+              echo "$checkout_ref"
+              echo "git submodule update --init --recursive"
+              echo "$pins" | sed 's/^/# pinned: /'
+              echo
+              echo "export CFLAGS='${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}'"
+              if [ -n "${{ matrix.generator }}" ]; then
+                echo "cmake -B build -G \"${{ matrix.generator }}\" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }}"
+              else
+                echo "cmake -B build -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }}"
+              fi
+              echo "cmake --build build --target copy_sample_key"
+              echo "cmake --build build --parallel \"\$(getconf _NPROCESSORS_ONLN)\""
+              echo
+              echo "cd build/bin"
+              for t in $UNIT_TESTS ${{ matrix.extra_tests }}; do echo "if [ -x ./$t ]; then ./$t; fi"; done
+            } > "$f"
+            chmod +x "$f"
+          fi
+
+          # The step log is the first place anyone looks, and unlike the job
+          # summary it is reachable from the API, so echo the platform
+          # identity there too.
+          echo "$header"
+
+          # Legibility for every run, not just failures: the invocation is
+          # visible in the UI without downloading anything.
+          { echo "<details><summary>Reproducer</summary>"
+            echo
+            echo '```'
+            cat "$f"
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reproducer
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: repro-${{ matrix.name }}
+          path: |
+            repro/
+            build/CMakeCache.txt
+          retention-days: 14
+
+  windows-msvc:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: windows-ia32-vs-mbedtls-debug
+            os: windows-latest
+            arch: ia32
+            toolchain: VS2022
+            crypto: mbedtls
+            target: Debug
+            msvc_arch: x86
+            generator: NMake Makefiles
+
+          - name: windows-ia32-vs-openssl-release
+            os: windows-latest
+            arch: ia32
+            toolchain: VS2022
+            crypto: openssl
+            target: Release
+            msvc_arch: x86
+            generator: NMake Makefiles
+
+          - name: windows-x64-vs-openssl-debug
+            os: windows-latest
+            arch: x64
+            toolchain: VS2022
+            crypto: openssl
+            target: Debug
+            msvc_arch: x64
+            generator: NMake Makefiles
+
+          # x64 x MSVC is otherwise OpenSSL only, and ia32 covers MSVC x Mbed TLS.
+          - name: windows-x64-vs-mbedtls-debug
+            os: windows-latest
+            arch: x64
+            toolchain: VS2022
+            crypto: mbedtls
+            target: Debug
+            msvc_arch: x64
+            generator: NMake Makefiles
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+          # Nothing after this step needs to talk to the remote, and the jobs
+          # run build scripts from the pull request's own tree.
+          persist-credentials: false
+      # OpenSSL is an ExternalProject with its own CFLAGS, so no LIBSPDM_*
+      # macro reaches it: one entry serves every configuration on a given
+      # platform. Measured at ~100 MB on POSIX and ~344 MB on Windows, so
+      # caching the tree wholesale is affordable and avoids maintaining a
+      # list of which paths have consumers -- the Windows DLL lives in the
+      # build tree, not the install tree, which such a list would miss.
+      - name: OpenSSL revision
+        id: ossl
+        shell: bash
+        run: |
+          echo "sha=$(git -C os_stub/openssllib/openssl rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "image=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
+
+      # Exact key only. A near-miss would pair stamps from one revision with
+      # an install tree from another, so restore-keys would be worse than a
+      # miss. The key omits TARGET and the macros because neither changes
+      # what OpenSSL builds.
+      - name: Cache OpenSSL build
+        if: matrix.crypto == 'openssl'
+        uses: actions/cache@v6
+        with:
+          path: build/os_stub/openssllib
+          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.image }}-${{ steps.ossl.outputs.sha }}
+
+      - name: Set up MSVC
+        uses: TheMrMilchmann/setup-msvc-dev@368ef7d1ee4d1171b31d4a7f67f4d954f903f5a9 # v4.1.0
+        with:
+          arch: ${{ matrix.msvc_arch }}
+
+      # Windows/MSVC uses the default shell rather than bash: OpenSSL's
+      # Configure is a Perl script, and under Git Bash `perl` resolves to the
+      # bundled MSYS interpreter, which lacks modules Configure requires.
+      - name: Configure (Windows/MSVC)
+        env:
+          CFLAGS: ${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}
+        run: |
+          cmake -B build -G "${{ matrix.generator }}" `
+            -DARCH=${{ matrix.arch }} `
+            -DTOOLCHAIN=${{ matrix.toolchain }} `
+            -DTARGET=${{ matrix.target }} `
+            -DCRYPTO=${{ matrix.crypto }} `
+            ${{ matrix.cmake_extra }}
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Build (Windows/MSVC)
+        run: |
+          if ('${{ matrix.expect_tests }}' -ne 'false') {
+            cmake --build build --target copy_sample_key
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          cmake --build build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      # Implements "For any configuration, run all basic unit tests", plus any
+      # extended unit test whose requirement this configuration satisfies.
+      # Each test is bounded so a hang fails the job instead of stalling it.
+      # One step per test, so the Actions UI shows a separate pass/fail entry
+      # for each. A single looping step buries later tests below the log
+      # viewer's truncation point. The shared runner keeps the binary lookup
+      # and the timeout guard in one place rather than in six copies.
+      - name: Prepare test runner
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: |
+          cat > run_test.sh <<'RUNNER'
+          #!/usr/bin/env bash
+          set -uo pipefail
+          t="$1"
+
+          exe=""
+          if [ -x "build/bin/$t" ]; then
+            exe="$t"
+          elif [ -x "build/bin/$t.exe" ]; then
+            exe="$t.exe"
+          fi
+
+          # Basic unit tests require no additional configuration, so a missing
+          # one means coverage was lost rather than legitimately skipped.
+          if [ -z "$exe" ]; then
+            echo "::error::$t was not built"
+            echo "- \`$t\`: **not built**" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+            exit 1
+          fi
+
+          # macOS has no GNU timeout; fall back to gtimeout, then to perl.
+          if command -v timeout >/dev/null 2>&1; then
+            ( cd build/bin && timeout 600 "./$exe" )
+          elif command -v gtimeout >/dev/null 2>&1; then
+            ( cd build/bin && gtimeout 600 "./$exe" )
+          else
+            ( cd build/bin && perl -e 'alarm shift; exec @ARGV' 600 "./$exe" )
+          fi
+          rc=$?
+
+          if [ "$rc" -eq 0 ]; then
+            echo "- \`$t\`: pass" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          else
+            echo "- \`$t\`: **FAIL** (exit $rc)" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+            echo "::error::$t failed with exit $rc"
+          fi
+          exit $rc
+          RUNNER
+          chmod +x run_test.sh
+          echo "### ${{ matrix.name }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Test Requester
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_requester
+
+      - name: Test Responder
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_responder
+
+      - name: Test Common
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_common
+
+      - name: Test SPDM Crypt
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_crypt
+
+      - name: Test Crypt
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_crypt
+
+      - name: Test Secured Message
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_secured_message
+
+      # Extended unit test: runs only where its requirement is satisfied.
+      - name: Test FIPS
+        if: contains(matrix.extra_tests, 'test_spdm_fips')
+        shell: bash
+        run: ./run_test.sh test_spdm_fips
+
+      # DISABLE_TESTS gates 87 test subdirectories, so this checks that nothing
+      # test-shaped was produced, and that libraries still were -- otherwise an
+      # empty build tree would satisfy the check vacuously.
+      - name: Verify no tests were built
+        if: matrix.expect_tests == 'false'
+        shell: bash
+        run: |
+          # build/bin does not exist when tests are disabled. Redirecting find's
+          # stderr hides the message but not its exit status, which pipefail
+          # propagates and set -e turns into a silent step failure, so test for
+          # the directory instead of relying on 2>/dev/null.
+          if [ -d build/bin ]; then
+            stray=$(find build/bin -maxdepth 1 -name 'test_*' | wc -l)
+          else
+            stray=0
+          fi
+          if [ -d build ]; then
+            libs=$(find build -type f \( -name '*.a' -o -name '*.lib' \) | wc -l)
+          else
+            libs=0
+          fi
+          echo "DISABLE_TESTS check: $stray test artifacts under build/bin, $libs libraries built"
+          {
+            echo "### ${{ matrix.name }}"
+            echo ""
+            echo "DISABLE_TESTS: $stray test artifacts, $libs libraries"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$stray" -ne 0 ]; then
+            echo "::error::DISABLE_TESTS was set but build/bin holds $stray test artifacts"
+            exit 1
+          fi
+          if [ "$libs" -eq 0 ]; then
+            echo "::error::DISABLE_TESTS build produced no libraries; the check would pass vacuously"
+            exit 1
+          fi
+      # Reproducer, generated from the job's own variables so that it cannot
+      # drift from what actually ran. The script restores the source tree but
+      # not the toolchain, so the compiler identity is recorded in the header:
+      # identical source can produce different diagnostics on different
+      # compiler versions.
+      - name: Generate reproducer
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p repro
+
+          # A failed configure leaves no build tree, and this step runs on
+          # always(). "ls ... | head" exits non-zero there, which pipefail and
+          # set -e turn into a silent step failure, losing the reproducer in
+          # exactly the case that most needs one.
+          ccfile=""
+          if [ -d build/CMakeFiles ]; then
+            ccfile=$(find build/CMakeFiles -name CMakeCCompiler.cmake -print -quit)
+          fi
+          cid=$(sed -n 's/^set(CMAKE_C_COMPILER_ID "\(.*\)")/\1/p' "$ccfile" 2>/dev/null || true)
+          cver=$(sed -n 's/^set(CMAKE_C_COMPILER_VERSION "\(.*\)")/\1/p' "$ccfile" 2>/dev/null || true)
+          compiler="${cid:-unknown} ${cver:-unknown}"
+          image="${ImageOS:-unknown} ${ImageVersion:-unknown}"
+
+          # The image label identifies the runner build, not what is actually
+          # underneath it. Record the distro and kernel too, so a reader can
+          # tell how far their machine differs from the one that failed.
+          if [ -r /etc/os-release ]; then
+            osname=$(grep -m1 '^PRETTY_NAME=' /etc/os-release | cut -d= -f2- | tr -d '"' || true)
+          elif command -v sw_vers >/dev/null 2>&1; then
+            osname="$(sw_vers -productName) $(sw_vers -productVersion)"
+          else
+            osname=$(cmd //c ver 2>/dev/null | tr -d '[:cntrl:]' | grep -m1 Windows || true)
+          fi
+          kernel=$(uname -srm 2>/dev/null)
+          url="${{ github.server_url }}/${{ github.repository }}"
+          run_url="$url/actions/runs/${{ github.run_id }}"
+
+          # On a pull_request event github.sha is the ephemeral merge commit
+          # under refs/pull/N/merge, which a plain clone does not fetch. Fetch
+          # that ref explicitly so the script checks out what CI actually built.
+          pr="${{ github.event.pull_request.number }}"
+          if [ -n "$pr" ]; then
+            fetch_ref="git fetch origin refs/pull/$pr/merge"
+            checkout_ref="git checkout FETCH_HEAD"
+          else
+            fetch_ref=""
+            checkout_ref="git checkout ${{ github.sha }}"
+          fi
+
+          # Informational: the checkout above already pins these, but recording
+          # them lets a reader verify the tree is what the job built.
+          pins=$(git submodule status 2>/dev/null | awk '{print $2" "$1}' || true)
+
+          header="Reproduces: ${{ matrix.name }}
+          Run:        $run_url
+          Runner:     ${{ matrix.os }} (image $image)
+          OS:         ${osname:-unknown}
+          Kernel:     ${kernel:-unknown}
+          Compiler:   $compiler
+          NOTE: this restores the source tree, not the toolchain. If your
+                compiler differs from the one above, a non-reproduction is
+                inconclusive rather than a refutation."
+
+          if [ "${{ runner.os }}" = "Windows" ] && [ -z "${{ matrix.shell }}" ]; then
+            f=repro/repro.bat
+            { echo "@echo off"
+              echo "$header" | sed 's/^/REM /'
+              echo "REM Run from a Visual Studio Developer Command Prompt for ${{ matrix.msvc_arch }}."
+              echo
+              echo "git clone $url.git libspdm-repro || exit /b 1"
+              echo "cd libspdm-repro || exit /b 1"
+              if [ -n "$fetch_ref" ]; then echo "$fetch_ref || exit /b 1"; fi
+              echo "$checkout_ref || exit /b 1"
+              echo "git submodule update --init --recursive || exit /b 1"
+              echo "$pins" | sed 's/^/REM pinned: /'
+              echo
+              echo "set CFLAGS=${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}"
+              echo "cmake -B build -G \"${{ matrix.generator }}\" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }} || exit /b 1"
+              echo "cmake --build build --target copy_sample_key"
+              echo "cmake --build build || exit /b 1"
+              echo
+              echo "cd build\\bin"
+              for t in $UNIT_TESTS ${{ matrix.extra_tests }}; do echo "if exist $t.exe $t.exe"; done
+            } > "$f"
+          else
+            f=repro/repro.sh
+            { echo "#!/usr/bin/env bash"
+              echo "$header" | sed 's/^/# /'
+              if [ -n "${{ matrix.shell }}" ]; then
+                echo "# Run inside an MSYS2 MINGW64 shell."
+              fi
+              echo "set -euo pipefail"
+              echo
+              echo "git clone $url.git libspdm-repro"
+              echo "cd libspdm-repro"
+              if [ -n "$fetch_ref" ]; then echo "$fetch_ref"; fi
+              echo "$checkout_ref"
+              echo "git submodule update --init --recursive"
+              echo "$pins" | sed 's/^/# pinned: /'
+              echo
+              echo "export CFLAGS='${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}'"
+              if [ -n "${{ matrix.generator }}" ]; then
+                echo "cmake -B build -G \"${{ matrix.generator }}\" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }}"
+              else
+                echo "cmake -B build -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }}"
+              fi
+              echo "cmake --build build --target copy_sample_key"
+              echo "cmake --build build --parallel \"\$(getconf _NPROCESSORS_ONLN)\""
+              echo
+              echo "cd build/bin"
+              for t in $UNIT_TESTS ${{ matrix.extra_tests }}; do echo "if [ -x ./$t ]; then ./$t; fi"; done
+            } > "$f"
+            chmod +x "$f"
+          fi
+
+          # The step log is the first place anyone looks, and unlike the job
+          # summary it is reachable from the API, so echo the platform
+          # identity there too.
+          echo "$header"
+
+          # Legibility for every run, not just failures: the invocation is
+          # visible in the UI without downloading anything.
+          { echo "<details><summary>Reproducer</summary>"
+            echo
+            echo '```'
+            cat "$f"
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reproducer
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: repro-${{ matrix.name }}
+          path: |
+            repro/
+            build/CMakeCache.txt
+          retention-days: 14
+
+  # Single required status check, so branch protection does not have to
+  # enumerate every matrix job.
+
+  mingw:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # MinGW GCC: the only job compiling Windows platform code with GCC
+          # and its -Werror set. Mbed TLS rather than OpenSSL because it needs
+          # no Perl and builds in roughly a quarter of the time.
+          #
+          # Completes the TOOLCHAIN x CRYPTO cross. OPENSSL_FLAGS and
+          # CMOCKA_FLAGS are declared per toolchain branch and OPENSSL_FLAGS
+          # applies to cryptlib_openssl, which is libspdm's own code, so gaps
+          # in this cross hide toolchain-specific build settings.
+          - name: windows-x64-mingw-mbedtls-release
+            os: windows-latest
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Release
+            shell: 'msys2 {0}'
+            generator: MSYS Makefiles
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+          # Nothing after this step needs to talk to the remote, and the jobs
+          # run build scripts from the pull request's own tree.
+          persist-credentials: false
+
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2.32.0
+        with:
+          msystem: MINGW64
+          update: true
+          install: git make
+          pacboy: toolchain:p cmake:p make:p
+
+      # MinGW needs the MSYS2 shell for its toolchain and the MSYS generator.
+      # `shell:` cannot reference the matrix context, so these are separate
+      # steps rather than a matrix-driven shell.
+      - name: Configure (MinGW)
+        shell: 'msys2 {0}'
+        env:
+          CFLAGS: ${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}
+        run: |
+          cmake -B build -G "${{ matrix.generator }}" \
+            -DARCH=${{ matrix.arch }} \
+            -DTOOLCHAIN=${{ matrix.toolchain }} \
+            -DTARGET=${{ matrix.target }} \
+            -DCRYPTO=${{ matrix.crypto }} \
+            ${{ matrix.cmake_extra }}
+
+      - name: Build (MinGW)
+        shell: 'msys2 {0}'
+        run: |
+          jobs=$(nproc 2>/dev/null || echo 2)
+          echo "Building with --parallel $jobs"
+          cmake --build build --target copy_sample_key
+          cmake --build build --parallel "$jobs"
+          # The test step runs under Git Bash, which needs the MinGW runtime
+          # DLLs on PATH to launch binaries this toolchain produced.
+          # $GITHUB_PATH is a Windows path, so convert it for the MSYS2 shell.
+          cygpath -w /mingw64/bin >> "$(cygpath -u "$GITHUB_PATH")"
+
+      # Implements "For any configuration, run all basic unit tests", plus any
+      # extended unit test whose requirement this configuration satisfies.
+      # Each test is bounded so a hang fails the job instead of stalling it.
+      # One step per test, so the Actions UI shows a separate pass/fail entry
+      # for each. A single looping step buries later tests below the log
+      # viewer's truncation point. The shared runner keeps the binary lookup
+      # and the timeout guard in one place rather than in six copies.
+      - name: Prepare test runner
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: |
+          cat > run_test.sh <<'RUNNER'
+          #!/usr/bin/env bash
+          set -uo pipefail
+          t="$1"
+
+          exe=""
+          if [ -x "build/bin/$t" ]; then
+            exe="$t"
+          elif [ -x "build/bin/$t.exe" ]; then
+            exe="$t.exe"
+          fi
+
+          # Basic unit tests require no additional configuration, so a missing
+          # one means coverage was lost rather than legitimately skipped.
+          if [ -z "$exe" ]; then
+            echo "::error::$t was not built"
+            echo "- \`$t\`: **not built**" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+            exit 1
+          fi
+
+          # macOS has no GNU timeout; fall back to gtimeout, then to perl.
+          if command -v timeout >/dev/null 2>&1; then
+            ( cd build/bin && timeout 600 "./$exe" )
+          elif command -v gtimeout >/dev/null 2>&1; then
+            ( cd build/bin && gtimeout 600 "./$exe" )
+          else
+            ( cd build/bin && perl -e 'alarm shift; exec @ARGV' 600 "./$exe" )
+          fi
+          rc=$?
+
+          if [ "$rc" -eq 0 ]; then
+            echo "- \`$t\`: pass" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          else
+            echo "- \`$t\`: **FAIL** (exit $rc)" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+            echo "::error::$t failed with exit $rc"
+          fi
+          exit $rc
+          RUNNER
+          chmod +x run_test.sh
+          echo "### ${{ matrix.name }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Test Requester
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_requester
+
+      - name: Test Responder
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_responder
+
+      - name: Test Common
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_common
+
+      - name: Test SPDM Crypt
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_crypt
+
+      - name: Test Crypt
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_crypt
+
+      - name: Test Secured Message
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_secured_message
+
+      # Extended unit test: runs only where its requirement is satisfied.
+      - name: Test FIPS
+        if: contains(matrix.extra_tests, 'test_spdm_fips')
+        shell: bash
+        run: ./run_test.sh test_spdm_fips
+
+      # DISABLE_TESTS gates 87 test subdirectories, so this checks that nothing
+      # test-shaped was produced, and that libraries still were -- otherwise an
+      # empty build tree would satisfy the check vacuously.
+      - name: Verify no tests were built
+        if: matrix.expect_tests == 'false'
+        shell: bash
+        run: |
+          # build/bin does not exist when tests are disabled. Redirecting find's
+          # stderr hides the message but not its exit status, which pipefail
+          # propagates and set -e turns into a silent step failure, so test for
+          # the directory instead of relying on 2>/dev/null.
+          if [ -d build/bin ]; then
+            stray=$(find build/bin -maxdepth 1 -name 'test_*' | wc -l)
+          else
+            stray=0
+          fi
+          if [ -d build ]; then
+            libs=$(find build -type f \( -name '*.a' -o -name '*.lib' \) | wc -l)
+          else
+            libs=0
+          fi
+          echo "DISABLE_TESTS check: $stray test artifacts under build/bin, $libs libraries built"
+          {
+            echo "### ${{ matrix.name }}"
+            echo ""
+            echo "DISABLE_TESTS: $stray test artifacts, $libs libraries"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$stray" -ne 0 ]; then
+            echo "::error::DISABLE_TESTS was set but build/bin holds $stray test artifacts"
+            exit 1
+          fi
+          if [ "$libs" -eq 0 ]; then
+            echo "::error::DISABLE_TESTS build produced no libraries; the check would pass vacuously"
+            exit 1
+          fi
+      # Reproducer, generated from the job's own variables so that it cannot
+      # drift from what actually ran. The script restores the source tree but
+      # not the toolchain, so the compiler identity is recorded in the header:
+      # identical source can produce different diagnostics on different
+      # compiler versions.
+      - name: Generate reproducer
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p repro
+
+          # A failed configure leaves no build tree, and this step runs on
+          # always(). "ls ... | head" exits non-zero there, which pipefail and
+          # set -e turn into a silent step failure, losing the reproducer in
+          # exactly the case that most needs one.
+          ccfile=""
+          if [ -d build/CMakeFiles ]; then
+            ccfile=$(find build/CMakeFiles -name CMakeCCompiler.cmake -print -quit)
+          fi
+          cid=$(sed -n 's/^set(CMAKE_C_COMPILER_ID "\(.*\)")/\1/p' "$ccfile" 2>/dev/null || true)
+          cver=$(sed -n 's/^set(CMAKE_C_COMPILER_VERSION "\(.*\)")/\1/p' "$ccfile" 2>/dev/null || true)
+          compiler="${cid:-unknown} ${cver:-unknown}"
+          image="${ImageOS:-unknown} ${ImageVersion:-unknown}"
+
+          # The image label identifies the runner build, not what is actually
+          # underneath it. Record the distro and kernel too, so a reader can
+          # tell how far their machine differs from the one that failed.
+          if [ -r /etc/os-release ]; then
+            osname=$(grep -m1 '^PRETTY_NAME=' /etc/os-release | cut -d= -f2- | tr -d '"' || true)
+          elif command -v sw_vers >/dev/null 2>&1; then
+            osname="$(sw_vers -productName) $(sw_vers -productVersion)"
+          else
+            osname=$(cmd //c ver 2>/dev/null | tr -d '[:cntrl:]' | grep -m1 Windows || true)
+          fi
+          kernel=$(uname -srm 2>/dev/null)
+          url="${{ github.server_url }}/${{ github.repository }}"
+          run_url="$url/actions/runs/${{ github.run_id }}"
+
+          # On a pull_request event github.sha is the ephemeral merge commit
+          # under refs/pull/N/merge, which a plain clone does not fetch. Fetch
+          # that ref explicitly so the script checks out what CI actually built.
+          pr="${{ github.event.pull_request.number }}"
+          if [ -n "$pr" ]; then
+            fetch_ref="git fetch origin refs/pull/$pr/merge"
+            checkout_ref="git checkout FETCH_HEAD"
+          else
+            fetch_ref=""
+            checkout_ref="git checkout ${{ github.sha }}"
+          fi
+
+          # Informational: the checkout above already pins these, but recording
+          # them lets a reader verify the tree is what the job built.
+          pins=$(git submodule status 2>/dev/null | awk '{print $2" "$1}' || true)
+
+          header="Reproduces: ${{ matrix.name }}
+          Run:        $run_url
+          Runner:     ${{ matrix.os }} (image $image)
+          OS:         ${osname:-unknown}
+          Kernel:     ${kernel:-unknown}
+          Compiler:   $compiler
+          NOTE: this restores the source tree, not the toolchain. If your
+                compiler differs from the one above, a non-reproduction is
+                inconclusive rather than a refutation."
+
+          if [ "${{ runner.os }}" = "Windows" ] && [ -z "${{ matrix.shell }}" ]; then
+            f=repro/repro.bat
+            { echo "@echo off"
+              echo "$header" | sed 's/^/REM /'
+              echo "REM Run from a Visual Studio Developer Command Prompt for ${{ matrix.msvc_arch }}."
+              echo
+              echo "git clone $url.git libspdm-repro || exit /b 1"
+              echo "cd libspdm-repro || exit /b 1"
+              if [ -n "$fetch_ref" ]; then echo "$fetch_ref || exit /b 1"; fi
+              echo "$checkout_ref || exit /b 1"
+              echo "git submodule update --init --recursive || exit /b 1"
+              echo "$pins" | sed 's/^/REM pinned: /'
+              echo
+              echo "set CFLAGS=${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}"
+              echo "cmake -B build -G \"${{ matrix.generator }}\" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }} || exit /b 1"
+              echo "cmake --build build --target copy_sample_key"
+              echo "cmake --build build || exit /b 1"
+              echo
+              echo "cd build\\bin"
+              for t in $UNIT_TESTS ${{ matrix.extra_tests }}; do echo "if exist $t.exe $t.exe"; done
+            } > "$f"
+          else
+            f=repro/repro.sh
+            { echo "#!/usr/bin/env bash"
+              echo "$header" | sed 's/^/# /'
+              if [ -n "${{ matrix.shell }}" ]; then
+                echo "# Run inside an MSYS2 MINGW64 shell."
+              fi
+              echo "set -euo pipefail"
+              echo
+              echo "git clone $url.git libspdm-repro"
+              echo "cd libspdm-repro"
+              if [ -n "$fetch_ref" ]; then echo "$fetch_ref"; fi
+              echo "$checkout_ref"
+              echo "git submodule update --init --recursive"
+              echo "$pins" | sed 's/^/# pinned: /'
+              echo
+              echo "export CFLAGS='${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}'"
+              if [ -n "${{ matrix.generator }}" ]; then
+                echo "cmake -B build -G \"${{ matrix.generator }}\" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }}"
+              else
+                echo "cmake -B build -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }}"
+              fi
+              echo "cmake --build build --target copy_sample_key"
+              echo "cmake --build build --parallel \"\$(getconf _NPROCESSORS_ONLN)\""
+              echo
+              echo "cd build/bin"
+              for t in $UNIT_TESTS ${{ matrix.extra_tests }}; do echo "if [ -x ./$t ]; then ./$t; fi"; done
+            } > "$f"
+            chmod +x "$f"
+          fi
+
+          # The step log is the first place anyone looks, and unlike the job
+          # summary it is reachable from the API, so echo the platform
+          # identity there too.
+          echo "$header"
+
+          # Legibility for every run, not just failures: the invocation is
+          # visible in the UI without downloading anything.
+          { echo "<details><summary>Reproducer</summary>"
+            echo
+            echo '```'
+            cat "$f"
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reproducer
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: repro-${{ matrix.name }}
+          path: |
+            repro/
+            build/CMakeCache.txt
+          retention-days: 14
+
+  # Single required status check, so branch protection does not have to
+  # enumerate every matrix job.
+
+  # Single required status check, so branch protection does not have to
+  # enumerate every matrix job.
+  tier1-complete:
+    name: Tier 1 complete
+    runs-on: ubuntu-latest
+    needs: [posix, windows-msvc, mingw]
+    if: always()
+    permissions:
+      contents: read
+      actions: read
+    env:
+      # Budgets from doc/internal/continuous_integration.md, Tier 1: total wall clock under 30
+      # minutes, worst case single job 20 minutes. Exceeding either is reported
+      # as a warning rather than a failure, because wall clock also depends on
+      # runner contention, which is not something a pull request can control.
+      MAX_RUN_MINUTES: 30
+      MAX_JOB_MINUTES: 20
+      SELF_JOB_NAME: Tier 1 complete
+    steps:
+      - name: Report timing against the budget
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # per_page=100 covers the current matrix; revisit beyond 100 jobs.
+          gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}" > run.json
+          gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs?per_page=100" > jobs.json
+          python3 - run.json jobs.json <<'TIMING'
+          import json, os, sys, datetime
+
+          UTC = datetime.timezone.utc
+          FMT = "%Y-%m-%dT%H:%M:%SZ"
+
+
+          def ts(s):
+              return datetime.datetime.strptime(s, FMT).replace(tzinfo=UTC)
+
+
+          run = json.load(open(sys.argv[1]))
+          jobs = json.load(open(sys.argv[2]))["jobs"]
+
+          # Allow tests to pin "now"; the workflow leaves it unset.
+          now = ts(sys.argv[3]) if len(sys.argv) > 3 else datetime.datetime.now(UTC)
+
+          max_run = int(os.environ.get("MAX_RUN_MINUTES", "30"))
+          max_job = int(os.environ.get("MAX_JOB_MINUTES", "20"))
+          me = os.environ.get("SELF_JOB_NAME", "Tier 1 complete")
+
+          queue = (ts(run["run_started_at"]) - ts(run["created_at"])).total_seconds()
+          elapsed = (now - ts(run["run_started_at"])).total_seconds()
+
+          durs = [
+              ((ts(j["completed_at"]) - ts(j["started_at"])).total_seconds(), j["name"])
+              for j in jobs
+              if j.get("completed_at") and j["name"] != me
+          ]
+          slow_d, slow_n = max(durs) if durs else (0, "(none)")
+          total = sum(d for d, _ in durs)
+
+          lines = [
+              "### Tier 1 timing",
+              "",
+              "| metric | value | budget |",
+              "|---|---|---|",
+              "| wall clock | %.1f min | %d min |" % (elapsed / 60, max_run),
+              "| slowest job | %.1f min (%s) | %d min |" % (slow_d / 60, slow_n, max_job),
+              "| queued before start | %.1f min | - |" % (queue / 60),
+              "| sum of job time | %.1f min | - |" % (total / 60),
+              "| jobs | %d | - |" % len(durs),
+          ]
+
+          warn = []
+          if elapsed > max_run * 60:
+              warn.append(
+                  "Tier 1 wall clock %.1f min exceeds the %d min budget in doc/internal/continuous_integration.md"
+                  % (elapsed / 60, max_run)
+              )
+          if slow_d > max_job * 60:
+              warn.append(
+                  "Job '%s' took %.1f min, over the %d min worst-case-job assumption"
+                  % (slow_n, slow_d / 60, max_job)
+              )
+
+          for w in warn:
+              print("::warning::" + w)
+              lines += ["", "> [!WARNING]", "> " + w]
+
+          print("\n".join(lines))
+          summary = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary:
+              with open(summary, "a") as f:
+                  f.write("\n".join(lines) + "\n")
+          TIMING
+
+      - name: Check result
+        run: |
+          posix="${{ needs.posix.result }}"
+          msvc="${{ needs['windows-msvc'].result }}"
+          mingw="${{ needs.mingw.result }}"
+          echo "posix=$posix windows-msvc=$msvc mingw=$mingw"
+          if [ "$posix" != "success" ] || [ "$msvc" != "success" ] || [ "$mingw" != "success" ]; then
+            echo "::error::Tier 1 did not pass (posix=$posix windows-msvc=$msvc mingw=$mingw)"
+            exit 1
+          fi
+
+# ---------------------------------------------------------------------------
+# Coverage audit against doc/internal/continuous_integration.md, Tier 1.
+#
+# Platform jobs are named os-arch-toolchain-crypto-target, so every line below
+# can be re-derived from the matrix rather than trusted. Figures are job counts.
+#
+#   Platform sweep, library defaults, 15 jobs:
+#     linux-x64-gcc-mbedtls-debug          linux-x64-gcc-openssl-release
+#     linux-x64-gcc-openssl-debug          linux-x64-clang-mbedtls-debug
+#     linux-x64-clang-openssl-release      linux-aarch64-gcc-mbedtls-debug
+#     linux-aarch64-gcc-openssl-release    linux-aarch64-clang-openssl-debug
+#     macos-aarch64-clang-openssl-release  macos-aarch64-clang-mbedtls-debug
+#     windows-ia32-vs-mbedtls-debug        windows-ia32-vs-openssl-release
+#     windows-x64-vs-openssl-debug         windows-x64-vs-mbedtls-debug
+#     windows-x64-mingw-mbedtls-release
+#
+#   Every value of every dimension is exercised:
+#     OS         Linux 8   macOS 2   Windows 5
+#     ARCH       ia32 2    x64 8     aarch64 5
+#     TOOLCHAIN  Visual Studio 4   Native GCC 5   MinGW GCC 1   CLANG 5
+#     CRYPTO     Mbed TLS 7   OpenSSL 8
+#     TARGET     Debug 9      Release 6
+#
+#   Full ARCH x CRYPTO cross, the stated exception to sparse crossing:
+#     ia32    x Mbed TLS 1   ia32    x OpenSSL 1
+#     x64     x Mbed TLS 4   x64     x OpenSSL 4
+#     aarch64 x Mbed TLS 2   aarch64 x OpenSSL 3
+#
+#   TOOLCHAIN x CRYPTO, complete except MinGW x OpenSSL, which is omitted
+#   because MinGW exists to cover GCC on Windows and Mbed TLS does that at a
+#   quarter of the cost:
+#     Visual Studio x Mbed TLS 2   Visual Studio x OpenSSL 2
+#     Native GCC    x Mbed TLS 2   Native GCC    x OpenSSL 3
+#     CLANG         x Mbed TLS 2   CLANG         x OpenSSL 3
+#     MinGW GCC     x Mbed TLS 1   MinGW GCC     x OpenSSL omitted
+#
+#   Configuration sweep, 7 jobs on the cheapest platform except
+#   config-classical-crypto, whose macro domain depends on CRYPTO:
+#     config-fips             config-record-transcript
+#     config-no-debug         config-minimal-caps
+#     config-shared-lib       config-classical-crypto
+#     config-disable-tests
+#
+#   Extended unit tests run where their requirement is met:
+#     test_spdm_fips -> config-fips.
+#
+# ---------------------------------------------------------------------------
