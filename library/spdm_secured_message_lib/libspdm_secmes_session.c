@@ -380,6 +380,11 @@ bool libspdm_create_update_session_data_key(void *spdm_secured_message_context,
         .request_data_sequence_number =
             secured_message_context->application_secret.request_data_sequence_number;
 
+        /* The backup now holds a complete snapshot of the old keys, so mark it valid before
+         * deriving the new ones. If a derivation below fails the caller can still roll back
+         * via libspdm_activate_update_session_data_key(..., use_new_key = false). */
+        secured_message_context->requester_backup_valid = true;
+
         status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
             secured_message_context->application_secret.request_data_secret,
@@ -403,8 +408,6 @@ bool libspdm_create_update_session_data_key(void *spdm_secured_message_context,
             return status;
         }
         secured_message_context->application_secret.request_data_sequence_number = 0;
-
-        secured_message_context->requester_backup_valid = true;
     } else if (action == LIBSPDM_KEY_UPDATE_ACTION_RESPONDER) {
         libspdm_copy_mem(&secured_message_context->application_secret_backup
                          .response_data_secret,
@@ -431,6 +434,11 @@ bool libspdm_create_update_session_data_key(void *spdm_secured_message_context,
         .response_data_sequence_number =
             secured_message_context->application_secret.response_data_sequence_number;
 
+        /* The backup now holds a complete snapshot of the old keys, so mark it valid before
+         * deriving the new ones. If a derivation below fails the caller can still roll back
+         * via libspdm_activate_update_session_data_key(..., use_new_key = false). */
+        secured_message_context->responder_backup_valid = true;
+
         status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
             secured_message_context->application_secret.response_data_secret,
@@ -455,8 +463,6 @@ bool libspdm_create_update_session_data_key(void *spdm_secured_message_context,
             return status;
         }
         secured_message_context->application_secret.response_data_sequence_number = 0;
-
-        secured_message_context->responder_backup_valid = true;
     } else {
         return false;
     }

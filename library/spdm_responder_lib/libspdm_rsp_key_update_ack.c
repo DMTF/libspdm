@@ -127,6 +127,9 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t *spdm_context
             session_info->secured_message_context,
             LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
         if (!result) {
+            libspdm_activate_update_session_data_key(
+                session_info->secured_message_context,
+                LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, false);
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
         libspdm_trigger_key_update_callback(
@@ -153,6 +156,9 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t *spdm_context
             session_info->secured_message_context,
             LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
         if (!result) {
+            libspdm_activate_update_session_data_key(
+                session_info->secured_message_context,
+                LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, false);
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
         libspdm_trigger_key_update_callback(
@@ -166,6 +172,9 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t *spdm_context
             session_info->secured_message_context,
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
         if (!result) {
+            libspdm_activate_update_session_data_key(
+                session_info->secured_message_context,
+                LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, false);
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
         libspdm_trigger_key_update_callback(
