@@ -4,6 +4,10 @@ set(src_rnglib "")
 
 if(TOOLCHAIN STREQUAL "ARM_GNU_BARE_METAL" OR TOOLCHAIN STREQUAL "RISCV_NONE")
     # The target must provide the required implementation at link time.
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Zephyr")
+set(src_rnglib
+    rng_zephyr.c
+)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT TOOLCHAIN STREQUAL "ARM_DS2022")
 set(src_rnglib
     rng_linux.c
