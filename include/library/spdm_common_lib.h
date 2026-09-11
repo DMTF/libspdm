@@ -77,7 +77,6 @@ typedef enum {
     LIBSPDM_DATA_LOCAL_CERT_INFO,
     LIBSPDM_DATA_LOCAL_KEY_USAGE_BIT_MASK,
 
-    LIBSPDM_DATA_MUT_AUTH_REQUESTED,
     LIBSPDM_DATA_HEARTBEAT_PERIOD,
 
     /* Negotiated result */
@@ -164,6 +163,11 @@ typedef enum {
      * if both PQC and traditional are supported by both requester and responder. */
     LIBSPDM_DATA_ALGO_PRIORITY_PQC_FIRST,
 
+    /* The Requester's certificate slot to be used for session-based mutual authentication.
+     * It is conveyed to the Requester in the final ENCAPSULATED_RESPONSE_ACK of the flow, and is
+     * the slot that FINISH is verified against. */
+    LIBSPDM_DATA_SESSION_ENCAP_REQ_SLOT_ID,
+
     /* MAX */
     LIBSPDM_DATA_MAX
 } libspdm_data_type_t;
@@ -192,7 +196,7 @@ typedef struct {
     /* data_type specific:
      *   session_id for the negotiated key.
      *   SlotId for the certificate.
-     *   req_slot_id + measurement_hash_type for LIBSPDM_DATA_MUT_AUTH_REQUESTED*/
+     */
     uint8_t additional_data[4];
 } libspdm_data_parameter_t;
 
@@ -237,12 +241,28 @@ typedef enum {
     /* Firmware Update is done. Need resync. */
     LIBSPDM_RESPONSE_STATE_NEED_RESYNC,
 
-    /* Processing Encapsulated message. */
-    LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP,
-
     /* MAX */
     LIBSPDM_RESPONSE_STATE_MAX
 } libspdm_response_state_t;
+
+typedef enum {
+    /* Endpoint is not in an encapsulated flow.
+     * This value is never passed to the Integrator via the encapsulated flow handler. */
+    LIBSPDM_ENCAP_FLOW_NONE,
+
+    /* Endpoint is in the basic mutual authentication encapsulated flow.
+     * This state is triggered by the Responder via its CHALLENGE_AUTH response. */
+    LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH,
+
+    /* Endpoint is in the session-based mutual authentication encapsulated flow.
+     * This state is is triggered by the Responder via its KEY_EXCHANGE_RSP response. */
+    LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH,
+
+    /* Endpoint is in a requester-initiated encapsulated flow.
+     * This state is triggered by the Requester when it sends GET_ENCAPSULATED_REQUEST without an
+     * in-band trigger from the Responder. */
+    LIBSPDM_ENCAP_FLOW_REQ_INITIATED
+} libspdm_encap_flow_type_t;
 
 /* These macros apply only if the negotiated SPDM version is 1.0 or 1.1.
  * The default verification mode is big endian only. */
@@ -1013,27 +1033,6 @@ typedef libspdm_return_t (*libspdm_process_event_func)(void *spdm_context,
 void libspdm_register_event_callback(void *spdm_context,
                                      libspdm_process_event_func process_event_func);
 #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
-
-#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT)
-/**
- * Encapsulate Get Endpoint Info Callback Function Pointer.
- *
- * @param spdm_context       A pointer to the SPDM context.
- * @param subcode            The subcode of the GET_ENDPOINT_INFO request.
- * @param param2             Bit [7:4]. Reserved.
- *                           Bit [3:0]. SlotID.
- * @param request_attributes The request attributes of the GET_ENDPOINT_INFO request.
- * @param endpoint_info_size The size in bytes of the endpoint_info buffer.
- * @param endpoint_info      A pointer to the buffer to store the endpoint information.
- */
-typedef libspdm_return_t (*libspdm_get_endpoint_info_callback_func)(
-    void *spdm_context,
-    uint8_t subcode,
-    uint8_t param2,
-    uint8_t request_attributes,
-    uint32_t endpoint_info_size,
-    const void *endpoint_info);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP && LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**

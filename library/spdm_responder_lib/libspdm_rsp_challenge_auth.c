@@ -12,44 +12,16 @@
     (LIBSPDM_SEND_CHALLENGE_SUPPORT)
 static void init_encap_state(libspdm_context_t *spdm_context)
 {
-    spdm_context->encap_context.session_id = INVALID_SESSION_ID;
-    spdm_context->encap_context.current_request_op_code = 0x00;
     spdm_context->encap_context.request_id = 0;
     spdm_context->encap_context.last_encap_request_size = 0;
     libspdm_zero_mem(&spdm_context->encap_context.last_encap_request_header,
                      sizeof(spdm_context->encap_context.last_encap_request_header));
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
+    spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH;
 
     /* Clear Cache. */
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_reset_message_mut_c(spdm_context);
-
-    /* Possible Sequence:
-     * 1. Basic Mutual Auth:
-     *    1.1 GET_DIGEST/GET_CERTIFICATE/CHALLENGE (encap_context.req_slot_id must not be 0xFF)
-     *    1.2 CHALLENGE (REQUEST_FLAGS_PUB_KEY_ID_CAP, encap_context req_slot_id must be 0xFF) */
-    libspdm_zero_mem(spdm_context->encap_context.request_op_code_sequence,
-                     sizeof(spdm_context->encap_context.request_op_code_sequence));
-    /* Basic Mutual Auth*/
-    if (libspdm_is_capabilities_flag_supported(
-            spdm_context, false,
-            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0)) {
-        LIBSPDM_ASSERT (spdm_context->encap_context.req_slot_id == 0xFF);
-
-        spdm_context->encap_context.request_op_code_count = 1;
-        spdm_context->encap_context.request_op_code_sequence[0] = SPDM_CHALLENGE;
-    } else {
-        LIBSPDM_ASSERT (spdm_context->encap_context.req_slot_id != 0xFF);
-        LIBSPDM_ASSERT(spdm_context->mut_auth_cert_chain_buffer != NULL);
-        LIBSPDM_ASSERT(spdm_context->mut_auth_cert_chain_buffer_max_size != 0);
-
-        spdm_context->encap_context.request_op_code_count = 3;
-        spdm_context->encap_context.request_op_code_sequence[0] = SPDM_GET_DIGESTS;
-        spdm_context->encap_context.request_op_code_sequence[1] = SPDM_GET_CERTIFICATE;
-        spdm_context->encap_context.request_op_code_sequence[2] = SPDM_CHALLENGE;
-    }
-
-    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
 

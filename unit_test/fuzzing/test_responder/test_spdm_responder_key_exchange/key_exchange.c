@@ -14,7 +14,6 @@
 
 extern uint8_t g_key_exchange_start_mut_auth;
 
-uint8_t m_cert_chain_buffer[SPDM_MAX_CERTIFICATE_CHAIN_SIZE];
 
 size_t libspdm_get_max_buffer_size(void)
 {
@@ -284,8 +283,6 @@ void libspdm_test_responder_key_exchange_case4(void **State)
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
-    libspdm_register_cert_chain_buffer(spdm_context, m_cert_chain_buffer,
-                                       sizeof(m_cert_chain_buffer));
 
     libspdm_reset_message_a(spdm_context);
     g_key_exchange_start_mut_auth = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;

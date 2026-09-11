@@ -122,8 +122,12 @@ int libspdm_unit_test_group_setup(void **state)
 
     #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
     (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
-    libspdm_register_cert_chain_buffer(
-        spdm_context, m_cert_chain_buffer, sizeof(m_cert_chain_buffer));
+    /* Tests that drive libspdm_process_encap_response_certificate directly do not go through
+     * libspdm_get_encap_request_get_certificate, so seed the buffer it would have supplied. */
+    ((libspdm_context_t *)spdm_context)->encap_context.payload_buffer = m_cert_chain_buffer;
+    ((libspdm_context_t *)spdm_context)->encap_context.payload_buffer_max_size =
+        sizeof(m_cert_chain_buffer);
+    ((libspdm_context_t *)spdm_context)->encap_context.payload_buffer_size = 0;
     #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
 
     *state = spdm_test_context;

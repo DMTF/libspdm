@@ -9,71 +9,6 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
-static void init_encap_state(libspdm_context_t *spdm_context, uint8_t mut_auth_requested)
-{
-    spdm_context->encap_context.session_id = INVALID_SESSION_ID;
-    spdm_context->encap_context.current_request_op_code = 0x00;
-    if (mut_auth_requested == SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS) {
-        spdm_context->encap_context.current_request_op_code = SPDM_GET_DIGESTS;
-    }
-    spdm_context->encap_context.request_id = 0;
-    spdm_context->encap_context.last_encap_request_size = 0;
-    libspdm_zero_mem(&spdm_context->encap_context.last_encap_request_header,
-                     sizeof(spdm_context->encap_context.last_encap_request_header));
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
-
-    /* Clear cache. */
-    libspdm_reset_message_mut_b(spdm_context);
-    libspdm_reset_message_mut_c(spdm_context);
-
-    /* Possible Sequence:
-     * 2. Session Mutual Auth: (spdm_context->last_spdm_request_session_id_valid)
-     *    2.1 GET_DIGEST/GET_CERTIFICATE
-     *        (MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST or MUT_AUTH_REQUESTED_WITH_GET_DIGESTS,
-     *         encap_context.req_slot_id must not be 0xFF)
-     *    2.2 N/A (REQUEST_FLAGS_PUB_KEY_ID_CAP, MUT_AUTH_REQUESTED, encap_context.req_slot_id may
-     *             or may not be 0xFF)*/
-
-    libspdm_zero_mem(spdm_context->encap_context.request_op_code_sequence,
-                     sizeof(spdm_context->encap_context.request_op_code_sequence));
-
-    /* Session mutual authentication. */
-    if (libspdm_is_capabilities_flag_supported(
-            spdm_context, false,
-            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0)) {
-        LIBSPDM_ASSERT(spdm_context->encap_context.req_slot_id == 0xFF);
-        LIBSPDM_ASSERT(mut_auth_requested == SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED);
-    } else {
-        LIBSPDM_ASSERT(spdm_context->mut_auth_cert_chain_buffer != NULL);
-        LIBSPDM_ASSERT(spdm_context->mut_auth_cert_chain_buffer_max_size != 0);
-    }
-
-    switch (mut_auth_requested) {
-    case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED:
-        /* No encapsulation is required. */
-        spdm_context->encap_context.request_op_code_count = 0;
-        break;
-    case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST:
-    case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS:
-        LIBSPDM_ASSERT (spdm_context->encap_context.req_slot_id != 0xFF);
-        spdm_context->encap_context.request_op_code_count = 2;
-        spdm_context->encap_context.request_op_code_sequence[0] = SPDM_GET_DIGESTS;
-        spdm_context->encap_context.request_op_code_sequence[1] = SPDM_GET_CERTIFICATE;
-        break;
-    default:
-        LIBSPDM_ASSERT (false);
-        spdm_context->encap_context.request_op_code_count = 0;
-        break;
-    }
-
-    if (spdm_context->encap_context.request_op_code_count != 0) {
-        /* Change state only if encapsulation is required. */
-        spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
-    }
-}
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) */
-
 bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
                                             libspdm_session_info_t *session_info,
                                             uint8_t *hmac)
@@ -241,6 +176,58 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     }
     return result;
 }
+
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+/**
+ * Initialize the encapsulated state for session-based mutual authentication.
+ *
+ * @param  spdm_context        A pointer to the SPDM context.
+ * @param  session_info        The session that mutual authentication occurs within.
+ * @param  mut_auth_requested  The MutAuthRequested value returned in KEY_EXCHANGE_RSP.
+ * @param  req_slot_id         The Requester's certificate slot.
+ **/
+static void init_encap_state(libspdm_context_t *spdm_context,
+                             libspdm_session_info_t *session_info,
+                             uint8_t mut_auth_requested,
+                             uint8_t req_slot_id)
+{
+    libspdm_encap_context_t *encap_context;
+
+    LIBSPDM_ASSERT(
+        (mut_auth_requested == SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) ||
+        (mut_auth_requested == SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS));
+
+    LIBSPDM_ASSERT(req_slot_id < SPDM_MAX_SLOT_COUNT);
+
+    encap_context = &session_info->encap_context;
+    encap_context->req_slot_id = req_slot_id;
+    encap_context->mut_auth_req_slot_id = req_slot_id;
+    encap_context->request_id = 0;
+    encap_context->last_encap_request_size = 0;
+    encap_context->flow_type = LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH;
+
+    libspdm_zero_mem(&encap_context->last_encap_request_header,
+                     sizeof(encap_context->last_encap_request_header));
+    encap_context->payload_buffer_size = 0;
+
+    /* Clear cache. */
+    libspdm_reset_message_mut_b(spdm_context);
+    libspdm_reset_message_mut_c(spdm_context);
+
+    switch (mut_auth_requested) {
+    case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST:
+        break;
+    case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS:
+        /* GET_DIGESTS was embedded in KEY_EXCHANGE_RSP; prime the ACK handler to treat the
+         * first DELIVER_ENCAPSULATED_RESPONSE as a DIGESTS reply. */
+        encap_context->last_encap_request_header.request_response_code = SPDM_GET_DIGESTS;
+        break;
+    default:
+        LIBSPDM_ASSERT(false);
+        break;
+    }
+}
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) */
 
 libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_context,
                                                    size_t request_size,
@@ -708,7 +695,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             else if (need_encap && req_encap_cap) {
                 spdm_response->mut_auth_requested = mut_auth_requested;
                 session_info->peer_used_cert_chain_slot_id = req_slot_id;
-                init_encap_state(spdm_context, mut_auth_requested);
+                init_encap_state(spdm_context, session_info, mut_auth_requested, req_slot_id);
             }
             #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
         }

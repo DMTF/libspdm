@@ -483,6 +483,118 @@ static void rsp_encap_challenge_case6(void **state)
     free(data);
 }
 
+/**
+ * Test 7: build an encapsulated CHALLENGE with and without a RequesterContext.
+ * Expected Behavior: the RequesterContext that is sent is also recorded in the encapsulated
+ * context, since libspdm_process_encap_response_challenge_auth checks CHALLENGE_AUTH against it.
+ **/
+static void rsp_encap_challenge_case7(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t encap_request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t encap_request_size;
+    uint8_t zero_context[SPDM_REQ_CONTEXT_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP;
+    spdm_context->last_spdm_request_session_id_valid = false;
+    libspdm_reset_message_mut_c(spdm_context);
+
+    libspdm_set_mem(m_requester_context, SPDM_REQ_CONTEXT_SIZE, 0xAA);
+    libspdm_zero_mem(spdm_context->encap_context.req_context, SPDM_REQ_CONTEXT_SIZE);
+
+    encap_request_size = sizeof(encap_request);
+    status = libspdm_get_encap_request_challenge(spdm_context, 0, m_requester_context,
+                                                 &encap_request_size, encap_request);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(encap_request_size, sizeof(spdm_challenge_request_t) + SPDM_REQ_CONTEXT_SIZE);
+
+    /* The context is placed in the request that is sent to the Requester ... */
+    assert_memory_equal((uint8_t *)encap_request + sizeof(spdm_challenge_request_t),
+                        m_requester_context, SPDM_REQ_CONTEXT_SIZE);
+    /* ... and recorded so that the CHALLENGE_AUTH response can be verified against it. */
+    assert_memory_equal(spdm_context->encap_context.req_context, m_requester_context,
+                        SPDM_REQ_CONTEXT_SIZE);
+
+    /* A NULL RequesterContext sends, and records, all zeros. */
+    libspdm_zero_mem(zero_context, SPDM_REQ_CONTEXT_SIZE);
+    libspdm_reset_message_mut_c(spdm_context);
+
+    encap_request_size = sizeof(encap_request);
+    status = libspdm_get_encap_request_challenge(spdm_context, 0, NULL,
+                                                 &encap_request_size, encap_request);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_memory_equal((uint8_t *)encap_request + sizeof(spdm_challenge_request_t),
+                        zero_context, SPDM_REQ_CONTEXT_SIZE);
+    assert_memory_equal(spdm_context->encap_context.req_context, zero_context,
+                        SPDM_REQ_CONTEXT_SIZE);
+}
+
+/**
+ * Test 8: the slot of the Requester's certificate chain is bounds-checked.
+ * Expected Behavior: a slot that is not less than SPDM_MAX_SLOT_COUNT is rejected with
+ * LIBSPDM_STATUS_INVALID_PARAMETER before anything is recorded, as CHALLENGE_AUTH would otherwise
+ * be verified against per-slot state that has no such entry. 0xFF, which designates the
+ * Requester's provisioned public key, and the highest valid slot are accepted and placed in the
+ * request.
+ **/
+static void rsp_encap_challenge_case8(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    const spdm_challenge_request_t *spdm_request;
+    uint8_t encap_request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t encap_request_size;
+    size_t index;
+    const uint8_t invalid_slot_id[] = { SPDM_MAX_SLOT_COUNT, 0xF, 0xFE };
+    const uint8_t valid_slot_id[] = { SPDM_MAX_SLOT_COUNT - 1, 0xFF };
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP;
+    spdm_context->last_spdm_request_session_id_valid = false;
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(invalid_slot_id); index++) {
+        spdm_context->encap_context.req_slot_id = 0;
+
+        encap_request_size = sizeof(encap_request);
+        status = libspdm_get_encap_request_challenge(spdm_context, invalid_slot_id[index], NULL,
+                                                     &encap_request_size, encap_request);
+        assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
+
+        /* The slot was not recorded. */
+        assert_int_equal(spdm_context->encap_context.req_slot_id, 0);
+    }
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(valid_slot_id); index++) {
+        libspdm_reset_message_mut_c(spdm_context);
+
+        encap_request_size = sizeof(encap_request);
+        status = libspdm_get_encap_request_challenge(spdm_context, valid_slot_id[index], NULL,
+                                                     &encap_request_size, encap_request);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+        spdm_request = (const void *)encap_request;
+        assert_int_equal(spdm_request->header.param1, valid_slot_id[index]);
+        assert_int_equal(spdm_context->encap_context.req_slot_id, valid_slot_id[index]);
+    }
+
+    spdm_context->encap_context.req_slot_id = 0;
+}
+
 int libspdm_rsp_encap_challenge_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -497,6 +609,10 @@ int libspdm_rsp_encap_challenge_test(void)
         cmocka_unit_test(rsp_encap_challenge_case5),
         /* Success Case, V1.3 With the correct challenge context field */
         cmocka_unit_test(rsp_encap_challenge_case6),
+        /* The RequesterContext that is sent is also recorded in the encapsulated context */
+        cmocka_unit_test(rsp_encap_challenge_case7),
+        /* The slot of the Requester's certificate chain is bounds-checked */
+        cmocka_unit_test(rsp_encap_challenge_case8),
     };
 
     libspdm_test_context_t test_context = {

@@ -10,6 +10,7 @@
 #if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP)
 
 extern bool g_generate_event_list_error;
+extern uint32_t g_event_count;
 
 static uint8_t m_send_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE];
 static uint8_t m_receive_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE];
@@ -71,7 +72,7 @@ static void rsp_encap_send_event_err_case1(void **state)
 
     g_generate_event_list_error = true;
 
-    status = libspdm_get_encap_request_send_event(spdm_context, &request_buffer_size,
+    status = libspdm_get_encap_request_send_event(spdm_context, m_session_id, &request_buffer_size,
                                                   m_send_buffer);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
@@ -110,11 +111,79 @@ static void rsp_encap_send_event_err_case2(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 3: the session exists but its handshake has not completed.
+ * Expected Behavior: get a LIBSPDM_STATUS_INVALID_STATE_LOCAL return code. Nothing is written into
+ * the request buffer and its size is unchanged, so the Integrator was not asked for events either,
+ * and SEND_EVENT is not recorded as the outstanding encapsulated request.
+ **/
+static void rsp_encap_send_event_err_case3(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    uint8_t untouched[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t request_buffer_size = sizeof(m_send_buffer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x03;
+
+    set_standard_state(spdm_context);
+    session_info = &spdm_context->session_info[0];
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+    libspdm_zero_mem(&session_info->encap_context.last_encap_request_header,
+                     sizeof(session_info->encap_context.last_encap_request_header));
+
+    libspdm_set_mem(m_send_buffer, sizeof(m_send_buffer), (uint8_t)0xA5);
+    libspdm_set_mem(untouched, sizeof(untouched), (uint8_t)0xA5);
+
+    status = libspdm_get_encap_request_send_event(spdm_context, m_session_id, &request_buffer_size,
+                                                  m_send_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
+
+    assert_int_equal(request_buffer_size, sizeof(m_send_buffer));
+    assert_memory_equal(m_send_buffer, untouched, sizeof(m_send_buffer));
+    assert_int_equal(session_info->encap_context.last_encap_request_header.request_response_code,
+                     0);
+}
+
+/**
+ * Test 4: an unknown session is rejected.
+ * Expected Behavior: get a LIBSPDM_STATUS_INVALID_STATE_LOCAL return code.
+ **/
+static void rsp_encap_send_event_err_case4(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t request_buffer_size = sizeof(m_send_buffer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x04;
+
+    set_standard_state(spdm_context);
+
+    g_event_count = 1;
+
+    status = libspdm_get_encap_request_send_event(spdm_context, 0xDEADBEEF, &request_buffer_size,
+                                                  m_send_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
+}
+
 int libspdm_rsp_encap_send_event_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(rsp_encap_send_event_err_case1),
         cmocka_unit_test(rsp_encap_send_event_err_case2),
+        /* The session's handshake has not completed */
+        cmocka_unit_test(rsp_encap_send_event_err_case3),
+        /* An unknown session */
+        cmocka_unit_test(rsp_encap_send_event_err_case4),
     };
 
     libspdm_test_context_t test_context = {
