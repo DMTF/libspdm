@@ -147,6 +147,30 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
+ * Verify that the integrator-provisioned SupportedSlotMask is consistent with the populated
+ * certificate slots: every populated slot shall be indicated in SupportedSlotMask.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS             The provisioned SupportedSlotMask is consistent.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL The provisioned SupportedSlotMask is inconsistent.
+ **/
+libspdm_return_t libspdm_validate_supported_slot_mask(libspdm_context_t *spdm_context);
+
+/**
+ * Verify that the integrator-provisioned per-slot CertificateInfo, KeyUsageMask and KeyPairID
+ * values are internally consistent and (when KEY_PAIR_INFO is supported) consistent with the
+ * associated key pair. These per-slot fields are only emitted for a multi-key connection; the
+ * caller is responsible for skipping this check when a multi-key connection is not in use.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS             The provisioned per-slot values are consistent.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL The provisioned per-slot values are inconsistent.
+ **/
+libspdm_return_t libspdm_validate_multi_key_slot_info(libspdm_context_t *spdm_context);
+
+/**
  * Process the SPDM GET_DIGESTS request and return the response.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
