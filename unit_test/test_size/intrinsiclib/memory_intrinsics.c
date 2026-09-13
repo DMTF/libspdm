@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -126,7 +126,7 @@ int strcmp(const char *s1, const char *s2)
     return (int)ascii_strcmp(s1, s2);
 }
 
-size_t ascii_strlen(const char *string)
+size_t strlen(const char *string)
 {
     size_t length;
 
@@ -136,11 +136,6 @@ size_t ascii_strlen(const char *string)
     for (length = 0; *string != '\0'; string++, length++) {
     }
     return length;
-}
-
-unsigned int strlen(char *s)
-{
-    return (unsigned int)ascii_strlen(s);
 }
 
 char *ascii_strstr(char *string, const char *search_string)
@@ -202,7 +197,7 @@ const void * memchr ( const void * ptr, int value, size_t num )
 
 const char * strchr ( const char * str, int ch )
 {
-    return memscan (str, (int)ascii_strlen(str) + 1, ch);
+    return memscan (str, (int)strlen(str) + 1, ch);
 }
 
 int strncmp ( const char * str1, const char * str2, size_t num )
