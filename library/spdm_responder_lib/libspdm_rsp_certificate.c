@@ -191,6 +191,10 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     }
     remainder_length = (uint32_t)(cert_chain_size - (length + offset));
 
+    if ((session_info == NULL) && !slot_size_requested) {
+        libspdm_detect_cert_retrieval_restart(spdm_context, slot_id, offset);
+    }
+
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   spdm_request->header.request_response_code);
 
@@ -254,6 +258,11 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                    response_size, response);
+        }
+
+        if (!slot_size_requested) {
+            libspdm_update_cert_retrieval_state(spdm_context, slot_id, offset + length,
+                                                remainder_length != 0);
         }
     }
 

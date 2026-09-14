@@ -4522,6 +4522,96 @@ static void req_get_certificate_case33(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 34: a previous certificate chain retrieval was abandoned after its first portion, for
+ * example because the Requester rejected the CERTIFICATE response, and the Requester now restarts
+ * the retrieval from offset 0.
+ * DSP0274 clause 17 (General ordering rules) states that "Out-of-order requests shall nullify the
+ * transcript". The messages of the abandoned attempt therefore must not remain in B, otherwise a
+ * later CHALLENGE_AUTH signature covers a transcript that the Responder may not agree on.
+ * Expected Behavior: the retrieval succeeds and message_b holds only the GET_CERTIFICATE /
+ * CERTIFICATE messages of the new, complete retrieval.
+ **/
+static void req_get_certificate_case34(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t cert_chain_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+    const uint8_t *root_cert;
+    size_t root_cert_size;
+    uint8_t stale_transcript[64];
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    size_t count;
+#endif
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    /* Assign, rather than OR, so that capabilities left by earlier test cases, such as
+     * ALIAS_CERT_CAP, do not change how the certificate chain is verified. */
+    spdm_context->connection_info.capability.flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->local_context.is_requester = true;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
+    if (!libspdm_x509_get_cert_from_cert_chain(
+            (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
+            data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
+        assert(false);
+    }
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
+    libspdm_reset_message_b(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+
+    /* Earlier test cases may have left another certificate chain cached in the test Responder. */
+    if (m_libspdm_local_certificate_chain != NULL) {
+        free(m_libspdm_local_certificate_chain);
+        m_libspdm_local_certificate_chain = NULL;
+        m_libspdm_local_certificate_chain_size = 0;
+    }
+
+    /* Simulate the transcript that an attempt abandoned after its first portion leaves behind. The
+     * in-progress state is set after the bytes are added because nullifying B also clears it. */
+    libspdm_set_mem(stale_transcript, sizeof(stale_transcript), 0xAA);
+    status = libspdm_append_message_b(spdm_context, stale_transcript, sizeof(stale_transcript));
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_context->connection_info.cert_retrieval_in_progress = true;
+    spdm_context->connection_info.cert_retrieval_slot_id = 0;
+    spdm_context->connection_info.cert_retrieval_next_offset = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+
+    cert_chain_size = sizeof(cert_chain);
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    /* The retrieval ran to completion, so nothing is left in progress. */
+    assert_false(spdm_context->connection_info.cert_retrieval_in_progress);
+    assert_false(spdm_context->connection_info.cert_retrieval_restart);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
+            LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+    /* The stale bytes are gone: only the messages of the new retrieval are in B. */
+    assert_int_equal(spdm_context->transcript.message_b.buffer_size,
+                     sizeof(spdm_get_certificate_request_t) * count +
+                     sizeof(spdm_certificate_response_t) * count +
+                     data_size);
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+    free(data);
+}
+
 int libspdm_req_get_certificate_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -4594,6 +4684,8 @@ int libspdm_req_get_certificate_test(void)
         cmocka_unit_test(req_get_certificate_case32),
         /* Fail response: get slot storage size, portion length not zero */
         cmocka_unit_test(req_get_certificate_case33),
+        /* Restarted certificate chain retrieval nullifies the transcript */
+        cmocka_unit_test(req_get_certificate_case34),
     };
 
     libspdm_test_context_t test_context = {
