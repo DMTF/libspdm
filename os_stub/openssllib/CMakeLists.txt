@@ -66,7 +66,7 @@ else()
     message(STATUS "Building OpenSSL as shared library (TOOLCHAIN=${TOOLCHAIN})")
 endif()
 
-set(OPENSSL_CONFIGURE_OPTIONS 
+set(OPENSSL_CONFIGURE_OPTIONS
     ${OPENSSL_SHARED_OPTION} no-ssl no-tls no-dtls no-tests
     no-threads no-engine no-capieng no-zlib no-legacy
     --prefix=${OPENSSL_INSTALL_DIR}
@@ -92,11 +92,20 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
         ${CMAKE_COMMAND} -E chdir "${OPENSSL_BUILD_DIR_NORMALIZED}"
         perl "${OPENSSL_SOURCE_DIR_NORMALIZED}/Configure" ${OPENSSL_ARCH} ${OPENSSL_CONFIGURE_OPTIONS}
     )
+
+    # OpenSSL suffixes the Windows shared library with the target architecture and omits
+    # the suffix for 32-bit.
+    if(ARCH STREQUAL "x64")
+        set(OPENSSL_DLL_ARCH_SUFFIX "-x64")
+    else()
+        set(OPENSSL_DLL_ARCH_SUFFIX "")
+    endif()
+
     if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
         set(OPENSSL_BUILD_CMD make)
         set(OPENSSL_INSTALL_CMD make install_sw)
         if(OPENSSL_LIBRARY_TYPE STREQUAL "SHARED")
-            set(OPENSSL_LIB_FILE "${CMAKE_CURRENT_BINARY_DIR}/openssl-build/src/openssl_external-build/libcrypto-3-x64.dll")
+            set(OPENSSL_LIB_FILE "${CMAKE_CURRENT_BINARY_DIR}/openssl-build/src/openssl_external-build/libcrypto-3${OPENSSL_DLL_ARCH_SUFFIX}.dll")
             set(OPENSSL_IMPLIB_FILE "${OPENSSL_LIB_DIR}/libcrypto.dll.a")
         else()
         set(OPENSSL_LIB_FILE "${OPENSSL_LIB_DIR}/libcrypto.a")
@@ -113,7 +122,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
         endif()
         if(OPENSSL_LIBRARY_TYPE STREQUAL "SHARED")
             set(OPENSSL_LIB_FILE "${OPENSSL_LIB_DIR}/libcrypto.lib")
-            set(OPENSSL_DLL_FILE "${CMAKE_CURRENT_BINARY_DIR}/openssl-build/src/openssl_external-build/libcrypto-3-x64.dll")
+            set(OPENSSL_DLL_FILE "${CMAKE_CURRENT_BINARY_DIR}/openssl-build/src/openssl_external-build/libcrypto-3${OPENSSL_DLL_ARCH_SUFFIX}.dll")
         else()
         set(OPENSSL_LIB_FILE "${OPENSSL_LIB_DIR}/libcrypto.lib")
         endif()
