@@ -37,19 +37,19 @@ void libspdm_dump_hex(const uint8_t *data, size_t size)
     size_t count;
     size_t left;
 
-#define COLUME_SIZE (16 * 2)
+#define COLUMN_SIZE (16 * 2)
 
-    count = size / COLUME_SIZE;
-    left = size % COLUME_SIZE;
+    count = size / COLUMN_SIZE;
+    left = size % COLUMN_SIZE;
     for (index = 0; index < count; index++) {
-        printf("%04x: ", (uint32_t)(index * COLUME_SIZE));
-        libspdm_dump_data(data + index * COLUME_SIZE, COLUME_SIZE);
+        printf("%04x: ", (uint32_t)(index * COLUMN_SIZE));
+        libspdm_dump_data(data + index * COLUMN_SIZE, COLUMN_SIZE);
         printf("\n");
     }
 
     if (left != 0) {
-        printf("%04x: ", (uint32_t)(index * COLUME_SIZE));
-        libspdm_dump_data(data + index * COLUME_SIZE, left);
+        printf("%04x: ", (uint32_t)(index * COLUMN_SIZE));
+        libspdm_dump_data(data + index * COLUMN_SIZE, left);
         printf("\n");
     }
 }
