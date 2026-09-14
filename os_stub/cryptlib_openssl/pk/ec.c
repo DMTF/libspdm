@@ -1337,9 +1337,9 @@ bool der_to_raw_rs(const uint8_t *der_sig, size_t der_sig_len,
     int r_len = BN_num_bytes(r);
     int s_len = BN_num_bytes(s);
 
-    if (r_len > expected_half_size || s_len > expected_half_size) {
-        printf("Component longer than expected (%d vs %zu, %d vs %zu)\n", r_len, expected_half_size, s_len,
-               expected_half_size);
+    if (((size_t)r_len > expected_half_size) || ((size_t)s_len > expected_half_size)) {
+        printf("Component longer than expected (%d vs %zu, %d vs %zu)\n",
+               r_len, expected_half_size, s_len, expected_half_size);
         ECDSA_SIG_free(sig);
         return false;
     }
