@@ -27,6 +27,13 @@
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65 | \
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_87)
 
+/* All of the algorithms supported below encode to 21 bytes or fewer (the ECP256 and SM2
+ * AlgorithmIdentifiers are currently the longest). If a new key/algorithm is added to
+ * libspdm_init_key_pair_info() with a longer AlgorithmIdentifier, the
+ * _Static_assert checks there will fail to build until this value is updated.
+ */
+#define LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN 21
+
 typedef struct {
     uint16_t capabilities;
     uint16_t key_usage_capabilities;
@@ -37,7 +44,7 @@ typedef struct {
     uint32_t current_pqc_asym_algo;
     uint16_t public_key_info_len;
     uint8_t assoc_cert_slot_mask;
-    uint8_t public_key_info[SPDM_MAX_PUBLIC_KEY_INFO_LEN];
+    uint8_t public_key_info[LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN];
 } libspdm_key_pair_info_t;
 
 /* Up to (9 traditional + 3 ML-DSA) PRIMARY key pairs, each backing slots 0 and 1, plus one
@@ -54,45 +61,75 @@ void libspdm_init_key_pair_info() {
 #if (LIBSPDM_RSA_SSA_SUPPORT || LIBSPDM_RSA_PSS_SUPPORT)
     uint8_t public_key_info_rsa[] = {0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7,
                                      0x0D, 0x01, 0x01, 0x01, 0x05, 0x00};
+    _Static_assert(
+        sizeof(public_key_info_rsa) <= LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN,
+        "public_key_info_rsa exceeds LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN; update the latter");
 #endif
 #if LIBSPDM_ECDSA_P256_SUPPORT
     uint8_t public_key_info_ecp256[] = {0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D,
                                         0x02, 0x01, 0x06, 0x08, 0x2A, 0x86, 0x48, 0xCE, 0x3D,
                                         0x03, 0x01, 0x07};
+    _Static_assert(
+        sizeof(public_key_info_ecp256) <= LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN,
+        "public_key_info_ecp256 exceeds LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN; update the latter");
 #endif
 #if LIBSPDM_ECDSA_P384_SUPPORT
     uint8_t public_key_info_ecp384[] = {0x30, 0x10, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D,
                                         0x02, 0x01, 0x06, 0x05, 0x2B, 0x81, 0x04, 0x00, 0x22};
+    _Static_assert(
+        sizeof(public_key_info_ecp384) <= LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN,
+        "public_key_info_ecp384 exceeds LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN; update the latter");
 #endif
 #if LIBSPDM_ECDSA_P521_SUPPORT
     uint8_t public_key_info_ecp521[] = {0x30, 0x10, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D,
                                         0x02, 0x01, 0x06, 0x05, 0x2B, 0x81, 0x04, 0x00, 0x23};
+    _Static_assert(
+        sizeof(public_key_info_ecp521) <= LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN,
+        "public_key_info_ecp521 exceeds LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN; update the latter");
 #endif
 #if LIBSPDM_SM2_DSA_P256_SUPPORT
     uint8_t public_key_info_sm2[] = {0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D,
                                      0x02, 0x01, 0x06, 0x08, 0x2A, 0x81, 0x1C, 0xCF, 0x55,
                                      0x01, 0x82, 0x2D};
+    _Static_assert(
+        sizeof(public_key_info_sm2) <= LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN,
+        "public_key_info_sm2 exceeds LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN; update the latter");
 #endif
 #if LIBSPDM_EDDSA_ED25519_SUPPORT
     uint8_t public_key_info_ed25519[] = {0x30, 0x05, 0x06, 0x03, 0x2B, 0x65, 0x70};
+    _Static_assert(
+        sizeof(public_key_info_ed25519) <= LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN,
+        "public_key_info_ed25519 exceeds LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN; update the latter");
 #endif
 #if LIBSPDM_EDDSA_ED448_SUPPORT
     uint8_t public_key_info_ed448[] = {0x30, 0x05, 0x06, 0x03, 0x2B, 0x65, 0x71};
+    _Static_assert(
+        sizeof(public_key_info_ed448) <= LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN,
+        "public_key_info_ed448 exceeds LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN; update the latter");
 #endif
 #if LIBSPDM_ML_DSA_44_SUPPORT
     uint8_t public_key_info_mldsa44[] = {0x30, 0x0A, 0x06, 0x09,
                                          /* 2.16.840.1.101.3.4.3.17 */
                                          0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x11};
+    _Static_assert(
+        sizeof(public_key_info_mldsa44) <= LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN,
+        "public_key_info_mldsa44 exceeds LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN; update the latter");
 #endif
 #if LIBSPDM_ML_DSA_65_SUPPORT
     uint8_t public_key_info_mldsa65[] = {0x30, 0x0A, 0x06, 0x09,
                                          /* 2.16.840.1.101.3.4.3.18 */
                                          0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x12};
+    _Static_assert(
+        sizeof(public_key_info_mldsa65) <= LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN,
+        "public_key_info_mldsa65 exceeds LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN; update the latter");
 #endif
 #if LIBSPDM_ML_DSA_87_SUPPORT
     uint8_t public_key_info_mldsa87[] = {0x30, 0x0A, 0x06, 0x09,
                                          /* 2.16.840.1.101.3.4.3.19 */
                                          0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x13};
+    _Static_assert(
+        sizeof(public_key_info_mldsa87) <= LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN,
+        "public_key_info_mldsa87 exceeds LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN; update the latter");
 #endif
     uint8_t index = 0;
     /*provisioned key pair info*/
