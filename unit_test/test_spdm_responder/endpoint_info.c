@@ -124,9 +124,11 @@ static void rsp_endpoint_info_case1(void **state)
         spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        (uint16_t)m_libspdm_use_asym_algo;
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
-        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
         data, data_size,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
@@ -340,9 +342,11 @@ static void rsp_endpoint_info_case3(void **state)
         spdm_context->connection_info.peer_used_cert_chain[1].buffer_hash);
     spdm_context->connection_info.peer_used_cert_chain[1].buffer_hash_size =
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        (uint16_t)m_libspdm_use_asym_algo;
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
-        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
         data, data_size,
         &spdm_context->connection_info.peer_used_cert_chain[1].leaf_cert_public_key);
 #endif
@@ -523,9 +527,11 @@ static void rsp_endpoint_info_case5(void **state)
         spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        (uint16_t)m_libspdm_use_asym_algo;
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
-        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
         data, data_size,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif

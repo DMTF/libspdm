@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -82,6 +82,7 @@ int libspdm_unit_test_group_setup(void **state)
 {
     libspdm_test_context_t *spdm_test_context;
     void *spdm_context;
+    libspdm_data_parameter_t parameter;
 
     spdm_test_context = m_spdm_test_context;
     spdm_test_context->spdm_context = (void *)malloc(libspdm_get_context_size());
@@ -92,6 +93,10 @@ int libspdm_unit_test_group_setup(void **state)
     spdm_test_context->case_id = 0xFFFFFFFF;
 
     libspdm_init_context(spdm_context);
+
+    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+    libspdm_set_data(spdm_context, LIBSPDM_DATA_IS_REQUESTER, &parameter,
+                     &spdm_test_context->is_requester, sizeof(bool));
 
     libspdm_register_device_io_func(spdm_context,
                                     spdm_test_context->send_message,
@@ -138,8 +143,12 @@ int libspdm_unit_test_group_teardown(void **state)
     LIBSPDM_ASSERT (!m_sender_buffer_acquired && !m_receiver_buffer_acquired);
 
     spdm_test_context = *state;
+
+    libspdm_deinit_context(spdm_test_context->spdm_context);
+
     free(spdm_test_context->spdm_context);
     free(spdm_test_context->scratch_buffer);
+
     spdm_test_context->spdm_context = NULL;
     spdm_test_context->case_id = 0xFFFFFFFF;
 
