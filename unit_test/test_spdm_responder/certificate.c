@@ -903,6 +903,8 @@ static void rsp_certificate_case13(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
+    libspdm_reset_message_b(spdm_context);
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     /*filling buffer B with arbitrary data*/
     arbitrary_size = 8;
@@ -1338,6 +1340,190 @@ static void rsp_certificate_case20(void **state)
 #endif
 }
 
+/**
+ * Test 21: a GET_CERTIFICATE that restarts a certificate chain retrieval that was left incomplete.
+ * DSP0274 clause 17 (General ordering rules) states that "Out-of-order requests shall nullify the
+ * transcript", so the GET_CERTIFICATE / CERTIFICATE messages of the abandoned attempt must not
+ * survive in B. If they did, the signature of a later CHALLENGE_AUTH would cover bytes that the
+ * Requester and the Responder can disagree on.
+ * Expected Behavior: a request that continues the in-progress retrieval extends message_b, whereas
+ * a request that restarts it nullifies message_b before the new request / response pair is
+ * recorded.
+ **/
+static void rsp_certificate_case21(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_certificate_response_t *spdm_response;
+    spdm_get_certificate_request_t spdm_request;
+    void *data;
+    size_t data_size;
+    const uint16_t portion_length = 16;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    size_t pair_size;
+#endif
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 21;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.cert_slot_reset_mask = 0;
+    /* The transcript is only recorded outside of a session. */
+    spdm_context->last_spdm_request_session_id_valid = false;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    /* The retrieval must span at least three portions for this test to be meaningful. */
+    assert_true(data_size > (size_t)portion_length * 3);
+    libspdm_reset_message_b(spdm_context);
+
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_request.header.request_response_code = SPDM_GET_CERTIFICATE;
+    spdm_request.header.param1 = 0;
+    spdm_request.header.param2 = 0;
+    spdm_request.length = portion_length;
+
+    /* First portion of the retrieval. */
+    spdm_request.offset = 0;
+    response_size = sizeof(response);
+    status = libspdm_get_response_certificate(spdm_context, sizeof(spdm_request), &spdm_request,
+                                              &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CERTIFICATE);
+    assert_int_equal(spdm_response->portion_length, portion_length);
+    assert_true(spdm_context->connection_info.cert_retrieval_in_progress);
+    assert_int_equal(spdm_context->connection_info.cert_retrieval_slot_id, 0);
+    assert_int_equal(spdm_context->connection_info.cert_retrieval_next_offset, portion_length);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    pair_size = sizeof(spdm_get_certificate_request_t) + sizeof(spdm_certificate_response_t) +
+                portion_length;
+    assert_int_equal(spdm_context->transcript.message_b.buffer_size, pair_size);
+#endif
+
+    /* Second portion continues the retrieval, so the transcript keeps growing. */
+    spdm_request.offset = portion_length;
+    response_size = sizeof(response);
+    status = libspdm_get_response_certificate(spdm_context, sizeof(spdm_request), &spdm_request,
+                                              &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_true(spdm_context->connection_info.cert_retrieval_in_progress);
+    assert_int_equal(spdm_context->connection_info.cert_retrieval_next_offset,
+                     portion_length * 2);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_b.buffer_size, pair_size * 2);
+#endif
+
+    /* The retrieval is restarted from offset 0 while it is still incomplete. The two pairs above
+     * belong to the abandoned attempt and are discarded. */
+    spdm_request.offset = 0;
+    response_size = sizeof(response);
+    status = libspdm_get_response_certificate(spdm_context, sizeof(spdm_request), &spdm_request,
+                                              &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_false(spdm_context->connection_info.cert_retrieval_restart);
+    assert_true(spdm_context->connection_info.cert_retrieval_in_progress);
+    assert_int_equal(spdm_context->connection_info.cert_retrieval_next_offset, portion_length);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_b.buffer_size, pair_size);
+#endif
+
+    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    free(data);
+}
+
+/**
+ * Test 22: retrieval of a second certificate chain after the first one has been retrieved in full.
+ * Per Table 53 of DSP0274 every GET_CERTIFICATE / CERTIFICATE pair issued since the last
+ * nullification belongs to B, so a completed retrieval must never be discarded by the retrieval
+ * that follows it.
+ * Expected Behavior: message_b holds the messages of both retrievals.
+ **/
+static void rsp_certificate_case22(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_get_certificate_request_t spdm_request;
+    void *data;
+    size_t data_size;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    size_t chain_size;
+#endif
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 22;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.cert_slot_reset_mask = 0;
+    /* The transcript is only recorded outside of a session. */
+    spdm_context->last_spdm_request_session_id_valid = false;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        return;
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[1] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[1] = data_size;
+    libspdm_reset_message_b(spdm_context);
+
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_request.header.request_response_code = SPDM_GET_CERTIFICATE;
+    spdm_request.header.param2 = 0;
+    spdm_request.offset = 0;
+    spdm_request.length = (uint16_t)data_size;
+
+    /* Slot 0 is retrieved in a single portion, so the retrieval completes. */
+    spdm_request.header.param1 = 0;
+    response_size = sizeof(response);
+    status = libspdm_get_response_certificate(spdm_context, sizeof(spdm_request), &spdm_request,
+                                              &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_false(spdm_context->connection_info.cert_retrieval_in_progress);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    chain_size = spdm_context->transcript.message_b.buffer_size;
+    assert_int_equal(chain_size, sizeof(spdm_get_certificate_request_t) +
+                     sizeof(spdm_certificate_response_t) + data_size);
+#endif
+
+    /* Slot 1 also starts at offset 0, but it does not abandon anything. */
+    spdm_request.header.param1 = 1;
+    response_size = sizeof(response);
+    status = libspdm_get_response_certificate(spdm_context, sizeof(spdm_request), &spdm_request,
+                                              &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_false(spdm_context->connection_info.cert_retrieval_restart);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_b.buffer_size, chain_size * 2);
+#endif
+
+    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[1] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[1] = 0;
+    free(data);
+}
+
 int libspdm_rsp_certificate_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1381,6 +1567,10 @@ int libspdm_rsp_certificate_test(void)
         cmocka_unit_test(rsp_certificate_case19),
         /* SlotSizeRequested against an empty slot */
         cmocka_unit_test(rsp_certificate_case20),
+        /* Restarted certificate chain retrieval nullifies the transcript */
+        cmocka_unit_test(rsp_certificate_case21),
+        /* Completed certificate chain retrieval is kept in the transcript */
+        cmocka_unit_test(rsp_certificate_case22),
     };
 
     libspdm_test_context_t test_context = {

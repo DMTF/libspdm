@@ -174,6 +174,10 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
         }
     }
 
+    if ((session_info == NULL) && !slot_storage_size_requested) {
+        libspdm_detect_cert_retrieval_restart(spdm_context, slot_id, 0);
+    }
+
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info, SPDM_GET_CERTIFICATE);
 
     chunk_enabled =
@@ -425,6 +429,12 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 libspdm_release_receiver_buffer (spdm_context);
                 goto done;
+            }
+
+            if (!slot_storage_size_requested) {
+                libspdm_update_cert_retrieval_state(
+                    spdm_context, slot_id, req_msg_offset + rsp_msg_portion_length,
+                    rsp_msg_remainder_length != 0);
             }
         }
 
