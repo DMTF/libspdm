@@ -23,7 +23,9 @@ libspdm has the following assumptions against the compiler, target hardware arch
 operating environment.
 - The endianness of the target architecture is little-endian.
 - The target architecture is a 32-bit or 64-bit system.
-- The compiler supports the `#pragma pack()` directive.
+- The compiler supports the `#pragma pack` directive.
+    - This includes both the packing of data within a `struct` and generating safe multi-byte
+      memory accesses on architectures that do not support misaligned accesses.
 - If a pointer has been `memset` to a value of `0` then the pointer is equal to `NULL`.
 - Characters are encoded as ASCII so that, for example, `('A' == 65)` evaluates to `1`.
 
