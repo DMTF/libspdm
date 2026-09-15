@@ -111,7 +111,7 @@ static void rsp_encap_get_certificate_case1(void **state)
                                                         &need_continue);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
     free(data);
 }
 
@@ -168,7 +168,7 @@ static void rsp_encap_get_certificate_case2(void **state)
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
 
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
     free(data);
 }
 
@@ -265,7 +265,7 @@ static void rsp_encap_get_certificate_case3(void **state)
                                                         &need_continue);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
     free(data);
 }
 
@@ -364,7 +364,7 @@ static void rsp_encap_get_certificate_case4(void **state)
                                                         &need_continue);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
     spdm_context->local_context.capability.max_spdm_msg_size = original_max_spdm_msg_size;
     free(data);
 }
@@ -450,7 +450,7 @@ static void rsp_encap_get_certificate_case5(void **state)
     spdm_context->connection_info.multi_key_conn_req = true;
     spdm_context->encap_context.req_slot_id = 0;
     spdm_context->connection_info.peer_cert_info[0] = 0;
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
     spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
     libspdm_reset_message_mut_b(spdm_context);
 
@@ -461,9 +461,10 @@ static void rsp_encap_get_certificate_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
                      SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
-    assert_int_equal(spdm_context->mut_auth_cert_chain_buffer_size,
+    assert_int_equal(spdm_context->encap_context.payload_buffer_size,
                      LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
-    assert_memory_equal(spdm_context->mut_auth_cert_chain_buffer, m_libspdm_local_certificate_chain,
+    assert_memory_equal(spdm_context->encap_context.payload_buffer,
+                        m_libspdm_local_certificate_chain,
                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
     /* Sub Case 2: CertModel Value of 2 , AliasCert model*/
@@ -473,8 +474,8 @@ static void rsp_encap_get_certificate_case5(void **state)
     spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
-    spdm_context->mut_auth_cert_chain_buffer = cert_chain;
+    spdm_context->encap_context.payload_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer = cert_chain;
 
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
@@ -482,9 +483,10 @@ static void rsp_encap_get_certificate_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
                      SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
-    assert_int_equal(spdm_context->mut_auth_cert_chain_buffer_size,
+    assert_int_equal(spdm_context->encap_context.payload_buffer_size,
                      LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
-    assert_memory_equal(spdm_context->mut_auth_cert_chain_buffer, m_libspdm_local_certificate_chain,
+    assert_memory_equal(spdm_context->encap_context.payload_buffer,
+                        m_libspdm_local_certificate_chain,
                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
     /* Sub Case 3: CertModel Value of 3 GenericCert model , slot_id set 1
@@ -492,13 +494,13 @@ static void rsp_encap_get_certificate_case5(void **state)
     spdm_context->connection_info.multi_key_conn_req = true;
     spdm_context->encap_context.req_slot_id = 1;
     spdm_context->connection_info.peer_cert_info[1] = 0;
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
     spdm_response->header.param1 = 1;
     spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
-    spdm_context->mut_auth_cert_chain_buffer = cert_chain;
+    spdm_context->encap_context.payload_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer = cert_chain;
 
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
@@ -506,9 +508,10 @@ static void rsp_encap_get_certificate_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[1],
                      SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT);
-    assert_int_equal(spdm_context->mut_auth_cert_chain_buffer_size,
+    assert_int_equal(spdm_context->encap_context.payload_buffer_size,
                      LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
-    assert_memory_equal(spdm_context->mut_auth_cert_chain_buffer, m_libspdm_local_certificate_chain,
+    assert_memory_equal(spdm_context->encap_context.payload_buffer,
+                        m_libspdm_local_certificate_chain,
                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
     /* Sub Case 4: CertModel Value of 3 , GenericCert model ,slot_id set 0
@@ -516,13 +519,13 @@ static void rsp_encap_get_certificate_case5(void **state)
     spdm_context->connection_info.multi_key_conn_req = true;
     spdm_context->encap_context.req_slot_id = 0;
     spdm_context->connection_info.peer_cert_info[0] = 0;
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
-    spdm_context->mut_auth_cert_chain_buffer = cert_chain;
+    spdm_context->encap_context.payload_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer = cert_chain;
 
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
@@ -536,12 +539,12 @@ static void rsp_encap_get_certificate_case5(void **state)
     spdm_context->connection_info.multi_key_conn_req = true;
     spdm_context->encap_context.req_slot_id = 0;
     spdm_context->connection_info.peer_cert_info[0] = 0;
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
     spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
-    spdm_context->mut_auth_cert_chain_buffer = cert_chain;
+    spdm_context->encap_context.payload_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer = cert_chain;
 
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
@@ -556,12 +559,12 @@ static void rsp_encap_get_certificate_case5(void **state)
     spdm_context->connection_info.multi_key_conn_req = false;
     spdm_context->encap_context.req_slot_id = 0;
     spdm_context->connection_info.peer_cert_info[0] = 0;
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer_size = 0;
     spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
-    spdm_context->mut_auth_cert_chain_buffer = cert_chain;
+    spdm_context->encap_context.payload_buffer_size = 0;
+    spdm_context->encap_context.payload_buffer = cert_chain;
 
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
@@ -569,9 +572,10 @@ static void rsp_encap_get_certificate_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
                      SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE);
-    assert_int_equal(spdm_context->mut_auth_cert_chain_buffer_size,
+    assert_int_equal(spdm_context->encap_context.payload_buffer_size,
                      LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
-    assert_memory_equal(spdm_context->mut_auth_cert_chain_buffer, m_libspdm_local_certificate_chain,
+    assert_memory_equal(spdm_context->encap_context.payload_buffer,
+                        m_libspdm_local_certificate_chain,
                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
     free(data);
@@ -581,12 +585,137 @@ static void rsp_encap_get_certificate_case5(void **state)
 }
 
 /**
- * Test 6: The Responder's Integrator registered, through libspdm_register_cert_chain_buffer(),
- * a certificate chain buffer that is smaller than the CERTIFICATE response's PortionLength.
+ * Test 6: the Integrator supplies the certificate chain buffer at the call site, and reads the
+ * retrieved size back with libspdm_get_encap_payload_size.
+ * Expected Behavior: a NULL buffer or a zero size is rejected with
+ * LIBSPDM_STATUS_INVALID_PARAMETER, an unknown session is rejected with
+ * LIBSPDM_STATUS_INVALID_STATE_LOCAL, and the getter reports what was accumulated.
+ **/
+static void rsp_encap_get_certificate_case6(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t encap_request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+    size_t encap_request_size;
+    size_t cert_chain_size;
+    uint32_t unknown_session_id;
+
+    spdm_test_context = *state;
+    spdm_test_context->case_id = 0x6;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->last_spdm_request_session_id_valid = false;
+
+    /* The buffer is mandatory. */
+    encap_request_size = sizeof(encap_request);
+    status = libspdm_get_encap_request_get_certificate(
+        spdm_context, NULL, 0, sizeof(cert_chain), NULL, &encap_request_size, encap_request);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
+
+    encap_request_size = sizeof(encap_request);
+    status = libspdm_get_encap_request_get_certificate(
+        spdm_context, NULL, 0, 0, cert_chain, &encap_request_size, encap_request);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
+
+    /* A successful call records the buffer and restarts the accumulation. */
+    spdm_context->encap_context.payload_buffer_size = 0x1234;
+    encap_request_size = sizeof(encap_request);
+    status = libspdm_get_encap_request_get_certificate(
+        spdm_context, NULL, 0, sizeof(cert_chain), cert_chain,
+        &encap_request_size, encap_request);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_ptr_equal(spdm_context->encap_context.payload_buffer, cert_chain);
+    assert_int_equal(spdm_context->encap_context.payload_buffer_max_size, sizeof(cert_chain));
+
+    cert_chain_size = 0xFFFF;
+    status = libspdm_get_encap_payload_size(spdm_context, NULL, &cert_chain_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(cert_chain_size, 0);
+
+    /* The getter reports whatever has been accumulated so far. */
+    spdm_context->encap_context.payload_buffer_size = 0x20;
+    status = libspdm_get_encap_payload_size(spdm_context, NULL, &cert_chain_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(cert_chain_size, 0x20);
+
+    /* A session that does not exist is rejected. */
+    unknown_session_id = 0xDEADBEEF;
+    status = libspdm_get_encap_payload_size(spdm_context, &unknown_session_id, &cert_chain_size);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
+
+    spdm_context->encap_context.payload_buffer_size = 0;
+}
+
+/**
+ * Test 7: the slot of the Requester's certificate chain is bounds-checked.
+ * Expected Behavior: a slot that is not less than SPDM_MAX_SLOT_COUNT is rejected with
+ * LIBSPDM_STATUS_INVALID_PARAMETER before anything is recorded, as the CERTIFICATE response would
+ * otherwise be recorded in per-slot state that has no such entry. GET_CERTIFICATE has no slot value
+ * that designates a provisioned public key, so 0xFF is rejected too. The highest valid slot is
+ * accepted and placed in the request.
+ **/
+static void rsp_encap_get_certificate_case7(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    const spdm_get_certificate_request_t *spdm_request;
+    uint8_t encap_request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+    size_t encap_request_size;
+    size_t index;
+    const uint8_t invalid_slot_id[] = { SPDM_MAX_SLOT_COUNT, 0xF, 0xFF };
+
+    spdm_test_context = *state;
+    spdm_test_context->case_id = 0x7;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->last_spdm_request_session_id_valid = false;
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(invalid_slot_id); index++) {
+        spdm_context->encap_context.req_slot_id = 0;
+        spdm_context->encap_context.payload_buffer = NULL;
+
+        encap_request_size = sizeof(encap_request);
+        status = libspdm_get_encap_request_get_certificate(
+            spdm_context, NULL, invalid_slot_id[index], sizeof(cert_chain), cert_chain,
+            &encap_request_size, encap_request);
+        assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
+
+        /* Neither the slot nor the buffer was recorded. */
+        assert_int_equal(spdm_context->encap_context.req_slot_id, 0);
+        assert_null(spdm_context->encap_context.payload_buffer);
+    }
+
+    encap_request_size = sizeof(encap_request);
+    status = libspdm_get_encap_request_get_certificate(
+        spdm_context, NULL, SPDM_MAX_SLOT_COUNT - 1, sizeof(cert_chain), cert_chain,
+        &encap_request_size, encap_request);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_request = (const void *)encap_request;
+    assert_int_equal(spdm_request->header.param1, SPDM_MAX_SLOT_COUNT - 1);
+    assert_int_equal(spdm_context->encap_context.req_slot_id, SPDM_MAX_SLOT_COUNT - 1);
+
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->encap_context.payload_buffer = NULL;
+    spdm_context->encap_context.payload_buffer_size = 0;
+}
+
+/**
+ * Test 8: the certificate chain buffer supplied by the Integrator is smaller than the CERTIFICATE
+ * response's PortionLength.
  * Expected Behavior: returns a status of LIBSPDM_STATUS_BUFFER_TOO_SMALL and the buffer is left
  *                    untouched.
  **/
-static void rsp_encap_get_certificate_case6(void **state)
+static void rsp_encap_get_certificate_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -599,12 +728,12 @@ static void rsp_encap_get_certificate_case6(void **state)
     uint16_t portion_length;
     uint16_t remainder_length;
     size_t spdm_response_size;
-    void *saved_cert_chain_buffer;
-    size_t saved_cert_chain_buffer_max_size;
+    void *saved_payload_buffer;
+    size_t saved_payload_buffer_max_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x6;
+    spdm_test_context->case_id = 0x8;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.capability.flags = 0;
@@ -639,28 +768,28 @@ static void rsp_encap_get_certificate_case6(void **state)
                      portion_length);
 
     /* This is the configuration of rsp_encap_get_certificate_case5 Sub Case 6, which succeeds,
-     * except that the registered buffer cannot hold the first portion. */
+     * except that the supplied buffer cannot hold the first portion. */
     spdm_context->connection_info.multi_key_conn_req = false;
     spdm_context->encap_context.req_slot_id = 0;
     spdm_context->connection_info.peer_cert_info[0] = 0;
     libspdm_reset_message_mut_b(spdm_context);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
 
-    saved_cert_chain_buffer = spdm_context->mut_auth_cert_chain_buffer;
-    saved_cert_chain_buffer_max_size = spdm_context->mut_auth_cert_chain_buffer_max_size;
-    spdm_context->mut_auth_cert_chain_buffer = cert_chain;
-    spdm_context->mut_auth_cert_chain_buffer_max_size = portion_length - 1;
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    saved_payload_buffer = spdm_context->encap_context.payload_buffer;
+    saved_payload_buffer_max_size = spdm_context->encap_context.payload_buffer_max_size;
+    spdm_context->encap_context.payload_buffer = cert_chain;
+    spdm_context->encap_context.payload_buffer_max_size = portion_length - 1;
+    spdm_context->encap_context.payload_buffer_size = 0;
 
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
                                                         &need_continue);
 
     assert_int_equal(status, LIBSPDM_STATUS_BUFFER_TOO_SMALL);
-    assert_int_equal(spdm_context->mut_auth_cert_chain_buffer_size, 0);
+    assert_int_equal(spdm_context->encap_context.payload_buffer_size, 0);
 
-    spdm_context->mut_auth_cert_chain_buffer = saved_cert_chain_buffer;
-    spdm_context->mut_auth_cert_chain_buffer_max_size = saved_cert_chain_buffer_max_size;
+    spdm_context->encap_context.payload_buffer = saved_payload_buffer;
+    spdm_context->encap_context.payload_buffer_max_size = saved_payload_buffer_max_size;
 
     free(m_libspdm_local_certificate_chain);
     m_libspdm_local_certificate_chain = NULL;
@@ -683,8 +812,12 @@ int libspdm_rsp_encap_get_certificate_test(void)
         cmocka_unit_test(rsp_encap_get_certificate_case4),
         /* check request attributes and response attributes*/
         cmocka_unit_test(rsp_encap_get_certificate_case5),
-        /* The Integrator's certificate chain buffer is too small*/
+        /* Integrator-supplied certificate chain buffer and its size getter */
         cmocka_unit_test(rsp_encap_get_certificate_case6),
+        /* The slot of the Requester's certificate chain is bounds-checked */
+        cmocka_unit_test(rsp_encap_get_certificate_case7),
+        /* The Integrator's certificate chain buffer is too small */
+        cmocka_unit_test(rsp_encap_get_certificate_case8),
     };
 
     libspdm_test_context_t test_context = {

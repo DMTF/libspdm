@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -65,11 +65,15 @@ libspdm_return_t libspdm_get_response_version(libspdm_context_t *spdm_context, s
 
     libspdm_set_connection_state(spdm_context, LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 
-    if ((spdm_context->response_state == LIBSPDM_RESPONSE_STATE_NEED_RESYNC) ||
-        (spdm_context->response_state == LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP)) {
+    if (spdm_context->response_state == LIBSPDM_RESPONSE_STATE_NEED_RESYNC) {
         /* receiving a GET_VERSION resets a need to resynchronization*/
         spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     }
+
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+    libspdm_reset_all_encap_state(spdm_context);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
+
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
         return libspdm_responder_handle_response_state(
             spdm_context,

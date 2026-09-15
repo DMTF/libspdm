@@ -65,12 +65,6 @@ libspdm_return_t libspdm_responder_handle_response_state(libspdm_context_t *spdm
             (uint8_t *)(void *)&spdm_context->error_data,
             response_size, response);
     #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
-    /* NOTE: Need to reset status to Normal in up level*/
-    case LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP:
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_REQUEST_IN_FLIGHT,
-                                               0, response_size, response);
-    /* NOTE: Need let SPDM_ENCAPSULATED_RESPONSE_ACK reset the State*/
     default:
         return LIBSPDM_STATUS_SUCCESS;
     }
