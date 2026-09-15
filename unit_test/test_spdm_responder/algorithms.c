@@ -2966,7 +2966,7 @@ static void rsp_algorithms_case33(void **state)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
 
-    /* request8 has req_base_asym_alg = ECDSA_ECC_NIST_P521; local has RSASSA_2048 → intersection = 0 */
+    /* request8 has req_base_asym_alg = ECDSA_ECC_NIST_P521; local has RSASSA_2048 -> intersection = 0 */
     response_size = sizeof(response);
     status = libspdm_get_response_algorithms(
         spdm_context,
@@ -3015,7 +3015,7 @@ static void rsp_algorithms_case34(void **state)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
 
-    /* request7 has req_base_asym_alg = RSASSA_2048 = m_libspdm_use_req_asym_algo → intersection != 0 */
+    /* request7 has req_base_asym_alg = RSASSA_2048 = m_libspdm_use_req_asym_algo -> intersection != 0 */
     response_size = sizeof(response);
     status = libspdm_get_response_algorithms(
         spdm_context,

@@ -1526,11 +1526,11 @@ static void rsp_csr_case14(void **state)
 /**
  * Test 15: receives a valid GET_CSR request message from Requester with need_reset for SPDM 1.3
  * Expected Behavior: the first get_csr with csr_tracking_tag 0: responder return need reset and available csr_tracking_tag;
- *                    Without reset, then send get_csr with unmatched csr_tracking_tag：responder return unexpected error;
- *                    Without reset, then send get_csr with matched csr_tracking_tag：responder return busy error;
- *                    Without reset, then send get_csr with non-0 csr_tracking_tag, and overwrite is set：responder return invalid error;
- *                    After reset, then send get_csr with unmatched csr_tracking_tag：responder return unexpected error;
- *                    After reset, then send get_csr with csr_tracking_tag 0, and overwrite is set：responder return need reset and available csr_tracking_tag;
+ *                    Without reset, then send get_csr with unmatched csr_tracking_tag: responder return unexpected error;
+ *                    Without reset, then send get_csr with matched csr_tracking_tag: responder return busy error;
+ *                    Without reset, then send get_csr with non-0 csr_tracking_tag, and overwrite is set: responder return invalid error;
+ *                    After reset, then send get_csr with unmatched csr_tracking_tag: responder return unexpected error;
+ *                    After reset, then send get_csr with csr_tracking_tag 0, and overwrite is set: responder return need reset and available csr_tracking_tag;
  **/
 static void rsp_csr_case15(void **state)
 {
