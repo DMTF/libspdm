@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -149,7 +149,7 @@ bool libspdm_write_output_file(const char *file_name, const void *file_data,
         return false;
     }
 
-    if ((fwrite(file_data, 1, file_size, fp_out)) != file_size) {
+    if ((file_size != 0) && (fwrite(file_data, 1, file_size, fp_out) != file_size)) {
         printf("Write output file error %s\n", file_name);
         fclose(fp_out);
         return false;
