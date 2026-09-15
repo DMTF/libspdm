@@ -8,6 +8,10 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT TOOLCHAIN STREQUAL "ARM_DS2022"
 set(src_rnglib
     rng_linux.c
 )
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+set(src_rnglib
+    rng_darwin.c
+)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 set(src_rnglib
     rng_win.c
