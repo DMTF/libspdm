@@ -997,12 +997,7 @@ static void rsp_chunk_response_case14(void** state)
     /* large response need a large scratch buffer */
     spdm_context->connection_info.capability.max_spdm_msg_size = data_transfer_size * 65536;
     spdm_context->local_context.capability.max_spdm_msg_size = data_transfer_size * 65536;
-    spdm_test_context->scratch_buffer_size =
-        libspdm_get_sizeof_required_scratch_buffer(spdm_context);
-    spdm_test_context->scratch_buffer = (void *)malloc(spdm_test_context->scratch_buffer_size);
-    libspdm_set_scratch_buffer (spdm_context,
-                                spdm_test_context->scratch_buffer,
-                                spdm_test_context->scratch_buffer_size);
+    libspdm_unit_test_resize_scratch_buffer(spdm_test_context);
 
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);

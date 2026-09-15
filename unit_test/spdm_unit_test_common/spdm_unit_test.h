@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -208,6 +208,16 @@ int libspdm_unit_test_group_setup(void **state);
 int libspdm_unit_test_group_teardown(void **state);
 void libspdm_setup_test_context(libspdm_test_context_t *spdm_test_context);
 libspdm_test_context_t *libspdm_get_test_context(void);
+
+/* Release the scratch buffer that the test context currently owns and replace it with one sized
+ * for the SPDM context's present capabilities. A test that changes max_spdm_msg_size must call
+ * this rather than allocating a replacement itself, otherwise the buffer that
+ * libspdm_unit_test_group_setup allocated is leaked.
+ *
+ * spdm_test_context->scratch_buffer must be NULL or a pointer returned by malloc, since this
+ * function and libspdm_unit_test_group_teardown both release it with free. */
+void libspdm_unit_test_resize_scratch_buffer(libspdm_test_context_t *spdm_test_context);
+
 void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size);
 void libspdm_dump_data(const uint8_t *buffer, size_t buffer_size);
 void libspdm_dump_hex(const uint8_t *buffer, size_t buffer_size);
