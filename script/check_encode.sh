@@ -9,9 +9,10 @@ set -e
 cd `dirname $0`
 cd ../
 
-file_list="./library ./include ./script"
+file_list="./library ./include ./script ./unit_test"
 
-for files in $(find $file_list -name '*.c' -or -name '*.h*' -or -name '*.sh' -or -name "*.txt");
+for files in $(find $file_list -path './unit_test/cmockalib/cmocka' -prune -o \
+               \( -name '*.c' -or -name '*.h*' -or -name '*.sh' -or -name "*.txt" \) -print);
 do
     file_output=$(file "$files")
     echo $file_output
