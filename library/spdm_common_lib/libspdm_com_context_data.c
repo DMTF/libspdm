@@ -1243,6 +1243,11 @@ void libspdm_reset_message_d(libspdm_context_t *spdm_context)
 
 void libspdm_reset_message_b(libspdm_context_t *spdm_context)
 {
+    /* B no longer holds any part of a certificate chain retrieval. */
+    spdm_context->connection_info.cert_retrieval_in_progress = false;
+    spdm_context->connection_info.cert_retrieval_slot_id = 0;
+    spdm_context->connection_info.cert_retrieval_next_offset = 0;
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_reset_managed_buffer(&spdm_context->transcript.message_b);
 #else
@@ -1491,6 +1496,17 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
     case SPDM_GET_DIGESTS:
         libspdm_reset_message_b(spdm_context);
         break;
+    case SPDM_GET_CERTIFICATE:
+        /* A GET_CERTIFICATE that neither starts a new certificate chain retrieval nor continues
+         * the in-progress one abandons that retrieval. Its messages are out-of-order with respect
+         * to the messages of the new sequence, so B is nullified before the new sequence is
+         * recorded. Without this the transcript of the abandoned attempt is signed and verified as
+         * part of a later CHALLENGE_AUTH, and the two endpoints can disagree on its contents. */
+        if (spdm_context->connection_info.cert_retrieval_restart) {
+            spdm_context->connection_info.cert_retrieval_restart = false;
+            libspdm_reset_message_b(spdm_context);
+        }
+        break;
     case SPDM_GET_ENDPOINT_INFO:
         libspdm_reset_message_e(spdm_context, session_info);
         libspdm_reset_message_encap_e(spdm_context, session_info);
@@ -1498,6 +1514,31 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
     default:
         break;
     }
+}
+
+void libspdm_detect_cert_retrieval_restart(libspdm_context_t *spdm_context, uint8_t slot_id,
+                                           uint32_t offset)
+{
+    libspdm_connection_info_t *connection_info;
+
+    connection_info = &spdm_context->connection_info;
+
+    connection_info->cert_retrieval_restart =
+        connection_info->cert_retrieval_in_progress &&
+        ((connection_info->cert_retrieval_slot_id != slot_id) ||
+         (connection_info->cert_retrieval_next_offset != offset));
+}
+
+void libspdm_update_cert_retrieval_state(libspdm_context_t *spdm_context, uint8_t slot_id,
+                                         uint32_t next_offset, bool in_progress)
+{
+    libspdm_connection_info_t *connection_info;
+
+    connection_info = &spdm_context->connection_info;
+
+    connection_info->cert_retrieval_in_progress = in_progress;
+    connection_info->cert_retrieval_slot_id = in_progress ? slot_id : 0;
+    connection_info->cert_retrieval_next_offset = in_progress ? next_offset : 0;
 }
 
 void libspdm_reset_message_buffer_via_encap_request_code(void *context, void *session_info,
