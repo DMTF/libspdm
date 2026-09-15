@@ -610,12 +610,7 @@ static libspdm_return_t libspdm_test_requester_chunk_send_vendor_specific_test_c
         = CHUNK_SEND_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.is_requester = true;
 
-    spdm_test_context->scratch_buffer_size =
-        libspdm_get_sizeof_required_scratch_buffer(spdm_context);
-    spdm_test_context->scratch_buffer = (void *)malloc(spdm_test_context->scratch_buffer_size);
-    libspdm_set_scratch_buffer (spdm_context,
-                                spdm_test_context->scratch_buffer,
-                                spdm_test_context->scratch_buffer_size);
+    libspdm_unit_test_resize_scratch_buffer(spdm_test_context);
 
     libspdm_reset_message_a(spdm_context);
 

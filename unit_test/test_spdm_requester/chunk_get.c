@@ -1116,12 +1116,7 @@ static void req_chunk_get_case5(void **state)
         CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.is_requester = true;
 
-    spdm_test_context->scratch_buffer_size =
-        libspdm_get_sizeof_required_scratch_buffer(spdm_context);
-    spdm_test_context->scratch_buffer = (void *)malloc(spdm_test_context->scratch_buffer_size);
-    libspdm_set_scratch_buffer (spdm_context,
-                                spdm_test_context->scratch_buffer,
-                                spdm_test_context->scratch_buffer_size);
+    libspdm_unit_test_resize_scratch_buffer(spdm_test_context);
 
     libspdm_set_mem(data, sizeof(data), 0xAA);
 
@@ -1167,12 +1162,7 @@ static void req_chunk_get_case6(void **state)
         CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE + 0x10;
     spdm_context->local_context.is_requester = true;
 
-    spdm_test_context->scratch_buffer_size =
-        libspdm_get_sizeof_required_scratch_buffer(spdm_context);
-    spdm_test_context->scratch_buffer = (void *)malloc(spdm_test_context->scratch_buffer_size);
-    libspdm_set_scratch_buffer (spdm_context,
-                                spdm_test_context->scratch_buffer,
-                                spdm_test_context->scratch_buffer_size);
+    libspdm_unit_test_resize_scratch_buffer(spdm_test_context);
 
     libspdm_set_mem(data, sizeof(data), 0xAA);
 
@@ -1217,12 +1207,7 @@ static void req_chunk_get_case7(void **state)
         CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.is_requester = true;
 
-    spdm_test_context->scratch_buffer_size =
-        libspdm_get_sizeof_required_scratch_buffer(spdm_context);
-    spdm_test_context->scratch_buffer = (void *)malloc(spdm_test_context->scratch_buffer_size);
-    libspdm_set_scratch_buffer (spdm_context,
-                                spdm_test_context->scratch_buffer,
-                                spdm_test_context->scratch_buffer_size);
+    libspdm_unit_test_resize_scratch_buffer(spdm_test_context);
 
     libspdm_set_mem(data, sizeof(data), 0xAA);
 
