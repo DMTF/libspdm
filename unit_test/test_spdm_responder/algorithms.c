@@ -15,6 +15,11 @@ typedef struct {
 
 typedef struct {
     spdm_negotiate_algorithms_request_t spdm_request_version10;
+    spdm_negotiate_algorithms_common_struct_table_t struct_table[5];
+} libspdm_negotiate_algorithms_request_spdm11_more_algo_t;
+
+typedef struct {
+    spdm_negotiate_algorithms_request_t spdm_request_version10;
     uint32_t extra[21];
     spdm_negotiate_algorithms_common_struct_table_t struct_table[4];
 } libspdm_negotiate_algorithms_request_spdm11_oversized_t;
@@ -531,7 +536,7 @@ size_t m_libspdm_negotiate_algorithm_request13_size =
     sizeof(m_libspdm_negotiate_algorithm_request13)-
     sizeof( spdm_negotiate_algorithms_common_struct_table_t);
 
-libspdm_negotiate_algorithms_request_spdm11_t
+libspdm_negotiate_algorithms_request_spdm11_more_algo_t
     m_libspdm_negotiate_algorithm_request14 = {
     {
         {
@@ -540,8 +545,7 @@ libspdm_negotiate_algorithms_request_spdm11_t
             5,
             0
         },
-        sizeof(libspdm_negotiate_algorithms_request_spdm11_t)+
-        sizeof(spdm_negotiate_algorithms_common_struct_table_t),
+        sizeof(libspdm_negotiate_algorithms_request_spdm11_more_algo_t),
         SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
@@ -565,11 +569,15 @@ libspdm_negotiate_algorithms_request_spdm11_t
             0x20,
             SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         },
+        {
+            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_PQC_ASYM_ALG,
+            0x20,
+            0
+        },
     }
 };
 size_t m_libspdm_negotiate_algorithm_request14_size =
-    sizeof(m_libspdm_negotiate_algorithm_request14)+
-    sizeof( spdm_negotiate_algorithms_common_struct_table_t);
+    sizeof(m_libspdm_negotiate_algorithm_request14);
 
 libspdm_negotiate_algorithms_request_spdm11_t
     m_libspdm_negotiate_algorithm_request15 = {
