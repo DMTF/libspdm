@@ -50,7 +50,7 @@ bool libspdm_write_output_file(const char *file_name, const void *file_data, siz
         return false;
     }
 
-    if ((fwrite(file_data, 1, file_size, fp_out)) != file_size) {
+    if ((file_size != 0) && (fwrite(file_data, 1, file_size, fp_out) != file_size)) {
         printf("Write output file error %s\n", file_name);
         fclose(fp_out);
         return false;
