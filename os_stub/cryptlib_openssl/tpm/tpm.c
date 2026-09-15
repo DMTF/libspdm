@@ -312,10 +312,9 @@ bool libspdm_tpm_read_nv(uint32_t index, void **buffer, size_t *size)
         1,
         NULL,
         &cap);
-    if (rc != TSS2_RC_SUCCESS)
-        goto out;
 
-    if (cap != NULL && cap->data.tpmProperties.count > 0 &&
+    if (rc == TSS2_RC_SUCCESS && cap != NULL && cap->data.tpmProperties.count > 0 &&
+        cap->data.tpmProperties.tpmProperty[0].property == TPM2_PT_NV_BUFFER_MAX &&
         cap->data.tpmProperties.tpmProperty[0].value > 0) {
         max_nv_buf = cap->data.tpmProperties.tpmProperty[0].value;
     } else {
