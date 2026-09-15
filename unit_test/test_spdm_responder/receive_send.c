@@ -177,6 +177,7 @@ static void libspdm_test_responder_receive_send_rsp_case1(void** state)
     #else
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
     #endif
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 }
@@ -466,6 +467,7 @@ static void libspdm_test_responder_receive_send_rsp_case4(void** state)
     #else
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
     #endif
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 }
@@ -822,30 +824,30 @@ int libspdm_rsp_receive_send_test(void)
         cmocka_unit_test(libspdm_test_responder_receive_send_rsp_case1),
         /* response message size is larger than responder sending transmit buffer size */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case2,
-                               libspdm_unit_test_group_setup),
+                               libspdm_unit_test_reset_context),
         #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
         /* response message size is larger than responder sending transmit buffer size
          * using the new Vendor Defined Message API */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case3,
-                               libspdm_unit_test_group_setup),
+                               libspdm_unit_test_reset_context),
         #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
         /* response message size is larger than requester max_spdm_msg_size */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case4,
-                               libspdm_unit_test_group_setup),
+                               libspdm_unit_test_reset_context),
         /* non-chunk request during active chunk GET transfer returns UnexpectedRequest
          * and does not terminate chunk transfer */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case5,
-                               libspdm_unit_test_group_setup),
+                               libspdm_unit_test_reset_context),
         /* GET_VERSION during active chunk GET transfer terminates chunk and proceeds */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case6,
-                               libspdm_unit_test_group_setup),
+                               libspdm_unit_test_reset_context),
         /* non-chunk request during active chunk SEND transfer returns UnexpectedRequest
          * and does not terminate chunk transfer */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case7,
-                               libspdm_unit_test_group_setup),
+                               libspdm_unit_test_reset_context),
         /* GET_VERSION during active chunk SEND transfer terminates chunk and proceeds */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case8,
-                               libspdm_unit_test_group_setup),
+                               libspdm_unit_test_reset_context),
     };
 
     libspdm_test_context_t test_context = {

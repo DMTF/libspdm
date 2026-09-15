@@ -206,6 +206,8 @@ typedef struct {
 
 int libspdm_unit_test_group_setup(void **state);
 int libspdm_unit_test_group_teardown(void **state);
+
+int libspdm_unit_test_reset_context(void **state);
 void libspdm_setup_test_context(libspdm_test_context_t *spdm_test_context);
 libspdm_test_context_t *libspdm_get_test_context(void);
 
