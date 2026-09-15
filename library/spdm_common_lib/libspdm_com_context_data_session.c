@@ -199,7 +199,7 @@ void *libspdm_get_secured_message_context_via_session_info(void *spdm_session_in
 uint32_t libspdm_generate_session_id(uint16_t req_session_id, uint16_t rsp_session_id)
 {
     uint32_t session_id;
-    session_id = (rsp_session_id << 16) | req_session_id;
+    session_id = ((uint32_t)rsp_session_id << 16) | req_session_id;
     return session_id;
 }
 
