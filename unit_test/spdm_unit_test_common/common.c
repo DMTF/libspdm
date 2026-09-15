@@ -163,6 +163,22 @@ int libspdm_unit_test_group_teardown(void **state)
     return 0;
 }
 
+int libspdm_unit_test_reset_context(void **state)
+{
+    void *group_state;
+    int status;
+
+    /* cmocka gives a per-test fixture a state of its own that starts as NULL, so the
+     * teardown has to be handed the test context directly. */
+    group_state = libspdm_get_test_context();
+    status = libspdm_unit_test_group_teardown(&group_state);
+    if (status != 0) {
+        return status;
+    }
+
+    return libspdm_unit_test_group_setup(state);
+}
+
 void libspdm_force_error (libspdm_error_target_t target)
 {
     switch (target) {

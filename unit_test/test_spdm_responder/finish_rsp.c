@@ -3884,24 +3884,24 @@ int libspdm_rsp_finish_rsp_test(void)
         /* Success Case, enable mutual authentication and use slot_id 0xFF */
         cmocka_unit_test(rsp_finish_rsp_case18),
         /* Invalid SlotID in FINISH request message when mutual authentication */
-        cmocka_unit_test_setup(rsp_finish_rsp_case19, libspdm_unit_test_group_setup),
-        cmocka_unit_test_setup(rsp_finish_rsp_case20, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case19, libspdm_unit_test_reset_context),
+        cmocka_unit_test_setup(rsp_finish_rsp_case20, libspdm_unit_test_reset_context),
         /* If FINISH.Param1 != 0x01, then FINISH.Param2 is reserved, shall be ignored when read */
-        cmocka_unit_test_setup(rsp_finish_rsp_case21, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case21, libspdm_unit_test_reset_context),
         /* If KEY_EXCHANGE_RSP.MutAuthRequested equals neither 0x02 nor 0x04, FINISH.Param2 no need match ENCAPSULATED_RESPONSE_ACK.EncapsulatedRequest */
-        cmocka_unit_test_setup(rsp_finish_rsp_case22, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case22, libspdm_unit_test_reset_context),
         /* Big Endian Sign - Little Endian Verify */
-        cmocka_unit_test_setup(rsp_finish_rsp_case23, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case23, libspdm_unit_test_reset_context),
         /* Big Endian Sign - Big Endian Verify */
-        cmocka_unit_test_setup(rsp_finish_rsp_case24, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case24, libspdm_unit_test_reset_context),
         /* Big Endian Sign - Big or Little Endian Verify */
-        cmocka_unit_test_setup(rsp_finish_rsp_case25, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case25, libspdm_unit_test_reset_context),
         /* Little Endian Sign - Little Endian Verify*/
-        cmocka_unit_test_setup(rsp_finish_rsp_case26, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case26, libspdm_unit_test_reset_context),
         /* Little Endian Sign - Big Endian Verify */
-        cmocka_unit_test_setup(rsp_finish_rsp_case27, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case27, libspdm_unit_test_reset_context),
         /* Little Endian Sign - Big or Little Endian Verify */
-        cmocka_unit_test_setup(rsp_finish_rsp_case28, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case28, libspdm_unit_test_reset_context),
         /* The requester and responder have not set HANDSHAKE_IN_THE_CLEAR*/
         cmocka_unit_test(rsp_finish_rsp_case29),
         /* SPDM 1.4 with OpaqueData */
