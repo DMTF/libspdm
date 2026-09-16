@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -141,6 +141,11 @@ static libspdm_return_t try_libspdm_subscribe_event_types(libspdm_context_t *spd
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
+
+    /* -=[Log Message Phase]=- */
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
 receive_done:
     libspdm_release_receiver_buffer(spdm_context);

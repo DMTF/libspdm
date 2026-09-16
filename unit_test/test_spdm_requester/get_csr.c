@@ -113,6 +113,8 @@ static void libspdm_clear_cached_csr()
     rename(file_name, new_name);
 }
 
+static uint8_t m_msg_log_buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE * 2];
+
 static libspdm_return_t send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
@@ -350,6 +352,10 @@ static void req_get_csr_case2(void **state)
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
+    #if LIBSPDM_ENABLE_MSG_LOG
+    size_t msg_log_size;
+    const spdm_message_header_t *logged_response;
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
     uint8_t csr_form_get[LIBSPDM_MAX_CSR_SIZE] = {0};
     size_t csr_len;
@@ -365,12 +371,29 @@ static void req_get_csr_case2(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
 
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_init_msg_log(spdm_context, m_msg_log_buffer, sizeof(m_msg_log_buffer));
+    libspdm_set_msg_log_mode(spdm_context, LIBSPDM_MSG_LOG_MODE_ENABLE);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
     status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get, &csr_len,
                              0, 0, NULL);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(csr_len, global_csr_len);
     assert_memory_equal(csr_form_get, csr_data_pointer, global_csr_len);
+    #if LIBSPDM_ENABLE_MSG_LOG
+    /* The request is logged when it is sent and the response when it is validated, so the
+     * SPDM_CSR response begins where the GET_CSR request ends. The response is located from the
+     * start of the log rather than from its end because the test transport pads a message up to
+     * LIBSPDM_TEST_ALIGNMENT, making the logged response longer than the CSR it carries. */
+    msg_log_size = libspdm_get_msg_log_size(spdm_context);
+    assert_int_equal(libspdm_get_msg_log_status(spdm_context), 0);
+    assert_true(msg_log_size > sizeof(spdm_get_csr_request_t));
+    logged_response =
+        (const spdm_message_header_t *)(m_msg_log_buffer + sizeof(spdm_get_csr_request_t));
+    assert_int_equal(logged_response->request_response_code, SPDM_CSR);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
 }
 
 /**

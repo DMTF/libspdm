@@ -17,6 +17,8 @@ static uint8_t m_libspdm_opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 
 static uint8_t m_requester_context[SPDM_REQ_CONTEXT_SIZE];
 
+static uint8_t m_msg_log_buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE * 2];
+
 static libspdm_return_t send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
@@ -2042,6 +2044,11 @@ static void req_challenge_case2(void **state)
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
+    #if LIBSPDM_ENABLE_MSG_LOG
+    size_t msg_log_size;
+    size_t response_size;
+    const spdm_message_header_t *logged_response;
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
     size_t data_size;
@@ -2087,12 +2094,31 @@ static void req_challenge_case2(void **state)
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
 
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_init_msg_log(spdm_context, m_msg_log_buffer, sizeof(m_msg_log_buffer));
+    libspdm_set_msg_log_mode(spdm_context, LIBSPDM_MSG_LOG_MODE_ENABLE);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge(
         spdm_context, NULL, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    #if LIBSPDM_ENABLE_MSG_LOG
+    /* The request is logged when it is sent and the response when it is validated, so the log
+     * holds the request followed by the SPDM_CHALLENGE_AUTH response. */
+    msg_log_size = libspdm_get_msg_log_size(spdm_context);
+    response_size = sizeof(spdm_challenge_auth_response_t) +
+                    libspdm_get_hash_size(m_libspdm_use_hash_algo) + SPDM_NONCE_SIZE +
+                    sizeof(uint16_t) + libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+    assert_int_equal(libspdm_get_msg_log_status(spdm_context), 0);
+    assert_true(msg_log_size > response_size);
+    logged_response =
+        (const spdm_message_header_t *)(m_msg_log_buffer + msg_log_size - response_size);
+    assert_int_equal(logged_response->request_response_code, SPDM_CHALLENGE_AUTH);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
 
     /* Completion of CHALLENGE sets M1/M2 to null. */
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT

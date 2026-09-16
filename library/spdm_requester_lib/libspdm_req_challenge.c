@@ -385,6 +385,13 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
      * the Responder intends to authenticate the Requester. */
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
 
+    /* -=[Log Message Phase]=- */
+    /* Logged here rather than at the end of the function because the BasicMutAuth path below
+     * releases the receiver buffer, which spdm_response points into, and then returns. */
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
     /* -=[Update State Phase]=- */
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
     if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
