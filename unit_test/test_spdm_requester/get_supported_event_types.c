@@ -49,6 +49,8 @@ static void set_standard_state(libspdm_context_t *spdm_context, uint32_t *sessio
         session_info->secured_message_context, LIBSPDM_SESSION_STATE_ESTABLISHED);
 }
 
+static uint8_t m_msg_log_buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE * 2];
+
 static libspdm_return_t send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
@@ -161,6 +163,11 @@ static void req_get_supported_event_types_case1(void **state)
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
+    #if LIBSPDM_ENABLE_MSG_LOG
+    size_t msg_log_size;
+    size_t response_size;
+    const spdm_message_header_t *logged_response;
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
     uint32_t session_id;
     uint8_t event_group_count;
     uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
@@ -171,12 +178,28 @@ static void req_get_supported_event_types_case1(void **state)
 
     set_standard_state(spdm_context, &session_id);
 
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_init_msg_log(spdm_context, m_msg_log_buffer, sizeof(m_msg_log_buffer));
+    libspdm_set_msg_log_mode(spdm_context, LIBSPDM_MSG_LOG_MODE_ENABLE);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
     status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
                                      &supported_event_groups_list_len,
                                      (void *)&m_supported_event_groups_list);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(event_group_count, 1);
+    #if LIBSPDM_ENABLE_MSG_LOG
+    /* The request is logged when it is sent and the response when it is validated, so the log
+     * holds the request followed by the SPDM_SUPPORTED_EVENT_TYPES response. */
+    msg_log_size = libspdm_get_msg_log_size(spdm_context);
+    response_size = sizeof(spdm_supported_event_types_response_t) + supported_event_groups_list_len;
+    assert_int_equal(libspdm_get_msg_log_status(spdm_context), 0);
+    assert_true(msg_log_size > response_size);
+    logged_response =
+        (const spdm_message_header_t *)(m_msg_log_buffer + msg_log_size - response_size);
+    assert_int_equal(logged_response->request_response_code, SPDM_SUPPORTED_EVENT_TYPES);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
 }
 
 int libspdm_req_get_supported_event_types_test(void)
