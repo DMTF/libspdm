@@ -498,7 +498,7 @@ static libspdm_return_t receive_message(
         error_rsp->header.request_response_code = SPDM_ERROR;
         error_rsp->header.param1 = SPDM_ERROR_CODE_LARGE_RESPONSE;
         error_rsp->header.param2 = 0;
-        *((uint16_t*) (error_rsp + 1)) = chunk_handle;
+        libspdm_write_uint16((uint8_t *)(error_rsp + 1), chunk_handle);
 
         libspdm_transport_test_encode_message(
             spdm_context, NULL, false, false,
@@ -539,7 +539,7 @@ static libspdm_return_t receive_message(
 
             /* first chunk has size of large response */
             chunk_seq_no = 0;
-            *((uint32_t*) (chunk_rsp + 1)) = (uint32_t) sub_rsp_size;
+            libspdm_write_uint32((uint8_t *)(chunk_rsp + 1), (uint32_t) sub_rsp_size);
 
             chunk_copy_to += sizeof(uint32_t);
             chunk_copy_size -= sizeof(uint32_t);
@@ -650,7 +650,7 @@ static libspdm_return_t receive_message(
         mal_rsp->chunk_seq_no = 0;
         /* Declared chunk_size equals the large message size, far more than is sent. */
         mal_rsp->chunk_size = declared_size;
-        *((uint32_t*) (mal_rsp + 1)) = declared_size;
+        libspdm_write_uint32((uint8_t *)(mal_rsp + 1), declared_size);
 
         libspdm_transport_test_encode_message(
             spdm_context, NULL, false, false,
@@ -714,7 +714,7 @@ static libspdm_return_t receive_message(
 
             /* first chunk has size of large response */
             chunk_seq_no = 0;
-            *((uint32_t*) (chunk_rsp + 1)) = (uint32_t) sub_rsp_size;
+            libspdm_write_uint32((uint8_t *)(chunk_rsp + 1), (uint32_t)sub_rsp_size);
 
             chunk_copy_to += sizeof(uint32_t);
             chunk_copy_size -= sizeof(uint32_t);
