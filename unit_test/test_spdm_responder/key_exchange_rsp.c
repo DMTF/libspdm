@@ -210,7 +210,7 @@ static void rsp_key_exchange_rsp_case1(void **state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
     assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
 
-    session_id = (m_libspdm_key_exchange_request1.req_session_id << 16) |
+    session_id = ((uint32_t)m_libspdm_key_exchange_request1.req_session_id << 16) |
                  spdm_response->rsp_session_id;
     libspdm_free_session_id(spdm_context, session_id);
     free(data1);
@@ -910,7 +910,7 @@ static void rsp_key_exchange_rsp_case9(void **state)
                         measurement_hash, measurement_summary_hash_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
-    session_id = (m_libspdm_key_exchange_request4.req_session_id << 16) |
+    session_id = ((uint32_t)m_libspdm_key_exchange_request4.req_session_id << 16) |
                  spdm_response->rsp_session_id;
     libspdm_free_session_id(spdm_context, session_id);
 
