@@ -1505,7 +1505,7 @@ static void rsp_measurements_case27(void **state)
     uint8_t expect_measurement_record_data[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     size_t expect_measurement_record_data_length;
     uint8_t *opaque_data;
-    uint16_t *opaque_data_size;
+    uint8_t *opaque_data_size;
     uint8_t expect_opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     size_t expect_opaque_data_size;
 
@@ -1592,18 +1592,18 @@ static void rsp_measurements_case27(void **state)
 
     measurement_record_data = (uint8_t *)response + sizeof(spdm_measurements_response_t);
     opaque_data_size =
-        (uint16_t *)(measurement_record_data + sizeof(spdm_measurement_block_dmtf_t) +
-                     libspdm_get_measurement_hash_size(
-                         m_libspdm_use_measurement_hash_algo) +
-                     SPDM_NONCE_SIZE);
-    opaque_data = (uint8_t *)opaque_data_size + sizeof(uint16_t);
+        measurement_record_data + sizeof(spdm_measurement_block_dmtf_t) +
+        libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo) +
+        SPDM_NONCE_SIZE;
+    opaque_data = opaque_data_size + sizeof(uint16_t);
 
     measurement_record_data_length = libspdm_read_uint24(spdm_response->measurement_record_length);
 
     assert_int_equal(measurement_record_data_length, expect_measurement_record_data_length );
     assert_memory_equal(measurement_record_data, expect_measurement_record_data,
                         expect_measurement_record_data_length);
-    assert_int_equal(*opaque_data_size, libspdm_secret_lib_meas_opaque_data_size);
+    assert_int_equal(libspdm_read_uint16(opaque_data_size),
+                     libspdm_secret_lib_meas_opaque_data_size);
     assert_memory_equal(opaque_data, expect_opaque_data, libspdm_secret_lib_meas_opaque_data_size);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
