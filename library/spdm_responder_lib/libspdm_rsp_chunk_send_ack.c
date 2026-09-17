@@ -111,7 +111,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
             return LIBSPDM_STATUS_SUCCESS;
         }
 
-        large_message_size = *(const uint32_t*) (spdm_request + 1);
+        large_message_size = libspdm_read_uint32((const uint8_t *)(spdm_request + 1));
         chunk = (((const uint8_t*) (spdm_request + 1)) + sizeof(uint32_t));
         calc_max_chunk_size =
             (uint32_t)request_size - (sizeof(spdm_chunk_send_request_t) + sizeof(uint32_t));
