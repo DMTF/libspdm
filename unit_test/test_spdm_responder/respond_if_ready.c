@@ -18,7 +18,9 @@
 #define LIBSPDM_MY_TEST_TOKEN            0x30
 #define LIBSPDM_MY_WRONG_TEST_TOKEN      0x2F
 
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 static libspdm_th_managed_buffer_t th_curr;
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
 
 extern size_t libspdm_secret_lib_challenge_opaque_data_size;
 
@@ -266,6 +268,7 @@ size_t m_libspdm_end_session_request_size = sizeof(m_libspdm_end_session_request
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 #endif
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 static void libspdm_secured_message_set_request_finished_key(
     void *spdm_secured_message_context, const void *key, size_t key_size)
 {
@@ -277,6 +280,7 @@ static void libspdm_secured_message_set_request_finished_key(
                      sizeof(secured_message_context->handshake_secret.request_finished_key),
                      key, secured_message_context->hash_size);
 }
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 /**

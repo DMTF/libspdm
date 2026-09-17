@@ -244,9 +244,11 @@ int main(void)
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
     #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+    #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
     if (libspdm_req_encap_key_update_ack_test() != 0) {
         return_value = 1;
     }
+    #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
     #if LIBSPDM_EVENT_RECIPIENT_SUPPORT
     if (libspdm_req_encap_event_ack_test() != 0) {
         return_value = 1;
