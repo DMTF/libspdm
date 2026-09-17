@@ -2,9 +2,15 @@ name: TPM Test
 
 on:
   push:
+    paths-ignore:
+      - '**/*.md'
+      - 'doc/**'
     branches:
       - main
   pull_request:
+    paths-ignore:
+      - 'doc/**'
+      - '**/*.md'
     branches:
       - main
   workflow_dispatch:
