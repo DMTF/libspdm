@@ -1911,6 +1911,46 @@ static void rsp_capabilities_case42(void **state)
     spdm_context->transcript.message_a.buffer_size = 0;
 }
 
+/**
+ * Test 43: a 1.0 GET_CAPABILITIES in a buffer holding only the header, which is the
+ * entire message in 1.0. The request is placed in an exactly sized allocation so that
+ * reading any field beyond the header is a heap overflow rather than a read of adjacent
+ * padding.
+ * Expected behavior: returns a CAPABILITIES response and reads no field past the header.
+ **/
+static void rsp_capabilities_case43(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_capabilities_response_t *spdm_response;
+    spdm_message_header_t *request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2B;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    request = (spdm_message_header_t *)malloc(sizeof(spdm_message_header_t));
+    assert_non_null(request);
+    request->spdm_version = SPDM_MESSAGE_VERSION_10;
+    request->request_response_code = SPDM_GET_CAPABILITIES;
+    request->param1 = 0;
+    request->param2 = 0;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(
+        spdm_context, sizeof(spdm_message_header_t), request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CAPABILITIES);
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_10);
+
+    free(request);
+}
+
 int libspdm_rsp_capabilities_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1983,6 +2023,7 @@ int libspdm_rsp_capabilities_test(void)
         cmocka_unit_test(rsp_capabilities_case40_supported_algorithms),
         cmocka_unit_test(rsp_capabilities_case41),
         cmocka_unit_test(rsp_capabilities_case42),
+        cmocka_unit_test(rsp_capabilities_case43),
     };
 
     libspdm_test_context_t test_context = {
