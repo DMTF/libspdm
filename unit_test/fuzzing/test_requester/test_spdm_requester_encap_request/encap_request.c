@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -76,6 +76,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                          spdm_response_size);
     } else {
         size_t ack_header_size;
+        size_t copy_offset;
 
         if(libspdm_get_connection_version(spdm_context) == SPDM_MESSAGE_VERSION_12) {
             ack_header_size = sizeof(spdm_encapsulated_response_ack_response_t);
@@ -94,11 +95,20 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         } else {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
+        /* The size checks above use a different offset than the copy below, so bound the
+         * copy by what the fuzz input actually holds at that offset. */
+        copy_offset = ack_header_size * (sub_index - 1) + sizeof(spdm_digest_response_t) +
+                      sizeof(spdm_get_encapsulated_request_request_t);
+        if (copy_offset >= spdm_test_context->test_buffer_size) {
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
+        }
+        if (spdm_response_size > spdm_test_context->test_buffer_size - copy_offset) {
+            spdm_response_size = spdm_test_context->test_buffer_size - copy_offset;
+        }
+
         libspdm_copy_mem(scratch_buffer + test_message_header_size,
                          scratch_buffer_size,
-                         (uint8_t *)spdm_test_context->test_buffer +
-                         ack_header_size * (sub_index - 1) + sizeof(spdm_digest_response_t) +
-                         sizeof(spdm_get_encapsulated_request_request_t),
+                         (uint8_t *)spdm_test_context->test_buffer + copy_offset,
                          spdm_response_size);
     }
 

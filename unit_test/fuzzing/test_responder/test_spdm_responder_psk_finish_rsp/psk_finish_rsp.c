@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -128,6 +128,9 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
     spdm_test_psk_finish_request =
         (libspdm_psk_finish_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_psk_finish_request_size = spdm_test_context->test_buffer_size;
+    if (spdm_test_psk_finish_request_size < sizeof(libspdm_psk_finish_request_mine_t)) {
+        return;
+    }
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -213,6 +216,9 @@ void libspdm_test_responder_psk_finish_rsp_case3(void **State)
     spdm_test_psk_finish_request =
         (libspdm_psk_finish_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_psk_finish_request_size = spdm_test_context->test_buffer_size;
+    if (spdm_test_psk_finish_request_size < sizeof(libspdm_psk_finish_request_mine_t)) {
+        return;
+    }
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;

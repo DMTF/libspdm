@@ -51,6 +51,9 @@ void libspdm_test_responder_encap_get_certificate_case1(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_response_size = spdm_test_context->test_buffer_size;
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_certificate_response_t)) {
+        return;
+    }
     spdm_response = (spdm_certificate_response_t *)spdm_test_context->test_buffer;
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
@@ -115,6 +118,9 @@ void libspdm_test_responder_encap_get_certificate_case2(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_response_size = spdm_test_context->test_buffer_size;
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_certificate_response_t)) {
+        return;
+    }
     spdm_response = (spdm_certificate_response_t *)spdm_test_context->test_buffer;
     spdm_response->remainder_length = 0;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
@@ -187,6 +193,9 @@ void libspdm_test_responder_encap_get_certificate_case3(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_response_size = spdm_test_context->test_buffer_size;
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_certificate_response_t)) {
+        return;
+    }
     spdm_response = (spdm_certificate_response_t *)spdm_test_context->test_buffer;
     spdm_response->remainder_length = 0;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -27,6 +27,9 @@
 void libspdm_debug_assert(const char *file_name, size_t line_number, const char *description)
 {
     printf("LIBSPDM_ASSERT: %s(%zu): %s\n", file_name, line_number, description);
+
+    /* Flush so that the assertion is present in the log rather than lost with the buffer. */
+    fflush(NULL);
 
 #if (LIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG == LIBSPDM_DEBUG_LIBSPDM_ASSERT_DEADLOOP)
     {

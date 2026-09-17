@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -67,6 +67,9 @@ void libspdm_test_responder_finish_case1(void **State)
 
     spdm_test_context = *State;
 
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_finish_request_mine_t)) {
+        return;
+    }
     spdm_test_finish_request = (libspdm_finish_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_finish_request_size = spdm_test_context->test_buffer_size;
 
@@ -374,6 +377,9 @@ void libspdm_test_responder_finish_case8(void **State)
 
     spdm_test_context = *State;
 
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_finish_request_mine_t)) {
+        return;
+    }
     spdm_test_finish_request = (libspdm_finish_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_finish_request_size = spdm_test_context->test_buffer_size;
 

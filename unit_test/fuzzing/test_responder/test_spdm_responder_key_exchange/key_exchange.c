@@ -53,6 +53,9 @@ void libspdm_test_responder_key_exchange_case1(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_key_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_key_exchange_request =
         (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
@@ -125,6 +128,9 @@ void libspdm_test_responder_key_exchange_case2(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
 
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_key_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_key_exchange_request =
         (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
@@ -190,6 +196,9 @@ void libspdm_test_responder_key_exchange_case3(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_key_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_key_exchange_request =
         (const libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
@@ -249,6 +258,9 @@ void libspdm_test_responder_key_exchange_case4(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_key_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_key_exchange_request =
         (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
@@ -332,6 +344,9 @@ void libspdm_test_responder_key_exchange_case5(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_key_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_key_exchange_request =
         (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
@@ -407,6 +422,9 @@ void libspdm_test_responder_key_exchange_case6(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_key_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_key_exchange_request =
         (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
@@ -478,6 +496,9 @@ void libspdm_test_responder_key_exchange_case7(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_key_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_key_exchange_request =
         (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;
@@ -548,6 +569,9 @@ void libspdm_test_responder_key_exchange_case8(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_key_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_key_exchange_request =
         (libspdm_key_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_key_exchange_request_size = spdm_test_context->test_buffer_size;

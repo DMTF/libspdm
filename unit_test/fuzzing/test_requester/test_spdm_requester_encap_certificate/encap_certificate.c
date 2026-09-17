@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -38,6 +38,9 @@ void libspdm_test_requester_encap_certificate(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo =
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
 
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_get_certificate_request_t)) {
+        return;
+    }
     spdm_request = (spdm_get_certificate_request_t *)spdm_test_context->test_buffer;
     slot_id = spdm_request->header.param1;
 
