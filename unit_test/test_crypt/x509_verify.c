@@ -418,8 +418,13 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("\n  - Retrieving serial_number - [Fail]");
         goto cleanup;
     } else {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n  - Retrieving serial_number = %llu - ",
-                       *((uint64_t *)asn1_buffer)));
+        size_t index;
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n  - Retrieving serial_number = "));
+        for (index = 0; index < asn1_buffer_len; index++) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%02x", asn1_buffer[index]));
+        }
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, " - "));
         libspdm_my_print("[Pass]");
     }
 

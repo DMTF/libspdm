@@ -26,6 +26,14 @@
 #include "hal/library/eventlib.h"
 #include "hal/library/cryptlib.h"
 
+/* Redeclare libspdm_debug_print so that the compiler checks the core library's format
+ * strings against their arguments. The public declaration is left alone so that an
+ * Integrator's own debug implementation is not constrained. */
+#if LIBSPDM_DEBUG_PRINT_ENABLE && (defined(__GNUC__) || defined(__clang__))
+extern void libspdm_debug_print(size_t error_level, const char *format, ...)
+__attribute__((format(printf, 2, 3)));
+#endif
+
 #define INVALID_SESSION_ID LIBSPDM_INVALID_SESSION_ID
 /* The SPDM specification does not limit the values of CTExponent and RDTExponent.
  * libspdm artificially limits their values to 31, which corresponds to approximately 35 minutes

@@ -5511,7 +5511,7 @@ static void req_get_measurements_case35(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     /* Check that the size of the two buffers are the same (fill data + request + response) */
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, m_libspdm_local_buffer_size);
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%x):\n",
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%zx):\n",
                    m_libspdm_local_buffer_size));
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
     /* Check that the contents of the two buffers are the same (fill data, request, response) */
