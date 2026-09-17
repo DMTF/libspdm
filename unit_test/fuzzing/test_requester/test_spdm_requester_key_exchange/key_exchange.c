@@ -342,6 +342,7 @@ void libspdm_test_requester_key_exchange_case1(void **State)
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
 #endif
 }
 
@@ -422,6 +423,7 @@ void libspdm_test_requester_key_exchange_case2(void **State)
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
 #endif
 }
 
@@ -509,6 +511,7 @@ void libspdm_test_requester_key_exchange_case3(void **State)
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
 #endif
 }
 
@@ -602,6 +605,7 @@ void libspdm_test_requester_key_exchange_case4(void **State)
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
 #endif
 }
 
@@ -695,6 +699,7 @@ void libspdm_test_requester_key_exchange_case5(void **State)
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
 #endif
 }
 
@@ -780,6 +785,7 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
 #endif
 }
 

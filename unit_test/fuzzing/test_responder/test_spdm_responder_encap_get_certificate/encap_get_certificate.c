@@ -96,6 +96,7 @@ void libspdm_test_responder_encap_get_certificate_case1(void **State)
     #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
 #endif
 }
 
@@ -171,6 +172,7 @@ void libspdm_test_responder_encap_get_certificate_case2(void **State)
     #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
 #endif
 }
 
@@ -246,6 +248,7 @@ void libspdm_test_responder_encap_get_certificate_case3(void **State)
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
 #endif
 }
 

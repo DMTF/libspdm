@@ -175,6 +175,7 @@ void libspdm_test_requester_challenge_case1(void **State)
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
 #endif
 }
 
@@ -243,6 +244,7 @@ void libspdm_test_requester_challenge_ex_case1(void **State)
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
 #endif
 }
 libspdm_test_context_t m_libspdm_requester_challenge_test_context = {

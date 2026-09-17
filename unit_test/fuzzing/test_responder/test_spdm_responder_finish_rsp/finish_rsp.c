@@ -513,6 +513,7 @@ void libspdm_test_responder_finish_case8(void **State)
     libspdm_req_asym_free(
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
 #endif
     g_key_exchange_start_mut_auth = 0;
 }
