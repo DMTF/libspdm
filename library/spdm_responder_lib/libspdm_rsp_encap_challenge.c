@@ -218,7 +218,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         );
     ptr += measurement_summary_hash_size;
 
-    opaque_length = *(const uint16_t *)ptr;
+    opaque_length = libspdm_read_uint16(ptr);
     if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }

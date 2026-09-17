@@ -229,7 +229,7 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
         ptr += SPDM_NONCE_SIZE;
-        ep_info_data_len = *(const uint32_t *) ptr;
+        ep_info_data_len = libspdm_read_uint32(ptr);
 
         if (spdm_response_size !=
             sizeof(spdm_endpoint_info_response_t) + SPDM_NONCE_SIZE +
@@ -267,7 +267,7 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
 
         /* nonce and signature not present */
         ptr = (const uint8_t *)(spdm_response + 1);
-        ep_info_data_len = *(const uint32_t *) ptr;
+        ep_info_data_len = libspdm_read_uint32(ptr);
         if (spdm_response_size <
             sizeof(spdm_endpoint_info_response_t) + ep_info_data_len + sizeof(uint32_t)) {
             return LIBSPDM_STATUS_INVALID_MSG_SIZE;
