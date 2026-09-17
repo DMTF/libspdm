@@ -1403,8 +1403,10 @@ int libspdm_req_get_encapsulated_request_test(void)
         cmocka_unit_test(req_get_encapsulated_request_case8),
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (..) */
 
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
         /*Success Case ,func :libspdm_get_encap_response_key_update */
         cmocka_unit_test(req_get_encapsulated_request_case9),
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
         /*Error response: GET_ENCAPSULATED_REQUEST message is encapsulated */
         cmocka_unit_test(req_get_encapsulated_request_case10),
         cmocka_unit_test(req_get_encapsulated_request_case11),
