@@ -110,9 +110,9 @@ void libspdm_test_responder_encap_challenge_case1(void **State)
     free(data);
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     #else
-    free(spdm_context->transcript.digest_context_mut_m1m2);
     libspdm_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg,
                       spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
     #endif
 }
 

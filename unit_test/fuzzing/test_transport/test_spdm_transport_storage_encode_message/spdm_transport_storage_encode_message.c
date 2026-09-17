@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -16,6 +16,8 @@
  * `LIBSPDM_ASSERT() support.
  */
 #define USE_VAR(x) (void)(x)
+
+#define LIBSPDM_TEST_STORAGE_MESSAGE_SIZE 12
 
 libspdm_test_context_t m_libspdm_transport_storage_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
@@ -36,9 +38,10 @@ void libspdm_test_transport_storage_encode_message(void **state)
     bool is_app_message, is_request_message;
     libspdm_return_t ret;
 
-    if (m_libspdm_transport_storage_test_context.test_buffer_size <
-        sizeof(libspdm_storage_transport_virtual_header_t)) {
-        LIBSPDM_ASSERT(false);
+    if (spdm_test_context->test_buffer_size <
+        sizeof(libspdm_storage_transport_virtual_header_t) +
+        LIBSPDM_TEST_STORAGE_MESSAGE_SIZE) {
+        return;
     }
 
     /* Valid Parameters: SPDM Storage Message */
@@ -46,7 +49,7 @@ void libspdm_test_transport_storage_encode_message(void **state)
     transport_message = spdm_test_context->test_buffer;
     is_app_message = false;
     is_request_message = true;
-    message_size = 12;
+    message_size = LIBSPDM_TEST_STORAGE_MESSAGE_SIZE;
     message = (uint8_t *)transport_message + sizeof(libspdm_storage_transport_virtual_header_t);
 
     ret = libspdm_transport_storage_encode_message(state,
@@ -91,9 +94,8 @@ void libspdm_test_transport_storage_encode_management_cmd(void **state)
     uint8_t transport_operation;
     libspdm_return_t ret;
 
-    if (m_libspdm_transport_storage_test_context.test_buffer_size <
-        sizeof(libspdm_storage_transport_virtual_header_t)) {
-        LIBSPDM_ASSERT(false);
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_storage_transport_virtual_header_t)) {
+        return;
     }
 
     transport_message_size = LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE;
@@ -188,9 +190,8 @@ void libspdm_test_transport_storage_encode_discovery_response(void **state)
     void *transport_message;
     libspdm_return_t ret;
 
-    if (m_libspdm_transport_storage_test_context.test_buffer_size <
-        sizeof(spdm_storage_discovery_response_t)) {
-        LIBSPDM_ASSERT(false);
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_storage_discovery_response_t)) {
+        return;
     }
 
     transport_message_size = LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE;
@@ -231,9 +232,8 @@ void libspdm_test_transport_storage_encode_pending_resp(void **state)
     uint32_t pending_response_length;
     libspdm_return_t ret;
 
-    if (m_libspdm_transport_storage_test_context.test_buffer_size <
-        sizeof(spdm_storage_pending_info_response_t)) {
-        LIBSPDM_ASSERT(false);
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_storage_pending_info_response_t)) {
+        return;
     }
 
     /* Valid Parameters: Response Pending */
