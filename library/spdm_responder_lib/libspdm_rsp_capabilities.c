@@ -64,6 +64,8 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
     const uint8_t event_cap = (uint8_t)(capabilities_flag >> 25) & 0x01;
     const uint8_t multi_key_cap = (uint8_t)(capabilities_flag >> 26) & 0x03;
 
+    LIBSPDM_ASSERT(version >= SPDM_MESSAGE_VERSION_11);
+
     /* Checks common to 1.1 and higher */
     if (version >= SPDM_MESSAGE_VERSION_11) {
         /* Illegal to return reserved values. */
@@ -220,11 +222,13 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
             request_size = sizeof(spdm_message_header_t);
         }
     }
-    if (!libspdm_check_request_flag_compatibility(
-            spdm_request->flags, spdm_request->header.spdm_version)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+        if (!libspdm_check_request_flag_compatibility(
+                spdm_request->flags, spdm_request->header.spdm_version)) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
     }
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         if ((spdm_request->data_transfer_size < SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12) ||
@@ -460,8 +464,12 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
         spdm_context->connection_info.capability.ct_exponent = 0;
     }
 
-    spdm_context->connection_info.capability.flags =
-        libspdm_mask_capability_flags(spdm_context, true, spdm_request->flags);
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+        spdm_context->connection_info.capability.flags =
+            libspdm_mask_capability_flags(spdm_context, true, spdm_request->flags);
+    } else {
+        spdm_context->connection_info.capability.flags = 0;
+    }
 
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_context->connection_info.capability.data_transfer_size =
