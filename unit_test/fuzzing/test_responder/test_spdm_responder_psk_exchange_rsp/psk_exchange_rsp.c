@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -50,6 +50,9 @@ void libspdm_test_responder_psk_exchange_case1(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
 
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_psk_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_psk_exchange_request =
         (libspdm_psk_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_psk_exchange_request_size = spdm_test_context->test_buffer_size;
@@ -173,6 +176,9 @@ void libspdm_test_responder_psk_exchange_case3(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
 
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_psk_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_psk_exchange_request =
         (libspdm_psk_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_psk_exchange_request_size = spdm_test_context->test_buffer_size;
@@ -244,6 +250,9 @@ void libspdm_test_responder_psk_exchange_case4(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_psk_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_psk_exchange_request =
         (libspdm_psk_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_psk_exchange_request_size = spdm_test_context->test_buffer_size;
@@ -324,6 +333,9 @@ void libspdm_test_responder_psk_exchange_case5(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_psk_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_psk_exchange_request =
         (libspdm_psk_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_psk_exchange_request_size = spdm_test_context->test_buffer_size;
@@ -404,6 +416,9 @@ void libspdm_test_responder_psk_exchange_case6(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
 
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_psk_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_psk_exchange_request =
         (libspdm_psk_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_psk_exchange_request_size = spdm_test_context->test_buffer_size;
@@ -478,6 +493,9 @@ void libspdm_test_responder_psk_exchange_case7(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_test_context->test_buffer_size < sizeof(libspdm_psk_exchange_request_mine_t)) {
+        return;
+    }
     spdm_test_psk_exchange_request =
         (libspdm_psk_exchange_request_mine_t *)spdm_test_context->test_buffer;
     spdm_test_psk_exchange_request_size = spdm_test_context->test_buffer_size;

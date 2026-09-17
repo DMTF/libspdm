@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -72,6 +72,9 @@ void libspdm_test_responder_chunk_get_case1(void **State)
     libspdm_set_mem((uint8_t*) scratch_buffer + first_chunk_size + second_chunk_size,
                     third_chunk_size, 3);
 
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_chunk_get_request_t)) {
+        return;
+    }
     spdm_request = (spdm_chunk_get_request_t *)spdm_test_context->test_buffer;
 
     spdm_context->chunk_context.get.chunk_in_use = true;
@@ -279,6 +282,9 @@ void libspdm_test_responder_chunk_get_case4(void **State)
     libspdm_set_mem((uint8_t*) scratch_buffer + first_chunk_size + second_chunk_size,
                     third_chunk_size, 3);
 
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_chunk_get_request_t)) {
+        return;
+    }
     spdm_request = (spdm_chunk_get_request_t *)spdm_test_context->test_buffer;
 
     spdm_context->chunk_context.get.chunk_in_use = true;

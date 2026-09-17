@@ -702,7 +702,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     elseif(TOOLCHAIN STREQUAL "LIBFUZZER")
         set(CMAKE_C_COMPILER clang)
         # -O1 may cause fuzzing test buffer overflow, use -O0 as workaround
-        add_compile_options(-std=c99 -fshort-wchar -fno-strict-aliasing -Wall  -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common  -mno-red-zone -Wno-address -fpie -fno-asynchronous-unwind-tables -DUSING_LTO  -DTEST_WITH_LIBFUZZER=TRUE -O0 -fsanitize=fuzzer,address -Werror-implicit-function-declaration)
+        # ASSERT_CONFIG=EXIT because the default deadloops, which under a fuzzer pins a core
+        # until the timeout and reports a hang instead of the assertion that fired.
+        add_compile_options(-std=c99 -fshort-wchar -fno-strict-aliasing -Wall  -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common  -mno-red-zone -Wno-address -fpie -fno-asynchronous-unwind-tables -DUSING_LTO  -DTEST_WITH_LIBFUZZER=TRUE -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=3 -O0 -fsanitize=fuzzer,address -Werror-implicit-function-declaration)
         if(CMAKE_BUILD_TYPE STREQUAL "Debug")
            add_compile_options(-g)
         endif()

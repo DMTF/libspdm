@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -47,6 +47,9 @@ void libspdm_test_responder_measurements_case1(void **State)
     response_size = sizeof(response);
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_get_measurements_request_t)) {
+        return;
+    }
     spdm_request = (spdm_get_measurements_request_t * )spdm_test_context->test_buffer;
     if ((spdm_request->header.param1 &
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
@@ -92,6 +95,9 @@ void libspdm_test_responder_measurements_case2(void **State)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_get_measurements_request_t)) {
+        return;
+    }
     spdm_request = (spdm_get_measurements_request_t * )spdm_test_context->test_buffer;
     if ((spdm_request->header.param1 &
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
@@ -140,6 +146,9 @@ void libspdm_test_responder_measurements_case3(void **State)
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
     free(data);
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_get_measurements_request_t)) {
+        return;
+    }
     spdm_request = (spdm_get_measurements_request_t * )spdm_test_context->test_buffer;
     if ((spdm_request->header.param1 &
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
@@ -201,6 +210,9 @@ void libspdm_test_responder_measurements_case4(void **State)
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
     free(data);
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_get_measurements_request_t)) {
+        return;
+    }
     spdm_request = (spdm_get_measurements_request_t * )spdm_test_context->test_buffer;
     if ((spdm_request->header.param1 &
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
@@ -235,6 +247,9 @@ void libspdm_test_responder_measurements_case5(void **State)
     response_size = sizeof(response);
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
+    if (spdm_test_context->test_buffer_size < sizeof(spdm_get_measurements_request_t)) {
+        return;
+    }
     spdm_request = (spdm_get_measurements_request_t * )spdm_test_context->test_buffer;
     if ((spdm_request->header.param1 &
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
