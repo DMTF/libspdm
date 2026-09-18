@@ -159,6 +159,17 @@ typedef struct {
     /* Sticky: set once a non-GET_DIGESTS request is processed after NEGOTIATED. A DIGESTS is added
      * to message_d only when this is false (DIGESTS immediately follows the VCA). */
     bool digest_transcript_window_closed;
+
+    /* State of the certificate chain retrieval whose GET_CERTIFICATE / CERTIFICATE messages are
+     * currently recorded in message_b. It allows the next portion of that retrieval to be
+     * distinguished from a GET_CERTIFICATE that abandons and restarts it. */
+    bool cert_retrieval_in_progress;
+    uint8_t cert_retrieval_slot_id;
+    uint32_t cert_retrieval_next_offset;
+
+    /* Set by libspdm_detect_cert_retrieval_restart and consumed by
+     * libspdm_reset_message_buffer_via_request_code. */
+    bool cert_retrieval_restart;
 } libspdm_connection_info_t;
 
 typedef struct {
@@ -942,6 +953,34 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
  */
 void libspdm_reset_message_buffer_via_encap_request_code(void *context, void *session_info,
                                                          uint8_t request_code);
+
+/**
+ * Determine whether an incoming or outgoing GET_CERTIFICATE continues the certificate chain
+ * retrieval that is currently recorded in message_b, or whether it abandons and restarts it.
+ *
+ * The result is consumed by the SPDM_GET_CERTIFICATE case of
+ * libspdm_reset_message_buffer_via_request_code, which must be called immediately afterwards.
+ * Both endpoints derive the same result from the same wire information, so message_b stays
+ * synchronized between the Requester and the Responder.
+ *
+ * @param  spdm_context                   A pointer to the SPDM context.
+ * @param  slot_id                        The slot number in the GET_CERTIFICATE request.
+ * @param  offset                         The offset in the GET_CERTIFICATE request.
+ */
+void libspdm_detect_cert_retrieval_restart(libspdm_context_t *spdm_context, uint8_t slot_id,
+                                           uint32_t offset);
+
+/**
+ * Record the certificate chain retrieval that message_b holds after a GET_CERTIFICATE /
+ * CERTIFICATE pair has been added to it.
+ *
+ * @param  spdm_context                   A pointer to the SPDM context.
+ * @param  slot_id                        The slot number of the retrieval.
+ * @param  next_offset                    The offset that the next portion of the retrieval uses.
+ * @param  in_progress                    False when the retrieval is complete.
+ */
+void libspdm_update_cert_retrieval_state(libspdm_context_t *spdm_context, uint8_t slot_id,
+                                         uint32_t next_offset, bool in_progress);
 
 /**
  * This function initializes the session info.
