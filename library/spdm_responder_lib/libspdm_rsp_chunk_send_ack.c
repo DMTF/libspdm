@@ -258,21 +258,33 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
         send_info->large_message_capacity = 0;
     } else if (send_info->chunk_bytes_transferred == send_info->large_message_size) {
         uint8_t opcode;
+        uint8_t reject_error_code = 0;
 
         opcode = ((spdm_message_header_t*)send_info->large_message)->request_response_code;
         libspdm_get_spdm_response_func response_func =
             libspdm_get_response_func_via_request_code(opcode);
 
-        if ((response_func != NULL) &&
-            (opcode != SPDM_CHUNK_SEND) && (opcode != SPDM_CHUNK_GET)) {
-            status = response_func(
-                spdm_context,
-                send_info->large_message_size, send_info->large_message,
-                &chunk_response_size, chunk_response);
-        } else {
+        if ((response_func == NULL) ||
+            (opcode == SPDM_CHUNK_SEND) || (opcode == SPDM_CHUNK_GET)) {
             status = LIBSPDM_STATUS_SUCCESS;
             libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                &chunk_response_size, chunk_response);
+        } else if (libspdm_is_request_out_of_order(
+                       spdm_context,
+                       spdm_context->last_spdm_request_session_id_valid ?
+                       &spdm_context->last_spdm_request_session_id : NULL,
+                       opcode, &reject_error_code)) {
+            /* libspdm_build_response() saw CHUNK_SEND, so the ordering checks are applied
+             * here to the assembled request. */
+            status = LIBSPDM_STATUS_SUCCESS;
+            libspdm_generate_error_response(
+                spdm_context, reject_error_code, 0,
+                &chunk_response_size, chunk_response);
+        } else {
+            status = response_func(
+                spdm_context,
+                send_info->large_message_size, send_info->large_message,
                 &chunk_response_size, chunk_response);
         }
 
