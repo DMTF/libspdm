@@ -17,6 +17,8 @@
  * read the key pair info of the key_pair_id.
  *
  * @param  spdm_context               A pointer to the SPDM context.
+ * @param  session_id                 Indicates the session in which the request was received.
+ *                                    If NULL then the request was not received in a session.
  * @param  key_pair_id                Indicate which key pair ID's information to retrieve.
  *
  * @param  total_key_pairs            Indicate the total number of key pairs on the Responder.
@@ -45,6 +47,7 @@
  **/
 extern bool libspdm_read_key_pair_info(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t key_pair_id,
     uint8_t *total_key_pairs,
     uint16_t *capabilities,
@@ -64,6 +67,8 @@ extern bool libspdm_read_key_pair_info(
  * write the key pair info of the key_pair_id.
  *
  * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  session_id                   Indicates the session in which the request was received.
+ *                                      If NULL then the request was not received in a session.
  * @param  key_pair_id                  Indicate which key pair ID's information to retrieve.
  *
  * @param  key_pair_id                  Indicate which key pair ID's information to retrieve.
@@ -82,6 +87,7 @@ extern bool libspdm_read_key_pair_info(
  **/
 extern bool libspdm_write_key_pair_info(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t key_pair_id,
     uint8_t operation,
     uint16_t desired_key_usage,

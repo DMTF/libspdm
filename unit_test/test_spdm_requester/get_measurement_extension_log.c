@@ -200,7 +200,7 @@ static libspdm_return_t receive_message(
         m_libspdm_mel_len = 0;
 
         libspdm_measurement_extension_log_collection(
-            spdm_context,
+            spdm_context, NULL,
             m_libspdm_use_mel_spec,
             m_libspdm_use_measurement_spec,
             m_libspdm_use_measurement_hash_algo,

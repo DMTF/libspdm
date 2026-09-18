@@ -174,6 +174,8 @@ extern bool libspdm_generate_measurement_summary_hash(
  * Collect the measurement extension log.
  *
  * @param  spdm_context               A pointer to the SPDM context.
+ * @param  session_id                 Indicates the session in which the request was received.
+ *                                    If NULL then the request was not received in a session.
  * @param  mel_specification          Indicates the measurement extension log specification.
  * @param  measurement_specification  Indicates the measurement specification.
  *                                    It must align with measurement_specification.
@@ -188,6 +190,7 @@ extern bool libspdm_generate_measurement_summary_hash(
  **/
 extern bool libspdm_measurement_extension_log_collection(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t mel_specification,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,

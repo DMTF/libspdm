@@ -1128,7 +1128,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
 
     /* Out-of-range slot id. */
     tmp_cert_size = cert_chain_a_size;
-    assert_false(libspdm_update_local_cert_chain(spdm_context, SPDM_MAX_SLOT_COUNT,
+    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, SPDM_MAX_SLOT_COUNT,
                                                  m_libspdm_use_hash_algo,
                                                  m_libspdm_use_asym_algo,
                                                  0,
@@ -1139,7 +1139,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
                                                  NULL, NULL));
     /* cert_chain_size smaller than the spdm_cert_chain_t header + root hash. */
     tmp_cert_size = sizeof(spdm_cert_chain_t) + hash_size - 1;
-    assert_false(libspdm_update_local_cert_chain(spdm_context, 0,
+    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0,
                                                  m_libspdm_use_hash_algo,
                                                  m_libspdm_use_asym_algo,
                                                  0,
@@ -1151,7 +1151,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
                                                  NULL, NULL));
     /* Unsupported cert_model. */
     tmp_cert_size = cert_chain_a_size;
-    assert_false(libspdm_update_local_cert_chain(spdm_context, 0,
+    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0,
                                                  m_libspdm_use_hash_algo,
                                                  m_libspdm_use_asym_algo,
                                                  0,
@@ -1165,7 +1165,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
 
     /* Device Cert, empty slot*/
     tmp_cert_size = cert_chain_a_size;
-    assert_true(libspdm_update_local_cert_chain(spdm_context, 0,
+    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0,
                                                 m_libspdm_use_hash_algo,
                                                 m_libspdm_use_asym_algo,
                                                 0,
@@ -1186,7 +1186,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
 
     /* Device Cert, replace chain*/
     tmp_cert_size = cert_chain_b_size;
-    assert_true(libspdm_update_local_cert_chain(spdm_context, 0,
+    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0,
                                                 m_libspdm_use_hash_algo,
                                                 m_libspdm_use_asym_algo,
                                                 0,
@@ -1219,7 +1219,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
                     &alias_chain, &alias_chain_size, NULL, NULL));
 
     tmp_cert_size = alias_chain_size;
-    assert_true(libspdm_update_local_cert_chain(spdm_context, 0,
+    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0,
                                                 m_libspdm_use_hash_algo,
                                                 m_libspdm_use_asym_algo,
                                                 0,

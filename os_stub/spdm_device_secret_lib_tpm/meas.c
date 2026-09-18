@@ -790,6 +790,7 @@ bool libspdm_generate_measurement_summary_hash(
 /*Collect the measurement extension log.*/
 bool libspdm_measurement_extension_log_collection(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t mel_specification,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,

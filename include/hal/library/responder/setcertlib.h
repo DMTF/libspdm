@@ -16,11 +16,13 @@
  * return if current code is running in a trusted environment.
  *
  * @param[in]  spdm_context  A pointer to the SPDM context.
+ * @param[in]  session_id    Indicates the session in which the request was received.
+ *                           If NULL then the request was not received in a session.
  *
  * @retval  true   It is in a trusted environment.
  * @retval  false  It is not in a trusted environment.
  **/
-extern bool libspdm_is_in_trusted_environment(void *spdm_context);
+extern bool libspdm_is_in_trusted_environment(void *spdm_context, const uint32_t *session_id);
 
 /**
  * Get the size of storage space for a certificate chain in a specific slot.
@@ -62,6 +64,8 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
  * with the existing ones that aren't changed.
  *
  * @param[in,out]  spdm_context     A pointer to the SPDM context.
+ * @param[in]      session_id       Indicates the session in which the request was received.
+ *                                  If NULL then the request was not received in a session.
  * @param[in]      slot_id          The slot id of the certificate chain.
  * @param[in]      base_hash_algo   The negotiated base hash algorithm
  *                                  (SPDM_ALGORITHMS_BASE_HASH_ALGO_*). May be
@@ -103,6 +107,7 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
  **/
 extern bool libspdm_update_local_cert_chain(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t slot_id,
     uint32_t base_hash_algo,
     uint32_t base_asym_algo,

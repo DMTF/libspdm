@@ -416,6 +416,7 @@ uint8_t libspdm_get_key_pair_id_by_slot(uint32_t base_asym_algo, uint32_t pqc_as
  **/
 bool libspdm_read_key_pair_info(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t key_pair_id,
     uint8_t *total_key_pairs,
     uint16_t *capabilities,
@@ -507,6 +508,7 @@ bool libspdm_cache_last_set_key_pair_info_request(const uint8_t *last_set_key_pa
 
 bool libspdm_write_key_pair_info(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t key_pair_id,
     uint8_t operation,
     uint16_t desired_key_usage,

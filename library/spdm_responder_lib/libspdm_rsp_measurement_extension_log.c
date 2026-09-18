@@ -21,6 +21,7 @@ libspdm_return_t libspdm_get_response_measurement_extension_log(libspdm_context_
     size_t remainder_length;
     size_t response_capacity;
     libspdm_session_info_t *session_info;
+    const uint32_t *session_id;
     libspdm_session_state_t session_state;
     spdm_measurement_extension_log_dmtf_t *spdm_mel;
     size_t spdm_mel_len;
@@ -56,7 +57,9 @@ libspdm_return_t libspdm_get_response_measurement_extension_log(libspdm_context_
     }
 
     session_info = NULL;
+    session_id = NULL;
     if (spdm_context->last_spdm_request_session_id_valid) {
+        session_id = &spdm_context->last_spdm_request_session_id;
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context,
             spdm_context->last_spdm_request_session_id);
@@ -114,6 +117,7 @@ libspdm_return_t libspdm_get_response_measurement_extension_log(libspdm_context_
     spdm_mel_len = 0;
     if (!libspdm_measurement_extension_log_collection(
             spdm_context,
+            session_id,
             spdm_context->connection_info.algorithm.mel_spec,
             spdm_context->connection_info.algorithm.measurement_spec,
             spdm_context->connection_info.algorithm.measurement_hash_algo,

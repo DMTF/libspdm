@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2022-2023 DMTF. All rights reserved.
+ *  Copyright 2022-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #ifndef REQUESTER_WATCHDOGLIB_H
@@ -13,24 +13,27 @@
 /**
  * Start the watchdog timer for a given session ID.
  *
- * @param  session_id  Indicate the SPDM session ID.
- * @param  timeout     Timeout value, in units of seconds.
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  session_id    Indicate the SPDM session ID.
+ * @param  timeout       Timeout value, in units of seconds.
  **/
-extern bool libspdm_start_watchdog(uint32_t session_id, uint16_t timeout);
+extern bool libspdm_start_watchdog(void *spdm_context, uint32_t session_id, uint16_t timeout);
 
 /**
  * Stop the watchdog timer for a given session ID.
  *
- * @param  session_id Indicate the SPDM session ID.
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  session_id    Indicate the SPDM session ID.
  **/
-extern bool libspdm_stop_watchdog(uint32_t session_id);
+extern bool libspdm_stop_watchdog(void *spdm_context, uint32_t session_id);
 
 /**
  * Reset the watchdog time for a given session ID.
  *
- * @param  session_id  Indicate the SPDM session ID.
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  session_id    Indicate the SPDM session ID.
  **/
-extern bool libspdm_reset_watchdog(uint32_t session_id);
+extern bool libspdm_reset_watchdog(void *spdm_context, uint32_t session_id);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
 
 #endif /* REQUESTER_WATCHDOGLIB_H */
