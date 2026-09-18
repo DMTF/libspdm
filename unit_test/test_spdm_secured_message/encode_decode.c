@@ -897,6 +897,65 @@ static void libspdm_test_secured_message_encode_case12(void **state)
                      decode_secured_message_context.application_secret.request_data_sequence_number);
 }
 
+/**
+ * Test 13: A peer-crafted ENC_MAC record whose decrypted application_data_length equals
+ *          cipher_text_size leaves no room for the 2-byte cipher header, so the reported
+ *          payload would run past the decrypted plaintext. Decoding must reject it.
+ **/
+static void libspdm_test_secured_message_encode_case13(void **state)
+{
+    libspdm_return_t status;
+    bool result;
+    size_t app_message_size = sizeof(m_app_message);
+    void *app_message = m_app_message;
+    const uint32_t session_id = 0x00112233;
+    const size_t record_header_size = 4 + PARTIAL_SEQ_NUM_SIZE + 2;
+    const size_t cipher_text_size = 48;
+    const size_t tag_size = 16;
+    uint8_t plain_text[48];
+    uint8_t iv[LIBSPDM_MAX_AEAD_IV_SIZE];
+    size_t cipher_out_size = cipher_text_size;
+
+    initialize_secured_message_context();
+    m_secured_message_context.sequence_number_endian =
+        LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE;
+
+    /* Forge a plaintext whose length field claims the entire ciphertext as payload,
+     * leaving no room for the cipher header. */
+    libspdm_zero_mem(plain_text, sizeof(plain_text));
+    libspdm_write_uint16(plain_text, (uint16_t)cipher_text_size);
+
+    /* Build the record header, which also serves as the AEAD additional data. */
+    libspdm_zero_mem(m_secured_message, sizeof(m_secured_message));
+    libspdm_write_uint32(m_secured_message, session_id);
+    libspdm_write_uint16(m_secured_message + record_header_size - 2,
+                         (uint16_t)(cipher_text_size + tag_size));
+
+    /* Sequence number zero means the IV is just the salt. */
+    libspdm_zero_mem(iv, sizeof(iv));
+    libspdm_copy_mem(iv, sizeof(iv),
+                     m_secured_message_context.application_secret.request_data_salt,
+                     m_secured_message_context.aead_iv_size);
+
+    result = libspdm_aead_encryption(
+        m_secured_message_context.secured_message_version,
+        m_secured_message_context.aead_cipher_suite,
+        m_secured_message_context.application_secret.request_data_encryption_key,
+        m_secured_message_context.aead_key_size, iv,
+        m_secured_message_context.aead_iv_size, m_secured_message, record_header_size,
+        plain_text, cipher_text_size,
+        m_secured_message + record_header_size + cipher_text_size, tag_size,
+        m_secured_message + record_header_size, &cipher_out_size);
+    assert_true(result);
+
+    status = libspdm_decode_secured_message(
+        &m_secured_message_context, session_id, true,
+        record_header_size + cipher_text_size + tag_size, m_secured_message,
+        &app_message_size, &app_message, &m_secured_message_callbacks);
+
+    assert_int_equal(LIBSPDM_STATUS_INVALID_MSG_SIZE, status);
+}
+
 libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -919,6 +978,7 @@ int libspdm_secured_message_encode_decode_test_main(void)
         cmocka_unit_test(libspdm_test_secured_message_encode_case10),
         cmocka_unit_test(libspdm_test_secured_message_encode_case11),
         cmocka_unit_test(libspdm_test_secured_message_encode_case12),
+        cmocka_unit_test(libspdm_test_secured_message_encode_case13),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);
