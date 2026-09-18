@@ -49,6 +49,7 @@ set(GCOV ${GCOV} CACHE STRING "Choose the target of Gcov: ON  OFF, and default i
 set(STACK_USAGE ${STACK_USAGE} CACHE STRING "Choose the target of STACK_USAGE: ON  OFF, and default is OFF" FORCE)
 set(BUILD_LINUX_SHARED_LIB ${BUILD_LINUX_SHARED_LIB} CACHE STRING "Choose if libspdm shared library should be built for linux: ON OFF, and default is OFF" FORCE)
 set(X509_IGNORE_CRITICAL ${X509_IGNORE_CRITICAL} CACHE STRING "Choose if libspdm-provided cryptography libraries (OpenSSL and MbedTLS) ignore unsupported critical extensions in certificates : ON OFF, and default is OFF" FORCE)
+set(X509_IGNORE_TIME ${X509_IGNORE_TIME} CACHE STRING "Choose if libspdm-provided cryptography libraries (OpenSSL and MbedTLS) ignore the validity period of certificates : ON OFF, and default is OFF" FORCE)
 set(DEVICE ${DEVICE} CACHE STRING "Choose the test device: sample tpm, and default is sample" FORCE)
 
 option(LIBSPDM_TPM_SUPPORT "Add TPM support in crypt_ext" OFF)
@@ -67,6 +68,10 @@ endif()
 
 if(NOT X509_IGNORE_CRITICAL)
     set(X509_IGNORE_CRITICAL "OFF")
+endif()
+
+if(NOT X509_IGNORE_TIME)
+    set(X509_IGNORE_TIME "OFF")
 endif()
 
 if (NOT DEVICE)
@@ -252,6 +257,14 @@ if (X509_IGNORE_CRITICAL STREQUAL "ON")
         add_definitions(-DOPENSSL_IGNORE_CRITICAL=1)
     elseif(CRYPTO STREQUAL "mbedtls")
         add_definitions(-DLIBSPDM_MBEDTLS_X509_ALLOW_UNSUPPORTED_CRITICAL_EXTENSION)
+    endif()
+endif()
+
+if (X509_IGNORE_TIME STREQUAL "ON")
+    if (CRYPTO STREQUAL "openssl")
+        add_definitions(-DOPENSSL_IGNORE_TIME=1)
+    elseif(CRYPTO STREQUAL "mbedtls")
+        add_definitions(-DLIBSPDM_MBEDTLS_X509_IGNORE_TIME)
     endif()
 endif()
 

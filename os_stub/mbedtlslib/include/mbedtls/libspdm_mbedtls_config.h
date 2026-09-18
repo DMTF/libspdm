@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -157,7 +157,9 @@
  * mbedtls_platform_gmtime_r() at compile-time by using the macro
  * MBEDTLS_PLATFORM_GMTIME_R_ALT.
  */
+#if !defined(LIBSPDM_MBEDTLS_X509_IGNORE_TIME)
 #define MBEDTLS_HAVE_TIME_DATE
+#endif
 
 /**
  * \def MBEDTLS_PLATFORM_MEMORY

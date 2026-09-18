@@ -93,6 +93,11 @@ bool libspdm_cryptest_main(void)
         return status;
     }
 
+    status = libspdm_validate_crypt_x509_expiration();
+    if (!status) {
+        return status;
+    }
+
     #if LIBSPDM_EDDSA_ED25519_SUPPORT
     status = libspdm_validate_crypt_x509("ed25519", sizeof("ed25519"));
     if (!status) {
