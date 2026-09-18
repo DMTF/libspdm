@@ -93,6 +93,7 @@ bool libspdm_validate_crypt_rsa_2(void);
  *
  **/
 bool libspdm_validate_crypt_x509(char *Path, size_t len);
+bool libspdm_validate_crypt_x509_expiration(void);
 
 /**
  * Validate Crypto DH Interfaces.

@@ -3,6 +3,7 @@
  *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
+#include <time.h>
 #include "test_crypt.h"
 #include "industry_standard/spdm.h"
 #include "internal/libspdm_device_secret_lib.h"
@@ -662,4 +663,105 @@ void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size)
     for (index = 0; index < buffer_size; index++) {
         printf("%02x", buffer[index]);
     }
+}
+
+/**
+ * The certificates in rsa3072_Expiration are generated with a one day validity period, so
+ * whether they are currently expired depends on when they were generated rather than on
+ * anything fixed. Derive the expected result from the certificate instead of assuming it
+ * has expired.
+ **/
+bool libspdm_validate_crypt_x509_expiration(void)
+{
+    bool status;
+    bool expected;
+    bool result;
+    bool in_validity_period;
+    uint8_t *ca_cert;
+    size_t ca_cert_len;
+    uint8_t *inter_cert;
+    size_t inter_cert_len;
+    uint8_t cert_from[64];
+    size_t cert_from_len;
+    uint8_t cert_to[64];
+    size_t cert_to_len;
+    uint8_t now[64];
+    size_t now_len;
+    char now_str[16];
+    time_t now_time;
+    struct tm *now_tm;
+
+    ca_cert = NULL;
+    inter_cert = NULL;
+    result = false;
+
+    libspdm_my_print("\n- X509 Expired Certificate Verification ... ");
+
+    status = libspdm_read_input_file("rsa3072_Expiration/ca.cert.der",
+                                     (void **)&ca_cert, &ca_cert_len);
+    if (!status) {
+        goto cleanup;
+    }
+
+    status = libspdm_read_input_file("rsa3072_Expiration/inter.cert.der",
+                                     (void **)&inter_cert, &inter_cert_len);
+    if (!status) {
+        goto cleanup;
+    }
+
+    cert_from_len = sizeof(cert_from);
+    cert_to_len = sizeof(cert_to);
+    status = libspdm_x509_get_validity(inter_cert, inter_cert_len, cert_from, &cert_from_len,
+                                       cert_to, &cert_to_len);
+    if (!status) {
+        goto cleanup;
+    }
+
+    now_time = time(NULL);
+    now_tm = gmtime(&now_time);
+    if (now_tm == NULL) {
+        goto cleanup;
+    }
+    if (strftime(now_str, sizeof(now_str), "%Y%m%d%H%M%SZ", now_tm) == 0) {
+        goto cleanup;
+    }
+
+    now_len = sizeof(now);
+    status = libspdm_x509_set_date_time(now_str, now, &now_len);
+    if (!status) {
+        goto cleanup;
+    }
+
+    in_validity_period = (libspdm_x509_compare_date_time(now, cert_from) >= 0) &&
+                         (libspdm_x509_compare_date_time(now, cert_to) <= 0);
+
+#if defined(OPENSSL_IGNORE_TIME) || defined(LIBSPDM_MBEDTLS_X509_IGNORE_TIME)
+    /* The build opted out of checking validity periods. */
+    expected = true;
+#else
+    expected = in_validity_period;
+#endif
+
+    status = libspdm_x509_verify_cert(inter_cert, inter_cert_len, ca_cert, ca_cert_len);
+    if (status != expected) {
+        libspdm_my_print("[Fail]\n");
+        goto cleanup;
+    }
+
+    if (in_validity_period) {
+        libspdm_my_print("[Pass - certificate has not expired, nothing distinguished]\n");
+    } else {
+        libspdm_my_print("[Pass]\n");
+    }
+    result = true;
+
+cleanup:
+    if (ca_cert != NULL) {
+        free(ca_cert);
+    }
+    if (inter_cert != NULL) {
+        free(inter_cert);
+    }
+
+    return result;
 }

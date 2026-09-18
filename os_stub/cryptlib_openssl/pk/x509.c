@@ -1902,7 +1902,7 @@ bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
     X509_STORE_set_flags(cert_store, X509_V_FLAG_IGNORE_CRITICAL);
 #endif
 
-#ifndef OPENSSL_CHECK_TIME
+#if OPENSSL_IGNORE_TIME
     X509_STORE_set_flags(cert_store, X509_V_FLAG_NO_CHECK_TIME);
 #endif
 
