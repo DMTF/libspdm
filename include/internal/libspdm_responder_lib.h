@@ -965,4 +965,22 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
                                                     void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
 
+/**
+ * Determine whether a request is out of order for the mutual authentication and encapsulated
+ * flows.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  session_id    The session the request arrived on, or NULL if outside of a session.
+ * @param  request_code  The request code to check. For a large request delivered by CHUNK_SEND
+ *                       this is the assembled request rather than CHUNK_SEND itself.
+ * @param  error_code    On return, the SPDM error code to respond with.
+ *
+ * @retval true   The request is out of order and error_code has been set.
+ * @retval false  The request may be dispatched.
+ **/
+bool libspdm_is_request_out_of_order(libspdm_context_t *spdm_context,
+                                     const uint32_t *session_id,
+                                     uint8_t request_code,
+                                     uint8_t *error_code);
+
 #endif /* SPDM_RESPONDER_LIB_INTERNAL_H */
