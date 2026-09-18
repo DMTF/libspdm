@@ -665,9 +665,13 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
                         break;
                     }
                 }
-                /* Outside of a session GET_VERSION is also legal, as it resets the connection. */
+                /* Outside of a session GET_VERSION is also legal, as it resets the connection.
+                 * The chunk transfer messages are also legal, as they deliver the response that
+                 * started the flow. */
                 if ((expected_code != 0) &&
                     (spdm_request->request_response_code != expected_code) &&
+                    (spdm_request->request_response_code != SPDM_CHUNK_GET) &&
+                    (spdm_request->request_response_code != SPDM_CHUNK_SEND) &&
                     ((session_id != NULL) ||
                      (spdm_request->request_response_code != SPDM_GET_VERSION))) {
                     status = libspdm_generate_error_response(
@@ -682,11 +686,14 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
              * authentication in its CHALLENGE_AUTH response, the next request from the Requester
              * must be GET_ENCAPSULATED_REQUEST. The flow has not yet issued an encapsulated
              * request while last_encap_request_size is 0. GET_VERSION is excluded because it
-             * resets the connection. */
+             * resets the connection, and the chunk transfer messages are excluded because a
+             * large CHALLENGE_AUTH is delivered by CHUNK_GET. */
             if ((session_id == NULL) &&
                 (context->encap_context.flow_type == LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH) &&
                 (context->encap_context.last_encap_request_size == 0) &&
                 (spdm_request->request_response_code != SPDM_GET_ENCAPSULATED_REQUEST) &&
+                (spdm_request->request_response_code != SPDM_CHUNK_GET) &&
+                (spdm_request->request_response_code != SPDM_CHUNK_SEND) &&
                 (spdm_request->request_response_code != SPDM_GET_VERSION)) {
                 status = libspdm_generate_error_response(
                     context, SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,

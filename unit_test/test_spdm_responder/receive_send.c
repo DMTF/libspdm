@@ -1238,6 +1238,101 @@ static void libspdm_test_responder_receive_send_rsp_case13(void **state)
     libspdm_release_sender_buffer(spdm_context);
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+
+#define RECEIVE_SEND_CHUNK_DATA_TRANSFER_SIZE 0x100
+
+/**
+ * Test 23: Basic mutual authentication enforcement must not reject the chunk transfer messages.
+ * When CHALLENGE_AUTH is larger than the Requester's DataTransferSize it is delivered with
+ * ERROR(LargeResponse) followed by CHUNK_GET, so the Requester cannot issue
+ * GET_ENCAPSULATED_REQUEST until that chunked transfer has completed. Rejecting CHUNK_GET would
+ * deadlock the connection, as the Requester can neither retrieve CHALLENGE_AUTH nor advance the
+ * flow.
+ * Expected behavior: CHUNK_GET reaches the chunk handler and returns CHUNK_RESPONSE, and the
+ * encapsulated flow is still pending.
+ **/
+static void libspdm_test_responder_receive_send_rsp_case23(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_chunk_get_request_t spdm_request;
+    spdm_message_header_t *spdm_response;
+    void *message;
+    size_t message_size;
+    uint8_t *response;
+    size_t response_size;
+    uint32_t transport_header_size;
+    void *scratch_buffer;
+    size_t scratch_buffer_size;
+    uint8_t chunk_handle;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 23;
+    set_basic_mut_auth_state(spdm_context);
+
+    /* The chunk transfer mechanism was introduced in SPDM 1.2. */
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.data_transfer_size =
+        RECEIVE_SEND_CHUNK_DATA_TRANSFER_SIZE;
+    spdm_context->local_context.capability.sender_data_transfer_size =
+        RECEIVE_SEND_CHUNK_DATA_TRANSFER_SIZE;
+
+    /* A large CHALLENGE_AUTH is waiting to be retrieved with CHUNK_GET. */
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+    scratch_buffer = (uint8_t *)scratch_buffer +
+                     libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    scratch_buffer_size = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
+    libspdm_zero_mem(scratch_buffer, scratch_buffer_size);
+
+    chunk_handle = (uint8_t)spdm_test_context->case_id;
+    spdm_context->chunk_context.get.chunk_in_use = true;
+    spdm_context->chunk_context.get.chunk_handle = chunk_handle;
+    spdm_context->chunk_context.get.chunk_seq_no = 0;
+    spdm_context->chunk_context.get.chunk_bytes_transferred = 0;
+    spdm_context->chunk_context.get.large_message = scratch_buffer;
+    spdm_context->chunk_context.get.large_message_size = scratch_buffer_size;
+    spdm_context->chunk_context.get.large_message_capacity = scratch_buffer_size;
+
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_request.header.request_response_code = SPDM_CHUNK_GET;
+    spdm_request.header.param1 = 0;
+    spdm_request.header.param2 = chunk_handle;
+    spdm_request.chunk_seq_no = 0;
+    libspdm_copy_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
+                     &spdm_request, sizeof(spdm_request));
+    spdm_context->last_spdm_request_size = sizeof(spdm_request);
+
+    libspdm_acquire_sender_buffer(spdm_context, &message_size, (void **)&message);
+    response = message;
+    response_size = message_size;
+    libspdm_zero_mem(response, response_size);
+
+    status = libspdm_build_response(spdm_context, NULL, false, &response_size, (void **)&response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
+    spdm_response = (spdm_message_header_t *)((uint8_t *)message + transport_header_size);
+
+    /* The chunked transfer proceeds instead of being rejected as an out-of-order request. */
+    assert_int_equal(spdm_response->request_response_code, SPDM_CHUNK_RESPONSE);
+
+    /* The flow is still pending, so GET_ENCAPSULATED_REQUEST is still required next. */
+    assert_int_equal(spdm_context->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH);
+
+    libspdm_release_sender_buffer(spdm_context);
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+
 /* Minimal handler: ends the flow as soon as libspdm asks for a request. Registered because
  * ENCAP_CAP requires a handler; the tests below are about which requests reach libspdm at all. */
 static libspdm_return_t receive_send_encap_handler(
@@ -2080,6 +2175,11 @@ int libspdm_rsp_receive_send_test(void)
         /* basic mutual auth enforcement: GET_VERSION is not rejected */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case13,
                                libspdm_unit_test_reset_context),
+        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+        /* basic mutual auth enforcement: the chunk transfer messages are not rejected */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case23,
+                               libspdm_unit_test_reset_context),
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
         #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* ResponseNotReady outstanding: only GET_ENCAPSULATED_REQUEST or GET_VERSION */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case14,
