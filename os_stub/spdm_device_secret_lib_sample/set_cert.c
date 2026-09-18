@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -29,7 +29,7 @@ bool g_in_trusted_environment = false;
 bool g_set_cert_is_busy = false;
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
-bool libspdm_is_in_trusted_environment(void *spdm_context)
+bool libspdm_is_in_trusted_environment(void *spdm_context, const uint32_t *session_id)
 {
     return g_in_trusted_environment;
 }
@@ -112,6 +112,7 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
 
 bool libspdm_update_local_cert_chain(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t slot_id,
     uint32_t base_hash_algo,
     uint32_t base_asym_algo,

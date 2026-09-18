@@ -79,7 +79,7 @@ static void rsp_measurement_extension_log_case1(void **state)
     spdm_mel = NULL;
     spdm_mel_len = 0;
     libspdm_measurement_extension_log_collection(
-        spdm_context,
+        spdm_context, NULL,
         m_libspdm_use_mel_spec,
         m_libspdm_use_measurement_spec,
         m_libspdm_use_measurement_hash_algo,
@@ -127,7 +127,7 @@ static void rsp_measurement_extension_log_case2(void **state)
 
     spdm_mel = NULL;
     spdm_mel_len = 0;
-    libspdm_measurement_extension_log_collection(spdm_context,
+    libspdm_measurement_extension_log_collection(spdm_context, NULL,
                                                  m_libspdm_use_mel_spec,
                                                  m_libspdm_use_measurement_spec,
                                                  m_libspdm_use_measurement_hash_algo,
@@ -191,7 +191,7 @@ static void rsp_measurement_extension_log_case3(void **state)
 
     spdm_mel = NULL;
     spdm_mel_len = 0;
-    libspdm_measurement_extension_log_collection(spdm_context,
+    libspdm_measurement_extension_log_collection(spdm_context, NULL,
                                                  m_libspdm_use_mel_spec,
                                                  m_libspdm_use_measurement_spec,
                                                  m_libspdm_use_measurement_hash_algo,
@@ -240,7 +240,7 @@ static void rsp_measurement_extension_log_case4(void **state)
 
     spdm_mel = NULL;
     spdm_mel_len = 0;
-    libspdm_measurement_extension_log_collection(spdm_context,
+    libspdm_measurement_extension_log_collection(spdm_context, NULL,
                                                  m_libspdm_use_mel_spec,
                                                  m_libspdm_use_measurement_spec,
                                                  m_libspdm_use_measurement_hash_algo,
@@ -293,7 +293,7 @@ static void rsp_measurement_extension_log_case5(void **state)
 
     spdm_mel = NULL;
     spdm_mel_len = 0;
-    libspdm_measurement_extension_log_collection(spdm_context,
+    libspdm_measurement_extension_log_collection(spdm_context, NULL,
                                                  m_libspdm_use_mel_spec,
                                                  m_libspdm_use_measurement_spec,
                                                  m_libspdm_use_measurement_hash_algo,

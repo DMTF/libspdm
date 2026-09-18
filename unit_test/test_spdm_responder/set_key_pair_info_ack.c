@@ -590,7 +590,7 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
      * request and reports that a reset is still required (not yet applied). */
     need_reset = true;
     result = libspdm_write_key_pair_info(
-        spdm_context, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
+        spdm_context, NULL, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
         SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE, 0,
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_44, 0, &need_reset);
     assert_true(result);
@@ -601,7 +601,7 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
      * reset is required, rather than applying the stale ML-DSA-44 value. */
     need_reset = true;
     result = libspdm_write_key_pair_info(
-        spdm_context, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
+        spdm_context, NULL, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
         SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE, 0,
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65, 0, &need_reset);
     assert_true(result);
@@ -611,7 +611,7 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
      * applied (need_reset cleared). */
     need_reset = true;
     result = libspdm_write_key_pair_info(
-        spdm_context, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
+        spdm_context, NULL, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
         SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE, 0,
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65, 0, &need_reset);
     assert_true(result);
@@ -619,7 +619,7 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
 
     /* The applied PQC algorithm shall be ML-DSA-65 (the replayed value), not ML-DSA-44. */
     assert_true(libspdm_read_key_pair_info(
-                    spdm_context, key_pair_id, &total_key_pairs, &capabilities,
+                    spdm_context, NULL, key_pair_id, &total_key_pairs, &capabilities,
                     &key_usage_capabilities, &current_key_usage, &asym_algo_capabilities,
                     &current_asym_algo, &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                     &assoc_cert_slot_mask, NULL, NULL));
@@ -693,7 +693,7 @@ static void rsp_set_key_pair_info_ack_case7(void **state)
     victim_assoc_cert_slot_mask = 0;
 
     (void)libspdm_read_key_pair_info(
-        spdm_context, 1, &total_key_pairs, &capabilities, &key_usage_capabilities,
+        spdm_context, NULL, 1, &total_key_pairs, &capabilities, &key_usage_capabilities,
         &current_key_usage, &asym_algo_capabilities, &current_asym_algo,
         &pqc_asym_algo_capabilities, &current_pqc_asym_algo, &assoc_cert_slot_mask, NULL, NULL);
 
@@ -701,7 +701,7 @@ static void rsp_set_key_pair_info_ack_case7(void **state)
          (victim_key_pair_id <= total_key_pairs) && !found_pair;
          victim_key_pair_id++) {
         if (!libspdm_read_key_pair_info(
-                spdm_context, victim_key_pair_id, &total_key_pairs, &capabilities,
+                spdm_context, NULL, victim_key_pair_id, &total_key_pairs, &capabilities,
                 &key_usage_capabilities, &current_key_usage, &asym_algo_capabilities,
                 &victim_asym_algo, &pqc_asym_algo_capabilities, &victim_pqc_asym_algo,
                 &victim_assoc_cert_slot_mask, NULL, NULL)) {
@@ -715,7 +715,7 @@ static void rsp_set_key_pair_info_ack_case7(void **state)
                 continue;
             }
             if (!libspdm_read_key_pair_info(
-                    spdm_context, other_key_pair_id, &total_key_pairs, &capabilities,
+                    spdm_context, NULL, other_key_pair_id, &total_key_pairs, &capabilities,
                     &key_usage_capabilities, &current_key_usage, &asym_algo_capabilities,
                     &current_asym_algo, &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
                     &assoc_cert_slot_mask, NULL, NULL)) {

@@ -17,6 +17,7 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
     bool result;
 
     libspdm_session_info_t *session_info;
+    const uint32_t *session_id;
     libspdm_session_state_t session_state;
 
     size_t csr_len;
@@ -73,7 +74,9 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
             response_size, response);
     }
 
+    session_id = NULL;
     if (spdm_context->last_spdm_request_session_id_valid) {
+        session_id = &spdm_context->last_spdm_request_session_id;
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context,
             spdm_context->last_spdm_request_session_id);
@@ -227,6 +230,7 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
 
     result = libspdm_gen_csr(
         spdm_context,
+        session_id,
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.pqc_asym_algo,

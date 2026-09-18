@@ -112,6 +112,7 @@ bool libspdm_challenge_start_mut_auth(
 /*Collect the measurement extension log.*/
 bool libspdm_measurement_extension_log_collection(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t mel_specification,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -246,7 +247,7 @@ bool libspdm_psk_finish_rsp_opaque_data(
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
-bool libspdm_is_in_trusted_environment(void *spdm_context)
+bool libspdm_is_in_trusted_environment(void *spdm_context, const uint32_t *session_id)
 {
     return false;
 }
@@ -259,6 +260,7 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
 
 bool libspdm_update_local_cert_chain(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t slot_id,
     uint32_t base_hash_algo,
     uint32_t base_asym_algo,
@@ -279,6 +281,7 @@ bool libspdm_update_local_cert_chain(
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
 bool libspdm_gen_csr(
     void *spdm_context,
+    const uint32_t *session_id,
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     bool *need_reset,
     const void *request, size_t request_size,
@@ -357,6 +360,7 @@ bool libspdm_generate_event_list(
  **/
 bool libspdm_read_key_pair_info(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t key_pair_id,
     uint8_t *total_key_pairs,
     uint16_t *capabilities,
@@ -378,6 +382,7 @@ bool libspdm_read_key_pair_info(
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
 bool libspdm_write_key_pair_info(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t key_pair_id,
     uint8_t operation,
     uint16_t desired_key_usage,
@@ -393,6 +398,7 @@ bool libspdm_write_key_pair_info(
 #ifdef LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
 libspdm_return_t libspdm_generate_device_endpoint_info(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t sub_code,
     uint8_t request_attributes,
     uint32_t *endpoint_info_size,

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -22,6 +22,7 @@
 
 libspdm_return_t libspdm_generate_device_endpoint_info(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t sub_code,
     uint8_t request_attributes,
     uint32_t *endpoint_info_size,

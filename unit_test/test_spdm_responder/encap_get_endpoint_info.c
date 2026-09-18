@@ -84,7 +84,7 @@ static void rsp_encap_get_endpoint_info_case1(void **state)
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED;
     endpoint_info_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
     libspdm_generate_device_endpoint_info(
-        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
         &endpoint_info_size, m_endpoint_info_buffer_receive);
     sig_size = libspdm_get_asym_signature_size(m_libspdm_use_req_asym_algo);
@@ -140,7 +140,7 @@ static void rsp_encap_get_endpoint_info_case1(void **state)
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED;
     endpoint_info_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
     libspdm_generate_device_endpoint_info(
-        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
         &endpoint_info_size, m_endpoint_info_buffer_receive);
     sig_size = libspdm_get_asym_signature_size(m_libspdm_use_req_asym_algo);
@@ -236,7 +236,7 @@ static void rsp_encap_get_endpoint_info_case2(void **state)
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED;
     endpoint_info_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
     libspdm_generate_device_endpoint_info(
-        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
         &endpoint_info_size, m_endpoint_info_buffer_receive);
     sig_size = libspdm_get_asym_signature_size(m_libspdm_use_req_asym_algo);
@@ -319,7 +319,7 @@ static void rsp_encap_get_endpoint_info_case3(void **state)
     spdm_context->encap_context.req_attributes = 0;
     endpoint_info_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
     libspdm_generate_device_endpoint_info(
-        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
         &endpoint_info_size, m_endpoint_info_buffer_receive);
 
@@ -442,7 +442,7 @@ static void rsp_encap_get_endpoint_info_case4(void **state)
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED;
     endpoint_info_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
     libspdm_generate_device_endpoint_info(
-        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
         &endpoint_info_size, m_endpoint_info_buffer_receive);
     sig_size = libspdm_get_asym_signature_size(m_libspdm_use_req_asym_algo);
@@ -529,7 +529,7 @@ static void rsp_encap_get_endpoint_info_case5(void **state)
     spdm_context->encap_context.req_attributes = 0;
     endpoint_info_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
     libspdm_generate_device_endpoint_info(
-        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
         &endpoint_info_size, m_endpoint_info_buffer_receive);
 

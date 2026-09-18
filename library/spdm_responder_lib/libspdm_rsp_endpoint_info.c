@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -24,6 +24,7 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
     uint8_t slot_id;
     uint8_t sub_code;
     libspdm_session_info_t *session_info;
+    const uint32_t *session_id;
     libspdm_session_state_t session_state;
     uint8_t *ptr;
     bool result;
@@ -42,7 +43,9 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
 
     if (!spdm_context->last_spdm_request_session_id_valid) {
         session_info = NULL;
+        session_id = NULL;
     } else {
+        session_id = &spdm_context->last_spdm_request_session_id;
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context,
             spdm_context->last_spdm_request_session_id);
@@ -208,7 +211,7 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
 
     endpoint_info_size = (uint32_t) (*response_size - spdm_response_size);
     status = libspdm_generate_device_endpoint_info(
-        spdm_context, sub_code, spdm_request->request_attributes,
+        spdm_context, session_id, sub_code, spdm_request->request_attributes,
         &endpoint_info_size, ptr);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(

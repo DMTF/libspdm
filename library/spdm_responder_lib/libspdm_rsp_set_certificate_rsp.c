@@ -79,6 +79,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     size_t old_local_cert_chain_size;
 
     libspdm_session_info_t *session_info;
+    const uint32_t *session_id;
     libspdm_session_state_t session_state;
 
     spdm_request = request;
@@ -117,7 +118,9 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
             response_size, response);
     }
 
+    session_id = NULL;
     if (spdm_context->last_spdm_request_session_id_valid) {
+        session_id = &spdm_context->last_spdm_request_session_id;
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context,
             spdm_context->last_spdm_request_session_id);
@@ -152,8 +155,8 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
                                                response_size, response);
     }
 
-    if ((!libspdm_is_in_trusted_environment(spdm_context)) && (slot_id != 0) &&
-        (!spdm_context->last_spdm_request_session_id_valid)) {
+    if ((!libspdm_is_in_trusted_environment(spdm_context, session_id)) && (slot_id != 0) &&
+        (session_id == NULL)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                                                response_size, response);
@@ -230,6 +233,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         /* erase slot_id cert_chain*/
         result = libspdm_update_local_cert_chain(
             spdm_context,
+            session_id,
             slot_id, 0, 0, 0, 0,
             old_local_cert_chain,
             old_local_cert_chain_size,
@@ -306,6 +310,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         /* set certificate to NV*/
         result = libspdm_update_local_cert_chain(
             spdm_context,
+            session_id,
             slot_id,
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.base_asym_algo,

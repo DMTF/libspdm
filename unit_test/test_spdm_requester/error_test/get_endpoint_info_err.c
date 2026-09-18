@@ -80,7 +80,7 @@ static libspdm_return_t receive_message(
     endpoint_info_buffer_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
     spdm_test_context = libspdm_get_test_context();
     libspdm_generate_device_endpoint_info(
-        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
         &endpoint_info_buffer_size, m_endpoint_info_buffer);
     switch (spdm_test_context->case_id) {
