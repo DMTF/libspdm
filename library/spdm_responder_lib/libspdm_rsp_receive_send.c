@@ -951,7 +951,7 @@ response_dispatched:
                     context, false,
                     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
                     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
-                result = libspdm_stop_watchdog(*session_id);
+                result = libspdm_stop_watchdog(spdm_context, *session_id);
                 if (!result) {
                     LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_stop_watchdog error\n"));
                     /* No need to return error for internal watchdog error. */
@@ -967,7 +967,7 @@ response_dispatched:
                     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
                     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
                 /* reset watchdog in any session messages. */
-                result = libspdm_reset_watchdog(*session_id);
+                result = libspdm_reset_watchdog(spdm_context, *session_id);
                 if (!result) {
                     LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_reset_watchdog error\n"));
                     /* No need to return error for internal watchdog error. */

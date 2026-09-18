@@ -18,6 +18,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     spdm_set_key_pair_info_ack_response_t *spdm_response;
 
     libspdm_session_info_t *session_info;
+    const uint32_t *session_id;
     libspdm_session_state_t session_state;
 
     uint16_t capabilities;
@@ -79,7 +80,9 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
             response_size, response);
     }
 
+    session_id = NULL;
     if (spdm_context->last_spdm_request_session_id_valid) {
+        session_id = &spdm_context->last_spdm_request_session_id;
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context,
             spdm_context->last_spdm_request_session_id);
@@ -115,6 +118,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     key_pair_id = spdm_request->key_pair_id;
     result = libspdm_read_key_pair_info(
         spdm_context,
+        session_id,
         key_pair_id,
         &total_key_pairs,
         &capabilities,
@@ -346,7 +350,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
                     continue;
                 }
                 if (!libspdm_read_key_pair_info(
-                        spdm_context, other_key_pair_id, &total_key_pairs, &other_capabilities,
+                        spdm_context, session_id, other_key_pair_id, &total_key_pairs, &other_capabilities,
                         &other_key_usage_capabilities, &other_current_key_usage,
                         &other_asym_algo_capabilities, &other_current_asym_algo,
                         &other_pqc_asym_algo_capabilities, &other_current_pqc_asym_algo,
@@ -373,6 +377,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     }
     result = libspdm_write_key_pair_info(
         spdm_context,
+        session_id,
         key_pair_id,
         operation,
         desired_key_usage,
@@ -402,7 +407,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         uint8_t slot_index;
 
         result = libspdm_read_key_pair_info(
-            spdm_context, key_pair_id, &total_key_pairs, &capabilities, &key_usage_capabilities,
+            spdm_context, session_id, key_pair_id, &total_key_pairs, &capabilities, &key_usage_capabilities,
             &new_current_key_usage, &asym_algo_capabilities, &current_asym_algo,
             &pqc_asym_algo_capabilities, &current_pqc_asym_algo, &new_assoc_cert_slot_mask,
             NULL, NULL);

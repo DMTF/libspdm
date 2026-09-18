@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -191,7 +191,10 @@ libspdm_return_t libspdm_get_encap_response_endpoint_info(void *spdm_context,
 
     endpoint_info_size = (uint32_t) (*response_size - spdm_response_size);
     status = libspdm_generate_device_endpoint_info(
-        context, spdm_request->header.param1,
+        context,
+        context->last_spdm_request_session_id_valid ?
+        &context->last_spdm_request_session_id : NULL,
+        spdm_request->header.param1,
         spdm_request->request_attributes,
         &endpoint_info_size, ptr);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {

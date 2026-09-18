@@ -565,7 +565,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
             result = libspdm_start_watchdog(
-                session_id, spdm_context->local_context.heartbeat_period * 2);
+                spdm_context, session_id, spdm_context->local_context.heartbeat_period * 2);
             if (!result) {
                 libspdm_free_session_id(spdm_context, session_id);
                 return libspdm_generate_error_response(

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -19,6 +19,8 @@
  * Required to be able to return the Device Class Identifier correctly
  *
  * @param  spdm_context         A pointer to the SPDM context.
+ * @param  session_id           Indicates the session in which the request was received.
+ *                              If NULL then the request was not received in a session.
  * @param  sub_code             The subcode of endpoint info, should be one of the
  *                              SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_* values.
  * @param  request_attributes   The request attributes of the endpoint info.
@@ -33,6 +35,7 @@
  **/
 extern libspdm_return_t libspdm_generate_device_endpoint_info(
     void *spdm_context,
+    const uint32_t *session_id,
     uint8_t sub_code,
     uint8_t request_attributes,
     uint32_t *endpoint_info_size,

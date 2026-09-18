@@ -141,7 +141,7 @@ static void req_encap_endpoint_info_case1(void **state)
     /* response size check */
     endpoint_info_size = 0;
     libspdm_generate_device_endpoint_info(
-        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
         &endpoint_info_size, endpoint_info_buffer);
     signature_size = libspdm_get_asym_signature_size(
@@ -253,7 +253,7 @@ static void req_encap_endpoint_info_case2(void **state)
     /* response size check */
     endpoint_info_size = 0;
     libspdm_generate_device_endpoint_info(
-        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
         &endpoint_info_size, endpoint_info_buffer);
     signature_size = libspdm_get_asym_signature_size(
@@ -348,7 +348,7 @@ static void req_encap_endpoint_info_case3(void **state)
     /* response size check */
     endpoint_info_size = 0;
     libspdm_generate_device_endpoint_info(
-        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
         &endpoint_info_size, endpoint_info_buffer);
     signature_size = libspdm_get_asym_signature_size(
@@ -419,7 +419,7 @@ static void req_encap_endpoint_info_case4(void **state)
     /* response size check */
     endpoint_info_size = 0;
     libspdm_generate_device_endpoint_info(
-        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         0, &endpoint_info_size, endpoint_info_buffer);
     assert_int_equal(response_size,
                      sizeof(spdm_endpoint_info_response_t) +
@@ -519,7 +519,7 @@ static void req_encap_endpoint_info_case5(void **state)
     /* response size check */
     endpoint_info_size = 0;
     libspdm_generate_device_endpoint_info(
-        spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
         &endpoint_info_size, endpoint_info_buffer);
     signature_size = libspdm_get_asym_signature_size(

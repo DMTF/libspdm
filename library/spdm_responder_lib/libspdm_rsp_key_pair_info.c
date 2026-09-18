@@ -16,6 +16,7 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
     spdm_key_pair_info_response_t *spdm_response;
 
     libspdm_session_info_t *session_info;
+    const uint32_t *session_id;
     libspdm_session_state_t session_state;
 
     uint8_t total_key_pairs;
@@ -73,7 +74,9 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
             response_size, response);
     }
 
+    session_id = NULL;
     if (spdm_context->last_spdm_request_session_id_valid) {
+        session_id = &spdm_context->last_spdm_request_session_id;
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context,
             spdm_context->last_spdm_request_session_id);
@@ -114,6 +117,7 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
     public_key_info = (uint8_t*)response + sizeof(spdm_key_pair_info_response_t);
     result = libspdm_read_key_pair_info(
         spdm_context,
+        session_id,
         key_pair_id,
         &total_key_pairs,
         &capabilities,

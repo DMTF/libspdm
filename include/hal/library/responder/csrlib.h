@@ -29,6 +29,8 @@
  *   |    Yes    |     0          |       -     |   -   |       Assert need_reset      |
  *
  * @param[in]     spdm_context    A pointer to the SPDM context.
+ * @param[in]     session_id      Indicates the session in which the request was received.
+ *                                If NULL then the request was not received in a session.
  * @param[in]     base_hash_algo  Indicates the hash algorithm.
  * @param[in]     base_asym_algo  Indicates the signing algorithm.
  * @param[in]     pqc_asym_algo   Indicates the post-quantum signing algorithm (0 if unused).
@@ -71,6 +73,7 @@
  **/
 extern bool libspdm_gen_csr(
     void *spdm_context,
+    const uint32_t *session_id,
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     bool *need_reset,
     const void *request, size_t request_size,
