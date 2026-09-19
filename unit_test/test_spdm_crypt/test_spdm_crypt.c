@@ -1369,6 +1369,235 @@ static void libspdm_test_crypt_ecdsa_palindrome(void **state)
     }
 }
 
+/* These tests sweep every algorithm the specification defines.
+ *
+ * A cryptlib may stub an algorithm that spdm_lib_config.h enables. The Mbed TLS backend, for
+ * example, does not implement SM3. The sweep therefore does not demand success. It probes with
+ * the one-shot entry point and requires the incremental entry points to agree with it. */
+typedef struct {
+    uint32_t base_hash_algo;
+    uint32_t measurement_hash_algo;
+    uint32_t hash_size;
+    uint32_t measurement_hash_size;
+    size_t hash_nid;
+} libspdm_hash_algo_entry_t;
+
+static const libspdm_hash_algo_entry_t m_libspdm_hash_algo_table[] = {
+    { SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+      SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256,
+      LIBSPDM_SHA256_SUPPORT ? 32 : 0, 32, LIBSPDM_CRYPTO_NID_SHA256 },
+    { SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384,
+      SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_384,
+      LIBSPDM_SHA384_SUPPORT ? 48 : 0, 48, LIBSPDM_CRYPTO_NID_SHA384 },
+    { SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512,
+      SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_512,
+      LIBSPDM_SHA512_SUPPORT ? 64 : 0, 64, LIBSPDM_CRYPTO_NID_SHA512 },
+    { SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256,
+      SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_256,
+      LIBSPDM_SHA3_256_SUPPORT ? 32 : 0, 32, LIBSPDM_CRYPTO_NID_SHA3_256 },
+    { SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384,
+      SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_384,
+      LIBSPDM_SHA3_384_SUPPORT ? 48 : 0, 48, LIBSPDM_CRYPTO_NID_SHA3_384 },
+    { SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512,
+      SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_512,
+      LIBSPDM_SHA3_512_SUPPORT ? 64 : 0, 64, LIBSPDM_CRYPTO_NID_SHA3_512 },
+    { SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256,
+      SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SM3_256,
+      LIBSPDM_SM3_256_SUPPORT ? 32 : 0, 32, LIBSPDM_CRYPTO_NID_SM3_256 },
+};
+
+#define LIBSPDM_HASH_ALGO_TABLE_COUNT \
+    (sizeof(m_libspdm_hash_algo_table) / sizeof(m_libspdm_hash_algo_table[0]))
+
+/* Split point for the incremental tests, so that the update entry points are driven more than
+ * once and libspdm_hash_duplicate is exercised against a context that already holds data. */
+#define LIBSPDM_HASH_SWEEP_SPLIT 16
+
+static const uint8_t m_libspdm_hash_sweep_message[] = {
+    0x19, 0x90, 0x2d, 0x02, 0x34, 0x6e, 0xd5, 0x90,
+    0x0e, 0x69, 0x51, 0x2f, 0xf2, 0xbd, 0x9d, 0x33,
+    0x26, 0x71, 0x8f, 0x62, 0xa0, 0x01, 0xbd, 0xfd,
+    0x94, 0xe2, 0x98, 0x17, 0x24, 0xfd, 0xca, 0xf0
+};
+
+static const uint8_t m_libspdm_hash_sweep_key[] = {
+    0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b,
+    0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b,
+    0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b,
+    0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b
+};
+
+static const uint8_t m_libspdm_hash_sweep_salt[] = {
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+    0x08, 0x09, 0x0a, 0x0b, 0x0c
+};
+
+static const uint8_t m_libspdm_hash_sweep_info[] = {
+    0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9
+};
+
+static void libspdm_test_crypt_hash_size_and_nid(void **state)
+{
+    size_t index;
+    const libspdm_hash_algo_entry_t *entry;
+
+    for (index = 0; index < LIBSPDM_HASH_ALGO_TABLE_COUNT; index++) {
+        entry = &m_libspdm_hash_algo_table[index];
+
+        assert_int_equal(libspdm_get_hash_size(entry->base_hash_algo), entry->hash_size);
+        assert_int_equal(libspdm_get_hash_nid(entry->base_hash_algo), entry->hash_nid);
+        assert_int_equal(libspdm_get_measurement_hash_size(entry->measurement_hash_algo),
+                         entry->measurement_hash_size);
+    }
+
+    assert_int_equal(libspdm_get_measurement_hash_size(
+                         SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY), 0xFFFFFFFF);
+
+    /* Unlike the operational entry points, which assert on an unknown algorithm, the size and
+     * NID getters return a benign value. */
+    assert_int_equal(libspdm_get_hash_size(0), 0);
+    assert_int_equal(libspdm_get_hash_nid(0), LIBSPDM_CRYPTO_NID_NULL);
+    assert_int_equal(libspdm_get_measurement_hash_size(0), 0);
+}
+
+static void libspdm_test_crypt_hash_all_algos(void **state)
+{
+    size_t index;
+    const libspdm_hash_algo_entry_t *entry;
+    uint8_t one_shot[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t incremental[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t duplicated[LIBSPDM_MAX_HASH_SIZE];
+    void *context;
+    void *copy;
+    bool one_shot_result;
+
+    for (index = 0; index < LIBSPDM_HASH_ALGO_TABLE_COUNT; index++) {
+        entry = &m_libspdm_hash_algo_table[index];
+
+        /* The algorithm is compiled out, so its arms assert rather than dispatch. */
+        if (entry->hash_size == 0) {
+            continue;
+        }
+
+        one_shot_result = libspdm_hash_all(entry->base_hash_algo,
+                                           m_libspdm_hash_sweep_message,
+                                           sizeof(m_libspdm_hash_sweep_message), one_shot);
+
+        context = libspdm_hash_new(entry->base_hash_algo);
+        if (context == NULL) {
+            /* The cryptlib stubs this algorithm; the one-shot entry point must say so too. */
+            assert_false(one_shot_result);
+            continue;
+        }
+
+        assert_true(one_shot_result);
+        assert_true(libspdm_hash_init(entry->base_hash_algo, context));
+        assert_true(libspdm_hash_update(entry->base_hash_algo, context,
+                                        m_libspdm_hash_sweep_message,
+                                        LIBSPDM_HASH_SWEEP_SPLIT));
+
+        copy = libspdm_hash_new(entry->base_hash_algo);
+        assert_non_null(copy);
+        assert_true(libspdm_hash_duplicate(entry->base_hash_algo, context, copy));
+
+        assert_true(libspdm_hash_update(entry->base_hash_algo, context,
+                                        m_libspdm_hash_sweep_message + LIBSPDM_HASH_SWEEP_SPLIT,
+                                        sizeof(m_libspdm_hash_sweep_message) -
+                                        LIBSPDM_HASH_SWEEP_SPLIT));
+        assert_true(libspdm_hash_final(entry->base_hash_algo, context, incremental));
+
+        assert_true(libspdm_hash_update(entry->base_hash_algo, copy,
+                                        m_libspdm_hash_sweep_message + LIBSPDM_HASH_SWEEP_SPLIT,
+                                        sizeof(m_libspdm_hash_sweep_message) -
+                                        LIBSPDM_HASH_SWEEP_SPLIT));
+        assert_true(libspdm_hash_final(entry->base_hash_algo, copy, duplicated));
+
+        assert_memory_equal(one_shot, incremental, entry->hash_size);
+        assert_memory_equal(one_shot, duplicated, entry->hash_size);
+
+        libspdm_hash_free(entry->base_hash_algo, copy);
+        libspdm_hash_free(entry->base_hash_algo, context);
+    }
+}
+
+static void libspdm_test_crypt_hmac_all_algos(void **state)
+{
+    size_t index;
+    const libspdm_hash_algo_entry_t *entry;
+    uint8_t one_shot[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t incremental[LIBSPDM_MAX_HASH_SIZE];
+    void *context;
+    bool one_shot_result;
+
+    for (index = 0; index < LIBSPDM_HASH_ALGO_TABLE_COUNT; index++) {
+        entry = &m_libspdm_hash_algo_table[index];
+
+        if (entry->hash_size == 0) {
+            continue;
+        }
+
+        one_shot_result = libspdm_hmac_all(entry->base_hash_algo,
+                                           m_libspdm_hash_sweep_message,
+                                           sizeof(m_libspdm_hash_sweep_message),
+                                           m_libspdm_hash_sweep_key,
+                                           sizeof(m_libspdm_hash_sweep_key), one_shot);
+
+        context = libspdm_hmac_new(entry->base_hash_algo);
+        if (context == NULL) {
+            assert_false(one_shot_result);
+            continue;
+        }
+
+        assert_true(one_shot_result);
+        assert_true(libspdm_hmac_init(entry->base_hash_algo, context,
+                                      m_libspdm_hash_sweep_key,
+                                      sizeof(m_libspdm_hash_sweep_key)));
+        assert_true(libspdm_hmac_update(entry->base_hash_algo, context,
+                                        m_libspdm_hash_sweep_message,
+                                        LIBSPDM_HASH_SWEEP_SPLIT));
+        assert_true(libspdm_hmac_update(entry->base_hash_algo, context,
+                                        m_libspdm_hash_sweep_message + LIBSPDM_HASH_SWEEP_SPLIT,
+                                        sizeof(m_libspdm_hash_sweep_message) -
+                                        LIBSPDM_HASH_SWEEP_SPLIT));
+        assert_true(libspdm_hmac_final(entry->base_hash_algo, context, incremental));
+
+        assert_memory_equal(one_shot, incremental, entry->hash_size);
+
+        libspdm_hmac_free(entry->base_hash_algo, context);
+    }
+}
+
+static void libspdm_test_crypt_hkdf_all_algos(void **state)
+{
+    size_t index;
+    const libspdm_hash_algo_entry_t *entry;
+    uint8_t prk[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t okm[64];
+    bool extracted;
+
+    for (index = 0; index < LIBSPDM_HASH_ALGO_TABLE_COUNT; index++) {
+        entry = &m_libspdm_hash_algo_table[index];
+
+        if (entry->hash_size == 0) {
+            continue;
+        }
+
+        /* The pseudorandom key is the size of the digest, which is what expand requires. */
+        extracted = libspdm_hkdf_extract(entry->base_hash_algo,
+                                         m_libspdm_hash_sweep_message,
+                                         sizeof(m_libspdm_hash_sweep_message),
+                                         m_libspdm_hash_sweep_salt,
+                                         sizeof(m_libspdm_hash_sweep_salt),
+                                         prk, entry->hash_size);
+
+        /* Extract and expand are backed by the same digest, so they stand or fall together. */
+        assert_int_equal(libspdm_hkdf_expand(entry->base_hash_algo, prk, entry->hash_size,
+                                             m_libspdm_hash_sweep_info,
+                                             sizeof(m_libspdm_hash_sweep_info),
+                                             okm, sizeof(okm)), extracted);
+    }
+}
+
 static int libspdm_crypt_lib_setup(void **state)
 {
     return 0;
@@ -1393,6 +1622,10 @@ static int libspdm_crypt_lib_test_main(void)
         cmocka_unit_test(libspdm_test_crypt_palindrome),
         cmocka_unit_test(libspdm_test_crypt_rsa_palindrome),
         cmocka_unit_test(libspdm_test_crypt_ecdsa_palindrome),
+        cmocka_unit_test(libspdm_test_crypt_hash_size_and_nid),
+        cmocka_unit_test(libspdm_test_crypt_hash_all_algos),
+        cmocka_unit_test(libspdm_test_crypt_hmac_all_algos),
+        cmocka_unit_test(libspdm_test_crypt_hkdf_all_algos),
     };
 
     return cmocka_run_group_tests(test_cases,
