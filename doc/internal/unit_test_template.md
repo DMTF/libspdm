@@ -29,6 +29,7 @@ test_spdm_responder/encap_challenge.c
 #### Error Tests
 
 Test file names for error tests take the form *message_name*\_err.c or encap_*message_name*_err.c.
+The files are stored in the `error_test/` directory.
 
 ```
 // Error unit test file names for CHALLENGE request and CHALLENGE_AUTH response.
