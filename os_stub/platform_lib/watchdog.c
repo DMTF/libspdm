@@ -6,40 +6,52 @@
 
 #include "base.h"
 #include "internal/libspdm_lib_config.h"
+#include "library/debuglib.h"
+#include "watchdog.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
-/**
- * If no heartbeat arrives in seconds, the watchdog timeout event
- * should terminate the session.
- *
- * @param  session_id     Indicate the SPDM session ID.
- * @param  seconds        heartbeat period, in seconds.
- *
- **/
+static libspdm_watchdog_stats_t m_libspdm_watchdog_stats;
+
+const libspdm_watchdog_stats_t *libspdm_watchdog_get_stats(void)
+{
+    return &m_libspdm_watchdog_stats;
+}
+
+void libspdm_watchdog_clear_stats(void)
+{
+    m_libspdm_watchdog_stats.start_count = 0;
+    m_libspdm_watchdog_stats.stop_count = 0;
+    m_libspdm_watchdog_stats.reset_count = 0;
+    m_libspdm_watchdog_stats.start_session_id = 0;
+    m_libspdm_watchdog_stats.stop_session_id = 0;
+    m_libspdm_watchdog_stats.reset_session_id = 0;
+    m_libspdm_watchdog_stats.start_timeout = 0;
+}
+
 bool libspdm_start_watchdog(void *spdm_context, uint32_t session_id, uint16_t seconds)
 {
+    m_libspdm_watchdog_stats.start_count++;
+    m_libspdm_watchdog_stats.start_session_id = session_id;
+    m_libspdm_watchdog_stats.start_timeout = seconds;
+
+    LIBSPDM_ASSERT(seconds != 0);
+
     return true;
 }
 
-/**
- * stop watchdog.
- *
- * @param  session_id     Indicate the SPDM session ID.
- *
- **/
 bool libspdm_stop_watchdog(void *spdm_context, uint32_t session_id)
 {
+    m_libspdm_watchdog_stats.stop_count++;
+    m_libspdm_watchdog_stats.stop_session_id = session_id;
+
     return true;
 }
 
-/**
- * Reset the watchdog in heartbeat response.
- *
- * @param  session_id     Indicate the SPDM session ID.
- *
- **/
 bool libspdm_reset_watchdog(void *spdm_context, uint32_t session_id)
 {
+    m_libspdm_watchdog_stats.reset_count++;
+    m_libspdm_watchdog_stats.reset_session_id = session_id;
+
     return true;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
