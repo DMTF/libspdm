@@ -360,20 +360,6 @@ bool libspdm_hmac_init_with_request_finished_key(
     void *spdm_secured_message_context, void *hmac_ctx);
 
 /**
- * Makes a copy of an existing HMAC context, with request_finished_key.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  hmac_ctx     Pointer to HMAC context being copied.
- * @param  new_hmac_ctx  Pointer to new HMAC context.
- *
- * @retval true   HMAC context copy succeeded.
- * @retval false  HMAC context copy failed.
- **/
-bool libspdm_hmac_duplicate_with_request_finished_key(
-    void *spdm_secured_message_context,
-    const void *hmac_ctx, void *new_hmac_ctx);
-
-/**
  * Digests the input data and updates HMAC context, with request_finished_key.
  *
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
@@ -448,20 +434,6 @@ void libspdm_hmac_free_with_response_finished_key(
  **/
 bool libspdm_hmac_init_with_response_finished_key(
     void *spdm_secured_message_context, void *hmac_ctx);
-
-/**
- * Makes a copy of an existing HMAC context, with response_finished_key.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  hmac_ctx     Pointer to HMAC context being copied.
- * @param  new_hmac_ctx  Pointer to new HMAC context.
- *
- * @retval true   HMAC context copy succeeded.
- * @retval false  HMAC context copy failed.
- **/
-bool libspdm_hmac_duplicate_with_response_finished_key(
-    void *spdm_secured_message_context,
-    const void *hmac_ctx, void *new_hmac_ctx);
 
 /**
  * Digests the input data and updates HMAC context, with response_finished_key.

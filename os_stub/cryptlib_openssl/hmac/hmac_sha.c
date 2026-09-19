@@ -124,47 +124,6 @@ bool hmac_md_set_key(const EVP_MD *md, void *hmac_md_ctx,
 }
 
 /**
- * Makes a copy of an existing HMAC-MD context.
- *
- * If hmac_md_ctx is NULL, then return false.
- * If new_hmac_md_ctx is NULL, then return false.
- *
- * @param[in]  hmac_md_ctx     Pointer to HMAC-MD context being copied.
- * @param[out] new_hmac_md_ctx  Pointer to new HMAC-MD context.
- *
- * @retval true   HMAC-MD context copy succeeded.
- * @retval false  HMAC-MD context copy failed.
- *
- **/
-bool hmac_md_duplicate(const void *hmac_md_ctx, void *new_hmac_md_ctx)
-{
-    libspdm_mac_context *src_mac_ctx;
-    libspdm_mac_context *dst_mac_ctx;
-    EVP_MAC_CTX *dup_ctx;
-
-    if (hmac_md_ctx == NULL || new_hmac_md_ctx == NULL) {
-        return false;
-    }
-
-    src_mac_ctx = (libspdm_mac_context *)hmac_md_ctx;
-    dst_mac_ctx = (libspdm_mac_context *)new_hmac_md_ctx;
-
-    /* Use EVP_MAC_CTX_dup to duplicate the source context */
-    dup_ctx = EVP_MAC_CTX_dup(src_mac_ctx->mac_ctx);
-    if (dup_ctx == NULL) {
-        return false;
-    }
-
-    /* Free the old destination context and replace with duplicated one */
-    if (dst_mac_ctx->mac_ctx != NULL) {
-        EVP_MAC_CTX_free(dst_mac_ctx->mac_ctx);
-    }
-    dst_mac_ctx->mac_ctx = dup_ctx;
-
-    return true;
-}
-
-/**
  * Digests the input data and updates HMAC-MD context.
  *
  * This function performs HMAC-MD digest on a data buffer of the specified size.
@@ -385,25 +344,6 @@ bool libspdm_hmac_sha256_set_key(void *hmac_sha256_ctx, const uint8_t *key,
 }
 
 /**
- * Makes a copy of an existing HMAC-SHA256 context.
- *
- * If hmac_sha256_ctx is NULL, then return false.
- * If new_hmac_sha256_ctx is NULL, then return false.
- *
- * @param[in]  hmac_sha256_ctx     Pointer to HMAC-SHA256 context being copied.
- * @param[out] new_hmac_sha256_ctx  Pointer to new HMAC-SHA256 context.
- *
- * @retval true   HMAC-SHA256 context copy succeeded.
- * @retval false  HMAC-SHA256 context copy failed.
- *
- **/
-bool libspdm_hmac_sha256_duplicate(const void *hmac_sha256_ctx,
-                                   void *new_hmac_sha256_ctx)
-{
-    return hmac_md_duplicate(hmac_sha256_ctx, new_hmac_sha256_ctx);
-}
-
-/**
  * Digests the input data and updates HMAC-SHA256 context.
  *
  * This function performs HMAC-SHA256 digest on a data buffer of the specified size.
@@ -534,27 +474,6 @@ bool libspdm_hmac_sha384_set_key(void *hmac_sha384_ctx, const uint8_t *key,
     bool result = hmac_md_set_key(md, hmac_sha384_ctx, key, key_size);
     EVP_MD_free(md);
     return result;
-}
-
-/**
- * Makes a copy of an existing HMAC-SHA384 context.
- *
- * If hmac_sha384_ctx is NULL, then return false.
- * If new_hmac_sha384_ctx is NULL, then return false.
- * If this interface is not supported, then return false.
- *
- * @param[in]  hmac_sha384_ctx     Pointer to HMAC-SHA384 context being copied.
- * @param[out] new_hmac_sha384_ctx  Pointer to new HMAC-SHA384 context.
- *
- * @retval true   HMAC-SHA384 context copy succeeded.
- * @retval false  HMAC-SHA384 context copy failed.
- * @retval false  This interface is not supported.
- *
- **/
-bool libspdm_hmac_sha384_duplicate(const void *hmac_sha384_ctx,
-                                   void *new_hmac_sha384_ctx)
-{
-    return hmac_md_duplicate(hmac_sha384_ctx, new_hmac_sha384_ctx);
 }
 
 /**
@@ -692,27 +611,6 @@ bool libspdm_hmac_sha512_set_key(void *hmac_sha512_ctx, const uint8_t *key,
     bool result = hmac_md_set_key(md, hmac_sha512_ctx, key, key_size);
     EVP_MD_free(md);
     return result;
-}
-
-/**
- * Makes a copy of an existing HMAC-SHA512 context.
- *
- * If hmac_sha512_ctx is NULL, then return false.
- * If new_hmac_sha512_ctx is NULL, then return false.
- * If this interface is not supported, then return false.
- *
- * @param[in]  hmac_sha512_ctx     Pointer to HMAC-SHA512 context being copied.
- * @param[out] new_hmac_sha512_ctx  Pointer to new HMAC-SHA512 context.
- *
- * @retval true   HMAC-SHA512 context copy succeeded.
- * @retval false  HMAC-SHA512 context copy failed.
- * @retval false  This interface is not supported.
- *
- **/
-bool libspdm_hmac_sha512_duplicate(const void *hmac_sha512_ctx,
-                                   void *new_hmac_sha512_ctx)
-{
-    return hmac_md_duplicate(hmac_sha512_ctx, new_hmac_sha512_ctx);
 }
 
 /**

@@ -15,7 +15,6 @@ void *hmac_md_new(void);
 void hmac_md_free(void *hmac_md_ctx);
 bool hmac_md_set_key(const EVP_MD *md, void *hmac_md_ctx,
                      const uint8_t *key, size_t key_size);
-bool hmac_md_duplicate(const void *hmac_md_ctx, void *new_hmac_md_ctx);
 bool hmac_md_update(void *hmac_md_ctx, const void *data,
                     size_t data_size);
 bool hmac_md_final(void *hmac_md_ctx, uint8_t *hmac_value);
@@ -70,25 +69,6 @@ bool libspdm_hmac_sm3_256_set_key(void *hmac_sm3_256_ctx, const uint8_t *key,
     bool result = hmac_md_set_key(md, hmac_sm3_256_ctx, key, key_size);
     EVP_MD_free(md);
     return result;
-}
-
-/**
- * Makes a copy of an existing HMAC-SM3_256 context.
- *
- * If hmac_sm3_256_ctx is NULL, then return false.
- * If new_hmac_sm3_256_ctx is NULL, then return false.
- *
- * @param[in]  hmac_sm3_256_ctx     Pointer to HMAC-SM3_256 context being copied.
- * @param[out] new_hmac_sm3_256_ctx  Pointer to new HMAC-SM3_256 context.
- *
- * @retval true   HMAC-SM3_256 context copy succeeded.
- * @retval false  HMAC-SM3_256 context copy failed.
- *
- **/
-bool libspdm_hmac_sm3_256_duplicate(const void *hmac_sm3_256_ctx,
-                                    void *new_hmac_sm3_256_ctx)
-{
-    return hmac_md_duplicate(hmac_sm3_256_ctx, new_hmac_sm3_256_ctx);
 }
 
 /**

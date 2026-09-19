@@ -611,16 +611,6 @@ bool libspdm_hmac_init_with_request_finished_key(
         secured_message_context->hash_size);
 }
 
-bool libspdm_hmac_duplicate_with_request_finished_key(
-    void *spdm_secured_message_context,
-    const void *hmac_ctx, void *new_hmac_ctx)
-{
-    libspdm_secured_message_context_t *secured_message_context;
-
-    secured_message_context = spdm_secured_message_context;
-    return libspdm_hmac_duplicate(secured_message_context->base_hash_algo, hmac_ctx, new_hmac_ctx);
-}
-
 bool libspdm_hmac_update_with_request_finished_key(
     void *spdm_secured_message_context,
     void *hmac_ctx, const void *data,
@@ -682,16 +672,6 @@ bool libspdm_hmac_init_with_response_finished_key(
         secured_message_context->base_hash_algo, hmac_ctx,
         secured_message_context->handshake_secret.response_finished_key,
         secured_message_context->hash_size);
-}
-
-bool libspdm_hmac_duplicate_with_response_finished_key(
-    void *spdm_secured_message_context,
-    const void *hmac_ctx, void *new_hmac_ctx)
-{
-    libspdm_secured_message_context_t *secured_message_context;
-
-    secured_message_context = spdm_secured_message_context;
-    return libspdm_hmac_duplicate(secured_message_context->base_hash_algo, hmac_ctx, new_hmac_ctx);
 }
 
 bool libspdm_hmac_update_with_response_finished_key(
