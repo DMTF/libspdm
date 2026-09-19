@@ -15,7 +15,7 @@
  *
  * @param  spdm_context  A pointer to the SPDM context.
  * @param  session_id    Indicate the SPDM session ID.
- * @param  timeout       Timeout value, in units of seconds.
+ * @param  timeout       Non-zero timeout value, in units of seconds.
  **/
 extern bool libspdm_start_watchdog(void *spdm_context, uint32_t session_id, uint16_t timeout);
 

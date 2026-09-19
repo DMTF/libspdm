@@ -315,7 +315,8 @@ libspdm_return_t libspdm_get_response_psk_finish(libspdm_context_t *spdm_context
     }
 
     #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
-    if (libspdm_is_capabilities_flag_supported(
+    if ((spdm_context->local_context.heartbeat_period != 0) &&
+        libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {

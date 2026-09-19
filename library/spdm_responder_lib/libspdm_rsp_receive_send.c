@@ -947,7 +947,8 @@ response_dispatched:
             break;
         case SPDM_END_SESSION_ACK:
             #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
-            if (libspdm_is_capabilities_flag_supported(
+            if ((session_info->heartbeat_period != 0) &&
+                libspdm_is_capabilities_flag_supported(
                     context, false,
                     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
                     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
@@ -962,7 +963,8 @@ response_dispatched:
             break;
         default:
             #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
-            if (libspdm_is_capabilities_flag_supported(
+            if ((session_info->heartbeat_period != 0) &&
+                libspdm_is_capabilities_flag_supported(
                     context, false,
                     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
                     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
