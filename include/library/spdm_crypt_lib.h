@@ -293,21 +293,6 @@ bool libspdm_hmac_init(uint32_t base_hash_algo,
                        size_t key_size);
 
 /**
- * Makes a copy of an existing HMAC context.
- *
- * If hmac_ctx is NULL, then return false.
- * If new_hmac_ctx is NULL, then return false.
- *
- * @param[in]  hmac_ctx      Pointer to HMAC context being copied.
- * @param[out] new_hmac_ctx  Pointer to new HMAC context.
- *
- * @retval true   HMAC context copy succeeded.
- * @retval false  HMAC context copy failed.
- *
- **/
-bool libspdm_hmac_duplicate(uint32_t base_hash_algo, const void *hmac_ctx, void *new_hmac_ctx);
-
-/**
  * Digests the input data and updates HMAC context.
  *
  * This function performs HMAC digest on a data buffer of the specified size.

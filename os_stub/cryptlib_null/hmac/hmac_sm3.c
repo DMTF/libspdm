@@ -53,25 +53,6 @@ bool libspdm_hmac_sm3_256_set_key(void *hmac_sm3_256_ctx, const uint8_t *key,
 }
 
 /**
- * Makes a copy of an existing HMAC-SM3_256 context.
- *
- * If hmac_sm3_256_ctx is NULL, then return false.
- * If new_hmac_sm3_256_ctx is NULL, then return false.
- *
- * @param[in]  hmac_sm3_256_ctx     Pointer to HMAC-SM3_256 context being copied.
- * @param[out] new_hmac_sm3_256_ctx  Pointer to new HMAC-SM3_256 context.
- *
- * @retval true   HMAC-SM3_256 context copy succeeded.
- * @retval false  HMAC-SM3_256 context copy failed.
- *
- **/
-bool libspdm_hmac_sm3_256_duplicate(const void *hmac_sm3_256_ctx,
-                                    void *new_hmac_sm3_256_ctx)
-{
-    return false;
-}
-
-/**
  * Digests the input data and updates HMAC-SM3_256 context.
  *
  * This function performs HMAC-SM3_256 digest on a data buffer of the specified size.

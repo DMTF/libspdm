@@ -56,26 +56,6 @@ bool libspdm_hmac_sha256_set_key(void *hmac_sha256_ctx, const uint8_t *key,
 }
 
 /**
- * Makes a copy of an existing HMAC-SHA256 context.
- *
- * If hmac_sha256_ctx is NULL, then return false.
- * If new_hmac_sha256_ctx is NULL, then return false.
- *
- * @param[in]  hmac_sha256_ctx     Pointer to HMAC-SHA256 context being copied.
- * @param[out] new_hmac_sha256_ctx  Pointer to new HMAC-SHA256 context.
- *
- * @retval true   HMAC-SHA256 context copy succeeded.
- * @retval false  HMAC-SHA256 context copy failed.
- *
- **/
-bool libspdm_hmac_sha256_duplicate(const void *hmac_sha256_ctx,
-                                   void *new_hmac_sha256_ctx)
-{
-    LIBSPDM_ASSERT(false);
-    return false;
-}
-
-/**
  * Digests the input data and updates HMAC-SHA256 context.
  *
  * This function performs HMAC-SHA256 digest on a data buffer of the specified size.
@@ -196,28 +176,6 @@ void libspdm_hmac_sha384_free(void *hmac_sha384_ctx)
  **/
 bool libspdm_hmac_sha384_set_key(void *hmac_sha384_ctx, const uint8_t *key,
                                  size_t key_size)
-{
-    LIBSPDM_ASSERT(false);
-    return false;
-}
-
-/**
- * Makes a copy of an existing HMAC-SHA384 context.
- *
- * If hmac_sha384_ctx is NULL, then return false.
- * If new_hmac_sha384_ctx is NULL, then return false.
- * If this interface is not supported, then return false.
- *
- * @param[in]  hmac_sha384_ctx     Pointer to HMAC-SHA384 context being copied.
- * @param[out] new_hmac_sha384_ctx  Pointer to new HMAC-SHA384 context.
- *
- * @retval true   HMAC-SHA384 context copy succeeded.
- * @retval false  HMAC-SHA384 context copy failed.
- * @retval false  This interface is not supported.
- *
- **/
-bool libspdm_hmac_sha384_duplicate(const void *hmac_sha384_ctx,
-                                   void *new_hmac_sha384_ctx)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -348,28 +306,6 @@ void libspdm_hmac_sha512_free(void *hmac_sha512_ctx)
  **/
 bool libspdm_hmac_sha512_set_key(void *hmac_sha512_ctx, const uint8_t *key,
                                  size_t key_size)
-{
-    LIBSPDM_ASSERT(false);
-    return false;
-}
-
-/**
- * Makes a copy of an existing HMAC-SHA512 context.
- *
- * If hmac_sha512_ctx is NULL, then return false.
- * If new_hmac_sha512_ctx is NULL, then return false.
- * If this interface is not supported, then return false.
- *
- * @param[in]  hmac_sha512_ctx     Pointer to HMAC-SHA512 context being copied.
- * @param[out] new_hmac_sha512_ctx  Pointer to new HMAC-SHA512 context.
- *
- * @retval true   HMAC-SHA512 context copy succeeded.
- * @retval false  HMAC-SHA512 context copy failed.
- * @retval false  This interface is not supported.
- *
- **/
-bool libspdm_hmac_sha512_duplicate(const void *hmac_sha512_ctx,
-                                   void *new_hmac_sha512_ctx)
 {
     LIBSPDM_ASSERT(false);
     return false;

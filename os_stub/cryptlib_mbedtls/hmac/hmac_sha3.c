@@ -86,77 +86,6 @@ static bool hmac_md_set_key(const mbedtls_md_type_t md_type, void *hmac_md_ctx,
 }
 
 /**
- * Return block size in md_type.
- * This function is use to enable hmac_duplicate.
- *
- * @param[in]   md_type          mbedtls Type.
- *
- * @retval blocksize in md_type
- **/
-static int hmac_md_get_blocksize( mbedtls_md_type_t md_type )
-{
-    switch( md_type )
-    {
-    case MBEDTLS_MD_SHA3_256:
-        return 64;
-    case MBEDTLS_MD_SHA3_384:
-        return 128;
-    case MBEDTLS_MD_SHA3_512:
-        return 128;
-    default:
-        LIBSPDM_ASSERT(false);
-        return 0;
-    }
-}
-
-/**
- * Makes a copy of an existing HMAC-MD context.
- *
- * If hmac_md_ctx is NULL, then return false.
- * If new_hmac_md_ctx is NULL, then return false.
- *
- * @param[in]  md_type          message digest Type.
- * @param[in]  hmac_md_ctx      Pointer to HMAC-MD context being copied.
- * @param[out] new_hmac_md_ctx  Pointer to new HMAC-MD context.
- *
- * @retval true   HMAC-MD context copy succeeded.
- * @retval false  HMAC-MD context copy failed.
- *
- **/
-static bool hmac_md_duplicate(const mbedtls_md_type_t md_type, const void *hmac_md_ctx,
-                              void *new_hmac_md_ctx)
-{
-    int ret;
-    const mbedtls_md_info_t *md_info;
-
-    if (hmac_md_ctx == NULL || new_hmac_md_ctx == NULL) {
-        return false;
-    }
-
-    libspdm_zero_mem(new_hmac_md_ctx, sizeof(mbedtls_md_context_t));
-    mbedtls_md_init(new_hmac_md_ctx);
-
-    md_info = mbedtls_md_info_from_type(md_type);
-    LIBSPDM_ASSERT(md_info != NULL);
-
-    ret = mbedtls_md_setup(new_hmac_md_ctx, md_info, 1);
-    if (ret != 0) {
-        return false;
-    }
-    ret = mbedtls_md_clone(new_hmac_md_ctx, hmac_md_ctx);
-    if (ret != 0) {
-        return false;
-    }
-    /*Temporary solution to the problem of context clone.
-     * There are not any standard function in mbedtls to clone a complete hmac context.*/
-    libspdm_copy_mem(((mbedtls_md_context_t *)new_hmac_md_ctx)->MBEDTLS_PRIVATE(hmac_ctx),
-                     hmac_md_get_blocksize(md_type) * 2,
-                     ((const mbedtls_md_context_t *)hmac_md_ctx)->MBEDTLS_PRIVATE(hmac_ctx),
-                     hmac_md_get_blocksize(md_type) * 2);
-    return true;
-}
-
-/**
  * Digests the input data and updates HMAC-MD context.
  *
  * This function performs HMAC-MD digest on a data buffer of the specified size.
@@ -317,25 +246,6 @@ bool libspdm_hmac_sha3_256_set_key(void *hmac_sha3_256_ctx, const uint8_t *key,
 }
 
 /**
- * Makes a copy of an existing HMAC-SHA3_256 context.
- *
- * If hmac_sha3_256_ctx is NULL, then return false.
- * If new_hmac_sha3_256_ctx is NULL, then return false.
- *
- * @param[in]  hmac_sha3_256_ctx     Pointer to HMAC-SHA3_256 context being copied.
- * @param[out] new_hmac_sha3_256_ctx  Pointer to new HMAC-SHA3_256 context.
- *
- * @retval true   HMAC-SHA3_256 context copy succeeded.
- * @retval false  HMAC-SHA3_256 context copy failed.
- *
- **/
-bool libspdm_hmac_sha3_256_duplicate(const void *hmac_sha3_256_ctx,
-                                     void *new_hmac_sha3_256_ctx)
-{
-    return hmac_md_duplicate(MBEDTLS_MD_SHA3_256, hmac_sha3_256_ctx, new_hmac_sha3_256_ctx);
-}
-
-/**
  * Digests the input data and updates HMAC-SHA3_256 context.
  *
  * This function performs HMAC-SHA3_256 digest on a data buffer of the specified size.
@@ -456,27 +366,6 @@ bool libspdm_hmac_sha3_384_set_key(void *hmac_sha3_384_ctx, const uint8_t *key,
 {
     return hmac_md_set_key(MBEDTLS_MD_SHA3_384, hmac_sha3_384_ctx, key,
                            key_size);
-}
-
-/**
- * Makes a copy of an existing HMAC-SHA3_384 context.
- *
- * If hmac_sha3_384_ctx is NULL, then return false.
- * If new_hmac_sha3_384_ctx is NULL, then return false.
- * If this interface is not supported, then return false.
- *
- * @param[in]  hmac_sha3_384_ctx     Pointer to HMAC-SHA3_384 context being copied.
- * @param[out] new_hmac_sha3_384_ctx  Pointer to new HMAC-SHA3_384 context.
- *
- * @retval true   HMAC-SHA3_384 context copy succeeded.
- * @retval false  HMAC-SHA3_384 context copy failed.
- * @retval false  This interface is not supported.
- *
- **/
-bool libspdm_hmac_sha3_384_duplicate(const void *hmac_sha3_384_ctx,
-                                     void *new_hmac_sha3_384_ctx)
-{
-    return hmac_md_duplicate(MBEDTLS_MD_SHA3_384, hmac_sha3_384_ctx, new_hmac_sha3_384_ctx);
 }
 
 /**
@@ -604,27 +493,6 @@ bool libspdm_hmac_sha3_512_set_key(void *hmac_sha3_512_ctx, const uint8_t *key,
 {
     return hmac_md_set_key(MBEDTLS_MD_SHA3_512, hmac_sha3_512_ctx, key,
                            key_size);
-}
-
-/**
- * Makes a copy of an existing HMAC-SHA3_512 context.
- *
- * If hmac_sha3_512_ctx is NULL, then return false.
- * If new_hmac_sha3_512_ctx is NULL, then return false.
- * If this interface is not supported, then return false.
- *
- * @param[in]  hmac_sha3_512_ctx     Pointer to HMAC-SHA3_512 context being copied.
- * @param[out] new_hmac_sha3_512_ctx  Pointer to new HMAC-SHA3_512 context.
- *
- * @retval true   HMAC-SHA3_512 context copy succeeded.
- * @retval false  HMAC-SHA3_512 context copy failed.
- * @retval false  This interface is not supported.
- *
- **/
-bool libspdm_hmac_sha3_512_duplicate(const void *hmac_sha3_512_ctx,
-                                     void *new_hmac_sha3_512_ctx)
-{
-    return hmac_md_duplicate(MBEDTLS_MD_SHA3_512, hmac_sha3_512_ctx, new_hmac_sha3_512_ctx);
 }
 
 /**
