@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -105,6 +105,7 @@ uint32_t libspdm_get_pqc_asym_signature_size(uint32_t pqc_asym_algo)
     }
 }
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
 bool libspdm_pqc_asym_get_public_key_from_x509(uint32_t pqc_asym_algo,
                                                const uint8_t *cert,
                                                size_t cert_size,
@@ -143,6 +144,7 @@ bool libspdm_pqc_asym_get_public_key_from_x509(uint32_t pqc_asym_algo,
         return false;
     }
 }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 bool libspdm_pqc_asym_get_public_key_from_der(uint32_t pqc_asym_algo,
                                               const uint8_t *der_data,
@@ -463,6 +465,7 @@ uint32_t libspdm_get_req_pqc_asym_signature_size(uint32_t req_pqc_asym_alg)
     return libspdm_get_pqc_asym_signature_size(req_pqc_asym_alg);
 }
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
 bool libspdm_req_pqc_asym_get_public_key_from_x509(uint32_t pqc_asym_algo,
                                                    const uint8_t *cert,
                                                    size_t cert_size,
@@ -471,6 +474,7 @@ bool libspdm_req_pqc_asym_get_public_key_from_x509(uint32_t pqc_asym_algo,
     return libspdm_pqc_asym_get_public_key_from_x509(
         pqc_asym_algo, cert, cert_size, context);
 }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 bool libspdm_req_pqc_asym_get_public_key_from_der(uint32_t req_pqc_asym_alg,
                                                   const uint8_t *der_data,
