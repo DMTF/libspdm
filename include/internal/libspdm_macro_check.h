@@ -106,6 +106,10 @@
     #error If endpoint is an event recipient then ENCAP_CAP must also be enabled.
 #endif
 
+#if (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) && !(LIBSPDM_CERT_PARSE_SUPPORT)
+    #error If SEND_GET_CERTIFICATE_SUPPORT is enabled then CERT_PARSE_SUPPORT must also be enabled.
+#endif
+
 #if ((LIBSPDM_MAX_VERSION_COUNT) == 0) || ((LIBSPDM_MAX_VERSION_COUNT) > 255)
     #error LIBSPDM_MAX_VERSION_COUNT must be between 1 and 255 inclusive.
 #endif
