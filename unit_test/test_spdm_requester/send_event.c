@@ -19,7 +19,9 @@ static struct m_test_params {
     uint8_t events_list[0x1000];
 } m_test_params;
 
+#if LIBSPDM_ENABLE_MSG_LOG
 static uint8_t m_msg_log_buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE * 2];
+#endif /* LIBSPDM_ENABLE_MSG_LOG */
 
 static libspdm_return_t send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
