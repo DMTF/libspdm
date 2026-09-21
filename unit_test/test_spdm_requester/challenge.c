@@ -17,7 +17,9 @@ static uint8_t m_libspdm_opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 
 static uint8_t m_requester_context[SPDM_REQ_CONTEXT_SIZE];
 
+#if LIBSPDM_ENABLE_MSG_LOG
 static uint8_t m_msg_log_buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE * 2];
+#endif /* LIBSPDM_ENABLE_MSG_LOG */
 
 static libspdm_return_t send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
