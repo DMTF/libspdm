@@ -71,7 +71,9 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 
     size_t root_cert_hash_size;
     const spdm_cert_chain_t *cert_chain_header;
+#if LIBSPDM_CERT_PARSE_SUPPORT
     size_t cert_chain_size;
+#endif /*LIBSPDM_CERT_PARSE_SUPPORT*/
     const void * cert_chain;
     const void *full_cert_chain;
     size_t full_cert_chain_size;
@@ -285,15 +287,15 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
                                                    response_size, response);
         }
 
-        /*get actual cert_chain size*/
-        cert_chain_size = cert_chain_header->length - sizeof(spdm_cert_chain_t) -
-                          root_cert_hash_size;
-
         /*point to actual cert_chain*/
         cert_chain = (const void*)((const uint8_t *)cert_chain
                                    + sizeof(spdm_cert_chain_t) + root_cert_hash_size);
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
+        /*get actual cert_chain size*/
+        cert_chain_size = cert_chain_header->length - sizeof(spdm_cert_chain_t) -
+                          root_cert_hash_size;
+
         /*check the cert_chain*/
         result = libspdm_set_cert_verify_certchain(spdm_version,
                                                    cert_chain, cert_chain_size,
