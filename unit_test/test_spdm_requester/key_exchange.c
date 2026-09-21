@@ -5427,6 +5427,9 @@ static void req_key_exchange_case6(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_free_session_id(spdm_context, spdm_context->session_info[0].session_id);
+    }
     spdm_test_context->case_id = 0x6;
     spdm_context->retry_times = 3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
@@ -5476,7 +5479,7 @@ static void req_key_exchange_case6(void **state)
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(session_id, 0xFFFEFFFE);
+    assert_int_equal(session_id, 0xFFFFFFFF);
     assert_int_equal(
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
@@ -5636,6 +5639,9 @@ static void req_key_exchange_case9(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_free_session_id(spdm_context, spdm_context->session_info[0].session_id);
+    }
     spdm_test_context->case_id = 0x9;
     spdm_context->retry_times = 3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
@@ -5686,7 +5692,7 @@ static void req_key_exchange_case9(void **state)
         measurement_hash);
     if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-        assert_int_equal(session_id, 0xFFFDFFFD);
+        assert_int_equal(session_id, 0xFFFFFFFF);
         assert_int_equal(
             libspdm_secured_message_get_session_state(
                 spdm_context->session_info[0].secured_message_context),
