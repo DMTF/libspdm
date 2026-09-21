@@ -1265,6 +1265,7 @@ static void req_get_encapsulated_request_case13(void **State)
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 static void req_get_encapsulated_request_case14(void **State)
 {
     libspdm_return_t status;
@@ -1382,6 +1383,7 @@ static void req_get_encapsulated_request_case15(void **State)
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
     free(data);
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
 
 int libspdm_req_get_encapsulated_request_test(void)
 {
@@ -1415,10 +1417,12 @@ int libspdm_req_get_encapsulated_request_test(void)
         /*Success Case ,func :libspdm_get_encap_response_endpoint_info */
         cmocka_unit_test(req_get_encapsulated_request_case13),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         /* Error response: send SPDM_GET_ENCAPSULATED_REQUEST and receive request resync */
         cmocka_unit_test(req_get_encapsulated_request_case14),
         /* Error response: send SPDM_DELIVER_ENCAPSULATED_RESPONSE and receive request resync */
         cmocka_unit_test(req_get_encapsulated_request_case15),
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
     };
 
     libspdm_test_context_t test_context = {

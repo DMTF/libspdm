@@ -4201,6 +4201,7 @@ static void rsp_finish_rsp_case33(void **state)
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) */
 
+#if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
 /**
  * Test 34: receiving a correct FINISH from the Requester when both endpoints support Heartbeat
  * and the Responder's HeartbeatPeriod is non-zero.
@@ -4436,6 +4437,7 @@ static void rsp_finish_rsp_case35(void **state)
 
     free(data1);
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
 
 int libspdm_rsp_finish_rsp_test(void)
 {
@@ -4508,10 +4510,12 @@ int libspdm_rsp_finish_rsp_test(void)
         /* FINISH signed with the key of a slot other than the designated one */
         cmocka_unit_test_setup(rsp_finish_rsp_case33, libspdm_unit_test_reset_context),
         #endif /* (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (..) */
+        #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
         /* Heartbeat is supported and HeartbeatPeriod is non-zero */
         cmocka_unit_test_setup(rsp_finish_rsp_case34, libspdm_unit_test_reset_context),
         /* Heartbeat is supported and HeartbeatPeriod is zero */
         cmocka_unit_test_setup(rsp_finish_rsp_case35, libspdm_unit_test_reset_context),
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
     };
 
     libspdm_test_context_t test_context = {

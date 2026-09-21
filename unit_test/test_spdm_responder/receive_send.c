@@ -1161,10 +1161,10 @@ static void libspdm_test_responder_receive_send_rsp_case12(void **state)
     spdm_test_context->case_id = 12;
     set_basic_mut_auth_state(spdm_context);
 
-    /* Wrong request: GET_DIGESTS instead of GET_ENCAPSULATED_REQUEST. */
+    /* Wrong request: GET_CAPABILITIES instead of GET_ENCAPSULATED_REQUEST. */
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.spdm_version = SPDM_MESSAGE_VERSION_11;
-    spdm_request.request_response_code = SPDM_GET_DIGESTS;
+    spdm_request.request_response_code = SPDM_GET_CAPABILITIES;
     libspdm_copy_mem(spdm_context->last_spdm_request,
                      libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
                      &spdm_request, sizeof(spdm_request));
@@ -1368,7 +1368,7 @@ static void libspdm_test_responder_receive_send_rsp_case14(void **state)
     size_t response_size;
     uint32_t transport_header_size;
     size_t index;
-    const uint8_t codes[] = {SPDM_GET_DIGESTS, SPDM_GET_ENCAPSULATED_REQUEST, SPDM_GET_VERSION};
+    const uint8_t codes[] = {SPDM_GET_CAPABILITIES, SPDM_GET_ENCAPSULATED_REQUEST, SPDM_GET_VERSION};
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1411,7 +1411,7 @@ static void libspdm_test_responder_receive_send_rsp_case14(void **state)
         transport_header_size = spdm_context->local_context.capability.transport_header_size;
         spdm_response = (spdm_error_response_t *)((uint8_t *)message + transport_header_size);
 
-        if (codes[index] == SPDM_GET_DIGESTS) {
+        if (codes[index] == SPDM_GET_CAPABILITIES) {
             /* Unrelated request while the encapsulated request is outstanding. */
             assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
             assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_REQUEST_IN_FLIGHT);
@@ -1477,7 +1477,7 @@ static void libspdm_test_responder_receive_send_rsp_case15(void **state)
         /* Bit 1: the flow has not issued a request, so only GET_ENCAPSULATED_REQUEST
          * advances it. */
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST,
-          SPDM_GET_DIGESTS, 0, SPDM_ERROR_CODE_UNEXPECTED_REQUEST },
+          SPDM_GET_CAPABILITIES, 0, SPDM_ERROR_CODE_UNEXPECTED_REQUEST },
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST,
           SPDM_DELIVER_ENCAPSULATED_RESPONSE, 0, SPDM_ERROR_CODE_UNEXPECTED_REQUEST },
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST,
@@ -1490,7 +1490,7 @@ static void libspdm_test_responder_receive_send_rsp_case15(void **state)
           SPDM_DELIVER_ENCAPSULATED_RESPONSE, sizeof(spdm_message_header_t), 0 },
         /* Anything that does not advance the flow is rejected on that channel. */
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST,
-          SPDM_GET_DIGESTS, sizeof(spdm_message_header_t), SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
+          SPDM_GET_CAPABILITIES, sizeof(spdm_message_header_t), SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
 
         /* Bit 2 embeds GET_DIGESTS in KEY_EXCHANGE_RSP, so the next non-session message is
          * DELIVER_ENCAPSULATED_RESPONSE rather than GET_ENCAPSULATED_REQUEST. */
@@ -1499,7 +1499,7 @@ static void libspdm_test_responder_receive_send_rsp_case15(void **state)
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS,
           SPDM_GET_ENCAPSULATED_REQUEST, 0, SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS,
-          SPDM_GET_DIGESTS, 0, SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
+          SPDM_GET_CAPABILITIES, 0, SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS,
           SPDM_GET_VERSION, 0, 0 },
     };
@@ -1605,7 +1605,7 @@ static void libspdm_test_responder_receive_send_rsp_case16(void **state)
         uint8_t expected_error;
     } cases[] = {
         /* Unrelated request while the encapsulated request is outstanding. */
-        { SPDM_GET_DIGESTS, SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
+        { SPDM_GET_CAPABILITIES, SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
         /* Within a session GET_VERSION does not release the Requester from the flow, which is
          * what distinguishes this from test 14. */
         { SPDM_GET_VERSION, SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },

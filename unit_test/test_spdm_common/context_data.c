@@ -1394,6 +1394,7 @@ static void libspdm_test_export_master_secret_case19(void **state)
     assert_int_equal(export_master_secret_size, LIBSPDM_MAX_HASH_SIZE - 4);
 }
 
+#if LIBSPDM_CHECK_SPDM_CONTEXT
 static void libspdm_test_check_context_case20(void **state)
 {
     void *context;
@@ -1434,6 +1435,7 @@ static void libspdm_test_check_context_case20(void **state)
     result = libspdm_check_context (context);
     assert_int_equal(false, result);
 }
+#endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
 
 static void libspdm_test_max_session_count_case21(void **state)
 {
@@ -2426,7 +2428,9 @@ int libspdm_common_context_data_test_main(void)
 
         /* Test that the Export Master Secret can be exported and cleared. */
         cmocka_unit_test(libspdm_test_export_master_secret_case19),
+#if LIBSPDM_CHECK_SPDM_CONTEXT
         cmocka_unit_test(libspdm_test_check_context_case20),
+#endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
 
         /* Test the max DHE/PSK session count */
         cmocka_unit_test(libspdm_test_max_session_count_case21),

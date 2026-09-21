@@ -825,14 +825,16 @@ static void rsp_psk_exchange_rsp_case10(void **state)
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
     uint32_t measurement_summary_hash_size;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
     size_t opaque_psk_exchange_req_size;
+    #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     bool result;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -900,10 +902,10 @@ static void rsp_psk_exchange_rsp_case10(void **state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_PSK_EXCHANGE_RSP);
     assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, m_libspdm_psk_exchange_request4.header.param1);
 
-#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     result = libspdm_generate_measurement_summary_hash(
         spdm_context,
         spdm_context->connection_info.version,
@@ -935,14 +937,16 @@ static void rsp_psk_exchange_rsp_case11(void **state)
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
     uint32_t measurement_summary_hash_size;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
     size_t opaque_psk_exchange_req_size;
+    #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     bool result;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1010,10 +1014,10 @@ static void rsp_psk_exchange_rsp_case11(void **state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_PSK_EXCHANGE_RSP);
     assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, m_libspdm_psk_exchange_request5.header.param1);
 
-#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     result = libspdm_generate_measurement_summary_hash(
         spdm_context,
         spdm_context->connection_info.version,
@@ -1632,6 +1636,7 @@ static void rsp_psk_exchange_rsp_case18(void **state)
     free(data1);
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
 /**
  * Test 19: the Responder does not require PSK_FINISH, so PSK_EXCHANGE_RSP establishes
  * the session, and both endpoints support Heartbeat with a non-zero HeartbeatPeriod.
@@ -1830,6 +1835,7 @@ static void rsp_psk_exchange_rsp_case20(void **state)
 #endif
     free(data1);
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
 
 int libspdm_rsp_psk_exchange_rsp_test(void)
 {
@@ -1872,10 +1878,12 @@ int libspdm_rsp_psk_exchange_rsp_test(void)
         cmocka_unit_test(rsp_psk_exchange_rsp_case17),
         /* The Responder using integrator defined opaque data */
         cmocka_unit_test(rsp_psk_exchange_rsp_case18),
+        #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
         /* Heartbeat is supported and HeartbeatPeriod is non-zero */
         cmocka_unit_test_setup(rsp_psk_exchange_rsp_case19, libspdm_unit_test_reset_context),
         /* Heartbeat is supported and HeartbeatPeriod is zero */
         cmocka_unit_test_setup(rsp_psk_exchange_rsp_case20, libspdm_unit_test_reset_context),
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
     };
 
     libspdm_test_context_t test_context = {
