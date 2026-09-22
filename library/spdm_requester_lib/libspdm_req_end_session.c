@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -21,7 +21,7 @@ typedef struct {
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    session_id to the END_SESSION request.
- * @param  end_session_attributes         end_session_attributes to the END_SESSION_ACK request.
+ * @param  end_session_attributes         end_session_attributes to the END_SESSION request.
  **/
 static libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *spdm_context,
                                                              uint32_t session_id,

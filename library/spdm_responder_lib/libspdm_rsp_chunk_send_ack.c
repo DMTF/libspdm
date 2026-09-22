@@ -241,8 +241,8 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
 
         *response_size = response_header_size + chunk_response_size;
 
-        /* Return success so that libspdm_build_response() does not overwrite
-         * the CHUNK_ACK with EarlyErrorDetected with a generic error. */
+        /* Return success so that libspdm_build_response() does not overwrite the
+         * CHUNK_SEND_ACK with EarlyErrorDetected with a generic error. */
         status = LIBSPDM_STATUS_SUCCESS;
 
         if (send_info->large_message != NULL) {

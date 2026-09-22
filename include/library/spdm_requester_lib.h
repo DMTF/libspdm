@@ -27,7 +27,7 @@ libspdm_return_t libspdm_init_connection(void *spdm_context, bool get_version_on
 
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 /**
- * This function sends GET_DIGEST to get all digest of the certificate chains from device.
+ * This function sends GET_DIGESTS to get all digests of the certificate chains from device.
  *
  * TotalDigestSize = sizeof(digest) * count in slot_mask
  *
@@ -247,7 +247,7 @@ libspdm_return_t libspdm_challenge_ex2(void *spdm_context, void *reserved,
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**
- * This function sends GET_MEASUREMENT
+ * This function sends GET_MEASUREMENTS
  * to get measurement from the device.
  *
  * If the signature is requested, this function verifies the signature of the measurement.
@@ -275,7 +275,7 @@ libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *ses
                                          void *measurement_record);
 
 /**
- * This function sends GET_MEASUREMENT to get measurement from the device.
+ * This function sends GET_MEASUREMENTS to get measurements from the device.
  *
  * If the signature is requested, this function verifies the signature of the measurement.
  *
@@ -314,7 +314,7 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
                                             size_t *opaque_data_size);
 
 /**
- * This function sends GET_MEASUREMENT to get measurement from the device.
+ * This function sends GET_MEASUREMENTS to get measurements from the device.
  *
  * If the signature is requested, this function verifies the signature of the measurement.
  *
@@ -449,7 +449,7 @@ libspdm_return_t libspdm_get_key_pair_info(void *spdm_context, const uint32_t *s
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
 /**
- * This function sends GET_KEY_PAIR_INFO to get key pair info from device.
+ * This function sends SET_KEY_PAIR_INFO to set key pair info on the device.
  *
  * @param  spdm_context                 A pointer to the SPDM context.
  * @param  session_id                   Indicates if it is a secured message protected via SPDM session.

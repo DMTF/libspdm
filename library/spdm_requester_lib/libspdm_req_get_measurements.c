@@ -142,7 +142,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
 }
 
 /**
- * This function sends GET_MEASUREMENT to get measurement from the device.
+ * This function sends GET_MEASUREMENTS to get measurements from the device.
  * If the signature is requested this function verifies the signature of the measurement.
  *
  * @param  context                    A pointer to the SPDM context.
