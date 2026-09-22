@@ -46,7 +46,7 @@ if(NOT ((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC")))
     )
 
     if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-        if((TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
+        if((TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
             target_compile_options(test_spdm_common PRIVATE /wd4819)
         endif()
     endif()

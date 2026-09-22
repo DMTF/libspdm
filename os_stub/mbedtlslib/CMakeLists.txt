@@ -25,7 +25,7 @@ target_include_directories(mbedtls PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/mbedtls/include
     ${CMAKE_CURRENT_LIST_DIR}/mbedtls/library
 )
-if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND ((TOOLCHAIN STREQUAL "CBMC") OR (TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022")))
+if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND ((TOOLCHAIN STREQUAL "CBMC") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022")))
     target_compile_options(mbedtls PRIVATE /wd4090 /wd4244 /wd4132 /wd4245 /wd4310 /wd4701 /wd4127 /wd4204 /wd4702 /wd4200 /wd4389)
 else()
     target_compile_options(mbedtls PRIVATE -Wno-cast-qual ${MBEDTLS_FLAGS})
@@ -46,7 +46,7 @@ target_include_directories(mbedx509 PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/mbedtls/include
     ${CMAKE_CURRENT_LIST_DIR}/mbedtls/library
 )
-if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND ((TOOLCHAIN STREQUAL "CBMC") OR (TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022")))
+if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND ((TOOLCHAIN STREQUAL "CBMC") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022")))
     target_compile_options(mbedx509 PRIVATE /wd4090 /wd4244 /wd4132 /wd4245 /wd4310 /wd4701 /wd4127 /wd4204 /wd4702 /wd4200 /wd4389)
 else()
     target_compile_options(mbedx509 PRIVATE -Wno-cast-qual ${MBEDTLS_FLAGS})
@@ -67,7 +67,7 @@ target_include_directories(mbedcrypto PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/mbedtls/include
     ${CMAKE_CURRENT_LIST_DIR}/mbedtls/library
 )
-if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND ((TOOLCHAIN STREQUAL "CBMC") OR (TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022")))
+if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND ((TOOLCHAIN STREQUAL "CBMC") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022")))
     target_compile_options(mbedcrypto PRIVATE /wd4090 /wd4244 /wd4132 /wd4245 /wd4310 /wd4701 /wd4127 /wd4204 /wd4702 /wd4200 /wd4389)
 else()
     target_compile_options(mbedcrypto PRIVATE -Wno-cast-qual ${MBEDTLS_FLAGS})
