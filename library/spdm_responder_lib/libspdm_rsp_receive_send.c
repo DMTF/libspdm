@@ -155,9 +155,9 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
     context->last_spdm_request_size =
         libspdm_get_scratch_buffer_last_spdm_request_capacity(context);
 
-    /* always use scratch buffer to response.
+    /* always use scratch buffer for the request.
      * if it is secured message, this scratch buffer will be used.
-     * if it is normal message, the response ptr will point to receiver buffer. */
+     * if it is normal message, the request ptr will point to receiver buffer. */
     transport_header_size = context->local_context.capability.transport_header_size;
     libspdm_get_scratch_buffer (context, (void **)&scratch_buffer, &scratch_buffer_size);
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP

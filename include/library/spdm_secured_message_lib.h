@@ -127,7 +127,7 @@ bool libspdm_secured_message_export_session_keys(void *spdm_secured_message_cont
                                                  size_t *session_keys_size);
 
 /**
- * Import the session_keys from an SPDM secured message context.
+ * Import the session_keys into an SPDM secured message context.
  *
  * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
  * @param  session_keys                  Indicate the buffer to store the session_keys in

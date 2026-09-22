@@ -28,7 +28,7 @@ extern "C" {
  *             The message exchange in a connection is plain text.*/
 
 /* Session: In one connection with one device, a host may create multiple sessions.
- *          The session starts with via KEY_EXCHANGE or PSK_EXCHANGE, and step with END_SESSION.
+ *          The session starts with KEY_EXCHANGE or PSK_EXCHANGE, and ends with END_SESSION.
  *          A session can be unique identified by a session ID, returned from the device.
  *          The message exchange in a session is cipher text.*/
 
@@ -856,9 +856,9 @@ void *libspdm_get_session_info_via_session_id(void *spdm_context, uint32_t sessi
 void *libspdm_get_secured_message_context_via_session_id(void *spdm_context, uint32_t session_id);
 
 /**
- * This function gets the secured message context via session ID.
+ * This function gets the secured message context via session info.
  *
- * @param  spdm_session_info  A pointer to the SPDM context.
+ * @param  spdm_session_info  A pointer to the SPDM session info.
  *
  * @return secured message context.
  **/
@@ -956,7 +956,7 @@ bool libspdm_get_local_public_key_buffer(void *spdm_context,
  * byte2 - libspdm minor version
  * byte1 - libspdm patch version
  * byte0 - libspdm alpha
- *         (office release with tag: 0, release candidate with tag: 1, non official release: 0xFF)
+ *         (official release with tag: 0, release candidate with tag: 1, non official release: 0xFF)
  **/
 uint32_t libspdm_module_version(void);
 

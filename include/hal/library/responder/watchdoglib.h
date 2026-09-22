@@ -28,7 +28,7 @@ extern bool libspdm_start_watchdog(void *spdm_context, uint32_t session_id, uint
 extern bool libspdm_stop_watchdog(void *spdm_context, uint32_t session_id);
 
 /**
- * Reset the watchdog time for a given session ID.
+ * Reset the watchdog timer for a given session ID.
  *
  * @param  spdm_context  A pointer to the SPDM context.
  * @param  session_id    Indicate the SPDM session ID.

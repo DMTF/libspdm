@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -9,7 +9,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 /**
  * This function sends SET_CERTIFICATE
- * to set certificate from the device.
+ * to set certificate on the device.
  *
  * @param  context                      A pointer to the SPDM context.
  * @param  session_id                   Indicates if it is a secured message protected via SPDM session.

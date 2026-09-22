@@ -159,7 +159,7 @@ typedef void (*libspdm_session_state_callback_func)(
 /**
  * Register an SPDM state callback function.
  *
- * This function can be called multiple times to let different session APPs register its own callback.
+ * This function can be called multiple times to let different session APPs register their own callbacks.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  spdm_session_state_callback     The function to be called in SPDM session state change.
@@ -169,7 +169,7 @@ void libspdm_register_session_state_callback_func(
     libspdm_session_state_callback_func spdm_session_state_callback);
 
 /**
- * Notify the connection state to an SPDM context register.
+ * Notify the connection state to an SPDM context registrant.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  connection_state              Indicate the SPDM connection state.
@@ -190,7 +190,7 @@ void libspdm_register_connection_state_callback_func(
     libspdm_connection_state_callback_func spdm_connection_state_callback);
 
 /**
- * Notify the key update operation to an SPDM context register.
+ * Notify the key update operation to an SPDM context registrant.
  *
  * @param  spdm_context           A pointer to the SPDM context.
  * @param  session_id             Session ID for the keys being updated.
@@ -202,7 +202,7 @@ typedef void (*libspdm_key_update_callback_func)(
     libspdm_key_update_action_t key_update_action);
 
 /**
- * Notify the key update operation to an SPDM context register.
+ * Notify the key update operation to an SPDM context registrant.
  *
  * @param  spdm_context           A pointer to the SPDM context.
  * @param  session_id             Session ID for the keys being updated.

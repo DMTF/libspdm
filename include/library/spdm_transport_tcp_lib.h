@@ -9,7 +9,7 @@
 
 #include "library/spdm_common_lib.h"
 
-/* Required sender/receive buffer in device io.
+/* Required sender/receiver buffer in device io.
  * +-------+--------+---------------------------+------+--+------+---+--------+-----+
  * | TYPE  |TransHdr|      EncryptionHeader     |AppHdr|  |Random|MAC|AlignPad|FINAL|
  * |       |        |SessionId|SeqNum|Len|AppLen|      |  |      |   |        |     |

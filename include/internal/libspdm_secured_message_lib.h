@@ -299,8 +299,8 @@ bool libspdm_secured_message_kem_generate_key(uint32_t kem_alg,
  *                                       On output, the size of data returned in cipher_text buffer in bytes.
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  *
- * @retval true   DHE exchanged key generation succeeded.
- * @retval false  DHE exchanged key generation failed.
+ * @retval true   KEM exchanged key generation succeeded.
+ * @retval false  KEM exchanged key generation failed.
  * @retval false  key_size is not large enough.
  **/
 bool libspdm_secured_message_kem_encapsulate(
@@ -315,12 +315,12 @@ bool libspdm_secured_message_kem_encapsulate(
  *
  * @param  kem_alg                SPDM kem_alg
  * @param  kem_context                   Pointer to the kem context.
- * @param  peer_cipher_text              Pointer to the peer's public key.
- * @param  peer_cipher_text_size         Size of peer's public key in bytes.
+ * @param  peer_cipher_text              Pointer to the peer's cipher text.
+ * @param  peer_cipher_text_size         Size of peer's cipher text in bytes.
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  *
- * @retval true   DHE exchanged key generation succeeded.
- * @retval false  DHE exchanged key generation failed.
+ * @retval true   KEM exchanged key generation succeeded.
+ * @retval false  KEM exchanged key generation failed.
  * @retval false  key_size is not large enough.
  **/
 bool libspdm_secured_message_kem_decapsulate(

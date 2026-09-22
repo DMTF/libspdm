@@ -106,7 +106,7 @@ extern bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
  *
  * @param[in]      cert         Pointer to the DER-encoded X509 certificate.
  * @param[in]      cert_size    Size of the X509 certificate in bytes.
- * @param[out]     cert_issuer  Pointer to the retrieved certificate subject bytes.
+ * @param[out]     cert_issuer  Pointer to the retrieved certificate issuer bytes.
  * @param[in, out] issuer_size  The size in bytes of the cert_issuer buffer on input,
  *                              and the size of buffer returned cert_issuer on output.
  *
@@ -214,7 +214,7 @@ extern int32_t libspdm_x509_compare_date_time(const void *date_time1, const void
  * @param[in]      cert_size  Size of the X509 certificate in bytes.
  * @param[out]     usage      Key usage (LIBSPDM_CRYPTO_X509_KU_*)
  *
- * @retval  true   if the usage is no equal 0. The certificate key usage retrieved successfully.
+ * @retval  true   if the usage is not equal to 0. The certificate key usage retrieved successfully.
  * @retval  true   if the usage is equal 0. The certificate parse successfully, but the cert doesn't have key usage.
  * @retval  false  Invalid certificate, or usage is NULL.
  **/

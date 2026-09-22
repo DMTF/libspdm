@@ -454,7 +454,7 @@ bool libspdm_asym_get_public_key_from_x509(uint32_t base_asym_algo,
  *                         retrieved public key component.
  *                         Use libspdm_asym_free() function to free the resource.
  *
- * @retval  true   Private key was retrieved successfully.
+ * @retval  true   Public key was retrieved successfully.
  * @retval  false  Invalid DER key data.
  **/
 bool libspdm_asym_get_public_key_from_der(uint32_t base_asym_algo,
@@ -1025,7 +1025,7 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size);
  * @param[in]      len               Size of buffer in bytes.
  * @param[out]     name_buffer       Buffer to contain the retrieved certificate
  *                                   SubjectAltName. At most name_buffer_size bytes will be
- *                                   written. Maybe NULL in order to determine the size
+ *                                   written. May be NULL in order to determine the size
  *                                   buffer needed.
  * @param[in,out]  name_buffer_size  The size in bytes of the name buffer on input,
  *                                   and the size of buffer returned name on output.
@@ -1049,7 +1049,7 @@ bool libspdm_get_dmtf_subject_alt_name_from_bytes(
  * @param[in]      cert_size         Size of the X509 certificate in bytes.
  * @param[out]     name_buffer       Buffer to contain the retrieved certificate
  *                                   SubjectAltName. At most name_buffer_size bytes will be
- *                                   written. Maybe NULL in order to determine the size
+ *                                   written. May be NULL in order to determine the size
  *                                   buffer needed.
  * @param[in,out]  name_buffer_size  The size in bytes of the name buffer on input,
  *                                   and the size of buffer returned name on output.
@@ -1207,7 +1207,7 @@ bool libspdm_pqc_asym_get_public_key_from_x509(uint32_t pqc_asym_algo,
  *                         retrieved public key component.
  *                         Use libspdm_asym_free() function to free the resource.
  *
- * @retval  true   Private key was retrieved successfully.
+ * @retval  true   Public key was retrieved successfully.
  * @retval  false  Invalid DER key data.
  **/
 bool libspdm_pqc_asym_get_public_key_from_der(uint32_t pqc_asym_algo,
@@ -1480,20 +1480,20 @@ bool libspdm_req_pqc_asym_sign_hash(
 uint32_t libspdm_get_kem_encap_key_size(uint32_t kem_alg);
 
 /**
- * This function returns the SPDM KEM algorithm key size.
+ * This function returns the SPDM KEM algorithm cipher text size.
  *
  * @param  kem_alg  SPDM kem_alg
  *
- * @return SPDM KEM algorithm key size.
+ * @return SPDM KEM algorithm cipher text size.
  **/
 uint32_t libspdm_get_kem_cipher_text_size(uint32_t kem_alg);
 
 /**
- * This function returns the SPDM KEM algorithm key size.
+ * This function returns the SPDM KEM algorithm shared secret size.
  *
  * @param  kem_alg  SPDM kem_alg
  *
- * @return SPDM KEM algorithm key size.
+ * @return SPDM KEM algorithm shared secret size.
  **/
 uint32_t libspdm_get_kem_shared_secret_size(uint32_t kem_alg);
 
@@ -1521,7 +1521,7 @@ void libspdm_kem_free(uint32_t kem_alg, void *context);
  * Generates KEM public key, based upon negotiated KEM algorithm.
  *
  * @param  kem_alg           SPDM kem_alg
- * @param  context           Pointer to the DHE context.
+ * @param  context           Pointer to the KEM context.
  * @param  encap_key         Pointer to the buffer to receive generated public key.
  * @param  encap_key_size    On input, the size of public_key buffer in bytes.
  *                           On output, the size of data returned in public_key buffer in bytes.
@@ -1659,7 +1659,7 @@ bool libspdm_generate_handshake_key (
  * @param export_master_secret_size      On input, the size of the export_master_secret buffer.
  *                                       On output, the actual size of the generated export master secret.
  *
- * @retval true   Handshake keys were generated successfully.
+ * @retval true   Data keys were generated successfully.
  * @retval false  An error occurred during key generation.
  */
 bool libspdm_generate_data_key (

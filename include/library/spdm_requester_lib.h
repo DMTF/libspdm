@@ -455,7 +455,7 @@ libspdm_return_t libspdm_get_key_pair_info(void *spdm_context, const uint32_t *s
  * @param  session_id                   Indicates if it is a secured message protected via SPDM session.
  *                                      If session_id is NULL, it is a normal message.
  *                                      If session_id is not NULL, it is a secured message.
- * @param  key_pair_id                  Indicate which key pair ID's information to retrieve.
+ * @param  key_pair_id                  Indicate which key pair ID's information to set.
  * @param  operation                    Set key pair info operation: change/erase/generate.
  * @param  desired_key_usage            Indicate the desired key usage for the requested key pair ID.
  * @param  desired_asym_algo            Indicate the desired asymmetric algorithm for the requested key pair ID.
@@ -877,7 +877,7 @@ libspdm_return_t libspdm_get_csr(void *spdm_context,
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 /**
  * This function try to send SET_CERTIFICATE
- * to set certificate from the device.
+ * to set certificate on the device.
  *
  * @param  context          A pointer to the SPDM context.
  * @param  session_id       Indicates if it is a secured message protected via SPDM session.

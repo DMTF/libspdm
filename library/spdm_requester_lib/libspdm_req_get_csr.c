@@ -23,7 +23,7 @@
  * @param[out] csr                          address to store CSR.
  * @param[in, out] csr_len                  on input, *csr_len indicates the max csr buffer size.
  *                                          on output, *csr_len indicates the actual csr buffer size.
- * @param[in]  request_attribute            Set certificate request attributes. This field is only used for SPDM 1.3 and above.
+ * @param[in]  request_attribute            GET_CSR request attributes. This field is only used for SPDM 1.3 and above.
  * @param[in]  key_pair_id                  The value of this field shall be the unique key pair number identifying the desired
  *                                          asymmetric key pair to associate with SlotID .
  * @param[out] available_csr_tracking_tag   available CSRTrackingTag when the Responder sends a ResetRequired error message

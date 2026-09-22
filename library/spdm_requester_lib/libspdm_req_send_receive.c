@@ -179,7 +179,7 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
     }
     is_message_app_message = false;
 
-    /* always use scratch buffer to response.
+    /* always use scratch buffer for the response.
      * if it is secured message, this scratch buffer will be used.
      * if it is normal message, the response ptr will point to receiver buffer. */
     transport_header_size = context->local_context.capability.transport_header_size;
