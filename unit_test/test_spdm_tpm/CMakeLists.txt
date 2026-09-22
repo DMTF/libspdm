@@ -24,7 +24,7 @@ target_sources(test_spdm_tpm
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if((TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
+    if((TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
         target_compile_options(test_spdm_tpm PRIVATE /wd4819)
     endif()
 endif()

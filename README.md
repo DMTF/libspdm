@@ -105,7 +105,6 @@
 
 | Windows System  | ia32 | x64 | arm | aarch64 | riscv32 | riscv64 |
 | --------------- | ---- | --- | --- | ------- | ------- | ------- |
-| [VS2015](https://visualstudio.microsoft.com/vs/older-downloads/) |  cl  |  cl |  -  |    -    |    -    |    -    |
 | [VS2019](https://visualstudio.microsoft.com/vs/older-downloads/) |  cl  |  cl |  -  |    -    |    -    |    -    |
 | [VS2022](https://visualstudio.microsoft.com/vs/older-downloads/) |  cl  |  cl |  -  |    -    |    -    |    -    |
 | [ARM_DS2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) |  -   |  -  | armclang | armclang |    -    |    -    |
@@ -159,7 +158,7 @@ Support [CodeQL](https://codeql.github.com/) tool.
 
 1) Compiler for IA32/X64 (Choose one)
 
-    a) [Visual Studio 2022](https://visualstudio.microsoft.com/vs/older-downloads/), [Visual Studio 2019](https://visualstudio.microsoft.com/vs/older-downloads/), [Visual Studio 2015](https://visualstudio.microsoft.com/vs/older-downloads/)
+    a) [Visual Studio 2022](https://visualstudio.microsoft.com/vs/older-downloads/), [Visual Studio 2019](https://visualstudio.microsoft.com/vs/older-downloads/)
 
     b) [LLVM](https://llvm.org/) (LLVM13)
     - Install [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0). Change the LLVM install path to `C:\LLVM`, and add LLVM path `C:\LLVM\bin` in PATH environment for CLANG build on Windows.
@@ -240,7 +239,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
    cd libspdm
    mkdir build
    cd build
-   cmake -G"NMake Makefiles" -DARCH=<x64|ia32> -DTOOLCHAIN=<VS2022|VS2019|VS2015|CLANG> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   cmake -G"NMake Makefiles" -DARCH=<x64|ia32> -DTOOLCHAIN=<VS2022|VS2019|CLANG> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
    nmake copy_sample_key
    nmake
    ```
