@@ -32,7 +32,7 @@ extern void *libspdm_sm2_dsa_new_by_nid(size_t nid);
  * @param[in]  der_size    Size of the DER-encoded public key data in bytes.
  * @param[out] sm2_context Pointer to newly generated SM2 context which contains the
  *                         SM2 public key component.
- *                         Use libspdm_sm2_free() function to free the resource.
+ *                         Use libspdm_sm2_dsa_free() function to free the resource.
  *
  * If der_data is NULL, then return false.
  * If sm2_context is NULL, then return false.

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -73,7 +73,7 @@ extern void libspdm_debug_assert(const char *file_name, size_t line_number,
 /**
  * LIBSPDM_DEBUG(level, format_string, argument_list...) - Macro that calls libspdm_debug_print().
  *                                                         It is enabled through the
- *                                                         LIBSPDM_PRINT_ENABLE macro.
+ *                                                         LIBSPDM_DEBUG_PRINT_ENABLE macro.
  * @param print_level    Either LIBSPDM_DEBUG_INFO or LIBSPDM_DEBUG_ERROR.
  * @param format_string  Formatted string.
  * @param argument_list  List of arguments.
@@ -98,7 +98,7 @@ extern void libspdm_debug_assert(const char *file_name, size_t line_number,
 
 /**
  * LIBSPDM_DEBUG_CODE(expression) - Macro that defines a section of debug source code.
- *                                  It is enabled through the LIBSPDM_BLOCK_ENABLE macro.
+ *                                  It is enabled through the LIBSPDM_DEBUG_BLOCK_ENABLE macro.
  *
  * @param expression  One or more lines of expressions that are used for debugging and should not
  *                    affect the behavior of functional code.

@@ -1174,7 +1174,7 @@ bool libspdm_check_context (void *spdm_context)
         SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                        "data_transfer_size must be greater than or equal "
-                       "to SPDM_MIN_DATA_TRANSFER_SIZE (%d).\n",
+                       "to SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 (%d).\n",
                        SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12));
         return false;
     }
@@ -1227,7 +1227,7 @@ bool libspdm_check_context (void *spdm_context)
 
     return true;
 }
-#endif /* LIBSPDM_CHECK_CONTEXT */
+#endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
 
 void libspdm_reset_message_a(libspdm_context_t *spdm_context)
 {
@@ -3160,12 +3160,12 @@ void libspdm_version_number_sort(spdm_version_number_t *ver_set, size_t ver_num)
         for (index_sort = 0; index_sort < ver_num; index_sort++) {
             index_max = index_sort;
             for (index = index_sort + 1; index < ver_num; index++) {
-                /* if ver_ser[index] higher than ver_set[index_max] */
+                /* if ver_set[index] higher than ver_set[index_max] */
                 if (ver_set[index] > ver_set[index_max]) {
                     index_max = index;
                 }
             }
-            /* swap ver_ser[index_min] and ver_set[index_sort] */
+            /* swap ver_set[index_max] and ver_set[index_sort] */
             version = ver_set[index_sort];
             ver_set[index_sort] = ver_set[index_max];
             ver_set[index_max] = version;

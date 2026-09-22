@@ -604,7 +604,7 @@ libspdm_return_t libspdm_transport_storage_encode_message(
             transport_message_size, transport_message, is_request_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                           "libspdm_storage_secured_message_encode_descriptors - %x\n", status));
+                           "libspdm_storage_secured_message_encode - %x\n", status));
             return status;
         }
 

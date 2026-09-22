@@ -353,7 +353,7 @@ libspdm_return_t libspdm_send_receive_end_session(libspdm_context_t *spdm_contex
  * This function executes a series of SPDM encapsulated requests and receives SPDM encapsulated responses.
  *
  * This function starts with the first encapsulated request (such as GET_ENCAPSULATED_REQUEST)
- * and ends with last encapsulated response (such as RESPONSE_PAYLOAD_TYPE_ABSENT or RESPONSE_PAYLOAD_TYPE_SLOT_NUMBER).
+ * and ends with last encapsulated response (such as RESPONSE_PAYLOAD_TYPE_ABSENT or RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER).
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    Indicate if the encapsulated request is a secured message.
