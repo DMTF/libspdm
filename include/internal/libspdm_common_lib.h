@@ -1504,7 +1504,7 @@ void libspdm_get_sender_buffer (
  *
  * @param  context                       A pointer to the SPDM context.
  * @param  max_msg_size                  size in bytes of the maximum size of receiver buffer.
- * @param  msg_buf_pt                    A pointer to a receiver buffer.
+ * @param  msg_buf_ptr                   A pointer to a receiver buffer.
  *
  * @retval RETURN_SUCCESS               The receiver buffer is acquired.
  **/

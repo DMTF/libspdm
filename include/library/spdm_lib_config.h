@@ -149,7 +149,7 @@
 
 /* Enables assertions and debug printing. When `LIBSPDM_DEBUG_ENABLE` is defined it overrides or
  * sets the values of `LIBSPDM_DEBUG_PRINT_ENABLE`, `LIBSPDM_DEBUG_ASSERT_ENABLE`, and
- * `LIBSPDM_BLOCK_ENABLE` to the value of `LIBSPDM_DEBUG_ENABLE`.
+ * `LIBSPDM_DEBUG_BLOCK_ENABLE` to the value of `LIBSPDM_DEBUG_ENABLE`.
  *
  * Note that if this file is used with CMake and `DTARGET=Release` is defined, then all debugging
  * is disabled.

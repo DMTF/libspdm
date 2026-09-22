@@ -127,7 +127,7 @@ libspdm_return_t libspdm_tcp_decode_discovery_message(size_t transport_message_s
  * Return the maximum transport layer message header size.
  *   Transport Message Header Size + sizeof(spdm_secured_message_cipher_header_t))
  *
- *   For TCP, Transport Message Header Size = sizeof(tcp_spdm_binding_header_t)
+ *   For TCP, Transport Message Header Size = sizeof(spdm_tcp_binding_header_t)
  *   For PCI_DOE, Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
  *
  * @param  spdm_context                  A pointer to the SPDM context.

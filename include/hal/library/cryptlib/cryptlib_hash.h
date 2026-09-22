@@ -37,7 +37,7 @@
  * Allocates and initializes one HASH_CTX context for subsequent SHA-256 use.
  *
  * @return  Pointer to the HASH_CTX context that has been initialized.
- *          If the allocations fails, sha256_new() returns NULL. *
+ *          If the allocations fails, libspdm_sha256_new() returns NULL. *
  **/
 extern void *libspdm_sha256_new(void);
 

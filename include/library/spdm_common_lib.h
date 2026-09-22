@@ -585,7 +585,7 @@ typedef void (*libspdm_device_release_sender_buffer_func)(void *spdm_context,
  * Acquire a device receiver buffer for transport layer message.
  *
  * @param  context       A pointer to the SPDM context.
- * @param  msg_buf_pt    A pointer to a receiver buffer.
+ * @param  msg_buf_ptr   A pointer to a receiver buffer.
  *
  * @retval LIBSPDM_STATUS_SUCCESS       The receiver buffer has been acquired.
  * @retval LIBSPDM_STATUS_ACQUIRE_FAIL  Unable to acquire receiver buffer.
@@ -823,7 +823,7 @@ typedef bool (*libspdm_verify_spdm_cert_chain_func)(
  *
  * If it is NOT registered, the default verification in SPDM lib will be used. It verifies:
  *  1) The integrity of the certificate chain, (Root Cert Hash->Root Cert->Cert Chain), according to X.509.
- *  2) The trust anchor, according LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT or LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN.
+ *  2) The trust anchor, according to LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT.
  * If it is registered, SPDM lib will use this function to verify the certificate.
  *
  * This function must be called after libspdm_init_context, and before any SPDM communication.
@@ -1008,7 +1008,7 @@ typedef libspdm_return_t (*libspdm_vendor_response_callback_func)(
  * @param svh_vendor_id_len  Length, in bytes, of the svh_vendor_id field.
  * @param svh_vendor_id      Vendor ID assigned by the Registry or Standards Body. If the value of
  *                           svh_vendor_id_len is 0 then this is NULL.
- * @param event_type_id      Event type identifier. If svh_id is SPDM_REGISTRY_ID_ DMTF then this is
+ * @param event_type_id      Event type identifier. If svh_id is SPDM_REGISTRY_ID_DMTF then this is
  *                           one of the SPDM_DMTF_EVENT_TYPE_* macros.
  * @param event_detail_len   Size, in bytes, of event_detail.
  * @param event_detail       Details of the event.
