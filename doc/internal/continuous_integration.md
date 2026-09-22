@@ -57,9 +57,9 @@ compiler `CFLAGS`.
 In general, operating system, host hardware, cryptography library, toolchain, and build target
 exercise the platform, while code configuration macros exercise the library. As such, they are
 crossed sparsely where every platform is covered against a few configurations, and code
-configurations are swept on the cheapest platform, where "cheapest" means a platform with high
-availability and fast compilation and test execution times. An example would be Linux running on x64
-hardware and compiling with GCC.
+configurations are swept on a reference platform, meaning one with high availability and fast
+compilation and test execution times. An example would be Linux running on x64 hardware and
+compiling with GCC.
 
 One exception to sparse platform combinations is that every combination of `ARCH` and `CRYPTO`
 should be exercised, since cryptography libraries often utilize hardware-specific instructions.

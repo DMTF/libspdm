@@ -176,8 +176,8 @@ jobs:
             target: Release
 
           # == Configuration sweep ============================================
-          # Coarse macros, swept on the cheapest platform unless the macro's
-          # domain depends on the crypto backend.
+          # Coarse macros, swept on the reference platform unless the macro's
+          # domain depends on the cryptography backend.
 
           - name: config-fips
             os: ubuntu-latest
@@ -1635,7 +1635,7 @@ jobs:
 #     CLANG         x Mbed TLS 3   CLANG         x OpenSSL 5
 #     MinGW GCC     x Mbed TLS 1   MinGW GCC     x OpenSSL omitted
 #
-#   Configuration sweep, 9 jobs on the cheapest platform except
+#   Configuration sweep, 9 jobs on a reference platform except
 #   config-classical-crypto, whose macro domain depends on CRYPTO:
 #     config-fips                  config-respond-if-ready-off
 #     config-msg-log-off           config-record-transcript
