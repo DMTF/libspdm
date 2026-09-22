@@ -49,7 +49,7 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
  * the feature is to erase the certificate chain.
  *
  * If a reset isn't required, then it is the implementations
- * responsability to allocate memory to store the new certificate
+ * responsibility to allocate memory to store the new certificate
  * chain and update `LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN` to
  * use the new chain in libspdm.
  *
@@ -58,7 +58,7 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
  * HAL must handle this.
  *
  * For DEVICE_CERT and GENERIC_CERT this is a simple. All that needs to be done
- * is memory allocated, thenew certificate copied and the old certificate freed.
+ * is memory allocated, the new certificate copied and the old certificate freed.
  *
  * The ALIAS_CERT is similar, but required combining the new updated certificates
  * with the existing ones that aren't changed.
@@ -103,7 +103,7 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
  *                If a reset is not required the local certificate chain was
  *                successfully updated.
  * @retval false  Failed to update the local certificate chain or store the new chain.
- *                The new chain is not commited and not in use.
+ *                The new chain is not committed and not in use.
  **/
 extern bool libspdm_update_local_cert_chain(
     void *spdm_context,

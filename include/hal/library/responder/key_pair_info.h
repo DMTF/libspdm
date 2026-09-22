@@ -70,15 +70,13 @@ extern bool libspdm_read_key_pair_info(
  * @param  session_id                   Indicates the session in which the request was received.
  *                                      If NULL then the request was not received in a session.
  * @param  key_pair_id                  Indicate which key pair ID's information to retrieve.
- *
- * @param  key_pair_id                  Indicate which key pair ID's information to retrieve.
  * @param  operation                    Set key pair info operation: change/erase/generate.
  * @param  desired_key_usage            Indicate the desired key usage for the requested key pair ID.
  * @param  desired_asym_algo            Indicate the desired asymmetric algorithm for the requested key pair ID.
  * @param  desired_assoc_cert_slot_mask Indicate the desired certificate slot association for the requested key pair ID.
  * @param  need_reset                   For input, for SPDM 1.4+, it gives the value of SET_KEY_PAIR_RESET_CAP:
  *                                                  If true, then device needs to be reset to complete the set_key_pair_info.
- *                                                  If false, the device doesn`t need to be reset to complete the set_key_pair_info.
+ *                                                  If false, the device doesn't need to be reset to complete the set_key_pair_info.
  *                                                 for SPDM 1.3, it will always be false.
  *                                       For output, it specifies whether the device needs to be reset to complete the set_key_pair_info or not.
  *

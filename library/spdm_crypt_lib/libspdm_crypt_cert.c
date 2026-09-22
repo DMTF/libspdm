@@ -308,7 +308,7 @@ bool libspdm_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg,
 }
 
 /**
- * Check the X509 DataTime is within a valid range.
+ * Check the X509 DateTime is within a valid range.
  *
  * @param  from                         notBefore Pointer to date_time object.
  * @param  from_size                     notBefore date_time object size.
@@ -824,7 +824,7 @@ static bool libspdm_get_public_key_algo_OID(
 }
 
 /**
- * Verify cert public key encryption algorithm is matched to negotiated base_aysm algo
+ * Verify cert public key encryption algorithm is matched to negotiated base_asym algo
  *
  * @param[in]      cert                  Pointer to the DER-encoded certificate data.
  * @param[in]      cert_size             The size of certificate data in bytes.
@@ -1030,7 +1030,7 @@ static bool libspdm_get_public_key_oid(
 }
 
 /**
- * Verify cert public key encryption algorithm is matched to negotiated base_aysm algo
+ * Verify cert public key encryption algorithm is matched to negotiated base_asym algo
  *
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
@@ -1376,7 +1376,7 @@ bool libspdm_contains_hardware_id_oid(const uint8_t *cert, size_t cert_size)
  * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
  *
  * @retval  true   verify pass
- * @retval  false  verify fail,two case: 1. Unable to get get or validate extension data.
+ * @retval  false  verify fail, two cases: 1. Unable to get or validate extension data.
  *                                       2. hardware_identity_oid is found in AliasCert model;
  **/
 static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t cert_size,

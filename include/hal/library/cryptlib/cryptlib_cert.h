@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -37,7 +37,7 @@ extern bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *leng
  *
  * @retval  true   If the subject_size is not equal 0. The certificate subject retrieved successfully.
  * @retval  true   If the subject_size is equal 0. The certificate parse successful. But the cert doesn't have subject.
- * @retval  false  If the subject_size is not equal 0. The certificate subject retrieved successfully.But the subject_size is too small for the result.
+ * @retval  false  If the subject_size is not equal 0. The certificate subject retrieved successfully. But the subject_size is too small for the result.
  * @retval  false  If the subject_size is equal 0. Invalid certificate.
  **/
 extern bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
@@ -171,7 +171,7 @@ extern bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
                                       size_t *to_size);
 
 /**
- * Format a date_time object into DataTime buffer
+ * Format a date_time object into DateTime buffer
  *
  * If date_time_str is NULL, then return false.
  * If date_time_size is NULL, then return false.

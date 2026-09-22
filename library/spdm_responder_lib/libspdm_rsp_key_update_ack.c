@@ -216,7 +216,7 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t *spdm_context
         libspdm_zero_mem (prev_spdm_request, sizeof(spdm_key_update_request_t));
         break;
     default:
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "espurious case\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "spurious case\n"));
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);

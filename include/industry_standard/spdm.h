@@ -210,7 +210,7 @@ typedef struct {
     uint8_t ext_hash_count;
     uint8_t reserved3;
     uint8_t mel_specification;
-    /* Followed by dynamic arrays for ext_asym, ext_hash, and struct_tableif needed
+    /* Followed by dynamic arrays for ext_asym, ext_hash, and struct_table if needed
      * spdm_extended_algorithm_t ext_asym[ext_asym_count];
      * spdm_extended_algorithm_t ext_hash[ext_hash_count];
      * spdm_negotiate_algorithms_common_struct_table_t struct_table[
@@ -376,7 +376,7 @@ typedef struct {
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_RESET_CAP | \
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP)
 
-/* SPDM GET_CAPBILITIES extended response flags (1.4) */
+/* SPDM GET_CAPABILITIES extended response flags (1.4) */
 #define SPDM_GET_CAPABILITIES_EXTENDED_RESPONSE_FLAGS_SLOT_MGMT_CAP 0x0001
 #define SPDM_GET_CAPABILITIES_EXTENDED_RESPONSE_FLAGS_14_MASK ( \
         SPDM_GET_CAPABILITIES_EXTENDED_RESPONSE_FLAGS_SLOT_MGMT_CAP)

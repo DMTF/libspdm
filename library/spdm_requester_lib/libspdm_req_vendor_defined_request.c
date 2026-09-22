@@ -301,7 +301,7 @@ done:
                      libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context));
     spdm_context->last_spdm_request_size = 0;
     /*
-     * reciver buffer "message" contains crypted message
+     * receiver buffer "message" contains encrypted message
      * "spdm_response" contains the plain-text VDM message
      */
     libspdm_zero_mem(spdm_response, spdm_response_size);
