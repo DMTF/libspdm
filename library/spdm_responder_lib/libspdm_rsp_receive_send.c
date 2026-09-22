@@ -282,11 +282,19 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
             LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
     }
 
+    /*
+     * decoded_message may contain padding zeros due to transport layer alignment requirements.
+     * trim the decoded_message size to the maximum data_transfer_size.
+     */
+    decoded_message_size = LIBSPDM_MIN(decoded_message_size,
+                                       context->local_context.capability.data_transfer_size);
+
     context->last_spdm_request_size = decoded_message_size;
     libspdm_copy_mem (context->last_spdm_request,
                       libspdm_get_scratch_buffer_last_spdm_request_capacity(context),
                       decoded_message_ptr,
                       decoded_message_size);
+    libspdm_zero_mem (decoded_message_ptr, decoded_message_size);
 
     if (!(*is_app_message)) {
         /* Check for minimal SPDM message size. */
@@ -726,7 +734,8 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
      * return UNSUPPORTED and clear response_size to continue the dispatch without send response.*/
     if((my_response_size == 0) && (status == LIBSPDM_STATUS_UNSUPPORTED_CAP)) {
         *response_size = 0;
-        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        goto done;
     }
 
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -734,7 +743,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
             context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             spdm_request->request_response_code, &my_response_size, my_response);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            return status;
+            goto done;
         }
     }
 
@@ -755,7 +764,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
             libspdm_free_session_id(context, *session_id);
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %xu\n", status));
-        return status;
+        goto done;
     }
 
     request_response_code = spdm_response->request_response_code;
@@ -846,7 +855,17 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         }
     }
 
-    return LIBSPDM_STATUS_SUCCESS;
+    status = LIBSPDM_STATUS_SUCCESS;
+done:
+    if (session_id != NULL) {
+        /* clean plain text in stratch buffer */
+        libspdm_zero_mem (my_response, my_response_size);
+    }
+    libspdm_zero_mem (context->last_spdm_request,
+                        libspdm_get_scratch_buffer_last_spdm_request_capacity(context));
+    context->last_spdm_request_size = 0;
+    context->last_spdm_request_session_id_valid = false;
+    return status;
 }
 
 void libspdm_register_get_response_func(void *context, libspdm_get_response_func get_response_func)

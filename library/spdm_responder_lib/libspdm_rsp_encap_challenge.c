@@ -144,6 +144,10 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         }
     }
 
+    if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+
     spdm_context->connection_info.peer_used_cert_chain_slot_id =
         spdm_context->encap_context.req_slot_id;
 
@@ -194,7 +198,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         );
     ptr += measurement_summary_hash_size;
 
-    opaque_length = *(const uint16_t *)ptr;
+    opaque_length = libspdm_read_uint16(ptr);
     if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
