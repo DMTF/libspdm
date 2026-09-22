@@ -200,6 +200,14 @@ jobs:
             target: Debug
             cflags: -DLIBSPDM_RESPOND_IF_READY_SUPPORT=0
 
+          - name: config-msg-log-off
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+            cflags: -DLIBSPDM_ENABLE_MSG_LOG=0
+
           - name: config-record-transcript
             os: ubuntu-latest
             arch: x64
@@ -1629,12 +1637,13 @@ jobs:
 #     CLANG         x Mbed TLS 3   CLANG         x OpenSSL 5
 #     MinGW GCC     x Mbed TLS 1   MinGW GCC     x OpenSSL omitted
 #
-#   Configuration sweep, 8 jobs on the cheapest platform except
+#   Configuration sweep, 9 jobs on the cheapest platform except
 #   config-classical-crypto, whose macro domain depends on CRYPTO:
 #     config-fips                  config-respond-if-ready-off
-#     config-record-transcript     config-minimal-caps
-#     config-x509-relaxed          config-shared-lib
-#     config-classical-crypto      config-disable-tests
+#     config-msg-log-off           config-record-transcript
+#     config-minimal-caps          config-x509-relaxed
+#     config-shared-lib            config-classical-crypto
+#     config-disable-tests
 #
 #   Extended unit tests run where their requirement is met:
 #     test_spdm_fips -> config-fips.
