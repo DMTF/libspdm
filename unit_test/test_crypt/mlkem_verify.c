@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -46,7 +46,7 @@ bool libspdm_validate_crypt_mlkem(void)
     mlkem2 = libspdm_mlkem_new_by_name(LIBSPDM_CRYPTO_NID_ML_KEM_512);
     if (mlkem2 == NULL) {
         libspdm_my_print("[Fail]");
-        libspdm_dh_free(mlkem1);
+        libspdm_mlkem_free(mlkem1);
         return false;
     }
 
@@ -54,8 +54,8 @@ bool libspdm_validate_crypt_mlkem(void)
     status = libspdm_mlkem_generate_key(mlkem1, encap_key1, &encap_key1_length);
     if (!status || encap_key1_length != 800) {
         libspdm_my_print("[Fail]");
-        libspdm_dh_free(mlkem1);
-        libspdm_dh_free(mlkem2);
+        libspdm_mlkem_free(mlkem1);
+        libspdm_mlkem_free(mlkem2);
         return false;
     }
 
@@ -65,8 +65,8 @@ bool libspdm_validate_crypt_mlkem(void)
                                        shared_secret2, &shared_secret2_length);
     if (!status || cipher_text2_length != 768 || shared_secret2_length != 32) {
         libspdm_my_print("[Fail]");
-        libspdm_dh_free(mlkem1);
-        libspdm_dh_free(mlkem2);
+        libspdm_mlkem_free(mlkem1);
+        libspdm_mlkem_free(mlkem2);
         return false;
     }
 
@@ -75,29 +75,29 @@ bool libspdm_validate_crypt_mlkem(void)
                                        shared_secret1, &shared_secret1_length);
     if (!status || shared_secret1_length != 32) {
         libspdm_my_print("[Fail]");
-        libspdm_dh_free(mlkem1);
-        libspdm_dh_free(mlkem2);
+        libspdm_mlkem_free(mlkem1);
+        libspdm_mlkem_free(mlkem2);
         return false;
     }
 
     libspdm_my_print("Compare Keys ... ");
     if (shared_secret1_length != shared_secret2_length) {
         libspdm_my_print("[Fail]");
-        libspdm_dh_free(mlkem1);
-        libspdm_dh_free(mlkem2);
+        libspdm_mlkem_free(mlkem1);
+        libspdm_mlkem_free(mlkem2);
         return false;
     }
 
     if (memcmp(shared_secret1, shared_secret2, shared_secret1_length) != 0) {
         libspdm_my_print("[Fail]");
-        libspdm_dh_free(mlkem1);
-        libspdm_dh_free(mlkem2);
+        libspdm_mlkem_free(mlkem1);
+        libspdm_mlkem_free(mlkem2);
         return false;
     }
 
     libspdm_my_print("[Pass]\n");
-    libspdm_dh_free(mlkem1);
-    libspdm_dh_free(mlkem2);
+    libspdm_mlkem_free(mlkem1);
+    libspdm_mlkem_free(mlkem2);
 
     return true;
 }
