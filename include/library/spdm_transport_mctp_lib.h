@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -19,7 +19,7 @@ extern "C" {
 #define LIBSPDM_MCTP_SEQUENCE_NUMBER_COUNT 2
 #define LIBSPDM_MCTP_MAX_RANDOM_NUMBER_COUNT 32
 
-/* Required sender/receive buffer in device io.
+/* Required sender/receiver buffer in device io.
  * +-------+--------+---------------------------+------+--+------+---+--------+-----+
  * | TYPE  |TransHdr|      EncryptionHeader     |AppHdr|  |Random|MAC|AlignPad|FINAL|
  * |       |        |SessionId|SeqNum|Len|AppLen|      |  |      |   |        |     |

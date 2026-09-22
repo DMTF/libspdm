@@ -24,8 +24,8 @@
  * @param  request         A pointer to a destination buffer to store the request.
  *                         The caller is responsible for having either implicit or explicit ownership
  *                         of the buffer.
- *                         For normal message, requester pointer point to transport_message + transport header size
- *                         For secured message, requester pointer will point to the scratch buffer + transport header size in spdm_context.
+ *                         For normal message, request pointer points to transport_message + transport header size
+ *                         For secured message, request pointer will point to the scratch buffer + transport header size in spdm_context.
  **/
 libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *session_id,
                                       bool is_app_message,
@@ -508,8 +508,8 @@ libspdm_return_t libspdm_get_encap_response_endpoint_info(void *spdm_context,
  * @param  request                      A pointer to a destination buffer to store the request.
  *                                     The caller is responsible for having
  *                                     either implicit or explicit ownership of the buffer.
- *                                      For normal message, requester pointer point to transport_message + transport header size
- *                                      For secured message, requester pointer will point to the scratch buffer + transport header size in spdm_context.
+ *                                      For normal message, request pointer points to transport_message + transport header size
+ *                                      For secured message, request pointer will point to the scratch buffer + transport header size in spdm_context.
  *
  * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.

@@ -43,7 +43,7 @@
  * On success, "measurements_count", "measurements", and "measurements_size"
  * fields will be set with data from all measurements.
  *
- * @param request_attribute A bitmask who fields are SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_*.
+ * @param request_attribute A bitmask whose fields are SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_*.
  *
  * @param  requester_nonce  If not NULL, a pointer to the requester nonce (32 bytes) from the
  *                          GET_MEASUREMENTS request. It is present when the GENERATE_SIGNATURE
@@ -110,7 +110,7 @@ extern libspdm_return_t libspdm_measurement_collection(
  *
  * @param  measurement_index  The index of the measurement to collect.
  *
- * @param request_attribute A bitmask who fields are SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_*.
+ * @param request_attribute A bitmask whose fields are SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_*.
  *
  * @param  request_context_size  The size, in bytes, of request_context.
  * @param  request_context       If spdm_version is greater than 1.2, then it is a pointer to the

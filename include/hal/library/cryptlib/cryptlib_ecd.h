@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -63,7 +63,7 @@ extern void libspdm_ecd_free(void *ecd_context);
  * @param[in]       public_size    The size of public buffer in bytes.
  *
  * @retval  true   Ed public key component was set successfully.
- * @retval  false  Invalid EC public key component.
+ * @retval  false  Invalid Ed public key component.
  **/
 extern bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
                                     size_t public_key_size);
@@ -79,7 +79,7 @@ extern bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key
  * @param[in]       private_size     The size of private buffer in bytes.
  *
  * @retval  true   Ed private key component was set successfully.
- * @retval  false  Invalid EC private key component.
+ * @retval  false  Invalid Ed private key component.
  *
  **/
 extern bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_key,
@@ -91,13 +91,13 @@ extern bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_ke
  * For ed25519, the public_size is 32.
  * For ed448, the public_size is 57.
  *
- * @param[in, out]  ecd_context    Pointer to Ed context being set.
+ * @param[in, out]  ecd_context    Pointer to Ed context.
  * @param[out]      public         Pointer to the buffer to receive generated public X,Y.
  * @param[in, out]  public_size    On input, the size of public buffer in bytes.
  *                                 On output, the size of data returned in public buffer in bytes.
  *
  * @retval  true   Ed key component was retrieved successfully.
- * @retval  false  Invalid EC public key component.
+ * @retval  false  Invalid Ed public key component.
  **/
 extern bool libspdm_ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
                                     size_t *public_key_size);

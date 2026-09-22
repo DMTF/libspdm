@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -138,7 +138,7 @@ extern void libspdm_sm2_key_exchange_free(void *sm2_context);
 /**
  * Initialize the specified sm2 context.
  *
- * @param[in]  sm2_context   Pointer to the sm2 context to be released.
+ * @param[in]  sm2_context   Pointer to the sm2 context to be initialized.
  * @param[in]  hash_nid      hash NID, only SM3 is valid.
  * @param[in]  id_a          The ID-A of the key exchange context.
  * @param[in]  id_a_size     Size of ID-A key exchange context.

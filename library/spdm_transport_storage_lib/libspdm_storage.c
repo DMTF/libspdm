@@ -176,7 +176,7 @@ static libspdm_return_t libspdm_storage_secured_message_decode(
  * @param  secured_message         On output, the start of an SPDM Storage secured message, pointing
  *                                 into the transport message.
  * @param  transport_message_size  Size in bytes of the transport message buffer.
- * @param  transport_message       A pointer to a source buffer to store the transport message.
+ * @param  transport_message       A pointer to a destination buffer to store the transport message.
  * @param  is_request_message      Indicates if it is a request message.
  *
  **/

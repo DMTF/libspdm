@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -39,11 +39,11 @@ extern bool libspdm_mldsa_set_pubkey(void *dsa_context, const uint8_t *key_data,
 /**
  * Gets the key component from the established DSA context.
  *
- * @param[in, out]  dsa_context  Pointer to DSA context being set.
+ * @param[in, out]  dsa_context  Pointer to DSA context.
  * @param[in]       key_data     Pointer to octet integer buffer.
  * @param[in]       key_size     Size of big number buffer in bytes.
  *
- * @retval  true   DSA key component was set successfully.
+ * @retval  true   DSA key component was retrieved successfully.
  **/
 extern bool libspdm_mldsa_get_pubkey(void *dsa_context, uint8_t *key_data, size_t *key_size);
 

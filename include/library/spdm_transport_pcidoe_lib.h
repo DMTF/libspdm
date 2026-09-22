@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -19,7 +19,7 @@ extern "C" {
 #define LIBSPDM_PCI_DOE_SEQUENCE_NUMBER_COUNT 0
 #define LIBSPDM_PCI_DOE_MAX_RANDOM_NUMBER_COUNT 0
 
-/* Required sender/receive buffer in device io.
+/* Required sender/receiver buffer in device io.
  * +-------+--------+---------------------------+------+--+------+---+--------+-----+
  * | TYPE  |TransHdr|      EncryptionHeader     |AppHdr|  |Random|MAC|AlignPad|FINAL|
  * |       |        |SessionId|SeqNum|Len|AppLen|      |  |      |   |        |     |
@@ -119,7 +119,7 @@ libspdm_return_t libspdm_transport_pci_doe_decode_message(
  * @param  transport_message                    A pointer to a source buffer to store the transport message.
  * @param  index                                A pointer to a destination to store the index.
  *
- * @retval LIBSPDM_STATUS_SUCCESS               The message is encoded successfully.
+ * @retval LIBSPDM_STATUS_SUCCESS               The message is decoded successfully.
  * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_message_size,
@@ -134,7 +134,7 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_messa
  * @param  transport_message                    A pointer to a source buffer to store the transport message.
  * @param  version                              A pointer to a destination to store the DOE Discovery Version.
  *
- * @retval LIBSPDM_STATUS_SUCCESS               The message is encoded successfully.
+ * @retval LIBSPDM_STATUS_SUCCESS               The message is decoded successfully.
  * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 libspdm_return_t libspdm_pci_doe_decode_discovery_request_version(size_t transport_message_size,
@@ -150,7 +150,7 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_request_version(size_t transpo
  * @param  protocol                             A pointer to a destination to store the protocol.
  * @param  next_index                           A pointer to a destination to store the next_index.
  *
- * @retval LIBSPDM_STATUS_SUCCESS               The message is encoded successfully.
+ * @retval LIBSPDM_STATUS_SUCCESS               The message is decoded successfully.
  * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 libspdm_return_t libspdm_pci_doe_decode_discovery_response(size_t transport_message_size,

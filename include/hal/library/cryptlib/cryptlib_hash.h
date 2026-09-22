@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -416,7 +416,7 @@ extern bool libspdm_sha3_256_update(void *sha3_256_context, const void *data, si
  * Completes computation of the SHA3-256 digest value.
  *
  * This function completes SHA3-256 hash computation and populates the digest value into
- * the specified memory. After this function has been called, the SHA3-512 context cannot
+ * the specified memory. After this function has been called, the SHA3-256 context cannot
  * be used again. SHA3-256 context should be already correctly initialized by
  * libspdm_sha3_256_init(), and must not have been finalized by libspdm_sha3_256_final().
  * Behavior with invalid SHA3-256 context is undefined.

@@ -20,7 +20,7 @@
  * @param  spdm_context      A pointer to the SPDM context.
  * @param  slot_id           The number of slot for the certificate chain.
  * @param  cert_chain_size   On input, indicate the size in bytes of the destination buffer to store
- *                           the digest buffer.
+ *                           the certificate chain.
  *                           On output, indicate the size in bytes of the certificate chain.
  * @param  cert_chain        A pointer to a destination buffer to store the certificate chain.
  * @param  trust_anchor      A buffer to hold the trust_anchor which is used to validate the peer

@@ -69,7 +69,7 @@ extern bool libspdm_read_key_pair_info(
  * @param  spdm_context                 A pointer to the SPDM context.
  * @param  session_id                   Indicates the session in which the request was received.
  *                                      If NULL then the request was not received in a session.
- * @param  key_pair_id                  Indicate which key pair ID's information to retrieve.
+ * @param  key_pair_id                  Indicate which key pair ID's information to write.
  * @param  operation                    Set key pair info operation: change/erase/generate.
  * @param  desired_key_usage            Indicate the desired key usage for the requested key pair ID.
  * @param  desired_asym_algo            Indicate the desired asymmetric algorithm for the requested key pair ID.

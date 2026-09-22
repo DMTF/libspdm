@@ -134,7 +134,7 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_STATUS_ACQUIRE_FAIL \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0010)
 
-/* Re-triable decrypt error from peer - must rollback to backup keys. */
+/* Retriable decrypt error from peer - must roll back to backup keys. */
 #define LIBSPDM_STATUS_SESSION_TRY_DISCARD_KEY_UPDATE \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0011)
 
@@ -174,7 +174,7 @@ typedef uint32_t libspdm_return_t;
 
 /* - Certificate Parsing Errors - */
 
-/* Certificate is malformed or does not comply to x.509 standard. */
+/* Certificate is malformed or does not comply with the X.509 standard. */
 #define LIBSPDM_STATUS_INVALID_CERT \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CERT_PARSE, 0x0000)
 

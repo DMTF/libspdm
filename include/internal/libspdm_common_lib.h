@@ -375,7 +375,7 @@ typedef struct {
  * Encap E = Concatenate (GET_ENDPOINT_INFO, ENDPOINT_INFO\signature)*/
 
 typedef struct {
-    /* the message_a must be plan text because we do not know the algorithm yet.*/
+    /* the message_a must be plain text because we do not know the algorithm yet.*/
     libspdm_vca_managed_buffer_t message_a;
     libspdm_message_d_managed_buffer_t message_d;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -469,7 +469,7 @@ typedef struct {
     void *digest_context_l1l2;
     void *digest_context_il1il2;
     void *digest_context_encap_il1il2;
-    /* this is back up for message F reset.*/
+    /* this is a backup for message F reset.*/
     void *digest_context_th_backup;
 #endif
 } libspdm_session_transcript_t;
@@ -1179,8 +1179,8 @@ uint32_t libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_conte
  * @param  is_requester                  Indicate of the signature generation for a requester or a responder.
  * @param  signature                     The buffer to store the endpoint info signature.
  *
- * @retval true  challenge signature is generated.
- * @retval false challenge signature is not generated.
+ * @retval true  endpoint info signature is generated.
+ * @retval false endpoint info signature is not generated.
  **/
 bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
                                               libspdm_session_info_t *session_info,
@@ -1189,7 +1189,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
                                               uint8_t *signature);
 
 /**
- * This function verifies the challenge signature based upon m1m2.
+ * This function verifies the endpoint info signature based upon il1il2.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_info                  A pointer to the SPDM session context.
@@ -1299,7 +1299,7 @@ libspdm_return_t libspdm_process_opaque_data_version_selection_data(
  *  Process general opaque data check
  *
  * @param  data_in_size                  size in bytes of the data_in.
- * @param  data_in                       A pointer to the buffer to store the opaque data version selection.
+ * @param  data_in                       A pointer to the opaque data to check.
  *
  * @retval true                           check opaque data successfully
  * @retval false                          check opaque data failed
@@ -2242,7 +2242,7 @@ const void *libspdm_find_event_instance_id(const void *events_list_start, uint32
  *
  * @param  context          A pointer to the SPDM context.
  * @param  session_id       Secure session identifier.
- * @param  event_data       A pointer to the event do be parsed and sent to Integrator.
+ * @param  event_data       A pointer to the event to be parsed and sent to Integrator.
  * @param  next_event_data  On output, returns a pointer to the next event in event_data.
  *
  * @retval  true   The event was successfully parsed and sent to the Integrator.

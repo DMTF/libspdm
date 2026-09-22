@@ -2778,7 +2778,7 @@ libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context,
 
     context = fips_selftest_context;
 
-    /*No tested for every used algo*/
+    /*Not tested for every used algo*/
     context->tested_algo = 0;
     /*self_test result is false for every used algo*/
     context->self_test_result = 0;
@@ -3155,7 +3155,7 @@ void libspdm_version_number_sort(spdm_version_number_t *ver_set, size_t ver_num)
     size_t index_max;
     spdm_version_number_t version;
 
-    /* Select sort */
+    /* Selection sort */
     if (ver_num > 1) {
         for (index_sort = 0; index_sort < ver_num; index_sort++) {
             index_max = index_sort;
