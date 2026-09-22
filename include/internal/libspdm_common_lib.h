@@ -355,18 +355,18 @@ typedef struct {
 
 /* M1/M2 = Concatenate (A, B, C)
  * A = Concatenate (GET_VERSION, VERSION, GET_CAPABILITIES, CAPABILITIES, NEGOTIATE_ALGORITHMS, ALGORITHMS)
- * B = Concatenate (GET_DIGEST, DIGEST, GET_CERTIFICATE, CERTIFICATE)
+ * B = Concatenate (GET_DIGESTS, DIGESTS, GET_CERTIFICATE, CERTIFICATE)
  * C = Concatenate (CHALLENGE, CHALLENGE_AUTH\signature)*/
 
 /* Mut M1/M2 = Concatenate (MutB, MutC)
- * MutB = Concatenate (GET_DIGEST, DIGEST, GET_CERTIFICATE, CERTIFICATE)
+ * MutB = Concatenate (GET_DIGESTS, DIGESTS, GET_CERTIFICATE, CERTIFICATE)
  * MutC = Concatenate (CHALLENGE, CHALLENGE_AUTH\signature)*/
 
 /* signature = Sign(SK, hash(L1))
  * Verify(PK, hash(L2), signature)*/
 
 /* L1/L2 = Concatenate (M)
- * M = Concatenate (GET_MEASUREMENT, MEASUREMENT\signature)*/
+ * M = Concatenate (GET_MEASUREMENTS, MEASUREMENTS\signature)*/
 
 /* IL1/IL2 = Concatenate (A, E)
  * E = Concatenate (GET_ENDPOINT_INFO, ENDPOINT_INFO\signature)*/
@@ -396,41 +396,41 @@ typedef struct {
 } libspdm_transcript_t;
 
 /* TH for KEY_EXCHANGE response signature: Concatenate (A, D, Ct, K)
- * D = DIGEST, if MULTI_KEY_CONN_RSP
+ * D = DIGESTS, if MULTI_KEY_CONN_RSP
  * Ct = certificate chain
  * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response\signature+verify_data)*/
 
 /* TH for KEY_EXCHANGE response HMAC: Concatenate (A, D, Ct, K)
- * D = DIGEST, if MULTI_KEY_CONN_RSP
+ * D = DIGESTS, if MULTI_KEY_CONN_RSP
  * Ct = certificate chain
  * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response\verify_data)*/
 
 /* TH for FINISH request signature: Concatenate (A, D, Ct, K, EncapD, CM, F)
- * D = DIGEST, if MULTI_KEY_CONN_RSP
+ * D = DIGESTS, if MULTI_KEY_CONN_RSP
  * Ct = certificate chain
  * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)
- * EncapD = Encap DIGEST, if MULTI_KEY_CONN_REQ
+ * EncapD = Encap DIGESTS, if MULTI_KEY_CONN_REQ
  * CM = mutual certificate chain
  * F  = Concatenate (FINISH request\signature+verify_data)*/
 
 /* TH for FINISH response HMAC: Concatenate (A, D, Ct, K, EncapD, CM, F)
- * D = DIGEST, if MULTI_KEY_CONN_RSP
+ * D = DIGESTS, if MULTI_KEY_CONN_RSP
  * Ct = certificate chain
  * K = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)
- * EncapD = Encap DIGEST, if MULTI_KEY_CONN_REQ
+ * EncapD = Encap DIGESTS, if MULTI_KEY_CONN_REQ
  * CM = mutual certificate chain, if MutAuth
  * F = Concatenate (FINISH request\verify_data)*/
 
 /* th1: Concatenate (A, D, Ct, K)
- * D = DIGEST, if MULTI_KEY_CONN_RSP
+ * D = DIGESTS, if MULTI_KEY_CONN_RSP
  * Ct = certificate chain
  * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)*/
 
 /* th2: Concatenate (A, D, Ct, K, EncapD, CM, F)
- * D = DIGEST, if MULTI_KEY_CONN_RSP
+ * D = DIGESTS, if MULTI_KEY_CONN_RSP
  * Ct = certificate chain
  * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)
- * EncapD = Encap DIGEST, if MULTI_KEY_CONN_REQ
+ * EncapD = Encap DIGESTS, if MULTI_KEY_CONN_REQ
  * CM = mutual certificate chain, if MutAuth
  * F  = Concatenate (FINISH request, FINISH response)*/
 

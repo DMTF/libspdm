@@ -55,7 +55,7 @@ libspdm_return_t libspdm_responder_handle_response_state(libspdm_context_t *spdm
                                                          void *response);
 
 /**
- * Process the SPDM RESPONSE_IF_READY request and return the response.
+ * Process the SPDM RESPOND_IF_READY request and return the response.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  request_size                  size in bytes of the request data.
@@ -219,7 +219,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**
- * Process the SPDM GET_MEASUREMENT request and return the response.
+ * Process the SPDM GET_MEASUREMENTS request and return the response.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  request_size                  size in bytes of the request data.
@@ -430,7 +430,7 @@ libspdm_return_t libspdm_get_response_heartbeat(libspdm_context_t *spdm_context,
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 /**
- * Process the SPDM ENCAPSULATED_REQUEST request and return the response.
+ * Process the SPDM GET_ENCAPSULATED_REQUEST request and return the response.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  request_size                  size in bytes of the request data.
@@ -451,7 +451,7 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
     size_t *response_size, void *response);
 
 /**
- * Process the SPDM ENCAPSULATED_RESPONSE_ACK request and return the response.
+ * Process the SPDM DELIVER_ENCAPSULATED_RESPONSE request and return the response.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  request_size                  size in bytes of the request data.
@@ -524,7 +524,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT) */
 
 /**
- * Process the SPDM encapsulated KEY_UPDATE response.
+ * Process the SPDM encapsulated KEY_UPDATE_ACK response.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  encap_response_size            size in bytes of the encapsulated response data.
@@ -541,7 +541,7 @@ libspdm_return_t libspdm_process_encap_response_key_update(
 
 #if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
 /**
- * Process the SPDM encapsulated GET_ENDPOINT_INFO response.
+ * Process the SPDM encapsulated ENDPOINT_INFO response.
  *
  * @param  spdm_context                 A pointer to the SPDM context.
  * @param  encap_response_size          size in bytes of the encapsulated response data.

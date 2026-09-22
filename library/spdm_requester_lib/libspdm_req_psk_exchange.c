@@ -205,7 +205,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_PSK_EXCHANGE);
     {
-        /* Double check if algorithm has been provisioned, because ALGORITHM might be skipped.*/
+        /* Double check if algorithm has been provisioned, because NEGOTIATE_ALGORITHMS might be skipped.*/
         if (libspdm_is_capabilities_flag_supported(
                 spdm_context, true, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {

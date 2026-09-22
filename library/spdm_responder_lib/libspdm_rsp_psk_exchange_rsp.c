@@ -169,7 +169,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     }
 
     {
-        /* Double check if algorithm has been provisioned, because ALGORITHM might be skipped.*/
+        /* Double check if algorithm has been provisioned, because NEGOTIATE_ALGORITHMS might be skipped.*/
         if (libspdm_is_capabilities_flag_supported(
                 spdm_context, true, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
@@ -277,7 +277,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
                           spdm_request->psk_hint_length + spdm_request->context_length;
 
         /*
-         * Here allows integrator generate own opaque data for Key Exchange Response.
+         * Here allows integrator generate own opaque data for PSK Exchange Response.
          * If libspdm_psk_exchange_rsp_opaque_data() returns false,
          * libspdm will generate version selection opaque data.
          */
