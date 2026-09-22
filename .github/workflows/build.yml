@@ -6,15 +6,13 @@ on:
       - '**/*.md'
       - 'doc/**'
     branches:
-      - main
-      - release-2.3
+      - release-3.8
   pull_request:
     paths-ignore:
       - 'doc/**'
       - '**/*.md'
     branches:
-      - main
-      - release-2.3
+      - release-3.8
   workflow_dispatch:
 
 concurrency:
