@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -89,8 +89,8 @@ extern bool libspdm_event_subscribe(
  *                          On output, the size, in bytes, of events_list.
  * @param  events_list      The list of events.
  *
- * retval true  events_list was successfully populated with a list of events.
- * retval false An error occurred when generating the list of events.
+ * @retval true  events_list was successfully populated with a list of events.
+ * @retval false An error occurred when generating the list of events.
  **/
 extern bool libspdm_generate_event_list(
     void *spdm_context,

@@ -48,7 +48,7 @@ typedef libspdm_return_t (*libspdm_get_response_func)(
  * this function will be invoked.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  get_response_func              The function to process the encapsuled message.
+ * @param  get_response_func              The function to process the SPDM or APP message.
  **/
 void libspdm_register_get_response_func(
     void *spdm_context, libspdm_get_response_func get_response_func);

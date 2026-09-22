@@ -223,7 +223,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     is_busy = false;
 
     if ((spdm_version >= SPDM_MESSAGE_VERSION_13) && erase) {
-        /*the CertChain field shall be absent;the value of SetCertModel shall be zero*/
+        /*the CertChain field shall be absent; the value of SetCertModel shall be zero*/
         if ((request_size < sizeof(spdm_set_certificate_request_t)) ||
             ((spdm_request->header.param1 &
               SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_MASK) != 0)) {

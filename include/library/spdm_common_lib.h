@@ -503,7 +503,7 @@ size_t libspdm_get_context_size_without_secured_context(void);
  *                       The caller is responsible for having either implicit or explicit ownership
  *                       of the buffer. The message pointer shall be inside of
  *                       [msg_buf_ptr, msg_buf_ptr + max_msg_size] from acquired sender_buffer.
- * @param  timeout       The timeout, in microsends, to use for the execution of the message.
+ * @param  timeout       The timeout, in microseconds, to use for the execution of the message.
  *                       If called in a Requester context then timeout is equal to RTT.
  *                       If called in a Responder context then timeout is equal to 0 and Responder
  *                       should not timeout when sending the message.
@@ -532,7 +532,7 @@ typedef libspdm_return_t (*libspdm_device_send_message_func)(void *spdm_context,
  *                       of the buffer. On input, the message pointer shall be msg_buf_ptr from
  *                       acquired receiver_buffer. On output, the message pointer shall be inside of
  *                       [msg_buf_ptr, msg_buf_ptr + max_msg_size] from acquired receiver_buffer.
- * @param  timeout       The timeout, in microsends, to use for the execution of the message.
+ * @param  timeout       The timeout, in microseconds, to use for the execution of the message.
  *                       If called in a Requester context then timeout is equal to RTT plus either
  *                       CT or ST1.
  *                       If called in a Responder context then timeout is equal to 0 and Responder

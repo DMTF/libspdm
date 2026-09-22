@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -21,7 +21,7 @@ typedef enum {
     LIBSPDM_RSA_KEY_E, /*< RSA public exponent (e)*/
     LIBSPDM_RSA_KEY_D, /*< RSA Private exponent (d)*/
     LIBSPDM_RSA_KEY_P, /*< RSA secret prime factor of Modulus (p)*/
-    LIBSPDM_RSA_KEY_Q, /*< RSA secret prime factor of Modules (q)*/
+    LIBSPDM_RSA_KEY_Q, /*< RSA secret prime factor of Modulus (q)*/
     LIBSPDM_RSA_KEY_DP, /*< p's CRT exponent (== d mod (p - 1))*/
     LIBSPDM_RSA_KEY_DQ, /*< q's CRT exponent (== d mod (q - 1))*/
     LIBSPDM_RSA_KEY_Q_INV /*< The CRT coefficient (== 1/q mod p)*/

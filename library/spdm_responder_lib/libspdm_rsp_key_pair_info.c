@@ -141,7 +141,7 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
                                                response_size, response);
     }
 
-    /*If responder doesn't support SET_KEY_PAIR_INFO_CAP,the capabilities should be 0*/
+    /*If responder doesn't support SET_KEY_PAIR_INFO_CAP, the capabilities should be 0*/
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP)) {

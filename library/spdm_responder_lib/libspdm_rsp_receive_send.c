@@ -422,8 +422,8 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     context = spdm_context;
     status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
 
-    /* For secure message, setup my_response to scratch buffer
-     * For non-secure message, setup my_response to sender buffer*/
+    /* For secure message, set up my_response to scratch buffer
+     * For non-secure message, set up my_response to sender buffer*/
     transport_header_size = context->local_context.capability.transport_header_size;
     if (session_id != NULL) {
         libspdm_get_scratch_buffer (context, (void **)&scratch_buffer, &scratch_buffer_size);
@@ -468,7 +468,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
             break;
         case SPDM_ERROR_CODE_INVALID_SESSION:
             /**
-             * don't use session ID, because we dont know which right session ID should be used.
+             * don't use session ID, because we don't know which session ID should be used.
              * just ignore this message
              * return UNSUPPORTED and clear response_size to continue the dispatch without send response
              **/

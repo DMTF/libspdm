@@ -1032,7 +1032,7 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size);
  *                                   If name_buffer is NULL then the amount of space needed
  *                                   in buffer (including the final null) is returned.
  * @param[out]     oid               OID of otherName
- * @param[in,out]  oid_size          The buffersize for required OID
+ * @param[in,out]  oid_size          The buffer size for required OID
  *
  * @retval true    Get the subjectAltName string successfully
  * @retval false   Get the subjectAltName string failed
@@ -1056,7 +1056,7 @@ bool libspdm_get_dmtf_subject_alt_name_from_bytes(
  *                                   If name_buffer is NULL then the amount of space needed
  *                                   in buffer (including the final null) is returned.
  * @param[out]     oid               OID of otherName
- * @param[in,out]  oid_size          The buffersize for required OID
+ * @param[in,out]  oid_size          The buffer size for required OID
  *
  * @retval true    Get the subjectAltName string successfully
  * @retval false   Get the subjectAltName string failed

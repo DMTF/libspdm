@@ -36,7 +36,7 @@ static bool libspdm_check_request_version_compatibility(libspdm_context_t *spdm_
 }
 
 /**
- * This function checks the compatibility of the received GET_CAPABILITES flag.
+ * This function checks the compatibility of the received GET_CAPABILITIES flag.
  * Some flags are mutually inclusive/exclusive.
  *
  * @param  capabilities_flag  The received CAPABILITIES Flag.

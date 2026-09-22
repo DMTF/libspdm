@@ -382,7 +382,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     }
 
     /* At this point the Requester has successfully authenticated the Responder, even if the
-     * the Responder intends to authenticate the Requester. */
+     * Responder intends to authenticate the Requester. */
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
 
     /* -=[Log Message Phase]=- */

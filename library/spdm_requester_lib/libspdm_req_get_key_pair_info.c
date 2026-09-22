@@ -227,7 +227,7 @@ static libspdm_return_t libspdm_try_get_key_pair_info(libspdm_context_t *spdm_co
 
     /* -=[Process Response Phase]=- */
 
-    /*If responder doesn't support SET_KEY_PAIR_INFO_CAP,the capabilities should be 0*/
+    /*If responder doesn't support SET_KEY_PAIR_INFO_CAP, the capabilities should be 0*/
     if ((!libspdm_is_capabilities_flag_supported(
              spdm_context, true, 0,
              SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP)) &&
