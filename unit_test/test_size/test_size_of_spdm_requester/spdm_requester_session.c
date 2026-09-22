@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -23,7 +23,7 @@ libspdm_return_t do_session_via_spdm(void *spdm_context)
         SPDM_KEY_EXCHANGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0, 0,
         &session_id, &heartbeat_period, measurement_hash);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_start_session - %xu\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_start_session - %x\n", status));
         return status;
     }
 
@@ -33,7 +33,7 @@ libspdm_return_t do_session_via_spdm(void *spdm_context)
 
     status = libspdm_stop_session(spdm_context, session_id, 0);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_stop_session - %xu\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_stop_session - %x\n", status));
         return status;
     }
 

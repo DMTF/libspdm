@@ -68,7 +68,7 @@ static libspdm_return_t send_message(
                                                            &decode_message_size,
                                                            (void **)&spdm_deliver_encapsulated_response_request);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %xu\n", status));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %x\n", status));
             }
             spdm_response = (void *)(spdm_deliver_encapsulated_response_request + 1);
 

@@ -409,7 +409,7 @@ libspdm_return_t libspdm_transport_storage_decode_message(
 
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                               "libspdm_decode_secured_message - %xu\n", status));
+                               "libspdm_decode_secured_message - %x\n", status));
                 libspdm_secured_message_get_last_spdm_error_struct(
                     secured_message_context, &spdm_error);
                 libspdm_set_last_spdm_error_struct(spdm_context,
@@ -421,7 +421,7 @@ libspdm_return_t libspdm_transport_storage_decode_message(
                                                             message, is_request_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                               "libspdm_storage_secured_message_decode - %xu\n", status));
+                               "libspdm_storage_secured_message_decode - %x\n", status));
                 return status;
             }
 
@@ -438,7 +438,7 @@ libspdm_return_t libspdm_transport_storage_decode_message(
             transport_message, &secured_message_size, (void **)&secured_message);
 
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %xu\n", status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %x\n", status));
             return status;
         }
 
@@ -464,7 +464,7 @@ libspdm_return_t libspdm_transport_storage_decode_message(
                 message_size, message, &spdm_secured_message_callbacks);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                               "libspdm_decode_secured_message - %xu\n", status));
+                               "libspdm_decode_secured_message - %x\n", status));
                 libspdm_secured_message_get_last_spdm_error_struct(
                     secured_message_context, &spdm_error);
                 libspdm_set_last_spdm_error_struct(spdm_context,
@@ -476,7 +476,7 @@ libspdm_return_t libspdm_transport_storage_decode_message(
                                                             message, is_request_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                               "libspdm_storage_secured_message_decode - %xu\n", status));
+                               "libspdm_storage_secured_message_decode - %x\n", status));
                 return status;
             }
             return LIBSPDM_STATUS_SUCCESS;
@@ -488,7 +488,7 @@ libspdm_return_t libspdm_transport_storage_decode_message(
                                                     transport_message,
                                                     message_size, message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %xu\n",
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %x\n",
                                status));
                 return status;
             }
@@ -604,7 +604,7 @@ libspdm_return_t libspdm_transport_storage_encode_message(
             transport_message_size, transport_message, is_request_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                           "libspdm_storage_secured_message_encode_descriptors - %xu\n", status));
+                           "libspdm_storage_secured_message_encode_descriptors - %x\n", status));
             return status;
         }
 
@@ -614,7 +614,7 @@ libspdm_return_t libspdm_transport_storage_encode_message(
             secured_message, &spdm_secured_message_callbacks);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                           "libspdm_encode_secured_message - %xu\n", status));
+                           "libspdm_encode_secured_message - %x\n", status));
             return status;
         }
 
@@ -638,7 +638,7 @@ libspdm_return_t libspdm_transport_storage_encode_message(
             secured_message - LIBSPDM_STORAGE_SECURED_MESSAGE_HEADER_RESERVED_BYTES,
             transport_message_size, transport_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %xu\n",
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %x\n",
                            status));
             return status;
         }
@@ -659,7 +659,7 @@ libspdm_return_t libspdm_transport_storage_encode_message(
                                                 transport_message_size,
                                                 transport_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %xu\n",
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %x\n",
                            status));
             return status;
         }

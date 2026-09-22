@@ -3920,7 +3920,7 @@ static void req_get_certificate_case25(void **state)
         cert_chain_size = sizeof(cert_chain);
         libspdm_zero_mem(cert_chain, sizeof(cert_chain));
         status = libspdm_get_certificate(spdm_context, NULL, slot_id, &cert_chain_size, cert_chain);
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_get_certificate - %xu\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_get_certificate - %x\n", status));
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     }
 
@@ -3932,7 +3932,7 @@ static void req_get_certificate_case25(void **state)
             spdm_context, NULL, slot_id,
             SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
             measurement_hash, NULL);
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_challenge - %xu\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_challenge - %x\n", status));
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     }
 
