@@ -401,7 +401,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "BasicMutAuth :\n"));
         status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "libspdm_challenge - libspdm_encapsulated_request - %xu\n", status));
+                       "libspdm_challenge - libspdm_encapsulated_request - %x\n", status));
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_reset_message_c(spdm_context);
             return status;

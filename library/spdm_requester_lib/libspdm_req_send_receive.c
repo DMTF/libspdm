@@ -100,7 +100,7 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
         libspdm_zero_mem(request, request_size);
     }
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message status - %xu\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message status - %x\n", status));
         if ((session_id != NULL) &&
             ((status == LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW) ||
              (status == LIBSPDM_STATUS_CRYPTO_ERROR))) {
@@ -113,7 +113,7 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
     status = context->send_message(context, message_size, message, timeout);
 
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_send_spdm_request[%x] status - %xu\n",
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_send_spdm_request[%x] status - %x\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
     }
 
@@ -156,7 +156,7 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
     status = context->receive_message(context, &message_size, (void **)&message, timeout);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "libspdm_receive_spdm_response[%x] status - %xu\n",
+                       "libspdm_receive_spdm_response[%x] status - %x\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
         return status;
     }
@@ -281,7 +281,7 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
             libspdm_free_session_id(context, *session_id);
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "libspdm_receive_spdm_response[%x] status - %xu\n",
+                       "libspdm_receive_spdm_response[%x] status - %x\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
     } else {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,

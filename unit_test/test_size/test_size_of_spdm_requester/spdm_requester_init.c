@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -148,7 +148,7 @@ void *spdm_client_init(void)
 
     status = libspdm_init_connection(spdm_context, false);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_init_connection - %xu\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_init_connection - %x\n", status));
         free_pool(spdm_context);
         return NULL;
     }

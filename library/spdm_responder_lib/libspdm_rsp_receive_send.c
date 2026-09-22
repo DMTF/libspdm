@@ -218,7 +218,7 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
     }
 
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_decode_message : %xu\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_decode_message : %x\n", status));
         if (context->last_spdm_error.error_code != 0) {
             /* If the SPDM error code is Non-Zero, that means we need send the error message back to requester.
              * In this case, we need return SUCCESS and let caller invoke libspdm_build_response() to send an ERROR message.*/
@@ -503,7 +503,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
                  (status == LIBSPDM_STATUS_CRYPTO_ERROR))) {
                 libspdm_free_session_id(context, *session_id);
             }
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %xu\n", status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %x\n", status));
             return status;
         }
 
@@ -904,7 +904,7 @@ response_dispatched:
              (status == LIBSPDM_STATUS_CRYPTO_ERROR))) {
             libspdm_free_session_id(context, *session_id);
         }
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %xu\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %x\n", status));
         goto done;
     }
 
