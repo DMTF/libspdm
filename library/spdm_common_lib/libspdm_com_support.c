@@ -7,93 +7,87 @@
 #include "internal/libspdm_common_lib.h"
 
 #if LIBSPDM_DEBUG_PRINT_ENABLE
-typedef struct {
-    uint8_t code;
-    const char *code_str;
-} libspdm_code_str_struct_t;
-
 const char *libspdm_get_code_str(uint8_t request_code)
 {
-    size_t index;
+    switch (request_code) {
+    /* SPDM response code (1.0) */
+    case SPDM_DIGESTS: return "SPDM_DIGESTS";
+    case SPDM_CERTIFICATE: return "SPDM_CERTIFICATE";
+    case SPDM_CHALLENGE_AUTH: return "SPDM_CHALLENGE_AUTH";
+    case SPDM_VERSION: return "SPDM_VERSION";
+    case SPDM_MEASUREMENTS: return "SPDM_MEASUREMENTS";
+    case SPDM_CAPABILITIES: return "SPDM_CAPABILITIES";
+    case SPDM_ALGORITHMS: return "SPDM_ALGORITHMS";
+    case SPDM_VENDOR_DEFINED_RESPONSE: return "SPDM_VENDOR_DEFINED_RESPONSE";
+    case SPDM_ERROR: return "SPDM_ERROR";
 
-    static const libspdm_code_str_struct_t code_str_struct[] = {
-        /* SPDM response code (1.0) */
-        { SPDM_DIGESTS, "SPDM_DIGESTS" },
-        { SPDM_CERTIFICATE, "SPDM_CERTIFICATE" },
-        { SPDM_CHALLENGE_AUTH, "SPDM_CHALLENGE_AUTH" },
-        { SPDM_VERSION, "SPDM_VERSION" },
-        { SPDM_MEASUREMENTS, "SPDM_MEASUREMENTS" },
-        { SPDM_CAPABILITIES, "SPDM_CAPABILITIES" },
-        { SPDM_ALGORITHMS, "SPDM_ALGORITHMS" },
-        { SPDM_VENDOR_DEFINED_RESPONSE, "SPDM_VENDOR_DEFINED_RESPONSE" },
-        { SPDM_ERROR, "SPDM_ERROR" },
-        /* SPDM response code (1.1) */
-        { SPDM_KEY_EXCHANGE_RSP, "SPDM_KEY_EXCHANGE_RSP" },
-        { SPDM_FINISH_RSP, "SPDM_FINISH_RSP" },
-        { SPDM_PSK_EXCHANGE_RSP, "SPDM_PSK_EXCHANGE_RSP" },
-        { SPDM_PSK_FINISH_RSP, "SPDM_PSK_FINISH_RSP" },
-        { SPDM_HEARTBEAT_ACK, "SPDM_HEARTBEAT_ACK" },
-        { SPDM_KEY_UPDATE_ACK, "SPDM_KEY_UPDATE_ACK" },
-        { SPDM_ENCAPSULATED_REQUEST, "SPDM_ENCAPSULATED_REQUEST" },
-        { SPDM_ENCAPSULATED_RESPONSE_ACK, "SPDM_ENCAPSULATED_RESPONSE_ACK" },
-        { SPDM_END_SESSION_ACK, "SPDM_END_SESSION_ACK" },
-        /* SPDM response code (1.2) */
-        { SPDM_CSR, "SPDM_CSR" },
-        { SPDM_SET_CERTIFICATE_RSP, "SPDM_SET_CERTIFICATE_RSP" },
-        { SPDM_CHUNK_SEND_ACK, "SPDM_CHUNK_SEND_ACK" },
-        { SPDM_CHUNK_RESPONSE, "SPDM_CHUNK_RESPONSE" },
-        /* SPDM response code (1.3 )*/
-        { SPDM_SUPPORTED_EVENT_TYPES, "SPDM_SUPPORTED_EVENT_TYPES" },
-        { SPDM_SUBSCRIBE_EVENT_TYPES_ACK, "SPDM_SUBSCRIBE_EVENT_TYPES_ACK" },
-        { SPDM_EVENT_ACK, "SPDM_EVENT_ACK" },
-        { SPDM_MEASUREMENT_EXTENSION_LOG, "SPDM_MEASUREMENT_EXTENSION_LOG" },
-        { SPDM_KEY_PAIR_INFO, "SPDM_KEY_PAIR_INFO" },
-        { SPDM_SET_KEY_PAIR_INFO_ACK, "SPDM_SET_KEY_PAIR_INFO_ACK" },
-        { SPDM_ENDPOINT_INFO, "SPDM_ENDPOINT_INFO" },
-        /* SPDM request code (1.0) */
-        { SPDM_GET_DIGESTS, "SPDM_GET_DIGESTS" },
-        { SPDM_GET_CERTIFICATE, "SPDM_GET_CERTIFICATE" },
-        { SPDM_CHALLENGE, "SPDM_CHALLENGE" },
-        { SPDM_GET_VERSION, "SPDM_GET_VERSION" },
-        { SPDM_GET_MEASUREMENTS, "SPDM_GET_MEASUREMENTS" },
-        { SPDM_GET_CAPABILITIES, "SPDM_GET_CAPABILITIES" },
-        { SPDM_NEGOTIATE_ALGORITHMS, "SPDM_NEGOTIATE_ALGORITHMS" },
-        { SPDM_VENDOR_DEFINED_REQUEST, "SPDM_VENDOR_DEFINED_REQUEST" },
-        { SPDM_RESPOND_IF_READY, "SPDM_RESPOND_IF_READY" },
-        /* SPDM request code (1.1) */
-        { SPDM_KEY_EXCHANGE, "SPDM_KEY_EXCHANGE" },
-        { SPDM_FINISH, "SPDM_FINISH" },
-        { SPDM_PSK_EXCHANGE, "SPDM_PSK_EXCHANGE" },
-        { SPDM_PSK_FINISH, "SPDM_PSK_FINISH" },
-        { SPDM_HEARTBEAT, "SPDM_HEARTBEAT" },
-        { SPDM_KEY_UPDATE, "SPDM_KEY_UPDATE" },
-        { SPDM_GET_ENCAPSULATED_REQUEST, "SPDM_GET_ENCAPSULATED_REQUEST" },
-        { SPDM_DELIVER_ENCAPSULATED_RESPONSE, "SPDM_DELIVER_ENCAPSULATED_RESPONSE" },
-        { SPDM_END_SESSION, "SPDM_END_SESSION" },
-        /* SPDM request code (1.2) */
-        { SPDM_GET_CSR, "SPDM_GET_CSR" },
-        { SPDM_SET_CERTIFICATE, "SPDM_SET_CERTIFICATE" },
-        { SPDM_CHUNK_SEND, "SPDM_CHUNK_SEND" },
-        { SPDM_CHUNK_GET, "SPDM_CHUNK_GET" },
-        /* SPDM request code (1.3) */
-        { SPDM_GET_SUPPORTED_EVENT_TYPES, "SPDM_GET_SUPPORTED_EVENT_TYPES" },
-        { SPDM_SUBSCRIBE_EVENT_TYPES, "SPDM_SUBSCRIBE_EVENT_TYPES" },
-        { SPDM_SEND_EVENT, "SPDM_SEND_EVENT" },
-        { SPDM_GET_MEASUREMENT_EXTENSION_LOG, "SPDM_GET_MEASUREMENT_EXTENSION_LOG" },
-        { SPDM_GET_KEY_PAIR_INFO, "SPDM_GET_KEY_PAIR_INFO" },
-        { SPDM_SET_KEY_PAIR_INFO, "SPDM_SET_KEY_PAIR_INFO" },
-        { SPDM_GET_ENDPOINT_INFO, "SPDM_GET_ENDPOINT_INFO" },
-    };
+    /* SPDM response code (1.1) */
+    case SPDM_KEY_EXCHANGE_RSP: return "SPDM_KEY_EXCHANGE_RSP";
+    case SPDM_FINISH_RSP: return "SPDM_FINISH_RSP";
+    case SPDM_PSK_EXCHANGE_RSP: return "SPDM_PSK_EXCHANGE_RSP";
+    case SPDM_PSK_FINISH_RSP: return "SPDM_PSK_FINISH_RSP";
+    case SPDM_HEARTBEAT_ACK: return "SPDM_HEARTBEAT_ACK";
+    case SPDM_KEY_UPDATE_ACK: return "SPDM_KEY_UPDATE_ACK";
+    case SPDM_ENCAPSULATED_REQUEST: return "SPDM_ENCAPSULATED_REQUEST";
+    case SPDM_ENCAPSULATED_RESPONSE_ACK: return "SPDM_ENCAPSULATED_RESPONSE_ACK";
+    case SPDM_END_SESSION_ACK: return "SPDM_END_SESSION_ACK";
 
-    for (index = 0; index < LIBSPDM_ARRAY_SIZE(code_str_struct); index++) {
-        if (request_code == code_str_struct[index].code) {
-            return code_str_struct[index].code_str;
-        }
+    /* SPDM response code (1.2) */
+    case SPDM_CSR: return "SPDM_CSR";
+    case SPDM_SET_CERTIFICATE_RSP: return "SPDM_SET_CERTIFICATE_RSP";
+    case SPDM_CHUNK_SEND_ACK: return "SPDM_CHUNK_SEND_ACK";
+    case SPDM_CHUNK_RESPONSE: return "SPDM_CHUNK_RESPONSE";
+
+    /* SPDM response code (1.3 )*/
+    case SPDM_SUPPORTED_EVENT_TYPES: return "SPDM_SUPPORTED_EVENT_TYPES";
+    case SPDM_SUBSCRIBE_EVENT_TYPES_ACK: return "SPDM_SUBSCRIBE_EVENT_TYPES_ACK";
+    case SPDM_EVENT_ACK: return "SPDM_EVENT_ACK";
+    case SPDM_MEASUREMENT_EXTENSION_LOG: return "SPDM_MEASUREMENT_EXTENSION_LOG";
+    case SPDM_KEY_PAIR_INFO: return "SPDM_KEY_PAIR_INFO";
+    case SPDM_SET_KEY_PAIR_INFO_ACK: return "SPDM_SET_KEY_PAIR_INFO_ACK";
+    case SPDM_ENDPOINT_INFO: return "SPDM_ENDPOINT_INFO";
+
+    /* SPDM request code (1.0) */
+    case SPDM_GET_DIGESTS: return "SPDM_GET_DIGESTS";
+    case SPDM_GET_CERTIFICATE: return "SPDM_GET_CERTIFICATE";
+    case SPDM_CHALLENGE: return "SPDM_CHALLENGE";
+    case SPDM_GET_VERSION: return "SPDM_GET_VERSION";
+    case SPDM_GET_MEASUREMENTS: return "SPDM_GET_MEASUREMENTS";
+    case SPDM_GET_CAPABILITIES: return "SPDM_GET_CAPABILITIES";
+    case SPDM_NEGOTIATE_ALGORITHMS: return "SPDM_NEGOTIATE_ALGORITHMS";
+    case SPDM_VENDOR_DEFINED_REQUEST: return "SPDM_VENDOR_DEFINED_REQUEST";
+    case SPDM_RESPOND_IF_READY: return "SPDM_RESPOND_IF_READY";
+
+    /* SPDM request code (1.1) */
+    case SPDM_KEY_EXCHANGE: return "SPDM_KEY_EXCHANGE";
+    case SPDM_FINISH: return "SPDM_FINISH";
+    case SPDM_PSK_EXCHANGE: return "SPDM_PSK_EXCHANGE";
+    case SPDM_PSK_FINISH: return "SPDM_PSK_FINISH";
+    case SPDM_HEARTBEAT: return "SPDM_HEARTBEAT";
+    case SPDM_KEY_UPDATE: return "SPDM_KEY_UPDATE";
+    case SPDM_GET_ENCAPSULATED_REQUEST: return "SPDM_GET_ENCAPSULATED_REQUEST";
+    case SPDM_DELIVER_ENCAPSULATED_RESPONSE: return "SPDM_DELIVER_ENCAPSULATED_RESPONSE";
+    case SPDM_END_SESSION: return "SPDM_END_SESSION";
+
+    /* SPDM request code (1.2) */
+    case SPDM_GET_CSR: return "SPDM_GET_CSR";
+    case SPDM_SET_CERTIFICATE: return "SPDM_SET_CERTIFICATE";
+    case SPDM_CHUNK_SEND: return "SPDM_CHUNK_SEND";
+    case SPDM_CHUNK_GET: return "SPDM_CHUNK_GET";
+
+    /* SPDM request code (1.3) */
+    case SPDM_GET_SUPPORTED_EVENT_TYPES: return "SPDM_GET_SUPPORTED_EVENT_TYPES";
+    case SPDM_SUBSCRIBE_EVENT_TYPES: return "SPDM_SUBSCRIBE_EVENT_TYPES";
+    case SPDM_SEND_EVENT: return "SPDM_SEND_EVENT";
+    case SPDM_GET_MEASUREMENT_EXTENSION_LOG: return "SPDM_GET_MEASUREMENT_EXTENSION_LOG";
+    case SPDM_GET_KEY_PAIR_INFO: return "SPDM_GET_KEY_PAIR_INFO";
+    case SPDM_SET_KEY_PAIR_INFO: return "SPDM_SET_KEY_PAIR_INFO";
+    case SPDM_GET_ENDPOINT_INFO: return "SPDM_GET_ENDPOINT_INFO";
+
+    default:
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "RequestResponseCode 0x%x not found.\n", request_code));
+        return "<unknown>";
     }
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "RequestResponseCode 0x%x not found.\n", request_code));
-
-    return "<unknown>";
 }
 
 void libspdm_internal_dump_hex_str(const uint8_t *data, size_t size)
