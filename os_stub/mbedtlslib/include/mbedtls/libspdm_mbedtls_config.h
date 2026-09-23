@@ -4377,7 +4377,8 @@ extern int my_snprintf(char *str, size_t size, const char *format, ...);
 
 /**< Maximum number of intermediate CAs in a verification chain. */
 
-/* #define MBEDTLS_X509_MAX_INTERMEDIATE_CA   8 */
+/* libspdm's long-chain unit tests need up to 47 intermediates (ShorterMAXUINT16). */
+#define MBEDTLS_X509_MAX_INTERMEDIATE_CA   64
 
 /**< Maximum length of a path/filename string in bytes including the null terminator character ('\0'). */
 
