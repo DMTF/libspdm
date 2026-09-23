@@ -1719,9 +1719,10 @@ static void libspdm_test_process_opaque_data_case22(void **state)
 
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
 /**
- * Test 23: libspdm_reset_context releases the peer leaf certificate public key.
- * Expected Behavior: after a parsed leaf public key is stored for a slot,
- * reset_context frees it and clears the slot, so it is not orphaned when the
+ * Test 23: libspdm_reset_context empties the peer certificate chain slots.
+ * Expected Behavior: a slot that holds a chain as GET_CERTIFICATE leaves it, with the hash of the
+ * chain and its parsed leaf public key, is emptied by reset_context. The key is freed rather than
+ * orphaned, and the hash is cleared so that the slot does not look populated without a key when the
  * connection is re-established (reset_context runs on every GET_VERSION).
  **/
 static void libspdm_test_reset_context_leaf_key_case23(void **state)
@@ -1754,9 +1755,16 @@ static void libspdm_test_reset_context_leaf_key_case23(void **state)
     assert_true(result);
     assert_non_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 
+    result = libspdm_hash_all(m_libspdm_use_hash_algo, data, data_size,
+                              spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    assert_true(result);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(m_libspdm_use_hash_algo);
+
     libspdm_reset_context(spdm_context);
 
     assert_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size, 0);
 
     free(data);
 }
@@ -2474,7 +2482,7 @@ int libspdm_common_context_data_test_main(void)
         cmocka_unit_test(libspdm_test_process_opaque_data_case22),
 
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
-        /* reset_context frees the stored peer leaf certificate public key */
+        /* reset_context empties the peer certificate chain slots */
         cmocka_unit_test(libspdm_test_reset_context_leaf_key_case23),
 #endif
 
