@@ -512,7 +512,7 @@ static bool libspdm_asym_func_need_hash(uint32_t base_asym_algo)
 
 /**
  * libspdm_copy_signature_swap_endian_rsa
- * Swaps the endianness of a RSA signature buffer. The ECDSA signature buffer is
+ * Swaps the endianness of a RSA signature buffer. The RSA signature buffer is
  * actually single internal buffer and can be swapped as a single whole buffer.
  *
  * There are two known usage models for buffers for this function.

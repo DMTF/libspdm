@@ -62,7 +62,7 @@
  * returned however, and "measurements" and "measurements_size" are unmodified.
  *
  * When "measurement_index" is non-zero, returns the number of measurements
- * returned in "measurements" and "measurements_size". If "measurements_index"
+ * returned in "measurements" and "measurements_size". If "measurement_index"
  * is an invalid index not supported by the device, "measurements_count" will
  * return 0 and the function will return LIBSPDM_STATUS_MEAS_INVALID_INDEX.
  *

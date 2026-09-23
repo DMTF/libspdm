@@ -237,7 +237,6 @@ bool libspdm_secured_message_dhe_generate_key(uint16_t dhe_named_group,
  *
  * @retval true   DHE exchanged key generation succeeded.
  * @retval false  DHE exchanged key generation failed.
- * @retval false  key_size is not large enough.
  **/
 bool libspdm_secured_message_dhe_compute_key(
     uint16_t dhe_named_group, void *dhe_context,
@@ -274,12 +273,12 @@ void libspdm_secured_message_kem_free(uint32_t kem_alg, void *kem_context);
  * @param  kem_alg                SPDM kem_alg
  * @param  kem_context                 Pointer to the KEM context.
  * @param  encap_key                   Pointer to the buffer to receive generated public key.
- * @param  encap_key_size              On input, the size of public_key buffer in bytes.
- *                                     On output, the size of data returned in public_key buffer in bytes.
+ * @param  encap_key_size              On input, the size of encap_key buffer in bytes.
+ *                                     On output, the size of data returned in encap_key buffer in bytes.
  *
  * @retval true   KEM public key generation succeeded.
  * @retval false  KEM public key generation failed.
- * @retval false  public_key_size is not large enough.
+ * @retval false  encap_key_size is not large enough.
  **/
 bool libspdm_secured_message_kem_generate_key(uint32_t kem_alg,
                                               void *kem_context,
@@ -301,7 +300,7 @@ bool libspdm_secured_message_kem_generate_key(uint32_t kem_alg,
  *
  * @retval true   KEM exchanged key generation succeeded.
  * @retval false  KEM exchanged key generation failed.
- * @retval false  key_size is not large enough.
+ * @retval false  cipher_text_size is not large enough.
  **/
 bool libspdm_secured_message_kem_encapsulate(
     uint32_t kem_alg, void *kem_context,
@@ -321,7 +320,6 @@ bool libspdm_secured_message_kem_encapsulate(
  *
  * @retval true   KEM exchanged key generation succeeded.
  * @retval false  KEM exchanged key generation failed.
- * @retval false  key_size is not large enough.
  **/
 bool libspdm_secured_message_kem_decapsulate(
     uint32_t kem_alg, void *kem_context,

@@ -29,13 +29,13 @@ extern void libspdm_mlkem_free(void *kem_context);
  *
  * @param[in, out]  kem_context       Pointer to the KEM context.
  * @param[out]      encap_key        Pointer to the buffer to receive generated public key.
- * @param[in, out]  encap_key_size   On input, the size of public_key buffer in bytes.
- *                                   On output, the size of data returned in public_key buffer in
+ * @param[in, out]  encap_key_size   On input, the size of encap_key buffer in bytes.
+ *                                   On output, the size of data returned in encap_key buffer in
  *                                   bytes.
  *
  * @retval true   KEM public key generation succeeded.
  * @retval false  KEM public key generation failed.
- * @retval false  public_key_size is not large enough.
+ * @retval false  encap_key_size is not large enough.
  * @retval false  This interface is not supported.
  **/
 extern bool libspdm_mlkem_generate_key(void *kem_context, uint8_t *encap_key, size_t *encap_key_size);
@@ -55,7 +55,7 @@ extern bool libspdm_mlkem_generate_key(void *kem_context, uint8_t *encap_key, si
  *
  * @retval true   KEM exchanged key generation succeeded.
  * @retval false  KEM exchanged key generation failed.
- * @retval false  key_size is not large enough.
+ * @retval false  cipher_text_size or shared_secret_size is not large enough.
  * @retval false  This interface is not supported.
  **/
 extern bool libspdm_mlkem_encapsulate(void *kem_context, const uint8_t *peer_encap_key,
@@ -75,7 +75,7 @@ extern bool libspdm_mlkem_encapsulate(void *kem_context, const uint8_t *peer_enc
  *
  * @retval true   KEM exchanged key generation succeeded.
  * @retval false  KEM exchanged key generation failed.
- * @retval false  key_size is not large enough.
+ * @retval false  shared_secret_size is not large enough.
  * @retval false  This interface is not supported.
  **/
 extern bool libspdm_mlkem_decapsulate(void *kem_context, const uint8_t *peer_cipher_text,

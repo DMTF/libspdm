@@ -717,8 +717,8 @@ extern bool libspdm_sm3_256_duplicate(const void *sm3_context, void *new_sm3_con
  *
  * This function performs SM3 digest on a data buffer of the specified size.
  * It can be called multiple times to compute the digest of long or discontinuous data streams.
- * SM3 context should be already correctly initialized by sm3_init(), and should not be finalized
- * by sm3_final(). Behavior with invalid context is undefined.
+ * SM3 context should be already correctly initialized by libspdm_sm3_256_init(), and should not be finalized
+ * by libspdm_sm3_256_final(). Behavior with invalid context is undefined.
  *
  * If sm3_context is NULL, then return false.
  *
@@ -736,8 +736,8 @@ extern bool libspdm_sm3_256_update(void *sm3_context, const void *data, size_t d
  *
  * This function completes SM3 hash computation and retrieves the digest value into
  * the specified memory. After this function has been called, the SM3 context cannot
- * be used again. SM3 context should be already correctly initialized by sm3_init(), and should not
- * be finalized by sm3_final(). Behavior with invalid SM3 context is undefined.
+ * be used again. SM3 context should be already correctly initialized by libspdm_sm3_256_init(), and should not
+ * be finalized by libspdm_sm3_256_final(). Behavior with invalid SM3 context is undefined.
  *
  * If sm3_context is NULL, then return false.
  * If hash_value is NULL, then return false.

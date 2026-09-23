@@ -120,7 +120,7 @@ libspdm_return_t libspdm_transport_pci_doe_decode_message(
  * @param  index                                A pointer to a destination to store the index.
  *
  * @retval LIBSPDM_STATUS_SUCCESS               The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the transport_message_size is zero.
  **/
 libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_message_size,
                                                           const void *transport_message,
@@ -135,7 +135,7 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_messa
  * @param  version                              A pointer to a destination to store the DOE Discovery Version.
  *
  * @retval LIBSPDM_STATUS_SUCCESS               The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the transport_message_size is zero.
  **/
 libspdm_return_t libspdm_pci_doe_decode_discovery_request_version(size_t transport_message_size,
                                                                   const void *transport_message,
@@ -151,7 +151,7 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_request_version(size_t transpo
  * @param  next_index                           A pointer to a destination to store the next_index.
  *
  * @retval LIBSPDM_STATUS_SUCCESS               The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the transport_message_size is zero.
  **/
 libspdm_return_t libspdm_pci_doe_decode_discovery_response(size_t transport_message_size,
                                                            void *transport_message,

@@ -867,7 +867,7 @@ typedef struct {
 typedef struct {
     uint8_t dmtf_spec_measurement_value_type;
     uint16_t dmtf_spec_measurement_value_size;
-    /*uint8_t                Dmtf_spec_measurement_value[dmtf_spec_measurement_value_size];*/
+    /*uint8_t                dmtf_spec_measurement_value[dmtf_spec_measurement_value_size];*/
 } spdm_measurement_block_dmtf_header_t;
 
 typedef struct {

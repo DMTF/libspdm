@@ -1669,7 +1669,7 @@ bool libspdm_x509_set_cert_certificate_check(
         return false;
     }
 
-    /* verify basic constraints: need check with is_device_cert_model*/
+    /* verify basic constraints: need to check with cert_model*/
     if (spdm_version >= SPDM_MESSAGE_VERSION_13) {
         need_basic_constraints = true;
     } else {

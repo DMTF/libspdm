@@ -68,7 +68,7 @@ void libspdm_fips_selftest_slhdsa(void *fips_selftest_context)
         goto update;
     }
 
-    /*mldsa KAT test*/
+    /*slhdsa KAT test*/
     result = libspdm_slhdsa_sign_ex(dsa_context,
                                     sign_context_sha2_128s, sizeof(sign_context_sha2_128s),
                                     message_hash_sha2_128s, sizeof(message_hash_sha2_128s),

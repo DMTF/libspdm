@@ -557,8 +557,8 @@ libspdm_return_t libspdm_get_supported_algorithms(void *spdm_context,
  *                                    If use_psk is false, it must be 32 bytes.
  *                                    If use_psk is true, it means the PSK context and must be 32 bytes at least.
  * @param  responder_random           A buffer to hold the responder random, if not NULL.
- * @param  responder_random_size      On input, the size of requester_random buffer.
- *                                    On output, the size of data returned in requester_random buffer.
+ * @param  responder_random_size      On input, the size of responder_random buffer.
+ *                                    On output, the size of data returned in responder_random buffer.
  *                                    If use_psk is false, it must be 32 bytes.
  *                                    If use_psk is true, it means the PSK context. It could be 0 if device does not support context.
  * @param  requester_opaque_data      A buffer to hold the requester opaque data, if not NULL.

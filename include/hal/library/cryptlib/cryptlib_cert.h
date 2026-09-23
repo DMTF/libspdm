@@ -144,7 +144,7 @@ extern bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_siz
  * Retrieve the Validity from one X.509 certificate
  *
  * If cert is NULL, then return false.
- * If CertIssuerSize is NULL, then return false.
+ * If from_size or to_size is NULL, then return false.
  * If this interface is not supported, then return false.
  *
  * @param[in]      cert       Pointer to the DER-encoded X509 certificate.
@@ -155,15 +155,15 @@ extern bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_siz
  * @param[in,out]  to_size    notAfter date_time object size.
  *
  * Note: libspdm_x509_compare_date_time to compare date_time object
- *       x509SetDateTime to get a date_time object from a date_time_str
+ *       libspdm_x509_set_date_time to get a date_time object from a date_time_str
  *
- * @retval  true   if the from_size and from_size are not equal 0.
+ * @retval  true   if the from_size and to_size are not equal to 0.
  *                 The certificate Validity retrieved successfully.
- * @retval  true   if the from_size and from_size are equal 0.
+ * @retval  true   if the from_size and to_size are equal to 0.
  *                 The certificate Validity does not exist.
- * @retval  false  if the from_size and from_size are not equal 0.
+ * @retval  false  if the from_size and to_size are not equal to 0.
  *                 The certificate Validity retrieved successfully, but the input buffer size is small.
- * @retval  false  if the from_size and from_size are equal 0.
+ * @retval  false  if the from_size and to_size are equal to 0.
  *                 Invalid certificate, or Validity retrieve failed.
  **/
 extern bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
@@ -228,10 +228,10 @@ extern bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size, si
  * @param[out]     usage       Key usage bytes.
  * @param[in, out] usage_size  Key usage buffer size in bytes.
  *
- * @retval true   If the returned usage_size == 0, it means that cert and oid are valid, but the Extended key usage is not found;
- *                If the returned usage_size != 0, it means that cert and oid are valid, and the Extended key usage is found;
- * @retval false  If the returned usage_size == 0, it means that cert or oid are invalid;
- *                If the returned usage_size != 0, it means that cert and oid are valid, and the Extended key usage is found,
+ * @retval true   If the returned usage_size == 0, it means that cert is valid, but the Extended key usage is not found;
+ *                If the returned usage_size != 0, it means that cert is valid, and the Extended key usage is found;
+ * @retval false  If the returned usage_size == 0, it means that cert is invalid;
+ *                If the returned usage_size != 0, it means that cert is valid, and the Extended key usage is found,
  *                                                 but the store buffer is too small.
  **/
 extern bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
@@ -246,10 +246,10 @@ extern bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
  * @param[out]     basic_constraints        Basic constraints bytes.
  * @param[in, out] basic_constraints_size   Basic constraints buffer size in bytes.
  *
- * @retval true   If the returned basic_constraints_size == 0, it means that cert and oid are valid, but the basic_constraints is not found;
- *                If the returned basic_constraints_size != 0, it means that cert and oid are valid, and the basic_constraints is found;
- * @retval false  If the returned basic_constraints_size == 0, it means that cert or oid are invalid;
- *                If the returned basic_constraints_size != 0, it means that cert and oid are valid, and the basic_constraints is found,
+ * @retval true   If the returned basic_constraints_size == 0, it means that cert is valid, but the basic_constraints is not found;
+ *                If the returned basic_constraints_size != 0, it means that cert is valid, and the basic_constraints is found;
+ * @retval false  If the returned basic_constraints_size == 0, it means that cert is invalid;
+ *                If the returned basic_constraints_size != 0, it means that cert is valid, and the basic_constraints is found,
  *                                                             but the store buffer is too small.
  **/
 extern bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
@@ -292,7 +292,7 @@ extern bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
  *
  * @param[in]      root_cert_length   Trusted Root Certificate buffer length.
  *
- * @retval  true   All certificates were issued by the first certificate in X509Certchain.
+ * @retval  true   All certificates were issued by the first certificate in cert_chain.
  * @retval  false  Invalid certificate or the certificate was not issued by the given
  *                 trusted CA.
  **/
@@ -395,7 +395,7 @@ extern bool libspdm_ecd_get_public_key_from_x509(const uint8_t *cert, size_t cer
  * @param[in]  cert         Pointer to the DER-encoded X509 certificate.
  * @param[in]  cert_size    Size of the X509 certificate in bytes.
  * @param[out] sm2_context  Pointer to newly generated sm2 context which contain the retrieved
- *                          sm2 public key component. Use sm2_free() function to free the
+ *                          sm2 public key component. Use libspdm_sm2_dsa_free() function to free the
  *                          resource.
  *
  * If cert is NULL, then return false.
@@ -416,7 +416,7 @@ extern bool libspdm_sm2_get_public_key_from_x509(const uint8_t *cert, size_t cer
  * @param[in]  cert         Pointer to the DER-encoded X509 certificate.
  * @param[in]  cert_size    Size of the X509 certificate in bytes.
  * @param[out] dsa_context  Pointer to newly generated mldsa context which contain the retrieved
- *                          mldsa public key component. Use mldsa_free() function to free the
+ *                          mldsa public key component. Use libspdm_mldsa_free() function to free the
  *                          resource.
  *
  * If cert is NULL, then return false.
@@ -437,7 +437,7 @@ extern bool libspdm_mldsa_get_public_key_from_x509(const uint8_t *cert, size_t c
  * @param[in]  cert         Pointer to the DER-encoded X509 certificate.
  * @param[in]  cert_size    Size of the X509 certificate in bytes.
  * @param[out] dsa_context  Pointer to newly generated slhdsa context which contain the retrieved
- *                          slhdsa public key component. Use slhdsa_free() function to free the
+ *                          slhdsa public key component. Use libspdm_slhdsa_free() function to free the
  *                          resource.
  *
  * If cert is NULL, then return false.
