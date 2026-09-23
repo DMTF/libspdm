@@ -12,7 +12,7 @@
  * This function sends GET_CSR
  * to get csr from the device.
  *
- * @param[in]  context                      A pointer to the SPDM context.
+ * @param[in]  spdm_context                 A pointer to the SPDM context.
  * @param[in]  session_id                   Indicates if it is a secured message protected via SPDM session.
  *                                          If session_id is NULL, it is a normal message.
  *                                          If session_id is NOT NULL, it is a secured message.

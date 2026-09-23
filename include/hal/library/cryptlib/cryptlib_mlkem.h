@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -46,10 +46,12 @@ extern bool libspdm_mlkem_generate_key(void *kem_context, uint8_t *encap_key, si
  * @param[in, out]  kem_context           Pointer to the KEM context.
  * @param[in]       peer_encap_key        Pointer to the peer's public key.
  * @param[in]       peer_encap_key_size   size of peer's public key in bytes.
- * @param[out]      key                   Pointer to the buffer to receive generated key.
- * @param[in, out]  key_size              On input, the size of key buffer in bytes.
- *                                        On output, the size of data returned in key buffer in
- *                                        bytes.
+ * @param[out]      cipher_text           Pointer to the buffer to receive cipher text.
+ * @param[in, out]  cipher_text_size      On input, the size of cipher text buffer in bytes.
+ *                                        On output, the size of data returned in cipher text buffer in bytes.
+ * @param[out]      shared_secret         Pointer to the buffer to receive generated shared secret.
+ * @param[in, out]  shared_secret_size    On input, the size of shared secret buffer in bytes.
+ *                                        On output, the size of data returned in shared secret buffer in bytes.
  *
  * @retval true   KEM exchanged key generation succeeded.
  * @retval false  KEM exchanged key generation failed.
@@ -64,13 +66,12 @@ extern bool libspdm_mlkem_encapsulate(void *kem_context, const uint8_t *peer_enc
 /**
  * Computes exchanged common key.
  *
- * @param[in, out]  kem_context           Pointer to the KEM context.
- * @param[in]       peer_encap_key        Pointer to the peer's public key.
- * @param[in]       peer_encap_key_size   size of peer's public key in bytes.
- * @param[out]      key                   Pointer to the buffer to receive generated key.
- * @param[in, out]  key_size              On input, the size of key buffer in bytes.
- *                                        On output, the size of data returned in key buffer in
- *                                        bytes.
+ * @param[in, out]  kem_context            Pointer to the KEM context.
+ * @param[in]       peer_cipher_text       Pointer to the peer's cipher text.
+ * @param[in]       peer_cipher_text_size  size of peer's cipher text in bytes.
+ * @param[out]      shared_secret          Pointer to the buffer to receive generated shared secret.
+ * @param[in, out]  shared_secret_size     On input, the size of shared secret buffer in bytes.
+ *                                         On output, the size of data returned in shared secret buffer in bytes.
  *
  * @retval true   KEM exchanged key generation succeeded.
  * @retval false  KEM exchanged key generation failed.
@@ -113,7 +114,7 @@ extern bool libspdm_mlkem_encapsulate_ex(void *kem_context, const uint8_t *peer_
 /**
  * Sets the key component into the established KEM context.
  *
- * @param[in, out]  dsa_context  Pointer to KEM context being set.
+ * @param[in, out]  kem_context  Pointer to KEM context being set.
  * @param[in]       key_data     Pointer to octet integer buffer.
  * @param[in]       key_size     Size of big number buffer in bytes.
  *

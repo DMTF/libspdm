@@ -241,7 +241,7 @@ bool libspdm_calculate_l1l2_hash(libspdm_context_t *spdm_context,
 /*
  * This function calculates m1m2.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  context                       A pointer to the SPDM context.
  * @param  is_mut                        Indicate if this is from mutual authentication.
  * @param  m1m2                          The buffer to store the m1m2
  */
@@ -371,7 +371,7 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
 /*
  * This function calculates m1m2 hash.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  context                       A pointer to the SPDM context.
  * @param  is_mut                        Indicate if this is from mutual authentication.
  * @param  m1m2_hash_size               size in bytes of the m1m2 hash
  * @param  m1m2_hash                   The buffer to store the m1m2 hash

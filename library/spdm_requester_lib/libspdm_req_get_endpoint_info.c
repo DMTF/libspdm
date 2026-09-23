@@ -12,7 +12,7 @@
  * This function sends GET_ENDPOINT_INFO and receives ENDPOINT_INFO *
  *
  *
- * @param  context                    A pointer to the SPDM context.
+ * @param  spdm_context               A pointer to the SPDM context.
  * @param  session_id                 Indicates if it is a secured message protected via SPDM session.
  *                                    If session_id is NULL, it is a normal message.
  *                                    If session_id is not NULL, it is a secured message.

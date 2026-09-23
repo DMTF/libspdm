@@ -194,7 +194,7 @@ void libspdm_register_connection_state_callback_func(
  *
  * @param  spdm_context           A pointer to the SPDM context.
  * @param  session_id             Session ID for the keys being updated.
- * @param  key_update_operation   Indicate the key update operation.
+ * @param  key_update_op          Indicate the key update operation.
  * @param  key_update_action      Indicate the direction of the key update.
  **/
 typedef void (*libspdm_key_update_callback_func)(
@@ -206,7 +206,7 @@ typedef void (*libspdm_key_update_callback_func)(
  *
  * @param  spdm_context           A pointer to the SPDM context.
  * @param  session_id             Session ID for the keys being updated.
- * @param  key_update_operation   Indicate the key update operation.
+ * @param  key_update_op          Indicate the key update operation.
  * @param  key_update_action      Indicate the direction of the key update.
  **/
 void libspdm_trigger_key_update_callback(

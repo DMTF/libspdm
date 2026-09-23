@@ -361,7 +361,7 @@ libspdm_return_t libspdm_get_measurement_ex2(void *spdm_context, const uint32_t 
  * This function sends GET_ENDPOINT_INFO from the device *
  *
  *
- * @param  context                    A pointer to the SPDM context.
+ * @param  spdm_context               A pointer to the SPDM context.
  * @param  session_id                 Indicates if it is a secured message protected via SPDM session.
  *                                    If session_id is NULL, it is a normal message.
  *                                    If session_id is not NULL, it is a secured message.
@@ -846,7 +846,7 @@ libspdm_return_t libspdm_generate_encap_extended_error_response(
 /**
  * This function sends GET_CSR to get CSR from the device.
  *
- * @param[in]  context                A pointer to the SPDM context.
+ * @param[in]  spdm_context           A pointer to the SPDM context.
  * @param[in]  session_id             Indicates if it is a secured message protected via SPDM session.
  *                                    If session_id is NULL, it is a normal message.
  *                                    If session_id is NOT NULL, it is a secured message.
@@ -879,7 +879,7 @@ libspdm_return_t libspdm_get_csr(void *spdm_context,
  * This function try to send SET_CERTIFICATE
  * to set certificate on the device.
  *
- * @param  context          A pointer to the SPDM context.
+ * @param  spdm_context     A pointer to the SPDM context.
  * @param  session_id       Indicates if it is a secured message protected via SPDM session.
  *                          If session_id is NULL, it is a normal message.
  *                          If session_id is NOT NULL, it is a secured message.
@@ -896,7 +896,7 @@ libspdm_return_t libspdm_set_certificate(void *spdm_context,
  * This function try to send SET_CERTIFICATE
  * to set certificate or erase certificate from the device.
  *
- * @param  context          A pointer to the SPDM context.
+ * @param  spdm_context     A pointer to the SPDM context.
  * @param  session_id       Indicates if it is a secured message protected via SPDM session.
  *                          If session_id is NULL, it is a normal message.
  *                          If session_id is NOT NULL, it is a secured message.
@@ -993,7 +993,7 @@ libspdm_return_t libspdm_send_event(void *spdm_context,
  * This function initializes message logging. The caller must provide a buffer and the buffer's
  * size.
  *
- * @param  context          A pointer to the SPDM context.
+ * @param  spdm_context     A pointer to the SPDM context.
  * @param  msg_buffer       A pointer to a caller-provided buffer.
  * @param  msg_buffer_size  The size of the buffer in bytes. It must be greater than zero.
  **/
@@ -1002,16 +1002,16 @@ void libspdm_init_msg_log (void *spdm_context, void *msg_buffer, size_t msg_buff
 /**
  * This function sets the mode in which the message logger operates.
  *
- * @param  context A pointer to the SPDM context.
- * @param  mode    A bitmask specifying the mode in which the message logger operates.
- *                 LIBSPDM_MSG_LOG_MODE_ENABLE - when set the message logger is active.
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  mode          A bitmask specifying the mode in which the message logger operates.
+ *                       LIBSPDM_MSG_LOG_MODE_ENABLE - when set the message logger is active.
  */
 void libspdm_set_msg_log_mode (void *spdm_context, uint32_t mode);
 
 /**
  * This function returns the status of the message logger.
  *
- * @param  context  A pointer to the SPDM context.
+ * @param  spdm_context  A pointer to the SPDM context.
  *
  * @return uint32_t A bitmask giving the status of the message logger.
  *                  LIBSPDM_MSG_LOG_STATUS_BUFFER_FULL - if set the message logging buffer has
@@ -1022,7 +1022,7 @@ uint32_t libspdm_get_msg_log_status (void *spdm_context);
 /**
  * This function returns the size of the message log.
  *
- * @param  context  A pointer to the SPDM context.
+ * @param  spdm_context  A pointer to the SPDM context.
  * @return size_t   The size of the message log in bytes.
  */
 size_t libspdm_get_msg_log_size (void *spdm_context);
@@ -1031,7 +1031,7 @@ size_t libspdm_get_msg_log_size (void *spdm_context);
  * This function resets the message log while retaining the message buffer and maximum size given in
  * libspdm_init_msg_log.
  *
- * @param context  A pointer to the SPDM context.
+ * @param spdm_context  A pointer to the SPDM context.
  */
 void libspdm_reset_msg_log (void *spdm_context);
 #endif /* LIBSPDM_ENABLE_MSG_LOG */

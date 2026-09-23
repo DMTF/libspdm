@@ -385,10 +385,10 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
 /**
  * Initialize an libspdm_fips_selftest_context.
  *
- * @param  spdm_context         A pointer to the SPDM context.
- * @param  buffer_size          The buffer size to hold large intermediate results.
- * @param  buffer               The buffer provided by integrator to
- *                              hold large intermediate results.
+ * @param  fips_selftest_context  A pointer to the FIPS self-test context.
+ * @param  buffer_size            The buffer size to hold large intermediate results.
+ * @param  buffer                 The buffer provided by integrator to
+ *                                hold large intermediate results.
  */
 libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context,
                                                     size_t buffer_size,
@@ -563,7 +563,7 @@ void libspdm_register_device_io_func(
 /**
  * Acquire a device sender buffer for transport layer message.
  *
- * @param  context       A pointer to the SPDM context.
+ * @param  spdm_context  A pointer to the SPDM context.
  * @param  msg_buf_ptr   A pointer to a sender buffer.
  *
  * @retval LIBSPDM_STATUS_SUCCESS       The sender buffer has been acquired.
@@ -575,7 +575,7 @@ typedef libspdm_return_t (*libspdm_device_acquire_sender_buffer_func)(
 /**
  * Release a device sender buffer for transport layer message.
  *
- * @param  context                       A pointer to the SPDM context.
+ * @param  spdm_context                  A pointer to the SPDM context.
  * @param  msg_buf_ptr                   A pointer to a sender buffer.
  **/
 typedef void (*libspdm_device_release_sender_buffer_func)(void *spdm_context,
@@ -584,7 +584,7 @@ typedef void (*libspdm_device_release_sender_buffer_func)(void *spdm_context,
 /**
  * Acquire a device receiver buffer for transport layer message.
  *
- * @param  context       A pointer to the SPDM context.
+ * @param  spdm_context  A pointer to the SPDM context.
  * @param  msg_buf_ptr   A pointer to a receiver buffer.
  *
  * @retval LIBSPDM_STATUS_SUCCESS       The receiver buffer has been acquired.
@@ -596,8 +596,8 @@ typedef libspdm_return_t (*libspdm_device_acquire_receiver_buffer_func)(
 /**
  * Release a device receiver buffer for transport layer message.
  *
- * @param  context      A pointer to the SPDM context.
- * @param  msg_buf_ptr  A pointer to a receiver buffer.
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  msg_buf_ptr   A pointer to a receiver buffer.
  **/
 typedef void (*libspdm_device_release_receiver_buffer_func)(void *spdm_context,
                                                             const void *msg_buf_ptr);
@@ -754,7 +754,7 @@ void libspdm_register_transport_layer_func(
  * The SPDM Integrator must call libspdm_get_sizeof_required_scratch_buffer to get the size,
  * then allocate enough scratch buffer and call libspdm_set_scratch_buffer().
  *
- * @param  context  A pointer to the SPDM context.
+ * @param  spdm_context  A pointer to the SPDM context.
  *
  * @return the size of required scratch buffer.
  **/
@@ -828,8 +828,8 @@ typedef bool (*libspdm_verify_spdm_cert_chain_func)(
  *
  * This function must be called after libspdm_init_context, and before any SPDM communication.
  *
- * @param  spdm_context        A pointer to the SPDM context.
- * @param  verify_certificate  The function to verify an SPDM certificate after GET_CERTIFICATE.
+ * @param  spdm_context            A pointer to the SPDM context.
+ * @param  verify_spdm_cert_chain  The function to verify an SPDM certificate after GET_CERTIFICATE.
  **/
 void libspdm_register_verify_spdm_cert_chain_func(
     void *spdm_context,

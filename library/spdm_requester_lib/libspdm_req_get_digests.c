@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -21,7 +21,7 @@ typedef struct {
 /**
  * This function sends GET_DIGESTS and receives DIGESTS *
  *
- * @param  context             A pointer to the SPDM context.
+ * @param  spdm_context        A pointer to the SPDM context.
  * @param  slot_mask           Bitmask of the slots that contain certificates.
  * @param  total_digest_buffer A pointer to a destination buffer to store the digests.
  *

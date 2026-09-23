@@ -110,10 +110,10 @@ bool libspdm_verify_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
  *                                   On output, the size of data returned in requester_context buffer.
  *                                   It must be 32 bytes at least.
  * @param  responder_context         A buffer to hold the responder context, if not NULL.
- * @param  responder_context_size    On input, the size of requester_context buffer.
- *                                   On output, the size of data returned in requester_context buffer.
+ * @param  responder_context_size    On input, the size of responder_context buffer.
+ *                                   On output, the size of data returned in responder_context buffer.
  *                                   It could be 0 if device does not support context.
- * @param  opaque_data               A buffer to hold the responder opaque data, if not NULL.
+ * @param  responder_opaque_data     A buffer to hold the responder opaque data, if not NULL.
  * @param  responder_opaque_data_size          On input, the size of the opaque data buffer.
  *                                   Responder opaque data should be less than 1024 bytes.
  *                                   On output, the size of the opaque data.

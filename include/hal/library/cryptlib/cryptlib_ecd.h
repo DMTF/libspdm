@@ -28,11 +28,11 @@ extern void *libspdm_ecd_new_by_nid(size_t nid);
  * The public key is ASN.1 DER-encoded as RFC7250 describes,
  * namely, the SubjectPublicKeyInfo structure of a X.509 certificate.
  *
- * @param[in]  der_data    Pointer to the DER-encoded public key data.
- * @param[in]  der_size    Size of the DER-encoded public key data in bytes.
- * @param[out] ec_context  Pointer to newly generated Ed context which contains the
- *                         Ed public key component.
- *                         Use libspdm_ecd_free() function to free the resource.
+ * @param[in]  der_data     Pointer to the DER-encoded public key data.
+ * @param[in]  der_size     Size of the DER-encoded public key data in bytes.
+ * @param[out] ecd_context  Pointer to newly generated Ed context which contains the
+ *                          Ed public key component.
+ *                          Use libspdm_ecd_free() function to free the resource.
  *
  * If der_data is NULL, then return false.
  * If ecd_context is NULL, then return false.
@@ -58,9 +58,9 @@ extern void libspdm_ecd_free(void *ecd_context);
  * For ed25519, the public_size is 32.
  * For ed448, the public_size is 57.
  *
- * @param[in, out]  ecd_context    Pointer to Ed context being set.
- * @param[in]       public_key     Pointer to the buffer to receive generated public X,Y.
- * @param[in]       public_size    The size of public buffer in bytes.
+ * @param[in, out]  ecd_context      Pointer to Ed context being set.
+ * @param[in]       public_key       Pointer to the buffer to receive generated public X,Y.
+ * @param[in]       public_key_size  The size of public_key buffer in bytes.
  *
  * @retval  true   Ed public key component was set successfully.
  * @retval  false  Invalid Ed public key component.
@@ -74,9 +74,9 @@ extern bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key
  * For ed25519, the private_size is 32.
  * For ed448, the private_size is 57.
  *
- * @param[in, out]  ecd_context      Pointer to Ed context being set.
- * @param[in]       private         Pointer to the buffer to receive generated private X,Y.
- * @param[in]       private_size     The size of private buffer in bytes.
+ * @param[in, out]  ecd_context       Pointer to Ed context being set.
+ * @param[in]       private_key       Pointer to the buffer to receive generated private X,Y.
+ * @param[in]       private_key_size  The size of private_key buffer in bytes.
  *
  * @retval  true   Ed private key component was set successfully.
  * @retval  false  Invalid Ed private key component.
@@ -91,10 +91,10 @@ extern bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_ke
  * For ed25519, the public_size is 32.
  * For ed448, the public_size is 57.
  *
- * @param[in, out]  ecd_context    Pointer to Ed context.
- * @param[out]      public         Pointer to the buffer to receive generated public X,Y.
- * @param[in, out]  public_size    On input, the size of public buffer in bytes.
- *                                 On output, the size of data returned in public buffer in bytes.
+ * @param[in, out]  ecd_context      Pointer to Ed context.
+ * @param[out]      public_key       Pointer to the buffer to receive generated public X,Y.
+ * @param[in, out]  public_key_size  On input, the size of public_key buffer in bytes.
+ *                                   On output, the size of data returned in public_key buffer in bytes.
  *
  * @retval  true   Ed key component was retrieved successfully.
  * @retval  false  Invalid Ed public key component.

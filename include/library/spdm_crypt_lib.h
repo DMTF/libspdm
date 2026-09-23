@@ -369,7 +369,7 @@ uint32_t libspdm_get_measurement_hash_size(uint32_t measurement_hash_algo);
  * @param  data_size       Size of data buffer in bytes.
  * @param  key             Pointer to the user-supplied key.
  * @param  key_size        Key size in bytes.
- * @param  hash_value      Pointer to a buffer that receives the HMAC value.
+ * @param  hmac_value      Pointer to a buffer that receives the HMAC value.
  *
  * @retval true   HMAC computation succeeded.
  * @retval false  HMAC computation failed.
@@ -418,7 +418,7 @@ bool libspdm_hkdf_expand(uint32_t base_hash_algo, const uint8_t *prk,
 /**
  * This function returns the SPDM asymmetric algorithm size.
  *
- * @param  base_asym_algo  SPDM base_hash_algo
+ * @param  base_asym_algo  SPDM base_asym_algo
  *
  * @return SPDM asymmetric algorithm size.
  **/
@@ -492,8 +492,6 @@ void libspdm_copy_signature_swap_endian(
  * @param  message_size    Size of the message in bytes.
  * @param  signature       Pointer to asymmetric signature to be verified.
  * @param  sig_size        Size of signature in bytes.
- * @param  endian          Endian to be tried. If both endians are selected,
- *                         the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -523,8 +521,6 @@ bool libspdm_asym_verify_ex(
  * @param  hash_size       Size of the hash in bytes.
  * @param  signature       Pointer to asymmetric signature to be verified.
  * @param  sig_size        Size of signature in bytes.
- * @param  endian          Endian to be tried. If both endians are selected,
- *                         the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -659,8 +655,6 @@ void libspdm_req_asym_free(uint16_t req_base_asym_alg, void *context);
  * @param  message_size       Size of the message in bytes.
  * @param  signature          Pointer to asymmetric signature to be verified.
  * @param  sig_size           Size of signature in bytes.
- * @param  endian             Endian to be tried. If both endians are selected,
- *                            the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -689,8 +683,6 @@ bool libspdm_req_asym_verify_ex(
  * @param  hash_size          Size of the hash in bytes.
  * @param  signature          Pointer to asymmetric signature to be verified.
  * @param  sig_size           Size of signature in bytes.
- * @param  endian             Endian to be tried. If both endians are selected,
- *                            the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -829,8 +821,8 @@ bool libspdm_dhe_generate_key(uint16_t dhe_named_group, void *context,
  *
  * @param  dhe_named_group       SPDM dhe_named_group
  * @param  context               Pointer to the DHE context.
- * @param  peer_public_key       Pointer to the peer's public key.
- * @param  peer_public_key_size  Size of peer's public key in bytes.
+ * @param  peer_public           Pointer to the peer's public key.
+ * @param  peer_public_size      Size of peer's public key in bytes.
  * @param  key                   Pointer to the buffer to receive generated key.
  * @param  key_size              On input, the size of key buffer in bytes.
  *                               On output, the size of data returned in key buffer in bytes.
@@ -934,7 +926,6 @@ bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version
 /**
  * Generates a random byte stream of the specified size.
  *
- * @param  spdm_context  A pointer to the SPDM context.
  * @param  size          Size of random bytes to generate.
  * @param  rand          Pointer to buffer to receive random value.
  *
@@ -975,8 +966,7 @@ bool libspdm_x509_certificate_check(
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
  * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
- * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
- *                                   If false, the local endpoint uses the AliasCert model.
+ * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
  *
  * @retval  true   Success.
  * @retval  false  Certificate is not valid.
@@ -1382,8 +1372,6 @@ void libspdm_req_pqc_asym_free(uint32_t req_pqc_asym_alg, void *context);
  * @param  message_size       Size of the message in bytes.
  * @param  signature          Pointer to asymmetric signature to be verified.
  * @param  sig_size           Size of signature in bytes.
- * @param  endian             Endian to be tried. If both endians are selected,
- *                            the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -1405,8 +1393,6 @@ bool libspdm_req_pqc_asym_verify(
  * @param  hash_size          Size of the hash in bytes.
  * @param  signature          Pointer to asymmetric signature to be verified.
  * @param  sig_size           Size of signature in bytes.
- * @param  endian             Endian to be tried. If both endians are selected,
- *                            the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
