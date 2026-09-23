@@ -237,6 +237,62 @@ jobs:
               -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=0
               -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=0
 
+          # Every toggle in spdm_lib_config.h off: the smallest legal library,
+          # and the only build without secured sessions. With CERT/CHAL/KEY_EX
+          # off the macro check also requires the signing and key exchange
+          # algorithms off, and Mbed TLS already pins EdDSA, SM2, SM3, SM4 and
+          # the PQC algorithms to 0. Three stay on: SHA-256, because
+          # LIBSPDM_MAX_HASH_SIZE is undefined with no hash algorithm;
+          # CERT_PARSE_SUPPORT, because the os_stub samples call the X.509
+          # functions it removes; and CHECK_MACRO, from BASE_CFLAGS. The unit
+          # tests assume a signing or key exchange algorithm, so only the
+          # library is built.
+          - name: config-all-off
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_PSK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CSR_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_EVENT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=0
+              -DLIBSPDM_SEND_GET_CERTIFICATE_SUPPORT=0
+              -DLIBSPDM_SEND_CHALLENGE_SUPPORT=0
+              -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=0
+              -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=0
+              -DLIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES=0
+              -DLIBSPDM_RESPOND_IF_READY_SUPPORT=0
+              -DLIBSPDM_FIPS_MODE=0
+              -DLIBSPDM_DEBUG_ENABLE=0
+              -DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=0
+              -DLIBSPDM_ENABLE_MSG_LOG=0
+              -DLIBSPDM_CHECK_SPDM_CONTEXT=0
+              -DLIBSPDM_RSA_SSA_2048_SUPPORT=0 -DLIBSPDM_RSA_SSA_3072_SUPPORT=0 -DLIBSPDM_RSA_SSA_4096_SUPPORT=0
+              -DLIBSPDM_RSA_PSS_2048_SUPPORT=0 -DLIBSPDM_RSA_PSS_3072_SUPPORT=0 -DLIBSPDM_RSA_PSS_4096_SUPPORT=0
+              -DLIBSPDM_ECDSA_P256_SUPPORT=0 -DLIBSPDM_ECDSA_P384_SUPPORT=0 -DLIBSPDM_ECDSA_P521_SUPPORT=0
+              -DLIBSPDM_FFDHE_2048_SUPPORT=0 -DLIBSPDM_FFDHE_3072_SUPPORT=0 -DLIBSPDM_FFDHE_4096_SUPPORT=0
+              -DLIBSPDM_ECDHE_P256_SUPPORT=0 -DLIBSPDM_ECDHE_P384_SUPPORT=0 -DLIBSPDM_ECDHE_P521_SUPPORT=0
+              -DLIBSPDM_AEAD_AES_128_GCM_SUPPORT=0 -DLIBSPDM_AEAD_AES_256_GCM_SUPPORT=0
+              -DLIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT=0
+              -DLIBSPDM_SHA384_SUPPORT=0 -DLIBSPDM_SHA512_SUPPORT=0
+              -DLIBSPDM_SHA3_256_SUPPORT=0 -DLIBSPDM_SHA3_384_SUPPORT=0 -DLIBSPDM_SHA3_512_SUPPORT=0
+            cmake_extra: -DDISABLE_TESTS=1
+            expect_tests: 'false'
+
           # The two escape hatches an endpoint without a reliable clock or a
           # full extension parser relies on. Both relax a certificate check,
           # neither interacts with the other, so one job covers both.
@@ -1116,20 +1172,28 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # MinGW GCC: the only job compiling Windows platform code with GCC
-          # and its -Werror set. Mbed TLS rather than OpenSSL because it needs
-          # no Perl and builds in roughly a quarter of the time.
-          #
-          # Completes the TOOLCHAIN x CRYPTO cross. OPENSSL_FLAGS and
-          # CMOCKA_FLAGS are declared per toolchain branch and OPENSSL_FLAGS
-          # applies to cryptlib_openssl, which is libspdm's own code, so gaps
-          # in this cross hide toolchain-specific build settings.
+          # MinGW GCC: the only jobs compiling Windows platform code with GCC
+          # and its -Werror set.
           - name: windows-x64-mingw-mbedtls-release
             os: windows-latest
             arch: x64
             toolchain: GCC
             crypto: mbedtls
             target: Release
+            shell: 'msys2 {0}'
+            generator: MSYS Makefiles
+
+          # Completes the TOOLCHAIN x CRYPTO cross. OPENSSL_FLAGS and
+          # CMOCKA_FLAGS are declared per toolchain branch and OPENSSL_FLAGS
+          # applies to cryptlib_openssl, which is libspdm's own code, so gaps
+          # in this cross hide toolchain-specific build settings. Debug
+          # because MinGW is otherwise Release only.
+          - name: windows-x64-mingw-openssl-debug
+            os: windows-latest
+            arch: x64
+            toolchain: GCC
+            crypto: openssl
+            target: Debug
             shell: 'msys2 {0}'
             generator: MSYS Makefiles
 
@@ -1186,6 +1250,30 @@ jobs:
           if [ "${{ matrix.crypto }}" = "openssl" ]; then
             fetch os_stub/openssllib/openssl
           fi
+
+      # OpenSSL is an ExternalProject with its own CFLAGS, so no LIBSPDM_*
+      # macro reaches it: one entry serves every configuration on a given
+      # platform. Measured at ~100 MB on POSIX and ~344 MB on Windows, so
+      # caching the tree wholesale is affordable and avoids maintaining a
+      # list of which paths have consumers -- the Windows DLL lives in the
+      # build tree, not the install tree, which such a list would miss.
+      - name: OpenSSL revision
+        id: ossl
+        shell: bash
+        run: |
+          echo "sha=$(git -C os_stub/openssllib/openssl rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "image=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
+
+      # Exact key only. A near-miss would pair stamps from one revision with
+      # an install tree from another, so restore-keys would be worse than a
+      # miss. The key omits TARGET and the macros because neither changes
+      # what OpenSSL builds.
+      - name: Cache OpenSSL build
+        if: matrix.crypto == 'openssl'
+        uses: actions/cache@v6
+        with:
+          path: build/os_stub/openssllib
+          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.image }}-${{ steps.ossl.outputs.sha }}
 
       - name: Set up MSYS2
         uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2.32.0
@@ -1600,7 +1688,7 @@ jobs:
 # Platform jobs are named os-arch-toolchain-crypto-target, so every line below
 # can be re-derived from the matrix rather than trusted. Figures are job counts.
 #
-#   Platform sweep, library defaults, 22 jobs:
+#   Platform sweep, library defaults, 23 jobs:
 #     linux-x64-gcc-mbedtls-debug          linux-x64-clang-openssl-release
 #     linux-aarch64-gcc-mbedtls-debug      macos-aarch64-clang-openssl-release
 #     linux-x64-gcc-openssl-release        linux-x64-clang-mbedtls-debug
@@ -1612,34 +1700,33 @@ jobs:
 #     windows-x64-vs-openssl-debug         windows-x64-vs-mbedtls-debug
 #     windows-ia32-vs-openssl-debug        windows-x64-vs-mbedtls-release
 #     windows-x64-vs-openssl-release       windows-x64-mingw-mbedtls-release
+#     windows-x64-mingw-openssl-debug
 #
 #   Every value of every dimension is exercised:
-#     OS         Linux 11  macOS 3   Windows 8
-#     ARCH       ia32 3    x64 14    aarch64 5
-#     TOOLCHAIN  Visual Studio 7   Native GCC 6      MinGW GCC 1       CLANG 8
-#     CRYPTO     Mbed TLS 10  OpenSSL 12
-#     TARGET     Debug 11     Release 11
+#     OS         Linux 11  macOS 3   Windows 9
+#     ARCH       ia32 3    x64 15    aarch64 5
+#     TOOLCHAIN  Visual Studio 7   Native GCC 6      MinGW GCC 2       CLANG 8
+#     CRYPTO     Mbed TLS 10  OpenSSL 13
+#     TARGET     Debug 12     Release 11
 #
 #   Full ARCH x CRYPTO cross, the stated exception to sparse crossing:
 #     ia32    x Mbed TLS 1   ia32    x OpenSSL 2
-#     x64     x Mbed TLS 7   x64     x OpenSSL 7
+#     x64     x Mbed TLS 7   x64     x OpenSSL 8
 #     aarch64 x Mbed TLS 2   aarch64 x OpenSSL 3
 #
-#   TOOLCHAIN x CRYPTO, complete except MinGW x OpenSSL, which is omitted
-#   because MinGW exists to cover GCC on Windows and Mbed TLS does that at a
-#   quarter of the cost:
+#   TOOLCHAIN x CRYPTO, complete:
 #     Visual Studio x Mbed TLS 3   Visual Studio x OpenSSL 4
 #     Native GCC    x Mbed TLS 3   Native GCC    x OpenSSL 3
 #     CLANG         x Mbed TLS 3   CLANG         x OpenSSL 5
-#     MinGW GCC     x Mbed TLS 1   MinGW GCC     x OpenSSL omitted
+#     MinGW GCC     x Mbed TLS 1   MinGW GCC     x OpenSSL 1
 #
-#   Configuration sweep, 9 jobs on a reference platform except
+#   Configuration sweep, 10 jobs on a reference platform except
 #   config-classical-crypto, whose macro domain depends on CRYPTO:
 #     config-fips                  config-respond-if-ready-off
 #     config-msg-log-off           config-record-transcript
-#     config-minimal-caps          config-x509-relaxed
-#     config-shared-lib            config-classical-crypto
-#     config-disable-tests
+#     config-minimal-caps          config-all-off
+#     config-x509-relaxed          config-shared-lib
+#     config-classical-crypto      config-disable-tests
 #
 #   Extended unit tests run where their requirement is met:
 #     test_spdm_fips -> config-fips.
