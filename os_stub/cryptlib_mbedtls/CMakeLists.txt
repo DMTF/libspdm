@@ -61,7 +61,12 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     endif()
 endif()
 
+# Mbed TLS sets these on its own libraries, which this target does not link.
 if(MBEDTLS_CONFIG_FILE)
+    target_compile_definitions(cryptlib_mbedtls PRIVATE -DMBEDTLS_CONFIG_FILE="${MBEDTLS_CONFIG_FILE}")
 else()
     target_compile_definitions(cryptlib_mbedtls PRIVATE -DMBEDTLS_CONFIG_FILE=<libspdm_mbedtls_config.h>)
+endif()
+if(MBEDTLS_USER_CONFIG_FILE)
+    target_compile_definitions(cryptlib_mbedtls PRIVATE -DMBEDTLS_USER_CONFIG_FILE="${MBEDTLS_USER_CONFIG_FILE}")
 endif()
