@@ -160,6 +160,8 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
     uint16_t data16;
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && LIBSPDM_CERT_PARSE_SUPPORT
     bool status;
+    uint32_t peer_base_asym_algo;
+    uint32_t peer_pqc_asym_algo;
 #endif
 
     if (spdm_context == NULL || data_type >= LIBSPDM_DATA_MAX) {
@@ -607,16 +609,24 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size =
             libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
 
-        if (context->connection_info.algorithm.pqc_asym_algo != 0) {
+        if (context->local_context.is_requester) {
+            peer_base_asym_algo = context->connection_info.algorithm.base_asym_algo;
+            peer_pqc_asym_algo = context->connection_info.algorithm.pqc_asym_algo;
+        } else {
+            peer_base_asym_algo = context->connection_info.algorithm.req_base_asym_alg;
+            peer_pqc_asym_algo = context->connection_info.algorithm.req_pqc_asym_alg;
+        }
+
+        if (peer_pqc_asym_algo != 0) {
             status = libspdm_get_pqc_leaf_cert_public_key_from_cert_chain(
                 context->connection_info.algorithm.base_hash_algo,
-                context->connection_info.algorithm.pqc_asym_algo,
+                peer_pqc_asym_algo,
                 (uint8_t *)(size_t)data, data_size,
                 &context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key);
         } else {
             status = libspdm_get_leaf_cert_public_key_from_cert_chain(
                 context->connection_info.algorithm.base_hash_algo,
-                context->connection_info.algorithm.base_asym_algo,
+                peer_base_asym_algo,
                 (uint8_t *)(size_t)data, data_size,
                 &context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key);
         }
