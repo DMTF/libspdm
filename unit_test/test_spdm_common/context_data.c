@@ -2427,6 +2427,61 @@ static void libspdm_test_reset_context_verify_signature_endian_case31(void **sta
                      LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE);
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+/**
+ * Test 32: libspdm_reset_context ends a chunk transfer in either direction.
+ * Expected Behavior: a CHUNK_GET or CHUNK_SEND transfer that is in progress is ended and the large
+ * message it was carrying is erased, so a connection reset on the Requester clears the chunk state
+ * as a GET_VERSION does on the Responder.
+ **/
+static void libspdm_test_reset_context_chunk_case32(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    void *scratch_buffer;
+    size_t scratch_buffer_size;
+    uint8_t *large_message;
+    size_t large_message_capacity;
+    libspdm_chunk_info_t *chunk_info[2];
+    size_t index;
+    size_t byte_index;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x20;
+
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+    large_message = (uint8_t *)scratch_buffer +
+                    libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    large_message_capacity = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
+
+    chunk_info[0] = &spdm_context->chunk_context.get;
+    chunk_info[1] = &spdm_context->chunk_context.send;
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(chunk_info); index++) {
+        libspdm_set_mem(large_message, large_message_capacity, 0xa5);
+        chunk_info[index]->chunk_in_use = true;
+        chunk_info[index]->chunk_seq_no = 2;
+        chunk_info[index]->chunk_bytes_transferred = large_message_capacity / 2;
+        chunk_info[index]->large_message = large_message;
+        chunk_info[index]->large_message_size = large_message_capacity;
+        chunk_info[index]->large_message_capacity = large_message_capacity;
+
+        libspdm_reset_context(spdm_context);
+
+        assert_false(chunk_info[index]->chunk_in_use);
+        assert_int_equal(chunk_info[index]->chunk_seq_no, 0);
+        assert_int_equal(chunk_info[index]->chunk_bytes_transferred, 0);
+        assert_null(chunk_info[index]->large_message);
+        assert_int_equal(chunk_info[index]->large_message_size, 0);
+        assert_int_equal(chunk_info[index]->large_message_capacity, 0);
+        for (byte_index = 0; byte_index < large_message_capacity; byte_index++) {
+            assert_int_equal(large_message[byte_index], 0);
+        }
+    }
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -2503,6 +2558,11 @@ int libspdm_common_context_data_test_main(void)
 
         /* reset_context restores the SPDM 1.0 and 1.1 signature endianness setting */
         cmocka_unit_test(libspdm_test_reset_context_verify_signature_endian_case31),
+
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+        /* reset_context ends a chunk transfer in either direction */
+        cmocka_unit_test(libspdm_test_reset_context_chunk_case32),
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);
