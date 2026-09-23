@@ -2482,6 +2482,106 @@ static void libspdm_test_reset_context_chunk_case32(void **state)
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && LIBSPDM_CERT_PARSE_SUPPORT
+/**
+ * Test 33: A Responder sets LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER to the Requester's
+ * certificate chain. The default Requester algorithm (RSASSA-2048) and Responder algorithm
+ * (ECDSA P-256) use different key types.
+ * Expected Behavior: the peer is the Requester, so the leaf public key is parsed with
+ * ReqBaseAsymAlg and libspdm_set_data succeeds. libspdm_reset_context then releases the key with
+ * the same algorithm.
+ **/
+static void libspdm_test_set_data_peer_cert_chain_responder_case33(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_data_parameter_t parameter;
+    libspdm_return_t status;
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x21;
+
+    spdm_context->local_context.is_requester = false;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.pqc_asym_algo = 0;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.req_pqc_asym_alg = 0;
+
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
+
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_CONNECTION;
+    parameter.additional_data[0] = 0;
+    status = libspdm_set_data(spdm_context, LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER, &parameter,
+                              data, data_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_non_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+
+    libspdm_reset_context(spdm_context);
+    assert_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+
+    free(data);
+}
+
+/**
+ * Test 34: A Requester sets LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER to the Responder's
+ * certificate chain, with the same algorithms as Test 33.
+ * Expected Behavior: the peer is the Responder, so the leaf public key is parsed with
+ * BaseAsymAlgo and libspdm_set_data succeeds.
+ **/
+static void libspdm_test_set_data_peer_cert_chain_requester_case34(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_data_parameter_t parameter;
+    libspdm_return_t status;
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x22;
+
+    spdm_context->local_context.is_requester = true;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.pqc_asym_algo = 0;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.req_pqc_asym_alg = 0;
+
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
+
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_CONNECTION;
+    parameter.additional_data[0] = 0;
+    status = libspdm_set_data(spdm_context, LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER, &parameter,
+                              data, data_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_non_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+
+    libspdm_reset_context(spdm_context);
+    assert_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+
+    free(data);
+}
+#endif /* !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && LIBSPDM_CERT_PARSE_SUPPORT */
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -2563,6 +2663,11 @@ int libspdm_common_context_data_test_main(void)
         /* reset_context ends a chunk transfer in either direction */
         cmocka_unit_test(libspdm_test_reset_context_chunk_case32),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && LIBSPDM_CERT_PARSE_SUPPORT
+        /* The peer leaf key is parsed with the peer's asymmetric algorithm. */
+        cmocka_unit_test(libspdm_test_set_data_peer_cert_chain_responder_case33),
+        cmocka_unit_test(libspdm_test_set_data_peer_cert_chain_requester_case34),
+#endif
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);
