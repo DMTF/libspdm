@@ -852,8 +852,8 @@ libspdm_return_t libspdm_process_opaque_data_supported_version_data(
  *
  * @param  spdm_context    A pointer to the SPDM context.
  * @param  session_info    The session info of an SPDM session.
- * @param  hmac_data       The HMAC data buffer.
- * @param  hmac_data_size  Size in bytes of the HMAC data buffer.
+ * @param  hmac            The HMAC data buffer.
+ * @param  hmac_size       Size in bytes of the HMAC data buffer.
  *
  * @retval true  HMAC verification pass.
  * @retval false HMAC verification fail.

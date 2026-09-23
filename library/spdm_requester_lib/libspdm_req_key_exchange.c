@@ -290,9 +290,9 @@ bool libspdm_verify_key_exchange_rsp_signature(
  * @param  heartbeat_period       Heartbeat_period from the KEY_EXCHANGE_RSP response.
  * @param  req_slot_id_param      req_slot_id_param from the KEY_EXCHANGE_RSP response.
  * @param  measurement_hash       Measurement_hash from the KEY_EXCHANGE_RSP response.
- * @param  requester_nonce_in     If not NULL, a buffer that holds the requester nonce (32 bytes)
- * @param  requester_nonce        If not NULL, a buffer to hold the requester nonce (32 bytes).
- * @param  responder_nonce        If not NULL, a buffer to hold the responder nonce (32 bytes).
+ * @param  requester_random_in    If not NULL, a buffer that holds the requester random data (32 bytes)
+ * @param  requester_random       If not NULL, a buffer to hold the requester random data (32 bytes).
+ * @param  responder_random       If not NULL, a buffer to hold the responder random data (32 bytes).
  **/
 static libspdm_return_t libspdm_try_send_receive_key_exchange(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,

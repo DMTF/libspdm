@@ -21,7 +21,7 @@ void libspdm_register_get_encap_response_func(void *spdm_context,
 /**
  * Return the GET_ENCAP_RESPONSE function via request code.
  *
- * @param  request_code                  The SPDM request code.
+ * @param  request_response_code         The SPDM request code.
  *
  * @return GET_ENCAP_RESPONSE function according to the request code.
  **/

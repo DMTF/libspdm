@@ -11,7 +11,7 @@
 /**
  * This function sends SET_KEY_PAIR_INFO and receives SET_KEY_PAIR_INFO_ACK
  *
- * @param  context             A pointer to the SPDM context.
+ * @param  spdm_context        A pointer to the SPDM context.
  *
  **/
 static libspdm_return_t libspdm_try_set_key_pair_info(libspdm_context_t *spdm_context,

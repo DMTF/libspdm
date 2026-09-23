@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -18,9 +18,9 @@ typedef struct {
 /**
  * This function sends GET_VERSION and receives VERSION.
  *
- * @param  spdm_context         A pointer to the SPDM context.
- * @param  version_count        The number of SPDM versions that the Responder supports.
- * @param  VersionNumberEntries The list of SPDM versions that the Responder supports.
+ * @param  spdm_context                A pointer to the SPDM context.
+ * @param  version_number_entry_count  The number of SPDM versions that the Responder supports.
+ * @param  version_number_entry        The list of SPDM versions that the Responder supports.
  *
  * @retval LIBSPDM_STATUS_SUCCESS
  *         GET_VERSION was sent and VERSION was received.

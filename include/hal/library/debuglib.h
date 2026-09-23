@@ -74,7 +74,7 @@ extern void libspdm_debug_assert(const char *file_name, size_t line_number,
  * LIBSPDM_DEBUG(level, format_string, argument_list...) - Macro that calls libspdm_debug_print().
  *                                                         It is enabled through the
  *                                                         LIBSPDM_DEBUG_PRINT_ENABLE macro.
- * @param print_level    Either LIBSPDM_DEBUG_INFO or LIBSPDM_DEBUG_ERROR.
+ * @param level          Either LIBSPDM_DEBUG_INFO or LIBSPDM_DEBUG_ERROR.
  * @param format_string  Formatted string.
  * @param argument_list  List of arguments.
  *

@@ -105,7 +105,7 @@ libspdm_return_t libspdm_handle_error_response_main(
  * @param  inout_response_size           The size of the response.
  *                                       On input, expected to be the size of an error response.
  *                                       On output, the large response size after being retrieved in chunks.
- * @param  response                      The error response on input. Large response on output.
+ * @param  inout_response                The error response on input. Large response on output.
  * @param  response_capacity             The maximum capacity of the response buffer.
  * @param  response_from_chunk           Indicates the response message is from chunking mechanism or not.
  *
@@ -135,10 +135,6 @@ libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
  * This function sends GET_CAPABILITIES and receives CAPABILITIES.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  RequesterCTExponent          RequesterCTExponent to the GET_CAPABILITIES request.
- * @param  RequesterFlags               RequesterFlags to the GET_CAPABILITIES request.
- * @param  ResponderCTExponent          ResponderCTExponent from the CAPABILITIES response.
- * @param  ResponderFlags               ResponderFlags from the CAPABILITIES response.
  *
  * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -288,8 +284,8 @@ libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_conte
  *                                      On output, the size of data returned in requester_context buffer.
  *                                      It must be 32 bytes at least.
  * @param  responder_context             A buffer to hold the responder context, if not NULL.
- * @param  responder_context_size        On input, the size of requester_context buffer.
- *                                      On output, the size of data returned in requester_context buffer.
+ * @param  responder_context_size        On input, the size of responder_context buffer.
+ *                                      On output, the size of data returned in responder_context buffer.
  *                                      It could be 0 if device does not support context.
  **/
 libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,

@@ -11,7 +11,7 @@
  * This function sends SET_CERTIFICATE
  * to set certificate on the device.
  *
- * @param  context                      A pointer to the SPDM context.
+ * @param  spdm_context                 A pointer to the SPDM context.
  * @param  session_id                   Indicates if it is a secured message protected via SPDM session.
  *                                      If session_id is NULL, it is a normal message.
  *                                      If session_id is NOT NULL, it is a secured message.

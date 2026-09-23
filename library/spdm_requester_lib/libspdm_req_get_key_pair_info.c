@@ -31,7 +31,7 @@ typedef struct {
 /**
  * This function sends GET_KEY_PAIR_INFO and receives KEY_PAIR_INFO *
  *
- * @param  context             A pointer to the SPDM context.
+ * @param  spdm_context        A pointer to the SPDM context.
  *
  **/
 static libspdm_return_t libspdm_try_get_key_pair_info(libspdm_context_t *spdm_context,

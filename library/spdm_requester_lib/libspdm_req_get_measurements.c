@@ -145,13 +145,13 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
  * This function sends GET_MEASUREMENTS to get measurements from the device.
  * If the signature is requested this function verifies the signature of the measurement.
  *
- * @param  context                    A pointer to the SPDM context.
+ * @param  spdm_context               A pointer to the SPDM context.
  * @param  session_id                 Indicates if it is a secured message protected via SPDM session.
  *                                    If session_id is NULL, it is a normal message.
  *                                    If session_id is not NULL, it is a secured message.
  * @param  request_attribute          The request attribute of the request message.
  * @param  measurement_operation      The measurement operation of the request message.
- * @param  slot_id                    The number of slot for the certificate chain.
+ * @param  slot_id_param              The number of slot for the certificate chain.
  * @param  requester_context          If not NULL, a buffer to hold the requester context (8 bytes).
  *                                    It is used only if the negotiated version >= 1.3.
  * @param  content_changed            The measurement content changed output param.

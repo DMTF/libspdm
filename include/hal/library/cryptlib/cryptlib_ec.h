@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -55,9 +55,9 @@ extern bool libspdm_ec_set_priv_key(void *ec_context, const uint8_t *private_key
  * For P-384, the public_size is 96. first 48-byte is X, second 48-byte is Y.
  * For P-521, the public_size is 132. first 66-byte is X, second 66-byte is Y.
  *
- * @param[in, out]  ec_context   Pointer to EC context being set.
- * @param[in]       public       Pointer to the buffer to receive generated public X,Y.
- * @param[in]       public_size  The size of public buffer in bytes.
+ * @param[in, out]  ec_context       Pointer to EC context being set.
+ * @param[in]       public_key       Pointer to the buffer to receive generated public X,Y.
+ * @param[in]       public_key_size  The size of public_key buffer in bytes.
  *
  * @retval  true   EC public key component was set successfully.
  * @retval  false  Invalid EC public key component.
@@ -88,10 +88,10 @@ extern bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
  * If public_size is NULL, then return false.
  * If public_size is large enough but public is NULL, then return false.
  *
- * @param[in, out]  ec_context   Pointer to the EC context.
- * @param[out]      public       Pointer to the buffer to receive generated public X,Y.
- * @param[in, out]  public_size  On input, the size of public buffer in bytes.
- *                               On output, the size of data returned in public buffer in bytes.
+ * @param[in, out]  ec_context       Pointer to the EC context.
+ * @param[out]      public_key       Pointer to the buffer to receive generated public X,Y.
+ * @param[in, out]  public_key_size  On input, the size of public_key buffer in bytes.
+ *                                   On output, the size of data returned in public_key buffer in bytes.
  *
  * @retval true   EC public X,Y generation succeeded.
  * @retval false  EC public X,Y generation failed.

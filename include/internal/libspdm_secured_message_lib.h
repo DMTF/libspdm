@@ -231,8 +231,8 @@ bool libspdm_secured_message_dhe_generate_key(uint16_t dhe_named_group,
  *
  * @param  dhe_named_group                SPDM dhe_named_group
  * @param  dhe_context                   Pointer to the DHE context.
- * @param  peer_public_key                Pointer to the peer's public key.
- * @param  peer_public_key_size            size of peer's public key in bytes.
+ * @param  peer_public                    Pointer to the peer's public key.
+ * @param  peer_public_size                size of peer's public key in bytes.
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  *
  * @retval true   DHE exchanged key generation succeeded.
@@ -395,7 +395,7 @@ bool libspdm_hmac_final_with_request_finished_key(
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  * @param  data                         Pointer to the buffer containing the data to be HMACed.
  * @param  data_size                     size of data buffer in bytes.
- * @param  hash_value                    Pointer to a buffer that receives the HMAC value.
+ * @param  hmac_value                    Pointer to a buffer that receives the HMAC value.
  *
  * @retval true   HMAC computation succeeded.
  * @retval false  HMAC computation failed.
@@ -471,7 +471,7 @@ bool libspdm_hmac_final_with_response_finished_key(
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  * @param  data                         Pointer to the buffer containing the data to be HMACed.
  * @param  data_size                     size of data buffer in bytes.
- * @param  hash_value                    Pointer to a buffer that receives the HMAC value.
+ * @param  hmac_value                    Pointer to a buffer that receives the HMAC value.
  *
  * @retval true   HMAC computation succeeded.
  * @retval false  HMAC computation failed.
