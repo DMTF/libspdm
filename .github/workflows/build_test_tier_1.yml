@@ -12,8 +12,6 @@ on:
   pull_request:
     branches:
       - main
-      - release-2.3
-      - release-3.8
     paths-ignore:
       - 'doc/**'
       - '**/*.md'
