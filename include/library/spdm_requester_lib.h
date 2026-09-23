@@ -516,10 +516,10 @@ libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
  *                                              Must not be NULL. The buffer must be large enough to hold the supported algorithms data.
  * @param spdm_version                          A pointer to store the SPDM version used for the request.
  *
- * @retval RETURN_SUCCESS                        The supported algorithms were successfully retrieved.
- * @retval RETURN_DEVICE_ERROR                   A device error occurs when communicates with the device.
- * @retval RETURN_UNSUPPORTED                    The operation is not supported by the device.
- * @retval RETURN_SECURITY_VIOLATION             Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS                The supported algorithms were successfully retrieved.
+ * @retval LIBSPDM_STATUS_SEND_FAIL              Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL           Unable to receive the response from the device.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP        The Requester or the device does not support SPDM 1.3 or later.
  *
  * @note   The buffer must be large enough to hold the supported algorithms block.
  *         The function will assert if responder_supported_algorithms_buffer is NULL.

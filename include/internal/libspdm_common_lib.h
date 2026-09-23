@@ -888,8 +888,8 @@ uint32_t libspdm_get_scratch_buffer_capacity(libspdm_context_t *spdm_context);
  * @param  buffer                       The address of the data buffer to be appended to the managed buffer.
  * @param  buffer_size                   The size in bytes of the data buffer to be appended to the managed buffer.
  *
- * @retval RETURN_SUCCESS               The new data buffer is appended to the managed buffer.
- * @retval RETURN_BUFFER_TOO_SMALL      The managed buffer is too small to be appended.
+ * @retval LIBSPDM_STATUS_SUCCESS       The new data buffer is appended to the managed buffer.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL   The managed buffer is too small to be appended.
  **/
 libspdm_return_t libspdm_append_managed_buffer(void *managed_buffer,
                                                const void *buffer, size_t buffer_size);
@@ -1217,7 +1217,7 @@ bool libspdm_verify_endpoint_info_signature(libspdm_context_t *spdm_context,
  * @param  session_info                  A pointer to the SPDM session context.
  * @param  l1l2                          The buffer to store the l1l2.
  *
- * @retval RETURN_SUCCESS  l1l2 is calculated.
+ * @retval true  l1l2 is calculated.
  */
 bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
                             void *session_info,
@@ -1233,7 +1233,7 @@ bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
  * @param  l1l2_hash_size               size in bytes of the l1l2 hash
  * @param  l1l2_hash                   The buffer to store the l1l2 hash
  *
- * @retval RETURN_SUCCESS  l1l2 is calculated.
+ * @retval true  l1l2 is calculated.
  */
 bool libspdm_calculate_l1l2_hash(libspdm_context_t *spdm_context,
                                  void *session_info,
@@ -1471,7 +1471,7 @@ bool libspdm_negotiate_connection_version(spdm_version_number_t *common_version,
  * @param  max_msg_size                  size in bytes of the maximum size of sender buffer.
  * @param  msg_buf_ptr                   A pointer to a sender buffer.
  *
- * @retval RETURN_SUCCESS               The sender buffer is acquired.
+ * @retval LIBSPDM_STATUS_SUCCESS       The sender buffer is acquired.
  **/
 libspdm_return_t libspdm_acquire_sender_buffer (
     libspdm_context_t *spdm_context, size_t *max_msg_size, void **msg_buf_ptr);
@@ -1480,8 +1480,6 @@ libspdm_return_t libspdm_acquire_sender_buffer (
  * Release a device sender buffer for transport layer message.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @retval RETURN_SUCCESS               The sender buffer is Released.
  **/
 void libspdm_release_sender_buffer (libspdm_context_t *spdm_context);
 
@@ -1505,7 +1503,7 @@ void libspdm_get_sender_buffer (
  * @param  max_msg_size                  size in bytes of the maximum size of receiver buffer.
  * @param  msg_buf_ptr                   A pointer to a receiver buffer.
  *
- * @retval RETURN_SUCCESS               The receiver buffer is acquired.
+ * @retval LIBSPDM_STATUS_SUCCESS       The receiver buffer is acquired.
  **/
 libspdm_return_t libspdm_acquire_receiver_buffer (
     libspdm_context_t *spdm_context, size_t *max_msg_size, void **msg_buf_ptr);
@@ -1514,8 +1512,6 @@ libspdm_return_t libspdm_acquire_receiver_buffer (
  * Release a device receiver buffer for transport layer message.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @retval RETURN_SUCCESS               The receiver buffer is Released.
  **/
 void libspdm_release_receiver_buffer (libspdm_context_t *spdm_context);
 
@@ -1656,8 +1652,8 @@ void libspdm_reset_message_encap_e(libspdm_context_t *spdm_context, void *sessio
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @retval RETURN_SUCCESS          message is appended.
- * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval LIBSPDM_STATUS_SUCCESS      message is appended.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL  message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_a(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size);
@@ -1669,8 +1665,8 @@ libspdm_return_t libspdm_append_message_a(libspdm_context_t *spdm_context, const
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @retval RETURN_SUCCESS          message is appended.
- * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval LIBSPDM_STATUS_SUCCESS      message is appended.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL  message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_d(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size);
@@ -1682,8 +1678,8 @@ libspdm_return_t libspdm_append_message_d(libspdm_context_t *spdm_context, const
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @retval RETURN_SUCCESS          message is appended.
- * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval LIBSPDM_STATUS_SUCCESS      message is appended.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL  message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_b(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size);
@@ -1695,8 +1691,8 @@ libspdm_return_t libspdm_append_message_b(libspdm_context_t *spdm_context, const
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @retval RETURN_SUCCESS          message is appended.
- * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval LIBSPDM_STATUS_SUCCESS      message is appended.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL  message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_c(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size);
@@ -1708,8 +1704,8 @@ libspdm_return_t libspdm_append_message_c(libspdm_context_t *spdm_context, const
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @retval RETURN_SUCCESS          message is appended.
- * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval LIBSPDM_STATUS_SUCCESS      message is appended.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL  message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_mut_b(libspdm_context_t *spdm_context, const void *message,
                                               size_t message_size);
@@ -1721,8 +1717,8 @@ libspdm_return_t libspdm_append_message_mut_b(libspdm_context_t *spdm_context, c
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @retval RETURN_SUCCESS          message is appended.
- * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval LIBSPDM_STATUS_SUCCESS      message is appended.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL  message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_mut_c(libspdm_context_t *spdm_context, const void *message,
                                               size_t message_size);
@@ -1737,8 +1733,8 @@ libspdm_return_t libspdm_append_message_mut_c(libspdm_context_t *spdm_context, c
  * @param  message       Message buffer.
  * @param  message_size  Size in bytes of message buffer.
  *
- * @retval RETURN_SUCCESS          message is appended.
- * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval LIBSPDM_STATUS_SUCCESS      message is appended.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL  message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_m(libspdm_context_t *spdm_context,
                                           void *session_info,
@@ -1753,8 +1749,8 @@ libspdm_return_t libspdm_append_message_m(libspdm_context_t *spdm_context,
  * @param  message            Message buffer.
  * @param  message_size       Size in bytes of message buffer.
  *
- * @retval RETURN_SUCCESS          message is appended.
- * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval LIBSPDM_STATUS_SUCCESS      message is appended.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL  message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
                                           void *spdm_session_info,
@@ -1768,8 +1764,8 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
  * @param  message            Message buffer.
  * @param  message_size       Size in bytes of message buffer.
  *
- * @retval RETURN_SUCCESS          message is appended.
- * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval LIBSPDM_STATUS_SUCCESS      message is appended.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL  message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_encap_d(void *spdm_session_info,
                                                 const void *message,
@@ -1784,8 +1780,8 @@ libspdm_return_t libspdm_append_message_encap_d(void *spdm_session_info,
  * @param  message            Message buffer.
  * @param  message_size       Size in bytes of message buffer.
  *
- * @retval RETURN_SUCCESS          message is appended.
- * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval LIBSPDM_STATUS_SUCCESS      message is appended.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL  message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
                                           void *spdm_session_info,
@@ -1802,8 +1798,8 @@ libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
  * @param  message                      message buffer.
  * @param  message_size                  size in bytes of message buffer.
  *
- * @retval RETURN_SUCCESS          message is appended.
- * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval LIBSPDM_STATUS_SUCCESS      message is appended.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL  message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_e(libspdm_context_t *spdm_context, void *session_info,
                                           const void *message, size_t message_size);
@@ -1818,8 +1814,8 @@ libspdm_return_t libspdm_append_message_e(libspdm_context_t *spdm_context, void 
  * @param  message                      message buffer.
  * @param  message_size                  size in bytes of message buffer.
  *
- * @retval RETURN_SUCCESS          message is appended.
- * @retval RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ * @retval LIBSPDM_STATUS_SUCCESS      message is appended.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL  message is not appended because the internal cache is full.
  **/
 libspdm_return_t libspdm_append_message_encap_e(libspdm_context_t *spdm_context, void *session_info,
                                                 const void *message, size_t message_size);
@@ -1865,7 +1861,7 @@ void libspdm_free_session_id(libspdm_context_t *spdm_context, uint32_t session_i
  * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
  * @param  th_curr                 The managed buffer to store the TH data.
  *
- * @retval RETURN_SUCCESS  current TH data is calculated.
+ * @retval true  current TH data is calculated.
  */
 bool libspdm_calculate_th_for_exchange(
     libspdm_context_t *spdm_context, void *spdm_session_info,
@@ -1880,7 +1876,7 @@ bool libspdm_calculate_th_for_exchange(
  * @param  th_hash_buffer_size  Size in bytes of the th_hash_buffer
  * @param  th_hash_buffer       The buffer to store the th_hash_buffer
  *
- * @retval RETURN_SUCCESS  current TH hash is calculated.
+ * @retval true  current TH hash is calculated.
  */
 bool libspdm_calculate_th_hash_for_exchange(
     libspdm_context_t *spdm_context, void *spdm_session_info,
@@ -1894,7 +1890,7 @@ bool libspdm_calculate_th_hash_for_exchange(
  * @param  th_hmac_buffer_size  Size in bytes of the th_hmac_buffer
  * @param  th_hmac_buffer       The buffer to store the th_hmac_buffer
  *
- * @retval RETURN_SUCCESS  current TH hmac is calculated.
+ * @retval true  current TH hmac is calculated.
  */
 bool libspdm_calculate_th_hmac_for_exchange_rsp(
     libspdm_context_t *spdm_context, void *spdm_session_info,
@@ -1913,7 +1909,7 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
  * @param  mut_cert_chain_buffer_size  Size in bytes of the certificate chain buffer in mutual authentication.
  * @param  th_curr                     The managed buffer to store the TH data.
  *
- * @retval RETURN_SUCCESS  current TH data is calculated.
+ * @retval true  current TH data is calculated.
  */
 bool libspdm_calculate_th_for_finish(libspdm_context_t *spdm_context,
                                      void *spdm_session_info,
@@ -1931,7 +1927,7 @@ bool libspdm_calculate_th_for_finish(libspdm_context_t *spdm_context,
  * @param  th_hash_buffer_size  Size in bytes of the th_hash_buffer
  * @param  th_hash_buffer       The buffer to store the th_hash_buffer
  *
- * @retval RETURN_SUCCESS  current TH hash is calculated.
+ * @retval true  current TH hash is calculated.
  */
 bool libspdm_calculate_th_hash_for_finish(libspdm_context_t *spdm_context,
                                           void *spdm_session_info,
@@ -1946,7 +1942,7 @@ bool libspdm_calculate_th_hash_for_finish(libspdm_context_t *spdm_context,
  * @param  th_hmac_buffer_size  Size in bytes of the th_hmac_buffer
  * @param  th_hmac_buffer       The buffer to store the th_hmac_buffer
  *
- * @retval RETURN_SUCCESS  current TH hmac is calculated.
+ * @retval true  current TH hmac is calculated.
  */
 bool libspdm_calculate_th_hmac_for_finish_rsp(libspdm_context_t *spdm_context,
                                               void *spdm_session_info,
@@ -1961,7 +1957,7 @@ bool libspdm_calculate_th_hmac_for_finish_rsp(libspdm_context_t *spdm_context,
  * @param  th_hmac_buffer_size  Size in bytes of the th_hmac_buffer
  * @param  th_hmac_buffer       The buffer to store the th_hmac_buffer
  *
- * @retval RETURN_SUCCESS  current TH hmac is calculated.
+ * @retval true  current TH hmac is calculated.
  */
 bool libspdm_calculate_th_hmac_for_finish_req(libspdm_context_t *spdm_context,
                                               void *spdm_session_info,
@@ -1977,7 +1973,7 @@ bool libspdm_calculate_th_hmac_for_finish_req(libspdm_context_t *spdm_context,
  * @param  is_requester       Indicate of the key generation for a requester or a responder.
  * @param  th1_hash_data      Th1 hash.
  *
- * @retval RETURN_SUCCESS  th1 hash is calculated.
+ * @retval true  th1 hash is calculated.
  */
 bool libspdm_calculate_th1_hash(libspdm_context_t *spdm_context,
                                 void *spdm_session_info,
@@ -1992,7 +1988,7 @@ bool libspdm_calculate_th1_hash(libspdm_context_t *spdm_context,
  * @param  is_requester       Indicate of the key generation for a requester or a responder.
  * @param  th2_hash_data      Th2 hash
  *
- * @retval RETURN_SUCCESS  th2 hash is calculated.
+ * @retval true  th2 hash is calculated.
  */
 bool libspdm_calculate_th2_hash(libspdm_context_t *spdm_context,
                                 void *spdm_session_info,

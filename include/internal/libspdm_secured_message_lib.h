@@ -496,7 +496,7 @@ void libspdm_secured_message_set_last_spdm_error_struct(
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  * @param  th1_hash_data                  th1 hash
  *
- * @retval RETURN_SUCCESS  SPDM HandshakeKey for a session is generated.
+ * @retval true  SPDM HandshakeKey for a session is generated.
  **/
 bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
                                             const uint8_t *th1_hash_data);
@@ -507,7 +507,7 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  * @param  th2_hash_data                  th2 hash
  *
- * @retval RETURN_SUCCESS  SPDM DataKey for a session is generated.
+ * @retval true  SPDM DataKey for a session is generated.
  **/
 bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
                                        const uint8_t *th2_hash_data);
@@ -518,7 +518,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  * @param  action                       Indicate of the key update action.
  *
- * @retval RETURN_SUCCESS  SPDM DataKey update is created.
+ * @retval true  SPDM DataKey update is created.
  **/
 bool libspdm_create_update_session_data_key(void *spdm_secured_message_context,
                                             libspdm_key_update_action_t action);
@@ -530,7 +530,7 @@ bool libspdm_create_update_session_data_key(void *spdm_secured_message_context,
  * @param  action                       Indicate of the key update action.
  * @param  use_new_key                    Indicate if the new key should be used.
  *
- * @retval RETURN_SUCCESS  SPDM DataKey update is activated.
+ * @retval true  SPDM DataKey update is activated.
  **/
 bool libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
                                               libspdm_key_update_action_t action,

@@ -56,8 +56,12 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  error_code                    Indicate the error code.
  *
- * @retval RETURN_NO_RESPONSE           If the error code is BUSY.
- * @retval RETURN_DEVICE_ERROR          If the error code is REQUEST_RESYNCH or others.
+ * @retval LIBSPDM_STATUS_NOT_READY_PEER       If the error code is RESPONSE_NOT_READY.
+ * @retval LIBSPDM_STATUS_BUSY_PEER            If the error code is BUSY.
+ * @retval LIBSPDM_STATUS_RESET_REQUIRED_PEER  If the error code is RESET_REQUIRED for SET_CERTIFICATE, GET_CSR, or SET_KEY_PAIR_INFO,
+ *                                             and the Responder supports the reset.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER         If the error code is REQUEST_RESYNCH.
+ * @retval LIBSPDM_STATUS_ERROR_PEER           For any other error code.
  **/
 libspdm_return_t libspdm_handle_simple_error_response(libspdm_context_t *spdm_context,
                                                       uint8_t error_code);
@@ -67,10 +71,10 @@ libspdm_return_t libspdm_handle_simple_error_response(libspdm_context_t *spdm_co
  *
  * The SPDM response code must be SPDM_ERROR.
  * For error code RESPONSE_NOT_READY, this function sends RESPOND_IF_READY and receives an expected SPDM response.
- * For error code BUSY, this function shrinks the managed buffer, and return RETURN_NO_RESPONSE.
- * For error code REQUEST_RESYNCH, this function shrinks the managed buffer, clears connection_state, and return RETURN_DEVICE_ERROR.
- * For error code DECRYPT_ERROR, end the session: free session id and session key, return RETURN_SECURITY_VIOLATION.
- * For any other error code, this function shrinks the managed buffer, and return RETURN_DEVICE_ERROR.
+ * For error code BUSY, this function returns LIBSPDM_STATUS_BUSY_PEER.
+ * For error code REQUEST_RESYNCH, this function clears connection_state and returns LIBSPDM_STATUS_RESYNCH_PEER.
+ * For error code DECRYPT_ERROR, end the session: free session id and session key, return LIBSPDM_STATUS_SESSION_MSG_ERROR.
+ * For any other error code, see libspdm_handle_simple_error_response().
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
@@ -78,16 +82,21 @@ libspdm_return_t libspdm_handle_simple_error_response(libspdm_context_t *spdm_co
  *                                       If session_id is NOT NULL, it is a secured message.
  * @param  response_size                 The size of the response.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer if LIBSPDM_STATUS_SUCCESS is returned.
  * @param  response                     The SPDM response message.
  * @param  original_request_code          Indicate the original request code.
  * @param  expected_response_code         Indicate the expected response code.
  *
- * @retval RETURN_SUCCESS               The error code is RESPONSE_NOT_READY. The RESPOND_IF_READY is sent and an expected SPDM response is received.
- * @retval RETURN_NO_RESPONSE           The error code is BUSY.
- * @retval RETURN_DEVICE_ERROR          The error code is REQUEST_RESYNCH or others.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    The error code is DECRYPT_ERROR and session_id is NOT NULL.
+ * @retval LIBSPDM_STATUS_SUCCESS              The error code is RESPONSE_NOT_READY. The RESPOND_IF_READY is sent and an expected SPDM response is received.
+ * @retval LIBSPDM_STATUS_NOT_READY_PEER       The error code is RESPONSE_NOT_READY and LIBSPDM_RESPOND_IF_READY_SUPPORT is 0.
+ * @retval LIBSPDM_STATUS_BUSY_PEER            The error code is BUSY.
+ * @retval LIBSPDM_STATUS_RESET_REQUIRED_PEER  The error code is RESET_REQUIRED for SET_CERTIFICATE, GET_CSR, or SET_KEY_PAIR_INFO,
+ *                                             and the Responder supports the reset.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER         The error code is REQUEST_RESYNCH.
+ * @retval LIBSPDM_STATUS_ERROR_PEER           The error code is any other value.
+ * @retval LIBSPDM_STATUS_SEND_FAIL            Unable to send RESPOND_IF_READY to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL         Unable to receive the response from the device.
+ * @retval LIBSPDM_STATUS_SESSION_MSG_ERROR    The error code is DECRYPT_ERROR and session_id is NOT NULL.
  **/
 libspdm_return_t libspdm_handle_error_response_main(
     libspdm_context_t *spdm_context, const uint32_t *session_id,
@@ -124,8 +133,9 @@ libspdm_return_t libspdm_handle_error_large_response(
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  *
- * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The GET_VERSION is sent and the VERSION is received.
+ * @retval LIBSPDM_STATUS_SEND_FAIL     Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL  Unable to receive the response from the device.
  **/
 libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
                                      uint8_t *version_number_entry_count,
@@ -136,8 +146,9 @@ libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  *
- * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The GET_CAPABILITIES is sent and the CAPABILITIES is received.
+ * @retval LIBSPDM_STATUS_SEND_FAIL     Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL  Unable to receive the response from the device.
  **/
 libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context);
 
@@ -153,8 +164,9 @@ libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context);
  * @param  supported_algs               A pointer to a buffer to store the supported algorithms.
  *                                      If NULL, supported algorithms are not requested.
  *
- * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The GET_CAPABILITIES is sent and the CAPABILITIES is received.
+ * @retval LIBSPDM_STATUS_SEND_FAIL     Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL  Unable to receive the response from the device.
  **/
 libspdm_return_t libspdm_get_capabilities_with_supported_algs(libspdm_context_t *spdm_context,
                                                               size_t *supported_algs_length,
@@ -165,8 +177,9 @@ libspdm_return_t libspdm_get_capabilities_with_supported_algs(libspdm_context_t 
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  *
- * @retval RETURN_SUCCESS               The NEGOTIATE_ALGORITHMS is sent and the ALGORITHMS is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The NEGOTIATE_ALGORITHMS is sent and the ALGORITHMS is received.
+ * @retval LIBSPDM_STATUS_SEND_FAIL     Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL  Unable to receive the response from the device.
  **/
 libspdm_return_t libspdm_negotiate_algorithms(libspdm_context_t *spdm_context);
 
@@ -183,8 +196,9 @@ libspdm_return_t libspdm_negotiate_algorithms(libspdm_context_t *spdm_context);
  * @param  req_slot_id_param               req_slot_id_param from the KEY_EXCHANGE_RSP response.
  * @param  measurement_hash              measurement_hash from the KEY_EXCHANGE_RSP response.
  *
- * @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
+ * @retval LIBSPDM_STATUS_SEND_FAIL     Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL  Unable to receive the response from the device.
  **/
 libspdm_return_t libspdm_send_receive_key_exchange(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
@@ -207,8 +221,9 @@ libspdm_return_t libspdm_send_receive_key_exchange(
  * @param  requester_random              A buffer to hold the requester random (32 bytes), if not NULL.
  * @param  responder_random              A buffer to hold the responder random (32 bytes), if not NULL.
  *
- * @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
+ * @retval LIBSPDM_STATUS_SEND_FAIL     Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL  Unable to receive the response from the device.
  **/
 libspdm_return_t libspdm_send_receive_key_exchange_ex(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
@@ -227,8 +242,9 @@ libspdm_return_t libspdm_send_receive_key_exchange_ex(
  * @param  session_id                    session_id to the FINISH request.
  * @param  req_slot_id_param               req_slot_id_param to the FINISH request.
  *
- * @retval RETURN_SUCCESS               The FINISH is sent and the FINISH_RSP is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The FINISH is sent and the FINISH_RSP is received.
+ * @retval LIBSPDM_STATUS_SEND_FAIL     Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL  Unable to receive the response from the device.
  **/
 libspdm_return_t libspdm_send_receive_finish(libspdm_context_t *spdm_context,
                                              uint32_t session_id,
@@ -255,8 +271,9 @@ libspdm_return_t libspdm_send_receive_finish_ex(
  * @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
  * @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
  *
- * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
+ * @retval LIBSPDM_STATUS_SEND_FAIL     Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL  Unable to receive the response from the device.
  **/
 libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
                                                    const void *psk_hint,
@@ -313,8 +330,9 @@ libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_co
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    session_id to the PSK_FINISH request.
  *
- * @retval RETURN_SUCCESS               The PSK_FINISH is sent and the PSK_FINISH_RSP is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The PSK_FINISH is sent and the PSK_FINISH_RSP is received.
+ * @retval LIBSPDM_STATUS_SEND_FAIL     Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL  Unable to receive the response from the device.
  **/
 libspdm_return_t libspdm_send_receive_psk_finish(libspdm_context_t *spdm_context,
                                                  uint32_t session_id);
@@ -336,8 +354,9 @@ libspdm_return_t libspdm_send_receive_psk_finish_ex(
  * @param  session_id                    session_id to the END_SESSION request.
  * @param  end_session_attributes         end_session_attributes to the END_SESSION request.
  *
- * @retval RETURN_SUCCESS               The END_SESSION is sent and the END_SESSION_ACK is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The END_SESSION is sent and the END_SESSION_ACK is received.
+ * @retval LIBSPDM_STATUS_SEND_FAIL     Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL  Unable to receive the response from the device.
  **/
 libspdm_return_t libspdm_send_receive_end_session(libspdm_context_t *spdm_context,
                                                   uint32_t session_id,
@@ -358,8 +377,9 @@ libspdm_return_t libspdm_send_receive_end_session(libspdm_context_t *spdm_contex
  * @param  mut_auth_requested             Indicate of the mut_auth_requested through KEY_EXCHANGE or CHALLENGE response.
  * @param  req_slot_id_param               req_slot_id_param from the RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER.
  *
- * @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The SPDM Encapsulated requests are sent and the responses are received.
+ * @retval LIBSPDM_STATUS_SEND_FAIL     Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL  Unable to receive the response from the device.
  **/
 libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
                                               const uint32_t *session_id,
@@ -375,14 +395,10 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
                                                    size_t request_size,
@@ -398,14 +414,10 @@ libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_encap_response_certificate(void *spdm_context,
                                                         size_t request_size,
@@ -424,14 +436,10 @@ libspdm_return_t libspdm_get_encap_response_certificate(void *spdm_context,
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_encap_response_challenge_auth(
     void *spdm_context, size_t request_size, void *request,
@@ -448,14 +456,10 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_encap_response_key_update(void *spdm_context,
                                                        size_t request_size,
@@ -507,8 +511,8 @@ libspdm_return_t libspdm_get_encap_response_endpoint_info(void *spdm_context,
  *                                      For normal message, request pointer points to transport_message + transport header size
  *                                      For secured message, request pointer will point to the scratch buffer + transport header size in spdm_context.
  *
- * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The SPDM request is sent successfully.
+ * @retval LIBSPDM_STATUS_SEND_FAIL     Unable to send the SPDM request to the device.
  **/
 libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
                                            const uint32_t *session_id,
@@ -528,8 +532,8 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
  *                                      For normal message, response pointer still point to original transport_message.
  *                                      For secured message, response pointer will point to the scratch buffer in spdm_context.
  *
- * @retval RETURN_SUCCESS               The SPDM response is received successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
+ * @retval LIBSPDM_STATUS_SUCCESS       The SPDM response is received successfully.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL  Unable to receive the SPDM response from the device.
  **/
 libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                                const uint32_t *session_id,
