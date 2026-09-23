@@ -185,7 +185,7 @@ libspdm_return_t libspdm_transport_storage_encode_message(
  * @param  transport_command       Storage transport command contained in transport message
  *
  * @retval LIBSPDM_STATUS_SUCCESS              The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the transport_message_size is zero.
  * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD    The message field is incorrect.
  * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP      The transport_message is unsupported.
  **/
@@ -207,7 +207,7 @@ libspdm_return_t libspdm_transport_storage_decode_management_cmd(
  * @param  transport_message       A pointer to a transport message buffer.
  *
  * @retval LIBSPDM_STATUS_SUCCESS              The message is encoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the transport_message_size is zero.
  * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD    The message field is incorrect.
  * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL     Insufficient transport buffer size
  **/
@@ -224,7 +224,7 @@ libspdm_return_t libspdm_transport_storage_encode_management_cmd(
  * @param  transport_message       A pointer to a destination buffer to store the transport message.
  *
  * @retval LIBSPDM_STATUS_SUCCESS              The message is encoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the transport_message_size is zero.
  * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL     @transport_message is too small
  **/
 libspdm_return_t libspdm_transport_storage_encode_discovery_response(
@@ -243,7 +243,7 @@ libspdm_return_t libspdm_transport_storage_encode_discovery_response(
  *                                 in bytes.
  *
  * @retval LIBSPDM_STATUS_SUCCESS              The message is encoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the transport_message_size is zero.
  * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL     @transport_message is too small
  **/
 libspdm_return_t libspdm_transport_storage_encode_pending_info_response(

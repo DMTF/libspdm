@@ -18,7 +18,7 @@
  * @param nid cipher NID
  *
  * @return  Pointer to the Shang-Mi2 context that has been initialized.
- *          If the allocations fails, sm2_new_by_nid() returns NULL.
+ *          If the allocation fails, libspdm_sm2_dsa_new_by_nid() returns NULL.
  **/
 extern void *libspdm_sm2_dsa_new_by_nid(size_t nid);
 
@@ -123,7 +123,7 @@ extern bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
  * @param nid cipher NID
  *
  * @return  Pointer to the Shang-Mi2 context that has been initialized.
- *          If the allocations fails, sm2_new_by_nid() returns NULL.
+ *          If the allocation fails, libspdm_sm2_key_exchange_new_by_nid() returns NULL.
  **/
 extern void *libspdm_sm2_key_exchange_new_by_nid(size_t nid);
 
@@ -158,9 +158,9 @@ extern bool libspdm_sm2_key_exchange_init(const void *sm2_context, size_t hash_n
  * Generates sm2 key and returns sm2 public key (X, Y), based upon GB/T 32918.3-2016: SM2 - Part3.
  *
  * This function generates random secret, and computes the public key (X, Y), which is
- * returned via parameter public, public_size.
- * X is the first half of public with size being public_size / 2,
- * Y is the second half of public with size being public_size / 2.
+ * returned via parameter public_data, public_size.
+ * X is the first half of public_data with size being public_size / 2,
+ * Y is the second half of public_data with size being public_size / 2.
  * sm2 context is updated accordingly.
  * If the public buffer is too small to hold the public X, Y, false is returned and
  * public_size is set to the required buffer size to obtain the public X, Y.
@@ -169,7 +169,7 @@ extern bool libspdm_sm2_key_exchange_init(const void *sm2_context, size_t hash_n
  *
  * If sm2_context is NULL, then return false.
  * If public_size is NULL, then return false.
- * If public_size is large enough but public is NULL, then return false.
+ * If public_size is large enough but public_data is NULL, then return false.
  *
  * @param[in, out]  sm2_context  Pointer to the sm2 context.
  * @param[out]      public_data  Pointer to the buffer to receive generated public X,Y.

@@ -1447,7 +1447,7 @@ void libspdm_version_number_sort(spdm_version_number_t *ver_set, size_t ver_num)
 
 /**
  * Negotiate SPDMversion for connection.
- * ver_set is the local version set of requester, res_ver_set is the version set of responder.
+ * req_ver_set is the local version set of requester, res_ver_set is the version set of responder.
  *
  * @param  common_version             A pointer to store the common version.
  * @param  req_ver_set                A pointer to the requester version set.

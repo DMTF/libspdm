@@ -261,7 +261,7 @@ bool libspdm_hash_final(uint32_t base_hash_algo, void *hash_context, uint8_t *ha
  * @param  base_hash_algo  SPDM base_hash_algo
  *
  * @return  Pointer to the HMAC context that has been initialized.
- *          If the allocations fails, libspdm_hash_new() returns NULL.
+ *          If the allocation fails, libspdm_hmac_new() returns NULL.
  **/
 void *libspdm_hmac_new(uint32_t base_hash_algo);
 
@@ -607,7 +607,7 @@ uint32_t libspdm_get_req_asym_signature_size(uint16_t req_base_asym_alg);
  * @param  cert               Pointer to the DER-encoded X509 certificate.
  * @param  cert_size          Size of the X509 certificate in bytes.
  * @param  context            Pointer to newly generated asymmetric context which contain the
- *                            retrieved public key component. Use libspdm_asym_free() function to
+ *                            retrieved public key component. Use libspdm_req_asym_free() function to
  *                            free the resource.
  *
  * @retval  true   Public key was retrieved successfully.
@@ -1175,7 +1175,7 @@ uint32_t libspdm_get_pqc_asym_signature_size(uint32_t pqc_asym_algo);
  * @param  cert            Pointer to the DER-encoded X509 certificate.
  * @param  cert_size       Size of the X509 certificate in bytes.
  * @param  context         Pointer to newly generated asymmetric context which contain the retrieved
- *                         public key component. Use libspdm_asym_free() function to free the
+ *                         public key component. Use libspdm_pqc_asym_free() function to free the
  *                         resource.
  *
  * @retval  true   Public key was retrieved successfully.
@@ -1195,7 +1195,7 @@ bool libspdm_pqc_asym_get_public_key_from_x509(uint32_t pqc_asym_algo,
  * @param  der_size        Size of the DER-encoded public key data in bytes.
  * @param  context         Pointer to newly generated asymmetric context which contain the
  *                         retrieved public key component.
- *                         Use libspdm_asym_free() function to free the resource.
+ *                         Use libspdm_pqc_asym_free() function to free the resource.
  *
  * @retval  true   Public key was retrieved successfully.
  * @retval  false  Invalid DER key data.
@@ -1324,7 +1324,7 @@ uint32_t libspdm_get_req_pqc_asym_signature_size(uint32_t req_pqc_asym_alg);
  * @param  cert               Pointer to the DER-encoded X509 certificate.
  * @param  cert_size          Size of the X509 certificate in bytes.
  * @param  context            Pointer to newly generated asymmetric context which contain the
- *                            retrieved public key component. Use libspdm_asym_free() function to
+ *                            retrieved public key component. Use libspdm_req_pqc_asym_free() function to
  *                            free the resource.
  *
  * @retval  true   Public key was retrieved successfully.
@@ -1344,7 +1344,7 @@ bool libspdm_req_pqc_asym_get_public_key_from_x509(uint32_t req_pqc_asym_alg,
  * @param  der_size           Size of the DER-encoded public key data in bytes.
  * @param  context            Pointer to newly generated asymmetric context which contain the
  *                            retrieved public key component.
- *                            Use libspdm_req_asym_free() function to free the resource.
+ *                            Use libspdm_req_pqc_asym_free() function to free the resource.
  *
  * @retval  true   Public key was retrieved successfully.
  * @retval  false  Invalid DER key data.
@@ -1509,12 +1509,12 @@ void libspdm_kem_free(uint32_t kem_alg, void *context);
  * @param  kem_alg           SPDM kem_alg
  * @param  context           Pointer to the KEM context.
  * @param  encap_key         Pointer to the buffer to receive generated public key.
- * @param  encap_key_size    On input, the size of public_key buffer in bytes.
- *                           On output, the size of data returned in public_key buffer in bytes.
+ * @param  encap_key_size    On input, the size of encap_key buffer in bytes.
+ *                           On output, the size of data returned in encap_key buffer in bytes.
  *
  * @retval true   KEM public key generation succeeded.
  * @retval false  KEM public key generation failed.
- * @retval false  public_key_size is not large enough.
+ * @retval false  encap_key_size is not large enough.
  **/
 bool libspdm_kem_generate_key(uint32_t kem_alg, void *context,
                               uint8_t *encap_key,
@@ -1536,7 +1536,7 @@ bool libspdm_kem_generate_key(uint32_t kem_alg, void *context,
  *
  * @retval true   KEM exchanged key generation succeeded.
  * @retval false  KEM exchanged key generation failed.
- * @retval false  key_size is not large enough.
+ * @retval false  cipher_text_size or shared_secret_size is not large enough.
  **/
 bool libspdm_kem_encapsulate(uint32_t kem_alg, void *context,
                              const uint8_t *peer_encap_key,
@@ -1559,7 +1559,7 @@ bool libspdm_kem_encapsulate(uint32_t kem_alg, void *context,
  *
  * @retval true   KEM exchanged key generation succeeded.
  * @retval false  KEM exchanged key generation failed.
- * @retval false  key_size is not large enough.
+ * @retval false  shared_secret_size is not large enough.
  **/
 bool libspdm_kem_decapsulate(uint32_t kem_alg, void *context,
                              const uint8_t *peer_cipher_text,

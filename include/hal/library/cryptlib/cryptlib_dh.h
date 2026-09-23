@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -44,9 +44,9 @@ extern void libspdm_dh_free(void *dh_context);
  * If public_key_size is large enough but public_key is NULL, then return false.
  * If this interface is not supported, then return false.
  *
- * For FFDHE2048, the public_size is 256.
- * For FFDHE3072, the public_size is 384.
- * For FFDHE4096, the public_size is 512.
+ * For FFDHE2048, the public_key_size is 256.
+ * For FFDHE3072, the public_key_size is 384.
+ * For FFDHE4096, the public_key_size is 512.
  *
  * @param[in, out]  dh_context       Pointer to the DH context.
  * @param[out]      public_key       Pointer to the buffer to receive generated public key.
@@ -74,9 +74,9 @@ extern bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key, size_
  * If key_size is not large enough, then return false.
  * If this interface is not supported, then return false.
  *
- * For FFDHE2048, the peer_public_size and key_size is 256.
- * For FFDHE3072, the peer_public_size and key_size is 384.
- * For FFDHE4096, the peer_public_size and key_size is 512.
+ * For FFDHE2048, the peer_public_key_size and key_size are 256.
+ * For FFDHE3072, the peer_public_key_size and key_size are 384.
+ * For FFDHE4096, the peer_public_key_size and key_size are 512.
  *
  * @param[in, out]  dh_context            Pointer to the DH context.
  * @param[in]       peer_public_key       Pointer to the peer's public key.

@@ -55,8 +55,8 @@ extern void libspdm_ecd_free(void *ecd_context);
 /**
  * Sets the public key component into the established Ed context.
  *
- * For ed25519, the public_size is 32.
- * For ed448, the public_size is 57.
+ * For ed25519, the public_key_size is 32.
+ * For ed448, the public_key_size is 57.
  *
  * @param[in, out]  ecd_context      Pointer to Ed context being set.
  * @param[in]       public_key       Pointer to the buffer to receive generated public X,Y.
@@ -71,8 +71,8 @@ extern bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key
 /**
  * Sets the private key component into the established Ed context.
  *
- * For ed25519, the private_size is 32.
- * For ed448, the private_size is 57.
+ * For ed25519, the private_key_size is 32.
+ * For ed448, the private_key_size is 57.
  *
  * @param[in, out]  ecd_context       Pointer to Ed context being set.
  * @param[in]       private_key       Pointer to the buffer to receive generated private X,Y.
@@ -88,8 +88,8 @@ extern bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_ke
 /**
  * Gets the public key component from the established Ed context.
  *
- * For ed25519, the public_size is 32.
- * For ed448, the public_size is 57.
+ * For ed25519, the public_key_size is 32.
+ * For ed448, the public_key_size is 57.
  *
  * @param[in, out]  ecd_context      Pointer to Ed context.
  * @param[out]      public_key       Pointer to the buffer to receive generated public X,Y.
