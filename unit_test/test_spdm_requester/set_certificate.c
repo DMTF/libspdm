@@ -334,6 +334,7 @@ static void req_set_certificate_case1(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
                                                          &data, &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -369,6 +370,7 @@ static void req_set_certificate_case2(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
                                                          &data, &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -440,6 +442,7 @@ static void req_set_certificate_case5(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -484,6 +487,7 @@ static void req_set_certificate_case6(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
                                                          &data, &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -546,6 +550,7 @@ static void req_set_certificate_case8(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
                                                          &data, &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -584,6 +589,7 @@ static void req_set_certificate_case9(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
                                                          &data, &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
