@@ -737,6 +737,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         context->spdm_10_11_verify_signature_endian = *(const uint8_t*)data;
+        context->spdm_10_11_verify_signature_endian_setting = *(const uint8_t*)data;
         break;
     case LIBSPDM_DATA_SEQUENCE_NUMBER_ENDIAN:
         if (data_size != sizeof(uint8_t)) {
@@ -3058,6 +3059,8 @@ void libspdm_reset_context(void *spdm_context)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
     context->current_dhe_session_count = 0;
     context->current_psk_session_count = 0;
+    context->spdm_10_11_verify_signature_endian =
+        context->spdm_10_11_verify_signature_endian_setting;
 }
 
 void libspdm_deinit_context(void *spdm_context)

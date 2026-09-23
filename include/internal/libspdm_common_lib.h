@@ -703,6 +703,9 @@ typedef struct {
     /* Endianness (BE/LE/Both) to use for signature verification on SPDM 1.0 and 1.1
      * This field is ignored for other SPDM versions */
     uint8_t spdm_10_11_verify_signature_endian;
+    /* The value set by the Integrator. Verification narrows BIG_OR_LITTLE to the endianness of the
+     * peer, so libspdm_reset_context restores spdm_10_11_verify_signature_endian from this. */
+    uint8_t spdm_10_11_verify_signature_endian_setting;
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
     libspdm_vendor_response_callback_func vendor_response_callback;

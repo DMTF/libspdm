@@ -2384,6 +2384,41 @@ static void libspdm_test_aead_limit_small_exponent_case30(void **state)
     }
 }
 
+/**
+ * Test 31: libspdm_reset_context restores the SPDM 1.0 and 1.1 signature endianness setting.
+ * Expected Behavior: the Integrator selects BIG_OR_LITTLE and a successful verification narrows it
+ * to the endianness of the peer's signatures. A connection reset returns it to BIG_OR_LITTLE, so the
+ * peer of the next connection may use either endianness.
+ **/
+static void libspdm_test_reset_context_verify_signature_endian_case31(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_data_parameter_t parameter;
+    uint8_t endian;
+    libspdm_return_t status;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1F;
+
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+    endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE;
+    status = libspdm_set_data(spdm_context, LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN,
+                              &parameter, &endian, sizeof(endian));
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    /* The narrowing that a successful verification of a little-endian signature performs. */
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
+
+    libspdm_reset_context(spdm_context);
+
+    assert_int_equal(spdm_context->spdm_10_11_verify_signature_endian,
+                     LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE);
+}
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -2457,6 +2492,9 @@ int libspdm_common_context_data_test_main(void)
         cmocka_unit_test(libspdm_test_aead_limit_peer_support_case29),
         /* DSP0277 1.3 AEAD limit: exponent boundary semantics (exp 0, 1, 63, 64). */
         cmocka_unit_test(libspdm_test_aead_limit_small_exponent_case30),
+
+        /* reset_context restores the SPDM 1.0 and 1.1 signature endianness setting */
+        cmocka_unit_test(libspdm_test_reset_context_verify_signature_endian_case31),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);
