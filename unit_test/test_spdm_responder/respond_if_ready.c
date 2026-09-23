@@ -1464,6 +1464,132 @@ static void rsp_respond_if_ready_case15(void **state) {
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+/* Set up the state left behind by a GET_DIGESTS, received outside of a session, to which the
+ * Responder answered ERROR(ResponseNotReady). */
+static void set_up_deferred_get_digests(libspdm_context_t *spdm_context) {
+    spdm_context->cache_spdm_request_session_id_valid = false;
+    spdm_context->last_spdm_request_session_id_valid = false;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.local_cert_chain_provision[0] = m_libspdm_local_certificate_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        sizeof(m_libspdm_local_certificate_chain);
+    libspdm_set_mem (m_libspdm_local_certificate_chain, sizeof(m_libspdm_local_certificate_chain),
+                     (uint8_t)(0xFF));
+
+    spdm_context->cache_spdm_request_size = m_libspdm_get_digest_request_size;
+    libspdm_copy_mem(spdm_context->cache_spdm_request,
+                     libspdm_get_scratch_buffer_cache_spdm_request_capacity(spdm_context),
+                     &m_libspdm_get_digest_request, m_libspdm_get_digest_request_size);
+    spdm_context->error_data.rd_exponent = 1;
+    spdm_context->error_data.rd_tm        = 1;
+    spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
+    spdm_context->error_data.token       = LIBSPDM_MY_TEST_TOKEN;
+}
+
+/**
+ * Test 16: receiving a correct RESPOND_IF_READY from the Requester while the Responder is in a
+ * Busy state, and then the same RESPOND_IF_READY once the Responder is no longer Busy.
+ * Expected behavior: ErrorCode=Busy means that the Responder ignored the request message and
+ * might be able to process it if it is sent again. The first RESPOND_IF_READY
+ * produces an ERROR message indicating the Busy state and the original request remains
+ * outstanding, so the retried RESPOND_IF_READY produces a valid DIGESTS response message.
+ **/
+static void rsp_respond_if_ready_case16(void **state) {
+    libspdm_return_t status;
+    libspdm_test_context_t    *spdm_test_context;
+    libspdm_context_t  *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_digest_response_t *spdm_response; /*response to the original request (DIGESTS)*/
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x10;
+    set_up_deferred_get_digests(spdm_context);
+
+    /* check ERROR response while the Responder is Busy */
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
+    response_size = sizeof(response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_libspdm_respond_if_ready_request1_size,
+                                                   &m_libspdm_respond_if_ready_request1,
+                                                   &response_size,
+                                                   response);
+    assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal (response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_BUSY);
+    assert_int_equal (spdm_response->header.param2, 0);
+
+    /* check DIGESTS response to the retried RESPOND_IF_READY */
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    response_size = sizeof(response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_libspdm_respond_if_ready_request1_size,
+                                                   &m_libspdm_respond_if_ready_request1,
+                                                   &response_size,
+                                                   response);
+    assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal (spdm_response->header.request_response_code, SPDM_DIGESTS);
+}
+
+/**
+ * Test 17: receiving a correct RESPOND_IF_READY from the Requester, and then the same
+ * RESPOND_IF_READY again after the Responder has returned the response to the original request.
+ * Expected behavior: the first RESPOND_IF_READY produces a valid DIGESTS response message. The
+ * original request is then no longer outstanding, so the Responder refuses the second
+ * RESPOND_IF_READY with an ERROR message indicating UnexpectedRequest rather than processing the
+ * original request again.
+ **/
+static void rsp_respond_if_ready_case17(void **state) {
+    libspdm_return_t status;
+    libspdm_test_context_t    *spdm_test_context;
+    libspdm_context_t  *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_digest_response_t *spdm_response; /*response to the original request (DIGESTS)*/
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x11;
+    set_up_deferred_get_digests(spdm_context);
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+
+    /* check DIGESTS response */
+    response_size = sizeof(response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_libspdm_respond_if_ready_request1_size,
+                                                   &m_libspdm_respond_if_ready_request1,
+                                                   &response_size,
+                                                   response);
+    assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal (spdm_response->header.request_response_code, SPDM_DIGESTS);
+
+    /* check ERROR response to the repeated RESPOND_IF_READY */
+    response_size = sizeof(response);
+    status = libspdm_get_response_respond_if_ready(spdm_context,
+                                                   m_libspdm_respond_if_ready_request1_size,
+                                                   &m_libspdm_respond_if_ready_request1,
+                                                   &response_size,
+                                                   response);
+    assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal (response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal (spdm_response->header.param2, 0);
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
+
 int libspdm_rsp_respond_if_ready_test(void) {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
@@ -1498,6 +1624,8 @@ int libspdm_rsp_respond_if_ready_test(void) {
         cmocka_unit_test(rsp_respond_if_ready_case13),
         cmocka_unit_test(rsp_respond_if_ready_case14),
         cmocka_unit_test(rsp_respond_if_ready_case15),
+        cmocka_unit_test(rsp_respond_if_ready_case16),
+        cmocka_unit_test(rsp_respond_if_ready_case17),
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
     };

@@ -28,8 +28,7 @@ libspdm_return_t libspdm_get_response_respond_if_ready(libspdm_context_t *spdm_c
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
     }
-    if (spdm_context->response_state == LIBSPDM_RESPONSE_STATE_NEED_RESYNC ||
-        spdm_context->response_state == LIBSPDM_RESPONSE_STATE_NOT_READY) {
+    if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
         return libspdm_responder_handle_response_state(
             spdm_context, spdm_request->request_response_code,
             response_size, response);
@@ -38,6 +37,12 @@ libspdm_return_t libspdm_get_response_respond_if_ready(libspdm_context_t *spdm_c
     if (request_size < sizeof(spdm_message_header_t)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+
+    if (spdm_context->cache_spdm_request_size == 0) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                                                response_size, response);
     }
 
