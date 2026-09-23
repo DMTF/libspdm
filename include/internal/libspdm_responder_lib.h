@@ -20,14 +20,10 @@
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 typedef libspdm_return_t (*libspdm_get_spdm_response_func)(
     libspdm_context_t *spdm_context, size_t request_size, const void *request,
@@ -40,14 +36,10 @@ typedef libspdm_return_t (*libspdm_get_spdm_response_func)(
  * @param  request_code                  The SPDM request code.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The response is returned.
  **/
 libspdm_return_t libspdm_responder_handle_response_state(libspdm_context_t *spdm_context,
                                                          uint8_t request_code,
@@ -62,14 +54,10 @@ libspdm_return_t libspdm_responder_handle_response_state(libspdm_context_t *spdm
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_respond_if_ready(libspdm_context_t *spdm_context,
                                                        size_t request_size,
@@ -85,14 +73,10 @@ libspdm_return_t libspdm_get_response_respond_if_ready(libspdm_context_t *spdm_c
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_version(libspdm_context_t *spdm_context,
                                               size_t request_size, const void *request,
@@ -107,14 +91,10 @@ libspdm_return_t libspdm_get_response_version(libspdm_context_t *spdm_context,
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_context,
                                                    size_t request_size,
@@ -130,14 +110,10 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context,
                                                  size_t request_size,
@@ -154,14 +130,10 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context,
                                               size_t request_size, const void *request,
@@ -175,14 +147,10 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context,
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 
 libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_context,
@@ -201,14 +169,10 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_context,
                                                      size_t request_size,
@@ -226,14 +190,10 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_context,
                                                    size_t request_size,
@@ -251,8 +211,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  **/
 libspdm_return_t libspdm_get_response_measurement_extension_log(libspdm_context_t *spdm_context,
@@ -271,14 +230,10 @@ libspdm_return_t libspdm_get_response_measurement_extension_log(libspdm_context_
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_context,
                                                    size_t request_size,
@@ -294,14 +249,11 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS          The request is processed and the response is returned.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP  The request is ignored and no response is returned.
  **/
 libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context,
                                              size_t request_size, const void *request,
@@ -318,14 +270,10 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context,
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_context,
                                                    size_t request_size,
@@ -341,14 +289,11 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS          The request is processed and the response is returned.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP  The request is ignored and no response is returned.
  **/
 libspdm_return_t libspdm_get_response_psk_finish(libspdm_context_t *spdm_context,
                                                  size_t request_size,
@@ -366,14 +311,10 @@ libspdm_return_t libspdm_get_response_psk_finish(libspdm_context_t *spdm_context
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_end_session(libspdm_context_t *spdm_context,
                                                   size_t request_size,
@@ -389,14 +330,11 @@ libspdm_return_t libspdm_get_response_end_session(libspdm_context_t *spdm_contex
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS          The request is processed and the response is returned.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP  The session keys could not be updated.
  **/
 libspdm_return_t libspdm_get_response_key_update(libspdm_context_t*spdm_context,
                                                  size_t request_size,
@@ -412,14 +350,10 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t*spdm_context,
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_heartbeat(libspdm_context_t *spdm_context,
                                                 size_t request_size,
@@ -437,14 +371,10 @@ libspdm_return_t libspdm_get_response_heartbeat(libspdm_context_t *spdm_context,
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_encapsulated_request(
     libspdm_context_t *spdm_context, size_t request_size, const void *request,
@@ -458,14 +388,10 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     libspdm_context_t *spdm_context, size_t request_size, const void *request,
@@ -480,9 +406,7 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
  * @param  encap_response                A pointer to the encapsulated response data.
  * @param  need_continue                     Indicate if encapsulated communication need continue.
  *
- * @retval RETURN_SUCCESS               The encapsulated response is processed.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The encapsulated response is processed.
  **/
 libspdm_return_t libspdm_process_encap_response_digest(
     libspdm_context_t *spdm_context, size_t encap_response_size,
@@ -496,9 +420,9 @@ libspdm_return_t libspdm_process_encap_response_digest(
  * @param  encap_response                A pointer to the encapsulated response data.
  * @param  need_continue                     Indicate if encapsulated communication need continue.
  *
- * @retval RETURN_SUCCESS               The encapsulated response is processed.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS           The encapsulated response is processed.
+ * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL  The buffer is too small to hold the certificate chain.
+ * @retval LIBSPDM_STATUS_VERIF_FAIL        Any verification fails.
  **/
 libspdm_return_t libspdm_process_encap_response_certificate(
     libspdm_context_t *spdm_context, size_t encap_response_size,
@@ -514,9 +438,8 @@ libspdm_return_t libspdm_process_encap_response_certificate(
  * @param  encap_response                A pointer to the encapsulated response data.
  * @param  need_continue                     Indicate if encapsulated communication need continue.
  *
- * @retval RETURN_SUCCESS               The encapsulated response is processed.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The encapsulated response is processed.
+ * @retval LIBSPDM_STATUS_VERIF_FAIL    Any verification fails.
  **/
 libspdm_return_t libspdm_process_encap_response_challenge_auth(
     libspdm_context_t *spdm_context, size_t encap_response_size,
@@ -531,9 +454,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
  * @param  encap_response                A pointer to the encapsulated response data.
  * @param  need_continue                     Indicate if encapsulated communication need continue.
  *
- * @retval RETURN_SUCCESS               The encapsulated response is processed.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The encapsulated response is processed.
  **/
 libspdm_return_t libspdm_process_encap_response_key_update(
     libspdm_context_t *spdm_context, size_t encap_response_size,
@@ -548,9 +469,9 @@ libspdm_return_t libspdm_process_encap_response_key_update(
  * @param  encap_response               A pointer to the encapsulated response data.
  * @param  need_continue                Indicate if encapsulated communication need continue.
  *
- * @retval RETURN_SUCCESS               The encapsulated response is processed.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS           The encapsulated response is processed.
+ * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL  The buffer is too small to hold the endpoint information.
+ * @retval LIBSPDM_STATUS_VERIF_FAIL        Any verification fails.
  **/
 libspdm_return_t libspdm_process_encap_response_endpoint_info(
     libspdm_context_t *spdm_context, size_t encap_response_size,
@@ -641,7 +562,8 @@ libspdm_return_t libspdm_get_encap_request_respond_if_ready(void *spdm_context,
  *
  * @param  error_code                    Indicate the error code.
  *
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval LIBSPDM_STATUS_NOT_READY_PEER   The error code is RESPONSE_NOT_READY.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP  The error code is any other value.
  **/
 libspdm_return_t libspdm_handle_encap_error_response_main(uint8_t error_code);
 
@@ -674,14 +596,10 @@ void libspdm_set_connection_state(libspdm_context_t *spdm_context,
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
                                           size_t request_size, const void *request,
@@ -711,14 +629,10 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_context,
                                                       size_t request_size, const void *request,
@@ -734,14 +648,10 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_chunk_get(libspdm_context_t *spdm_context,
                                                 size_t request_size,
@@ -757,14 +667,10 @@ libspdm_return_t libspdm_get_response_chunk_get(libspdm_context_t *spdm_context,
  * @param  request                      A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
  *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ *                                     On output, it means the size in bytes of copied response data buffer.
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @retval LIBSPDM_STATUS_SUCCESS       The request is processed and the response is returned.
  **/
 libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context,
                                                  size_t request_size,
