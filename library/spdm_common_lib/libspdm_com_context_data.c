@@ -2963,6 +2963,21 @@ libspdm_return_t libspdm_init_context(void *spdm_context)
                                                      LIBSPDM_MAX_SESSION_COUNT);
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+static void libspdm_reset_chunk_info(libspdm_chunk_info_t *chunk_info)
+{
+    if (chunk_info->large_message != NULL) {
+        libspdm_zero_mem(chunk_info->large_message, chunk_info->large_message_capacity);
+    }
+    chunk_info->chunk_in_use = false;
+    chunk_info->chunk_seq_no = 0;
+    chunk_info->chunk_bytes_transferred = 0;
+    chunk_info->large_message = NULL;
+    chunk_info->large_message_size = 0;
+    chunk_info->large_message_capacity = 0;
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+
 void libspdm_reset_context(void *spdm_context)
 {
     libspdm_context_t *context;
@@ -3043,6 +3058,10 @@ void libspdm_reset_context(void *spdm_context)
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
     libspdm_zero_mem(&context->encap_context, sizeof(libspdm_encap_context_t));
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+    libspdm_reset_chunk_info(&context->chunk_context.get);
+    libspdm_reset_chunk_info(&context->chunk_context.send);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
     context->connection_info.multi_key_conn_req = false;
     context->connection_info.multi_key_conn_rsp = false;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT

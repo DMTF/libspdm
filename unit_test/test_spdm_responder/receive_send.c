@@ -817,6 +817,99 @@ static void libspdm_test_responder_receive_send_rsp_case8(void** state)
     libspdm_release_sender_buffer(spdm_context);
 }
 
+/**
+ * Test 24: During an active chunk GET transfer, a GET_VERSION request whose SPDMVersion is not 1.0
+ * is invalid, and an invalid GET_VERSION request that results in an ERROR shall not affect the
+ * connection state.
+ * Expected behavior: the Responder returns ERROR(VersionMismatch) and the chunk transfer sequence
+ * is not terminated.
+ **/
+static void libspdm_test_responder_receive_send_rsp_case24(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t *response;
+    spdm_error_response_t *spdm_response;
+    spdm_get_version_request_t spdm_request;
+    void *message;
+    size_t message_size;
+    uint32_t transport_header_size;
+    void *scratch_buffer;
+    size_t scratch_buffer_size;
+    uint8_t *large_message;
+    size_t large_message_capacity;
+    size_t i;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 24;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.data_transfer_size =
+        LIBSPDM_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.max_spdm_msg_size =
+        LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    /* Simulate an active chunk GET transfer. */
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+    large_message = (uint8_t *)scratch_buffer +
+                    libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    large_message_capacity = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
+    libspdm_set_mem(large_message, large_message_capacity, 0xa5);
+
+    spdm_context->chunk_context.get.chunk_in_use = true;
+    spdm_context->chunk_context.get.chunk_handle = 1;
+    spdm_context->chunk_context.get.chunk_seq_no = 2;
+    spdm_context->chunk_context.get.large_message = large_message;
+    spdm_context->chunk_context.get.large_message_size = large_message_capacity;
+    spdm_context->chunk_context.get.large_message_capacity = large_message_capacity;
+
+    /* {ERROR} GET_VERSION with an SPDMVersion other than 1.0. */
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_request.header.request_response_code = SPDM_GET_VERSION;
+
+    libspdm_copy_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
+                     &spdm_request, sizeof(spdm_request));
+    spdm_context->last_spdm_request_size = sizeof(spdm_request);
+
+    libspdm_acquire_sender_buffer(spdm_context, &message_size, (void **)&message);
+    response = message;
+    response_size = message_size;
+    libspdm_zero_mem(response, response_size);
+
+    status = libspdm_build_response(spdm_context, NULL, false,
+                                    &response_size, (void **)&response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    transport_header_size =
+        spdm_context->local_context.capability.transport_header_size;
+    spdm_response = (spdm_error_response_t *)((uint8_t *)message + transport_header_size);
+
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_VERSION_MISMATCH);
+
+    /* Verify chunk transfer sequence is NOT terminated. */
+    assert_true(spdm_context->chunk_context.get.chunk_in_use);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_handle, 1);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_seq_no, 2);
+    assert_ptr_equal(spdm_context->chunk_context.get.large_message, large_message);
+    for (i = 0; i < large_message_capacity; i++) {
+        assert_int_equal(large_message[i], 0xa5);
+    }
+
+    libspdm_release_sender_buffer(spdm_context);
+}
+
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP)
 
 /**
@@ -2153,6 +2246,9 @@ int libspdm_rsp_receive_send_test(void)
                                libspdm_unit_test_reset_context),
         /* GET_VERSION during active chunk SEND transfer terminates chunk and proceeds */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case8,
+                               libspdm_unit_test_reset_context),
+        /* invalid GET_VERSION during active chunk GET transfer does not terminate chunk */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case24,
                                libspdm_unit_test_reset_context),
         #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP)
         /* session-based mutual auth enforcement: MUT_AUTH_REQUESTED (bit 0). This has no
