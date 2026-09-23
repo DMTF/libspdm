@@ -3028,10 +3028,10 @@ void libspdm_reset_context(void *spdm_context)
                         context->connection_info.algorithm.req_base_asym_alg, pubkey_context);
                 }
             }
-
-            context->connection_info.peer_used_cert_chain[slot_index].leaf_cert_public_key = NULL;
         }
     }
+    libspdm_zero_mem(context->connection_info.peer_used_cert_chain,
+                     sizeof(context->connection_info.peer_used_cert_chain));
 #endif
 
     context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
