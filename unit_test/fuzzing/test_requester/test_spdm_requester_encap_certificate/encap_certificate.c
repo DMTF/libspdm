@@ -53,6 +53,7 @@ void libspdm_test_requester_encap_certificate(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
 

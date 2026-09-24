@@ -182,6 +182,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                                                              m_libspdm_use_asym_algo,
                                                              &data, &data_size,
                                                              NULL, NULL)) {
+            LIBSPDM_ASSERT(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
@@ -299,6 +300,7 @@ void libspdm_test_requester_key_exchange_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -378,6 +380,7 @@ void libspdm_test_requester_key_exchange_case2(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -459,6 +462,7 @@ void libspdm_test_requester_key_exchange_case3(void **State)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -553,6 +557,7 @@ void libspdm_test_requester_key_exchange_case4(void **State)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -647,6 +652,7 @@ void libspdm_test_requester_key_exchange_case5(void **State)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -739,6 +745,7 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);

@@ -79,6 +79,7 @@ void libspdm_test_responder_key_exchange_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -153,6 +154,7 @@ void libspdm_test_responder_key_exchange_case2(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -221,6 +223,7 @@ void libspdm_test_responder_key_exchange_case3(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -290,6 +293,7 @@ void libspdm_test_responder_key_exchange_case4(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -374,6 +378,7 @@ void libspdm_test_responder_key_exchange_case5(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -447,6 +452,7 @@ void libspdm_test_responder_key_exchange_case6(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -519,6 +525,7 @@ void libspdm_test_responder_key_exchange_case7(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data;
@@ -611,11 +618,13 @@ void libspdm_test_responder_key_exchange_case8(void **State)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     if (!libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data1, &data_size1)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_public_key_provision = data1;
     spdm_context->local_context.local_public_key_provision_size = data_size1;
     if (!libspdm_read_requester_public_key(m_libspdm_use_req_asym_algo, &data2, &data_size2)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.peer_public_key_provision = data2;

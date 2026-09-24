@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -35,6 +35,7 @@ static void libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_c
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->transcript.message_a.buffer_size = 0;

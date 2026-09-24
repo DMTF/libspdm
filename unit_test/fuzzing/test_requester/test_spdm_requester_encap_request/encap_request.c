@@ -167,6 +167,7 @@ void libspdm_test_requester_encap_request(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -226,6 +227,7 @@ void libspdm_test_requester_encap_request_case2(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);

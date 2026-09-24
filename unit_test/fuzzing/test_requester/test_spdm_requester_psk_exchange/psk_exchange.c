@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -142,6 +142,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
     cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -212,6 +213,7 @@ void libspdm_test_requester_psk_exchange_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -277,6 +279,7 @@ void libspdm_test_requester_psk_exchange_case2(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -344,6 +347,7 @@ void libspdm_test_requester_psk_exchange_case3(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -409,6 +413,7 @@ void libspdm_test_requester_psk_exchange_ex_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);

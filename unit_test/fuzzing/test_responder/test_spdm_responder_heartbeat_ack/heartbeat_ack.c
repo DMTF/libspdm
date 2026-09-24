@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -57,6 +57,7 @@ void libspdm_test_responder_heartbeat_case1(void **State)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data1,
                                                          &data_size1, NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
@@ -173,6 +174,7 @@ void libspdm_test_responder_heartbeat_case4(void **State)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data1,
                                                          &data_size1, NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
