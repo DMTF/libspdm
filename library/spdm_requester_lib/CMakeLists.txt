@@ -47,4 +47,5 @@ target_sources(spdm_requester_lib
         libspdm_req_get_measurement_extension_log.c
         libspdm_req_get_key_pair_info.c
         libspdm_req_set_key_pair_info.c
+        libspdm_req_parse_measurement_transaction_data.c
 )
