@@ -314,7 +314,7 @@ popd
 
 pushd sm2
 openssl ecparam -genkey -name SM2 -out ca.key
-openssl req -nodes -x509 -days 3650 -key ca.key -out ca.cert -sm3 -subj "/CN=DMTF libspdm SM2 CA" -addext "basicConstraints=critical,CA:TRUE,pathlen:0"
+openssl req -nodes -x509 -days 3650 -key ca.key -out ca.cert -sm3 -subj "/CN=DMTF libspdm SM2 CA" -addext "basicConstraints=critical,CA:TRUE"
 openssl ecparam -genkey -name SM2 -out inter.key
 openssl ecparam -genkey -name SM2 -out end_requester.key
 openssl ecparam -genkey -name SM2 -out end_responder.key
@@ -584,7 +584,7 @@ popd
 #=== sm2 Certificate Chains ===
 pushd sm2
 openssl ecparam -genkey -name SM2 -out ca1.key
-openssl req -nodes -x509 -days 3650 -key ca1.key -out ca1.cert -sm3 -subj "/CN=DMTF libspdm SM2 CA" -addext "basicConstraints=critical,CA:TRUE,pathlen:0"
+openssl req -nodes -x509 -days 3650 -key ca1.key -out ca1.cert -sm3 -subj "/CN=DMTF libspdm SM2 CA" -addext "basicConstraints=critical,CA:TRUE"
 openssl pkey -in ca1.key -outform der -out ca1.key.der
 openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sm3 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sm3 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
