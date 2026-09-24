@@ -1249,6 +1249,14 @@ jobs:
             fetch os_stub/openssllib/openssl
           fi
 
+      - name: Set up MSYS2
+        uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2.32.0
+        with:
+          msystem: MINGW64
+          update: true
+          install: git make
+          pacboy: toolchain:p cmake:p make:p
+
       # OpenSSL is an ExternalProject with its own CFLAGS, so no LIBSPDM_*
       # macro reaches it: one entry serves every configuration on a given
       # platform. Measured at ~100 MB on POSIX and ~344 MB on Windows, so
@@ -1260,32 +1268,26 @@ jobs:
         shell: bash
         run: |
           echo "sha=$(git -C os_stub/openssllib/openssl rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-          echo "image=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
 
-      # The OpenSSL revision precedes the runner image in the key so that
-      # restore-keys can fall back to the same revision's tree from an older
-      # image, rather than rebuilding whenever an image rollout lands. The
-      # fallback therefore reuses objects from the older image's compiler
-      # until the revision changes. Because the prefix pins the revision,
-      # stamps from one revision are never paired with a tree from another.
-      # The key omits TARGET and the macros because neither changes what
-      # OpenSSL builds.
+      # MSYS2 installs MinGW's GCC when the job runs, so the runner image says
+      # nothing about the compiler that builds OpenSSL. Record that compiler
+      # instead. GITHUB_OUTPUT is a Windows path, which cygpath converts.
+      - name: MinGW compiler
+        id: mingw_cc
+        shell: 'msys2 {0}'
+        run: |
+          echo "version=gcc-$(gcc -dumpfullversion)" >> "$(cygpath -u "$GITHUB_OUTPUT")"
+
+      # The key names the compiler that builds OpenSSL, so it changes only
+      # when the OpenSSL revision or MinGW's GCC does. Both need a rebuild,
+      # so there is no fallback to restore. The key omits TARGET and the
+      # macros because neither changes what OpenSSL builds.
       - name: Cache OpenSSL build
         if: matrix.crypto == 'openssl'
         uses: actions/cache@v6
         with:
           path: build/os_stub/openssllib
-          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
-          restore-keys: |
-            openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-
-
-      - name: Set up MSYS2
-        uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2.32.0
-        with:
-          msystem: MINGW64
-          update: true
-          install: git make
-          pacboy: toolchain:p cmake:p make:p
+          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-${{ steps.mingw_cc.outputs.version }}
 
       # MinGW needs the MSYS2 shell for its toolchain and the MSYS generator.
       # `shell:` cannot reference the matrix context, so these are separate
