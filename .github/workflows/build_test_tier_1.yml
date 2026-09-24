@@ -107,8 +107,8 @@ jobs:
 
           # macOS builds OpenSSL as darwin64-arm64 and Linux as linux-aarch64,
           # which are different assembly. macos-aarch64-clang-openssl-release
-          # satisfies aarch64 x OpenSSL in letter; this covers the Linux arm64
-          # crypto path in fact.
+          # technically satisfies aarch64 x OpenSSL, but it does not exercise
+          # the Linux arm64 OpenSSL code; this job does.
           - name: linux-aarch64-gcc-openssl-release
             os: ubuntu-24.04-arm
             arch: aarch64
@@ -116,8 +116,6 @@ jobs:
             crypto: openssl
             target: Release
 
-          # gcc x OpenSSL is otherwise Release only, so the asserts that Debug
-          # enables are never exercised against the OpenSSL backend.
           - name: linux-x64-gcc-openssl-debug
             os: ubuntu-latest
             arch: x64
@@ -125,7 +123,6 @@ jobs:
             crypto: openssl
             target: Debug
 
-          # aarch64 is otherwise GCC only. Debug x OpenSSL is also new for arm64.
           - name: linux-aarch64-clang-openssl-debug
             os: ubuntu-24.04-arm
             arch: aarch64
@@ -133,7 +130,6 @@ jobs:
             crypto: openssl
             target: Debug
 
-          # macOS is otherwise OpenSSL and Release only.
           - name: macos-aarch64-clang-mbedtls-debug
             os: macos-latest
             arch: aarch64
@@ -186,8 +182,6 @@ jobs:
             cflags: -DLIBSPDM_FIPS_MODE=1
             extra_tests: test_spdm_fips
 
-          # DMTF/libspdm#3906 was a hard-coded session ID that only held while
-          # every preceding test allocated one, which this macro changes.
           - name: config-respond-if-ready-off
             os: ubuntu-latest
             arch: x64
@@ -770,9 +764,6 @@ jobs:
             msvc_arch: x86
             generator: NMake Makefiles
 
-          # MSVC x64 was Debug only, so optimization and the Release value of
-          # LIBSPDM_DEBUG_ENABLE went untested on the configuration most
-          # likely to ship.
           - name: windows-x64-vs-mbedtls-release
             os: windows-latest
             arch: x64
@@ -1183,11 +1174,6 @@ jobs:
             shell: 'msys2 {0}'
             generator: MSYS Makefiles
 
-          # Completes the TOOLCHAIN x CRYPTO cross. OPENSSL_FLAGS and
-          # CMOCKA_FLAGS are declared per toolchain branch and OPENSSL_FLAGS
-          # applies to cryptlib_openssl, which is libspdm's own code, so gaps
-          # in this cross hide toolchain-specific build settings. Debug
-          # because MinGW is otherwise Release only.
           - name: windows-x64-mingw-openssl-debug
             os: windows-latest
             arch: x64
