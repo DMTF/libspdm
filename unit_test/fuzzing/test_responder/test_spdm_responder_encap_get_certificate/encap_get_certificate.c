@@ -64,6 +64,7 @@ void libspdm_test_responder_encap_get_certificate_case1(void **State)
                                                          m_libspdm_use_req_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
@@ -134,6 +135,7 @@ void libspdm_test_responder_encap_get_certificate_case2(void **State)
                                                          m_libspdm_use_req_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
@@ -211,6 +213,7 @@ void libspdm_test_responder_encap_get_certificate_case3(void **State)
                                                          m_libspdm_use_req_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
@@ -279,6 +282,7 @@ void libspdm_test_get_encap_request_get_certificate_case2(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;

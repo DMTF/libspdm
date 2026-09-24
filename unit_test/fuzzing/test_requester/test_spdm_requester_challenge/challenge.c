@@ -62,6 +62,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
     ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision_size[0] =
@@ -138,6 +139,7 @@ void libspdm_test_requester_challenge_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -203,6 +205,7 @@ void libspdm_test_requester_challenge_ex_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);

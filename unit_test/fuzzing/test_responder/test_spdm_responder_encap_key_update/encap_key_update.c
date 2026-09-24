@@ -162,6 +162,7 @@ void libspdm_test_get_encap_request_key_update_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -217,6 +218,7 @@ void libspdm_test_get_encap_request_key_update_case2(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
