@@ -69,6 +69,7 @@ void libspdm_gen_req_info()
 
     if (!libspdm_read_responder_public_key(m_libspdm_use_asym_algo,
                                            &req_info_pkinfo, &req_info_pkinfo_len)) {
+        assert_true(false);
         return;
     }
 

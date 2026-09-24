@@ -105,6 +105,7 @@ static void rsp_endpoint_info_case1(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
@@ -221,6 +222,7 @@ static void rsp_endpoint_info_case2(void **state)
 
     session_info = NULL;
     if (!libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data, &data_size)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_public_key_provision = data;
@@ -318,6 +320,7 @@ static void rsp_endpoint_info_case3(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
@@ -508,6 +511,7 @@ static void rsp_endpoint_info_case5(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {

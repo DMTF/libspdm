@@ -800,6 +800,7 @@ static void rsp_endpoint_info_err_case13(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {

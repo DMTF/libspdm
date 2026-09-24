@@ -59,6 +59,7 @@ static void rsp_set_certificate_rsp_case1(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &cert_chain,
                                                          &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -97,6 +98,7 @@ static void rsp_set_certificate_rsp_case1(void **state)
                                                                   m_libspdm_use_asym_algo,
                                                                   &cert_chain_slot_1,
                                                                   &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -183,6 +185,7 @@ static void rsp_set_certificate_rsp_case2(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &cert_chain,
                                                          &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -253,6 +256,7 @@ static void rsp_set_certificate_rsp_case3(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &cert_chain,
                                                          &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -326,6 +330,7 @@ static void rsp_set_certificate_rsp_case4(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &cert_chain,
                                                          &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -412,6 +417,7 @@ static void rsp_set_certificate_rsp_case5(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &cert_chain,
                                                          &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -480,6 +486,7 @@ static void rsp_set_certificate_rsp_case6(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &cert_chain,
                                                          &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -554,6 +561,7 @@ static void rsp_set_certificate_rsp_case7(void **state)
     if (!libspdm_read_responder_public_certificate_chain_alias_cert_till_dev_cert_ca(
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &cert_chain, &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -627,6 +635,7 @@ static void rsp_set_certificate_rsp_case8(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &cert_chain,
                                                          &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -700,6 +709,7 @@ static void rsp_set_certificate_rsp_case9(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &cert_chain,
                                                          &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -887,6 +897,7 @@ static void rsp_set_certificate_rsp_case11(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &cert_chain,
                                                          &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -960,6 +971,7 @@ static void rsp_set_certificate_rsp_case12(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &cert_chain,
                                                          &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -1033,6 +1045,7 @@ static void rsp_set_certificate_rsp_case13(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &cert_chain,
                                                          &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -1115,6 +1128,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
                                                          m_libspdm_use_asym_algo,
                                                          &cert_chain_a, &cert_chain_a_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     if (!libspdm_read_responder_public_certificate_chain_per_slot(1, m_libspdm_use_hash_algo,
