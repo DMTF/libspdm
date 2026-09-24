@@ -292,9 +292,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
         send_info->chunk_handle = 0;
         send_info->chunk_seq_no = 0;
         send_info->chunk_bytes_transferred = 0;
-        if (send_info->large_message != NULL) {
-            libspdm_zero_mem(send_info->large_message, send_info->large_message_capacity);
-        }
+        libspdm_zero_mem(send_info->large_message, send_info->large_message_capacity);
         send_info->large_message = NULL;
         send_info->large_message_size = 0;
         send_info->large_message_capacity = 0;
