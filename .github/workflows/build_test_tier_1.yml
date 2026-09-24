@@ -401,16 +401,22 @@ jobs:
           echo "sha=$(git -C os_stub/openssllib/openssl rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           echo "image=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
 
-      # Exact key only. A near-miss would pair stamps from one revision with
-      # an install tree from another, so restore-keys would be worse than a
-      # miss. The key omits TARGET and the macros because neither changes
-      # what OpenSSL builds.
+      # The OpenSSL revision precedes the runner image in the key so that
+      # restore-keys can fall back to the same revision's tree from an older
+      # image, rather than rebuilding whenever an image rollout lands. The
+      # fallback therefore reuses objects from the older image's compiler
+      # until the revision changes. Because the prefix pins the revision,
+      # stamps from one revision are never paired with a tree from another.
+      # The key omits TARGET and the macros because neither changes what
+      # OpenSSL builds.
       - name: Cache OpenSSL build
         if: matrix.crypto == 'openssl'
         uses: actions/cache@v6
         with:
           path: build/os_stub/openssllib
-          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.image }}-${{ steps.ossl.outputs.sha }}
+          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          restore-keys: |
+            openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-
 
       - name: Configure
         shell: bash
@@ -848,16 +854,22 @@ jobs:
           echo "sha=$(git -C os_stub/openssllib/openssl rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           echo "image=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
 
-      # Exact key only. A near-miss would pair stamps from one revision with
-      # an install tree from another, so restore-keys would be worse than a
-      # miss. The key omits TARGET and the macros because neither changes
-      # what OpenSSL builds.
+      # The OpenSSL revision precedes the runner image in the key so that
+      # restore-keys can fall back to the same revision's tree from an older
+      # image, rather than rebuilding whenever an image rollout lands. The
+      # fallback therefore reuses objects from the older image's compiler
+      # until the revision changes. Because the prefix pins the revision,
+      # stamps from one revision are never paired with a tree from another.
+      # The key omits TARGET and the macros because neither changes what
+      # OpenSSL builds.
       - name: Cache OpenSSL build
         if: matrix.crypto == 'openssl'
         uses: actions/cache@v6
         with:
           path: build/os_stub/openssllib
-          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.image }}-${{ steps.ossl.outputs.sha }}
+          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          restore-keys: |
+            openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-
 
       - name: Set up MSVC
         uses: TheMrMilchmann/setup-msvc-dev@368ef7d1ee4d1171b31d4a7f67f4d954f903f5a9 # v4.1.0
@@ -1250,16 +1262,22 @@ jobs:
           echo "sha=$(git -C os_stub/openssllib/openssl rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           echo "image=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
 
-      # Exact key only. A near-miss would pair stamps from one revision with
-      # an install tree from another, so restore-keys would be worse than a
-      # miss. The key omits TARGET and the macros because neither changes
-      # what OpenSSL builds.
+      # The OpenSSL revision precedes the runner image in the key so that
+      # restore-keys can fall back to the same revision's tree from an older
+      # image, rather than rebuilding whenever an image rollout lands. The
+      # fallback therefore reuses objects from the older image's compiler
+      # until the revision changes. Because the prefix pins the revision,
+      # stamps from one revision are never paired with a tree from another.
+      # The key omits TARGET and the macros because neither changes what
+      # OpenSSL builds.
       - name: Cache OpenSSL build
         if: matrix.crypto == 'openssl'
         uses: actions/cache@v6
         with:
           path: build/os_stub/openssllib
-          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.image }}-${{ steps.ossl.outputs.sha }}
+          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          restore-keys: |
+            openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-
 
       - name: Set up MSYS2
         uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2.32.0
