@@ -1031,6 +1031,7 @@ static void rsp_measurements_case18(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     measurement_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
@@ -1454,6 +1455,7 @@ static void rsp_measurements_case26(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     measurement_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
@@ -1533,6 +1535,7 @@ static void rsp_measurements_case27(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     measurement_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) +
@@ -1654,6 +1657,7 @@ static void rsp_measurements_case28(void **state)
     libspdm_secret_lib_meas_opaque_data_size = 0x20;
 
     if (!libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data, &data_size)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_public_key_provision = data;
@@ -1870,6 +1874,7 @@ static void rsp_measurements_case30(void** state)
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &data, &data_size,
             &hash, &hash_size)) {
+        assert_true(false);
         return;
     }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1990,6 +1995,7 @@ static void rsp_measurements_case31(void** state)
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &data, &data_size,
             &hash, &hash_size)) {
+        assert_true(false);
         return;
     }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2110,6 +2116,7 @@ static void rsp_measurements_case32(void** state)
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &data, &data_size,
             &hash, &hash_size)) {
+        assert_true(false);
         return;
     }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2235,6 +2242,7 @@ static void rsp_measurements_case33(void** state)
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &data, &data_size,
             &hash, &hash_size)) {
+        assert_true(false);
         return;
     }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2361,6 +2369,7 @@ static void rsp_measurements_case34(void** state)
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &data, &data_size,
             &hash, &hash_size)) {
+        assert_true(false);
         return;
     }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2523,6 +2532,7 @@ static void rsp_measurements_case36(void **state)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {

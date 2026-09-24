@@ -76,6 +76,7 @@ static void rsp_encap_get_certificate_case1(void **state)
                 m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
                 &m_libspdm_local_certificate_chain,
                 &m_libspdm_local_certificate_chain_size, NULL, NULL)) {
+            assert_true(false);
             return;
         }
     }
@@ -229,6 +230,7 @@ static void rsp_encap_get_certificate_case3(void **state)
                 m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
                 &m_libspdm_local_certificate_chain,
                 &m_libspdm_local_certificate_chain_size, NULL, NULL)) {
+            assert_true(false);
             return;
         }
     }
@@ -330,6 +332,7 @@ static void rsp_encap_get_certificate_case4(void **state)
                 m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
                 &m_libspdm_local_certificate_chain,
                 &m_libspdm_local_certificate_chain_size, NULL, NULL)) {
+            assert_true(false);
             return;
         }
     }
@@ -424,6 +427,7 @@ static void rsp_encap_get_certificate_case5(void **state)
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &m_libspdm_local_certificate_chain,
             &m_libspdm_local_certificate_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 

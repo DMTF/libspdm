@@ -467,6 +467,7 @@ static void rsp_encapsulated_request_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -535,6 +536,7 @@ static void rsp_encapsulated_request_case2(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -716,6 +718,7 @@ static void rsp_encapsulated_request_case5(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -792,6 +795,7 @@ static void rsp_encapsulated_request_case6(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -937,6 +941,7 @@ static void rsp_encapsulated_request_case8(void **State)
                                                          m_libspdm_use_req_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -1252,6 +1257,7 @@ static void rsp_encapsulated_response_ack_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -1339,6 +1345,7 @@ static void rsp_encapsulated_response_ack_case2(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -1358,6 +1365,7 @@ static void rsp_encapsulated_response_ack_case2(void **State)
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &libspdm_local_certificate_chain,
             &libspdm_local_certificate_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -1426,6 +1434,7 @@ static void rsp_encapsulated_response_ack_case3(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -1637,6 +1646,7 @@ static void rsp_encapsulated_response_ack_case7(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -1658,6 +1668,7 @@ static void rsp_encapsulated_response_ack_case7(void **State)
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &libspdm_local_certificate_chain,
             &libspdm_local_certificate_chain_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -1737,6 +1748,7 @@ static void rsp_encapsulated_response_ack_case8(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -2043,6 +2055,7 @@ static void rsp_encapsulated_response_ack_case10(void **State)
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_req_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -2462,6 +2475,7 @@ static void rsp_encapsulated_response_ack_case12(void **State)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -2573,6 +2587,7 @@ static void rsp_encapsulated_response_ack_case13(void **State)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -2676,6 +2691,7 @@ static void rsp_encapsulated_response_ack_case14(void **State)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -2771,6 +2787,7 @@ static void rsp_encapsulated_response_ack_case15(void **State)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
 
@@ -3717,6 +3734,7 @@ static bool provision_requester_root_cert(libspdm_context_t *spdm_context, void 
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, cert_chain,
                                                          cert_chain_size, &hash, &hash_size)) {
+        assert_true(false);
         return false;
     }
     if (!libspdm_x509_get_cert_from_cert_chain(
@@ -4093,6 +4111,7 @@ static void rsp_encapsulated_request_case23(void **State)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
