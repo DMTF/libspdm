@@ -30,9 +30,15 @@
  * strings against their arguments. The public declaration is left alone so that an
  * Integrator's own debug implementation is not constrained. */
 #if LIBSPDM_DEBUG_PRINT_ENABLE && (defined(__GNUC__) || defined(__clang__))
+#if defined(__MINGW32__) && !defined(__clang__)
+/* MinGW's GCC checks the printf archetype against msvcrt, which lacks C99 format specifiers. */
+extern void libspdm_debug_print(size_t error_level, const char *format, ...)
+__attribute__((format(gnu_printf, 2, 3)));
+#else
 extern void libspdm_debug_print(size_t error_level, const char *format, ...)
 __attribute__((format(printf, 2, 3)));
-#endif
+#endif /* defined(__MINGW32__) && !defined(__clang__) */
+#endif /* LIBSPDM_DEBUG_PRINT_ENABLE && (defined(__GNUC__) || defined(__clang__)) */
 
 #define INVALID_SESSION_ID LIBSPDM_INVALID_SESSION_ID
 /* The SPDM specification does not limit the values of CTExponent and RDTExponent.
