@@ -2,6 +2,10 @@
 # library instead.
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
+if(NOT DEFINED MARCH)
+    message(FATAL_ERROR "A target architecture must be set with the -DMARCH option")
+endif()
+
 if(ARCH STREQUAL "aarch64")
     set(CMAKE_C_COMPILER aarch64-none-elf-gcc)
     set(CMAKE_AR aarch64-none-elf-gcc-ar)
@@ -14,4 +18,7 @@ elseif(ARCH STREQUAL "arm")
     set(CMAKE_LINKER arm-none-eabi-gcc)
 endif()
 
-list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES ARCH)
+set(CMAKE_C_FLAGS_INIT "-march=${MARCH} --specs=nosys.specs")
+set(CMAKE_EXE_LINKER_FLAGS_INIT "--specs=nosys.specs")
+
+list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES ARCH MARCH)

@@ -231,9 +231,9 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 
 ### Toolchain Selection
 
-   `TOOLCHAIN` selects the compiler through `cmake/toolchain/<TOOLCHAIN>.cmake`, which CMake reads before it identifies the compiler.
+   `TOOLCHAIN` selects the compiler and the target flags through `cmake/toolchain/<TOOLCHAIN>.cmake`, which CMake reads before it identifies the compiler.
    A `-DCMAKE_TOOLCHAIN_FILE` on the command line takes precedence.
-   A build directory keeps the compiler it was first configured with, so use a new build directory when changing `TOOLCHAIN`.
+   A build directory keeps the compiler and target flags it was first configured with, so use a new build directory when changing `TOOLCHAIN` or `ARCH`.
 
 ### Windows Builds for IA32/X64
    For ia32 builds, use a `x86 Native Tools Command Prompt for Visual Studio...` command prompt.
