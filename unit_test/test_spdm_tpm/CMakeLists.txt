@@ -9,8 +9,6 @@ target_include_directories(test_spdm_tpm
         ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_tpm
         ${CMAKE_BINARY_DIR}/os_stub/spdm_device_secret_lib_tpm
         ${LIBSPDM_DIR}/os_stub/spdm_cert_verify_callback_sample
-        ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
-        ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common
         ${LIBSPDM_DIR}/os_stub/include
         ${LIBSPDM_DIR}/os_stub

@@ -7,8 +7,6 @@ target_include_directories(test_spdm_responder_if_ready
         ${LIBSPDM_DIR}/unit_test/fuzzing/test_responder/test_spdm_responder_if_ready
         ${LIBSPDM_DIR}/include
         ${LIBSPDM_DIR}/unit_test/include
-        ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
-        ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
         ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_${DEVICE}
         ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
         ${LIBSPDM_DIR}/os_stub/include
