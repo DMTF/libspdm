@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 
 function(libspdm_make_contiguous_slot_ids COUNT OUT_SLOT_IDS)
     set(SLOT_IDS "")
