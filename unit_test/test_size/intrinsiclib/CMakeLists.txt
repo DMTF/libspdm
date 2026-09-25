@@ -43,6 +43,6 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     endif()
 endif()
 
-if(TOOLCHAIN MATCHES "CLANG")
+if(CMAKE_C_COMPILER_ID MATCHES "Clang")
     target_compile_options(intrinsiclib PRIVATE -Wno-incompatible-library-redeclaration)
 endif()
