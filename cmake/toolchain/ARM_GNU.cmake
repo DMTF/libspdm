@@ -1,0 +1,13 @@
+if(ARCH STREQUAL "aarch64")
+    set(CMAKE_C_COMPILER aarch64-none-linux-gnu-gcc)
+    set(CMAKE_AR aarch64-none-linux-gnu-gcc-ar)
+    set(CMAKE_RANLIB aarch64-none-linux-gnu-gcc-ranlib)
+    set(CMAKE_LINKER aarch64-none-linux-gnu-gcc)
+elseif(ARCH STREQUAL "arm")
+    set(CMAKE_C_COMPILER arm-none-linux-gnueabihf-gcc)
+    set(CMAKE_AR arm-none-linux-gnueabihf-gcc-ar)
+    set(CMAKE_RANLIB arm-none-linux-gnueabihf-gcc-ranlib)
+    set(CMAKE_LINKER arm-none-linux-gnueabihf-gcc)
+endif()
+
+list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES ARCH)
