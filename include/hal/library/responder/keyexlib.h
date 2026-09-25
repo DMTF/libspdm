@@ -52,7 +52,8 @@ extern bool libspdm_key_exchange_rsp_opaque_data(
  * @param  spdm_context            A pointer to the SPDM context.
  * @param  session_id              Secure session identifier.
  * @param  spdm_version            Indicates the negotiated version.
- * @param  req_slot_id             The certificate slot within the FINISH request.
+ * @param  req_slot_id             The certificate slot within the FINISH request, or 0 if the
+ *                                 request does not include a signature.
  * @param  req_opaque_data         The OpaqueData field in the FINISH request.
  * @param  req_opaque_data_size    Size, in bytes, of req_opaque_data.
  * @param  opaque_data             The buffer to store the OpaqueData field in the FINISH_RSP response.

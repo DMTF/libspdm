@@ -15,6 +15,7 @@ uint8_t g_key_exchange_req_slot_id = 0;
 bool g_generate_key_exchange_opaque_data = false;
 size_t libspdm_secret_lib_finish_opaque_data_size;
 bool g_generate_finish_opaque_data = false;
+uint8_t g_finish_opaque_data_req_slot_id = 0;
 
 bool libspdm_key_exchange_rsp_opaque_data(
     void *spdm_context,
@@ -74,6 +75,8 @@ bool libspdm_finish_rsp_opaque_data(
     void *opaque_data,
     size_t *opaque_data_size)
 {
+    g_finish_opaque_data_req_slot_id = req_slot_id;
+
     if (g_generate_finish_opaque_data) {
         LIBSPDM_ASSERT(libspdm_secret_lib_finish_opaque_data_size <= *opaque_data_size);
 
