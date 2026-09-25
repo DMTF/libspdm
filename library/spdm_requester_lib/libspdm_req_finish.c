@@ -35,9 +35,9 @@ bool libspdm_verify_finish_rsp_hmac(libspdm_context_t *spdm_context,
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t slot_id;
-    uint8_t *cert_chain_buffer;
+    const uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
-    uint8_t *mut_cert_chain_buffer;
+    const uint8_t *mut_cert_chain_buffer;
     size_t mut_cert_chain_buffer_size;
     uint8_t *th_curr_data;
     size_t th_curr_data_size;
@@ -133,9 +133,9 @@ bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t slot_id;
-    uint8_t *cert_chain_buffer;
+    const uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
-    uint8_t *mut_cert_chain_buffer;
+    const uint8_t *mut_cert_chain_buffer;
     size_t mut_cert_chain_buffer_size;
     uint8_t *th_curr_data;
     size_t th_curr_data_size;
@@ -226,9 +226,9 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
     bool result;
     size_t signature_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    uint8_t *cert_chain_buffer;
+    const uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
-    uint8_t *mut_cert_chain_buffer;
+    const uint8_t *mut_cert_chain_buffer;
     size_t mut_cert_chain_buffer_size;
     uint8_t *th_curr_data;
     size_t th_curr_data_size;

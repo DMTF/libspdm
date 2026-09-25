@@ -1902,7 +1902,7 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
         message_size);
 #else
     {
-        uint8_t *cert_chain_buffer;
+        const uint8_t *cert_chain_buffer;
         size_t cert_chain_buffer_size;
         bool result;
         uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
