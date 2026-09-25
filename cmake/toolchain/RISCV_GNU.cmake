@@ -1,0 +1,13 @@
+if(ARCH STREQUAL "riscv32")
+    set(CMAKE_C_COMPILER riscv32-unknown-linux-gnu-gcc)
+    set(CMAKE_AR riscv32-unknown-linux-gnu-gcc-ar)
+    set(CMAKE_RANLIB riscv32-unknown-linux-gnu-gcc-ranlib)
+    set(CMAKE_LINKER riscv32-unknown-linux-gnu-gcc)
+elseif(ARCH STREQUAL "riscv64")
+    set(CMAKE_C_COMPILER riscv64-unknown-linux-gnu-gcc)
+    set(CMAKE_AR riscv64-unknown-linux-gnu-gcc-ar)
+    set(CMAKE_RANLIB riscv64-unknown-linux-gnu-gcc-ranlib)
+    set(CMAKE_LINKER riscv64-unknown-linux-gnu-gcc)
+endif()
+
+list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES ARCH)

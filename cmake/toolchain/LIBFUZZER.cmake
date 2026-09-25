@@ -1,0 +1,8 @@
+if(CMAKE_HOST_WIN32)
+    set(CMAKE_C_COMPILER clang-cl.exe)
+    set(CMAKE_LINKER lld-link.exe)
+else()
+    set(CMAKE_C_COMPILER clang)
+    set(CMAKE_AR llvm-ar)
+    set(CMAKE_LINKER clang)
+endif()
