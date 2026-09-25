@@ -20,11 +20,6 @@ endif()
 
 add_subdirectory(cmocka EXCLUDE_FROM_ALL)
 
-# cmocka adds -std=gnu99 only on UNIX. MinGW needs it too, because -std=c99 hides strdup().
-if(MINGW)
-    target_compile_options(cmocka PRIVATE -std=gnu99)
-endif()
-
 if(TOOLCHAIN STREQUAL "ARM_DS2022")
     target_sources(cmocka PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/strdup.c)
 endif()
