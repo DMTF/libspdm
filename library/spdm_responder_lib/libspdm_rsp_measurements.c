@@ -418,6 +418,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
         break;
     }
 
+    slot_id_param = 0;
     if ((spdm_request->header.param1 &
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
         if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {

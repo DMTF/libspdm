@@ -569,6 +569,7 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context, si
     request_size = sizeof(spdm_finish_request_t) + opaque_data_entry_size +
                    signature_size + hmac_size;
 
+    req_slot_id = 0;
     if ((spdm_request->header.param1 & SPDM_FINISH_REQUEST_ATTRIBUTES_SIGNATURE_INCLUDED) != 0) {
         req_slot_id = spdm_request->header.param2;
         if ((req_slot_id != 0xFF) && (req_slot_id >= SPDM_MAX_SLOT_COUNT)) {
