@@ -78,6 +78,13 @@ elseif(ARCH STREQUAL "ia32")
     target_compile_definitions(mbedcrypto PRIVATE -DEFI32)
 endif()
 
+# libspdm_mbedtls_config.h reads this libspdm option.
+if(X509_IGNORE_TIME STREQUAL "ON")
+    foreach(target IN ITEMS mbedtls mbedx509 mbedcrypto)
+        target_compile_definitions(${target} PRIVATE LIBSPDM_MBEDTLS_X509_IGNORE_TIME)
+    endforeach()
+endif()
+
 add_library(mbedtlslib INTERFACE)
 target_link_libraries(mbedtlslib INTERFACE
     mbedx509
