@@ -5,7 +5,6 @@
  **/
 
 #include "internal/libspdm_responder_lib.h"
-#include <stddef.h>
 
 /**
  * This function checks the compatibility of the received SPDM version,
