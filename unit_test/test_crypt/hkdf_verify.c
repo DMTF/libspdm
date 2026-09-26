@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -174,7 +174,7 @@ bool libspdm_validate_crypt_hkdf(void)
         );
     if (!status) {
         libspdm_my_print("[Fail]\n");
-        return true;
+        return false;
     }
 
     libspdm_zero_mem(out, sizeof(out));

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -95,7 +95,7 @@ bool libspdm_validate_crypt_hmac(void)
     hmac_ctx = libspdm_hmac_sha3_256_new();
     if (hmac_ctx == NULL) {
         libspdm_my_print("[Fail]\n");
-        return true;
+        return false;
     }
 
     status = libspdm_hmac_sha3_256_set_key(hmac_ctx, m_libspdm_hmac_sha256_key, 20);
