@@ -52,12 +52,12 @@ target_sources(cryptlib_mbedtls
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    target_compile_options(cryptlib_mbedtls PRIVATE -Wno-incompatible-pointer-types -Wno-pointer-sign)
+    target_compile_options(cryptlib_mbedtls PRIVATE -Wno-pointer-sign)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if((TOOLCHAIN STREQUAL "CBMC") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-        target_compile_options(cryptlib_mbedtls PRIVATE /wd4090 /wd4200)
+        target_compile_options(cryptlib_mbedtls PRIVATE /wd4200)
     endif()
 endif()
 
