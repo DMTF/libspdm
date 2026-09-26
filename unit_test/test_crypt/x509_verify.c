@@ -263,6 +263,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
                                             test_ca_cert_len + 1);
     if (status) {
         libspdm_my_print("[Fail]\n");
+        status = false;
         goto cleanup;
     } else {
         libspdm_my_print("[Pass]\n");
@@ -275,6 +276,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
                                             test_end_cert_len);
     if (status) {
         libspdm_my_print("[Fail]\n");
+        status = false;
         goto cleanup;
     } else {
         libspdm_my_print("[Pass]\n");
@@ -287,6 +289,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
                                             test_end_cert_len + 1);
     if (status) {
         libspdm_my_print("[Fail]\n");
+        status = false;
         goto cleanup;
     } else {
         libspdm_my_print("[Pass]\n");
