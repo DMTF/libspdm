@@ -1,10 +1,11 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #include "hal/library/memlib.h"
+#include "library/debuglib.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -15,6 +16,7 @@
 
 void libspdm_zero_mem(void *buffer, size_t length)
 {
+    LIBSPDM_ASSERT(buffer != NULL);
 
 #if defined(__STDC_LIB_EXT1__)
     memset_s(buffer, length, 0, length);
