@@ -1626,7 +1626,7 @@ static int32_t libspdm_internal_atoi(const char *p_start, char const *p_end)
     int32_t k = 0;
     while (p < p_end) {
 
-        /* k = k * 2³ + k * 2¹ = k * 8 + k * 2 = k * 10*/
+        /* k = k * 2^3 + k * 2^1 = k * 8 + k * 2 = k * 10*/
 
         k = (k << 3) + (k << 1) + (*p) - '0';
         p++;
