@@ -697,6 +697,7 @@ static void libspdm_test_crypt_spdm_verify_certificate_chain_buffer(void **state
                 SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
                 &data,&data_size,
                 NULL, NULL)) {
+            assert_true(false);
             return;
         }
 
@@ -738,6 +739,7 @@ static void libspdm_test_crypt_spdm_verify_certificate_chain_buffer(void **state
                 SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
                 &data,&data_size,
                 NULL, NULL)) {
+            assert_true(false);
             return;
         }
 

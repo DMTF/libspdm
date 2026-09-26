@@ -73,6 +73,7 @@ void libspdm_test_responder_psk_finish_rsp_case1(void **State)
                                                          m_libspdm_use_asym_algo,
                                                          &data1, &data_size1,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
@@ -148,6 +149,7 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
                                                          m_libspdm_use_asym_algo,
                                                          &data1, &data_size1,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
@@ -241,6 +243,7 @@ void libspdm_test_responder_psk_finish_rsp_case3(void **State)
                                                          m_libspdm_use_asym_algo,
                                                          &data1, &data_size1,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data1;

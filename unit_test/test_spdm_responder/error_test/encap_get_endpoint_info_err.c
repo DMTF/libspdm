@@ -50,6 +50,7 @@ static void rsp_encap_get_endpoint_info_err_case1(void **state)
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_req_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -150,6 +151,7 @@ static void rsp_encap_get_endpoint_info_err_case2(void **state)
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_req_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -321,6 +323,7 @@ static void rsp_encap_get_endpoint_info_err_case3(void **state)
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_req_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -418,6 +421,7 @@ static void rsp_encap_get_endpoint_info_err_case4(void **state)
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_req_asym_algo, &data,
                                                          &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);

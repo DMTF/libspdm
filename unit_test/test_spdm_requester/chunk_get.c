@@ -48,6 +48,7 @@ static void libspdm_requester_chunk_get_test_case1_build_certificates_response(
                 m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
                 &m_libspdm_local_certificate_chain_test_case_1,
                 &m_libspdm_local_certificate_chain_size_test_case_1, NULL, NULL)) {
+            assert_true(false);
             return;
         }
     }
@@ -164,6 +165,7 @@ static void libspdm_requester_chunk_get_test_case3_build_challenge_response(
             m_libspdm_use_hash_algo,
             m_libspdm_use_asym_algo, &data,
             &data_size, NULL, NULL)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
@@ -807,6 +809,7 @@ static void req_chunk_get_case1(void** state)
             m_libspdm_use_hash_algo,
             m_libspdm_use_asym_algo, &data,
             &data_size, &hash, &hash_size)) {
+        assert_true(false);
         return;
     }
     libspdm_x509_get_cert_from_cert_chain(
@@ -878,6 +881,7 @@ static void req_chunk_get_case2(void** state)
     if (!libspdm_read_responder_public_certificate_chain(
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &data, &data_size, &hash, &hash_size)) {
+        assert_true(false);
         return;
     }
     libspdm_reset_message_m(spdm_context, NULL);
@@ -960,6 +964,7 @@ static void req_chunk_get_case3(void** state)
     if (!libspdm_read_responder_public_certificate_chain(
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &data, &data_size, &hash, &hash_size)) {
+        assert_true(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);

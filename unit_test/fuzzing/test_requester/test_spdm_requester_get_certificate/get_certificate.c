@@ -102,6 +102,7 @@ void libspdm_test_requester_get_certificate_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
@@ -164,6 +165,7 @@ void libspdm_test_requester_get_certificate_case2(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
@@ -228,6 +230,7 @@ void libspdm_test_requester_get_certificate_case3(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
@@ -290,6 +293,7 @@ void libspdm_test_requester_get_certificate_ex_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
@@ -375,6 +379,7 @@ void libspdm_test_requester_get_certificate_in_session_case1(void **State)
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size, &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,

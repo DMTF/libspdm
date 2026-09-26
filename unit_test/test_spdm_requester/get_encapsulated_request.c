@@ -1239,6 +1239,7 @@ static void req_get_encapsulated_request_case13(void **State)
                                                          m_libspdm_use_req_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.local_cert_chain_provision[0] = data;

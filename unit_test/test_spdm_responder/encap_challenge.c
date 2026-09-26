@@ -40,6 +40,7 @@ static void rsp_encap_challenge_case1(void **state)
                                                          m_libspdm_use_req_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     libspdm_reset_message_mut_c(spdm_context);
@@ -124,6 +125,7 @@ static void rsp_encap_challenge_case2(void **state)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -194,6 +196,7 @@ static void rsp_encap_challenge_case3(void **state)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -263,6 +266,7 @@ static void rsp_encap_challenge_case4(void **state)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -336,6 +340,7 @@ static void rsp_encap_challenge_case5(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     if (!libspdm_read_requester_public_key(m_libspdm_use_req_asym_algo, &data, &data_size)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.peer_public_key_provision = data;
@@ -413,6 +418,7 @@ static void rsp_encap_challenge_case6(void **state)
                                                          m_libspdm_use_req_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        assert_true(false);
         return;
     }
     libspdm_reset_message_mut_c(spdm_context);

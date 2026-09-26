@@ -91,6 +91,7 @@ static void libspdm_test_responder_receive_send_rsp_case1(void** state)
             m_libspdm_use_asym_algo, &data,
             &data_size,
             &hash, &hash_size)) {
+        assert_true(false);
         return;
     }
 
@@ -383,6 +384,7 @@ static void libspdm_test_responder_receive_send_rsp_case4(void** state)
             m_libspdm_use_asym_algo, &data,
             &data_size,
             &hash, &hash_size)) {
+        assert_true(false);
         return;
     }
 

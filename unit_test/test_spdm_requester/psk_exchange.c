@@ -387,6 +387,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -499,6 +500,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -676,6 +678,7 @@ static libspdm_return_t receive_message(
             if (!libspdm_read_responder_public_certificate_chain(
                     m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
                     &data_size, NULL, NULL)) {
+                assert_true(false);
                 return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             cert_buffer = (uint8_t *)data +
@@ -869,6 +872,7 @@ static libspdm_return_t receive_message(
             if (!libspdm_read_responder_public_certificate_chain(
                     m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
                     &data_size, NULL, NULL)) {
+                assert_true(false);
                 return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             cert_buffer = (uint8_t *)data +
@@ -1027,6 +1031,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -1137,6 +1142,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -1251,6 +1257,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -1373,6 +1380,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -1495,6 +1503,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -1618,6 +1627,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -1733,6 +1743,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -1848,6 +1859,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -1971,6 +1983,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -2084,6 +2097,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -2197,6 +2211,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -2310,6 +2325,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -2423,6 +2439,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -2539,6 +2556,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -2650,6 +2668,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -2761,6 +2780,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;
@@ -2873,6 +2893,7 @@ static libspdm_return_t receive_message(
         if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
+            assert_true(false);
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         cert_buffer = (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size;

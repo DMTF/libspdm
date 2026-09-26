@@ -937,6 +937,7 @@ static void req_get_endpoint_info_case4(void **state)
     if (!libspdm_read_responder_public_certificate_chain_per_slot(1, m_libspdm_use_hash_algo,
                                                                   m_libspdm_use_asym_algo, &data,
                                                                   &data_size, &hash, &hash_size)) {
+        assert_true(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -1027,6 +1028,7 @@ static void req_get_endpoint_info_case5(void **state)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PUB_KEY_ID_CAP;
     if (!libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data, &data_size)) {
+        assert_true(false);
         return;
     }
     spdm_context->local_context.peer_public_key_provision = data;

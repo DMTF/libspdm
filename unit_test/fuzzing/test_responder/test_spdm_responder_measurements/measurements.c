@@ -134,6 +134,7 @@ void libspdm_test_responder_measurements_case3(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     for (int i = 1; i < SPDM_MAX_SLOT_COUNT; i++) {
@@ -188,6 +189,7 @@ void libspdm_test_responder_measurements_case4(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     for (int i = 1; i < SPDM_MAX_SLOT_COUNT; i++) {

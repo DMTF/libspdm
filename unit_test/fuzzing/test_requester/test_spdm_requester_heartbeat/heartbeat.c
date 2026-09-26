@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -134,6 +134,7 @@ void libspdm_test_requester_heartbeat_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
@@ -209,6 +210,7 @@ void libspdm_test_requester_heartbeat_case2(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          &hash, &hash_size)) {
+        LIBSPDM_ASSERT(false);
         return;
     }
     libspdm_reset_message_a(spdm_context);
