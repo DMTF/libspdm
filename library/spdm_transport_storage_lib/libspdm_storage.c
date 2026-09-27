@@ -378,9 +378,9 @@ libspdm_return_t libspdm_transport_storage_decode_message(
                 LIBSPDM_STORAGE_SECURED_MESSAGE_HEADER_RESERVED_BYTES + sizeof(uint32_t)) {
                 return LIBSPDM_STATUS_INVALID_MSG_SIZE;
             }
-            **session_id =
-                *((uint32_t *)(((uint8_t *)transport_message) +
-                               LIBSPDM_STORAGE_SECURED_MESSAGE_HEADER_RESERVED_BYTES));
+            **session_id = libspdm_read_uint32(
+                (const uint8_t *)transport_message +
+                LIBSPDM_STORAGE_SECURED_MESSAGE_HEADER_RESERVED_BYTES);
 
             secured_message_context =
                 libspdm_get_secured_message_context_via_session_id(
