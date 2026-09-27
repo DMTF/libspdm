@@ -605,11 +605,26 @@ static void libspdm_test_crypt_spdm_x509_set_cert_certificate_check(void **state
 
 }
 
+/* Copies data into a buffer one byte longer, so that a test can pass a size one byte larger than
+ * the data without reading past the end of an allocation. */
+static uint8_t *libspdm_test_copy_with_trailing_byte(const void *data, size_t data_size)
+{
+    uint8_t *copy;
+
+    copy = malloc(data_size + 1);
+    assert_non_null(copy);
+    libspdm_copy_mem(copy, data_size + 1, data, data_size);
+    copy[data_size] = 0x00;
+
+    return copy;
+}
+
 static void libspdm_test_crypt_spdm_verify_cert_chain_data(void **state)
 {
     bool status;
     uint8_t *file_buffer;
     size_t file_buffer_size;
+    uint8_t *padded_buffer;
 
     if ((LIBSPDM_RSA_SSA_2048_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
         status = libspdm_read_input_file("rsa2048/bundle_requester.certchain.der",
@@ -626,14 +641,16 @@ static void libspdm_test_crypt_spdm_verify_cert_chain_data(void **state)
             SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
         assert_true(status);
 
+        padded_buffer = libspdm_test_copy_with_trailing_byte(file_buffer, file_buffer_size);
         status = libspdm_verify_cert_chain_data(
             SPDM_MESSAGE_VERSION_13,
-            file_buffer, file_buffer_size + 1,
+            padded_buffer, file_buffer_size + 1,
             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
             0,
             SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
             true,
             SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        free(padded_buffer);
         assert_false(status);
 
         status = libspdm_verify_cert_chain_data(
@@ -661,14 +678,16 @@ static void libspdm_test_crypt_spdm_verify_cert_chain_data(void **state)
             SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
         assert_true(status);
 
+        padded_buffer = libspdm_test_copy_with_trailing_byte(file_buffer, file_buffer_size);
         status = libspdm_verify_cert_chain_data(
             SPDM_MESSAGE_VERSION_13,
-            file_buffer, file_buffer_size + 1,
+            padded_buffer, file_buffer_size + 1,
             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
             0,
             SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
             false,
             SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        free(padded_buffer);
         assert_false(status);
 
         status = libspdm_verify_cert_chain_data(
@@ -690,6 +709,7 @@ static void libspdm_test_crypt_spdm_verify_certificate_chain_buffer(void **state
     bool status;
     void *data;
     size_t data_size;
+    uint8_t *padded_buffer;
 
     if ((LIBSPDM_RSA_SSA_2048_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
         if (!libspdm_read_responder_public_certificate_chain(
@@ -710,14 +730,16 @@ static void libspdm_test_crypt_spdm_verify_certificate_chain_buffer(void **state
             SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
         assert_true(status);
 
+        padded_buffer = libspdm_test_copy_with_trailing_byte(data, data_size);
         status = libspdm_verify_certificate_chain_buffer(
             SPDM_MESSAGE_VERSION_13,
             SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
             0,
-            data,data_size + 1,
+            padded_buffer, data_size + 1,
             true,
             SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        free(padded_buffer);
         assert_false(status);
 
         status = libspdm_verify_certificate_chain_buffer(
@@ -751,14 +773,16 @@ static void libspdm_test_crypt_spdm_verify_certificate_chain_buffer(void **state
             SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
         assert_true(status);
 
+        padded_buffer = libspdm_test_copy_with_trailing_byte(data, data_size);
         status = libspdm_verify_certificate_chain_buffer(
             SPDM_MESSAGE_VERSION_13,
             SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
             SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
             0,
-            data,data_size + 1,
+            padded_buffer, data_size + 1,
             false,
             SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        free(padded_buffer);
         assert_false(status);
 
         status = libspdm_verify_certificate_chain_buffer(

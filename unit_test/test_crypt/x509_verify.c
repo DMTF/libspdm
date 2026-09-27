@@ -125,8 +125,24 @@ size_t libspdm_get_aysm_nid_from_file_name(char *Path, size_t len)
  * @retval  false  Validation failed.
  *
  **/
+/* Copies data into a buffer one byte longer, so that a check can pass a size one byte larger than
+ * the data without reading past the end of an allocation. Returns NULL if allocation fails. */
+static uint8_t *libspdm_copy_with_trailing_byte(const uint8_t *data, size_t data_size)
+{
+    uint8_t *copy;
+
+    copy = malloc(data_size + 1);
+    if (copy != NULL) {
+        libspdm_copy_mem(copy, data_size + 1, data, data_size);
+        copy[data_size] = 0x00;
+    }
+
+    return copy;
+}
+
 bool libspdm_validate_crypt_x509(char *Path, size_t len)
 {
+    uint8_t *padded_cert;
     bool status;
     const uint8_t *leaf_cert;
     size_t leaf_cert_len;
@@ -258,9 +274,15 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                    "- X509 Certificate CA cert verify itself Verification with large cert len"));
+    padded_cert = libspdm_copy_with_trailing_byte(test_ca_cert, test_ca_cert_len);
+    if (padded_cert == NULL) {
+        libspdm_my_print("[Fail]\n");
+        status = false;
+        goto cleanup;
+    }
     status = libspdm_x509_verify_cert_chain((const uint8_t *)test_ca_cert, test_ca_cert_len,
-                                            (const uint8_t *)test_ca_cert,
-                                            test_ca_cert_len + 1);
+                                            padded_cert, test_ca_cert_len + 1);
+    free(padded_cert);
     if (status) {
         libspdm_my_print("[Fail]\n");
         status = false;
@@ -284,9 +306,15 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                    "- X509 Certificate end cert verify itself Verification with large cert len"));
+    padded_cert = libspdm_copy_with_trailing_byte(test_end_cert, test_end_cert_len);
+    if (padded_cert == NULL) {
+        libspdm_my_print("[Fail]\n");
+        status = false;
+        goto cleanup;
+    }
     status = libspdm_x509_verify_cert_chain((const uint8_t *)test_end_cert, test_end_cert_len,
-                                            (const uint8_t *)test_end_cert,
-                                            test_end_cert_len + 1);
+                                            padded_cert, test_end_cert_len + 1);
+    free(padded_cert);
     if (status) {
         libspdm_my_print("[Fail]\n");
         status = false;
