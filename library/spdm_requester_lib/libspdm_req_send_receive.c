@@ -41,8 +41,10 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
      * so just making the determination here by examining scratch/sender buffers.
      * This may be something that should be refactored in the future. */
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-    if ((uint8_t *)request >= sender_buffer &&
-        (uint8_t *)request < sender_buffer + sender_buffer_size) {
+    /* If message is in the scratch buffer then sender_buffer can/will be NULL, so first check for
+     * NULLness before performing pointer arithmetic with it. */
+    if ((sender_buffer != NULL) && ((uint8_t *)request >= sender_buffer) &&
+        ((uint8_t *)request < (sender_buffer + sender_buffer_size))) {
         message = sender_buffer;
         message_size = sender_buffer_size;
     } else {
