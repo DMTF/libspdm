@@ -609,6 +609,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size =
             libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
 
+        libspdm_free_peer_leaf_cert_public_key(context, slot_id);
         if (context->local_context.is_requester) {
             peer_base_asym_algo = context->connection_info.algorithm.base_asym_algo;
             peer_pqc_asym_algo = context->connection_info.algorithm.pqc_asym_algo;
@@ -2993,15 +2994,10 @@ void libspdm_reset_context(void *spdm_context)
     libspdm_context_t *context;
     size_t index;
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
-    void *pubkey_context;
-    bool is_requester;
     uint8_t slot_index;
 #endif
 
     context = spdm_context;
-#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
-    is_requester = context->local_context.is_requester;
-#endif
 
     /* Clear all information about previous connection. Local context information is preserved. */
 
@@ -3032,28 +3028,7 @@ void libspdm_reset_context(void *spdm_context)
      * below, and these contexts are otherwise only released in
      * libspdm_deinit_context, so they leak across every re-connection. */
     for (slot_index = 0; slot_index < SPDM_MAX_SLOT_COUNT; slot_index++) {
-        pubkey_context = context->connection_info.peer_used_cert_chain[slot_index].
-                         leaf_cert_public_key;
-
-        if (pubkey_context != NULL) {
-            if (is_requester) {
-                if (context->connection_info.algorithm.pqc_asym_algo != 0) {
-                    libspdm_pqc_asym_free(
-                        context->connection_info.algorithm.pqc_asym_algo, pubkey_context);
-                } else {
-                    libspdm_asym_free(
-                        context->connection_info.algorithm.base_asym_algo, pubkey_context);
-                }
-            } else {
-                if (context->connection_info.algorithm.req_pqc_asym_alg != 0) {
-                    libspdm_req_pqc_asym_free(
-                        context->connection_info.algorithm.req_pqc_asym_alg, pubkey_context);
-                } else {
-                    libspdm_req_asym_free(
-                        context->connection_info.algorithm.req_base_asym_alg, pubkey_context);
-                }
-            }
-        }
+        libspdm_free_peer_leaf_cert_public_key(context, slot_index);
     }
     libspdm_zero_mem(context->connection_info.peer_used_cert_chain,
                      sizeof(context->connection_info.peer_used_cert_chain));
@@ -3098,41 +3073,14 @@ void libspdm_deinit_context(void *spdm_context)
     libspdm_context_t *context;
     libspdm_session_info_t *session_info;
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
-    void *pubkey_context;
-    bool is_requester;
     uint8_t slot_index;
 #endif
 
     context = spdm_context;
 
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
-    is_requester = context->local_context.is_requester;
-
     for (slot_index = 0; slot_index < SPDM_MAX_SLOT_COUNT; slot_index++) {
-        pubkey_context = context->connection_info.peer_used_cert_chain[slot_index].
-                         leaf_cert_public_key;
-
-        if (pubkey_context != NULL) {
-            if (is_requester) {
-                if (context->connection_info.algorithm.pqc_asym_algo != 0) {
-                    libspdm_pqc_asym_free(
-                        context->connection_info.algorithm.pqc_asym_algo, pubkey_context);
-                } else {
-                    libspdm_asym_free(
-                        context->connection_info.algorithm.base_asym_algo, pubkey_context);
-                }
-            } else {
-                if (context->connection_info.algorithm.req_pqc_asym_alg != 0) {
-                    libspdm_req_pqc_asym_free(
-                        context->connection_info.algorithm.req_pqc_asym_alg, pubkey_context);
-                } else {
-                    libspdm_req_asym_free(
-                        context->connection_info.algorithm.req_base_asym_alg, pubkey_context);
-                }
-            }
-
-            context->connection_info.peer_used_cert_chain[slot_index].leaf_cert_public_key = NULL;
-        }
+        libspdm_free_peer_leaf_cert_public_key(context, slot_index);
     }
 #endif
 

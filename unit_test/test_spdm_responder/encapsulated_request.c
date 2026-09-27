@@ -1001,6 +1001,12 @@ static void rsp_encapsulated_request_case8(void **State)
     assert_int_equal(spdm_response_requester->header.param1, 0x0);
     assert_int_equal(spdm_response_requester->header.param2, 0);
     free(data);
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    /* The key was parsed with base_asym_algo, not req_base_asym_alg, so free it explicitly. */
+    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
+                      spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
+#endif
 }
 
 /**
@@ -2120,6 +2126,9 @@ static void rsp_encapsulated_response_ack_case10(void **State)
     assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NORMAL);
 
     free(data);
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    libspdm_free_peer_leaf_cert_public_key(spdm_context, 0);
+#endif
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT) */
 

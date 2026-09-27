@@ -1216,6 +1216,19 @@ bool libspdm_verify_endpoint_info_signature(libspdm_context_t *spdm_context,
                                             const void *sign_data,
                                             size_t sign_data_size);
 
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+/**
+ * Free the cached public key of the peer's leaf certificate in a slot, if there is one.
+ *
+ * The key is freed with the negotiated algorithm that it was parsed with, so this must be called
+ * before the negotiated algorithms change.
+ *
+ * @param  context  A pointer to the SPDM context.
+ * @param  slot_id  The slot of the peer certificate chain.
+ **/
+void libspdm_free_peer_leaf_cert_public_key(libspdm_context_t *context, uint8_t slot_id);
+#endif /* !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) */
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*
  * This function calculates l1l2.

@@ -130,6 +130,36 @@ bool libspdm_get_local_public_key_buffer(void *spdm_context,
     return false;
 }
 
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+void libspdm_free_peer_leaf_cert_public_key(libspdm_context_t *context, uint8_t slot_id)
+{
+    void *pubkey_context;
+
+    pubkey_context = context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key;
+    if (pubkey_context == NULL) {
+        return;
+    }
+
+    if (context->local_context.is_requester) {
+        if (context->connection_info.algorithm.pqc_asym_algo != 0) {
+            libspdm_pqc_asym_free(context->connection_info.algorithm.pqc_asym_algo,
+                                  pubkey_context);
+        } else {
+            libspdm_asym_free(context->connection_info.algorithm.base_asym_algo, pubkey_context);
+        }
+    } else {
+        if (context->connection_info.algorithm.req_pqc_asym_alg != 0) {
+            libspdm_req_pqc_asym_free(context->connection_info.algorithm.req_pqc_asym_alg,
+                                      pubkey_context);
+        } else {
+            libspdm_req_asym_free(context->connection_info.algorithm.req_base_asym_alg,
+                                  pubkey_context);
+        }
+    }
+    context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key = NULL;
+}
+#endif /* !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) */
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
                             void *session_info,

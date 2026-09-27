@@ -508,6 +508,7 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
     spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size =
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
+    libspdm_free_peer_leaf_cert_public_key(spdm_context, slot_id);
     if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
         result = libspdm_get_pqc_leaf_cert_public_key_from_cert_chain(
             spdm_context->connection_info.algorithm.base_hash_algo,
