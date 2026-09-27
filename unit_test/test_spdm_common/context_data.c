@@ -362,7 +362,7 @@ static void libspdm_test_common_context_data_case1(void **state)
                               NULL, &return_data, &data_return_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
-    assert_memory_equal(data, return_data, sizeof(data));
+    assert_ptr_equal(data, return_data);
     assert_int_equal(data_return_size, sizeof(void*));
 
     /* check that nothing changed at the data location */
