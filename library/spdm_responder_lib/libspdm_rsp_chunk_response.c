@@ -179,7 +179,7 @@ libspdm_return_t libspdm_get_response_chunk_get(
         spdm_chunk = (uint8_t*) (spdm_response + 1);
 
         /* Set LargeMessageSize only in first chunk. */
-        *((uint32_t*) (spdm_chunk)) = (uint32_t)get_info->large_message_size;
+        libspdm_write_uint32(spdm_chunk, (uint32_t)get_info->large_message_size);
         spdm_chunk += sizeof(uint32_t);
 
         *response_size = sizeof(spdm_chunk_response_response_t)
