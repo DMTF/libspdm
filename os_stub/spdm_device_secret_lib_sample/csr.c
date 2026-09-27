@@ -29,7 +29,6 @@ bool libspdm_read_cached_last_csr_request(uint8_t **last_csr_request,
     size_t file_size;
     uint8_t *file_data;
 
-    file_data = NULL;
     *available_rsp_csr_tracking_tag = 0;
     char file[] = "cached_last_csr_x_request";
     /*change the file name, for example: cached_last_csr_1_request*/
@@ -38,13 +37,16 @@ bool libspdm_read_cached_last_csr_request(uint8_t **last_csr_request,
 
     for (index = 1; index <= SPDM_MAX_CSR_TRACKING_TAG; index++) {
         file[16] = (char)(index + '0');
-        libspdm_read_input_file(file, (void **)(&file_data), &file_size);
-        if (file_size == 0) {
-            *available_rsp_csr_tracking_tag |=  (1 << index);
+        file_data = NULL;
+        file_size = 0;
+        /* A missing or empty file means the tag is free. */
+        if (libspdm_read_input_file(file, (void **)(&file_data), &file_size)) {
+            free(file_data);
         } else {
-            if (file_data != NULL) {
-                free(file_data);
-            }
+            file_size = 0;
+        }
+        if (file_size == 0) {
+            *available_rsp_csr_tracking_tag |= (1 << index);
         }
     }
 
