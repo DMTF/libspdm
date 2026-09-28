@@ -2218,6 +2218,38 @@ static void libspdm_test_responder_receive_send_rsp_case22(void** state)
     libspdm_release_sender_buffer(spdm_context);
 }
 
+/**
+ * Test 25: the Requester sends a secured message whose session ID is 0.
+ * Expected behavior: libspdm_process_request() rejects the message as InvalidSession, the same
+ * as for any other session ID that does not belong to a session.
+ **/
+static void libspdm_test_responder_receive_send_rsp_case25(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t *session_id;
+    bool is_app_message;
+    uint8_t request[sizeof(libspdm_test_message_header_t) + 2 * sizeof(uint32_t)];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 25;
+
+    /* The test transport header is followed by the session ID and 4 bytes of padding, since the
+     * payload must be longer than the session ID and a multiple of 4 bytes. */
+    libspdm_zero_mem(request, sizeof(request));
+    ((libspdm_test_message_header_t *)request)->message_type =
+        LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST;
+
+    is_app_message = false;
+    session_id = NULL;
+    status = libspdm_process_request(spdm_context, &session_id, &is_app_message,
+                                     sizeof(request), request);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->last_spdm_error.error_code, SPDM_ERROR_CODE_INVALID_SESSION);
+}
+
 int libspdm_rsp_receive_send_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -2312,6 +2344,9 @@ int libspdm_rsp_receive_send_test(void)
                                libspdm_unit_test_reset_context),
         /* libspdm_build_response() NULL response / zero response_size / zero request_size */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case22,
+                               libspdm_unit_test_reset_context),
+        /* secured message with session ID 0 is rejected as InvalidSession */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case25,
                                libspdm_unit_test_reset_context),
     };
 

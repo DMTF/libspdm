@@ -161,7 +161,6 @@ void *libspdm_get_session_info_via_session_id(void *spdm_context, uint32_t sessi
     if (session_id == INVALID_SESSION_ID) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                        "libspdm_get_session_info_via_session_id - Invalid session_id\n"));
-        LIBSPDM_ASSERT(false);
         return NULL;
     }
 
