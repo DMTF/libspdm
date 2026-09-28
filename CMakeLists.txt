@@ -472,7 +472,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         if(GCOV STREQUAL "ON")
         add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
         endif()
-        set(OPENSSL_FLAGS -std=c11 -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
+        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
 
         set(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error -no-pie" )
         if(GCOV STREQUAL "ON")
@@ -567,7 +567,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         if(GCOV STREQUAL "ON")
             add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
         endif()
-        set(OPENSSL_FLAGS -std=c11 -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
+        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
 
         set(CMAKE_EXE_LINKER_FLAGS "-flto=auto -Wno-error -no-pie" )
         if(GCOV STREQUAL "ON")
@@ -584,7 +584,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         if (ARCH STREQUAL "x64")
             add_compile_options(-mno-red-zone)
         endif()
-        set(OPENSSL_FLAGS -std=c11 -include base.h -Wno-error=format -Wno-format -Wno-cast-qual)
+        set(OPENSSL_FLAGS -include base.h -Wno-error=format -Wno-format -Wno-cast-qual)
 
         string(APPEND CMAKE_EXE_LINKER_FLAGS " -flto -Wno-error -no-pie")
 
@@ -676,7 +676,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
         endif()
 
         set(MBEDTLS_FLAGS "")
-        set(OPENSSL_FLAGS -std=c11 -include base.h -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
+        set(OPENSSL_FLAGS -include base.h -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
 
         set(CMAKE_EXE_LINKER_FLAGS "-Wno-error")
         set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
@@ -801,6 +801,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
         set(CMAKE_C_FLAGS_RELEASE     "/GL /O1b2s")
         set(CMAKE_C_FLAGS_DEBUG       "/Od")
     else()
+        # MSVC has no C99 mode, and CMake before 3.19 passes no option for C_STANDARD 11.
         add_compile_options(/std:c11 /nologo /Gs32768 /Gy /EHs-c- /GR- /GF /Z7 /Gw /Oy- /D_CRT_SECURE_NO_WARNINGS)
         set(OPENSSL_FLAGS /FIbase.h /wd4090 /wd4132 /wd4244 /wd4245 /wd4267 /wd4306 /wd4310 /wd4700 /wd4389 /wd4702 /wd4706 /wd4819 /wd4013)
 
@@ -1150,9 +1151,10 @@ else()
     endif()
 endif()
 
-# Applies C11, LIBSPDM_WARNING_OPTIONS and LIBSPDM_CONFIG_DEFINITIONS to the targets in a directory
-# and its subdirectories, except the third-party code, which keeps its own settings. The warning
-# options go first, so that a target's own suppressions still take effect.
+# Applies C99, LIBSPDM_WARNING_OPTIONS and LIBSPDM_CONFIG_DEFINITIONS to the targets in a directory
+# and its subdirectories, except the third-party code, which keeps its own settings. A target that
+# sets its own C_STANDARD or C_EXTENSIONS keeps them. The warning options go first, so that a
+# target's own suppressions still take effect.
 function(libspdm_configure_targets directory)
     get_property(targets DIRECTORY "${directory}" PROPERTY BUILDSYSTEM_TARGETS)
     foreach(target IN LISTS targets)
@@ -1161,8 +1163,14 @@ function(libspdm_configure_targets directory)
             get_property(options TARGET ${target} PROPERTY COMPILE_OPTIONS)
             set_property(TARGET ${target} PROPERTY COMPILE_OPTIONS ${LIBSPDM_WARNING_OPTIONS} ${options})
             set_property(TARGET ${target} APPEND PROPERTY COMPILE_DEFINITIONS ${LIBSPDM_CONFIG_DEFINITIONS})
-            set_property(TARGET ${target} PROPERTY C_STANDARD 11)
-            set_property(TARGET ${target} PROPERTY C_EXTENSIONS OFF)
+            get_property(standard_set TARGET ${target} PROPERTY C_STANDARD SET)
+            if(NOT standard_set)
+                set_property(TARGET ${target} PROPERTY C_STANDARD 99)
+            endif()
+            get_property(extensions_set TARGET ${target} PROPERTY C_EXTENSIONS SET)
+            if(NOT extensions_set)
+                set_property(TARGET ${target} PROPERTY C_EXTENSIONS OFF)
+            endif()
         endif()
     endforeach()
     get_property(subdirectories DIRECTORY "${directory}" PROPERTY SUBDIRECTORIES)
