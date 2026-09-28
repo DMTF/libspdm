@@ -315,6 +315,7 @@ bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
     bool res;
     X509 *x509_cert;
     X509_NAME *x509_name;
+    int32_t ret;
     size_t x509_name_size;
 
     /* Check input parameters.*/
@@ -345,7 +346,12 @@ bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
         goto done;
     }
 
-    x509_name_size = i2d_X509_NAME(x509_name, NULL);
+    ret = i2d_X509_NAME(x509_name, NULL);
+    if (ret <= 0) {
+        *subject_size = 0;
+        goto done;
+    }
+    x509_name_size = (size_t)ret;
     if (*subject_size < x509_name_size) {
         *subject_size = x509_name_size;
         goto done;
@@ -862,6 +868,7 @@ bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
     bool res;
     X509 *x509_cert;
     X509_NAME *x509_name;
+    int32_t ret;
     size_t x509_name_size;
 
     /* Check input parameters.*/
@@ -892,7 +899,12 @@ bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
         goto done;
     }
 
-    x509_name_size = i2d_X509_NAME(x509_name, NULL);
+    ret = i2d_X509_NAME(x509_name, NULL);
+    if (ret <= 0) {
+        *issuer_size = 0;
+        goto done;
+    }
+    x509_name_size = (size_t)ret;
     if (*issuer_size < x509_name_size) {
         *issuer_size = x509_name_size;
         goto done;
