@@ -148,6 +148,7 @@ bool libspdm_read_input_file(const char *file_name, void **file_data,
     if (temp_result != *file_size) {
         printf("Read input file error %s", file_name);
         free((void *)*file_data);
+        *file_data = NULL;
         fclose(fp_in);
         return false;
     }
