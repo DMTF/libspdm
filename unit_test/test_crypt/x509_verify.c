@@ -144,6 +144,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
 {
     uint8_t *padded_cert;
     bool status;
+    bool result;
     const uint8_t *leaf_cert;
     size_t leaf_cert_len;
     uint8_t *test_cert;
@@ -184,6 +185,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     test_bundle_cert = NULL;
     test_end_cert = NULL;
     test_private_key = NULL;
+    result = false;
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
     x509_ca_cert = NULL;
     csr = NULL;
@@ -277,7 +279,6 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     padded_cert = libspdm_copy_with_trailing_byte(test_ca_cert, test_ca_cert_len);
     if (padded_cert == NULL) {
         libspdm_my_print("[Fail]\n");
-        status = false;
         goto cleanup;
     }
     status = libspdm_x509_verify_cert_chain((const uint8_t *)test_ca_cert, test_ca_cert_len,
@@ -285,7 +286,6 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     free(padded_cert);
     if (status) {
         libspdm_my_print("[Fail]\n");
-        status = false;
         goto cleanup;
     } else {
         libspdm_my_print("[Pass]\n");
@@ -298,7 +298,6 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
                                             test_end_cert_len);
     if (status) {
         libspdm_my_print("[Fail]\n");
-        status = false;
         goto cleanup;
     } else {
         libspdm_my_print("[Pass]\n");
@@ -309,7 +308,6 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     padded_cert = libspdm_copy_with_trailing_byte(test_end_cert, test_end_cert_len);
     if (padded_cert == NULL) {
         libspdm_my_print("[Fail]\n");
-        status = false;
         goto cleanup;
     }
     status = libspdm_x509_verify_cert_chain((const uint8_t *)test_end_cert, test_end_cert_len,
@@ -317,7 +315,6 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     free(padded_cert);
     if (status) {
         libspdm_my_print("[Fail]\n");
-        status = false;
         goto cleanup;
     } else {
         libspdm_my_print("[Pass]\n");
@@ -626,7 +623,6 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     #endif /* LIBSPDM_SLH_DSA_SUPPORT */
     default:
         libspdm_my_print("\n  - Get Private Key - [Fail]");
-        status = false;
         goto cleanup;
     }
 
@@ -663,7 +659,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
 #endif
 
     libspdm_my_print("\n");
-    status = true;
+    result = true;
 
 cleanup:
     if (test_cert != NULL) {
@@ -689,7 +685,7 @@ cleanup:
         libspdm_x509_free(x509_ca_cert);
     }
 #endif
-    return status;
+    return result;
 }
 
 /* Security regression test for cert-chain validation.
