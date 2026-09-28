@@ -97,6 +97,11 @@ bool libspdm_read_cached_csr(uint8_t **csr_pointer, size_t *csr_len)
     file = "test_csr/cached.csr";
 
     res = libspdm_read_input_file(file, (void **)csr_pointer, csr_len);
+    if (res && (*csr_len == 0)) {
+        free(*csr_pointer);
+        *csr_pointer = NULL;
+        res = false;
+    }
     return res;
 }
 
@@ -228,8 +233,7 @@ bool libspdm_gen_csr(
                 (cached_last_request_len == request_size) &&
                 (libspdm_consttime_is_mem_equal(cached_last_csr_request, request,
                                                 request_size)) &&
-                (libspdm_read_cached_csr(&cached_csr, csr_len)) &&
-                (*csr_len != 0)) {
+                (libspdm_read_cached_csr(&cached_csr, csr_len))) {
 
                 /*get and save cached csr*/
                 if (csr_buffer_size < *csr_len) {
@@ -314,9 +318,8 @@ bool libspdm_gen_csr(
             (cached_last_request_len == request_size) &&
             (libspdm_consttime_is_mem_equal(cached_last_csr_request, request,
                                             request_size)) &&
-            (libspdm_read_cached_csr(&cached_csr, csr_len)) &&
-            (*csr_len != 0) &&
-            (flag)) {
+            (flag) &&
+            (libspdm_read_cached_csr(&cached_csr, csr_len))) {
 
             /*get and save cached csr*/
             if (csr_buffer_size < *csr_len) {
