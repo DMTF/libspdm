@@ -2173,13 +2173,15 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t pqc_asym_nid,
     }
 
     libspdm_zero_mem(pubkey_buffer, sizeof(pubkey_buffer));
-    pubkey_der_len = mbedtls_pk_write_pubkey_der(&key, pubkey_buffer, sizeof(pubkey_buffer));
-    if (pubkey_der_len > 0) {
-        /*Note: data is written at the end of the buffer!*/
-        pubkey_der_data = pubkey_buffer + sizeof(pubkey_buffer) - pubkey_der_len;
-    } else {
+    ret = mbedtls_pk_write_pubkey_der(&key, pubkey_buffer, sizeof(pubkey_buffer));
+    if (ret <= 0) {
+        ret = 1;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"mbedtls_pk_write_pubkey_der failed \n"));
         goto free_all;
     }
+    pubkey_der_len = (size_t)ret;
+    /*Note: data is written at the end of the buffer!*/
+    pubkey_der_data = pubkey_buffer + sizeof(pubkey_buffer) - pubkey_der_len;
 
     /* requester info parse
      * check the req_info version and subjectPKInfo;
