@@ -91,12 +91,16 @@ jobs:
             crypto: openssl
             target: Release
 
+          # With LTO, GCC reports late warnings such as -Wmaybe-uninitialized
+          # only at the link, where libspdm passes no warning options. Fat LTO
+          # objects make GCC report them when compiling, under -Werror.
           - name: linux-x64-gcc-openssl-release
             os: ubuntu-latest
             arch: x64
             toolchain: GCC
             crypto: openssl
             target: Release
+            cflags: -ffat-lto-objects
 
           - name: linux-x64-clang-mbedtls-debug
             os: ubuntu-latest
@@ -143,6 +147,8 @@ jobs:
             toolchain: GCC
             crypto: mbedtls
             target: Release
+            # See linux-x64-gcc-openssl-release.
+            cflags: -ffat-lto-objects
 
           - name: linux-x64-clang-mbedtls-release
             os: ubuntu-latest
