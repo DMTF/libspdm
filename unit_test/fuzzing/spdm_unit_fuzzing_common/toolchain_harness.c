@@ -16,9 +16,6 @@
 #include <stdint.h>
 #include <stddef.h>
 #endif
-#ifdef TEST_WITH_KLEE
-#include <klee/klee.h>
-#endif
 
 size_t libspdm_alignment_size(size_t size)
 {
@@ -54,20 +51,6 @@ bool libspdm_init_test_buffer(const char *file_name, size_t max_buffer_size,
     size_t aligned_size;
     size_t copy_size;
     size_t BytesRead;
-
-#ifdef TEST_WITH_KLEE
-    /* For test with KLEE the whole buffer is symbolic, so it is sized by the caller. */
-    buffer = malloc(max_buffer_size);
-    if (buffer == NULL) {
-        return false;
-    }
-    *test_buffer = buffer;
-    if (buffer_size != NULL) {
-        *buffer_size = max_buffer_size;
-    }
-    klee_make_symbolic((uint8_t *)buffer, max_buffer_size, "buffer");
-    return true;
-#else
 
     file = fopen(file_name, "rb");
     if (file == NULL) {
@@ -119,7 +102,6 @@ bool libspdm_init_test_buffer(const char *file_name, size_t max_buffer_size,
     }
 
     return true;
-#endif
 }
 
 #ifdef TEST_WITH_LIBFUZZER

@@ -354,7 +354,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 
 ### Other Tests
 
-  libspdm also supports other tests such as code coverage, fuzzing, symbolic execution, and model checker.
+  libspdm also supports other tests such as code coverage and fuzzing.
 
   Refer to [test](https://github.com/DMTF/libspdm/blob/main/doc/test.md) for more details.
 

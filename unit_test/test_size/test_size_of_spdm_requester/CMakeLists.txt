@@ -47,46 +47,24 @@ if(TOOLCHAIN STREQUAL "ARM_DS2022" OR TOOLCHAIN STREQUAL "ARM_GNU")
     target_link_libraries(test_size_of_spdm_requester PRIVATE armbuild_lib)
 endif()
 
-if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    target_link_libraries(test_size_of_spdm_requester
-        PRIVATE
-            $<TARGET_OBJECTS:memlib>
-            $<TARGET_OBJECTS:debuglib>
-            $<TARGET_OBJECTS:spdm_requester_lib>
-            $<TARGET_OBJECTS:spdm_common_lib>
-#            $<TARGET_OBJECTS:cryptstublib_dummy>
-#            $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
-#            $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
-#            $<TARGET_OBJECTS:rnglib_null>
-            $<TARGET_OBJECTS:cryptlib_null>
-            $<TARGET_OBJECTS:malloclib_null>
-            $<TARGET_OBJECTS:spdm_crypt_lib>
-            $<TARGET_OBJECTS:spdm_secured_message_lib>
-            $<TARGET_OBJECTS:spdm_transport_mctp_lib>
-            $<TARGET_OBJECTS:spdm_device_secret_lib_null>
-            $<TARGET_OBJECTS:intrinsiclib>
-            $<TARGET_OBJECTS:platform_lib>
-    )
-else()
-    target_link_libraries(test_size_of_spdm_requester
-        PRIVATE
-            memlib
-            debuglib_null
-            spdm_requester_lib
-            spdm_common_lib
-        #    cryptstublib_dummy
-        #    ${CRYPTO_LIB_PATHS}
-        #    cryptlib_${CRYPTO}
-        #    rnglib_null
-            cryptlib_null
-            malloclib_simple
-            spdm_crypt_lib
-            spdm_secured_message_lib
-            spdm_transport_mctp_lib
-            spdm_device_secret_lib_null
-        #    spdm_device_secret_lib_sample
-        #    spdm_crypt_ext_lib
-            intrinsiclib
-            platform_lib_null
-    )
-endif()
+target_link_libraries(test_size_of_spdm_requester
+    PRIVATE
+        memlib
+        debuglib_null
+        spdm_requester_lib
+        spdm_common_lib
+    #    cryptstublib_dummy
+    #    ${CRYPTO_LIB_PATHS}
+    #    cryptlib_${CRYPTO}
+    #    rnglib_null
+        cryptlib_null
+        malloclib_simple
+        spdm_crypt_lib
+        spdm_secured_message_lib
+        spdm_transport_mctp_lib
+        spdm_device_secret_lib_null
+    #    spdm_device_secret_lib_sample
+    #    spdm_crypt_ext_lib
+        intrinsiclib
+        platform_lib_null
+)
