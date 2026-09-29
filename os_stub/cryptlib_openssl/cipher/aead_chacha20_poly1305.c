@@ -209,7 +209,7 @@ bool libspdm_aead_chacha20_poly1305_decrypt(
     }
 
     ret_value = (bool)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG,
-                                          (int32_t)tag_size, (void *)tag);
+                                          (int32_t)tag_size, (void *)(size_t)tag);
     if (!ret_value) {
         goto done;
     }

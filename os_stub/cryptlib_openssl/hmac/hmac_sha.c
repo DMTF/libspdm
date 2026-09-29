@@ -112,7 +112,7 @@ bool hmac_md_set_key(const EVP_MD *md, void *hmac_md_ctx,
 
     /* Setup parameters for HMAC */
     params[0] = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_DIGEST,
-                                                 (char *)digest_name, 0);
+                                                 (char *)(size_t)digest_name, 0);
     params[1] = OSSL_PARAM_construct_end();
 
     /* Initialize MAC operation with key and parameters */
@@ -267,7 +267,7 @@ bool hmac_md_all(const EVP_MD *md, const void *data,
     /* Setup parameters */
     OSSL_PARAM params[2];
     params[0] = OSSL_PARAM_construct_utf8_string(OSSL_MAC_PARAM_DIGEST,
-                                                 (char *)digest_name, 0);
+                                                 (char *)(size_t)digest_name, 0);
     params[1] = OSSL_PARAM_construct_end();
 
     /* Initialize with key */

@@ -51,7 +51,7 @@ int PasswordCallback(char *buf, const int size, const int flag, const void *key)
 
         /* Duplicate key phrase directly.*/
 
-        key_length = (int)ascii_str_len((char *)key);
+        key_length = (int)ascii_str_len((const char *)key);
         key_length = (key_length > size) ? size : key_length;
         libspdm_copy_mem(buf, size, key, (size_t)key_length);
         return key_length;
@@ -88,7 +88,7 @@ static bool get_private_key_from_pem_bio(const uint8_t *pem_data, size_t pem_siz
 
     *pkey = PEM_read_bio_PrivateKey(pem_bio, NULL,
                                     (pem_password_cb *)&PasswordCallback,
-                                    (void *)password);
+                                    (void *)(size_t)password);
     if (*pkey != NULL) {
         result = true;
     }

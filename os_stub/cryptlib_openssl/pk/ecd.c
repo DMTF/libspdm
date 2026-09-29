@@ -359,7 +359,7 @@ bool libspdm_eddsa_sign(const void *ecd_context, size_t hash_nid,
                         const uint8_t *message, size_t size, uint8_t *signature,
                         size_t *sig_size)
 {
-    libspdm_key_context *key_ctx;
+    const libspdm_key_context *key_ctx;
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;
     size_t half_size;
@@ -368,7 +368,7 @@ bool libspdm_eddsa_sign(const void *ecd_context, size_t hash_nid,
         OSSL_PARAM_END
     };
     const OSSL_PARAM params_ed448[] = {
-        OSSL_PARAM_octet_string("context-string", (void *) context, context_size),
+        OSSL_PARAM_octet_string("context-string", (void *)(size_t)context, context_size),
         OSSL_PARAM_END
     };
 
@@ -380,7 +380,7 @@ bool libspdm_eddsa_sign(const void *ecd_context, size_t hash_nid,
         return false;
     }
 
-    key_ctx = (libspdm_key_context *)ecd_context;
+    key_ctx = (const libspdm_key_context *)ecd_context;
     pkey = key_ctx->evp_pkey;
     if (pkey == NULL) {
         return false;
@@ -476,7 +476,7 @@ bool libspdm_eddsa_verify(const void *ecd_context, size_t hash_nid,
                           const uint8_t *message, size_t size,
                           const uint8_t *signature, size_t sig_size)
 {
-    libspdm_key_context *key_ctx;
+    const libspdm_key_context *key_ctx;
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;
     size_t half_size;
@@ -485,7 +485,7 @@ bool libspdm_eddsa_verify(const void *ecd_context, size_t hash_nid,
         OSSL_PARAM_END
     };
     const OSSL_PARAM params_ed448[] = {
-        OSSL_PARAM_octet_string("context-string", (void *) context, context_size),
+        OSSL_PARAM_octet_string("context-string", (void *)(size_t)context, context_size),
         OSSL_PARAM_END
     };
 
@@ -497,7 +497,7 @@ bool libspdm_eddsa_verify(const void *ecd_context, size_t hash_nid,
         return false;
     }
 
-    key_ctx = (libspdm_key_context *)ecd_context;
+    key_ctx = (const libspdm_key_context *)ecd_context;
     pkey = key_ctx->evp_pkey;
     if (pkey == NULL) {
         return false;

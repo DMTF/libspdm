@@ -60,7 +60,7 @@ static bool libspdm_rsa_sign_with_padding(libspdm_key_context *ctx, const EVP_MD
     {
         OSSL_PARAM params[2];
         const char *md_name = EVP_MD_get0_name(evp_md);
-        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)md_name, 0);
+        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)(size_t)md_name, 0);
         params[1] = OSSL_PARAM_construct_end();
 
         rc = EVP_PKEY_sign_init_ex(pctx, params);

@@ -485,7 +485,7 @@ bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, size_t hash_nid,
     {
         OSSL_PARAM params[2];
         const char *md_name = EVP_MD_get0_name(evp_md);
-        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)md_name, 0);
+        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)(size_t)md_name, 0);
         params[1] = OSSL_PARAM_construct_end();
 
         rc = EVP_PKEY_verify_init_ex(pctx, params);
@@ -628,7 +628,7 @@ bool libspdm_rsa_pss_verify(void *rsa_context, size_t hash_nid,
     {
         OSSL_PARAM params[2];
         const char *md_name = EVP_MD_get0_name(evp_md);
-        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)md_name, 0);
+        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)(size_t)md_name, 0);
         params[1] = OSSL_PARAM_construct_end();
 
         rc = EVP_PKEY_verify_init_ex(pctx, params);
@@ -763,7 +763,7 @@ bool libspdm_rsa_pss_verify_fips(void *rsa_context, size_t hash_nid,
     {
         OSSL_PARAM params[2];
         const char *md_name = EVP_MD_get0_name(evp_md);
-        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)md_name, 0);
+        params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)(size_t)md_name, 0);
         params[1] = OSSL_PARAM_construct_end();
 
         rc = EVP_PKEY_verify_init_ex(pctx, params);

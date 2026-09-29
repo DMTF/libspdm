@@ -32,7 +32,7 @@ bool libspdm_random_bytes(uint8_t *output, size_t size)
     }
 
     /* Generate random data. */
-    if (RAND_bytes(output, size) != 1) {
+    if (RAND_bytes(output, (int)size) != 1) {
         return false;
     }
 

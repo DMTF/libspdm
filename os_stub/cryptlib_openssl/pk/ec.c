@@ -53,8 +53,9 @@ static void get_evp_compatible_public_key(EVP_PKEY *evp_pkey,
  * secp256r1            256 bits                  32
  * secp384r1            384 bits                  48
  * secp521r1            521 bits                  66
+ * Other curves are unsupported and return 0.
  */
-static inline int evp_pkey_get_half_size(EVP_PKEY *evp_pkey) {
+static inline uint8_t evp_pkey_get_half_size(EVP_PKEY *evp_pkey) {
     switch (EVP_PKEY_bits(evp_pkey)) {
     case 256:
         return 32;
@@ -63,7 +64,7 @@ static inline int evp_pkey_get_half_size(EVP_PKEY *evp_pkey) {
     case 521:
         return 66;
     default:
-        return -1;
+        return 0;
     }
 }
 
@@ -115,7 +116,7 @@ void *libspdm_ec_new_by_nid(size_t nid)
         return NULL;
     }
 
-    params[0] = OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME, (char *) curve_name, 0);
+    params[0] = OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME, (char *)(size_t)curve_name, 0);
     params[1] = OSSL_PARAM_construct_end();
 
     pctx = EVP_PKEY_CTX_new_from_name(NULL, "EC", NULL);
@@ -275,11 +276,11 @@ bool libspdm_ec_set_priv_key(void *ec_context, const uint8_t *private_key,
     }
 
     half_size = evp_pkey_get_half_size(evp_pkey);
-    if (private_key_size != half_size) {
+    if ((half_size == 0) || (private_key_size != half_size)) {
         return false;
     }
 
-    priv_bn = BN_bin2bn(private_key, private_key_size, NULL);
+    priv_bn = BN_bin2bn(private_key, (int)private_key_size, NULL);
     if (priv_bn == NULL) {
         return false;
     }
@@ -469,7 +470,7 @@ bool libspdm_ec_check_key(const void *ec_context)
         return false;
     }
 
-    evp_pkey = ((libspdm_key_context *)ec_context)->evp_pkey;
+    evp_pkey = ((const libspdm_key_context *)ec_context)->evp_pkey;
     if (evp_pkey == NULL) {
         return false;
     }
@@ -676,6 +677,9 @@ bool libspdm_ecdsa_sign(void *ec_context, size_t hash_nid,
     }
 
     half_size = evp_pkey_get_half_size(evp_pkey);
+    if (half_size == 0) {
+        return false;
+    }
     if (*sig_size < (size_t)(half_size * 2)) {
         *sig_size = half_size * 2;
         return false;
@@ -742,7 +746,7 @@ bool libspdm_ecdsa_sign(void *ec_context, size_t hash_nid,
 
     OSSL_PARAM params[2];
     const char *md_name = EVP_MD_get0_name(md_type);
-    params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)md_name, 0);
+    params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)(size_t)md_name, 0);
     params[1] = OSSL_PARAM_construct_end();
 
     if (EVP_PKEY_sign_init_ex(ctx, params) <= 0) {
@@ -823,7 +827,7 @@ bool libspdm_ecdsa_verify(void *ec_context, size_t hash_nid,
     }
 
     half_size = evp_pkey_get_half_size(evp_pkey);
-    if (sig_size != (size_t)(half_size * 2)) {
+    if ((half_size == 0) || (sig_size != (size_t)(half_size * 2))) {
         return false;
     }
 
@@ -891,7 +895,7 @@ bool libspdm_ecdsa_verify(void *ec_context, size_t hash_nid,
 
     OSSL_PARAM params[2];
     const char *md_name = EVP_MD_get0_name(md_type);
-    params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)md_name, 0);
+    params[0] = OSSL_PARAM_construct_utf8_string("digest", (char *)(size_t)md_name, 0);
     params[1] = OSSL_PARAM_construct_end();
 
     if (EVP_PKEY_verify_init_ex(ctx, params) <= 0) {
@@ -921,7 +925,7 @@ cleanup:
 #endif
 
 /*setup random number*/
-static int libspdm_ecdsa_sign_setup_random(EC_KEY *eckey, BIGNUM **kinvp, BIGNUM **rp,
+static int libspdm_ecdsa_sign_setup_random(const EC_KEY *eckey, BIGNUM **kinvp, BIGNUM **rp,
                                            uint8_t* random, size_t random_len)
 {
     BN_CTX *ctx = NULL;
@@ -978,7 +982,7 @@ static int libspdm_ecdsa_sign_setup_random(EC_KEY *eckey, BIGNUM **kinvp, BIGNUM
     }
 
     /*random number*/
-    k = BN_bin2bn(random, random_len, NULL);
+    k = BN_bin2bn(random, (int)random_len, NULL);
 
     /* compute r the x-coordinate of generator * k */
     if (!EC_POINT_mul(group, tmp_point, k, NULL, NULL, ctx)) {
@@ -1055,8 +1059,8 @@ bool libspdm_ecdsa_sign_ex(void *ec_context, size_t hash_nid,
     ECDSA_SIG *ecdsa_sig;
     int32_t openssl_nid;
     uint8_t half_size;
-    BIGNUM *bn_r;
-    BIGNUM *bn_s;
+    const BIGNUM *bn_r;
+    const BIGNUM *bn_s;
     int r_size;
     int s_size;
     uint8_t random[32];
@@ -1182,19 +1186,18 @@ bool libspdm_ecdsa_sign_ex(void *ec_context, size_t hash_nid,
             goto cleanup;
         }
 
-        if (!libspdm_ecdsa_sign_setup_random((EC_KEY *)ec_key, &kinv, &rp, random, sizeof(random))) {
+        if (!libspdm_ecdsa_sign_setup_random(ec_key, &kinv, &rp, random, sizeof(random))) {
             result = false;
             goto cleanup;
         }
         ecdsa_sig = ECDSA_do_sign_ex(message_hash, (uint32_t)hash_size, kinv, rp,
-                                     (EC_KEY *)ec_key);
+                                     (EC_KEY *)(size_t)ec_key);
         if (ecdsa_sig == NULL) {
             result = false;
             goto cleanup;
         }
 
-        ECDSA_SIG_get0(ecdsa_sig, (const BIGNUM **)&bn_r,
-                       (const BIGNUM **)&bn_s);
+        ECDSA_SIG_get0(ecdsa_sig, &bn_r, &bn_s);
 
         r_size = BN_num_bytes(bn_r);
         s_size = BN_num_bytes(bn_s);
@@ -1324,7 +1327,7 @@ bool der_to_raw_rs(const uint8_t *der_sig, size_t der_sig_len,
                    uint8_t *out_raw, size_t expected_half_size)
 {
     const uint8_t *p = der_sig;
-    ECDSA_SIG *sig = d2i_ECDSA_SIG(NULL, &p, der_sig_len);
+    ECDSA_SIG *sig = d2i_ECDSA_SIG(NULL, &p, (long)der_sig_len);
     if (sig == NULL) {
         printf("Failed to decode DER signature.\n");
         return false;
@@ -1346,8 +1349,8 @@ bool der_to_raw_rs(const uint8_t *der_sig, size_t der_sig_len,
 
     memset(out_raw, 0, expected_half_size * 2);
 
-    BN_bn2binpad(r, out_raw, expected_half_size);
-    BN_bn2binpad(s, out_raw + expected_half_size, expected_half_size);
+    BN_bn2binpad(r, out_raw, (int)expected_half_size);
+    BN_bn2binpad(s, out_raw + expected_half_size, (int)expected_half_size);
 
     ECDSA_SIG_free(sig);
     return true;
@@ -1366,9 +1369,9 @@ EVP_PKEY *import_peer_pubkey(const char* curve_name, const unsigned char *pub, s
 
     OSSL_PARAM params[] = {
         OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME,
-                                         (void *) curve_name, 0),
+                                         (void *)(size_t)curve_name, 0),
         OSSL_PARAM_construct_octet_string(OSSL_PKEY_PARAM_PUB_KEY,
-                                          (void *)pub, pub_len),
+                                          (void *)(size_t)pub, pub_len),
         OSSL_PARAM_construct_end()
     };
 

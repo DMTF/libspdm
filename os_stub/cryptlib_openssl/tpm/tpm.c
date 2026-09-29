@@ -742,14 +742,14 @@ bool libspdm_tpm_verify_quote(
         return libspdm_asym_verify_hash(
             0, 0,
             base_asym_algo, base_hash,
-            (void *)pub_key_context,
+            (void *)(size_t)pub_key_context,
             hash_digest, hash_size,
             raw_sig, sizeof(raw_sig));
     } else if (sig.sigAlg == TPM2_ALG_RSASSA || sig.sigAlg == TPM2_ALG_RSAPSS) {
         return libspdm_asym_verify_hash(
             0, 0,
             base_asym_algo, base_hash,
-            (void *)pub_key_context,
+            (void *)(size_t)pub_key_context,
             hash_digest, hash_size,
             sig.signature.rsassa.sig.buffer,
             sig.signature.rsassa.sig.size);
