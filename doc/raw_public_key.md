@@ -24,3 +24,6 @@ openssl pkey -in end_point.key.priv.pem -inform PEM -pubout -outform DER -out en
 
 The Integrator can use `LIBSPDM_DATA_PEER_PUBLIC_KEY` and `LIBSPDM_DATA_LOCAL_PUBLIC_KEY` to
 register the raw public key.
+
+A Responder that sets `PUB_KEY_ID_CAP` cannot include SPDM 1.0 in `LIBSPDM_DATA_SPDM_VERSION`, and
+`libspdm_check_context` fails if it does.
