@@ -407,6 +407,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
 
     ptr = (uint8_t *)spdm_response + sizeof(spdm_psk_exchange_response_t) +
           measurement_summary_hash_size + spdm_response->context_length;
+    secured_message_version = 0;
     if (spdm_response->opaque_length != 0) {
         result = libspdm_process_general_opaque_data_check(spdm_context,
                                                            spdm_response->opaque_length, ptr);
