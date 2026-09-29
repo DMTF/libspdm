@@ -112,10 +112,9 @@ typedef enum {
     /* Raw request buffer and size */
     LIBSPDM_DATA_REQUEST_AND_SIZE,
 
-    /* if the context is for a requester. It only needs to be set in VCA cache.
-     * In normal flow, the value is set in GET_VERSION or VERSION automatically.
-     * false means responder
-     * true means requester
+    /* If the context is for a Requester (true) or Responder (false), it only needs to be set by the
+     * Integrator in a VCA cache, or before libspdm_check_context() is called.
+     * In a normal flow, the value is set via GET_VERSION or VERSION automatically.
      **/
     LIBSPDM_DATA_IS_REQUESTER,
 
@@ -333,6 +332,7 @@ libspdm_return_t libspdm_get_data(void *spdm_context,
  * This is typically called after all context data has been populated via the libspdm_set_data
  * function. The function returns on first failure. If LIBSPDM_DEBUG_ENABLE or
  * LIBSPDM_DEBUG_PRINT_ENABLE are enabled then it also prints the failing condition.
+ * LIBSPDM_DATA_IS_REQUESTER should be set before calling.
  *
  * @param  spdm_context  A pointer to the SPDM context.
  *

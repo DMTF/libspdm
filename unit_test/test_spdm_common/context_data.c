@@ -2592,6 +2592,74 @@ static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     NULL,
 };
 
+#if LIBSPDM_CHECK_SPDM_CONTEXT
+/**
+ * Test 35: A Responder sets PUB_KEY_ID_CAP, but SPDM 1.0, which it supports by default, has no
+ * provisioned public keys.
+ * Expected Behavior: libspdm_check_context fails until SPDM 1.0 is removed from the Responder's
+ * versions. The same capabilities and versions are valid for a Requester, since SPDM 1.0 has no
+ * mutual authentication.
+ **/
+static void libspdm_test_check_context_pub_key_id_case35(void **state)
+{
+    void *context;
+    libspdm_return_t status;
+    bool result;
+    libspdm_data_parameter_t parameter;
+    uint32_t capability_flags;
+    bool is_requester;
+    spdm_version_number_t spdm_version[2];
+
+    context = (void *)malloc(libspdm_get_context_size());
+    libspdm_init_context(context);
+    libspdm_register_transport_layer_func(context,
+                                          LIBSPDM_MAX_SPDM_MSG_SIZE,
+                                          LIBSPDM_TEST_TRANSPORT_HEADER_SIZE,
+                                          LIBSPDM_TEST_TRANSPORT_TAIL_SIZE,
+                                          libspdm_transport_test_encode_message,
+                                          libspdm_transport_test_decode_message);
+    libspdm_register_device_buffer_func(context,
+                                        LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE,
+                                        LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE,
+                                        spdm_device_acquire_sender_buffer,
+                                        spdm_device_release_sender_buffer,
+                                        spdm_device_acquire_receiver_buffer,
+                                        spdm_device_release_receiver_buffer);
+
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+    capability_flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PUB_KEY_ID_CAP;
+    status = libspdm_set_data(context, LIBSPDM_DATA_CAPABILITY_FLAGS, &parameter,
+                              &capability_flags, sizeof(capability_flags));
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    /* {ERROR} The default versions include SPDM 1.0. */
+    result = libspdm_check_context(context);
+    assert_false(result);
+
+    is_requester = true;
+    status = libspdm_set_data(context, LIBSPDM_DATA_IS_REQUESTER, &parameter,
+                              &is_requester, sizeof(is_requester));
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    result = libspdm_check_context(context);
+    assert_true(result);
+
+    is_requester = false;
+    status = libspdm_set_data(context, LIBSPDM_DATA_IS_REQUESTER, &parameter,
+                              &is_requester, sizeof(is_requester));
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_version[0] = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_version[1] = SPDM_MESSAGE_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    status = libspdm_set_data(context, LIBSPDM_DATA_SPDM_VERSION, &parameter,
+                              spdm_version, sizeof(spdm_version));
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    result = libspdm_check_context(context);
+    assert_true(result);
+
+    free(context);
+}
+#endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
+
 int libspdm_common_context_data_test_main(void)
 {
     const struct CMUnitTest spdm_common_context_data_tests[] = {
@@ -2671,6 +2739,10 @@ int libspdm_common_context_data_test_main(void)
         cmocka_unit_test(libspdm_test_set_data_peer_cert_chain_responder_case33),
         cmocka_unit_test(libspdm_test_set_data_peer_cert_chain_requester_case34),
 #endif
+#if LIBSPDM_CHECK_SPDM_CONTEXT
+        /* A Responder with PUB_KEY_ID_CAP cannot support SPDM 1.0. */
+        cmocka_unit_test(libspdm_test_check_context_pub_key_id_case35),
+#endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);

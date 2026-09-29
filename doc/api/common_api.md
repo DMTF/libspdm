@@ -85,6 +85,8 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
     - `LIBSPDM_DATA_LOCATION_LOCAL`
         - The SPDM version(s) of the local endpoint.
         - Can contain multiple entries.
+        - A Responder whose capabilities include `PUB_KEY_ID_CAP` cannot include SPDM 1.0, which has
+          no provisioned public keys.
 - `LIBSPDM_DATA_CAPABILITY_FLAGS`
     - The SPDM capabilities of an endpoint. These are communicated through the `GET_CAPABILITIES /
       CAPABILITIES` messages. This is a bitmask whose fields are defined through the
@@ -269,6 +271,7 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
       the endpoints support `CACHE_CAP`.
 - `LIBSPDM_DATA_IS_REQUESTER`
     - Specifies if the local endpoint is a Requester (true) or Responder (false).
+    - libspdm sets it when the connection starts, with `GET_VERSION` or `VERSION`.
 - `LIBSPDM_DATA_APP_CONTEXT_DATA`
     - Is used to hold a pointer to Integrator-defined data that is tied to the `spdm_context`. Via
       this mechanism an Integrator can extend the `spdm_context`.
