@@ -43,7 +43,3 @@ target_sources(cryptlib_null
         pk/x509_pqc.c
         rand/rand.c
 )
-
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    target_compile_options(cryptlib_null PRIVATE -Wno-incompatible-pointer-types -Wno-pointer-sign)
-endif()

@@ -320,15 +320,13 @@ elseif(MSVC)
         # clang-cl builds have always disabled warnings, and CI does not build them.
         set(LIBSPDM_WARNING_OPTIONS /w)
     else()
-        set(LIBSPDM_WARNING_OPTIONS /W4 /WX /wd4063 /wd4100 /wd4127 /wd4701 /wd4703 /wd4057)
+        set(LIBSPDM_WARNING_OPTIONS /W4 /WX /wd4100 /wd4127 /wd4701 /wd4703)
     endif()
 elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     set(LIBSPDM_WARNING_OPTIONS -Wall -Werror -Werror-implicit-function-declaration -Wcast-qual
-        -Wno-array-bounds -Wno-address -Wno-maybe-uninitialized -Wno-uninitialized
-        -Wno-builtin-declaration-mismatch -Wno-nonnull-compare)
+        -Wno-maybe-uninitialized)
 elseif(CMAKE_C_COMPILER_ID MATCHES "Clang")
-    set(LIBSPDM_WARNING_OPTIONS -Wall -Werror -Werror-implicit-function-declaration -Wcast-qual
-        -Wno-array-bounds -Wno-address)
+    set(LIBSPDM_WARNING_OPTIONS -Wall -Werror -Werror-implicit-function-declaration -Wcast-qual)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -651,7 +649,6 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if(TOOLCHAIN STREQUAL "GCC")
         add_compile_options(-fno-strict-aliasing -ffunction-sections -fdata-sections -fno-common -fpie -fno-asynchronous-unwind-tables)
-        list(APPEND LIBSPDM_WARNING_OPTIONS -Wno-error=attributes)
         if (ARCH STREQUAL "x64")
             add_compile_options(-mno-red-zone)
         endif()

@@ -51,16 +51,6 @@ target_sources(cryptlib_mbedtls
         sys_call/crt_wrapper_host.c
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    target_compile_options(cryptlib_mbedtls PRIVATE -Wno-pointer-sign)
-endif()
-
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if((TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-        target_compile_options(cryptlib_mbedtls PRIVATE /wd4200)
-    endif()
-endif()
-
 # Mbed TLS sets these on its own libraries, which this target does not link.
 if(MBEDTLS_CONFIG_FILE)
     target_compile_definitions(cryptlib_mbedtls PRIVATE -DMBEDTLS_CONFIG_FILE="${MBEDTLS_CONFIG_FILE}")
