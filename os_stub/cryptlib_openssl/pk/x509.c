@@ -271,7 +271,7 @@ bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
         return false;
     }
 
-    ret = ASN1_get_object((const uint8_t **)ptr, &obj_length, &obj_tag, &obj_class,
+    ret = ASN1_get_object((const uint8_t **)(size_t)ptr, &obj_length, &obj_tag, &obj_class,
                           (int32_t)(end - (*ptr)));
     /* Either a primitive encoding with a valid tag and definite length, but the content octets won't fit into omax, or parsing failed. */
     if (ret & OPENSSL_ASN1_ERROR_MASK) {
@@ -286,7 +286,7 @@ bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
 
         /* if doesn't match tag, restore ptr to origin ptr*/
 
-        *ptr = (uint8_t *)ptr_old;
+        *ptr = (uint8_t *)(size_t)ptr_old;
         return false;
     }
 }
@@ -1569,8 +1569,8 @@ bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
     if (cert == NULL || cert_size == 0 || basic_constraints_size == NULL) {
         return false;
     }
-    status = libspdm_x509_get_extension_data((uint8_t *)cert, cert_size,
-                                             (uint8_t *)m_libspdm_oid_basic_constraints,
+    status = libspdm_x509_get_extension_data(cert, cert_size,
+                                             m_libspdm_oid_basic_constraints,
                                              sizeof(m_libspdm_oid_basic_constraints),
                                              basic_constraints,
                                              basic_constraints_size);
@@ -2012,7 +2012,7 @@ bool libspdm_x509_get_tbs_cert(const uint8_t *cert, size_t cert_size,
         return false;
     }
 
-    *tbs_cert = (uint8_t *)temp;
+    *tbs_cert = (uint8_t *)(size_t)temp;
 
     ASN1_get_object(&temp, (long *)&length, (int *)&asn1_tag,
                     (int *)&obj_class, (long)length);
@@ -2368,7 +2368,7 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
     size_t oid_len;
     uint8_t *val;
     size_t val_len;
-    size_t nid;
+    int nid;
     ASN1_OBJECT *oid_asn1_obj;
     const unsigned char *oid_for_d2i;
 
@@ -2377,6 +2377,7 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
     uint8_t *der_data;
     int32_t der_len;
     X509_REQ_INFO *x509_req_info;
+    const unsigned char *req_info_for_d2i;
 
     x509_req_info = NULL;
     der_data = NULL;
@@ -2392,7 +2393,8 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
     }
 
     /*get subject name from req_info and set it to CSR*/
-    x509_req_info = d2i_X509_REQ_INFO(NULL, (const unsigned char **)(&req_info), req_info_len);
+    req_info_for_d2i = req_info;
+    x509_req_info = d2i_X509_REQ_INFO(NULL, &req_info_for_d2i, (long)req_info_len);
     if (x509_req_info) {
         X509_REQ_set_subject_name(req, X509_REQ_get_subject_name((X509_REQ *)x509_req_info));
         X509_REQ_INFO_free(x509_req_info);
@@ -2425,7 +2427,7 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
     pubkey_info_len = obj_len + (ptr - pubkey_info);
     der_len = i2d_PUBKEY(public_key, &der_data);
     /*check the public key info*/
-    if (!((der_len > 0) && (der_len == pubkey_info_len) &&
+    if (!((der_len > 0) && ((size_t)der_len == pubkey_info_len) &&
           (libspdm_consttime_is_mem_equal(pubkey_info, der_data, der_len)))) {
         if (der_data != NULL) {
             OPENSSL_free(der_data);
@@ -2486,7 +2488,7 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
 
             /*transfer oid to nid*/
             oid_for_d2i = oid;
-            oid_asn1_obj = d2i_ASN1_OBJECT(NULL, &oid_for_d2i, oid_len);
+            oid_asn1_obj = d2i_ASN1_OBJECT(NULL, &oid_for_d2i, (long)oid_len);
             nid = OBJ_obj2nid(oid_asn1_obj);
             ASN1_OBJECT_free(oid_asn1_obj);
 
@@ -2494,7 +2496,7 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
             ret = X509_REQ_add1_attr_by_NID(req, nid,
                                             V_ASN1_UTF8STRING,
                                             (const unsigned char *)val,
-                                            val_len);
+                                            (int)val_len);
             if (ret == 0) {
                 return false;
             }

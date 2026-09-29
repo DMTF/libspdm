@@ -278,7 +278,7 @@ bool libspdm_sm2_dsa_check_key(const void *sm2_context)
         return false;
     }
 
-    pkey = ((libspdm_key_context *)sm2_context)->evp_pkey;
+    pkey = ((const libspdm_key_context *)sm2_context)->evp_pkey;
     if (pkey == NULL || EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
         return false;
     }
@@ -579,15 +579,15 @@ static void ecc_signature_der_to_bin(uint8_t *der_signature,
                      bn_s, s_size);
 }
 
-static void ecc_signature_bin_to_der(uint8_t *signature, size_t sig_size,
+static void ecc_signature_bin_to_der(const uint8_t *signature, size_t sig_size,
                                      uint8_t *der_signature,
                                      size_t *der_sig_size_in_out)
 {
     size_t der_sig_size;
     uint8_t der_r_size;
     uint8_t der_s_size;
-    uint8_t *bn_r;
-    uint8_t *bn_s;
+    const uint8_t *bn_r;
+    const uint8_t *bn_s;
     uint8_t r_size;
     uint8_t s_size;
     uint8_t half_size;
@@ -704,7 +704,7 @@ bool libspdm_sm2_dsa_sign(const void *sm2_context, size_t hash_nid,
         return false;
     }
 
-    pkey = ((libspdm_key_context *)sm2_context)->evp_pkey;
+    pkey = ((const libspdm_key_context *)sm2_context)->evp_pkey;
     if (pkey == NULL || EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
         return false;
     }
@@ -737,7 +737,7 @@ bool libspdm_sm2_dsa_sign(const void *sm2_context, size_t hash_nid,
 
     if (id_a_size != 0) {
         result = EVP_PKEY_CTX_set1_id(pkey_ctx, id_a,
-                                      id_a_size);
+                                      (int)id_a_size);
         if (result <= 0) {
             EVP_MD_CTX_free(ctx);
             EVP_PKEY_CTX_free(pkey_ctx);
@@ -821,7 +821,7 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
         return false;
     }
 
-    pkey = ((libspdm_key_context *)sm2_context)->evp_pkey;
+    pkey = ((const libspdm_key_context *)sm2_context)->evp_pkey;
     if (pkey == NULL) {
         return false;
     }
@@ -848,7 +848,7 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
     }
 
     der_sig_size = sizeof(der_signature);
-    ecc_signature_bin_to_der((uint8_t *)signature, sig_size, der_signature,
+    ecc_signature_bin_to_der(signature, sig_size, der_signature,
                              &der_sig_size);
 
     ctx = EVP_MD_CTX_new();
@@ -863,7 +863,7 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
 
     if (id_a_size != 0) {
         result = EVP_PKEY_CTX_set1_id(pkey_ctx, id_a,
-                                      id_a_size);
+                                      (int)id_a_size);
         if (result <= 0) {
             EVP_MD_CTX_free(ctx);
             EVP_PKEY_CTX_free(pkey_ctx);

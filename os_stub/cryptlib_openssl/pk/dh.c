@@ -72,7 +72,7 @@ void *libspdm_dh_new_by_nid(size_t nid)
     /* Set the named group using OSSL_PARAM */
     OSSL_PARAM params_set[2];
     params_set[0] = OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME,
-                                                     (char *)group_name, 0);
+                                                     (char *)(size_t)group_name, 0);
     params_set[1] = OSSL_PARAM_construct_end();
 
     if (EVP_PKEY_CTX_set_params(pkey_ctx, params_set) <= 0) {

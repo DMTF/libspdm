@@ -95,7 +95,7 @@ bool libspdm_mldsa_get_private_key_from_pem(const uint8_t *pem_data,
 
     pkey = PEM_read_bio_PrivateKey(pem_bio, NULL,
                                    (pem_password_cb *)&PasswordCallback,
-                                   (void *)password);
+                                   (void *)(size_t)password);
     if (pkey == NULL) {
         goto done;
     }
@@ -180,7 +180,7 @@ bool libspdm_slhdsa_get_private_key_from_pem(const uint8_t *pem_data,
 
     pkey = PEM_read_bio_PrivateKey(pem_bio, NULL,
                                    (pem_password_cb *)&PasswordCallback,
-                                   (void *)password);
+                                   (void *)(size_t)password);
     if (pkey == NULL) {
         goto done;
     }

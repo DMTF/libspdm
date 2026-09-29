@@ -268,7 +268,7 @@ bool libspdm_aead_aes_gcm_decrypt(const uint8_t *key, size_t key_size,
     }
 
     ret_value = (bool)EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG,
-                                          (int32_t)tag_size, (void *)tag);
+                                          (int32_t)tag_size, (void *)(size_t)tag);
     if (!ret_value) {
         goto done;
     }
