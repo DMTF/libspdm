@@ -483,6 +483,9 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG) ||
         libspdm_is_capabilities_flag_supported(
+            spdm_context, true, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EP_INFO_CAP_SIG) ||
+        libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) ||
@@ -511,6 +514,9 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG) ||
+        libspdm_is_capabilities_flag_supported(
+            spdm_context, true, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EP_INFO_CAP_SIG) ||
         libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
