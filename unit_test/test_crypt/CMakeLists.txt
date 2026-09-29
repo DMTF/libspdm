@@ -36,12 +36,6 @@ target_sources(test_crypt
         os_support.c
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if((TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-        target_compile_options(test_crypt PRIVATE /wd4819)
-    endif()
-endif()
-
 if(TOOLCHAIN STREQUAL "ARM_DS2022")
     target_link_libraries(test_crypt PRIVATE armbuild_lib)
 endif()

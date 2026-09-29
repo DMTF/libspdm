@@ -74,12 +74,6 @@ target_sources(test_spdm_requester
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/event_support.c
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if((TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-        target_compile_options(test_spdm_requester PRIVATE /wd4819)
-    endif()
-endif()
-
 if(TOOLCHAIN STREQUAL "ARM_DS2022")
     set(test_spdm_requester_LIBRARY ${test_spdm_requester_LIBRARY} armbuild_lib)
     target_link_libraries(test_spdm_requester PRIVATE armbuild_lib)

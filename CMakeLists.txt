@@ -753,8 +753,9 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
     else()
         # MSVC has no C99 mode, and CMake before 3.19 passes no option for C_STANDARD 11.
-        add_compile_options(/std:c11 /nologo /Gs32768 /Gy /GF /Z7 /Gw /Oy- /D_CRT_SECURE_NO_WARNINGS)
-        set(OPENSSL_FLAGS /FIbase.h /wd4090 /wd4132 /wd4244 /wd4245 /wd4267 /wd4306 /wd4310 /wd4700 /wd4389 /wd4702 /wd4706 /wd4819 /wd4013)
+        # /utf-8 because cmocka.h is UTF-8, which the system code page may not represent.
+        add_compile_options(/std:c11 /utf-8 /nologo /Gs32768 /Gy /GF /Z7 /Gw /Oy- /D_CRT_SECURE_NO_WARNINGS)
+        set(OPENSSL_FLAGS /FIbase.h /wd4090 /wd4132 /wd4244 /wd4245 /wd4267 /wd4306 /wd4310 /wd4700 /wd4389 /wd4702 /wd4706 /wd4013)
 
         set(CMAKE_STATIC_LINKER_FLAGS "/NOLOGO /LTCG")
 
