@@ -12,7 +12,3 @@ target_sources(cryptstublib_dummy
     PRIVATE
         rand_dummy.c
 )
-
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    target_compile_options(cryptstublib_dummy PRIVATE -Wno-incompatible-pointer-types -Wno-pointer-sign)
-endif()
