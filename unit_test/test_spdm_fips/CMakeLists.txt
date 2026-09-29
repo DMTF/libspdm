@@ -28,29 +28,16 @@ if(TOOLCHAIN STREQUAL "ARM_DS2022")
     target_link_libraries(test_spdm_fips PRIVATE armbuild_lib)
 endif()
 
-if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    target_link_libraries(test_spdm_fips
-        PRIVATE
-            $<TARGET_OBJECTS:memlib>
-            $<TARGET_OBJECTS:debuglib>
-            $<TARGET_OBJECTS:spdm_crypt_lib>
-            $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
-            $<TARGET_OBJECTS:rnglib>
-            $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
-            $<TARGET_OBJECTS:malloclib>
-    )
-else()
-    target_link_libraries(test_spdm_fips
-        PRIVATE
-            memlib
-            debuglib
-            spdm_crypt_lib
-            spdm_crypt_ext_lib
-            ${CRYPTO_LIB_PATHS}
-            cryptlib_${CRYPTO}
-            rnglib
-            malloclib
-            cmockalib
-            spdm_device_secret_lib_${DEVICE}
-    )
-endif()
+target_link_libraries(test_spdm_fips
+    PRIVATE
+        memlib
+        debuglib
+        spdm_crypt_lib
+        spdm_crypt_ext_lib
+        ${CRYPTO_LIB_PATHS}
+        cryptlib_${CRYPTO}
+        rnglib
+        malloclib
+        cmockalib
+        spdm_device_secret_lib_${DEVICE}
+)

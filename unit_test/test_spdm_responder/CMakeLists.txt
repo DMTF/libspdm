@@ -78,42 +78,22 @@ if(TOOLCHAIN STREQUAL "ARM_DS2022")
     target_compile_options(test_spdm_responder PRIVATE /wd4819)
 endif()
 
-if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    target_link_libraries(test_spdm_responder
-        PRIVATE
-            $<TARGET_OBJECTS:memlib>
-            $<TARGET_OBJECTS:debuglib>
-            $<TARGET_OBJECTS:spdm_responder_lib>
-            $<TARGET_OBJECTS:spdm_common_lib>
-            $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
-            $<TARGET_OBJECTS:rnglib>
-            $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
-            $<TARGET_OBJECTS:malloclib>
-            $<TARGET_OBJECTS:spdm_crypt_lib>
-            $<TARGET_OBJECTS:spdm_secured_message_lib>
-            $<TARGET_OBJECTS:spdm_device_secret_lib_${DEVICE}>
-            $<TARGET_OBJECTS:spdm_transport_test_lib>
-            $<TARGET_OBJECTS:cmockalib>
-            $<TARGET_OBJECTS:platform_lib>
-    )
-else()
-    target_link_libraries(test_spdm_responder
-        PRIVATE
-            memlib
-            debuglib
-            spdm_requester_lib
-            spdm_responder_lib
-            spdm_common_lib
-            ${CRYPTO_LIB_PATHS}
-            rnglib
-            cryptlib_${CRYPTO}
-            malloclib
-            spdm_crypt_lib
-            spdm_crypt_ext_lib
-            spdm_secured_message_lib
-            spdm_device_secret_lib_${DEVICE}
-            spdm_transport_test_lib
-            cmockalib
-            platform_lib
-    )
-endif()
+target_link_libraries(test_spdm_responder
+    PRIVATE
+        memlib
+        debuglib
+        spdm_requester_lib
+        spdm_responder_lib
+        spdm_common_lib
+        ${CRYPTO_LIB_PATHS}
+        rnglib
+        cryptlib_${CRYPTO}
+        malloclib
+        spdm_crypt_lib
+        spdm_crypt_ext_lib
+        spdm_secured_message_lib
+        spdm_device_secret_lib_${DEVICE}
+        spdm_transport_test_lib
+        cmockalib
+        platform_lib
+)

@@ -51,7 +51,7 @@ if(NOT DEFINED ARCH)
 endif()
 
 set(ARCH ${ARCH} CACHE STRING "Choose the arch of build: ia32 x64 arm aarch64 riscv32 riscv64 arc loongarch64" FORCE)
-set(TOOLCHAIN ${TOOLCHAIN} CACHE STRING "Choose the toolchain of build: Windows: VS2019 VS2022 CLANG ARM_DS2022 LIBFUZZER Linux: GCC ARM_DS2022 ARM_GNU ARM_GNU_BARE_METAL ARM_GCC AARCH64_GCC RISCV_GNU RISCV64_GCC RISCV_XPACK ARC_GCC LOONGARCH64_GNU CLANG CBMC AFL KLEE LIBFUZZER" FORCE)
+set(TOOLCHAIN ${TOOLCHAIN} CACHE STRING "Choose the toolchain of build: Windows: VS2019 VS2022 CLANG ARM_DS2022 LIBFUZZER Linux: GCC ARM_DS2022 ARM_GNU ARM_GNU_BARE_METAL ARM_GCC AARCH64_GCC RISCV_GNU RISCV64_GCC RISCV_XPACK ARC_GCC LOONGARCH64_GNU CLANG AFL LIBFUZZER" FORCE)
 set(CMAKE_BUILD_TYPE ${TARGET} CACHE STRING "Choose the target of build: Debug Release" FORCE)
 set(CRYPTO ${CRYPTO} CACHE STRING "Choose the crypto of build: mbedtls openssl" FORCE)
 set(GCOV ${GCOV} CACHE STRING "Choose the target of Gcov: ON  OFF, and default is OFF" FORCE)
@@ -134,12 +134,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         message("TOOLCHAIN = GCC")
     elseif(TOOLCHAIN STREQUAL "CLANG")
         message("TOOLCHAIN = CLANG")
-    elseif(TOOLCHAIN STREQUAL "CBMC")
-        message("TOOLCHAIN = CBMC")
     elseif(TOOLCHAIN STREQUAL "AFL")
         message("TOOLCHAIN = AFL")
-    elseif(TOOLCHAIN STREQUAL "KLEE")
-        message("TOOLCHAIN = KLEE")
     elseif(TOOLCHAIN STREQUAL "LIBFUZZER")
         message("TOOLCHAIN = LIBFUZZER")
     elseif(TOOLCHAIN STREQUAL "ARM_DS2022")
@@ -196,8 +192,6 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
         message("TOOLCHAIN = VS2022")
     elseif(TOOLCHAIN STREQUAL "CLANG")
         message("TOOLCHAIN = CLANG")
-    elseif(TOOLCHAIN STREQUAL "CBMC")
-        message("TOOLCHAIN = CBMC")
     elseif(TOOLCHAIN STREQUAL "LIBFUZZER")
         message("TOOLCHAIN = LIBFUZZER")
     elseif(TOOLCHAIN STREQUAL "ARM_DS2022")
@@ -590,19 +584,6 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
         set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
 
-    elseif(TOOLCHAIN STREQUAL "CBMC")
-        set(CMAKE_C_COMPILER goto-cc)
-        add_compile_options(-fshort-wchar -fno-strict-aliasing -ffunction-sections -fdata-sections -fno-common -maccumulate-outgoing-args -mno-red-zone -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO -DCBMC -DDEBUG_ASSERT_CHOICE=0)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-
-        set(CMAKE_LINKER goto-cc)
-        set(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error")
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <OBJECTS> -o <TARGET>")
-
     elseif(TOOLCHAIN STREQUAL "AFL")
         add_compile_options(-fshort-wchar -fno-strict-aliasing -ffunction-sections -fdata-sections -fno-common -maccumulate-outgoing-args -mno-red-zone -fpie -fno-asynchronous-unwind-tables -DUSING_LTO)
         if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -619,20 +600,6 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         endif()
 
         set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
-
-    elseif(TOOLCHAIN STREQUAL "KLEE")
-        set(CMAKE_C_COMPILER clang)
-        add_compile_options(-fno-strict-aliasing -ffunction-sections -fdata-sections -fno-common -mno-red-zone -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO -emit-llvm -DTEST_WITH_KLEE=TRUE -DDEBUG_ASSERT_CHOICE=0)
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-           add_compile_options(-g)
-        endif()
-        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
-
-        set(CMAKE_C_CREATE_STATIC_LIBRARY "")
-
-        set(CMAKE_LINKER llvm-link)
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <OBJECTS> -o <TARGET>")
 
     elseif(TOOLCHAIN STREQUAL "LIBFUZZER")
         # -O1 may cause fuzzing test buffer overflow, use -O0 as workaround
@@ -787,19 +754,6 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
             set(CMAKE_C_STANDARD_LIBRARIES "Kernel32.lib MSVCRTD.lib vcruntimed.lib ucrtd.lib Gdi32.lib User32.lib Winmm.lib Advapi32.lib ws2_32.lib clang_rt.asan_dynamic-i386.lib clang_rt.asan_dynamic_runtime_thunk-i386.lib clang_rt.fuzzer-i386.lib")
         endif()
 
-    elseif(TOOLCHAIN STREQUAL "CBMC")
-        set(CMAKE_C_COMPILER goto-cl.exe)
-        add_compile_options(/nologo /Gs32768 /Gy /EHs-c- /GR- /GF /Z7 /Oy- /D_CRT_SECURE_NO_WARNINGS /DCBMC_CC)
-        set(OPENSSL_FLAGS /FIbase.h /wd4090 /wd4132 /wd4244 /wd4245 /wd4267 /wd4306 /wd4310 /wd4700 /wd4389 /wd4702 /wd4706 /wd4819 /wd4013)
-
-        set(CMAKE_C_CREATE_STATIC_LIBRARY "")
-
-        set(CMAKE_LINKER goto-cl.exe)
-
-        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <OBJECTS>")
-
-        set(CMAKE_C_FLAGS_RELEASE     "/GL /O1b2s")
-        set(CMAKE_C_FLAGS_DEBUG       "/Od")
     else()
         # MSVC has no C99 mode, and CMake before 3.19 passes no option for C_STANDARD 11.
         add_compile_options(/std:c11 /nologo /Gs32768 /Gy /EHs-c- /GR- /GF /Z7 /Gw /Oy- /D_CRT_SECURE_NO_WARNINGS)

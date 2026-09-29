@@ -12,13 +12,6 @@ target_include_directories(test_spdm_responder_version
         ${LIBSPDM_DIR}/os_stub
 )
 
-if(TOOLCHAIN STREQUAL "KLEE")
-    target_include_directories(test_spdm_responder_version
-        PRIVATE
-            $ENV{KLEE_SRC_PATH}/include
-    )
-endif()
-
 target_sources(test_spdm_responder_version
     PRIVATE
         version.c
@@ -26,39 +19,20 @@ target_sources(test_spdm_responder_version
         ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
 )
 
-if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    target_link_libraries(test_spdm_responder_version
-        PRIVATE
-            $<TARGET_OBJECTS:memlib>
-            $<TARGET_OBJECTS:debuglib>
-            $<TARGET_OBJECTS:spdm_responder_lib>
-            $<TARGET_OBJECTS:spdm_common_lib>
-            $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
-            $<TARGET_OBJECTS:rnglib>
-            $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
-            $<TARGET_OBJECTS:malloclib>
-            $<TARGET_OBJECTS:spdm_crypt_lib>
-            $<TARGET_OBJECTS:spdm_secured_message_lib>
-            $<TARGET_OBJECTS:spdm_transport_test_lib>
-            $<TARGET_OBJECTS:spdm_device_secret_lib_null>
-            $<TARGET_OBJECTS:platform_lib_null>
-    )
-else()
-    target_link_libraries(test_spdm_responder_version
-        PRIVATE
-            memlib
-            debuglib
-            spdm_responder_lib
-            spdm_common_lib
-            ${CRYPTO_LIB_PATHS}
-            rnglib
-            cryptlib_${CRYPTO}
-            malloclib
-            spdm_crypt_lib
-            spdm_crypt_ext_lib
-            spdm_secured_message_lib
-            spdm_transport_test_lib
-            spdm_device_secret_lib_null
-            platform_lib_null
-    )
-endif()
+target_link_libraries(test_spdm_responder_version
+    PRIVATE
+        memlib
+        debuglib
+        spdm_responder_lib
+        spdm_common_lib
+        ${CRYPTO_LIB_PATHS}
+        rnglib
+        cryptlib_${CRYPTO}
+        malloclib
+        spdm_crypt_lib
+        spdm_crypt_ext_lib
+        spdm_secured_message_lib
+        spdm_transport_test_lib
+        spdm_device_secret_lib_null
+        platform_lib_null
+)
