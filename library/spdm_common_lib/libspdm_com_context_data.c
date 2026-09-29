@@ -1237,6 +1237,21 @@ bool libspdm_check_context (void *spdm_context)
         }
     }
 
+    /* SPDM 1.0 has no provisioned public keys. */
+    if (!context->local_context.is_requester &&
+        ((context->local_context.capability.flags &
+          SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PUB_KEY_ID_CAP) != 0)) {
+        for (index = 0; index < context->local_context.version.spdm_version_count; index++) {
+            if (libspdm_get_version_from_version_number(
+                    context->local_context.version.spdm_version[index]) ==
+                SPDM_MESSAGE_VERSION_10) {
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                               "A Responder with PUB_KEY_ID_CAP cannot support SPDM 1.0.\n"));
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 #endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
