@@ -20,12 +20,6 @@ target_sources(test_spdm_sample
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if((TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-        target_compile_options(test_spdm_sample PRIVATE /wd4819)
-    endif()
-endif()
-
 if(TOOLCHAIN STREQUAL "ARM_DS2022")
     target_link_libraries(test_spdm_sample PRIVATE armbuild_lib)
 endif()
