@@ -38,11 +38,6 @@ target_include_directories(mbedtls PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/mbedtls/library
 )
 target_compile_options(mbedtls PRIVATE ${MBEDTLS_FLAGS})
-if(ARCH STREQUAL "x64")
-    target_compile_definitions(mbedtls PRIVATE -DEFIx64)
-elseif(ARCH STREQUAL "ia32")
-    target_compile_definitions(mbedtls PRIVATE -DEFI32)
-endif()
 
 # mbedx509
 if(MBEDTLS_CONFIG_FILE)
@@ -55,11 +50,6 @@ target_include_directories(mbedx509 PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/mbedtls/library
 )
 target_compile_options(mbedx509 PRIVATE ${MBEDTLS_FLAGS})
-if(ARCH STREQUAL "x64")
-    target_compile_definitions(mbedx509 PRIVATE -DEFIx64)
-elseif(ARCH STREQUAL "ia32")
-    target_compile_definitions(mbedx509 PRIVATE -DEFI32)
-endif()
 
 # mbedcrypto
 if(MBEDTLS_CONFIG_FILE)
@@ -72,11 +62,6 @@ target_include_directories(mbedcrypto PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/mbedtls/library
 )
 target_compile_options(mbedcrypto PRIVATE ${MBEDTLS_FLAGS})
-if(ARCH STREQUAL "x64")
-    target_compile_definitions(mbedcrypto PRIVATE -DEFIx64)
-elseif(ARCH STREQUAL "ia32")
-    target_compile_definitions(mbedcrypto PRIVATE -DEFI32)
-endif()
 
 # libspdm_mbedtls_config.h reads this libspdm option.
 if(X509_IGNORE_TIME STREQUAL "ON")
