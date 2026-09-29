@@ -3386,6 +3386,75 @@ static void rsp_algorithms_case39(void **state)
 
 }
 
+/**
+ * Send an SPDM 1.3 NEGOTIATE_ALGORITHMS that offers the test's signing and hash algorithms to a
+ * Responder that sets EP_INFO_CAP_SIG and supports the given signing and hash algorithms. Returns
+ * the response code, or the error code of an ERROR response.
+ **/
+static uint8_t rsp_algorithms_ep_info(libspdm_context_t *spdm_context, uint32_t base_asym_algo,
+                                      uint32_t base_hash_algo)
+{
+    libspdm_return_t status;
+    spdm_negotiate_algorithms_request_t spdm_request;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_message_header_t *spdm_response;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EP_INFO_CAP_SIG;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->local_context.algorithm.base_asym_algo = base_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = base_hash_algo;
+    spdm_context->local_context.algorithm.measurement_spec = 0;
+    spdm_context->local_context.algorithm.measurement_hash_algo = 0;
+    spdm_context->local_context.algorithm.other_params_support = 0;
+    libspdm_reset_message_a(spdm_context);
+
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    spdm_request.header.request_response_code = SPDM_NEGOTIATE_ALGORITHMS;
+    spdm_request.length = sizeof(spdm_request);
+    spdm_request.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_request.base_hash_algo = m_libspdm_use_hash_algo;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_algorithms(spdm_context, sizeof(spdm_request), &spdm_request,
+                                             &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    if (spdm_response->request_response_code == SPDM_ERROR) {
+        return spdm_response->param1;
+    }
+    return spdm_response->request_response_code;
+}
+
+/**
+ * Test 40: The Responder sets EP_INFO_CAP_SIG, and a signed ENDPOINT_INFO is a signature over the
+ *          hash of IL1/IL2.
+ * Expected behavior: the Responder returns ERROR(InvalidRequest) when it would select no signing
+ *                    algorithm or no hash algorithm, and returns ALGORITHMS when it selects both.
+ **/
+static void rsp_algorithms_case40(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x28;
+
+    assert_int_equal(rsp_algorithms_ep_info(spdm_context, 0, m_libspdm_use_hash_algo),
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(rsp_algorithms_ep_info(spdm_context, m_libspdm_use_asym_algo, 0),
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(rsp_algorithms_ep_info(spdm_context, m_libspdm_use_asym_algo,
+                                            m_libspdm_use_hash_algo),
+                     SPDM_ALGORITHMS);
+}
+
 int libspdm_rsp_algorithms_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -3464,6 +3533,8 @@ int libspdm_rsp_algorithms_test(void)
 #endif
         cmocka_unit_test(rsp_algorithms_case38),
         cmocka_unit_test(rsp_algorithms_case39),
+        /* EP_INFO_CAP_SIG needs a hash and a signing algorithm */
+        cmocka_unit_test(rsp_algorithms_case40),
     };
 
     m_libspdm_negotiate_algorithms_request1.base_asym_algo = m_libspdm_use_asym_algo;
