@@ -69,6 +69,7 @@ target_sources(test_spdm_requester
         error_test/encap_subscribe_event_types_ack_err.c
         error_test/encap_certificate_err.c
         error_test/get_csr_err.c
+        error_test/get_measurement_extension_log_err.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
