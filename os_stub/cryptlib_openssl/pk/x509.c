@@ -2855,6 +2855,18 @@ bool libspdm_gen_x509_csr(
         goto free_all;
     }
 
+    ret = i2d_X509_REQ(x509_req, NULL);
+    if (ret <= 0) {
+        ret = 0;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"i2d_X509_REQ error\n"));
+        goto free_all;
+    }
+    if ((size_t)ret > *csr_len) {
+        ret = 0;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"csr buffer is too small\n"));
+        goto free_all;
+    }
+
     ret = i2d_X509_REQ(x509_req, &csr_p);
     if (ret <= 0) {
         ret = 0;

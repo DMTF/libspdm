@@ -183,6 +183,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     size_t asym_nid;
     uint8_t *csr;
     size_t csr_size;
+    size_t csr_index;
     void *x509_ca_cert;
     void *context;
     void (*context_free)(void *);
@@ -671,6 +672,31 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         goto cleanup;
     } else {
         libspdm_my_print("\n  - Gen CSR - [Pass]");
+    }
+
+    /* A buffer that is too small for the CSR, as 64 bytes always is, must be rejected, and
+     * nothing may be written past it. */
+    libspdm_set_mem(csr, 0x10000, 0xa5);
+    csr_size = 64;
+    if ((asym_nid & 0x8000) != 0) {
+        status = libspdm_gen_x509_csr(
+            hash_nid, 0, asym_nid, NULL, 0, true, context,
+            subject_name, &csr_size, csr, NULL);
+    } else {
+        status = libspdm_gen_x509_csr(
+            hash_nid, asym_nid, 0, NULL, 0, true, context,
+            subject_name, &csr_size, csr, NULL);
+    }
+    for (csr_index = 64; csr_index < 0x10000; csr_index++) {
+        if (csr[csr_index] != 0xa5) {
+            break;
+        }
+    }
+    if (status || (csr_index != 0x10000)) {
+        libspdm_my_print("\n  - Gen CSR into a small buffer - [Fail]");
+        goto cleanup;
+    } else {
+        libspdm_my_print("\n  - Gen CSR into a small buffer - [Pass]");
     }
 #endif
 
