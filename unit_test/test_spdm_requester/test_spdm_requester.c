@@ -18,6 +18,7 @@ int libspdm_req_negotiate_algorithms_error_test(void);
 int libspdm_req_get_digests_test(void);
 int libspdm_req_get_digests_error_test(void);
 int libspdm_req_get_certificate_test(void);
+int libspdm_req_get_certificate_error_test(void);
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 
 #if LIBSPDM_SEND_CHALLENGE_SUPPORT
@@ -152,6 +153,9 @@ int main(void)
         return_value = 1;
     }
     if (libspdm_req_get_certificate_test() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_req_get_certificate_error_test() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
