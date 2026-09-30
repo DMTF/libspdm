@@ -25,6 +25,35 @@ extern "C" {
  **/
 libspdm_return_t libspdm_init_connection(void *spdm_context, bool get_version_only);
 
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+/**
+ * This function retrieves the supported algorithms from the responder.
+ * It sends the GET_VERSION and GET_CAPABILITIES requests, where GET_CAPABILITIES.Param1[0] is set.
+ * If the Responder supports this extended capability, the Responder will include the Supported
+ * Algorithms Block in its CAPABILITIES response.
+ *
+ * @param spdm_context                          A pointer to the SPDM context.
+ * @param responder_supported_algorithms_length  On input, indicates the size in bytes of the provided buffer.
+ *                                              The buffer must be large enough to hold the supported algorithms block.
+ *                                              On output, the size in bytes of the supported algorithms data.
+ * @param responder_supported_algorithms_buffer  A pointer to a destination buffer to store the supported algorithms.
+ *                                              Must not be NULL. The buffer must be large enough to hold the supported algorithms data.
+ * @param spdm_version                          A pointer to store the SPDM version used for the request.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS                The supported algorithms were successfully retrieved.
+ * @retval LIBSPDM_STATUS_SEND_FAIL              Unable to send the request to the device.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL           Unable to receive the response from the device.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP        The Requester or the device does not support SPDM 1.3 or later.
+ *
+ * @note   The buffer must be large enough to hold the supported algorithms block.
+ *         The function will assert if responder_supported_algorithms_buffer is NULL.
+ */
+libspdm_return_t libspdm_get_supported_algorithms(void *spdm_context,
+                                                  size_t *responder_supported_algorithms_length,
+                                                  void *responder_supported_algorithms_buffer,
+                                                  uint8_t *spdm_version);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 /**
  * This function sends GET_DIGESTS to get all digests of the certificate chains from device.
@@ -501,33 +530,6 @@ libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
                                        uint32_t *session_id,
                                        uint8_t *heartbeat_period,
                                        void *measurement_hash);
-
-/**
- * This function retrieves the supported algorithms from the responder.
- * It sends the GET_VERSION and GET_CAPABILITIES requests, where GET_CAPABILITIES.Param1[0] is set.
- * If the Responder supports this extended capability, the Responder will include the Supported
- * Algorithms Block in its CAPABILITIES response.
- *
- * @param spdm_context                          A pointer to the SPDM context.
- * @param responder_supported_algorithms_length  On input, indicates the size in bytes of the provided buffer.
- *                                              The buffer must be large enough to hold the supported algorithms block.
- *                                              On output, the size in bytes of the supported algorithms data.
- * @param responder_supported_algorithms_buffer  A pointer to a destination buffer to store the supported algorithms.
- *                                              Must not be NULL. The buffer must be large enough to hold the supported algorithms data.
- * @param spdm_version                          A pointer to store the SPDM version used for the request.
- *
- * @retval LIBSPDM_STATUS_SUCCESS                The supported algorithms were successfully retrieved.
- * @retval LIBSPDM_STATUS_SEND_FAIL              Unable to send the request to the device.
- * @retval LIBSPDM_STATUS_RECEIVE_FAIL           Unable to receive the response from the device.
- * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP        The Requester or the device does not support SPDM 1.3 or later.
- *
- * @note   The buffer must be large enough to hold the supported algorithms block.
- *         The function will assert if responder_supported_algorithms_buffer is NULL.
- */
-libspdm_return_t libspdm_get_supported_algorithms(void *spdm_context,
-                                                  size_t *responder_supported_algorithms_length,
-                                                  void *responder_supported_algorithms_buffer,
-                                                  uint8_t *spdm_version);
 
 /**
  * This function sends KEY_EXCHANGE or PSK_EXCHANGE to start an SPDM Session.

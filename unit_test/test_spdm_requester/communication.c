@@ -561,16 +561,16 @@ static void req_communication_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
 }
 
-/* spdm_requester_lib.h declares libspdm_get_supported_algorithms only under this condition. */
-#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 /**
  * Test 6: The Requester supports no SPDM version that can report supported algorithms in
  *         CAPABILITIES, which SPDM 1.3 introduced.
  * Expected Behavior: libspdm_get_supported_algorithms returns LIBSPDM_STATUS_UNSUPPORTED_CAP
  *                    without sending a request.
+ *                    Skipped when CHUNK_CAP support is compiled out.
  **/
 static void req_communication_case6(void **state)
 {
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -599,14 +599,19 @@ static void req_communication_case6(void **state)
     assert_int_equal(m_request_count, 0);
 
     spdm_context->local_context.version = local_version;
+    #else
+    skip();
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 }
 
 /**
  * Test 7: The transport fails to receive VERSION during libspdm_get_supported_algorithms.
  * Expected Behavior: Returns LIBSPDM_STATUS_RECEIVE_FAIL.
+ *                    Skipped when CHUNK_CAP support is compiled out.
  **/
 static void req_communication_case7(void **state)
 {
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -625,6 +630,9 @@ static void req_communication_case7(void **state)
     status = libspdm_get_supported_algorithms(spdm_context, &supported_algorithms_length,
                                               supported_algorithms, &spdm_version);
     assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
+    #else
+    skip();
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 }
 
 /**
@@ -632,9 +640,11 @@ static void req_communication_case7(void **state)
  *         CAPABILITIES.
  * Expected Behavior: libspdm_get_supported_algorithms returns LIBSPDM_STATUS_UNSUPPORTED_CAP after
  *                    the version exchange.
+ *                    Skipped when CHUNK_CAP support is compiled out.
  **/
 static void req_communication_case8(void **state)
 {
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -657,14 +667,19 @@ static void req_communication_case8(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
     assert_int_equal(spdm_version, SPDM_MESSAGE_VERSION_12);
     assert_int_equal(m_request_count, 1);
+    #else
+    skip();
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 }
 
 /**
  * Test 9: The transport fails to receive CAPABILITIES during libspdm_get_supported_algorithms.
  * Expected Behavior: Returns LIBSPDM_STATUS_RECEIVE_FAIL.
+ *                    Skipped when CHUNK_CAP support is compiled out.
  **/
 static void req_communication_case9(void **state)
 {
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -684,15 +699,20 @@ static void req_communication_case9(void **state)
     status = libspdm_get_supported_algorithms(spdm_context, &supported_algorithms_length,
                                               supported_algorithms, &spdm_version);
     assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
+    #else
+    skip();
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 }
 
 /**
  * Test 10: The Responder supports SPDM 1.4 and reports its supported algorithms in CAPABILITIES.
  * Expected Behavior: libspdm_get_supported_algorithms returns LIBSPDM_STATUS_SUCCESS, SPDM 1.4,
  *                    and the Responder's SupportedAlgorithms block.
+ *                    Skipped when CHUNK_CAP support is compiled out.
  **/
 static void req_communication_case10(void **state)
 {
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -717,8 +737,10 @@ static void req_communication_case10(void **state)
     supported_algorithms_block = (const void *)supported_algorithms;
     assert_int_equal(supported_algorithms_length, supported_algorithms_block->length);
     assert_int_equal(supported_algorithms_block->base_hash_algo, m_libspdm_use_hash_algo);
+    #else
+    skip();
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 }
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 /**
@@ -1455,13 +1477,11 @@ int libspdm_req_communication_test(void)
         cmocka_unit_test(req_communication_case3),
         cmocka_unit_test(req_communication_case4),
         cmocka_unit_test(req_communication_case5),
-        #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
         cmocka_unit_test(req_communication_case6),
         cmocka_unit_test(req_communication_case7),
         cmocka_unit_test(req_communication_case8),
         cmocka_unit_test(req_communication_case9),
         cmocka_unit_test(req_communication_case10),
-        #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
         #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
         cmocka_unit_test(req_communication_case11),
         cmocka_unit_test(req_communication_case12),
