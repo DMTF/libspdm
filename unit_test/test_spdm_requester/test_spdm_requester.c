@@ -42,6 +42,7 @@ int libspdm_req_finish_test(void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 int libspdm_req_psk_exchange_test(void);
+int libspdm_req_psk_exchange_error_test(void);
 int libspdm_req_psk_finish_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 
@@ -196,6 +197,9 @@ int main(void)
 
     #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
     if (libspdm_req_psk_exchange_test() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_req_psk_exchange_error_test() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
