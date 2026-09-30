@@ -8,6 +8,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
 
+#pragma pack(1)
 typedef struct {
     spdm_message_header_t header;
     uint8_t total_key_pairs;
@@ -21,6 +22,7 @@ typedef struct {
     uint8_t assoc_cert_slot_mask;
     uint8_t public_key_info[SPDM_MAX_PUBLIC_KEY_INFO_LEN];
 } libspdm_key_pair_info_response_max_t;
+#pragma pack()
 
 /**
  * This function sends GET_KEY_PAIR_INFO and receives KEY_PAIR_INFO *

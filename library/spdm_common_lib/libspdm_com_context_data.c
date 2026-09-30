@@ -176,7 +176,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
     size_t cert_buffer_size;
 #endif
 
-    if (spdm_context == NULL || data == NULL || data_type >= LIBSPDM_DATA_MAX) {
+    if (spdm_context == NULL || data_type >= LIBSPDM_DATA_MAX) {
         return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
@@ -2125,6 +2125,7 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
             if (!result) {
                 libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                    spdm_session_info->session_transcript.digest_context_th);
+                spdm_session_info->session_transcript.digest_context_th = NULL;
                 return LIBSPDM_STATUS_CRYPTO_ERROR;
             }
             result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
@@ -2136,6 +2137,7 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
             if (!result) {
                 libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                    spdm_session_info->session_transcript.digest_context_th);
+                spdm_session_info->session_transcript.digest_context_th = NULL;
                 return LIBSPDM_STATUS_CRYPTO_ERROR;
             }
             if (!spdm_session_info->use_psk) {
@@ -2148,6 +2150,7 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
                     if (!result) {
                         libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                            spdm_session_info->session_transcript.digest_context_th);
+                        spdm_session_info->session_transcript.digest_context_th = NULL;
                         return LIBSPDM_STATUS_CRYPTO_ERROR;
                     }
                 }
@@ -2159,6 +2162,7 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
                 if (!result) {
                     libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                        spdm_session_info->session_transcript.digest_context_th);
+                    spdm_session_info->session_transcript.digest_context_th = NULL;
                     return LIBSPDM_STATUS_CRYPTO_ERROR;
                 }
             }
@@ -2170,6 +2174,7 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
         if (!result) {
             libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                spdm_session_info->session_transcript.digest_context_th);
+            spdm_session_info->session_transcript.digest_context_th = NULL;
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
         return LIBSPDM_STATUS_SUCCESS;
@@ -3369,9 +3374,10 @@ void libspdm_reset_context(void *spdm_context)
 
     context = spdm_context;
 
-    /*Clear all info about last connection*/
+    /* Clear all information about previous connection. Local context information is preserved. */
 
-    /*need clear session info to free context before algo is zeroed.*/
+    /* Need to clear session information and message transcripts before negotiated algorithm
+     * information is cleared. */
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++)
     {
         libspdm_session_info_init(context,
@@ -3379,6 +3385,16 @@ void libspdm_reset_context(void *spdm_context)
                                   INVALID_SESSION_ID,
                                   false);
     }
+
+    libspdm_reset_message_a(spdm_context);
+    libspdm_reset_message_d(spdm_context);
+    libspdm_reset_message_b(spdm_context);
+    libspdm_reset_message_c(spdm_context);
+    libspdm_reset_message_mut_b(spdm_context);
+    libspdm_reset_message_mut_c(spdm_context);
+    libspdm_reset_message_m(spdm_context, NULL);
+    libspdm_reset_message_e(spdm_context, NULL);
+    libspdm_reset_message_encap_e(spdm_context, NULL);
 
     context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     libspdm_zero_mem(&context->connection_info.version, sizeof(spdm_version_number_t));

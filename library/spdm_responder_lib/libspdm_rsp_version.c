@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -78,13 +78,7 @@ libspdm_return_t libspdm_get_response_version(libspdm_context_t *spdm_context, s
     }
 
     /* -=[Process Request Phase]=- */
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                                  spdm_request->header.request_response_code);
-
-    libspdm_reset_message_a(spdm_context);
-    libspdm_reset_message_d(spdm_context);
-    libspdm_reset_message_b(spdm_context);
-    libspdm_reset_message_c(spdm_context);
+    libspdm_reset_context(spdm_context);
 
     request_size = sizeof(spdm_get_version_request_t);
     status = libspdm_append_message_a(spdm_context, spdm_request, request_size);
@@ -93,8 +87,6 @@ libspdm_return_t libspdm_get_response_version(libspdm_context_t *spdm_context, s
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
-
-    libspdm_reset_context(spdm_context);
 
     /* -=[Construct Response Phase]=- */
     LIBSPDM_ASSERT(*response_size >= sizeof(libspdm_version_response_mine_t));

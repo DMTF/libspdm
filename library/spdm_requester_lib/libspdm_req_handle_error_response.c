@@ -346,8 +346,8 @@ libspdm_return_t libspdm_handle_error_large_response(
                 break;
             }
 
-            large_response_size = *(uint32_t*) (spdm_response + 1);
-            chunk_ptr = (uint8_t*) (((uint32_t*) (spdm_response + 1)) + 1);
+            large_response_size = libspdm_read_uint32((const uint8_t *)(spdm_response + 1));
+            chunk_ptr = (uint8_t *)(spdm_response + 1) + sizeof(uint32_t);
 
             if (spdm_response->chunk_size > large_response_size) {
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
@@ -418,6 +418,7 @@ libspdm_return_t libspdm_handle_error_large_response(
             *inout_response_size = large_response_size;
 
             LIBSPDM_INTERNAL_DUMP_HEX(large_response, large_response_size);
+            libspdm_zero_mem(large_response, large_response_size);
         }
     }
 

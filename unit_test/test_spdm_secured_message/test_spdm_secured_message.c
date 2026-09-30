@@ -1,8 +1,11 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
+
+#include "spdm_unit_test.h"
+#include "library/spdm_common_lib.h"
 
 extern int libspdm_secured_message_encode_decode_test_main(void);
 
