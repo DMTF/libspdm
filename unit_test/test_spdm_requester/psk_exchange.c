@@ -65,6 +65,8 @@ static libspdm_return_t send_message(
     case 0x1:
         return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
+    case 0x1D:
+    case 0x1E:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_psk_exchange_request_size(
             spdm_context, (const uint8_t *)request + header_size,
@@ -326,7 +328,9 @@ static libspdm_return_t receive_message(
     case 0x1:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
 
-    case 0x2: {
+    case 0x2:
+    case 0x1D:
+    case 0x1E: {
         spdm_psk_exchange_response_t *spdm_response;
         uint32_t hash_size;
         uint32_t hmac_size;
@@ -4953,6 +4957,160 @@ static void req_psk_exchange_case28(void **state)
     free(data);
 }
 
+/**
+ * Test 29: The Integrator uses libspdm_send_receive_psk_exchange_ex to supply the RequesterContext
+ *          and the OpaqueData of PSK_EXCHANGE and to retrieve both contexts and the Responder's
+ *          OpaqueData. The buffers for the contexts are larger than the contexts.
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS. The request carries the
+ *                    Integrator's RequesterContext and OpaqueData, and each context and the
+ *                    Responder's OpaqueData are returned with their actual sizes.
+ **/
+static void req_psk_exchange_case29(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t heartbeat_period;
+    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t requester_context_in[LIBSPDM_PSK_CONTEXT_LENGTH];
+    uint8_t requester_context[LIBSPDM_PSK_CONTEXT_LENGTH * 2];
+    size_t requester_context_size;
+    uint8_t responder_context[LIBSPDM_PSK_CONTEXT_LENGTH * 2];
+    size_t responder_context_size;
+    uint8_t requester_opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t requester_opaque_data_size;
+    uint8_t responder_opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t responder_opaque_data_size;
+    libspdm_session_info_t *session_info;
+    const spdm_psk_exchange_request_t *spdm_request;
+    const spdm_psk_exchange_response_t *spdm_response;
+    const uint8_t *ptr;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1D;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
+
+    libspdm_set_mem(requester_context_in, sizeof(requester_context_in), 0x5A);
+    requester_opaque_data_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    libspdm_build_opaque_data_supported_version_data(spdm_context, &requester_opaque_data_size,
+                                                     requester_opaque_data);
+
+    requester_context_size = sizeof(requester_context);
+    responder_context_size = sizeof(responder_context);
+    responder_opaque_data_size = sizeof(responder_opaque_data);
+    status = libspdm_send_receive_psk_exchange_ex(
+        spdm_context,
+        LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        &heartbeat_period, measurement_hash,
+        requester_context_in, sizeof(requester_context_in),
+        requester_context, &requester_context_size,
+        responder_context, &responder_context_size,
+        requester_opaque_data, requester_opaque_data_size,
+        responder_opaque_data, &responder_opaque_data_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    assert_non_null(session_info);
+    assert_int_equal(libspdm_secured_message_get_session_state(
+                         session_info->secured_message_context),
+                     LIBSPDM_SESSION_STATE_HANDSHAKING);
+
+    /* send_message saved the request in m_libspdm_local_buffer, and receive_message appended
+     * the response without ResponderVerifyData. */
+    spdm_request = (const void *)m_libspdm_local_buffer;
+    assert_int_equal(spdm_request->context_length, sizeof(requester_context_in));
+    assert_int_equal(spdm_request->opaque_length, requester_opaque_data_size);
+    ptr = (const uint8_t *)(spdm_request + 1) + spdm_request->psk_hint_length;
+    assert_memory_equal(ptr, requester_context_in, sizeof(requester_context_in));
+    ptr += spdm_request->context_length;
+    assert_memory_equal(ptr, requester_opaque_data, requester_opaque_data_size);
+    ptr += spdm_request->opaque_length;
+
+    spdm_response = (const void *)ptr;
+    ptr = (const uint8_t *)(spdm_response + 1);
+    assert_int_equal(requester_context_size, sizeof(requester_context_in));
+    assert_memory_equal(requester_context, requester_context_in, sizeof(requester_context_in));
+    assert_int_equal(responder_context_size, spdm_response->context_length);
+    assert_memory_equal(responder_context, ptr, spdm_response->context_length);
+    ptr += spdm_response->context_length;
+    assert_int_equal(responder_opaque_data_size, spdm_response->opaque_length);
+    assert_memory_equal(responder_opaque_data, ptr, spdm_response->opaque_length);
+
+    libspdm_free_session_id(spdm_context, session_id);
+}
+
+/**
+ * Test 30: Through libspdm_send_receive_psk_exchange_ex, the Integrator's buffer for the
+ *          Responder's OpaqueData is one byte smaller than the OpaqueData in PSK_EXCHANGE_RSP.
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_BUFFER_TOO_SMALL.
+ **/
+static void req_psk_exchange_case30(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t heartbeat_period;
+    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t responder_opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t responder_opaque_data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1E;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
+
+    responder_opaque_data_size =
+        libspdm_get_opaque_data_version_selection_data_size(spdm_context) - 1;
+    status = libspdm_send_receive_psk_exchange_ex(
+        spdm_context,
+        LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        &heartbeat_period, measurement_hash,
+        NULL, 0, NULL, NULL, NULL, NULL, NULL, 0,
+        responder_opaque_data, &responder_opaque_data_size);
+    assert_int_equal(status, LIBSPDM_STATUS_BUFFER_TOO_SMALL);
+}
+
 int libspdm_req_psk_exchange_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -5011,6 +5169,10 @@ int libspdm_req_psk_exchange_test(void)
         cmocka_unit_test(req_psk_exchange_case27),
         /* PSK_EXCHANGE_RSP without OpaqueData selects secured message version 0 */
         cmocka_unit_test(req_psk_exchange_case28),
+        /* Integrator's contexts and OpaqueData through libspdm_send_receive_psk_exchange_ex */
+        cmocka_unit_test(req_psk_exchange_case29),
+        /* Buffer too small for the Responder's OpaqueData */
+        cmocka_unit_test(req_psk_exchange_case30),
     };
 
     libspdm_test_context_t test_context = {
