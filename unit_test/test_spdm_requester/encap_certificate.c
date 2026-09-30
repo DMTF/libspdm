@@ -93,11 +93,74 @@ static void req_encap_certificate_case1(void **state)
 }
 
 /**
- * Test 2:
- * Expected Behavior:
+ * Test 2: request the first LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of the certificate chain with
+ * the LargeOffset and LargeLength fields of SPDM 1.4.
+ * Expected Behavior: generate a correctly formed CERTIFICATE message with LargeCertChain set in
+ * Param1, PortionLength and RemainderLength set to 0, and the lengths in LargePortionLength and
+ * LargeRemainderLength.
  **/
 static void req_encap_certificate_case2(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_get_certificate_large_request_t spdm_request;
+    spdm_certificate_large_response_t *spdm_response;
+    void *data;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_LARGE_RESP_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo,
+                                                         &data, &data_size, NULL, NULL)) {
+        assert_true(false);
+        return;
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_14;
+    spdm_request.header.request_response_code = SPDM_GET_CERTIFICATE;
+    spdm_request.header.param1 = SPDM_GET_CERTIFICATE_REQUEST_LARGE_CERT_CHAIN;
+    spdm_request.header.param2 = 0;
+    spdm_request.offset = 0;
+    spdm_request.length = 0;
+    spdm_request.large_offset = 0;
+    spdm_request.large_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+
+    response_size = sizeof(response);
+    status = libspdm_get_encap_response_certificate(
+        spdm_context, sizeof(spdm_request), &spdm_request, &response_size, response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_certificate_large_response_t) +
+                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_14);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CERTIFICATE);
+    assert_int_equal(spdm_response->header.param1, SPDM_CERTIFICATE_RESPONSE_LARGE_CERT_CHAIN);
+    assert_int_equal(spdm_response->header.param2, 0);
+    assert_int_equal(spdm_response->portion_length, 0);
+    assert_int_equal(spdm_response->remainder_length, 0);
+    assert_int_equal(spdm_response->large_portion_length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    assert_int_equal(spdm_response->large_remainder_length,
+                     data_size - LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    assert_memory_equal(spdm_response + 1, data, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+
+    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    free(data);
 }
 
 /**
@@ -516,12 +579,77 @@ static void req_encap_certificate_case7(void **state)
     free(data);
 }
 
+/**
+ * Test 8: request the certificate chain of slot 0 in a connection where the Requester has multiple
+ * asymmetric keys (MULTI_KEY_CONN_REQ is true).
+ * Expected Behavior: generate a correctly formed CERTIFICATE message whose Param2 holds the
+ * CertificateInfo of slot 0.
+ **/
+static void req_encap_certificate_case8(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_get_certificate_request_t spdm_request;
+    spdm_certificate_response_t *spdm_response;
+    void *data;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x8;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.multi_key_conn_req = true;
+    spdm_context->local_context.capability.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo,
+                                                         &data, &data_size, NULL, NULL)) {
+        assert_true(false);
+        return;
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_info[0] = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    spdm_request.header.request_response_code = SPDM_GET_CERTIFICATE;
+    spdm_request.header.param1 = 0;
+    spdm_request.header.param2 = 0;
+    spdm_request.offset = 0;
+    spdm_request.length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+
+    response_size = sizeof(response);
+    status = libspdm_get_encap_response_certificate(
+        spdm_context, sizeof(spdm_request), &spdm_request, &response_size, response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_certificate_response_t) +
+                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CERTIFICATE);
+    assert_int_equal(spdm_response->header.param1, 0);
+    assert_int_equal(spdm_response->header.param2, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+    assert_int_equal(spdm_response->portion_length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    assert_int_equal(spdm_response->remainder_length, data_size - LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+
+    spdm_context->connection_info.multi_key_conn_req = false;
+    spdm_context->local_context.local_cert_info[0] = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
+    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    free(data);
+}
+
 int libspdm_req_encap_certificate_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
         cmocka_unit_test(req_encap_certificate_case1),
-        /* Can be populated with new test.*/
+        /* Large certificate chain fields*/
         cmocka_unit_test(req_encap_certificate_case2),
         cmocka_unit_test(req_encap_certificate_case3),
         /* Tests varying offset*/
@@ -532,6 +660,8 @@ int libspdm_req_encap_certificate_test(void)
         cmocka_unit_test(req_encap_certificate_case6),
         /* check request attributes and response attributes*/
         cmocka_unit_test(req_encap_certificate_case7),
+        /* CertificateInfo in a multi-key connection*/
+        cmocka_unit_test(req_encap_certificate_case8),
     };
 
     libspdm_test_context_t test_context = {
