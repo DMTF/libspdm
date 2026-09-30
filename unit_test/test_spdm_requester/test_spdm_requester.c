@@ -13,6 +13,7 @@ int libspdm_req_get_capabilities_test(void);
 int libspdm_req_get_capabilities_error_test(void);
 int libspdm_req_negotiate_algorithms_test(void);
 int libspdm_req_negotiate_algorithms_error_test(void);
+int libspdm_req_communication_test(void);
 
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 int libspdm_req_get_digests_test(void);
@@ -368,6 +369,10 @@ int main(void)
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
+
+    if (libspdm_req_communication_test() != 0) {
+        return_value = 1;
+    }
 
     return return_value;
 }

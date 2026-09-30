@@ -50,6 +50,7 @@ target_sources(test_spdm_requester
         set_key_pair_info.c
         get_endpoint_info.c
         send_event.c
+        communication.c
         error_test/get_version_err.c
         error_test/get_capabilities_err.c
         error_test/negotiate_algorithms_err.c
