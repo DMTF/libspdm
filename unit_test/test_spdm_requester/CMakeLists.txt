@@ -72,6 +72,7 @@ target_sources(test_spdm_requester
         error_test/get_measurement_extension_log_err.c
         error_test/psk_exchange_err.c
         error_test/get_certificate_err.c
+        error_test/get_encapsulated_request_err.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c

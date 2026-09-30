@@ -55,6 +55,7 @@ int libspdm_req_end_session_test(void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 int libspdm_req_get_encapsulated_request_test(void);
+int libspdm_req_get_encapsulated_request_error_test(void);
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 int libspdm_req_encap_digests_test(void);
@@ -237,6 +238,9 @@ int main(void)
 
     #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
     if (libspdm_req_get_encapsulated_request_test() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_req_get_encapsulated_request_error_test() != 0) {
         return_value = 1;
     }
     #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
