@@ -61,6 +61,13 @@ static libspdm_return_t send_message(
     size_t spdm_request_size;
     libspdm_session_info_t *session_info;
     uint8_t request_buffer[0x1000];
+    libspdm_test_context_t *spdm_test_context;
+
+    spdm_test_context = libspdm_get_test_context();
+    if (spdm_test_context->case_id == 6) {
+        /* {ERROR} The transport fails to send the request. */
+        return LIBSPDM_STATUS_SEND_FAIL;
+    }
 
     /* Workaround request being const. */
     libspdm_copy_mem(request_buffer, sizeof(request_buffer), request, request_size);
@@ -106,51 +113,88 @@ static libspdm_return_t receive_message(
     uint8_t event_group_total_bytes;
     libspdm_test_context_t *spdm_test_context;
 
+    transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+    spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+    session_id = m_session_id;
+
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    LIBSPDM_ASSERT((session_info != NULL));
+
+    /* Each test case alters this valid response. */
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    spdm_response->header.request_response_code = SPDM_SUPPORTED_EVENT_TYPES;
+    spdm_response->header.param1 = 1;
+    spdm_response->header.param2 = 0;
+
+    generate_dmtf_event_group(spdm_response + 1, &event_group_total_bytes, 0,
+                              true, true, true, true);
+    spdm_response->supported_event_groups_list_len = event_group_total_bytes;
+
+    spdm_response_size = sizeof(spdm_supported_event_types_response_t) +
+                         event_group_total_bytes;
+
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
-    case 1: {
-        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
-        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
-
-        session_id = m_session_id;
-
-        session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
-        LIBSPDM_ASSERT((session_info != NULL));
-
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
-        spdm_response->header.request_response_code = SPDM_SUPPORTED_EVENT_TYPES;
-        /* Illegal EventGroupCount value. */
+    case 1:
+        /* {ERROR} Illegal EventGroupCount value. */
         spdm_response->header.param1 = 0;
+        break;
+    case 8:
+        /* {ERROR} The transport fails to receive the response. */
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
+    case 9:
+        /* {ERROR} The Responder is busy. */
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
         spdm_response->header.param2 = 0;
-
-        generate_dmtf_event_group(spdm_response + 1, &event_group_total_bytes, 0,
-                                  true, true, true, true);
-        spdm_response->supported_event_groups_list_len = event_group_total_bytes;
-
-        spdm_response_size = sizeof(spdm_supported_event_types_response_t) +
-                             event_group_total_bytes;
-
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
-         * transport_message is always in sender buffer. */
-        libspdm_get_scratch_buffer(spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
-        libspdm_copy_mem(scratch_buffer + transport_header_size,
-                         scratch_buffer_size - transport_header_size,
-                         spdm_response, spdm_response_size);
-
-        spdm_response = (void *)(scratch_buffer + transport_header_size);
-
-        libspdm_transport_test_encode_message(spdm_context, &session_id,
-                                              false, false, spdm_response_size,
-                                              spdm_response, response_size, response);
-
-        /* Workaround: Use single context to encode message and then decode message. */
-        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->
-        application_secret.response_data_sequence_number--;
-    }
-        return LIBSPDM_STATUS_SUCCESS;
+        spdm_response_size = sizeof(spdm_error_response_t);
+        break;
+    case 10:
+        /* {ERROR} The response code does not match the request. */
+        spdm_response->header.request_response_code = SPDM_SUBSCRIBE_EVENT_TYPES_ACK;
+        break;
+    case 11:
+        /* {ERROR} SPDMVersion does not match the request. */
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+        break;
+    case 12:
+        /* {ERROR} The response ends before SupportedEventGroupsListLen. */
+        spdm_response_size = sizeof(spdm_message_header_t);
+        break;
+    case 13:
+        /* {ERROR} Illegal SupportedEventGroupsListLen value. */
+        spdm_response->supported_event_groups_list_len = 0;
+        break;
+    case 14:
+        /* The response is valid but larger than the Requester's buffer. */
+        break;
+    case 15:
+        /* {ERROR} The response has one byte more than SupportedEventGroupsListLen indicates. */
+        spdm_response_size++;
+        break;
     default:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
+
+    /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+     * transport_message is always in sender buffer. */
+    libspdm_get_scratch_buffer(spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+    libspdm_copy_mem(scratch_buffer + transport_header_size,
+                     scratch_buffer_size - transport_header_size,
+                     spdm_response, spdm_response_size);
+
+    spdm_response = (void *)(scratch_buffer + transport_header_size);
+
+    libspdm_transport_test_encode_message(spdm_context, &session_id,
+                                          false, false, spdm_response_size,
+                                          spdm_response, response_size, response);
+
+    /* Workaround: Use single context to encode message and then decode message. */
+    ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->
+    application_secret.response_data_sequence_number--;
+
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -179,10 +223,422 @@ static void req_get_supported_event_types_err_case1(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 2: The session is still in the handshake phase. GET_SUPPORTED_EVENT_TYPES is only allowed
+ *         in the application phase of a session.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_INVALID_STATE_LOCAL without sending a
+ *                    request.
+ **/
+static void req_get_supported_event_types_err_case2(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 2;
+
+    set_standard_state(spdm_context, &session_id);
+
+    /* {ERROR} The session has not been established. */
+    libspdm_secured_message_set_session_state(
+        spdm_context->session_info[0].secured_message_context,
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
+}
+
+/**
+ * Test 3: The negotiated SPDM version is 1.2. GET_SUPPORTED_EVENT_TYPES was introduced in SPDM 1.3.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_UNSUPPORTED_CAP without sending a request.
+ **/
+static void req_get_supported_event_types_err_case3(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 3;
+
+    set_standard_state(spdm_context, &session_id);
+
+    /* {ERROR} SPDM 1.2 does not define GET_SUPPORTED_EVENT_TYPES. */
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+}
+
+/**
+ * Test 4: The Responder does not set EVENT_CAP, so it is not an event notifier.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_UNSUPPORTED_CAP without sending a request.
+ **/
+static void req_get_supported_event_types_err_case4(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 4;
+
+    set_standard_state(spdm_context, &session_id);
+
+    /* {ERROR} Responder is not an event notifier. */
+    spdm_context->connection_info.capability.flags &=
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EVENT_CAP;
+
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+}
+
+/**
+ * Test 5: The Requester cannot acquire the sender buffer.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_ACQUIRE_FAIL.
+ **/
+static void req_get_supported_event_types_err_case5(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 5;
+
+    set_standard_state(spdm_context, &session_id);
+
+    /* {ERROR} Acquiring the sender buffer fails. */
+    libspdm_force_error(LIBSPDM_ERR_ACQUIRE_SENDER_BUFFER);
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+    libspdm_release_error(LIBSPDM_ERR_ACQUIRE_SENDER_BUFFER);
+
+    assert_int_equal(status, LIBSPDM_STATUS_ACQUIRE_FAIL);
+}
+
+/**
+ * Test 6: The transport fails to send the request.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_SEND_FAIL.
+ **/
+static void req_get_supported_event_types_err_case6(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 6;
+
+    set_standard_state(spdm_context, &session_id);
+
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
+}
+
+/**
+ * Test 7: The request is sent but the Requester cannot acquire the receiver buffer.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_ACQUIRE_FAIL.
+ **/
+static void req_get_supported_event_types_err_case7(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 7;
+
+    set_standard_state(spdm_context, &session_id);
+
+    /* {ERROR} Acquiring the receiver buffer fails. */
+    libspdm_force_error(LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER);
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+    libspdm_release_error(LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER);
+
+    assert_int_equal(status, LIBSPDM_STATUS_ACQUIRE_FAIL);
+}
+
+/**
+ * Test 8: The transport fails to receive the response.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_RECEIVE_FAIL.
+ **/
+static void req_get_supported_event_types_err_case8(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 8;
+
+    set_standard_state(spdm_context, &session_id);
+
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
+}
+
+/**
+ * Test 9: Responder returns an ERROR message with ErrorCode=Busy to the request and to its one
+ *         retry.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_BUSY_PEER.
+ **/
+static void req_get_supported_event_types_err_case9(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 9;
+
+    set_standard_state(spdm_context, &session_id);
+    spdm_context->retry_times = 1;
+
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
+
+    spdm_context->retry_times = 0;
+}
+
+/**
+ * Test 10: Responder returns SUBSCRIBE_EVENT_TYPES_ACK instead of SUPPORTED_EVENT_TYPES.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ **/
+static void req_get_supported_event_types_err_case10(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 10;
+
+    set_standard_state(spdm_context, &session_id);
+
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
+
+/**
+ * Test 11: Responder returns SPDMVersion 1.2 in response to a 1.3 request.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ **/
+static void req_get_supported_event_types_err_case11(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 11;
+
+    set_standard_state(spdm_context, &session_id);
+
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
+
+/**
+ * Test 12: Responder returns only the SPDM message header, with a valid EventGroupCount, so the
+ *          SupportedEventGroupsListLen field is missing.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_INVALID_MSG_SIZE.
+ **/
+static void req_get_supported_event_types_err_case12(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 12;
+
+    set_standard_state(spdm_context, &session_id);
+
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
+}
+
+/**
+ * Test 13: Responder returns a value of 0 for SupportedEventGroupsListLen.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ **/
+static void req_get_supported_event_types_err_case13(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 13;
+
+    set_standard_state(spdm_context, &session_id);
+
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
+
+/**
+ * Test 14: The Requester's buffer is one byte smaller than the Responder's
+ *          SupportedEventGroupsList.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_BUFFER_TOO_SMALL.
+ **/
+static void req_get_supported_event_types_err_case14(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint8_t event_group_total_bytes;
+    uint32_t supported_event_groups_list_len;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 14;
+
+    set_standard_state(spdm_context, &session_id);
+
+    /* Same event group as the one the Responder returns. */
+    generate_dmtf_event_group(m_supported_event_groups_list, &event_group_total_bytes, 0,
+                              true, true, true, true);
+    /* {ERROR} The buffer cannot hold the whole list. */
+    supported_event_groups_list_len = event_group_total_bytes - 1;
+
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_BUFFER_TOO_SMALL);
+}
+
+/**
+ * Test 15: The size of the response is one byte larger than SupportedEventGroupsListLen indicates.
+ * Expected Behavior: Returns with status LIBSPDM_STATUS_INVALID_MSG_SIZE.
+ **/
+static void req_get_supported_event_types_err_case15(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t event_group_count;
+    uint32_t supported_event_groups_list_len = sizeof(m_supported_event_groups_list);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 15;
+
+    set_standard_state(spdm_context, &session_id);
+
+    status = libspdm_get_event_types(spdm_context, session_id, &event_group_count,
+                                     &supported_event_groups_list_len,
+                                     (void *)&m_supported_event_groups_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
+}
+
 int libspdm_req_get_supported_event_types_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(req_get_supported_event_types_err_case1)
+        cmocka_unit_test(req_get_supported_event_types_err_case1),
+        cmocka_unit_test(req_get_supported_event_types_err_case2),
+        cmocka_unit_test(req_get_supported_event_types_err_case3),
+        cmocka_unit_test(req_get_supported_event_types_err_case4),
+        cmocka_unit_test(req_get_supported_event_types_err_case5),
+        cmocka_unit_test(req_get_supported_event_types_err_case6),
+        cmocka_unit_test(req_get_supported_event_types_err_case7),
+        cmocka_unit_test(req_get_supported_event_types_err_case8),
+        cmocka_unit_test(req_get_supported_event_types_err_case9),
+        cmocka_unit_test(req_get_supported_event_types_err_case10),
+        cmocka_unit_test(req_get_supported_event_types_err_case11),
+        cmocka_unit_test(req_get_supported_event_types_err_case12),
+        cmocka_unit_test(req_get_supported_event_types_err_case13),
+        cmocka_unit_test(req_get_supported_event_types_err_case14),
+        cmocka_unit_test(req_get_supported_event_types_err_case15)
     };
 
     libspdm_test_context_t test_context = {
