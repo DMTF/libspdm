@@ -102,6 +102,9 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
 
     send_info = &spdm_context->chunk_context.send;
 
+    /* Per DSP0274 an error in the CHUNK_SEND request itself is answered with an ERROR message,
+     * while ResponseToLargeRequest carries the response to the large request. The transfer
+     * state is kept, as if the invalid chunk was silently discarded. */
     if (!send_info->chunk_in_use) {
 
         if (request_size < sizeof(spdm_chunk_send_request_t) + sizeof(uint32_t)) {
@@ -132,11 +135,17 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
                 - sizeof(uint32_t))
             || spdm_request->chunk_size > calc_max_chunk_size
             || (uint32_t)request_size > spdm_context->local_context.capability.data_transfer_size
-            || large_message_size > spdm_context->local_context.capability.max_spdm_msg_size
             || large_message_size > max_chunk_data_transfer_size
             || large_message_size <= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12
             || (spdm_request->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK)
             ) {
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
+        }
+
+        if (large_message_size > spdm_context->local_context.capability.max_spdm_msg_size) {
+            /* An error in the large request itself, reported with EarlyErrorDetected. */
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         } else {
             libspdm_get_scratch_buffer(spdm_context, (void**) &scratch_buffer,
@@ -162,43 +171,35 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
         calc_max_chunk_size =
             (uint32_t)request_size - sizeof(spdm_chunk_send_request_t);
 
-        if (chunk_seq_no != send_info->chunk_seq_no + 1) {
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        /* ChunkSeqNo 0 after the first chunk means the sequence number wrapped. */
+        if (chunk_seq_no != send_info->chunk_seq_no + 1
+            || chunk_seq_no == 0
+            || spdm_request->header.param2 != send_info->chunk_handle
+            || spdm_request->chunk_size > calc_max_chunk_size
+            || (uint32_t)request_size > spdm_context->local_context.capability.data_transfer_size
+            || spdm_request->chunk_size + send_info->chunk_bytes_transferred
+            > send_info->large_message_size
+            || ((spdm_request->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK)
+                && (spdm_request->chunk_size + send_info->chunk_bytes_transferred
+                    != send_info->large_message_size))
+            || (!(spdm_request->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK)
+                && (spdm_request->chunk_size
+                    < SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12
+                    - sizeof(spdm_chunk_send_request_t)))) {
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
         }
 
-        if (spdm_request->header.param2 != send_info->chunk_handle
-            || spdm_request->chunk_size > calc_max_chunk_size
-            || spdm_request->chunk_size + send_info->chunk_bytes_transferred
-            > send_info->large_message_size) {
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-        } else if ((spdm_request->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK)
-                   && (spdm_request->chunk_size + send_info->chunk_bytes_transferred
-                       != send_info->large_message_size)) {
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-        } else if (!(spdm_request->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK)
-                   && ((spdm_request->chunk_size + send_info->chunk_bytes_transferred
-                        > send_info->large_message_size)
-                       || (spdm_request->chunk_size
-                           < SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12
-                           - sizeof(spdm_chunk_send_request_t))
-                       || ((uint32_t) request_size
-                           > spdm_context->local_context.capability.data_transfer_size))) {
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-        } else if (chunk_seq_no == 0) {
-            /* Chunk seq no wrapped */
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-        } else {
+        libspdm_copy_mem(
+            (uint8_t*)send_info->large_message + send_info->chunk_bytes_transferred,
+            send_info->large_message_size - send_info->chunk_bytes_transferred,
+            chunk, spdm_request->chunk_size);
 
-            libspdm_copy_mem(
-                (uint8_t*)send_info->large_message + send_info->chunk_bytes_transferred,
-                send_info->large_message_size - send_info->chunk_bytes_transferred,
-                chunk, spdm_request->chunk_size);
-
-            send_info->chunk_seq_no = chunk_seq_no;
-            send_info->chunk_bytes_transferred += spdm_request->chunk_size;
-            if (spdm_request->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK) {
-                send_info->chunk_in_use= false;
-            }
+        send_info->chunk_seq_no = chunk_seq_no;
+        send_info->chunk_bytes_transferred += spdm_request->chunk_size;
+        if (spdm_request->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK) {
+            send_info->chunk_in_use= false;
         }
     }
 
@@ -227,16 +228,13 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
     chunk_response_size = *response_size - response_header_size;
 
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        /* Set the EARLY_ERROR_DETECTED bit here, because one of the CHUNK_SEND requests failed.
-         * If there is an error after all chunks have been sent by the requester correctly,
-         * the responder reflects the error in the ChunkSendAck.ResponseToLargeRequest buffer,
-         * and not in the EARLY_ERROR_DETECTED bit. */
-
+        /* LargeMessageSize exceeds MaxSPDMmsgSize (DSP0274 RequestTooLarge), so the Requester
+         * shall terminate the transfer. */
         spdm_response->header.param1
             |= SPDM_CHUNK_SEND_ACK_RESPONSE_ATTRIBUTE_EARLY_ERROR_DETECTED;
 
         libspdm_generate_error_response(
-            spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+            spdm_context, SPDM_ERROR_CODE_REQUEST_TOO_LARGE, 0,
             &chunk_response_size, chunk_response);
 
         *response_size = response_header_size + chunk_response_size;
