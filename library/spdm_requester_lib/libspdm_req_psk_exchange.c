@@ -397,6 +397,10 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
+    if (spdm_response->opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
+    }
     if (spdm_response_size <
         sizeof(spdm_psk_exchange_response_t) +
         spdm_response->context_length + spdm_response->opaque_length +
@@ -445,11 +449,6 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     ptr += measurement_summary_hash_size;
-
-    if (spdm_response->opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
-        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-        goto receive_done;
-    }
 
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,

@@ -133,6 +133,15 @@ static libspdm_return_t receive_message(
         spdm_response->header.param2 = 0;
         spdm_response_size = sizeof(spdm_error_response_t);
         break;
+    case 0x14:
+        /* {ERROR} OpaqueDataLength is greater than SPDM_MAX_OPAQUE_DATA_SIZE, and the response
+         * carries that much OpaqueData: the version selection data followed by zeros. */
+        spdm_response->opaque_length = SPDM_MAX_OPAQUE_DATA_SIZE + 4;
+        ptr = (uint8_t *)general_opaque_data_table_header + opaque_data_size;
+        libspdm_zero_mem(ptr, spdm_response->opaque_length - opaque_data_size + hmac_size);
+        spdm_response_size = sizeof(spdm_psk_exchange_response_t) + context_length +
+                             spdm_response->opaque_length + hmac_size;
+        break;
     default:
         assert_true(false);
         break;
@@ -607,6 +616,27 @@ static void req_psk_exchange_err_case19(void **state)
     spdm_context->retry_times = 0;
 }
 
+/**
+ * Test 20: The Responder's OpaqueDataLength is greater than SPDM_MAX_OPAQUE_DATA_SIZE, and
+ *          PSK_EXCHANGE_RSP carries that much OpaqueData.
+ * Expected Behavior: Returns LIBSPDM_STATUS_INVALID_MSG_FIELD without processing the OpaqueData.
+ **/
+static void req_psk_exchange_err_case20(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x14;
+
+    set_standard_state(spdm_context);
+
+    status = send_receive_psk_exchange(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
+
 int libspdm_req_psk_exchange_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -629,6 +659,7 @@ int libspdm_req_psk_exchange_error_test(void)
         cmocka_unit_test(req_psk_exchange_err_case17),
         cmocka_unit_test(req_psk_exchange_err_case18),
         cmocka_unit_test(req_psk_exchange_err_case19),
+        cmocka_unit_test(req_psk_exchange_err_case20),
     };
 
     libspdm_test_context_t test_context = {

@@ -433,6 +433,11 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     opaque_data_length = libspdm_read_uint16((const uint8_t *)request +
                                              sizeof(spdm_key_exchange_request_t) +
                                              req_key_exchange_size);
+    if (opaque_data_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
     if (request_size < sizeof(spdm_key_exchange_request_t) + req_key_exchange_size +
         sizeof(uint16_t) + opaque_data_length) {
         return libspdm_generate_error_response(spdm_context,
