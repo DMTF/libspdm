@@ -749,7 +749,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     }
 
     if ((responder_opaque_data != NULL) && (responder_opaque_data_size != NULL)) {
-        if (opaque_length >= *responder_opaque_data_size) {
+        if (opaque_length > *responder_opaque_data_size) {
             status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
             goto receive_done;
         }

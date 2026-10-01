@@ -3270,7 +3270,8 @@ static void req_get_measurements_case3(void **state)
         responder_nonce[index] = 0x00;
     }
 
-    opaque_data_size = sizeof(opaque_data);
+    /* The buffer is exactly the size of the OpaqueData. */
+    opaque_data_size = strlen("libspdm");
 
     status = libspdm_get_measurement_ex(spdm_context, NULL, request_attribute, 1,
                                         0, NULL, &number_of_block,
@@ -6009,6 +6010,59 @@ static void req_get_measurements_case41(void **state)
     free(data);
 }
 
+/**
+ * Test 42: Unsigned response to get the total number of measurements, with an empty OpaqueData,
+ *          through libspdm_get_measurement_ex with an empty buffer for the OpaqueData.
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code and an OpaqueData size of 0.
+ **/
+static void req_get_measurements_case42(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t number_of_blocks;
+    uint8_t opaque_data[1];
+    size_t opaque_data_size;
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xA;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
+    libspdm_reset_message_m(spdm_context, NULL);
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+
+    /* The buffer is exactly the size of the empty OpaqueData. */
+    opaque_data_size = 0;
+
+    status = libspdm_get_measurement_ex(
+        spdm_context, NULL, 0,
+        SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS,
+        0, NULL, &number_of_blocks, NULL, NULL, NULL, NULL, NULL,
+        opaque_data, &opaque_data_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(number_of_blocks, 4);
+    assert_int_equal(opaque_data_size, 0);
+    free(data);
+}
+
 int libspdm_req_get_measurements_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -6053,6 +6107,7 @@ int libspdm_req_get_measurements_test(void)
         cmocka_unit_test(req_get_measurements_case39),
         cmocka_unit_test(req_get_measurements_case40),
         cmocka_unit_test(req_get_measurements_case41),
+        cmocka_unit_test(req_get_measurements_case42),
     };
 
     libspdm_test_context_t test_context = {

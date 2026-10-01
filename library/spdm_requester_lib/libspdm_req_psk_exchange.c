@@ -480,7 +480,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     ptr += spdm_response->context_length;
 
     if ((responder_opaque_data != NULL) && (responder_opaque_data_size != NULL)) {
-        if (spdm_response->opaque_length >= *responder_opaque_data_size) {
+        if (spdm_response->opaque_length > *responder_opaque_data_size) {
             status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
             goto receive_done;
         }
