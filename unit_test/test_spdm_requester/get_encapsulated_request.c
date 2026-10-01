@@ -13,6 +13,12 @@ static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 static uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
 static uint8_t temp_buff[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
+/* The code of the last request, the request that the Responder is not ready to answer, and the
+ * token of the ERROR(ResponseNotReady) response. */
+static uint8_t m_last_request_code;
+static uint8_t m_not_ready_request_code;
+static const uint8_t m_not_ready_token = 0xA5;
+
 static libspdm_return_t send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
@@ -89,6 +95,21 @@ static libspdm_return_t send_message(
         return LIBSPDM_STATUS_SUCCESS;
     case 0xF:
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x10:
+    case 0x11:
+    {
+        const spdm_message_header_t *spdm_request;
+
+        spdm_request = (const void *)((const uint8_t *)request +
+                                      sizeof(libspdm_test_message_header_t));
+        m_last_request_code = spdm_request->request_response_code;
+        if (m_last_request_code == SPDM_RESPOND_IF_READY) {
+            assert_int_equal(spdm_request->spdm_version, SPDM_MESSAGE_VERSION_13);
+            assert_int_equal(spdm_request->param1, m_not_ready_request_code);
+            assert_int_equal(spdm_request->param2, m_not_ready_token);
+        }
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -717,6 +738,74 @@ static libspdm_return_t receive_message(
         }
         libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
                                               temp_buf_size, temp_buf_ptr,
+                                              response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x10:
+    case 0x11:
+    {
+        spdm_error_response_t *spdm_error;
+        spdm_error_data_response_not_ready_t *not_ready;
+        spdm_encapsulated_response_ack_response_t *spdm_encapsulated_response_ack_response;
+        spdm_message_header_t *encapsulated_request;
+        uint8_t *spdm_response;
+        size_t spdm_response_size;
+        uint8_t request_code;
+
+        spdm_response = (uint8_t *)*response + LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+
+        /* RESPOND_IF_READY retrieves the response to the request that was not ready. */
+        request_code = m_last_request_code;
+        if (request_code == SPDM_RESPOND_IF_READY) {
+            request_code = m_not_ready_request_code;
+        }
+
+        if (m_last_request_code == m_not_ready_request_code) {
+            spdm_error = (void *)spdm_response;
+            spdm_error->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+            spdm_error->header.request_response_code = SPDM_ERROR;
+            spdm_error->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+            spdm_error->header.param2 = 0;
+            not_ready = (void *)(spdm_error + 1);
+            not_ready->rd_exponent = 1;
+            not_ready->request_code = m_not_ready_request_code;
+            not_ready->token = m_not_ready_token;
+            not_ready->rd_tm = 2;
+            spdm_response_size = sizeof(spdm_error_response_t) +
+                                 sizeof(spdm_error_data_response_not_ready_t);
+        } else if (request_code == SPDM_GET_ENCAPSULATED_REQUEST) {
+            /* An encapsulated request with ID 1 that libspdm has no handler for. */
+            libspdm_encapsulated_request_response = (void *)spdm_response;
+            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+            libspdm_encapsulated_request_response->header.request_response_code =
+                SPDM_ENCAPSULATED_REQUEST;
+            libspdm_encapsulated_request_response->header.param1 = 1;
+            libspdm_encapsulated_request_response->header.param2 = 0;
+            encapsulated_request = (void *)(libspdm_encapsulated_request_response + 1);
+            encapsulated_request->spdm_version = SPDM_MESSAGE_VERSION_13;
+            encapsulated_request->request_response_code = SPDM_VENDOR_DEFINED_REQUEST;
+            encapsulated_request->param1 = 0;
+            encapsulated_request->param2 = 0;
+            spdm_response_size = sizeof(spdm_encapsulated_request_response_t) +
+                                 sizeof(spdm_message_header_t);
+        } else {
+            assert_int_equal(request_code, SPDM_DELIVER_ENCAPSULATED_RESPONSE);
+            spdm_encapsulated_response_ack_response = (void *)spdm_response;
+            spdm_encapsulated_response_ack_response->header.spdm_version =
+                SPDM_MESSAGE_VERSION_13;
+            spdm_encapsulated_response_ack_response->header.request_response_code =
+                SPDM_ENCAPSULATED_RESPONSE_ACK;
+            spdm_encapsulated_response_ack_response->header.param1 = 0;
+            spdm_encapsulated_response_ack_response->header.param2 =
+                SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT;
+            spdm_encapsulated_response_ack_response->ack_request_id = 1;
+            libspdm_zero_mem(spdm_encapsulated_response_ack_response->reserved,
+                             sizeof(spdm_encapsulated_response_ack_response->reserved));
+            spdm_response_size = sizeof(spdm_encapsulated_response_ack_response_t);
+        }
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                              spdm_response_size, spdm_response,
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
@@ -1386,6 +1475,78 @@ static void req_get_encapsulated_request_case15(void **State)
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
 
+/**
+ * Test 16: The Responder returns an ERROR message with ErrorCode=ResponseNotReady to
+ *          GET_ENCAPSULATED_REQUEST, and then returns ENCAPSULATED_REQUEST to RESPOND_IF_READY.
+ * Expected Behavior: Answers the encapsulated request with DELIVER_ENCAPSULATED_RESPONSE and
+ *                    returns LIBSPDM_STATUS_SUCCESS.
+ *                    Skipped when RESPOND_IF_READY support is compiled out.
+ **/
+static void req_get_encapsulated_request_case16(void **state)
+{
+    #if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x10;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.capability.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+    libspdm_register_get_encap_response_func(spdm_context, NULL);
+
+    m_not_ready_request_code = SPDM_GET_ENCAPSULATED_REQUEST;
+
+    status = libspdm_send_receive_encap_request(spdm_context, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(m_last_request_code, SPDM_DELIVER_ENCAPSULATED_RESPONSE);
+    #else
+    skip();
+    #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
+}
+
+/**
+ * Test 17: The Responder returns an ERROR message with ErrorCode=ResponseNotReady to
+ *          DELIVER_ENCAPSULATED_RESPONSE, and then returns ENCAPSULATED_RESPONSE_ACK to
+ *          RESPOND_IF_READY.
+ * Expected Behavior: Returns LIBSPDM_STATUS_SUCCESS after sending RESPOND_IF_READY.
+ *                    Skipped when RESPOND_IF_READY support is compiled out.
+ **/
+static void req_get_encapsulated_request_case17(void **state)
+{
+    #if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x11;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.capability.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+    libspdm_register_get_encap_response_func(spdm_context, NULL);
+
+    m_not_ready_request_code = SPDM_DELIVER_ENCAPSULATED_RESPONSE;
+
+    status = libspdm_send_receive_encap_request(spdm_context, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(m_last_request_code, SPDM_RESPOND_IF_READY);
+    #else
+    skip();
+    #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
+}
+
 int libspdm_req_get_encapsulated_request_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1424,6 +1585,8 @@ int libspdm_req_get_encapsulated_request_test(void)
         /* Error response: send SPDM_DELIVER_ENCAPSULATED_RESPONSE and receive request resync */
         cmocka_unit_test(req_get_encapsulated_request_case15),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
+        cmocka_unit_test(req_get_encapsulated_request_case16),
+        cmocka_unit_test(req_get_encapsulated_request_case17),
     };
 
     libspdm_test_context_t test_context = {

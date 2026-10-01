@@ -6,13 +6,19 @@
 
 #include "spdm_unit_test.h"
 #include "internal/libspdm_requester_lib.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 
 /* The encapsulated request that the Responder sends. libspdm has no handler of its own for it. */
 #define ENCAP_REQUEST_CODE SPDM_VENDOR_DEFINED_REQUEST
 
+static uint32_t m_session_id = 0xFFFFFFFF;
+
+/* The code of the last request, and whether it was a secured message. The Responder answers in
+ * kind. */
 static uint8_t m_last_request_code;
+static bool m_last_request_secured;
 
 static void set_standard_state(libspdm_context_t *spdm_context)
 {
@@ -27,6 +33,29 @@ static void set_standard_state(libspdm_context_t *spdm_context)
 
     libspdm_register_get_encap_response_func(spdm_context, NULL);
 }
+
+#if !(LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP)
+/* Adds an established session to the standard state. */
+static void set_session_state(libspdm_context_t *spdm_context)
+{
+    libspdm_session_info_t *session_info;
+
+    set_standard_state(spdm_context);
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, m_session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    libspdm_secured_message_set_session_state(session_info->secured_message_context,
+                                              LIBSPDM_SESSION_STATE_ESTABLISHED);
+}
+#endif /* !(LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) */
 
 /* Fails to process the encapsulated request. */
 static libspdm_return_t get_encap_response_fail(void *spdm_context, size_t spdm_request_size,
@@ -62,13 +91,98 @@ static libspdm_return_t get_encap_response_fail_sender_buffer(
         spdm_response_size, spdm_response);
 }
 
+/* Writes an ERROR message with ErrorCode=ResponseNotReady for request_code, and returns its
+ * size. */
+static size_t write_not_ready_response(void *spdm_response, uint8_t spdm_version,
+                                       uint8_t request_code)
+{
+    spdm_error_response_t *spdm_error;
+    spdm_error_data_response_not_ready_t *not_ready;
+
+    spdm_error = spdm_response;
+    spdm_error->header.spdm_version = spdm_version;
+    spdm_error->header.request_response_code = SPDM_ERROR;
+    spdm_error->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+    spdm_error->header.param2 = 0;
+    not_ready = (void *)(spdm_error + 1);
+    not_ready->rd_exponent = 1;
+    not_ready->request_code = request_code;
+    not_ready->token = 0;
+    not_ready->rd_tm = 2;
+
+    return sizeof(spdm_error_response_t) + sizeof(spdm_error_data_response_not_ready_t);
+}
+
+/* Decodes a secured request and returns its SPDM message. */
+static const spdm_message_header_t *decode_secured_request(void *spdm_context,
+                                                           size_t request_size,
+                                                           const void *request)
+{
+    static uint8_t transport_message[LIBSPDM_SENDER_BUFFER_SIZE];
+    static uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
+    libspdm_session_info_t *session_info;
+    uint32_t *message_session_id;
+    bool is_app_message;
+    void *message;
+    size_t message_size;
+    libspdm_return_t status;
+
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, m_session_id);
+    assert_non_null(session_info);
+    /* Workaround: Use single context to encode message and then decode message. */
+    ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->
+    application_secret.request_data_sequence_number--;
+
+    libspdm_copy_mem(transport_message, sizeof(transport_message), request, request_size);
+    message = message_buffer;
+    message_size = sizeof(message_buffer);
+    status = libspdm_transport_test_decode_message(spdm_context, &message_session_id,
+                                                   &is_app_message, true, request_size,
+                                                   transport_message, &message_size, &message);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    return message;
+}
+
+/* Encodes a secured response. The secured message is written where spdm_response is, so the
+ * plaintext is first copied to the scratch buffer. */
+static void encode_secured_response(void *spdm_context, size_t spdm_response_size,
+                                    const void *spdm_response, size_t *response_size,
+                                    void **response)
+{
+    libspdm_session_info_t *session_info;
+    uint8_t *scratch_buffer;
+    size_t scratch_buffer_size;
+    uint8_t *message;
+
+    libspdm_get_scratch_buffer(spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+    message = scratch_buffer + LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+    libspdm_copy_mem(message, scratch_buffer_size - LIBSPDM_TEST_TRANSPORT_HEADER_SIZE,
+                     spdm_response, spdm_response_size);
+    libspdm_transport_test_encode_message(spdm_context, &m_session_id, false, false,
+                                          spdm_response_size, message, response_size, response);
+
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, m_session_id);
+    assert_non_null(session_info);
+    /* Workaround: Use single context to encode message and then decode message. */
+    ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->
+    application_secret.response_data_sequence_number--;
+}
+
 static libspdm_return_t send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
     const spdm_message_header_t *spdm_request;
 
-    spdm_request = (const void *)((const uint8_t *)request + sizeof(libspdm_test_message_header_t));
+    m_last_request_secured = (((const libspdm_test_message_header_t *)request)->message_type ==
+                              LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST);
+    if (m_last_request_secured) {
+        spdm_request = decode_secured_request(spdm_context, request_size, request);
+    } else {
+        spdm_request = (const void *)((const uint8_t *)request +
+                                      sizeof(libspdm_test_message_header_t));
+    }
     m_last_request_code = spdm_request->request_response_code;
 
     spdm_test_context = libspdm_get_test_context();
@@ -129,6 +243,16 @@ static libspdm_return_t receive_message(
             /* {ERROR} The response code does not match the request. */
             spdm_encapsulated_request_response->header.request_response_code =
                 SPDM_ENCAPSULATED_RESPONSE_ACK;
+            break;
+        case 0x13:
+            /* {ERROR} The Responder is not ready. */
+            spdm_response_size = write_not_ready_response(spdm_response, spdm_version,
+                                                          SPDM_GET_ENCAPSULATED_REQUEST);
+            break;
+        case 0x15:
+            /* {ERROR} The ERROR message ends before Param1. */
+            spdm_encapsulated_request_response->header.request_response_code = SPDM_ERROR;
+            spdm_response_size = offsetof(spdm_message_header_t, param1);
             break;
         default:
             break;
@@ -197,13 +321,29 @@ static libspdm_return_t receive_message(
             spdm_response_size = sizeof(spdm_encapsulated_response_ack_response_t) +
                                  sizeof(spdm_message_header_t);
             break;
+        case 0x14:
+            /* {ERROR} The Responder is not ready. */
+            spdm_response_size = write_not_ready_response(spdm_response, spdm_version,
+                                                          SPDM_DELIVER_ENCAPSULATED_RESPONSE);
+            break;
+        case 0x16:
+            /* {ERROR} The ERROR message ends before Param1. */
+            spdm_encapsulated_response_ack_response->header.request_response_code = SPDM_ERROR;
+            spdm_response_size = offsetof(spdm_message_header_t, param1);
+            break;
         default:
             break;
         }
     }
 
-    libspdm_transport_test_encode_message(spdm_context, NULL, false, false, spdm_response_size,
-                                          spdm_response, response_size, response);
+    if (m_last_request_secured) {
+        encode_secured_response(spdm_context, spdm_response_size, spdm_response, response_size,
+                                response);
+    } else {
+        libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                              spdm_response_size, spdm_response, response_size,
+                                              response);
+    }
 
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -626,6 +766,117 @@ static void req_get_encapsulated_request_err_case18(void **state)
     libspdm_register_get_encap_response_func(spdm_context, NULL);
 }
 
+/**
+ * Test 19: The Responder returns an ERROR message with ErrorCode=ResponseNotReady to
+ *          GET_ENCAPSULATED_REQUEST, and RESPOND_IF_READY support is compiled out.
+ * Expected Behavior: Returns LIBSPDM_STATUS_NOT_READY_PEER.
+ *                    Skipped when RESPOND_IF_READY support is compiled in.
+ **/
+static void req_get_encapsulated_request_err_case19(void **state)
+{
+    #if !(LIBSPDM_RESPOND_IF_READY_SUPPORT)
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x13;
+
+    set_standard_state(spdm_context);
+
+    status = libspdm_send_receive_encap_request(spdm_context, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
+    assert_int_equal(m_last_request_code, SPDM_GET_ENCAPSULATED_REQUEST);
+    #else
+    skip();
+    #endif /* !(LIBSPDM_RESPOND_IF_READY_SUPPORT) */
+}
+
+/**
+ * Test 20: The Responder returns an ERROR message with ErrorCode=ResponseNotReady to
+ *          DELIVER_ENCAPSULATED_RESPONSE, and RESPOND_IF_READY support is compiled out.
+ * Expected Behavior: Returns LIBSPDM_STATUS_NOT_READY_PEER.
+ *                    Skipped when RESPOND_IF_READY support is compiled in.
+ **/
+static void req_get_encapsulated_request_err_case20(void **state)
+{
+    #if !(LIBSPDM_RESPOND_IF_READY_SUPPORT)
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x14;
+
+    set_standard_state(spdm_context);
+
+    status = libspdm_send_receive_encap_request(spdm_context, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
+    assert_int_equal(m_last_request_code, SPDM_DELIVER_ENCAPSULATED_RESPONSE);
+    #else
+    skip();
+    #endif /* !(LIBSPDM_RESPOND_IF_READY_SUPPORT) */
+}
+
+/**
+ * Test 21: In a session, the Responder returns an ERROR message to GET_ENCAPSULATED_REQUEST that
+ *          ends before Param1. Outside a session the test transport pads messages to four bytes.
+ * Expected Behavior: Returns LIBSPDM_STATUS_INVALID_MSG_SIZE.
+ *                    Skipped when CHUNK_CAP support is compiled in, as libspdm then rejects the
+ *                    message before libspdm_encapsulated_request processes it.
+ **/
+static void req_get_encapsulated_request_err_case21(void **state)
+{
+    #if !(LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP)
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x15;
+
+    set_session_state(spdm_context);
+
+    status = libspdm_send_receive_encap_request(spdm_context, &m_session_id);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
+    assert_int_equal(m_last_request_code, SPDM_GET_ENCAPSULATED_REQUEST);
+    #else
+    skip();
+    #endif /* !(LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) */
+}
+
+/**
+ * Test 22: In a session, the Responder returns an ERROR message to DELIVER_ENCAPSULATED_RESPONSE
+ *          that ends before Param1. Outside a session the test transport pads messages to four
+ *          bytes.
+ * Expected Behavior: Returns LIBSPDM_STATUS_INVALID_MSG_SIZE.
+ *                    Skipped when CHUNK_CAP support is compiled in, as libspdm then rejects the
+ *                    message before libspdm_encapsulated_request processes it.
+ **/
+static void req_get_encapsulated_request_err_case22(void **state)
+{
+    #if !(LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP)
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x16;
+
+    set_session_state(spdm_context);
+
+    status = libspdm_send_receive_encap_request(spdm_context, &m_session_id);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
+    assert_int_equal(m_last_request_code, SPDM_DELIVER_ENCAPSULATED_RESPONSE);
+    #else
+    skip();
+    #endif /* !(LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) */
+}
+
 int libspdm_req_get_encapsulated_request_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -647,6 +898,10 @@ int libspdm_req_get_encapsulated_request_error_test(void)
         cmocka_unit_test(req_get_encapsulated_request_err_case16),
         cmocka_unit_test(req_get_encapsulated_request_err_case17),
         cmocka_unit_test(req_get_encapsulated_request_err_case18),
+        cmocka_unit_test(req_get_encapsulated_request_err_case19),
+        cmocka_unit_test(req_get_encapsulated_request_err_case20),
+        cmocka_unit_test(req_get_encapsulated_request_err_case21),
+        cmocka_unit_test(req_get_encapsulated_request_err_case22),
     };
 
     libspdm_test_context_t test_context = {
