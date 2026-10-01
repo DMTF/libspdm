@@ -267,11 +267,11 @@ libspdm_return_t libspdm_get_response_psk_finish(libspdm_context_t *spdm_context
              SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) == SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_NONE) {
             opaque_data_size = 0;
         } else {
-            status = libspdm_psk_finish_rsp_opaque_data(
+            result = libspdm_psk_finish_rsp_opaque_data(
                 spdm_context, session_id, spdm_request->header.spdm_version,
                 req_opaque_data, req_opaque_data_size,
                 opaque_data, &opaque_data_size);
-            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            if (!result) {
                 return libspdm_generate_error_response(spdm_context,
                                                        SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                        response_size, response);
