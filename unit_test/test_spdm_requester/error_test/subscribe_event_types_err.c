@@ -174,6 +174,22 @@ static libspdm_return_t receive_message(
         /* {ERROR} SPDMVersion does not match the request. */
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
         break;
+    case 0xE: {
+        spdm_error_data_response_not_ready_t *not_ready;
+
+        /* {ERROR} The Responder is not ready, and its ExtendedErrorData makes the ERROR message
+         * larger than the ACK. */
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+        spdm_response_size = sizeof(spdm_error_response_t) +
+                             sizeof(spdm_error_data_response_not_ready_t);
+        not_ready = (void *)((uint8_t *)spdm_response + sizeof(spdm_error_response_t));
+        not_ready->rd_exponent = 1;
+        not_ready->request_code = SPDM_SUBSCRIBE_EVENT_TYPES;
+        not_ready->token = 0;
+        not_ready->rd_tm = 2;
+        break;
+    }
     default:
         break;
     }
@@ -542,6 +558,38 @@ static void req_subscribe_event_types_err_case13(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 14: The Responder returns an ERROR message with ErrorCode=ResponseNotReady, whose
+ *          ExtendedErrorData makes it larger than SUBSCRIBE_EVENT_TYPES_ACK, and RESPOND_IF_READY
+ *          support is compiled out.
+ * Expected Behavior: Returns LIBSPDM_STATUS_NOT_READY_PEER.
+ *                    Skipped when RESPOND_IF_READY support is compiled in.
+ **/
+static void req_subscribe_event_types_err_case14(void **state)
+{
+    #if !(LIBSPDM_RESPOND_IF_READY_SUPPORT)
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xE;
+
+    set_standard_state(spdm_context, &session_id);
+    set_standard_subscribe_list();
+
+    status = libspdm_subscribe_event_types(spdm_context, session_id,
+                                           test_params.subscribe_event_group_count,
+                                           test_params.subscribe_list_len,
+                                           test_params.subscribe_list);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
+    #else
+    skip();
+    #endif /* !(LIBSPDM_RESPOND_IF_READY_SUPPORT) */
+}
+
 int libspdm_req_subscribe_event_types_error_test(void)
 {
     libspdm_test_context_t test_context = {
@@ -564,7 +612,8 @@ int libspdm_req_subscribe_event_types_error_test(void)
         cmocka_unit_test(req_subscribe_event_types_err_case10),
         cmocka_unit_test(req_subscribe_event_types_err_case11),
         cmocka_unit_test(req_subscribe_event_types_err_case12),
-        cmocka_unit_test(req_subscribe_event_types_err_case13)
+        cmocka_unit_test(req_subscribe_event_types_err_case13),
+        cmocka_unit_test(req_subscribe_event_types_err_case14),
     };
 
     libspdm_setup_test_context(&test_context);

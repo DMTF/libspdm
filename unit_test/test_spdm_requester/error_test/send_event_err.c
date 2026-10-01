@@ -29,6 +29,7 @@ static libspdm_return_t send_message(
     case 0x7:
     case 0x8:
     case 0x9:
+    case 0xA:
         return LIBSPDM_STATUS_SUCCESS;
     case 0x5:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -81,6 +82,22 @@ static libspdm_return_t receive_message(
         /* Invalid SPDMVersion field value. */
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_14;
         break;
+    case 0xA: {
+        spdm_error_data_response_not_ready_t *not_ready;
+
+        /* {ERROR} The Responder is not ready, and its ExtendedErrorData makes the ERROR message
+         * larger than the ACK. */
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+        spdm_response_size = sizeof(spdm_error_response_t) +
+                             sizeof(spdm_error_data_response_not_ready_t);
+        not_ready = (void *)((uint8_t *)spdm_response + sizeof(spdm_error_response_t));
+        not_ready->rd_exponent = 1;
+        not_ready->request_code = SPDM_SEND_EVENT;
+        not_ready->token = 0;
+        not_ready->rd_tm = 2;
+        break;
+    }
     default:
         break;
     }
@@ -108,6 +125,7 @@ static libspdm_return_t receive_message(
     case 0x7:
     case 0x8:
     case 0x9:
+    case 0xA:
         return LIBSPDM_STATUS_SUCCESS;
     default:
         assert_true(false);
@@ -431,6 +449,42 @@ static void req_send_event_err_case9(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 10: The Responder returns an ERROR message with ErrorCode=ResponseNotReady, whose
+ *          ExtendedErrorData makes it larger than EVENT_ACK, and RESPOND_IF_READY support is
+ *          compiled out.
+ * Expected behavior: returns with LIBSPDM_STATUS_NOT_READY_PEER.
+ *                    Skipped when RESPOND_IF_READY support is compiled in.
+ **/
+static void req_send_event_err_case10(void **state)
+{
+    #if !(LIBSPDM_RESPOND_IF_READY_SUPPORT)
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_return_t status;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xA;
+
+    set_standard_state(spdm_context);
+
+    m_test_params.event_count = 3;
+    m_test_params.events_list_size = 100;
+
+    for (int unsigned index = 0; index < m_test_params.events_list_size; index++) {
+        m_test_params.events_list[index] = (uint8_t)index;
+    }
+
+    status = libspdm_send_event(spdm_context, m_session_id, m_test_params.event_count,
+                                m_test_params.events_list_size, m_test_params.events_list);
+
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
+    #else
+    skip();
+    #endif /* !(LIBSPDM_RESPOND_IF_READY_SUPPORT) */
+}
+
 int libspdm_req_send_event_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -443,6 +497,7 @@ int libspdm_req_send_event_error_test(void)
         cmocka_unit_test(req_send_event_err_case7),
         cmocka_unit_test(req_send_event_err_case8),
         cmocka_unit_test(req_send_event_err_case9),
+        cmocka_unit_test(req_send_event_err_case10),
     };
 
     libspdm_test_context_t test_context = {
