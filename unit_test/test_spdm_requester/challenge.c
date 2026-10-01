@@ -3011,7 +3011,8 @@ static void req_challenge_case16(void **state) {
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
 
-    opaque_data_size = sizeof(opaque_data);
+    /* The buffer is exactly the size of the OpaqueData. */
+    opaque_data_size = strlen("libspdm");
 
     libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge_ex (spdm_context, NULL, 0,
