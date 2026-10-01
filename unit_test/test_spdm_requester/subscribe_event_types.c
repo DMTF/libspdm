@@ -14,6 +14,10 @@ static const uint32_t m_session_id = 0xffffffff;
 
 static uint8_t m_spdm_request_buffer[0x1000];
 
+/* The code of the last request, and the token of the ERROR(ResponseNotReady) response. */
+static uint8_t m_last_request_code;
+static const uint8_t m_not_ready_token = 0xA5;
+
 static struct test_params {
     uint8_t subscribe_event_group_count;
     uint32_t subscribe_list_len;
@@ -91,8 +95,14 @@ static libspdm_return_t send_message(
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     spdm_message = spdm_request_buffer;
+    m_last_request_code = spdm_message->header.request_response_code;
 
     assert_int_equal(spdm_message->header.spdm_version, SPDM_MESSAGE_VERSION_13);
+    if (spdm_message->header.request_response_code == SPDM_RESPOND_IF_READY) {
+        assert_int_equal(spdm_message->header.param1, SPDM_SUBSCRIBE_EVENT_TYPES);
+        assert_int_equal(spdm_message->header.param2, m_not_ready_token);
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     assert_int_equal(spdm_message->header.request_response_code, SPDM_SUBSCRIBE_EVENT_TYPES);
     assert_int_equal(spdm_message->header.param1, test_params.subscribe_event_group_count);
     assert_int_equal(spdm_message->header.param2, 0);
@@ -111,7 +121,10 @@ static libspdm_return_t send_message(
 static libspdm_return_t receive_message(
     void *spdm_context, size_t *response_size, void **response, uint64_t timeout)
 {
+    libspdm_test_context_t *spdm_test_context;
     spdm_subscribe_event_types_ack_response_t *spdm_response;
+    spdm_error_response_t *spdm_error;
+    spdm_error_data_response_not_ready_t *not_ready;
     size_t spdm_response_size;
     size_t transport_header_size;
     uint32_t session_id;
@@ -129,13 +142,32 @@ static libspdm_return_t receive_message(
     transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
     spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
-    spdm_response_size = sizeof(spdm_subscribe_event_types_ack_response_t);
-    libspdm_zero_mem(spdm_response, spdm_response_size);
+    spdm_test_context = libspdm_get_test_context();
+    if ((spdm_test_context->case_id == 0x4) && (m_last_request_code == SPDM_SUBSCRIBE_EVENT_TYPES)) {
+        /* The Responder is not ready, and its ExtendedErrorData makes the ERROR message larger
+         * than the ACK. */
+        spdm_error = (void *)spdm_response;
+        spdm_response_size = sizeof(spdm_error_response_t) +
+                             sizeof(spdm_error_data_response_not_ready_t);
+        libspdm_zero_mem(spdm_error, spdm_response_size);
+        spdm_error->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_error->header.request_response_code = SPDM_ERROR;
+        spdm_error->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+        spdm_error->header.param2 = 0;
+        not_ready = (void *)(spdm_error + 1);
+        not_ready->rd_exponent = 1;
+        not_ready->request_code = SPDM_SUBSCRIBE_EVENT_TYPES;
+        not_ready->token = m_not_ready_token;
+        not_ready->rd_tm = 2;
+    } else {
+        spdm_response_size = sizeof(spdm_subscribe_event_types_ack_response_t);
+        libspdm_zero_mem(spdm_response, spdm_response_size);
 
-    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
-    spdm_response->header.request_response_code = SPDM_SUBSCRIBE_EVENT_TYPES_ACK;
-    spdm_response->header.param1 = 0;
-    spdm_response->header.param2 = 0;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.request_response_code = SPDM_SUBSCRIBE_EVENT_TYPES_ACK;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+    }
 
     /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
      * transport_message is always in sender buffer. */
@@ -267,6 +299,40 @@ static void req_subscribe_event_types_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
+/**
+ * Test 4: The Responder first returns an ERROR message with ErrorCode=ResponseNotReady, whose
+ *         ExtendedErrorData makes it larger than SUBSCRIBE_EVENT_TYPES_ACK, and then returns
+ *         SUBSCRIBE_EVENT_TYPES_ACK to RESPOND_IF_READY.
+ * Expected Behavior: Returns LIBSPDM_STATUS_SUCCESS after sending RESPOND_IF_READY.
+ *                    Skipped when RESPOND_IF_READY support is compiled out.
+ **/
+static void req_subscribe_event_types_case4(void **state)
+{
+    #if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x4;
+
+    set_standard_state(spdm_context, &session_id);
+    test_params.subscribe_event_group_count = 0;
+    test_params.subscribe_list_len = 0;
+
+    status = libspdm_subscribe_event_types(spdm_context, session_id,
+                                           test_params.subscribe_event_group_count,
+                                           test_params.subscribe_list_len, NULL);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(m_last_request_code, SPDM_RESPOND_IF_READY);
+    #else
+    skip();
+    #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
+}
+
 int libspdm_req_subscribe_event_types_test(void)
 {
     libspdm_test_context_t test_context = {
@@ -279,7 +345,8 @@ int libspdm_req_subscribe_event_types_test(void)
     const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(req_subscribe_event_types_case1),
         cmocka_unit_test(req_subscribe_event_types_case2),
-        cmocka_unit_test(req_subscribe_event_types_case3)
+        cmocka_unit_test(req_subscribe_event_types_case3),
+        cmocka_unit_test(req_subscribe_event_types_case4),
     };
 
     libspdm_setup_test_context(&test_context);

@@ -121,7 +121,7 @@ static libspdm_return_t try_libspdm_subscribe_event_types(libspdm_context_t *spd
     }
 
     /* -=[Validate Response Phase]=- */
-    if (spdm_response_size != sizeof(spdm_subscribe_event_types_ack_response_t)) {
+    if (spdm_response_size < sizeof(spdm_message_header_t)) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
@@ -139,6 +139,10 @@ static libspdm_return_t try_libspdm_subscribe_event_types(libspdm_context_t *spd
     }
     if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
+    }
+    if (spdm_response_size != sizeof(spdm_subscribe_event_types_ack_response_t)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
 
