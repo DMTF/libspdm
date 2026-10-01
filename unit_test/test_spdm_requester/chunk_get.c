@@ -1113,6 +1113,9 @@ static void req_chunk_get_case5(void **state)
     spdm_context->local_context.capability.max_spdm_msg_size =
         BUFFER_SIZE_FOR_CHUNK_SEQ_NO_WRAP_TEST;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     spdm_context->local_context.capability.data_transfer_size =
         CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->connection_info.capability.data_transfer_size =
@@ -1158,6 +1161,9 @@ static void req_chunk_get_case6(void **state)
     spdm_context->local_context.capability.max_spdm_msg_size =
         BUFFER_SIZE_FOR_CHUNK_SEQ_NO_WRAP_TEST;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     /* to pass the exam of max_chunk_data_transfer_size*/
     spdm_context->local_context.capability.data_transfer_size =
         CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE + 0x10;
