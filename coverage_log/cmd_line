@@ -1,0 +1,1 @@
+genhtml --rc branch_coverage=1 coverage.info --output-directory /tmp/coverage_log
