@@ -4475,6 +4475,200 @@ static void libspdm_test_negotiate_connection_version_invalid_case73(void **stat
                                                       NULL, 0));
 }
 
+/* The largest OpaqueData that a 16-bit OpaqueDataLength allows with 4-byte alignment. */
+#define LIBSPDM_TEST_LARGE_OPAQUE_DATA_SIZE 0xFFFC
+
+/* Returns the size, with padding, of an opaque element with no vendor ID. */
+static size_t libspdm_test_opaque_element_size(size_t data_len)
+{
+    return (sizeof(opaque_element_table_header_t) + sizeof(uint16_t) + data_len + 3) & ~3;
+}
+
+/* Writes an opaque element with no vendor ID and returns its size with padding. If data is NULL,
+ * the element data is filled with 0xA5. */
+static size_t libspdm_test_write_opaque_element(uint8_t *ptr, uint8_t id, uint16_t data_len,
+                                                const void *data)
+{
+    opaque_element_table_header_t *element_header;
+    size_t element_size;
+
+    element_size = libspdm_test_opaque_element_size(data_len);
+    libspdm_zero_mem(ptr, element_size);
+
+    element_header = (void *)ptr;
+    element_header->id = id;
+    element_header->vendor_len = 0;
+    ptr += sizeof(opaque_element_table_header_t);
+    libspdm_write_uint16(ptr, data_len);
+    ptr += sizeof(uint16_t);
+    if (data == NULL) {
+        libspdm_set_mem(ptr, data_len, 0xA5);
+    } else {
+        libspdm_copy_mem(ptr, data_len, data, data_len);
+    }
+
+    return element_size;
+}
+
+/* Allocates a general opaque data table of LIBSPDM_TEST_LARGE_OPAQUE_DATA_SIZE bytes. A PCI-SIG
+ * element fills the first part of the table, so that the secured message elements start beyond
+ * SPDM_MAX_OPAQUE_DATA_SIZE. */
+static uint8_t *libspdm_test_build_large_opaque_data(
+    const void *sm_data1, uint16_t sm_data1_len, const void *sm_data2, uint16_t sm_data2_len)
+{
+    spdm_general_opaque_data_table_header_t *table_header;
+    uint8_t *opaque_data;
+    uint8_t *ptr;
+    size_t filler_data_len;
+
+    opaque_data = malloc(LIBSPDM_TEST_LARGE_OPAQUE_DATA_SIZE);
+    assert_non_null(opaque_data);
+
+    table_header = (void *)opaque_data;
+    table_header->total_elements = (sm_data2 == NULL) ? 2 : 3;
+    libspdm_zero_mem(table_header->reserved, sizeof(table_header->reserved));
+    ptr = (uint8_t *)(table_header + 1);
+
+    filler_data_len = LIBSPDM_TEST_LARGE_OPAQUE_DATA_SIZE - sizeof(*table_header) -
+                      libspdm_test_opaque_element_size(sm_data1_len) -
+                      sizeof(opaque_element_table_header_t) - sizeof(uint16_t);
+    if (sm_data2 != NULL) {
+        filler_data_len -= libspdm_test_opaque_element_size(sm_data2_len);
+    }
+    assert_true((filler_data_len % 4) == 0);
+
+    ptr += libspdm_test_write_opaque_element(ptr, SPDM_REGISTRY_ID_PCISIG,
+                                             (uint16_t)filler_data_len, NULL);
+    ptr += libspdm_test_write_opaque_element(ptr, SPDM_REGISTRY_ID_DMTF, sm_data1_len, sm_data1);
+    if (sm_data2 != NULL) {
+        ptr += libspdm_test_write_opaque_element(ptr, SPDM_REGISTRY_ID_DMTF, sm_data2_len,
+                                                 sm_data2);
+    }
+    assert_int_equal((size_t)(ptr - opaque_data), LIBSPDM_TEST_LARGE_OPAQUE_DATA_SIZE);
+
+    return opaque_data;
+}
+
+static void libspdm_test_set_large_opaque_data_state(libspdm_context_t *spdm_context)
+{
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.algorithm.other_params_support =
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
+
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 3;
+    spdm_context->local_context.secured_message_version.secured_message_version[0] =
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[1] =
+        SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.secured_message_version[2] =
+        SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+}
+
+/**
+ * Test 74: In SPDM 1.2 with OpaqueDataFmt1, the Responder's OpaqueData is a general opaque data
+ *          table of 0xFFFC bytes, the largest that a 16-bit OpaqueDataLength allows with 4-byte
+ *          alignment. A PCI-SIG element fills most of it, and the version selection and AEAD limit
+ *          elements follow beyond SPDM_MAX_OPAQUE_DATA_SIZE.
+ * Expected Behavior: the general opaque data check accepts the table, and the Requester's version
+ *                    selection and AEAD limit parsers find their elements.
+ **/
+static void libspdm_test_process_large_opaque_data_selection_case74(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    secured_message_opaque_element_version_selection_t version_selection;
+    secured_message_opaque_element_aead_limit_t aead_limit;
+    spdm_version_number_t secured_message_version;
+    uint8_t aead_limit_exponent;
+    uint8_t *opaque_data;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x4A;
+
+    libspdm_test_set_large_opaque_data_state(spdm_context);
+
+    version_selection.sm_data_version = SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
+    version_selection.sm_data_id = SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION;
+    version_selection.selected_version = SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    aead_limit.sm_data_version = SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
+    aead_limit.sm_data_id = SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_AEAD_LIMIT;
+    aead_limit.aead_limit_exponent = 32;
+
+    opaque_data = libspdm_test_build_large_opaque_data(
+        &version_selection, sizeof(version_selection), &aead_limit, sizeof(aead_limit));
+
+    assert_true(libspdm_process_general_opaque_data_check(
+                    spdm_context, LIBSPDM_TEST_LARGE_OPAQUE_DATA_SIZE, opaque_data));
+
+    secured_message_version = 0;
+    status = libspdm_process_opaque_data_version_selection_data(
+        spdm_context, LIBSPDM_TEST_LARGE_OPAQUE_DATA_SIZE, opaque_data, &secured_message_version);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(secured_message_version,
+                     SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT);
+
+    aead_limit_exponent = 0;
+    status = libspdm_process_opaque_data_aead_limit(
+        spdm_context, SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            LIBSPDM_TEST_LARGE_OPAQUE_DATA_SIZE, opaque_data, &aead_limit_exponent);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(aead_limit_exponent, 32);
+
+    free(opaque_data);
+}
+
+/**
+ * Test 75: In SPDM 1.2 with OpaqueDataFmt1, the Requester's OpaqueData is a general opaque data
+ *          table of 0xFFFC bytes. A PCI-SIG element fills most of it, and the supported version
+ *          element follows beyond SPDM_MAX_OPAQUE_DATA_SIZE.
+ * Expected Behavior: the general opaque data check accepts the table, and the Responder's supported
+ *                    version parser selects the highest common version, 1.3.
+ **/
+static void libspdm_test_process_large_opaque_data_supported_version_case75(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    secured_message_opaque_element_supported_version_t *supported_version;
+    uint8_t *versions_list;
+    uint8_t sm_data[sizeof(secured_message_opaque_element_supported_version_t) +
+                    2 * sizeof(spdm_version_number_t)];
+    spdm_version_number_t secured_message_version;
+    uint8_t *opaque_data;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x4B;
+
+    libspdm_test_set_large_opaque_data_state(spdm_context);
+
+    supported_version = (void *)sm_data;
+    supported_version->sm_data_version = SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
+    supported_version->sm_data_id = SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION;
+    supported_version->version_count = 2;
+    versions_list = (uint8_t *)(supported_version + 1);
+    libspdm_write_uint16(versions_list, SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT);
+    libspdm_write_uint16(versions_list + sizeof(spdm_version_number_t),
+                         SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT);
+
+    opaque_data = libspdm_test_build_large_opaque_data(sm_data, sizeof(sm_data), NULL, 0);
+
+    assert_true(libspdm_process_general_opaque_data_check(
+                    spdm_context, LIBSPDM_TEST_LARGE_OPAQUE_DATA_SIZE, opaque_data));
+
+    secured_message_version = 0;
+    status = libspdm_process_opaque_data_supported_version_data(
+        spdm_context, LIBSPDM_TEST_LARGE_OPAQUE_DATA_SIZE, opaque_data, &secured_message_version);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(secured_message_version,
+                     SECURED_SPDM_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT);
+
+    free(opaque_data);
+}
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -4677,6 +4871,11 @@ int libspdm_common_context_data_test_main(void)
                                libspdm_unit_test_reset_context),
         /* version negotiation rejects invalid version lists */
         cmocka_unit_test_setup(libspdm_test_negotiate_connection_version_invalid_case73,
+                               libspdm_unit_test_reset_context),
+        /* OpaqueData larger than SPDM_MAX_OPAQUE_DATA_SIZE */
+        cmocka_unit_test_setup(libspdm_test_process_large_opaque_data_selection_case74,
+                               libspdm_unit_test_reset_context),
+        cmocka_unit_test_setup(libspdm_test_process_large_opaque_data_supported_version_case75,
                                libspdm_unit_test_reset_context),
     };
 
