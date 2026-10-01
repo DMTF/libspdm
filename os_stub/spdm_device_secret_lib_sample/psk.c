@@ -47,6 +47,7 @@ uint8_t m_cxl_tsp_current_psk_session_index = 0xFF;
 bool g_generate_psk_exchange_opaque_data = false;
 size_t libspdm_secret_lib_psk_finish_opaque_data_size;
 bool g_generate_psk_finish_opaque_data = false;
+bool g_psk_finish_opaque_data_error = false;
 
 bool libspdm_psk_handshake_secret_hkdf_expand(
     spdm_version_number_t spdm_version,
@@ -259,6 +260,12 @@ bool libspdm_psk_finish_rsp_opaque_data(
     void *opaque_data,
     size_t *opaque_data_size)
 {
+    if (g_psk_finish_opaque_data_error) {
+        /* Fail with a valid size, so the caller can only detect the failure by the result. */
+        *opaque_data_size = 0;
+        return false;
+    }
+
     if (g_generate_psk_finish_opaque_data) {
         LIBSPDM_ASSERT(libspdm_secret_lib_psk_finish_opaque_data_size <= *opaque_data_size);
 
