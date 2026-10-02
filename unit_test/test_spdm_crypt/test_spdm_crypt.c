@@ -1723,6 +1723,107 @@ static void libspdm_test_crypt_aead_all_suites(void **state)
     assert_int_equal(libspdm_get_aead_tag_size(0), 0);
 }
 
+/* The public key and shared secret sizes of each DHE group, or 0 when the group is compiled out. */
+typedef struct {
+    uint16_t dhe_named_group;
+    uint32_t pub_key_size;
+    uint32_t shared_secret_size;
+} libspdm_dhe_group_entry_t;
+
+static const libspdm_dhe_group_entry_t m_libspdm_dhe_group_table[] = {
+    { SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048,
+      LIBSPDM_FFDHE_2048_SUPPORT ? 256 : 0, LIBSPDM_FFDHE_2048_SUPPORT ? 256 : 0 },
+    { SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072,
+      LIBSPDM_FFDHE_3072_SUPPORT ? 384 : 0, LIBSPDM_FFDHE_3072_SUPPORT ? 384 : 0 },
+    { SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096,
+      LIBSPDM_FFDHE_4096_SUPPORT ? 512 : 0, LIBSPDM_FFDHE_4096_SUPPORT ? 512 : 0 },
+    { SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1,
+      LIBSPDM_ECDHE_P256_SUPPORT ? 32 * 2 : 0, LIBSPDM_ECDHE_P256_SUPPORT ? 32 : 0 },
+    { SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1,
+      LIBSPDM_ECDHE_P384_SUPPORT ? 48 * 2 : 0, LIBSPDM_ECDHE_P384_SUPPORT ? 48 : 0 },
+    { SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1,
+      LIBSPDM_ECDHE_P521_SUPPORT ? 66 * 2 : 0, LIBSPDM_ECDHE_P521_SUPPORT ? 66 : 0 },
+    { SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256,
+      LIBSPDM_SM2_KEY_EXCHANGE_P256_SUPPORT ? 32 * 2 : 0,
+      LIBSPDM_SM2_KEY_EXCHANGE_P256_SUPPORT ? 32 : 0 },
+};
+
+static void libspdm_test_crypt_dhe_all_groups(void **state)
+{
+    size_t index;
+    const libspdm_dhe_group_entry_t *entry;
+    spdm_version_number_t spdm_version;
+    void *initiator;
+    void *responder;
+    uint8_t initiator_pub_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+    uint8_t responder_pub_key[LIBSPDM_MAX_DHE_KEY_SIZE];
+    size_t initiator_pub_key_size;
+    size_t responder_pub_key_size;
+    uint8_t initiator_secret[LIBSPDM_MAX_DHE_SS_SIZE];
+    uint8_t responder_secret[LIBSPDM_MAX_DHE_SS_SIZE];
+    size_t initiator_secret_size;
+    size_t responder_secret_size;
+
+    spdm_version = SPDM_MESSAGE_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(m_libspdm_dhe_group_table); index++) {
+        entry = &m_libspdm_dhe_group_table[index];
+
+        assert_int_equal(libspdm_get_dhe_pub_key_size(entry->dhe_named_group),
+                         entry->pub_key_size);
+        assert_int_equal(libspdm_get_dhe_shared_secret_size(entry->dhe_named_group),
+                         entry->shared_secret_size);
+
+        /* The group is compiled out, so its arms assert rather than dispatch. */
+        if (entry->pub_key_size == 0) {
+            continue;
+        }
+
+        initiator = libspdm_dhe_new(spdm_version, entry->dhe_named_group, true);
+        assert_non_null(initiator);
+        responder = libspdm_dhe_new(spdm_version, entry->dhe_named_group, false);
+        assert_non_null(responder);
+
+        initiator_pub_key_size = sizeof(initiator_pub_key);
+        assert_true(libspdm_dhe_generate_key(entry->dhe_named_group, initiator,
+                                             initiator_pub_key, &initiator_pub_key_size));
+        assert_int_equal(initiator_pub_key_size, entry->pub_key_size);
+
+        responder_pub_key_size = sizeof(responder_pub_key);
+        assert_true(libspdm_dhe_generate_key(entry->dhe_named_group, responder,
+                                             responder_pub_key, &responder_pub_key_size));
+        assert_int_equal(responder_pub_key_size, entry->pub_key_size);
+
+        /* Each side combines its own private key with the other's public key, and both arrive at
+         * the same secret. */
+        initiator_secret_size = sizeof(initiator_secret);
+        assert_true(libspdm_dhe_compute_key(entry->dhe_named_group, initiator,
+                                            responder_pub_key, responder_pub_key_size,
+                                            initiator_secret, &initiator_secret_size));
+        assert_int_equal(initiator_secret_size, entry->shared_secret_size);
+
+        responder_secret_size = sizeof(responder_secret);
+        assert_true(libspdm_dhe_compute_key(entry->dhe_named_group, responder,
+                                            initiator_pub_key, initiator_pub_key_size,
+                                            responder_secret, &responder_secret_size));
+        assert_int_equal(responder_secret_size, entry->shared_secret_size);
+
+        assert_memory_equal(initiator_secret, responder_secret, entry->shared_secret_size);
+
+        libspdm_dhe_free(entry->dhe_named_group, initiator);
+        libspdm_dhe_free(entry->dhe_named_group, responder);
+    }
+
+    /* Unlike the other entry points, which assert on an unknown group, these return benign
+     * values. */
+    assert_int_equal(libspdm_get_dhe_pub_key_size(0), 0);
+    assert_int_equal(libspdm_get_dhe_shared_secret_size(0), 0);
+    assert_null(libspdm_dhe_new(spdm_version, 0, true));
+
+    /* Freeing no context does nothing. */
+    libspdm_dhe_free(SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1, NULL);
+}
+
 static int libspdm_crypt_lib_setup(void **state)
 {
     return 0;
@@ -1752,6 +1853,7 @@ static int libspdm_crypt_lib_test_main(void)
         cmocka_unit_test(libspdm_test_crypt_hmac_all_algos),
         cmocka_unit_test(libspdm_test_crypt_hkdf_all_algos),
         cmocka_unit_test(libspdm_test_crypt_aead_all_suites),
+        cmocka_unit_test(libspdm_test_crypt_dhe_all_groups),
     };
 
     return cmocka_run_group_tests(test_cases,
