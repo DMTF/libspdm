@@ -588,6 +588,7 @@ static void libspdm_test_crypt_spdm_x509_set_cert_certificate_check(void **state
             true,
             SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
         assert_false(status);
+        free(file_buffer);
 
         status = libspdm_read_input_file("ecp256/end_requester_ca_false.cert.der",
                                          (void **)&file_buffer, &file_buffer_size);
@@ -819,12 +820,9 @@ static void libspdm_test_crypt_asym_verify(void **state)
     libspdm_read_input_file(file, &data, &data_size);
     status = libspdm_asym_get_private_key_from_pem(
         m_libspdm_use_asym_algo, data, data_size, NULL, &context);
-
-    if (!status) {
-        libspdm_zero_mem(data, data_size);
-        free(data);
-        assert_true(status);
-    }
+    libspdm_zero_mem(data, data_size);
+    free(data);
+    assert_true(status);
 
     const uint8_t message[] = {
         0x19, 0x90, 0x2d, 0x02, 0x34, 0x6e, 0xd5, 0x90,
@@ -1030,6 +1028,8 @@ static void libspdm_test_crypt_asym_verify(void **state)
     assert_int_equal(signature_endian, LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY);
 
 #endif
+
+    libspdm_asym_free(m_libspdm_use_asym_algo, context);
 }
 
 static void libspdm_test_crypt_req_asym_verify(void **state)
@@ -1061,11 +1061,9 @@ static void libspdm_test_crypt_req_asym_verify(void **state)
                                                        data,
                                                        data_size, NULL,
                                                        &context);
-    if (!status) {
-        libspdm_zero_mem(data, data_size);
-        free(data);
-        assert_true(status);
-    }
+    libspdm_zero_mem(data, data_size);
+    free(data);
+    assert_true(status);
     sig_size = libspdm_get_asym_signature_size(m_libspdm_use_req_asym_algo);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1257,6 +1255,8 @@ static void libspdm_test_crypt_req_asym_verify(void **state)
     assert_true(status);
     assert_int_equal(signature_endian, LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY);
 #endif
+
+    libspdm_req_asym_free(m_libspdm_use_req_asym_algo, context);
 }
 
 bool libspdm_is_palindrome(const uint8_t *buf, size_t buf_size);
