@@ -87,6 +87,15 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
 
     LIBSPDM_ASSERT(opaque_data_length < SPDM_MAX_OPAQUE_DATA_SIZE);
 
+    if (((spdm_context->connection_info.algorithm.other_params_support &
+          SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) == SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_NONE) &&
+        (opaque_data_length != 0)) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Overriding opaque_data_length to 0 since there is "
+                       "no negotiated opaque data format.\n"));
+        opaque_data_length = 0;
+        warning = LIBSPDM_STATUS_OVERRIDDEN_PARAMETER;
+    }
+
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
@@ -131,15 +140,6 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
         libspdm_copy_mem(spdm_request + 1,
                          spdm_request_size - sizeof(spdm_get_csr_request_t),
                          (uint8_t *)requester_info, requester_info_length);
-    }
-
-    if (((spdm_context->connection_info.algorithm.other_params_support &
-          SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) == SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_NONE) &&
-        (opaque_data_length != 0)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Overriding opaque_data_length to 0 since there is "
-                       "no negotiated opaque data format.\n"));
-        opaque_data_length = 0;
-        warning = LIBSPDM_STATUS_OVERRIDDEN_PARAMETER;
     }
 
     if (opaque_data_length != 0) {

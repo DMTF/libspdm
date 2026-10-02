@@ -159,6 +159,19 @@ static libspdm_return_t send_message(
     case 0x7:
         assert_true(false);
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x8: {
+        const spdm_get_csr_request_t *spdm_request;
+
+        spdm_request =
+            (const spdm_get_csr_request_t *)((const uint8_t *)request +
+                                             sizeof(libspdm_test_message_header_t));
+
+        /* The opaque data is dropped since no opaque data format was negotiated. */
+        assert_int_equal(spdm_request->opaque_data_length, 0);
+        assert_int_equal(spdm_request->requester_info_length, right_req_info_size);
+        assert_memory_equal(spdm_request + 1, right_req_info, right_req_info_size);
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -237,7 +250,8 @@ static libspdm_return_t receive_message(
                                               response);
     }
         return LIBSPDM_STATUS_SUCCESS;
-    case 0x4: {
+    case 0x4:
+    case 0x8: {
         spdm_csr_response_t *spdm_response;
         size_t spdm_response_size;
         size_t transport_header_size;
@@ -600,6 +614,49 @@ static void req_get_csr_case7(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
 }
 
+/**
+ * Test 8: The Integrator passes opaque data but no opaque data format was negotiated.
+ * Expected Behavior: the request is sent without the opaque data, and the successful response
+ * returns the warning LIBSPDM_STATUS_OVERRIDDEN_PARAMETER.
+ **/
+static void req_get_csr_case8(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    uint8_t csr_form_get[LIBSPDM_MAX_CSR_SIZE] = {0};
+    size_t csr_len;
+
+    csr_len = LIBSPDM_MAX_CSR_SIZE;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x8;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->connection_info.capability.flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+
+    /* No opaque data format was negotiated. */
+    spdm_context->connection_info.algorithm.other_params_support = 0;
+
+    status = libspdm_get_csr(spdm_context, NULL,
+                             right_req_info, right_req_info_size,
+                             m_csr_opaque_data, m_csr_opaque_data_size,
+                             (void *)&csr_form_get, &csr_len,
+                             0, 0, NULL);
+
+    assert_int_equal(status, LIBSPDM_STATUS_OVERRIDDEN_PARAMETER);
+    assert_int_equal(csr_len, global_csr_len);
+    assert_memory_equal(csr_form_get, csr_data_pointer, global_csr_len);
+}
+
 int libspdm_req_get_csr_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -616,6 +673,8 @@ int libspdm_req_get_csr_test(void)
         /* Illegal ResetRequired error response. */
         cmocka_unit_test(req_get_csr_case6),
         cmocka_unit_test(req_get_csr_case7),
+        /* Opaque data without a negotiated opaque data format. */
+        cmocka_unit_test(req_get_csr_case8),
     };
 
     libspdm_test_context_t test_context = {
