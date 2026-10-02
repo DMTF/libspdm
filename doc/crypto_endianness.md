@@ -5,7 +5,7 @@
 SPDM 1.2 and later define the endianness of digital signatures for RSA, ECDSA, SM2_DSA, and EdDSA.
 * RSA: big endian for s.
 * ECDSA and SM2_DSA: big endian for r and s.
-* EdDSA: big endian for R and little endian for S.
+* EdDSA: little endian for R and S, as RFC 8032 defines.
 
 When the negotiated SPDM version is 1.2 or later libspdm follows these definitions.
 
@@ -17,7 +17,8 @@ Please refer to [common_api](https://github.com/DMTF/libspdm/blob/main/doc/api/c
 
 ## Endianness of key exchange data
 
-SPDM 1.1 and later defines the endianness of key exchange data for FFDHE, ECDHE, and SM2_KeyExchange.
+SPDM 1.1 and later define the endianness of key exchange data for FFDHE and ECDHE, and SPDM 1.2 and
+later for SM2_KeyExchange.
 * FFDHE: big endian for Y.
 * ECDHE and SM2_KeyExchange: big endian for X and Y.
 
@@ -25,9 +26,10 @@ libspdm follows that for SPDM 1.1+. Because the definition aligns with existing 
 
 ## Endianness of AEAD IV
 
-Version 1.2 of the Secured Messages using SPDM specification explicitly specifies the endianness of
-the sequence number used to construct the AEAD IV as little endian. When the negotiated secured
-message version of the session is 1.2 libspdm unconditionally uses little endian.
+Versions 1.2 and later of the Secured Messages using SPDM specification explicitly specify the
+endianness of the sequence number used to construct the AEAD IV as little endian. When the
+negotiated secured message version of the session is 1.2 or later libspdm unconditionally uses
+little endian.
 
 Versions 1.0 and 1.1 of the Secured Messages using SPDM specification do not explicitly specify how
 the AEAD IV is formed. In particular the endianness of the sequence number is either missing (1.0)
