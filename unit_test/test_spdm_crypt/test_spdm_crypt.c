@@ -2547,6 +2547,253 @@ static void libspdm_test_crypt_x509_certificate_check_all_algos(void **state)
     }
 }
 
+static void libspdm_test_crypt_no_certificate(void **state)
+{
+    assert_false(libspdm_x509_certificate_check(
+                     SPDM_MESSAGE_VERSION_12, NULL, 0,
+                     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, 0,
+                     SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                     false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+    assert_false(libspdm_x509_set_cert_certificate_check(
+                     SPDM_MESSAGE_VERSION_12, NULL, 0,
+                     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, 0,
+                     SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                     false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+    assert_false(libspdm_is_root_certificate(NULL, 0));
+}
+
+static void libspdm_test_crypt_responder_certificate_eku(void **state)
+{
+#if LIBSPDM_RSA_SSA_2048_SUPPORT
+    void *cert;
+    size_t cert_size;
+
+    /* A Responder certificate may carry the Responder authentication EKU, with or without the
+     * Requester one, but not the Requester one alone. */
+    libspdm_test_read_key_file("rsa2048", "end_responder_with_spdm_rsp_eku.cert.der",
+                               &cert, &cert_size);
+    assert_true(libspdm_x509_certificate_check(
+                    SPDM_MESSAGE_VERSION_12, cert, cert_size,
+                    SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048, 0,
+                    SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                    false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+    free(cert);
+
+    libspdm_test_read_key_file("rsa2048", "end_responder_with_spdm_req_eku.cert.der",
+                               &cert, &cert_size);
+    assert_false(libspdm_x509_certificate_check(
+                     SPDM_MESSAGE_VERSION_12, cert, cert_size,
+                     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048, 0,
+                     SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                     false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+    free(cert);
+#else
+    skip();
+#endif /* LIBSPDM_RSA_SSA_2048_SUPPORT */
+}
+
+static void libspdm_test_crypt_is_root_certificate(void **state)
+{
+    void *cert;
+    size_t cert_size;
+
+    /* Only the self-signed CA certificate at the top of the chain is a root. */
+    libspdm_test_read_key_file("ecp256", "ca.cert.der", &cert, &cert_size);
+    assert_true(libspdm_is_root_certificate(cert, cert_size));
+    free(cert);
+
+    libspdm_test_read_key_file("ecp256", "inter.cert.der", &cert, &cert_size);
+    assert_false(libspdm_is_root_certificate(cert, cert_size));
+    free(cert);
+
+    libspdm_test_read_key_file("ecp256", "end_responder.cert.der", &cert, &cert_size);
+    assert_false(libspdm_is_root_certificate(cert, cert_size));
+    free(cert);
+}
+
+static void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_buffer_size(void **state)
+{
+    size_t common_name_size;
+    char common_name[64];
+    size_t dmtf_oid_size;
+    uint8_t dmtf_oid[64];
+    uint8_t not_a_sequence[sizeof(m_libspdm_subject_alt_name_buffer1)];
+    void *cert;
+    size_t cert_size;
+    size_t needed_size;
+
+    /* A buffer that is too small is reported with the size that it needs. The name needs room
+     * for a terminating NUL. */
+    common_name_size = sizeof(common_name);
+    dmtf_oid_size = sizeof(m_libspdm_dmtf_oid) - 1;
+    assert_false(libspdm_get_dmtf_subject_alt_name_from_bytes(
+                     m_libspdm_subject_alt_name_buffer1,
+                     sizeof(m_libspdm_subject_alt_name_buffer1),
+                     common_name, &common_name_size, dmtf_oid, &dmtf_oid_size));
+    assert_int_equal(dmtf_oid_size, sizeof(m_libspdm_dmtf_oid));
+
+    common_name_size = strlen("ACME:WIDGET:1234567890");
+    dmtf_oid_size = sizeof(dmtf_oid);
+    assert_false(libspdm_get_dmtf_subject_alt_name_from_bytes(
+                     m_libspdm_subject_alt_name_buffer1,
+                     sizeof(m_libspdm_subject_alt_name_buffer1),
+                     common_name, &common_name_size, dmtf_oid, &dmtf_oid_size));
+    assert_int_equal(common_name_size, strlen("ACME:WIDGET:1234567890") + 1);
+
+    /* There is nowhere to put the name. */
+    common_name_size = sizeof(common_name);
+    dmtf_oid_size = sizeof(dmtf_oid);
+    assert_false(libspdm_get_dmtf_subject_alt_name_from_bytes(
+                     m_libspdm_subject_alt_name_buffer1,
+                     sizeof(m_libspdm_subject_alt_name_buffer1),
+                     NULL, &common_name_size, dmtf_oid, &dmtf_oid_size));
+
+    /* The encoding is a SET rather than a SEQUENCE. */
+    libspdm_copy_mem(not_a_sequence, sizeof(not_a_sequence),
+                     m_libspdm_subject_alt_name_buffer1,
+                     sizeof(m_libspdm_subject_alt_name_buffer1));
+    not_a_sequence[0] = 0x31;
+    common_name_size = sizeof(common_name);
+    dmtf_oid_size = sizeof(dmtf_oid);
+    assert_false(libspdm_get_dmtf_subject_alt_name_from_bytes(
+                     not_a_sequence, sizeof(not_a_sequence),
+                     common_name, &common_name_size, dmtf_oid, &dmtf_oid_size));
+
+    /* A certificate without a subject alternative name has no name to return. */
+    libspdm_test_read_key_file("ecp256", "ca.cert.der", &cert, &cert_size);
+    common_name_size = sizeof(common_name);
+    dmtf_oid_size = sizeof(dmtf_oid);
+    assert_false(libspdm_get_dmtf_subject_alt_name(cert, cert_size, common_name,
+                                                   &common_name_size,
+                                                   dmtf_oid, &dmtf_oid_size));
+    assert_int_equal(common_name_size, 0);
+    free(cert);
+
+    /* A name buffer smaller than the extension is reported with the extension's size, which then
+     * suffices. */
+    libspdm_test_read_key_file("ecp256", "end_requester.cert.der", &cert, &cert_size);
+    common_name_size = 1;
+    dmtf_oid_size = sizeof(dmtf_oid);
+    assert_false(libspdm_get_dmtf_subject_alt_name(cert, cert_size, common_name,
+                                                   &common_name_size,
+                                                   dmtf_oid, &dmtf_oid_size));
+    needed_size = common_name_size;
+    assert_true(needed_size > 1);
+    assert_true(needed_size <= sizeof(common_name));
+    assert_true(libspdm_get_dmtf_subject_alt_name(cert, cert_size, common_name,
+                                                  &common_name_size,
+                                                  dmtf_oid, &dmtf_oid_size));
+    assert_string_equal(common_name, "ACME:WIDGET:1234567890");
+    free(cert);
+}
+
+static void libspdm_test_crypt_spdm_verify_cert_chain_data_malformed(void **state)
+{
+    uint8_t *cert_chain_data;
+    size_t cert_chain_data_size;
+    uint8_t not_a_certificate[64];
+
+    /* A chain longer than a certificate chain can be once its header and root hash are added. */
+    cert_chain_data_size = SPDM_MAX_CERTIFICATE_CHAIN_SIZE -
+                           (sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE) + 1;
+    cert_chain_data = calloc(1, cert_chain_data_size);
+    assert_non_null(cert_chain_data);
+    assert_false(libspdm_verify_cert_chain_data(
+                     SPDM_MESSAGE_VERSION_13, cert_chain_data, cert_chain_data_size,
+                     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, 0,
+                     SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                     false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+    free(cert_chain_data);
+
+    /* Bytes that do not hold a certificate. */
+    libspdm_set_mem(not_a_certificate, sizeof(not_a_certificate), 0xFF);
+    assert_false(libspdm_verify_cert_chain_data(
+                     SPDM_MESSAGE_VERSION_13, not_a_certificate, sizeof(not_a_certificate),
+                     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, 0,
+                     SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                     false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+}
+
+static void libspdm_test_crypt_spdm_verify_certificate_chain_buffer_malformed(void **state)
+{
+#if (LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)
+    uint8_t buffer[sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE + 64];
+    spdm_cert_chain_t *cert_chain_header;
+    size_t hash_size;
+    size_t buffer_size;
+    void *data;
+    size_t data_size;
+
+    hash_size = libspdm_get_hash_size(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256);
+    cert_chain_header = (spdm_cert_chain_t *)buffer;
+
+    /* The buffer holds the header and the root hash, but no certificate. */
+    libspdm_zero_mem(buffer, sizeof(buffer));
+    buffer_size = sizeof(spdm_cert_chain_t) + hash_size;
+    cert_chain_header->length = (uint16_t)buffer_size;
+    assert_false(libspdm_verify_certificate_chain_buffer(
+                     SPDM_MESSAGE_VERSION_13, SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, 0,
+                     buffer, buffer_size, false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+
+    /* The bytes after the header and the root hash do not hold a certificate. */
+    buffer_size = sizeof(spdm_cert_chain_t) + hash_size + 64;
+    libspdm_set_mem(buffer + sizeof(spdm_cert_chain_t) + hash_size, 64, 0xFF);
+    cert_chain_header->length = (uint16_t)buffer_size;
+    assert_false(libspdm_verify_certificate_chain_buffer(
+                     SPDM_MESSAGE_VERSION_13, SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, 0,
+                     buffer, buffer_size, false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+
+    /* The root hash does not match the root certificate. */
+    assert_true(libspdm_read_responder_public_certificate_chain(
+                    SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                    SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                    &data, &data_size, NULL, NULL));
+    ((uint8_t *)data)[sizeof(spdm_cert_chain_t)] ^= 0x01;
+    assert_false(libspdm_verify_certificate_chain_buffer(
+                     SPDM_MESSAGE_VERSION_13, SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, 0,
+                     data, data_size, false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+    free(data);
+#else
+    skip();
+#endif /* (LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT) */
+}
+
+static void libspdm_test_crypt_verify_req_info(void **state)
+{
+    /* A CertificationRequestInfo is a SEQUENCE of an INTEGER version, a subject SEQUENCE, a
+     * subjectPKInfo SEQUENCE and [0] attributes, which libspdm checks for structure alone. */
+    uint8_t no_attributes[] = {
+        0x30, 0x09, 0x02, 0x01, 0x00, 0x30, 0x00, 0x30, 0x00, 0xA0, 0x00
+    };
+    uint8_t one_attribute[] = {
+        0x30, 0x0B, 0x02, 0x01, 0x00, 0x30, 0x00, 0x30, 0x00, 0xA0, 0x02, 0x30, 0x00
+    };
+    uint8_t trailing_byte[] = {
+        0x30, 0x09, 0x02, 0x01, 0x00, 0x30, 0x00, 0x30, 0x00, 0xA0, 0x00, 0x05
+    };
+    uint8_t not_a_sequence[] = { 0x31, 0x00 };
+    uint8_t no_version[] = { 0x30, 0x02, 0x30, 0x00 };
+    uint8_t no_subject[] = { 0x30, 0x03, 0x02, 0x01, 0x00 };
+    uint8_t no_subject_pk_info[] = { 0x30, 0x05, 0x02, 0x01, 0x00, 0x30, 0x00 };
+    uint8_t no_attributes_tag[] = { 0x30, 0x07, 0x02, 0x01, 0x00, 0x30, 0x00, 0x30, 0x00 };
+
+    /* Requester info is optional. */
+    assert_true(libspdm_verify_req_info(no_attributes, 0));
+
+    assert_true(libspdm_verify_req_info(no_attributes, sizeof(no_attributes)));
+    assert_true(libspdm_verify_req_info(one_attribute, sizeof(one_attribute)));
+
+    assert_false(libspdm_verify_req_info(trailing_byte, sizeof(trailing_byte)));
+    assert_false(libspdm_verify_req_info(not_a_sequence, sizeof(not_a_sequence)));
+    assert_false(libspdm_verify_req_info(no_version, sizeof(no_version)));
+    assert_false(libspdm_verify_req_info(no_subject, sizeof(no_subject)));
+    assert_false(libspdm_verify_req_info(no_subject_pk_info, sizeof(no_subject_pk_info)));
+    assert_false(libspdm_verify_req_info(no_attributes_tag, sizeof(no_attributes_tag)));
+}
+
 static int libspdm_crypt_lib_setup(void **state)
 {
     return 0;
@@ -2583,6 +2830,13 @@ static int libspdm_crypt_lib_test_main(void)
         cmocka_unit_test(libspdm_test_crypt_pqc_asym_signature_size),
         cmocka_unit_test(libspdm_test_crypt_kem_all_algos),
         cmocka_unit_test(libspdm_test_crypt_x509_certificate_check_all_algos),
+        cmocka_unit_test(libspdm_test_crypt_no_certificate),
+        cmocka_unit_test(libspdm_test_crypt_responder_certificate_eku),
+        cmocka_unit_test(libspdm_test_crypt_is_root_certificate),
+        cmocka_unit_test(libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_buffer_size),
+        cmocka_unit_test(libspdm_test_crypt_spdm_verify_cert_chain_data_malformed),
+        cmocka_unit_test(libspdm_test_crypt_spdm_verify_certificate_chain_buffer_malformed),
+        cmocka_unit_test(libspdm_test_crypt_verify_req_info),
     };
 
     return cmocka_run_group_tests(test_cases,
