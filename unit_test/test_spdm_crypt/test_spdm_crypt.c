@@ -2486,6 +2486,67 @@ static void libspdm_test_crypt_kem_all_algos(void **state)
     libspdm_kem_free(SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512, NULL);
 }
 
+static void libspdm_test_crypt_x509_certificate_check_all_algos(void **state)
+{
+    size_t cert_index;
+    size_t algo_index;
+    const libspdm_asym_algo_entry_t *cert_entry;
+    const libspdm_asym_algo_entry_t *algo_entry;
+    void *cert;
+    size_t cert_size;
+    bool expected;
+
+    for (cert_index = 0; cert_index < LIBSPDM_ARRAY_SIZE(m_libspdm_asym_algo_table);
+         cert_index++) {
+        cert_entry = &m_libspdm_asym_algo_table[cert_index];
+
+        /* The RSA signature schemes share their keys, and so their certificates. */
+        if ((cert_index > 0) &&
+            (strcmp(cert_entry->key_dir, m_libspdm_asym_algo_table[cert_index - 1].key_dir) ==
+             0)) {
+            continue;
+        }
+
+        libspdm_test_read_key_file(cert_entry->key_dir, "end_responder.cert.der",
+                                   &cert, &cert_size);
+
+        /* The leaf certificate passes the check only for the algorithms that use its key. */
+        for (algo_index = 0; algo_index < LIBSPDM_ARRAY_SIZE(m_libspdm_asym_algo_table);
+             algo_index++) {
+            algo_entry = &m_libspdm_asym_algo_table[algo_index];
+
+            /* The check skips the public key algorithm for SM2 and extracts the key, which
+             * asserts when SM2 is compiled out. */
+            if ((algo_entry->base_asym_algo ==
+                 SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256) &&
+                (algo_entry->signature_size == 0)) {
+                continue;
+            }
+
+            expected = (strcmp(algo_entry->key_dir, cert_entry->key_dir) == 0) &&
+                       (algo_entry->signature_size != 0);
+            assert_int_equal(libspdm_x509_certificate_check(
+                                 SPDM_MESSAGE_VERSION_12, cert, cert_size,
+                                 algo_entry->base_asym_algo, 0,
+                                 SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                 false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT),
+                             expected);
+        }
+
+        /* None of the certificates holds a PQC key. */
+        for (algo_index = 0; algo_index < LIBSPDM_ARRAY_SIZE(m_libspdm_pqc_asym_algo_table);
+             algo_index++) {
+            assert_false(libspdm_x509_certificate_check(
+                             SPDM_MESSAGE_VERSION_12, cert, cert_size,
+                             0, m_libspdm_pqc_asym_algo_table[algo_index].pqc_asym_algo,
+                             SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                             false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+        }
+
+        free(cert);
+    }
+}
+
 static int libspdm_crypt_lib_setup(void **state)
 {
     return 0;
@@ -2521,6 +2582,7 @@ static int libspdm_crypt_lib_test_main(void)
         cmocka_unit_test(libspdm_test_crypt_req_asym_all_algos),
         cmocka_unit_test(libspdm_test_crypt_pqc_asym_signature_size),
         cmocka_unit_test(libspdm_test_crypt_kem_all_algos),
+        cmocka_unit_test(libspdm_test_crypt_x509_certificate_check_all_algos),
     };
 
     return cmocka_run_group_tests(test_cases,
