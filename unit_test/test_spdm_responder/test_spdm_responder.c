@@ -54,12 +54,14 @@ int libspdm_rsp_respond_if_ready_test (void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 int libspdm_rsp_key_exchange_rsp_test(void);
+int libspdm_rsp_key_exchange_rsp_error_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
 int libspdm_rsp_finish_rsp_test(void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 int libspdm_rsp_psk_exchange_rsp_test(void);
+int libspdm_rsp_psk_exchange_rsp_error_test(void);
 int libspdm_rsp_psk_finish_rsp_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
@@ -205,6 +207,9 @@ int main(void)
     if (libspdm_rsp_key_exchange_rsp_test() != 0) {
         return_value = 1;
     }
+    if (libspdm_rsp_key_exchange_rsp_error_test() != 0) {
+        return_value = 1;
+    }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
@@ -215,6 +220,9 @@ int main(void)
 
     #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
     if (libspdm_rsp_psk_exchange_rsp_test() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_rsp_psk_exchange_rsp_error_test() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
