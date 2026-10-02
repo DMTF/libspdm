@@ -73,20 +73,36 @@ one function reports the size of whichever payload the handler is currently bein
 
 If the Requester cannot fulfil an encapsulated request it returns an encapsulated `ERROR` message.
 libspdm calls the handler with `error_code` set to that `ErrorCode`, so that the Integrator learns
-why the flow ended, and then terminates the flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2`. The
-handler must acknowledge this by setting the value of `terminate_flow` to `true`; it cannot continue
-the flow. The value of `error_code` is `0` on every other call.
+why the flow ended, and then terminates the flow. The handler must acknowledge this by setting the
+value of `terminate_flow` to `true`; it cannot continue the flow. The value of `error_code` is `0`
+on every other call.
+
+libspdm terminates the flow with an `ENCAPSULATED_RESPONSE_ACK` that carries no further request,
+and clears its `Param2`. The session-based mutual authentication flow is the exception: its final
+`ENCAPSULATED_RESPONSE_ACK` must designate the Requester's certificate slot, so libspdm sets
+`Param2` to `2` and sends the slot held by `LIBSPDM_DATA_SESSION_ENCAP_REQ_SLOT_ID`. That slot is
+`0` unless the Integrator has changed it.
 
 `ErrorCode == ResponseNotReady` is the one value that does not mean the operation has failed. The
 Requester is asking for more time rather than declining the request, and the encapsulated request
-remains outstanding. libspdm retains it and, when the Requester next sends
-`GET_ENCAPSULATED_REQUEST`, reissues it as an encapsulated `RESPOND_IF_READY` request without
-calling the handler. The flow therefore resumes where it left off and can still complete. An
-Integrator that releases per-flow state when a flow ends should keep that state for this
-`ErrorCode`, since the flow it belongs to is going to continue.
+remains outstanding. libspdm clears `Param2` in this case, even in the session-based mutual
+authentication flow, and retains the request. When the Requester next sends
+`GET_ENCAPSULATED_REQUEST`, libspdm reissues the request as an encapsulated `RESPOND_IF_READY`
+request without calling the handler. The flow therefore resumes where it left off and can still
+complete. An Integrator that releases per-flow state when a flow ends should keep that state for
+this `ErrorCode`, since the flow it belongs to is going to continue.
 
 This resumption requires `LIBSPDM_RESPOND_IF_READY_SUPPORT`. When that macro is `0` libspdm does not
-retain the outstanding request, and `ResponseNotReady` ends the flow like any other `ErrorCode`.
+retain the outstanding request, and the flow is not resumed. Even with the macro set, libspdm does
+not resume the flow in the following cases:
+- The outstanding request is `KEY_UPDATE`.
+- The outstanding request is the implicit `GET_DIGESTS` request of
+  `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS`.
+- The flow is session-based mutual authentication and both endpoints have set
+  `HANDSHAKE_IN_THE_CLEAR_CAP`.
+
+In these cases the Integrator should release its per-flow state as it would for any other
+`ErrorCode`.
 
 ## Encapsulated Flows
 
@@ -152,7 +168,8 @@ libspdm_return_t encap_flow_handler(
 
 As part of `KEY_EXCHANGE` request processing, libspdm calls `libspdm_key_exchange_start_mut_auth()`
 to query the Integrator on whether to pursue session-based mutual authentication. If this function
-returns a non-zero value then the session-based mutual authentication flow begins.
+returns a non-zero value then libspdm requests session-based mutual authentication through
+`KEY_EXCHANGE_RSP.MutAuthRequested`.
 
 If `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED` is returned by the Integrator then no
 encapsulated messages are exchanged between the Requester and Responder. This value is required if
@@ -167,6 +184,10 @@ then the encapsulated flow is initiated and the Integrator can send encapsulated
 If `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS` is returned by the Integrator
 then the encapsulated flow is initiated with an implicit `GET_DIGESTS` request sent to the
 Requester.
+
+These two encapsulated flows require the Requester to have set `ENCAP_CAP`. If it has not, libspdm
+returns an error to the Requester when the Integrator has set `*mandatory_mut_auth` to `true`, and
+otherwise does not request mutual authentication, so the session is established without it.
 
 ```C
 libspdm_return_t encap_flow_handler(
@@ -187,10 +208,11 @@ libspdm_return_t encap_flow_handler(
     LIBSPDM_ASSERT(encap_flow_type == LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH);
 
     if (error_code != 0) {
-        /* The Requester returned an encapsulated ERROR, whose ErrorCode is in error_code, so this
-         * flow ends here. Unless the ErrorCode is ResponseNotReady, in which case libspdm resumes
-         * the flow, the Requester's certificate slot is never designated and the session does not
-         * complete mutual authentication. */
+        /* The Requester returned an encapsulated ERROR, whose ErrorCode is in error_code. If the
+         * ErrorCode is ResponseNotReady then libspdm resumes the flow later, except in the cases
+         * listed under Encapsulated Errors above. Otherwise the flow ends here without the
+         * Requester's certificate chain, although libspdm still designates a certificate slot in
+         * the final ENCAPSULATED_RESPONSE_ACK. */
         *terminate_flow = true;
 
         return LIBSPDM_STATUS_SUCCESS;
@@ -219,7 +241,8 @@ libspdm_return_t encap_flow_handler(
 
         libspdm_zero_mem(&parameter, sizeof(parameter));
         parameter.location = LIBSPDM_DATA_LOCATION_SESSION;
-        libspdm_write_uint32(parameter.additional_data, *session_id);
+        libspdm_copy_mem(parameter.additional_data, sizeof(parameter.additional_data),
+                         session_id, sizeof(*session_id));
 
         libspdm_set_data(spdm_context, LIBSPDM_DATA_SESSION_ENCAP_REQ_SLOT_ID, &parameter,
                          &slot_id, sizeof(slot_id));
@@ -340,7 +363,8 @@ libspdm_return_t encap_flow_handler(
                                                     encap_request_size, encap_request);
     }
     case SPDM_KEY_UPDATE:
-        /* libspdm issued the VerifyNewKey request itself, so both keys are now in use. */
+        /* libspdm issued the VerifyNewKey request itself, so the key update is complete. UpdateKey
+         * changes only the key for the messages that the Responder sends. */
         *terminate_flow = true;
 
         return LIBSPDM_STATUS_SUCCESS;
