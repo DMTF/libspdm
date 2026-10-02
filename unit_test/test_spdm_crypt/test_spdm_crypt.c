@@ -7,6 +7,7 @@
 #include "spdm_unit_test.h"
 #include "library/spdm_common_lib.h"
 #include "library/spdm_crypt_ext_lib.h"
+#include "internal/libspdm_crypt_lib.h"
 
 /* https://lapo.it/asn1js/#MCQGCisGAQQBgxyCEgEMFkFDTUU6V0lER0VUOjEyMzQ1Njc4OTA*/
 static uint8_t m_libspdm_subject_alt_name_buffer1[] = {
@@ -1824,6 +1825,512 @@ static void libspdm_test_crypt_dhe_all_groups(void **state)
     libspdm_dhe_free(SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1, NULL);
 }
 
+/* The asymmetric algorithms, the sample_key directory that holds their keys and certificates, the
+ * hash algorithm each one signs with, whether SPDM 1.0 and 1.1 define it (SM2 and EdDSA arrived in
+ * SPDM 1.2), and its signature size, or 0 when the algorithm is compiled out. */
+typedef struct {
+    uint32_t base_asym_algo;
+    const char *key_dir;
+    uint32_t base_hash_algo;
+    bool spdm_10_11;
+    uint32_t signature_size;
+} libspdm_asym_algo_entry_t;
+
+static const libspdm_asym_algo_entry_t m_libspdm_asym_algo_table[] = {
+    { SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048, "rsa2048",
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, true,
+      LIBSPDM_RSA_SSA_2048_SUPPORT ? 256 : 0 },
+    { SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048, "rsa2048",
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, true,
+      LIBSPDM_RSA_PSS_2048_SUPPORT ? 256 : 0 },
+    { SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072, "rsa3072",
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, true,
+      LIBSPDM_RSA_SSA_3072_SUPPORT ? 384 : 0 },
+    { SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072, "rsa3072",
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, true,
+      LIBSPDM_RSA_PSS_3072_SUPPORT ? 384 : 0 },
+    { SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096, "rsa4096",
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, true,
+      LIBSPDM_RSA_SSA_4096_SUPPORT ? 512 : 0 },
+    { SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096, "rsa4096",
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, true,
+      LIBSPDM_RSA_PSS_4096_SUPPORT ? 512 : 0 },
+    { SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, "ecp256",
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, true,
+      LIBSPDM_ECDSA_P256_SUPPORT ? 32 * 2 : 0 },
+    { SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384, "ecp384",
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, true,
+      LIBSPDM_ECDSA_P384_SUPPORT ? 48 * 2 : 0 },
+    { SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521, "ecp521",
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, true,
+      LIBSPDM_ECDSA_P521_SUPPORT ? 66 * 2 : 0 },
+    /* The SM2 signature algorithm is defined with SM3. */
+    { SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256, "sm2",
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256, false,
+      LIBSPDM_SM2_DSA_P256_SUPPORT ? 32 * 2 : 0 },
+    { SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519, "ed25519",
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, false,
+      LIBSPDM_EDDSA_ED25519_SUPPORT ? 32 * 2 : 0 },
+    { SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448, "ed448",
+      SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, false,
+      LIBSPDM_EDDSA_ED448_SUPPORT ? 57 * 2 : 0 },
+};
+
+/* Reads sample_key/<key_dir>/<file_name>. */
+static void libspdm_test_read_key_file(const char *key_dir, const char *file_name,
+                                       void **data, size_t *data_size)
+{
+    char path[64];
+    size_t dir_length;
+    size_t name_length;
+
+    dir_length = strlen(key_dir);
+    name_length = strlen(file_name);
+    assert_true(dir_length + 1 + name_length < sizeof(path));
+
+    libspdm_copy_mem(path, sizeof(path), key_dir, dir_length);
+    path[dir_length] = '/';
+    libspdm_copy_mem(path + dir_length + 1, sizeof(path) - dir_length - 1,
+                     file_name, name_length + 1);
+
+    assert_true(libspdm_read_input_file(path, data, data_size));
+}
+
+/* The Responder and the Requester sign and verify through separate entry points. These wrappers
+ * let one sweep drive either set. */
+static bool libspdm_test_asym_sign(bool is_requester, spdm_version_number_t spdm_version,
+                                   uint8_t op_code, const libspdm_asym_algo_entry_t *entry,
+                                   void *context, const uint8_t *message, size_t message_size,
+                                   uint8_t *signature, size_t *sig_size)
+{
+    if (is_requester) {
+        return libspdm_req_asym_sign(spdm_version, op_code, (uint16_t)entry->base_asym_algo,
+                                     entry->base_hash_algo, context, message, message_size,
+                                     signature, sig_size);
+    }
+    return libspdm_asym_sign(spdm_version, op_code, entry->base_asym_algo,
+                             entry->base_hash_algo, context, message, message_size,
+                             signature, sig_size);
+}
+
+static bool libspdm_test_asym_sign_hash(bool is_requester, spdm_version_number_t spdm_version,
+                                        uint8_t op_code, const libspdm_asym_algo_entry_t *entry,
+                                        void *context, const uint8_t *message_hash,
+                                        size_t hash_size, uint8_t *signature, size_t *sig_size)
+{
+    if (is_requester) {
+        return libspdm_req_asym_sign_hash(spdm_version, op_code,
+                                          (uint16_t)entry->base_asym_algo,
+                                          entry->base_hash_algo, context, message_hash,
+                                          hash_size, signature, sig_size);
+    }
+    return libspdm_asym_sign_hash(spdm_version, op_code, entry->base_asym_algo,
+                                  entry->base_hash_algo, context, message_hash, hash_size,
+                                  signature, sig_size);
+}
+
+static bool libspdm_test_asym_verify_ex(bool is_requester, spdm_version_number_t spdm_version,
+                                        uint8_t op_code, const libspdm_asym_algo_entry_t *entry,
+                                        void *context, const uint8_t *message,
+                                        size_t message_size, const uint8_t *signature,
+                                        size_t sig_size, uint8_t *endian)
+{
+    if (is_requester) {
+        return libspdm_req_asym_verify_ex(spdm_version, op_code,
+                                          (uint16_t)entry->base_asym_algo,
+                                          entry->base_hash_algo, context, message, message_size,
+                                          signature, sig_size, endian);
+    }
+    return libspdm_asym_verify_ex(spdm_version, op_code, entry->base_asym_algo,
+                                  entry->base_hash_algo, context, message, message_size,
+                                  signature, sig_size, endian);
+}
+
+static bool libspdm_test_asym_verify(bool is_requester, spdm_version_number_t spdm_version,
+                                     uint8_t op_code, const libspdm_asym_algo_entry_t *entry,
+                                     void *context, const uint8_t *message, size_t message_size,
+                                     const uint8_t *signature, size_t sig_size)
+{
+    if (is_requester) {
+        return libspdm_req_asym_verify(spdm_version, op_code, (uint16_t)entry->base_asym_algo,
+                                       entry->base_hash_algo, context, message, message_size,
+                                       signature, sig_size);
+    }
+    return libspdm_asym_verify(spdm_version, op_code, entry->base_asym_algo,
+                               entry->base_hash_algo, context, message, message_size,
+                               signature, sig_size);
+}
+
+static bool libspdm_test_asym_verify_hash(bool is_requester, spdm_version_number_t spdm_version,
+                                          uint8_t op_code, const libspdm_asym_algo_entry_t *entry,
+                                          void *context, const uint8_t *message_hash,
+                                          size_t hash_size, const uint8_t *signature,
+                                          size_t sig_size)
+{
+    if (is_requester) {
+        return libspdm_req_asym_verify_hash(spdm_version, op_code,
+                                            (uint16_t)entry->base_asym_algo,
+                                            entry->base_hash_algo, context, message_hash,
+                                            hash_size, signature, sig_size);
+    }
+    return libspdm_asym_verify_hash(spdm_version, op_code, entry->base_asym_algo,
+                                    entry->base_hash_algo, context, message_hash, hash_size,
+                                    signature, sig_size);
+}
+
+/* Loads the private key, and the public key from both its DER encoding and the leaf certificate,
+ * of the given role. */
+static void libspdm_test_asym_load_keys(bool is_requester, const libspdm_asym_algo_entry_t *entry,
+                                        void **private_context, void **der_context,
+                                        void **cert_context)
+{
+    void *data;
+    size_t data_size;
+
+    libspdm_test_read_key_file(entry->key_dir,
+                               is_requester ? "end_requester.key" : "end_responder.key",
+                               &data, &data_size);
+    if (is_requester) {
+        assert_true(libspdm_req_asym_get_private_key_from_pem((uint16_t)entry->base_asym_algo,
+                                                              data, data_size, NULL,
+                                                              private_context));
+    } else {
+        assert_true(libspdm_asym_get_private_key_from_pem(entry->base_asym_algo,
+                                                          data, data_size, NULL,
+                                                          private_context));
+    }
+    libspdm_zero_mem(data, data_size);
+    free(data);
+
+    libspdm_test_read_key_file(entry->key_dir,
+                               is_requester ? "end_requester.key.pub.der" :
+                               "end_responder.key.pub.der",
+                               &data, &data_size);
+    if (is_requester) {
+        assert_true(libspdm_req_asym_get_public_key_from_der((uint16_t)entry->base_asym_algo,
+                                                             data, data_size, der_context));
+    } else {
+        assert_true(libspdm_asym_get_public_key_from_der(entry->base_asym_algo,
+                                                         data, data_size, der_context));
+    }
+    free(data);
+
+    libspdm_test_read_key_file(entry->key_dir,
+                               is_requester ? "end_requester.cert.der" : "end_responder.cert.der",
+                               &data, &data_size);
+    if (is_requester) {
+        assert_true(libspdm_req_asym_get_public_key_from_x509((uint16_t)entry->base_asym_algo,
+                                                              data, data_size, cert_context));
+    } else {
+        assert_true(libspdm_asym_get_public_key_from_x509(entry->base_asym_algo,
+                                                          data, data_size, cert_context));
+    }
+    free(data);
+}
+
+/* SPDM 1.0 and 1.1 sign the digest of the message itself. A signature may also arrive in
+ * little-endian order, which verification can be told to accept. */
+static void libspdm_test_asym_sweep_spdm_11(bool is_requester,
+                                            const libspdm_asym_algo_entry_t *entry,
+                                            void *private_context, void *der_context,
+                                            void *cert_context)
+{
+    spdm_version_number_t spdm_version;
+    uint8_t op_code;
+    uint8_t message[sizeof(m_libspdm_hash_sweep_message)];
+    uint8_t message_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint32_t hash_size;
+    uint8_t signature[LIBSPDM_MAX_ASYM_SIG_SIZE];
+    uint8_t swapped_signature[LIBSPDM_MAX_ASYM_SIG_SIZE];
+    size_t sig_size;
+    uint8_t endian;
+
+    spdm_version = SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    op_code = is_requester ? SPDM_FINISH : SPDM_MEASUREMENTS;
+    hash_size = libspdm_get_hash_size(entry->base_hash_algo);
+    assert_true(libspdm_hash_all(entry->base_hash_algo, m_libspdm_hash_sweep_message,
+                                 sizeof(m_libspdm_hash_sweep_message), message_hash));
+
+    /* A signature over the message verifies against the message and against its digest, with
+     * either public key. */
+    sig_size = sizeof(signature);
+    assert_true(libspdm_test_asym_sign(is_requester, spdm_version, op_code, entry,
+                                       private_context, m_libspdm_hash_sweep_message,
+                                       sizeof(m_libspdm_hash_sweep_message),
+                                       signature, &sig_size));
+    assert_int_equal(sig_size, entry->signature_size);
+    assert_true(libspdm_test_asym_verify(is_requester, spdm_version, op_code, entry, der_context,
+                                         m_libspdm_hash_sweep_message,
+                                         sizeof(m_libspdm_hash_sweep_message),
+                                         signature, sig_size));
+    assert_true(libspdm_test_asym_verify(is_requester, spdm_version, op_code, entry,
+                                         cert_context, m_libspdm_hash_sweep_message,
+                                         sizeof(m_libspdm_hash_sweep_message),
+                                         signature, sig_size));
+    assert_true(libspdm_test_asym_verify_hash(is_requester, spdm_version, op_code, entry,
+                                              der_context, message_hash, hash_size,
+                                              signature, sig_size));
+
+    /* The signature does not cover a different message. */
+    libspdm_copy_mem(message, sizeof(message), m_libspdm_hash_sweep_message,
+                     sizeof(m_libspdm_hash_sweep_message));
+    message[0] ^= 0x01;
+    assert_false(libspdm_test_asym_verify(is_requester, spdm_version, op_code, entry,
+                                          der_context, message, sizeof(message),
+                                          signature, sig_size));
+
+    /* Accepting either order detects the order of the signature. */
+    endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE;
+    assert_true(libspdm_test_asym_verify_ex(is_requester, spdm_version, op_code, entry,
+                                            der_context, m_libspdm_hash_sweep_message,
+                                            sizeof(m_libspdm_hash_sweep_message),
+                                            signature, sig_size, &endian));
+    assert_int_equal(endian, LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY);
+
+    libspdm_copy_signature_swap_endian(entry->base_asym_algo,
+                                       swapped_signature, sizeof(swapped_signature),
+                                       signature, sig_size);
+
+    endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE;
+    assert_true(libspdm_test_asym_verify_ex(is_requester, spdm_version, op_code, entry,
+                                            der_context, m_libspdm_hash_sweep_message,
+                                            sizeof(m_libspdm_hash_sweep_message),
+                                            swapped_signature, sig_size, &endian));
+    assert_int_equal(endian, LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY);
+
+    endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
+    assert_true(libspdm_test_asym_verify_ex(is_requester, spdm_version, op_code, entry,
+                                            der_context, m_libspdm_hash_sweep_message,
+                                            sizeof(m_libspdm_hash_sweep_message),
+                                            swapped_signature, sig_size, &endian));
+
+    endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+    assert_false(libspdm_test_asym_verify_ex(is_requester, spdm_version, op_code, entry,
+                                             der_context, m_libspdm_hash_sweep_message,
+                                             sizeof(m_libspdm_hash_sweep_message),
+                                             swapped_signature, sig_size, &endian));
+
+    /* A signature over the digest verifies against the message. */
+    sig_size = sizeof(signature);
+    assert_true(libspdm_test_asym_sign_hash(is_requester, spdm_version, op_code, entry,
+                                            private_context, message_hash, hash_size,
+                                            signature, &sig_size));
+    assert_int_equal(sig_size, entry->signature_size);
+    assert_true(libspdm_test_asym_verify(is_requester, spdm_version, op_code, entry, der_context,
+                                         m_libspdm_hash_sweep_message,
+                                         sizeof(m_libspdm_hash_sweep_message),
+                                         signature, sig_size));
+}
+
+/* SPDM 1.2 and later sign a signing context, which names the SPDM version and the message that
+ * carries the signature, followed by the digest of the message. */
+static void libspdm_test_asym_sweep_spdm_12(bool is_requester,
+                                            const libspdm_asym_algo_entry_t *entry,
+                                            void *private_context, void *der_context,
+                                            void *cert_context)
+{
+    spdm_version_number_t spdm_version;
+    uint8_t op_code;
+    uint8_t other_op_code;
+    uint8_t message[sizeof(m_libspdm_hash_sweep_message)];
+    uint8_t message_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint32_t hash_size;
+    uint8_t signature[LIBSPDM_MAX_ASYM_SIG_SIZE];
+    size_t sig_size;
+
+    spdm_version = SPDM_MESSAGE_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    op_code = is_requester ? SPDM_FINISH : SPDM_MEASUREMENTS;
+    other_op_code = SPDM_CHALLENGE_AUTH;
+    hash_size = libspdm_get_hash_size(entry->base_hash_algo);
+    assert_true(libspdm_hash_all(entry->base_hash_algo, m_libspdm_hash_sweep_message,
+                                 sizeof(m_libspdm_hash_sweep_message), message_hash));
+
+    sig_size = sizeof(signature);
+    assert_true(libspdm_test_asym_sign(is_requester, spdm_version, op_code, entry,
+                                       private_context, m_libspdm_hash_sweep_message,
+                                       sizeof(m_libspdm_hash_sweep_message),
+                                       signature, &sig_size));
+    assert_int_equal(sig_size, entry->signature_size);
+    assert_true(libspdm_test_asym_verify(is_requester, spdm_version, op_code, entry, der_context,
+                                         m_libspdm_hash_sweep_message,
+                                         sizeof(m_libspdm_hash_sweep_message),
+                                         signature, sig_size));
+    assert_true(libspdm_test_asym_verify(is_requester, spdm_version, op_code, entry,
+                                         cert_context, m_libspdm_hash_sweep_message,
+                                         sizeof(m_libspdm_hash_sweep_message),
+                                         signature, sig_size));
+    assert_true(libspdm_test_asym_verify_hash(is_requester, spdm_version, op_code, entry,
+                                              der_context, message_hash, hash_size,
+                                              signature, sig_size));
+
+    /* The signature does not cover a different message, another message's signing context, or
+     * another SPDM version's. */
+    libspdm_copy_mem(message, sizeof(message), m_libspdm_hash_sweep_message,
+                     sizeof(m_libspdm_hash_sweep_message));
+    message[0] ^= 0x01;
+    assert_false(libspdm_test_asym_verify(is_requester, spdm_version, op_code, entry,
+                                          der_context, message, sizeof(message),
+                                          signature, sig_size));
+    assert_false(libspdm_test_asym_verify(is_requester, spdm_version, other_op_code, entry,
+                                          der_context, m_libspdm_hash_sweep_message,
+                                          sizeof(m_libspdm_hash_sweep_message),
+                                          signature, sig_size));
+    assert_false(libspdm_test_asym_verify(is_requester,
+                                          SPDM_MESSAGE_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                          op_code, entry, der_context,
+                                          m_libspdm_hash_sweep_message,
+                                          sizeof(m_libspdm_hash_sweep_message),
+                                          signature, sig_size));
+
+    /* A signature over the digest verifies against the message. */
+    sig_size = sizeof(signature);
+    assert_true(libspdm_test_asym_sign_hash(is_requester, spdm_version, op_code, entry,
+                                            private_context, message_hash, hash_size,
+                                            signature, &sig_size));
+    assert_int_equal(sig_size, entry->signature_size);
+    assert_true(libspdm_test_asym_verify(is_requester, spdm_version, op_code, entry, der_context,
+                                         m_libspdm_hash_sweep_message,
+                                         sizeof(m_libspdm_hash_sweep_message),
+                                         signature, sig_size));
+}
+
+static void libspdm_test_asym_sweep(bool is_requester)
+{
+    size_t index;
+    const libspdm_asym_algo_entry_t *entry;
+    uint32_t signature_size;
+    void *private_context;
+    void *der_context;
+    void *cert_context;
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(m_libspdm_asym_algo_table); index++) {
+        entry = &m_libspdm_asym_algo_table[index];
+
+        if (is_requester) {
+            signature_size =
+                libspdm_get_req_asym_signature_size((uint16_t)entry->base_asym_algo);
+        } else {
+            signature_size = libspdm_get_asym_signature_size(entry->base_asym_algo);
+        }
+        assert_int_equal(signature_size, entry->signature_size);
+
+        /* The algorithm is compiled out, so its arms assert rather than dispatch. */
+        if (entry->signature_size == 0) {
+            continue;
+        }
+
+        libspdm_test_asym_load_keys(is_requester, entry,
+                                    &private_context, &der_context, &cert_context);
+
+        if (entry->spdm_10_11) {
+            libspdm_test_asym_sweep_spdm_11(is_requester, entry,
+                                            private_context, der_context, cert_context);
+        }
+        libspdm_test_asym_sweep_spdm_12(is_requester, entry,
+                                        private_context, der_context, cert_context);
+
+        if (is_requester) {
+            libspdm_req_asym_free((uint16_t)entry->base_asym_algo, private_context);
+            libspdm_req_asym_free((uint16_t)entry->base_asym_algo, der_context);
+            libspdm_req_asym_free((uint16_t)entry->base_asym_algo, cert_context);
+        } else {
+            libspdm_asym_free(entry->base_asym_algo, private_context);
+            libspdm_asym_free(entry->base_asym_algo, der_context);
+            libspdm_asym_free(entry->base_asym_algo, cert_context);
+        }
+    }
+
+    /* Unlike the other entry points, which assert on an unknown algorithm, the size getter
+     * returns 0. */
+    if (is_requester) {
+        assert_int_equal(libspdm_get_req_asym_signature_size(0), 0);
+    } else {
+        assert_int_equal(libspdm_get_asym_signature_size(0), 0);
+    }
+}
+
+/* The signing contexts of DSP0274, one for each signer and message that carries a signature. */
+typedef struct {
+    bool is_requester;
+    uint8_t op_code;
+    const char *spdm_context;
+} libspdm_signing_context_entry_t;
+
+static const libspdm_signing_context_entry_t m_libspdm_signing_context_table[] = {
+    { false, SPDM_CHALLENGE_AUTH, "responder-challenge_auth signing" },
+    { true, SPDM_CHALLENGE_AUTH, "requester-challenge_auth signing" },
+    { false, SPDM_MEASUREMENTS, "responder-measurements signing" },
+    { false, SPDM_KEY_EXCHANGE_RSP, "responder-key_exchange_rsp signing" },
+    { true, SPDM_FINISH, "requester-finish signing" },
+    { false, SPDM_ENDPOINT_INFO, "responder-endpoint_info signing" },
+    { true, SPDM_ENDPOINT_INFO, "requester-endpoint_info signing" },
+};
+
+static void libspdm_test_crypt_signing_context(void **state)
+{
+    static const uint8_t versions[] = {
+        SPDM_MESSAGE_VERSION_12, SPDM_MESSAGE_VERSION_13, SPDM_MESSAGE_VERSION_14
+    };
+    size_t version_index;
+    size_t index;
+    const libspdm_signing_context_entry_t *entry;
+    spdm_version_number_t spdm_version;
+    const void *context;
+    size_t context_size;
+    size_t spdm_context_size;
+    uint8_t expected[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE];
+    uint8_t actual[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE];
+    uint8_t *prefix;
+    size_t repeat;
+
+    /* combined_spdm_prefix is 100 bytes: spdm_prefix, which is "dmtf-spdm-v<version>.*" four
+     * times, then zeros, then spdm_context at the end. */
+    assert_int_equal(SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE, 100);
+
+    for (version_index = 0; version_index < LIBSPDM_ARRAY_SIZE(versions); version_index++) {
+        spdm_version = (spdm_version_number_t)versions[version_index] <<
+                       SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+        for (index = 0; index < LIBSPDM_ARRAY_SIZE(m_libspdm_signing_context_table); index++) {
+            entry = &m_libspdm_signing_context_table[index];
+            spdm_context_size = strlen(entry->spdm_context);
+
+            context = libspdm_get_signing_context_string(spdm_version, entry->op_code,
+                                                         entry->is_requester, &context_size);
+            assert_int_equal(context_size, spdm_context_size);
+            assert_memory_equal(context, entry->spdm_context, spdm_context_size);
+
+            libspdm_zero_mem(expected, sizeof(expected));
+            for (repeat = 0; repeat < 4; repeat++) {
+                prefix = expected + repeat * 16;
+                libspdm_copy_mem(prefix, 16, "dmtf-spdm-v", 11);
+                prefix[11] = (uint8_t)('0' + (versions[version_index] >> 4));
+                prefix[12] = '.';
+                prefix[13] = (uint8_t)('0' + (versions[version_index] & 0xF));
+                prefix[14] = '.';
+                prefix[15] = '*';
+            }
+            libspdm_copy_mem(expected + sizeof(expected) - spdm_context_size, spdm_context_size,
+                             entry->spdm_context, spdm_context_size);
+
+            libspdm_set_mem(actual, sizeof(actual), 0xFF);
+            libspdm_create_signing_context(spdm_version, entry->op_code, entry->is_requester,
+                                           actual);
+            assert_memory_equal(actual, expected, sizeof(expected));
+        }
+    }
+}
+
+static void libspdm_test_crypt_asym_all_algos(void **state)
+{
+    libspdm_test_asym_sweep(false);
+}
+
+static void libspdm_test_crypt_req_asym_all_algos(void **state)
+{
+    libspdm_test_asym_sweep(true);
+}
+
 static int libspdm_crypt_lib_setup(void **state)
 {
     return 0;
@@ -1854,6 +2361,9 @@ static int libspdm_crypt_lib_test_main(void)
         cmocka_unit_test(libspdm_test_crypt_hkdf_all_algos),
         cmocka_unit_test(libspdm_test_crypt_aead_all_suites),
         cmocka_unit_test(libspdm_test_crypt_dhe_all_groups),
+        cmocka_unit_test(libspdm_test_crypt_signing_context),
+        cmocka_unit_test(libspdm_test_crypt_asym_all_algos),
+        cmocka_unit_test(libspdm_test_crypt_req_asym_all_algos),
     };
 
     return cmocka_run_group_tests(test_cases,
