@@ -1624,6 +1624,105 @@ static void libspdm_test_crypt_hkdf_all_algos(void **state)
     }
 }
 
+/* The key, IV and tag sizes of each AEAD cipher suite, or 0 when the suite is compiled out. */
+typedef struct {
+    uint16_t aead_cipher_suite;
+    uint32_t key_size;
+    uint32_t iv_size;
+    uint32_t tag_size;
+} libspdm_aead_suite_entry_t;
+
+static const libspdm_aead_suite_entry_t m_libspdm_aead_suite_table[] = {
+    { SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM,
+      LIBSPDM_AEAD_AES_128_GCM_SUPPORT ? 16 : 0,
+      LIBSPDM_AEAD_AES_128_GCM_SUPPORT ? 12 : 0,
+      LIBSPDM_AEAD_AES_128_GCM_SUPPORT ? 16 : 0 },
+    { SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM,
+      LIBSPDM_AEAD_AES_256_GCM_SUPPORT ? 32 : 0,
+      LIBSPDM_AEAD_AES_256_GCM_SUPPORT ? 12 : 0,
+      LIBSPDM_AEAD_AES_256_GCM_SUPPORT ? 16 : 0 },
+    { SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_CHACHA20_POLY1305,
+      LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT ? 32 : 0,
+      LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT ? 12 : 0,
+      LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT ? 16 : 0 },
+    { SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AEAD_SM4_GCM,
+      LIBSPDM_AEAD_SM4_128_GCM_SUPPORT ? 16 : 0,
+      LIBSPDM_AEAD_SM4_128_GCM_SUPPORT ? 12 : 0,
+      LIBSPDM_AEAD_SM4_128_GCM_SUPPORT ? 16 : 0 },
+};
+
+static void libspdm_test_crypt_aead_all_suites(void **state)
+{
+    size_t index;
+    const libspdm_aead_suite_entry_t *entry;
+    uint8_t tag[LIBSPDM_MAX_AEAD_TAG_SIZE];
+    uint8_t cipher_text[sizeof(m_libspdm_hash_sweep_message)];
+    uint8_t plain_text[sizeof(m_libspdm_hash_sweep_message)];
+    size_t cipher_text_size;
+    size_t plain_text_size;
+    spdm_version_number_t secured_message_version;
+
+    secured_message_version = SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(m_libspdm_aead_suite_table); index++) {
+        entry = &m_libspdm_aead_suite_table[index];
+
+        assert_int_equal(libspdm_get_aead_key_size(entry->aead_cipher_suite), entry->key_size);
+        assert_int_equal(libspdm_get_aead_iv_size(entry->aead_cipher_suite), entry->iv_size);
+        assert_int_equal(libspdm_get_aead_tag_size(entry->aead_cipher_suite), entry->tag_size);
+
+        /* The suite is compiled out, so its arms assert rather than dispatch. */
+        if (entry->key_size == 0) {
+            continue;
+        }
+
+        /* The sweep reuses the hash sweep's inputs: its key, its salt as the IV, and its info as
+         * the associated data. */
+        cipher_text_size = sizeof(cipher_text);
+        assert_true(libspdm_aead_encryption(secured_message_version, entry->aead_cipher_suite,
+                                            m_libspdm_hash_sweep_key, entry->key_size,
+                                            m_libspdm_hash_sweep_salt, entry->iv_size,
+                                            m_libspdm_hash_sweep_info,
+                                            sizeof(m_libspdm_hash_sweep_info),
+                                            m_libspdm_hash_sweep_message,
+                                            sizeof(m_libspdm_hash_sweep_message),
+                                            tag, entry->tag_size,
+                                            cipher_text, &cipher_text_size));
+        assert_int_equal(cipher_text_size, sizeof(m_libspdm_hash_sweep_message));
+        assert_memory_not_equal(cipher_text, m_libspdm_hash_sweep_message, cipher_text_size);
+
+        plain_text_size = sizeof(plain_text);
+        assert_true(libspdm_aead_decryption(secured_message_version, entry->aead_cipher_suite,
+                                            m_libspdm_hash_sweep_key, entry->key_size,
+                                            m_libspdm_hash_sweep_salt, entry->iv_size,
+                                            m_libspdm_hash_sweep_info,
+                                            sizeof(m_libspdm_hash_sweep_info),
+                                            cipher_text, cipher_text_size,
+                                            tag, entry->tag_size,
+                                            plain_text, &plain_text_size));
+        assert_int_equal(plain_text_size, sizeof(m_libspdm_hash_sweep_message));
+        assert_memory_equal(plain_text, m_libspdm_hash_sweep_message, plain_text_size);
+
+        /* Decryption authenticates the cipher text, so a modified tag is rejected. */
+        tag[0] ^= 0x01;
+        plain_text_size = sizeof(plain_text);
+        assert_false(libspdm_aead_decryption(secured_message_version, entry->aead_cipher_suite,
+                                             m_libspdm_hash_sweep_key, entry->key_size,
+                                             m_libspdm_hash_sweep_salt, entry->iv_size,
+                                             m_libspdm_hash_sweep_info,
+                                             sizeof(m_libspdm_hash_sweep_info),
+                                             cipher_text, cipher_text_size,
+                                             tag, entry->tag_size,
+                                             plain_text, &plain_text_size));
+    }
+
+    /* Unlike encryption and decryption, which assert on an unknown suite, the size getters return
+     * 0. */
+    assert_int_equal(libspdm_get_aead_key_size(0), 0);
+    assert_int_equal(libspdm_get_aead_iv_size(0), 0);
+    assert_int_equal(libspdm_get_aead_tag_size(0), 0);
+}
+
 static int libspdm_crypt_lib_setup(void **state)
 {
     return 0;
@@ -1652,6 +1751,7 @@ static int libspdm_crypt_lib_test_main(void)
         cmocka_unit_test(libspdm_test_crypt_hash_all_algos),
         cmocka_unit_test(libspdm_test_crypt_hmac_all_algos),
         cmocka_unit_test(libspdm_test_crypt_hkdf_all_algos),
+        cmocka_unit_test(libspdm_test_crypt_aead_all_suites),
     };
 
     return cmocka_run_group_tests(test_cases,
