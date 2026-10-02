@@ -97,9 +97,12 @@ void libspdm_fips_selftest_ecdh(void *fips_selftest_context)
     if (!libspdm_consttime_is_mem_equal(common_key, expected_ecdh_secret,
                                         sizeof(expected_ecdh_secret))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ECDH KAT failed \n"));
+        libspdm_ec_free(ec_context);
         result = false;
         goto update;
     }
+
+    libspdm_ec_free(ec_context);
 
 update:
     /* mark it as tested*/

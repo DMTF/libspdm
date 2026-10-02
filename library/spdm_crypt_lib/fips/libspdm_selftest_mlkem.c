@@ -131,6 +131,8 @@ void libspdm_fips_selftest_mlkem(void *fips_selftest_context)
         goto update;
     }
 
+    libspdm_mlkem_free(kem_context);
+
 update:
     /* mark it as tested*/
     context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_ML_KEM;
