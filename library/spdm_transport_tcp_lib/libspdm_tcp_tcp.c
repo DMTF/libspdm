@@ -56,7 +56,7 @@ libspdm_return_t libspdm_tcp_encode_message(const uint32_t *session_id, size_t m
         message_size + sizeof(spdm_tcp_binding_header_t);
     *transport_message = (uint8_t *)message - sizeof(spdm_tcp_binding_header_t);
     tcp_message_header = *transport_message;
-    tcp_message_header->payload_length = (uint16_t)(*transport_message_size - 2);
+    tcp_message_header->payload_length = (uint16_t)message_size;
     tcp_message_header->binding_version = 0x1;
 
     if (session_id != NULL) {
