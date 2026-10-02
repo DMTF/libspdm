@@ -4,7 +4,10 @@ if(CMAKE_HOST_WIN32)
     if(ARCH STREQUAL "x64")
         set(CMAKE_C_FLAGS_INIT "-m64")
     elseif(ARCH STREQUAL "ia32")
-        set(CMAKE_C_FLAGS_INIT "-m32 -march=i586")
+        # A target triple, unlike -m32, is seen by CMake's compiler checks, which otherwise link
+        # with /machine:x64.
+        set(CMAKE_C_COMPILER_TARGET i686-pc-windows-msvc)
+        set(CMAKE_C_FLAGS_INIT "-march=i586")
     endif()
 elseif(CMAKE_HOST_APPLE)
     set(CMAKE_C_COMPILER clang)
