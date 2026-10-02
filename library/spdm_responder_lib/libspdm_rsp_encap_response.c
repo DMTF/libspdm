@@ -586,6 +586,15 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     session_id = libspdm_get_encap_session_id_via_last_request(spdm_context);
 
     if (last_request_code != 0) {
+        if ((encap_context->flow_type == LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH) &&
+            (last_request_code == SPDM_GET_DIGESTS) &&
+            (encap_context->last_encap_request_size == 0)) {
+            /* This answers the GET_DIGESTS that KEY_EXCHANGE_RSP issued implicitly. It has no
+             * request message, so its size is recorded now. The flow has then moved past its
+             * first message, and the request can be reissued after ResponseNotReady. */
+            encap_context->last_encap_request_size = sizeof(spdm_get_digest_request_t);
+        }
+
         /* Process the encapsulated response from the Requester before calling the handler. */
         status = libspdm_dispatch_process_encap_response(
             spdm_context, last_request_code,
