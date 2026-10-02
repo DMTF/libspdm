@@ -5018,7 +5018,9 @@ static void req_psk_exchange_case29(void **state)
 
     requester_context_size = sizeof(requester_context);
     responder_context_size = sizeof(responder_context);
-    responder_opaque_data_size = sizeof(responder_opaque_data);
+    /* The buffer is exactly the size of the Responder's OpaqueData. */
+    responder_opaque_data_size =
+        libspdm_get_opaque_data_version_selection_data_size(spdm_context);
     status = libspdm_send_receive_psk_exchange_ex(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),

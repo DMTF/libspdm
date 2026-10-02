@@ -330,7 +330,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     }
 
     if ((opaque_data != NULL) && (opaque_data_size != NULL)) {
-        if (opaque_length >= *opaque_data_size) {
+        if (opaque_length > *opaque_data_size) {
             status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
             goto receive_done;
         }

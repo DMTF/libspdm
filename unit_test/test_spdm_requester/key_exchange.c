@@ -7742,7 +7742,9 @@ static void req_key_exchange_case31(void **state)
     }
 
     heartbeat_period = 0;
-    responder_opaque_data_size = sizeof(responder_opaque_data);
+    /* The buffer is exactly the size of the Responder's OpaqueData. */
+    responder_opaque_data_size =
+        libspdm_get_opaque_data_version_selection_data_size(spdm_context);
     requester_opaque_data_size = sizeof(requester_opaque_data);
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange_ex(
@@ -7753,6 +7755,8 @@ static void req_key_exchange_case31(void **state)
         requester_opaque_data, requester_opaque_data_size,
         responder_opaque_data, &responder_opaque_data_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(responder_opaque_data_size,
+                     libspdm_get_opaque_data_version_selection_data_size(spdm_context));
     assert_int_equal(session_id, 0xFFFFFFFF);
     assert_int_equal(
         libspdm_secured_message_get_session_state(

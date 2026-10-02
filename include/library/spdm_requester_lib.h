@@ -194,7 +194,7 @@ libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
  * @param  responder_nonce        A buffer to hold the responder nonce (32 bytes), if not NULL.
  * @param  opaque_data            A buffer to hold the responder opaque data, if not NULL.
  * @param  opaque_data_size       On input, the size of the opaque data buffer.
- *                                Responder opaque data should be less than 1024 bytes.
+ *                                Responder opaque data is at most 1024 bytes.
  *                                On output, the size of the opaque data.
  **/
 libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
@@ -229,7 +229,7 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
  * @param  responder_nonce        A buffer to hold the responder nonce (32 bytes), if not NULL.
  * @param  opaque_data            A buffer to hold the responder opaque data, if not NULL.
  * @param  opaque_data_size       On input, the size of the opaque data buffer.
- *                                Responder opaque data should be less than 1024 bytes.
+ *                                Responder opaque data is at most 1024 bytes.
  *                                On output, the size of the opaque data.
  **/
 libspdm_return_t libspdm_challenge_ex2(void *spdm_context, void *reserved,
@@ -296,7 +296,7 @@ libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *ses
  * @param  responder_nonce            A buffer to hold the responder nonce (32 bytes), if not NULL.
  * @param  opaque_data                A buffer to hold the responder opaque data, if not NULL.
  * @param  opaque_data_size           On input, the size of the opaque data buffer.
- *                                    Responder opaque data should be less than 1024 bytes.
+ *                                    Responder opaque data is at most 1024 bytes.
  *                                    On output, the size of the opaque data.
  **/
 libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *session_id,
@@ -337,7 +337,7 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
  * @param  responder_nonce            A buffer to hold the responder nonce (32 bytes), if not NULL.
  * @param  opaque_data                A buffer to hold the responder opaque data, if not NULL.
  * @param  opaque_data_size           On input, the size of the opaque data buffer.
- *                                    Responder opaque data should be less than 1024 bytes.
+ *                                    Responder opaque data is at most 1024 bytes.
  *                                    On output, the size of the opaque data.
  **/
 libspdm_return_t libspdm_get_measurement_ex2(void *spdm_context, const uint32_t *session_id,
@@ -567,7 +567,7 @@ libspdm_return_t libspdm_get_supported_algorithms(void *spdm_context,
  * @param  requester_opaque_data_size The size of the opaque data, if requester_opaque_data is not NULL.
  * @param  responder_opaque_data      A buffer to hold the responder opaque data, if not NULL.
  * @param  responder_opaque_data_size On input, the size of the opaque data buffer.
- *                                    Opaque data should be less than 1024 bytes.
+ *                                    Opaque data is at most 1024 bytes.
  *                                    On output, the size of the opaque data.
  **/
 libspdm_return_t libspdm_start_session_exchange(void *spdm_context, bool use_psk,
@@ -604,7 +604,7 @@ libspdm_return_t libspdm_start_session_exchange(void *spdm_context, bool use_psk
  * @param  responder_opaque_data      A buffer to hold the responder opaque data, if not NULL.
  *                                    This parameter is only used for SPDM 1.4 and later
  * @param  responder_opaque_data_size On input, the size of the opaque data buffer.
- *                                    Opaque data should be less than 1024 bytes.
+ *                                    Opaque data is at most 1024 bytes.
  *                                    On output, the size of the opaque data.
  *                                    This parameter is only used for SPDM 1.4 and later
  */
