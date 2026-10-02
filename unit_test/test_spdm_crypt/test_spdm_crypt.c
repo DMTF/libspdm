@@ -2331,6 +2331,161 @@ static void libspdm_test_crypt_req_asym_all_algos(void **state)
     libspdm_test_asym_sweep(true);
 }
 
+/* The signature sizes of FIPS 204 (ML-DSA) and FIPS 205 (SLH-DSA), or 0 when the parameter set is
+ * compiled out. */
+typedef struct {
+    uint32_t pqc_asym_algo;
+    uint32_t signature_size;
+} libspdm_pqc_asym_algo_entry_t;
+
+static const libspdm_pqc_asym_algo_entry_t m_libspdm_pqc_asym_algo_table[] = {
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44, LIBSPDM_ML_DSA_44_SUPPORT ? 2420 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_65, LIBSPDM_ML_DSA_65_SUPPORT ? 3309 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_87, LIBSPDM_ML_DSA_87_SUPPORT ? 4627 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128S,
+      LIBSPDM_SLH_DSA_SHA2_128S_SUPPORT ? 7856 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128S,
+      LIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT ? 7856 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128F,
+      LIBSPDM_SLH_DSA_SHA2_128F_SUPPORT ? 17088 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128F,
+      LIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT ? 17088 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192S,
+      LIBSPDM_SLH_DSA_SHA2_192S_SUPPORT ? 16224 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192S,
+      LIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT ? 16224 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192F,
+      LIBSPDM_SLH_DSA_SHA2_192F_SUPPORT ? 35664 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192F,
+      LIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT ? 35664 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256S,
+      LIBSPDM_SLH_DSA_SHA2_256S_SUPPORT ? 29792 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256S,
+      LIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT ? 29792 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256F,
+      LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT ? 49856 : 0 },
+    { SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256F,
+      LIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT ? 49856 : 0 },
+};
+
+static void libspdm_test_crypt_pqc_asym_signature_size(void **state)
+{
+    size_t index;
+    const libspdm_pqc_asym_algo_entry_t *entry;
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(m_libspdm_pqc_asym_algo_table); index++) {
+        entry = &m_libspdm_pqc_asym_algo_table[index];
+
+        assert_int_equal(libspdm_get_pqc_asym_signature_size(entry->pqc_asym_algo),
+                         entry->signature_size);
+        assert_int_equal(libspdm_get_req_pqc_asym_signature_size(entry->pqc_asym_algo),
+                         entry->signature_size);
+    }
+
+    /* Unlike the other entry points, which assert on an unknown algorithm, the size getters
+     * return 0. */
+    assert_int_equal(libspdm_get_pqc_asym_signature_size(0), 0);
+    assert_int_equal(libspdm_get_req_pqc_asym_signature_size(0), 0);
+
+    /* Freeing no context does nothing. */
+    libspdm_pqc_asym_free(SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44, NULL);
+    libspdm_req_pqc_asym_free(SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44, NULL);
+}
+
+/* The encapsulation key, cipher text and shared secret sizes of FIPS 203 (ML-KEM), or 0 when the
+ * parameter set is compiled out. */
+typedef struct {
+    uint32_t kem_alg;
+    uint32_t encap_key_size;
+    uint32_t cipher_text_size;
+    uint32_t shared_secret_size;
+} libspdm_kem_algo_entry_t;
+
+static const libspdm_kem_algo_entry_t m_libspdm_kem_algo_table[] = {
+    { SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512, LIBSPDM_ML_KEM_512_SUPPORT ? 800 : 0,
+      LIBSPDM_ML_KEM_512_SUPPORT ? 768 : 0, LIBSPDM_ML_KEM_512_SUPPORT ? 32 : 0 },
+    { SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768, LIBSPDM_ML_KEM_768_SUPPORT ? 1184 : 0,
+      LIBSPDM_ML_KEM_768_SUPPORT ? 1088 : 0, LIBSPDM_ML_KEM_768_SUPPORT ? 32 : 0 },
+    { SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024, LIBSPDM_ML_KEM_1024_SUPPORT ? 1568 : 0,
+      LIBSPDM_ML_KEM_1024_SUPPORT ? 1568 : 0, LIBSPDM_ML_KEM_1024_SUPPORT ? 32 : 0 },
+};
+
+static void libspdm_test_crypt_kem_all_algos(void **state)
+{
+    size_t index;
+    const libspdm_kem_algo_entry_t *entry;
+    spdm_version_number_t spdm_version;
+    void *initiator;
+    void *responder;
+    uint8_t encap_key[LIBSPDM_MAX_KEM_ENCAP_KEY_SIZE];
+    size_t encap_key_size;
+    uint8_t cipher_text[LIBSPDM_MAX_KEM_CT_SIZE];
+    size_t cipher_text_size;
+    uint8_t initiator_secret[LIBSPDM_MAX_KEM_SS_SIZE];
+    uint8_t responder_secret[LIBSPDM_MAX_KEM_SS_SIZE];
+    size_t initiator_secret_size;
+    size_t responder_secret_size;
+
+    spdm_version = SPDM_MESSAGE_VERSION_14 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(m_libspdm_kem_algo_table); index++) {
+        entry = &m_libspdm_kem_algo_table[index];
+
+        assert_int_equal(libspdm_get_kem_encap_key_size(entry->kem_alg), entry->encap_key_size);
+        assert_int_equal(libspdm_get_kem_cipher_text_size(entry->kem_alg),
+                         entry->cipher_text_size);
+        assert_int_equal(libspdm_get_kem_shared_secret_size(entry->kem_alg),
+                         entry->shared_secret_size);
+
+        /* The parameter set is compiled out, so its arms assert rather than dispatch. */
+        if (entry->encap_key_size == 0) {
+            continue;
+        }
+
+        initiator = libspdm_kem_new(spdm_version, entry->kem_alg, true);
+        assert_non_null(initiator);
+        responder = libspdm_kem_new(spdm_version, entry->kem_alg, false);
+        assert_non_null(responder);
+
+        /* The initiator publishes an encapsulation key, the responder encapsulates a secret to
+         * it, and the initiator decapsulates the same secret. */
+        encap_key_size = sizeof(encap_key);
+        assert_true(libspdm_kem_generate_key(entry->kem_alg, initiator,
+                                             encap_key, &encap_key_size));
+        assert_int_equal(encap_key_size, entry->encap_key_size);
+
+        cipher_text_size = sizeof(cipher_text);
+        responder_secret_size = sizeof(responder_secret);
+        assert_true(libspdm_kem_encapsulate(entry->kem_alg, responder,
+                                            encap_key, encap_key_size,
+                                            cipher_text, &cipher_text_size,
+                                            responder_secret, &responder_secret_size));
+        assert_int_equal(cipher_text_size, entry->cipher_text_size);
+        assert_int_equal(responder_secret_size, entry->shared_secret_size);
+
+        initiator_secret_size = sizeof(initiator_secret);
+        assert_true(libspdm_kem_decapsulate(entry->kem_alg, initiator,
+                                            cipher_text, cipher_text_size,
+                                            initiator_secret, &initiator_secret_size));
+        assert_int_equal(initiator_secret_size, entry->shared_secret_size);
+
+        assert_memory_equal(initiator_secret, responder_secret, entry->shared_secret_size);
+
+        libspdm_kem_free(entry->kem_alg, initiator);
+        libspdm_kem_free(entry->kem_alg, responder);
+    }
+
+    /* Unlike the other entry points, which assert on an unknown algorithm, these return benign
+     * values. */
+    assert_int_equal(libspdm_get_kem_encap_key_size(0), 0);
+    assert_int_equal(libspdm_get_kem_cipher_text_size(0), 0);
+    assert_int_equal(libspdm_get_kem_shared_secret_size(0), 0);
+    assert_null(libspdm_kem_new(spdm_version, 0, true));
+
+    /* Freeing no context does nothing. */
+    libspdm_kem_free(SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512, NULL);
+}
+
 static int libspdm_crypt_lib_setup(void **state)
 {
     return 0;
@@ -2364,6 +2519,8 @@ static int libspdm_crypt_lib_test_main(void)
         cmocka_unit_test(libspdm_test_crypt_signing_context),
         cmocka_unit_test(libspdm_test_crypt_asym_all_algos),
         cmocka_unit_test(libspdm_test_crypt_req_asym_all_algos),
+        cmocka_unit_test(libspdm_test_crypt_pqc_asym_signature_size),
+        cmocka_unit_test(libspdm_test_crypt_kem_all_algos),
     };
 
     return cmocka_run_group_tests(test_cases,
