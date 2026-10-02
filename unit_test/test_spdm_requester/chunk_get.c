@@ -441,6 +441,7 @@ static libspdm_return_t receive_message(
 {
     libspdm_test_context_t* spdm_test_context;
     uint8_t chunk_handle = CHUNK_GET_UNIT_TEST_CHUNK_HANDLE;
+    static uint32_t current_case_id = 0;
     static bool error_large_response_sent = false;
 
     static spdm_message_header_t* sub_rsp = NULL;
@@ -463,9 +464,9 @@ static libspdm_return_t receive_message(
     spdm_test_context = libspdm_get_test_context();
     spdm_request_header = (spdm_message_header_t*) m_libspdm_local_request_buffer;
 
-    /* Reset statics when entering case 0xB with the initial GET_CAPABILITIES request */
-    if (spdm_test_context->case_id == 0xB &&
-        spdm_request_header->request_response_code == SPDM_GET_CAPABILITIES) {
+    /* Start each case afresh, since a failed case can stop partway through a large response. */
+    if (spdm_test_context->case_id != current_case_id) {
+        current_case_id = spdm_test_context->case_id;
         sub_rsp = NULL;
         sub_rsp_size = 0;
         sub_rsp_copied = 0;
@@ -474,18 +475,30 @@ static libspdm_return_t receive_message(
         error_large_response_sent = false;
     }
 
-    /* Reset statics when entering case 0xC with the initial GET_DIGESTS request */
-    if (spdm_test_context->case_id == 0xC &&
-        spdm_request_header->request_response_code == SPDM_GET_DIGESTS) {
-        sub_rsp = NULL;
-        sub_rsp_size = 0;
-        sub_rsp_copied = 0;
-        sub_rsp_remaining = 0;
-        chunk_seq_no = 0;
-        error_large_response_sent = false;
+    if (spdm_test_context->case_id == 0x7) {
+        /* This case only returns ERROR(RequestResynch), with an SPDMVersion that does not match
+         * the request. */
+        spdm_error_response_t* error_rsp;
+        size_t error_rsp_size;
+
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        error_rsp = (void*) ((uint8_t*) *response + transport_header_size);
+        error_rsp_size = sizeof(spdm_error_response_t) + sizeof(uint8_t);
+
+        error_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        error_rsp->header.request_response_code = SPDM_ERROR;
+        error_rsp->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
+        error_rsp->header.param2 = 0;
+
+        libspdm_transport_test_encode_message(
+            spdm_context, NULL, false, false,
+            error_rsp_size, error_rsp,
+            response_size, response);
+
+        return LIBSPDM_STATUS_SUCCESS;
     }
 
-    /* First response to these tests should always be error large response */
+    /* First response to the other cases is always an error large response */
     if (error_large_response_sent == false) {
         error_large_response_sent = true;
 
@@ -602,34 +615,6 @@ static libspdm_return_t receive_message(
         build_response_func = libspdm_requester_chunk_get_test_case5_case6_build_vendor_response;
     } else if (spdm_test_context->case_id == 0x6) {
         build_response_func = libspdm_requester_chunk_get_test_case5_case6_build_vendor_response;
-    } else if (spdm_test_context->case_id == 0x7) {
-        /* This case only return one error message with RequestResynch */
-        spdm_error_response_t* error_rsp;
-        size_t error_rsp_size;
-
-        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
-        error_rsp = (void*) ((uint8_t*) *response + transport_header_size);
-        error_rsp_size = sizeof(spdm_error_response_t) + sizeof(uint8_t);
-
-        error_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        error_rsp->header.request_response_code = SPDM_ERROR;
-        error_rsp->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
-        error_rsp->header.param2 = 0;
-
-        libspdm_transport_test_encode_message(
-            spdm_context, NULL, false, false,
-            error_rsp_size, error_rsp,
-            response_size, response);
-
-        /* reset static status for next case */
-        sub_rsp = NULL;
-        sub_rsp_size = 0;
-        sub_rsp_copied = 0;
-        sub_rsp_remaining = 0;
-        chunk_seq_no = 0;
-        error_large_response_sent = false;
-
-        return LIBSPDM_STATUS_SUCCESS;
     } else if (spdm_test_context->case_id == 0xC) {
         /* Return a single CHUNK_RESPONSE whose declared chunk_size is larger than the
          * number of bytes actually present in the received message. Reassembly must
@@ -658,13 +643,6 @@ static libspdm_return_t receive_message(
             spdm_context, NULL, false, false,
             mal_rsp_size, mal_rsp,
             response_size, response);
-
-        sub_rsp = NULL;
-        sub_rsp_size = 0;
-        sub_rsp_copied = 0;
-        sub_rsp_remaining = 0;
-        chunk_seq_no = 0;
-        error_large_response_sent = false;
 
         return LIBSPDM_STATUS_SUCCESS;
     } else if (spdm_test_context->case_id == 0x8) {
@@ -1231,6 +1209,9 @@ static void req_chunk_get_case7(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
+    /* The ERROR answers VENDOR_DEFINED_REQUEST itself, so no CHUNK_GET is sent. */
+    assert_int_equal(((spdm_message_header_t *)m_libspdm_local_request_buffer)
+                     ->request_response_code, SPDM_VENDOR_DEFINED_REQUEST);
 }
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
 
@@ -1345,6 +1326,9 @@ static void req_chunk_get_case9(void** state)
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    /* The CHUNK_RESPONSE to CHUNK_GET is rejected. */
+    assert_int_equal(((spdm_message_header_t *)m_libspdm_local_request_buffer)
+                     ->request_response_code, SPDM_CHUNK_GET);
 }
 
 static void req_chunk_get_case10(void** state)
@@ -1380,6 +1364,9 @@ static void req_chunk_get_case10(void** state)
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    /* The CHUNK_RESPONSE to CHUNK_GET is rejected. */
+    assert_int_equal(((spdm_message_header_t *)m_libspdm_local_request_buffer)
+                     ->request_response_code, SPDM_CHUNK_GET);
 }
 
 static void req_chunk_get_case12(void** state)
