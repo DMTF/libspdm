@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -961,10 +961,10 @@ static int libspdm_ecdsa_sign_setup_random(const EC_KEY *eckey, BIGNUM **kinvp, 
     X = BN_new();
 
     if (k == NULL || r == NULL || X == NULL) {
-        return 0;
+        goto err;
     }
     if ((tmp_point = EC_POINT_new(group)) == NULL) {
-        return 0;
+        goto err;
     }
     order = EC_GROUP_get0_order(group);
 
@@ -978,11 +978,13 @@ static int libspdm_ecdsa_sign_setup_random(const EC_KEY *eckey, BIGNUM **kinvp, 
 
     e = BN_CTX_get(ctx);
     if (e == NULL) {
-        return 0;
+        goto err;
     }
 
     /*random number*/
-    k = BN_bin2bn(random, (int)random_len, NULL);
+    if (BN_bin2bn(random, (int)random_len, k) == NULL) {
+        goto err;
+    }
 
     /* compute r the x-coordinate of generator * k */
     if (!EC_POINT_mul(group, tmp_point, k, NULL, NULL, ctx)) {
