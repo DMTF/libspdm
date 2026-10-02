@@ -110,7 +110,6 @@ libspdm_return_t libspdm_get_encap_request_get_endpoint_info(
 
         spdm_nonce = (uint8_t *)(spdm_request + 1);
         if (!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_nonce)) {
-            libspdm_release_sender_buffer (spdm_context);
             return LIBSPDM_STATUS_LOW_ENTROPY;
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap RequesterNonce - "));
