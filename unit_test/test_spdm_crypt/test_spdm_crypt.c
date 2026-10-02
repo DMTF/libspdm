@@ -1545,6 +1545,9 @@ static void libspdm_test_crypt_hash_all_algos(void **state)
         libspdm_hash_free(entry->base_hash_algo, copy);
         libspdm_hash_free(entry->base_hash_algo, context);
     }
+
+    /* Freeing no context does nothing. */
+    libspdm_hash_free(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, NULL);
 }
 
 static void libspdm_test_crypt_hmac_all_algos(void **state)
@@ -1592,6 +1595,9 @@ static void libspdm_test_crypt_hmac_all_algos(void **state)
 
         libspdm_hmac_free(entry->base_hash_algo, context);
     }
+
+    /* Freeing no context does nothing. */
+    libspdm_hmac_free(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, NULL);
 }
 
 static void libspdm_test_crypt_hkdf_all_algos(void **state)
