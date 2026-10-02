@@ -8,8 +8,8 @@ A libspdm raw public key follows the format as defined by
 ## Cryptography Library
 
 libspdm calls the cryptography library directly to parse the raw public key.
-- For OpenSSL, libspdm calls `d2i_RSA_PUBKEY_bio` for RSA, `d2i_EC_PUBKEY_bio` for ECDSA, and
-  `d2i_PUBKEY_bio` for EdDSA and SM2DSA.
+- For OpenSSL, libspdm calls `d2i_PUBKEY_bio` for RSA, EdDSA, and SM2DSA, and
+  `OSSL_DECODER_from_data` for ECDSA.
 - For MbedTLS, libspdm calls `mbedtls_pk_parse_public_key` for RSA and ECDSA. EdDSA and SM2DSA are
   not supported.
 
