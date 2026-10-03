@@ -3005,6 +3005,10 @@ void libspdm_reset_context(void *spdm_context)
      * information is cleared. */
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++)
     {
+        if (context->session_info[index].session_id != INVALID_SESSION_ID) {
+            libspdm_set_session_state(context, context->session_info[index].session_id,
+                                      LIBSPDM_SESSION_STATE_NOT_STARTED);
+        }
         libspdm_session_info_init(context,
                                   &context->session_info[index],
                                   INVALID_SESSION_ID,
