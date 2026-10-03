@@ -251,26 +251,24 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             libspdm_release_receiver_buffer (spdm_context);
             return status;
         }
+        if (spdm_response_size < sizeof(spdm_message_header_t)) {
+            libspdm_release_receiver_buffer (spdm_context);
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        }
         if (libspdm_encapsulated_request_response->header.request_response_code == SPDM_ERROR) {
             const uint8_t error_code = libspdm_encapsulated_request_response->header.param1;
-
-            libspdm_release_receiver_buffer(spdm_context);
-
-            if (spdm_response_size < sizeof(spdm_error_response_t)) {
-                libspdm_release_receiver_buffer (spdm_context);
-                return LIBSPDM_STATUS_INVALID_MSG_SIZE;
-            }
 
             if (mut_auth_requested == 0) {
                 /* Responder can send NoPendingRequests or UnexpectedRequest if it has no
                  * encapsulated request for the Requester. */
                 if ((libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) &&
                     (error_code == SPDM_ERROR_CODE_NO_PENDING_REQUESTS)) {
-
+                    libspdm_release_receiver_buffer (spdm_context);
                     return LIBSPDM_STATUS_SUCCESS;
                 }
                 if ((libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_13) &&
                     (error_code == SPDM_ERROR_CODE_UNEXPECTED_REQUEST)) {
+                    libspdm_release_receiver_buffer (spdm_context);
                     return LIBSPDM_STATUS_SUCCESS;
                 }
             }
@@ -278,7 +276,11 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
                 spdm_context, session_id,
                 &spdm_response_size, (void **)&spdm_response,
                 SPDM_GET_ENCAPSULATED_REQUEST, SPDM_ENCAPSULATED_REQUEST);
-            return status;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                libspdm_release_receiver_buffer (spdm_context);
+                return status;
+            }
+            libspdm_encapsulated_request_response = (void *)spdm_response;
         }
         if (libspdm_encapsulated_request_response->header.spdm_version !=
             spdm_get_encapsulated_request_request->header.spdm_version) {
@@ -375,20 +377,21 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             libspdm_release_receiver_buffer (spdm_context);
             return status;
         }
+        if (spdm_response_size < sizeof(spdm_message_header_t)) {
+            libspdm_release_receiver_buffer (spdm_context);
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        }
         if (spdm_encapsulated_response_ack_response->header.request_response_code == SPDM_ERROR) {
-            libspdm_release_receiver_buffer(spdm_context);
-
-            if (spdm_response_size < sizeof(spdm_error_response_t)) {
-                libspdm_release_receiver_buffer (spdm_context);
-                return LIBSPDM_STATUS_INVALID_MSG_SIZE;
-            }
-
             status = libspdm_handle_error_response_main(
                 spdm_context, session_id,
                 &spdm_response_size, (void **)&spdm_response,
                 SPDM_DELIVER_ENCAPSULATED_RESPONSE,
                 SPDM_ENCAPSULATED_RESPONSE_ACK);
-            return status;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                libspdm_release_receiver_buffer (spdm_context);
+                return status;
+            }
+            spdm_encapsulated_response_ack_response = (void *)spdm_response;
         } else if (spdm_encapsulated_response_ack_response->header.request_response_code !=
                    SPDM_ENCAPSULATED_RESPONSE_ACK) {
             libspdm_release_receiver_buffer (spdm_context);
