@@ -6,7 +6,7 @@
 
    The SPDM and secured message libraries follow :
 
-   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.2.pdf), version [1.1.4](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.4.pdf), version [1.2.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.3.pdf), version [1.3.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.3.2.pdf), and version [1.4.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.4.1.pdf))
+   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.3.pdf), version [1.1.5](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.5.pdf), version [1.2.4](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.4.pdf), version [1.3.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.3.3.pdf), and version [1.4.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.4.1.pdf))
 
    [DSP0277](https://www.dmtf.org/dsp/DSP0277)  Secured Messages using SPDM Specification (version [1.0.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.0.1.pdf), version [1.1.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.1.1.pdf), version [1.2.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.2.0.pdf), and version [1.3.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.3.0.pdf))
 
@@ -14,7 +14,7 @@
 
    [DSP0275](https://www.dmtf.org/dsp/DSP0275)  Security Protocol and Data Model (SPDM) over MCTP Binding Specification (version [1.0.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0275_1.0.2.pdf))
 
-   [DSP0276](https://www.dmtf.org/dsp/DSP0276)  Secured Messages using SPDM over MCTP Binding Specification (version [1.2.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0276_1.2.0.pdf))
+   [DSP0276](https://www.dmtf.org/dsp/DSP0276)  Secured Messages using SPDM over MCTP Binding Specification (version [1.3.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0276_1.3.0.pdf))
 
    Storage Binding follows :
 
@@ -26,7 +26,7 @@
 
    PCIe follows :
 
-   PCI Express Base Specification [Revision 6.2](https://members.pcisig.com/wg/PCI-SIG/document/20590)
+   PCI Express Base Specification [Revision 6.5](https://members.pcisig.com/wg/PCI-SIG/document/24163).
 
    CXL follows :
 
@@ -44,15 +44,15 @@
 
 4) Implemented Requests and Responses
 
-   SPDM 1.0: `GET_VERSION`, `GET_CAPABILITIES`, `NEGOTIATE_ALGORITHMS`, `GET_DIGESTS`, `GET_CERTIFICATE`, `CHALLENGE`, `GET_MEASUREMENTS`, and `VENDOR_DEFINED_REQUEST`.
+   SPDM 1.0: `GET_VERSION`, `GET_CAPABILITIES`, `NEGOTIATE_ALGORITHMS`, `GET_DIGESTS`, `GET_CERTIFICATE`, `CHALLENGE`, `GET_MEASUREMENTS`, `RESPOND_IF_READY`, and `VENDOR_DEFINED_REQUEST`.
 
    SPDM 1.1: `KEY_EXCHANGE`, `FINISH`, `PSK_EXCHANGE`, `PSK_FINISH`, `END_SESSION`, `HEARTBEAT`, `KEY_UPDATE`, and `ENCAPSULATED` messages.
 
    SPDM 1.2: `GET_CSR`, `SET_CERTIFICATE`, `CHUNK_SEND`, and `CHUNK_GET`.
 
-   SPDM 1.3: `GET_KEY_PAIR_INFO`, `SET_KEY_PAIR_INFO`, `SUBSCRIBE_EVENT_TYPE`, `GET_SUPPORTED_EVENT_TYPES`, `GET_ENDPOINT_INFO` and `GET_MEASUREMENT_EXTENSION_LOG`. Additional SPDM 1.3 messages will be implemented in future releases.
+   SPDM 1.3: `GET_KEY_PAIR_INFO`, `SET_KEY_PAIR_INFO`, `GET_SUPPORTED_EVENT_TYPES`, `SUBSCRIBE_EVENT_TYPES`, `SEND_EVENT`, `GET_ENDPOINT_INFO`, and `GET_MEASUREMENT_EXTENSION_LOG`.
 
-   SPDM 1.4: Additional SPDM 1.4 messages will be implemented in future releases.
+   SPDM 1.4: `SLOT_MANAGEMENT` will be implemented in a future release.
 
 5) Cryptography Support
 
@@ -168,7 +168,7 @@ Support [CodeQL](https://codeql.github.com/) tool.
 
 For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
-2) [CMake](https://cmake.org/) (Version [3.17.2](https://github.com/Kitware/CMake/releases/tag/v3.17.2) is known to work. Newer versions may fail).
+2) [CMake](https://cmake.org/) (Version 3.16 or later, or 3.19 or later for ARM_DS2022).
 
 3) [Perl](https://www.perl.org/) (Version 5.10.0 or higher)
    - Required for building OpenSSL from source (OpenSSL's `Configure` script is written in Perl).
@@ -192,7 +192,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 
 For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
-2) [CMake](https://cmake.org/).
+2) [CMake](https://cmake.org/) (Version 3.16 or later, or 3.19 or later for ARM_DS2022).
 
 3) [Perl](https://www.perl.org/) (Version 5.10.0 or higher)
    - Required for building OpenSSL from source (OpenSSL's `Configure` script is written in Perl).
@@ -206,9 +206,9 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 4) [TPM2](https://tpm2-software.github.io) (Version 4.1.x or higher)
   - Optionally required for building libspdm with TPM backend support.
   - If not available, install via:
-    - Debian/Ubuntu: `sudo apt-get install tpm2-tools libtss2-dev libengine-tpm2-tss-openssl`
-    - Fedora: `sudo dnf install tpm2-tools tpm2-tss-devel tpm2-tss-engine` 
-    - Arch Linux: `sudo package -S tpm2-tools tpm2-tss tpm2-openssl`
+    - Debian/Ubuntu: `sudo apt-get install tpm2-tools libtss2-dev tpm2-openssl`
+    - Fedora: `sudo dnf install tpm2-tools tpm2-tss-devel tpm2-openssl`
+    - Arch Linux: `sudo pacman -S tpm2-tools tpm2-tss tpm2-openssl`
 
 ### Cryptography Library
 
@@ -232,6 +232,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 ### Toolchain Selection
 
    `TOOLCHAIN` selects the compiler and the target flags through `cmake/toolchain/<TOOLCHAIN>.cmake`, which CMake reads before it identifies the compiler.
+   `VS2019`, `VS2022`, and `NONE` have no toolchain file and use the compiler from the environment.
    A `-DCMAKE_TOOLCHAIN_FILE` on the command line takes precedence.
    A build directory keeps the compiler and target flags it was first configured with, so use a new build directory when changing `TOOLCHAIN` or `ARCH`.
 
@@ -325,7 +326,7 @@ Example CMake commands:
 For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
 ## TPM support (Optional)
-  
+
   ```
   cmake -DLIBSPDM_TPM_SUPPORT=ON -DDEVICE=tpm ...
   ```
@@ -341,10 +342,10 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 
    <pre>
       [==========] Running 2 test(s).
-      [ RUN      ] test_spdm_responder_version_case1
-      [       OK ] test_spdm_responder_version_case1
-      [ RUN      ] test_spdm_responder_version_case2
-      [       OK ] test_spdm_responder_version_case2
+      [ RUN      ] rsp_version_case1
+      [       OK ] rsp_version_case1
+      [ RUN      ] rsp_version_case2
+      [       OK ] rsp_version_case2
       [==========] 2 test(s) run.
       [  PASSED  ] 2 test(s).
    </pre>
