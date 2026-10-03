@@ -5,6 +5,47 @@
  **/
 
 #include "internal/libspdm_secured_message_lib.h"
+#include "library/spdm_responder_lib.h"
+
+/**
+ * Notify the session state to a session APP.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    The session_id of a session.
+ * @param  session_state                 The state of a session.
+ **/
+static void libspdm_trigger_session_state_callback(libspdm_context_t *spdm_context,
+                                                   uint32_t session_id,
+                                                   libspdm_session_state_t session_state)
+{
+    if (spdm_context->spdm_session_state_callback != NULL) {
+        ((libspdm_session_state_callback_func)
+         spdm_context->spdm_session_state_callback)(spdm_context, session_id, session_state);
+    }
+}
+
+void libspdm_set_session_state(libspdm_context_t *spdm_context,
+                               uint32_t session_id,
+                               libspdm_session_state_t session_state)
+{
+    libspdm_session_info_t *session_info;
+    libspdm_session_state_t old_session_state;
+
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    if (session_info == NULL) {
+        LIBSPDM_ASSERT(false);
+        return;
+    }
+
+    old_session_state = libspdm_secured_message_get_session_state(
+        session_info->secured_message_context);
+    if (old_session_state != session_state) {
+        libspdm_secured_message_set_session_state(
+            session_info->secured_message_context, session_state);
+        libspdm_trigger_session_state_callback(
+            spdm_context, session_info->session_id, session_state);
+    }
+}
 
 void libspdm_session_info_init(libspdm_context_t *spdm_context,
                                libspdm_session_info_t *session_info,
@@ -329,6 +370,8 @@ void libspdm_free_session_id(libspdm_context_t *spdm_context, uint32_t session_i
     session_info = spdm_context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == session_id) {
+            libspdm_set_session_state(spdm_context, session_id,
+                                      LIBSPDM_SESSION_STATE_NOT_STARTED);
             libspdm_session_info_init(spdm_context,
                                       &session_info[index],
                                       INVALID_SESSION_ID, 0,

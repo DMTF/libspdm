@@ -178,7 +178,21 @@ Specifies the state the session has transitioned to. Its value is one of
     - The Requester and Responder have established a session.
 
 ### Details
-TBD
+A transition to `LIBSPDM_SESSION_STATE_NOT_STARTED` is reported when an active
+session is freed, including normal termination, error cleanup, and context reset
+(either through `libspdm_reset_context()` or an accepted GET_VERSION). No callback
+is issued for an unused slot or a session already in `NOT_STARTED`.
+
+The callback runs synchronously after the state changes and before the session
+slot is reinitialized. The original session ID still identifies the slot during
+the callback, and its state is `NOT_STARTED`. The Integrator can use this ID to
+release application-owned resources. The slot is invalidated after the callback
+returns; `latest_session_id` need not retain that ID during the callback.
+
+Read-only lookup of the notified session is supported. The callback must not
+reenter operations that reset or destroy the same context, or allocate or free
+its sessions. Session teardown does not provide reentrancy protection. During
+context reset, other slots and session counters may be partially reset.
 <br/><br/>
 
 
