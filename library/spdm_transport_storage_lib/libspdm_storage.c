@@ -280,11 +280,7 @@ libspdm_return_t libspdm_storage_decode_message(uint32_t **session_id,
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
 
-#if __BYTE_ORDER__==__ORDER_BIG_ENDIAN__
-    security_protocol_specific  = libspdm_byte_swap_16(storage_header->security_protocol_specific);
-#else
     security_protocol_specific  = storage_header->security_protocol_specific;
-#endif
     spsp0 = security_protocol_specific & 0xFF;
     spsp1 = security_protocol_specific >> 8;
 
@@ -552,11 +548,6 @@ libspdm_return_t libspdm_storage_encode_message(const uint32_t *session_id,
                                                       SPDM_STORAGE_MAX_CONNECTION_ID_MASK;
     }
 
-#if __BYTE_ORDER__==__ORDER_BIG_ENDIAN__
-    storage_header->security_protocol_specific = libspdm_byte_swap_16(
-        storage_header->security_protocol_specific);
-#endif
-
     return LIBSPDM_STATUS_SUCCESS;
 }
 
@@ -723,11 +714,6 @@ libspdm_return_t libspdm_transport_storage_encode_management_cmd(
     storage_header->security_protocol_specific |= connection_id &
                                                   SPDM_STORAGE_MAX_CONNECTION_ID_MASK;
 
-#if __BYTE_ORDER__==__ORDER_BIG_ENDIAN__
-    storage_header->security_protocol_specific = libspdm_byte_swap_16(
-        storage_header->security_protocol_specific);
-#endif
-
     return LIBSPDM_STATUS_SUCCESS;
 }
 
@@ -820,11 +806,7 @@ libspdm_return_t libspdm_transport_storage_decode_management_cmd(
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
 
-#if __BYTE_ORDER__==__ORDER_BIG_ENDIAN__
-    security_protocol_specific = libspdm_byte_swap_16(storage_header->security_protocol_specific);
-#else
     security_protocol_specific = storage_header->security_protocol_specific;
-#endif
     spsp0 = security_protocol_specific & 0xFF;
     spsp1 = security_protocol_specific >> 8;
 
