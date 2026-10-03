@@ -469,10 +469,178 @@ static void rsp_version_case10(void **state)
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
+/* Teardown callbacks must observe the original ID and the new state before reuse. */
+static uint32_t m_teardown_ids[LIBSPDM_MAX_SESSION_COUNT];
+static size_t m_teardown_count;
+
+static void libspdm_test_version_teardown_callback(
+    void *context, uint32_t session_id, libspdm_session_state_t state)
+{
+    libspdm_session_info_t *session_info;
+    size_t index;
+
+    assert_int_equal(state, LIBSPDM_SESSION_STATE_NOT_STARTED);
+    session_info = libspdm_get_session_info_via_session_id(context, session_id);
+    assert_non_null(session_info);
+    assert_int_equal(libspdm_secured_message_get_session_state(
+                         session_info->secured_message_context), state);
+    assert_true(m_teardown_count < LIBSPDM_MAX_SESSION_COUNT);
+    for (index = 0; index < m_teardown_count; index++) {
+        assert_int_not_equal(m_teardown_ids[index], session_id);
+    }
+    m_teardown_ids[m_teardown_count++] = session_id;
+}
+
+/* Exercise both reset entry points, including mixed states and unused slots. */
+static void rsp_version_session_teardown(void **state)
+{
+    libspdm_test_context_t *test_context;
+    libspdm_context_t *context;
+    libspdm_session_info_t *session_info;
+    spdm_get_version_request_t request;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t response_size;
+    size_t index;
+    size_t count;
+    size_t mode;
+    libspdm_return_t status;
+
+    test_context = *state;
+    context = test_context->spdm_context;
+    libspdm_reset_context(context);
+    libspdm_register_session_state_callback_func(context,
+                                                 libspdm_test_version_teardown_callback);
+    count = LIBSPDM_MAX_SESSION_COUNT > 2 ? 2 : 1;
+    for (mode = 0; mode < 2; mode++) {
+        m_teardown_count = 0;
+        for (index = 0; index < count; index++) {
+            session_info = libspdm_assign_session_id(context, (uint32_t)(0x12340001 + index),
+                                                     SECURED_SPDM_VERSION_11 <<
+                                                     SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                                     index != 0);
+            assert_non_null(session_info);
+            libspdm_secured_message_set_session_state(
+                session_info->secured_message_context,
+                index == 0 ? LIBSPDM_SESSION_STATE_ESTABLISHED :
+                LIBSPDM_SESSION_STATE_HANDSHAKING);
+        }
+        libspdm_zero_mem(&request, sizeof(request));
+        request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        request.header.request_response_code = SPDM_GET_VERSION;
+        if (mode == 0) {
+            /* A malformed request must leave active sessions untouched. */
+            response_size = sizeof(response);
+            status = libspdm_get_response_version(context, sizeof(request) - 1,
+                                                  &request, &response_size, response);
+            assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+            assert_int_equal(((spdm_message_header_t *)response)->request_response_code,
+                             SPDM_ERROR);
+            assert_int_equal(m_teardown_count, 0);
+            response_size = sizeof(response);
+            status = libspdm_get_response_version(context, sizeof(request),
+                                                  &request, &response_size, response);
+            assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+            assert_int_equal(((spdm_message_header_t *)response)->request_response_code,
+                             SPDM_VERSION);
+        } else {
+            libspdm_reset_context(context);
+        }
+        assert_int_equal(m_teardown_count, count);
+        for (index = 0; index < count; index++) {
+            assert_int_equal(m_teardown_ids[index], 0x12340001 + index);
+            assert_null(libspdm_get_session_info_via_session_id(
+                            context, (uint32_t)(0x12340001 + index)));
+        }
+        assert_int_equal(context->current_dhe_session_count, 0);
+        assert_int_equal(context->current_psk_session_count, 0);
+        assert_int_equal(context->latest_session_id, INVALID_SESSION_ID);
+        libspdm_reset_context(context);
+        response_size = sizeof(response);
+        assert_int_equal(libspdm_get_response_version(context, sizeof(request),
+                                                      &request, &response_size, response),
+                         LIBSPDM_STATUS_SUCCESS);
+        assert_int_equal(m_teardown_count, count);
+    }
+    libspdm_register_session_state_callback_func(context, NULL);
+}
+
+/* Free and terminate notify once; unused and already-not-started slots do not. */
+static void rsp_version_free_session_teardown(void **state)
+{
+    libspdm_test_context_t *test_context;
+    libspdm_context_t *context;
+    libspdm_session_info_t *session_info;
+    size_t mode;
+    uint32_t session_id;
+
+    test_context = *state;
+    context = test_context->spdm_context;
+    libspdm_reset_context(context);
+    libspdm_register_session_state_callback_func(context,
+                                                 libspdm_test_version_teardown_callback);
+    for (mode = 0; mode < 5; mode++) {
+        m_teardown_count = 0;
+        session_id = (uint32_t)(0x43210001 + mode);
+        session_info = libspdm_assign_session_id(context, session_id,
+                                                 SECURED_SPDM_VERSION_11 <<
+                                                 SPDM_VERSION_NUMBER_SHIFT_BIT, mode % 2 != 0);
+        assert_non_null(session_info);
+        if (mode != 4) {
+            libspdm_secured_message_set_session_state(
+                session_info->secured_message_context,
+                mode % 2 == 0 ? LIBSPDM_SESSION_STATE_HANDSHAKING :
+                LIBSPDM_SESSION_STATE_ESTABLISHED);
+        }
+        if (mode < 2 || mode == 4) {
+            libspdm_free_session_id(context, session_id);
+        } else {
+            assert_int_equal(libspdm_terminate_session(context, session_id),
+                             LIBSPDM_STATUS_SUCCESS);
+        }
+        assert_int_equal(m_teardown_count, mode == 4 ? 0 : 1);
+        if (mode != 4) {
+            assert_int_equal(m_teardown_ids[0], session_id);
+        }
+        assert_null(libspdm_get_session_info_via_session_id(context, session_id));
+        assert_int_equal(context->current_dhe_session_count, 0);
+        assert_int_equal(context->current_psk_session_count, 0);
+        assert_int_equal(libspdm_terminate_session(context, session_id),
+                         LIBSPDM_STATUS_INVALID_PARAMETER);
+        assert_int_equal(m_teardown_count, mode == 4 ? 0 : 1);
+    }
+#if LIBSPDM_MAX_SESSION_COUNT > 1
+    m_teardown_count = 0;
+    session_info = libspdm_assign_session_id(context, 0x43210010,
+                                             SECURED_SPDM_VERSION_11 <<
+                                             SPDM_VERSION_NUMBER_SHIFT_BIT, true);
+    assert_non_null(session_info);
+    libspdm_secured_message_set_session_state(session_info->secured_message_context,
+                                              LIBSPDM_SESSION_STATE_HANDSHAKING);
+    session_info = libspdm_assign_session_id(context, 0x43210011,
+                                             SECURED_SPDM_VERSION_11 <<
+                                             SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    assert_non_null(session_info);
+    libspdm_secured_message_set_session_state(session_info->secured_message_context,
+                                              LIBSPDM_SESSION_STATE_ESTABLISHED);
+    libspdm_free_session_id(context, 0x43210010);
+    assert_int_equal(m_teardown_count, 1);
+    assert_int_equal(m_teardown_ids[0], 0x43210010);
+    assert_int_equal(context->current_psk_session_count, 0);
+    assert_int_equal(context->current_dhe_session_count, 1);
+    assert_int_equal(libspdm_secured_message_get_session_state(session_info->secured_message_context),
+                     LIBSPDM_SESSION_STATE_ESTABLISHED);
+    assert_int_equal(context->latest_session_id, 0x43210011);
+#endif
+    libspdm_register_session_state_callback_func(context, NULL);
+    libspdm_reset_context(context);
+}
+
 int libspdm_rsp_version_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(rsp_version_case1),
+        cmocka_unit_test(rsp_version_session_teardown),
+        cmocka_unit_test(rsp_version_free_session_teardown),
         /* Invalid request*/
         cmocka_unit_test(rsp_version_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/

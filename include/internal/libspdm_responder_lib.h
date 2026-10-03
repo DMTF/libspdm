@@ -568,17 +568,6 @@ libspdm_return_t libspdm_get_encap_request_respond_if_ready(void *spdm_context,
 libspdm_return_t libspdm_handle_encap_error_response_main(uint8_t error_code);
 
 /**
- * Set session_state to an SPDM secured message context and trigger callback.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    Indicate the SPDM session ID.
- * @param  session_state                 Indicate the SPDM session state.
- */
-void libspdm_set_session_state(libspdm_context_t *spdm_context,
-                               uint32_t session_id,
-                               libspdm_session_state_t session_state);
-
-/**
  * Set connection_state to an SPDM context and trigger callback.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

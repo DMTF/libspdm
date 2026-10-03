@@ -1865,6 +1865,7 @@ static void libspdm_test_responder_receive_send_rsp_case18(void** state)
  * invoke them only when state actually changes.
  **/
 static uint32_t m_session_state_callback_count;
+static uint32_t m_session_state_callback_last_id;
 static libspdm_session_state_t m_session_state_callback_last_state;
 static uint32_t m_connection_state_callback_count;
 static libspdm_connection_state_t m_connection_state_callback_last_state;
@@ -1881,6 +1882,13 @@ static libspdm_return_t libspdm_test_get_response_func_stub(
 static void libspdm_test_session_state_callback(
     void *spdm_context, uint32_t session_id, libspdm_session_state_t session_state)
 {
+    libspdm_session_info_t *session_info;
+
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    assert_non_null(session_info);
+    assert_int_equal(libspdm_secured_message_get_session_state(
+                         session_info->secured_message_context), session_state);
+    m_session_state_callback_last_id = session_id;
     m_session_state_callback_count++;
     m_session_state_callback_last_state = session_state;
 }
@@ -2057,6 +2065,9 @@ static void libspdm_test_responder_receive_send_rsp_case21(void** state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 21;
+    m_session_state_callback_count = 0;
+    libspdm_register_session_state_callback_func(spdm_context,
+                                                 libspdm_test_session_state_callback);
 
     /* Set up algorithms and encrypt/mac capabilities so the session's secured message context
      * has a valid session type (ENC_MAC) and valid hash/AEAD sizes. */
@@ -2096,6 +2107,9 @@ static void libspdm_test_responder_receive_send_rsp_case21(void** state)
     status = libspdm_build_response(spdm_context, &session_id, false, &response_size,
                                     (void **)&response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(m_session_state_callback_count, 1);
+    assert_int_equal(m_session_state_callback_last_id, session_id);
+    assert_int_equal(m_session_state_callback_last_state, LIBSPDM_SESSION_STATE_NOT_STARTED);
     /* Session should have been freed as part of decrypt-error handling. */
     assert_int_equal(session_info->session_id, INVALID_SESSION_ID);
     assert_int_equal(spdm_context->last_spdm_error.error_code, 0);
@@ -2125,6 +2139,10 @@ static void libspdm_test_responder_receive_send_rsp_case21(void** state)
                                     (void **)&response);
     assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
     assert_int_equal(response_size, 0);
+    assert_int_equal(m_session_state_callback_count, 2);
+    assert_int_equal(m_session_state_callback_last_id, session_id);
+    assert_int_equal(m_session_state_callback_last_state, LIBSPDM_SESSION_STATE_NOT_STARTED);
+    assert_null(libspdm_get_session_info_via_session_id(spdm_context, session_id));
 
     libspdm_release_sender_buffer(spdm_context);
     spdm_context->handle_error_return_policy = 0;
@@ -2147,6 +2165,8 @@ static void libspdm_test_responder_receive_send_rsp_case21(void** state)
 
     libspdm_release_sender_buffer(spdm_context);
 
+    assert_int_equal(m_session_state_callback_count, 2);
+    libspdm_register_session_state_callback_func(spdm_context, NULL);
     libspdm_zero_mem(&spdm_context->last_spdm_error, sizeof(spdm_context->last_spdm_error));
 }
 
@@ -2250,9 +2270,107 @@ static void libspdm_test_responder_receive_send_rsp_case25(void** state)
     assert_int_equal(spdm_context->last_spdm_error.error_code, SPDM_ERROR_CODE_INVALID_SESSION);
 }
 
+static libspdm_return_t m_teardown_encode_status;
+static uint32_t m_teardown_encode_count;
+static libspdm_transport_encode_message_func m_teardown_original_encode;
+
+static libspdm_return_t libspdm_test_teardown_encode(
+    void *context, const uint32_t *session_id, bool is_app_message,
+    bool is_request_message, size_t message_size, void *message,
+    size_t *transport_message_size, void **transport_message)
+{
+    libspdm_session_info_t *session_info;
+
+    assert_non_null(session_id);
+    session_info = libspdm_get_session_info_via_session_id(context, *session_id);
+    assert_non_null(session_info);
+    assert_int_equal(libspdm_secured_message_get_session_state(
+                         session_info->secured_message_context), LIBSPDM_SESSION_STATE_ESTABLISHED);
+    assert_int_equal(m_session_state_callback_count, 0);
+    m_teardown_encode_count++;
+    if (LIBSPDM_STATUS_IS_ERROR(m_teardown_encode_status)) {
+        return m_teardown_encode_status;
+    }
+    return m_teardown_original_encode(context, session_id, is_app_message, is_request_message,
+                                      message_size, message, transport_message_size,
+                                      transport_message);
+}
+
+/* Cover both encode failure branches, DecryptError ordering, and normal END_SESSION. */
+static void libspdm_test_responder_encode_teardown(void **state)
+{
+    libspdm_test_context_t *test_context;
+    libspdm_context_t *context;
+    libspdm_session_info_t *session_info;
+    spdm_message_header_t *request;
+    uint32_t session_id;
+    size_t mode;
+    size_t response_size;
+    void *response;
+    libspdm_return_t status;
+
+    test_context = *state;
+    context = test_context->spdm_context;
+    context->connection_info.version = SPDM_MESSAGE_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    context->connection_info.capability.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    context->local_context.capability.flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    context->handle_error_return_policy = 0;
+    m_teardown_original_encode = context->transport_encode_message;
+    context->transport_encode_message = libspdm_test_teardown_encode;
+    libspdm_register_session_state_callback_func(context, libspdm_test_session_state_callback);
+    for (mode = 0; mode < 6; mode++) {
+        m_session_state_callback_count = 0;
+        m_teardown_encode_count = 0;
+        m_teardown_encode_status = mode >= 4 ? LIBSPDM_STATUS_SUCCESS :
+                                   mode % 2 == 0 ? LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW :
+                                   LIBSPDM_STATUS_CRYPTO_ERROR;
+        session_id = (uint32_t)(0x76540001 + mode);
+        session_info = libspdm_assign_session_id(context, session_id,
+                                                 SECURED_SPDM_VERSION_11 <<
+                                                 SPDM_VERSION_NUMBER_SHIFT_BIT, true);
+        assert_non_null(session_info);
+        libspdm_secured_message_set_session_state(session_info->secured_message_context,
+                                                  LIBSPDM_SESSION_STATE_ESTABLISHED);
+        libspdm_zero_mem(&context->last_spdm_error, sizeof(context->last_spdm_error));
+        if (mode >= 2 && mode < 5) {
+            context->last_spdm_error.error_code = SPDM_ERROR_CODE_DECRYPT_ERROR;
+            context->last_spdm_error.session_id = session_id;
+        }
+        /* An unsupported request exercises the normal dispatch/encode branch. */
+        request = (void *)context->last_spdm_request;
+        libspdm_zero_mem(request, sizeof(*request));
+        request->spdm_version = SPDM_MESSAGE_VERSION_12;
+        request->request_response_code = 0;
+        context->last_spdm_request_size = sizeof(*request);
+        context->last_spdm_request_session_id = session_id;
+        context->last_spdm_request_session_id_valid = true;
+        if (mode == 5) {
+            request->request_response_code = SPDM_END_SESSION;
+        }
+        assert_int_equal(libspdm_acquire_sender_buffer(context, &response_size, &response),
+                         LIBSPDM_STATUS_SUCCESS);
+        status = libspdm_build_response(context, &session_id, false, &response_size, &response);
+        assert_int_equal(status, m_teardown_encode_status);
+        assert_int_equal(m_teardown_encode_count, 1);
+        assert_int_equal(m_session_state_callback_count, 1);
+        assert_int_equal(m_session_state_callback_last_id, session_id);
+        assert_int_equal(m_session_state_callback_last_state, LIBSPDM_SESSION_STATE_NOT_STARTED);
+        assert_null(libspdm_get_session_info_via_session_id(context, session_id));
+        libspdm_release_sender_buffer(context);
+    }
+    context->transport_encode_message = m_teardown_original_encode;
+    libspdm_register_session_state_callback_func(context, NULL);
+    libspdm_zero_mem(&context->last_spdm_error, sizeof(context->last_spdm_error));
+}
+
 int libspdm_rsp_receive_send_test(void)
 {
     const struct CMUnitTest test_cases[] = {
+        cmocka_unit_test_setup(libspdm_test_responder_encode_teardown,
+                               libspdm_unit_test_reset_context),
         /* response message size is larger than requester data_transfer_size */
         cmocka_unit_test(libspdm_test_responder_receive_send_rsp_case1),
         /* response message size is larger than responder sending transmit buffer size */
