@@ -658,6 +658,8 @@ A pointer to a destination buffer to store the supported algorithms. Must not be
 A pointer to store the SPDM version used for the request.
 
 ### Details
+Only available when `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP` is enabled.
+
 Retrieves the supported algorithms from the responder by sending GET_VERSION and GET_CAPABILITIES requests. The GET_CAPABILITIES request has Param1[0] set to request the Supported Algorithms Block. If the Responder supports this extended capability, it will include the Supported Algorithms Block in its CAPABILITIES response.
 
 The function returns `LIBSPDM_STATUS_SUCCESS` if the supported algorithms were successfully retrieved, `LIBSPDM_STATUS_UNSUPPORTED_CAP` if the requester configuration does not support this operation (either the Requester does not support version 1.3 or above, or CHUNK_CAP is not enabled), or other error codes if communication or verification fails.

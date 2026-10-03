@@ -31,6 +31,7 @@ libspdm_return_t libspdm_init_connection(void *spdm_context, bool get_version_on
     return LIBSPDM_STATUS_SUCCESS;
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 libspdm_return_t libspdm_get_supported_algorithms(void *spdm_context,
                                                   size_t *responder_supported_algorithms_length,
                                                   void *responder_supported_algorithms_buffer,
@@ -82,6 +83,7 @@ libspdm_return_t libspdm_get_supported_algorithms(void *spdm_context,
 
     return LIBSPDM_STATUS_SUCCESS;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
