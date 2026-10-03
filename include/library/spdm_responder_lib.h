@@ -147,6 +147,9 @@ libspdm_return_t libspdm_generate_extended_error_response(
 
 /**
  * Notify the session state to a session APP.
+ * Active session teardown, including reset and error cleanup, reports NOT_STARTED
+ * before the original session ID is invalidated. The callback must not reset or
+ * destroy this context, or allocate or free its sessions.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    The session_id of a session.

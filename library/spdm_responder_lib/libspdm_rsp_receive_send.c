@@ -321,46 +321,6 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Notify the session state to a session APP.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    The session_id of a session.
- * @param  session_state                 The state of a session.
- **/
-static void libspdm_trigger_session_state_callback(libspdm_context_t *spdm_context,
-                                                   uint32_t session_id,
-                                                   libspdm_session_state_t session_state)
-{
-    if (spdm_context->spdm_session_state_callback != NULL) {
-        ((libspdm_session_state_callback_func)
-         spdm_context->spdm_session_state_callback)(spdm_context, session_id, session_state);
-    }
-}
-
-void libspdm_set_session_state(libspdm_context_t *spdm_context,
-                               uint32_t session_id,
-                               libspdm_session_state_t session_state)
-{
-    libspdm_session_info_t *session_info;
-    libspdm_session_state_t old_session_state;
-
-    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
-    if (session_info == NULL) {
-        LIBSPDM_ASSERT(false);
-        return;
-    }
-
-    old_session_state = libspdm_secured_message_get_session_state(
-        session_info->secured_message_context);
-    if (old_session_state != session_state) {
-        libspdm_secured_message_set_session_state(
-            session_info->secured_message_context, session_state);
-        libspdm_trigger_session_state_callback(
-            spdm_context, session_info->session_id, session_state);
-    }
-}
-
 libspdm_return_t libspdm_terminate_session(
     void *spdm_context, uint32_t session_id)
 {

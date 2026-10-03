@@ -9,6 +9,23 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 
+static uint32_t m_encap_teardown_count;
+static uint32_t m_encap_teardown_id;
+
+static void libspdm_test_encap_teardown_callback(
+    void *context, uint32_t session_id, libspdm_session_state_t state)
+{
+    libspdm_session_info_t *session_info;
+
+    session_info = libspdm_get_session_info_via_session_id(context, session_id);
+    assert_non_null(session_info);
+    assert_int_equal(state, LIBSPDM_SESSION_STATE_NOT_STARTED);
+    assert_int_equal(libspdm_secured_message_get_session_state(
+                         session_info->secured_message_context), state);
+    m_encap_teardown_count++;
+    m_encap_teardown_id = session_id;
+}
+
 static void libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_context,
                                                        uint32_t *session_id)
 {
@@ -232,10 +249,17 @@ static void rsp_encap_key_update_case4(void **state)
     spdm_response.header.param1 = SPDM_ERROR_CODE_DECRYPT_ERROR;
     spdm_response.header.param2 = 0;
 
+    m_encap_teardown_count = 0;
+    libspdm_register_session_state_callback_func(spdm_context,
+                                                 libspdm_test_encap_teardown_callback);
     status = libspdm_process_encap_response_key_update(spdm_context, spdm_response_size,
                                                        &spdm_response, &need_continue);
 
     assert_int_equal(status, LIBSPDM_STATUS_SESSION_MSG_ERROR);
+    assert_int_equal(m_encap_teardown_count, 1);
+    assert_int_equal(m_encap_teardown_id, session_id);
+    assert_null(libspdm_get_session_info_via_session_id(spdm_context, session_id));
+    libspdm_register_session_state_callback_func(spdm_context, NULL);
 }
 
 /**
