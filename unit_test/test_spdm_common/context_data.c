@@ -1437,6 +1437,9 @@ static void libspdm_test_check_context_case20(void **state)
 
     result = libspdm_check_context (context);
     assert_int_equal(false, result);
+
+    libspdm_deinit_context(context);
+    free(context);
 }
 #endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
 
