@@ -2389,6 +2389,8 @@ static void req_get_endpoint_info_err_case20(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_e.buffer_size, 0);
 #endif
+
+    free(data);
 }
 
 int libspdm_req_get_endpoint_info_error_test(void)

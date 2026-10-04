@@ -497,6 +497,8 @@ static void rsp_measurements_case7(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
+
+    free(data);
 }
 
 /**
@@ -1806,6 +1808,8 @@ static void rsp_measurements_case29(void** state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
+
+    free(data);
 }
 
 /**
@@ -1927,6 +1931,8 @@ static void rsp_measurements_case30(void** state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
+
+    free(data);
 }
 
 /**
@@ -2048,6 +2054,8 @@ static void rsp_measurements_case31(void** state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
+
+    free(data);
 }
 
 /**
@@ -2174,6 +2182,8 @@ static void rsp_measurements_case32(void** state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
+
+    free(data);
 }
 
 /**
@@ -2300,6 +2310,8 @@ static void rsp_measurements_case33(void** state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
+
+    free(data);
 }
 
 
@@ -2426,6 +2438,8 @@ static void rsp_measurements_case34(void** state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
+
+    free(data);
 }
 
 /**
@@ -2583,6 +2597,8 @@ static void rsp_measurements_case36(void **state)
 #else
     assert_null(spdm_context->transcript.digest_context_l1l2);
 #endif
+
+    free(data);
 }
 
 int libspdm_rsp_measurements_test(void)

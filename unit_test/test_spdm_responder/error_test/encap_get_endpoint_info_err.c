@@ -108,6 +108,8 @@ static void rsp_encap_get_endpoint_info_err_case1(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_encap_e.buffer_size, 0);
 #endif
+
+    free(data);
 }
 
 /**
@@ -282,6 +284,8 @@ static void rsp_encap_get_endpoint_info_err_case2(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_encap_e.buffer_size, 0);
 #endif
+
+    free(data);
 }
 
 /**
@@ -380,6 +384,8 @@ static void rsp_encap_get_endpoint_info_err_case3(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_encap_e.buffer_size, 0);
 #endif
+
+    free(data);
 }
 
 /**
@@ -491,6 +497,8 @@ static void rsp_encap_get_endpoint_info_err_case4(void **state)
     status = libspdm_process_encap_response_endpoint_info(spdm_context, response_size,
                                                           spdm_response, &need_continue);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
+
+    free(data);
 }
 
 /**

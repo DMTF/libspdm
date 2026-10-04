@@ -189,6 +189,8 @@ static void rsp_encap_get_endpoint_info_case1(void **state)
 #else
     assert_null(spdm_context->transcript.digest_context_encap_il1il2);
 #endif
+
+    free(data);
 }
 
 /**
@@ -286,6 +288,8 @@ static void rsp_encap_get_endpoint_info_case2(void **state)
 #else
     assert_null(spdm_context->transcript.digest_context_encap_il1il2);
 #endif
+
+    free(data);
 }
 
 /**
@@ -493,6 +497,8 @@ static void rsp_encap_get_endpoint_info_case4(void **state)
 #else
     assert_null(session_info->session_transcript.digest_context_encap_il1il2);
 #endif
+
+    free(data);
 }
 
 /**

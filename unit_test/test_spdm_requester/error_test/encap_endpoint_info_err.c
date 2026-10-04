@@ -605,6 +605,8 @@ static void req_encap_endpoint_info_err_case9(void **state)
     /* transcript.message_encap_e size check */
     assert_int_equal(spdm_context->transcript.message_encap_e.buffer_size, 0);
 #endif
+
+    free(data);
 }
 
 /**

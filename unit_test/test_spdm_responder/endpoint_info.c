@@ -181,6 +181,8 @@ static void rsp_endpoint_info_case1(void **state)
         spdm_context, session_info, true, m_libspdm_get_endpoint_info_request1.header.param2,
         signature, signature_size);
     assert_true(result);
+
+    free(data);
 }
 
 /**
@@ -276,6 +278,8 @@ static void rsp_endpoint_info_case2(void **state)
         spdm_context, session_info, true, m_libspdm_get_endpoint_info_request2.header.param2,
         signature, signature_size);
     assert_true(result);
+
+    free(data);
 }
 
 /**
@@ -400,6 +404,8 @@ static void rsp_endpoint_info_case3(void **state)
         spdm_context, session_info, true, m_libspdm_get_endpoint_info_request3.header.param2,
         signature, signature_size);
     assert_true(result);
+
+    free(data);
 }
 
 /**
@@ -587,6 +593,8 @@ static void rsp_endpoint_info_case5(void **state)
         spdm_context, session_info, true, m_libspdm_get_endpoint_info_request1.header.param2,
         signature, signature_size);
     assert_true(result);
+
+    free(data);
 }
 
 int libspdm_rsp_endpoint_info_test(void)
