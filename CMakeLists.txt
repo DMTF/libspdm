@@ -72,6 +72,12 @@ if(NOT BUILD_LINUX_SHARED_LIB)
     set(BUILD_LINUX_SHARED_LIB "OFF")
 endif()
 
+# The shared libraries are linked from the objects of the static libraries, so every target
+# must be position-independent.
+if((BUILD_LINUX_SHARED_LIB STREQUAL "ON") AND (CMAKE_SYSTEM_NAME MATCHES "Linux"))
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
+
 if(NOT X509_IGNORE_CRITICAL)
     set(X509_IGNORE_CRITICAL "OFF")
 endif()
