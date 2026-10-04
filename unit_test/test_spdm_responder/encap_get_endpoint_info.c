@@ -71,6 +71,7 @@ static void rsp_encap_get_endpoint_info_case1(void **state)
             spdm_context->connection_info.peer_used_cert_chain[index].buffer_hash);
         spdm_context->connection_info.peer_used_cert_chain[index].buffer_hash_size =
             libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+        libspdm_free_peer_leaf_cert_public_key(spdm_context, (uint8_t)index);
         libspdm_get_leaf_cert_public_key_from_cert_chain(
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
@@ -436,6 +437,7 @@ static void rsp_encap_get_endpoint_info_case4(void **state)
             spdm_context->connection_info.peer_used_cert_chain[index].buffer_hash);
         spdm_context->connection_info.peer_used_cert_chain[index].buffer_hash_size =
             libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+        libspdm_free_peer_leaf_cert_public_key(spdm_context, (uint8_t)index);
         libspdm_get_leaf_cert_public_key_from_cert_chain(
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
