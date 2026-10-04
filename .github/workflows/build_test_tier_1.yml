@@ -310,7 +310,7 @@ jobs:
             toolchain: GCC
             crypto: mbedtls
             target: Debug
-            cmake_extra: -DBUILD_LINUX_SHARED_LIB=1
+            cmake_extra: -DBUILD_LINUX_SHARED_LIB=ON
 
           # Mbed TLS pins all 18 PQC macros to 0, so this configuration is
           # inert there and must run against OpenSSL.
