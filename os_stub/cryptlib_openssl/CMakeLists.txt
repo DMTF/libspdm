@@ -46,7 +46,7 @@ target_sources(cryptlib_openssl
 )
 
 if(ENABLE_BINARY_BUILD STREQUAL "1")
-    target_link_libraries(cryptlib_openssl PUBLIC ssl crypto)
+    target_link_libraries(cryptlib_openssl PUBLIC ${COMPILED_LIBSSL_PATH} ${COMPILED_LIBCRYPTO_PATH})
 else()
     target_link_libraries(cryptlib_openssl PUBLIC openssllib)
 endif()
