@@ -177,6 +177,12 @@ static void req_encap_endpoint_info_case1(void **state)
     assert_true(result);
 
     free(data);
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    /* The key was parsed with req_base_asym_alg, not base_asym_algo, so free it explicitly. */
+    libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg,
+                          spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
+#endif
 }
 
 /**
@@ -292,6 +298,12 @@ static void req_encap_endpoint_info_case2(void **state)
     assert_true(result);
 
     free(data);
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    /* The key was parsed with req_base_asym_alg, not base_asym_algo, so free it explicitly. */
+    libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg,
+                          spdm_context->connection_info.peer_used_cert_chain[1].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[1].leaf_cert_public_key = NULL;
+#endif
 }
 
 /**
@@ -564,6 +576,12 @@ static void req_encap_endpoint_info_case5(void **state)
     assert_true(result);
 
     free(data);
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    /* The key was parsed with req_base_asym_alg, not base_asym_algo, so free it explicitly. */
+    libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg,
+                          spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key = NULL;
+#endif
 }
 
 int libspdm_req_encap_endpoint_info_test(void)

@@ -127,6 +127,7 @@ static void rsp_endpoint_info_case1(void **state)
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         (uint16_t)m_libspdm_use_asym_algo;
+    libspdm_free_peer_leaf_cert_public_key(spdm_context, 0);
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
@@ -351,6 +352,7 @@ static void rsp_endpoint_info_case3(void **state)
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         (uint16_t)m_libspdm_use_asym_algo;
+    libspdm_free_peer_leaf_cert_public_key(spdm_context, 1);
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
@@ -539,6 +541,7 @@ static void rsp_endpoint_info_case5(void **state)
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         (uint16_t)m_libspdm_use_asym_algo;
+    libspdm_free_peer_leaf_cert_public_key(spdm_context, 0);
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
