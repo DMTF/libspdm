@@ -2546,10 +2546,6 @@ static void req_get_measurements_err_case2(void **state)
     uint32_t measurement_record_length;
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
-    void *data;
-    size_t data_size;
-    void *hash;
-    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2558,11 +2554,6 @@ static void req_get_measurements_err_case2(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags = 0;
-    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                         m_libspdm_use_asym_algo, &data,
-                                                         &data_size, &hash, &hash_size)) {
-        assert(false);
-    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2808,10 +2799,6 @@ static void req_get_measurements_err_case6(void **state)
     uint32_t measurement_record_length;
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
-    void *data;
-    size_t data_size;
-    void *hash;
-    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2821,11 +2808,6 @@ static void req_get_measurements_err_case6(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                         m_libspdm_use_asym_algo, &data,
-                                                         &data_size, &hash, &hash_size)) {
-        assert(false);
-    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -2998,10 +2980,6 @@ static void req_get_measurements_err_case9(void **state)
     uint32_t measurement_record_length;
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
-    void *data;
-    size_t data_size;
-    void *hash;
-    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -3011,11 +2989,6 @@ static void req_get_measurements_err_case9(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags =
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
-    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                         m_libspdm_use_asym_algo, &data,
-                                                         &data_size, &hash, &hash_size)) {
-        assert(false);
-    }
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
@@ -3048,10 +3021,6 @@ static void req_get_measurements_err_case10(void **state)
     uint32_t measurement_record_length;
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
-    void *data;
-    size_t data_size;
-    void *hash;
-    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -3061,11 +3030,6 @@ static void req_get_measurements_err_case10(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags =
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
-    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                         m_libspdm_use_asym_algo, &data,
-                                                         &data_size, &hash, &hash_size)) {
-        assert(false);
-    }
 
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3101,10 +3065,6 @@ static void req_get_measurements_err_case11(void **state)
     uint32_t measurement_record_length;
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
-    void *data;
-    size_t data_size;
-    void *hash;
-    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -3114,11 +3074,6 @@ static void req_get_measurements_err_case11(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags =
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
-    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                         m_libspdm_use_asym_algo, &data,
-                                                         &data_size, &hash, &hash_size)) {
-        assert(false);
-    }
 
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3443,10 +3398,6 @@ static void req_get_measurements_err_case16(void **state)
     uint32_t measurement_record_length;
     uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t request_attribute;
-    void *data;
-    size_t data_size;
-    void *hash;
-    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -3456,11 +3407,6 @@ static void req_get_measurements_err_case16(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                         m_libspdm_use_asym_algo, &data,
-                                                         &data_size, &hash, &hash_size)) {
-        assert(false);
-    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =

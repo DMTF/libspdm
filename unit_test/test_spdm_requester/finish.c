@@ -1057,6 +1057,7 @@ static libspdm_return_t receive_message(
         cert_buffer = (uint8_t *)data;
         cert_buffer_size = data_size;
         libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size, cert_buffer_hash);
+        free(data);
         if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_req_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
@@ -1227,6 +1228,7 @@ static libspdm_return_t receive_message(
         cert_buffer = (uint8_t *)data;
         cert_buffer_size = data_size;
         libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size, cert_buffer_hash);
+        free(data);
         if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_req_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
@@ -1331,6 +1333,7 @@ static libspdm_return_t receive_message(
         cert_buffer = (uint8_t *)data;
         cert_buffer_size = data_size;
         libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size, cert_buffer_hash);
+        free(data);
         if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
                                                              m_libspdm_use_req_asym_algo, &data,
                                                              &data_size, NULL, NULL)) {
@@ -2948,6 +2951,7 @@ static void req_finish_case16(void **state)
         data, data_size,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
+    free(data);
 
     req_slot_id_param = 0;
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -3052,6 +3056,7 @@ static void req_finish_case17(void **state)
         data, data_size,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
+    free(data);
 
     req_slot_id_param = 0;
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -3152,6 +3157,7 @@ static void req_finish_case18(void **state)
         data, data_size,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
+    free(data);
 
     req_slot_id_param = 0;
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -3261,6 +3267,7 @@ static void req_finish_case20(void **state)
         data, data_size,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
+    free(data);
 
     req_slot_id_param = 0;
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -3448,6 +3455,7 @@ static void req_finish_case22(void **state)
         data, data_size,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
+    free(data);
 
     req_slot_id_param = 0;
     if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,

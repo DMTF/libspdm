@@ -3160,6 +3160,8 @@ static void req_challenge_case18(void **state) {
                                 SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH,
                                 measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    free(data);
 }
 
 /**
@@ -3229,6 +3231,8 @@ static void req_challenge_case19(void **state) {
                                 SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH,
                                 measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    free(data);
 }
 
 /**

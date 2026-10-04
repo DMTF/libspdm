@@ -91,16 +91,20 @@ static void libspdm_gen_req_info() {
     free(req_info_pkinfo);
 }
 
-static bool libspdm_read_requester_gen_csr(void **csr_data, size_t *csr_len)
+static bool libspdm_read_requester_gen_csr(void *csr_data, size_t *csr_len)
 {
     char *file;
+    void *file_data;
     bool res;
 
     file = "test_csr/cached.csr";
-    res = libspdm_read_input_file(file, csr_data, csr_len);
+    res = libspdm_read_input_file(file, &file_data, csr_len);
     if (!res) {
         return res;
     }
+
+    libspdm_copy_mem(csr_data, LIBSPDM_MAX_CSR_SIZE, file_data, *csr_len);
+    free(file_data);
 
     return res;
 }
@@ -180,7 +184,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        libspdm_read_requester_gen_csr((void *)&csr_data_pointer, &global_csr_len);
+        libspdm_read_requester_gen_csr(csr_data_pointer, &global_csr_len);
 
         spdm_response_size = sizeof(spdm_csr_response_t) + global_csr_len;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -207,7 +211,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        libspdm_read_requester_gen_csr((void *)&csr_data_pointer, &global_csr_len);
+        libspdm_read_requester_gen_csr(csr_data_pointer, &global_csr_len);
 
         spdm_response_size = sizeof(spdm_csr_response_t) + global_csr_len;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -242,7 +246,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        libspdm_read_requester_gen_csr((void *)&csr_data_pointer, &global_csr_len);
+        libspdm_read_requester_gen_csr(csr_data_pointer, &global_csr_len);
         spdm_response_size = sizeof(spdm_csr_response_t) + global_csr_len;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
@@ -266,7 +270,7 @@ static libspdm_return_t receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
 
-        libspdm_read_requester_gen_csr((void *)&csr_data_pointer, &global_csr_len);
+        libspdm_read_requester_gen_csr(csr_data_pointer, &global_csr_len);
 
         spdm_response_size = sizeof(spdm_csr_response_t) + global_csr_len;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;

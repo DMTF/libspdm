@@ -560,6 +560,8 @@ static void req_set_certificate_case8(void **state)
                                         1);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
+
+    free(data);
 }
 
 /**
@@ -599,6 +601,8 @@ static void req_set_certificate_case9(void **state)
                                         1);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    free(data);
 }
 
 int libspdm_req_set_certificate_test(void)

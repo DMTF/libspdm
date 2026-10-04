@@ -500,6 +500,8 @@ static void rsp_encapsulated_request_case1(void **State)
     assert_int_equal(spdm_get_digests_request->header.request_response_code, SPDM_GET_DIGESTS);
     assert_int_equal(spdm_get_digests_request->header.param1, 0);
     assert_int_equal(spdm_get_digests_request->header.param2, 0);
+
+    free(data);
 }
 
 /**
@@ -578,6 +580,8 @@ static void rsp_encapsulated_request_case2(void **State)
                           sizeof(spdm_get_certificate_request_t);
 
     assert_int_equal(spdm_get_certificate_request->length, length);
+
+    free(data);
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
 
@@ -752,6 +756,8 @@ static void rsp_encapsulated_request_case5(void **State)
     assert_int_equal(challenge_request->header.request_response_code, SPDM_CHALLENGE);
     assert_int_equal(challenge_request->header.param1, 4);
     assert_int_equal(challenge_request->header.param2, 0);
+
+    free(data);
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT) */
 
@@ -1607,6 +1613,8 @@ static void rsp_encapsulated_response_ack_case6(void **State)
     assert_int_equal(spdm_response_requester->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response_requester->header.param1, SPDM_ERROR_CODE_REQUEST_RESYNCH);
     assert_int_equal(spdm_response_requester->header.param2, 0);
+
+    free(data);
 }
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)

@@ -175,6 +175,8 @@ static void req_encap_endpoint_info_case1(void **state)
         spdm_context, session_info, false, m_libspdm_get_endpoint_info_request1.header.param2,
         signature, signature_size);
     assert_true(result);
+
+    free(data);
 }
 
 /**
@@ -288,6 +290,8 @@ static void req_encap_endpoint_info_case2(void **state)
         spdm_context, session_info, false, m_libspdm_get_endpoint_info_request2.header.param2,
         signature, signature_size);
     assert_true(result);
+
+    free(data);
 }
 
 /**
@@ -384,6 +388,8 @@ static void req_encap_endpoint_info_case3(void **state)
         spdm_context, session_info, false, m_libspdm_get_endpoint_info_request3.header.param2,
         signature, signature_size);
     assert_true(result);
+
+    free(data);
 }
 
 /**
@@ -556,6 +562,8 @@ static void req_encap_endpoint_info_case5(void **state)
         spdm_context, session_info, false, m_libspdm_get_endpoint_info_request1.header.param2,
         signature, signature_size);
     assert_true(result);
+
+    free(data);
 }
 
 int libspdm_req_encap_endpoint_info_test(void)
