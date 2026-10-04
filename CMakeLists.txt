@@ -1035,7 +1035,12 @@ else()
             )
         elseif(CRYPTO STREQUAL "openssl")
             set(CRYPTO_DEPS "-lssl -lcrypto")
-            if((TOOLCHAIN STREQUAL "NONE") AND (ENABLE_BINARY_BUILD STREQUAL "0"))
+            if(ENABLE_BINARY_BUILD STREQUAL "1")
+                target_link_libraries(${LIB_NAME}_crypto
+                    PUBLIC ${COMPILED_LIBSSL_PATH}
+                    PUBLIC ${COMPILED_LIBCRYPTO_PATH}
+                )
+            elseif((TOOLCHAIN STREQUAL "NONE") AND (ENABLE_BINARY_BUILD STREQUAL "0"))
                 target_link_libraries(${LIB_NAME}_crypto
                     PUBLIC openssllib
                     PUBLIC cryptlib_openssl
