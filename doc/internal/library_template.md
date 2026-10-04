@@ -12,8 +12,8 @@ File names for non-encapsulated messages take the form libspdm_req_*message_name
 
 ```
 // File names for CHALLENGE and END_SESSION request messages.
-spdm_requester/libspdm_req_challenge.c
-spdm_requester/libspdm_req_end_session.c
+spdm_requester_lib/libspdm_req_challenge.c
+spdm_requester_lib/libspdm_req_end_session.c
 ```
 
 File names for encapsulated messages take the form libspdm_req_encap_*message_name*.c where
@@ -21,8 +21,8 @@ File names for encapsulated messages take the form libspdm_req_encap_*message_na
 
 ```
 // File names for encapsulated CHALLENGE_AUTH and CERTIFICATE response messages.
-spdm_requester/libspdm_req_encap_challenge_auth.c
-spdm_requester/libspdm_req_encap_certificate.c
+spdm_requester_lib/libspdm_req_encap_challenge_auth.c
+spdm_requester_lib/libspdm_req_encap_certificate.c
 ```
 
 ### Responder
@@ -32,8 +32,8 @@ File names for non-encapsulated messages take the form libspdm_rsp_*message_name
 
 ```
 // File names for CHALLENGE_AUTH and END_SESSION_ACK response messages.
-spdm_responder/libspdm_rsp_challenge_auth.c
-spdm_responder/libspdm_rsp_end_session_ack.c
+spdm_responder_lib/libspdm_rsp_challenge_auth.c
+spdm_responder_lib/libspdm_rsp_end_session_ack.c
 ```
 
 File names for encapsulated messages take the form libspdm_rsp_encap_*message_name*.c where
@@ -41,6 +41,6 @@ File names for encapsulated messages take the form libspdm_rsp_encap_*message_na
 
 ```
 // File names for encapsulated CHALLENGE and GET_CERTIFICATE request messages.
-spdm_responder/libspdm_rsp_encap_challenge.c
-spdm_responder/libspdm_rsp_encap_get_certificate.c
+spdm_responder_lib/libspdm_rsp_encap_challenge.c
+spdm_responder_lib/libspdm_rsp_encap_get_certificate.c
 ```
