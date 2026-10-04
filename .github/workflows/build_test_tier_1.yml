@@ -330,6 +330,20 @@ jobs:
               -DLIBSPDM_SLH_DSA_SHA2_256F_SUPPORT=0 -DLIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT=0
               -DLIBSPDM_ML_KEM_512_SUPPORT=0 -DLIBSPDM_ML_KEM_768_SUPPORT=0 -DLIBSPDM_ML_KEM_1024_SUPPORT=0
 
+          # ENABLE_BINARY_BUILD links an OpenSSL that is built outside libspdm,
+          # here from the same submodule by "Build OpenSSL binaries". libspdm
+          # supports binary builds only with OpenSSL. The shared libraries are
+          # the other consumer of the given OpenSSL libraries, so they are
+          # built too.
+          - name: config-binary-build
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: openssl
+            target: Debug
+            openssl_binary: 'true'
+            cmake_extra: -DBUILD_LINUX_SHARED_LIB=ON
+
           # == Pass/fail signal for a build that produces no tests ============
 
           - name: config-disable-tests
@@ -416,13 +430,47 @@ jobs:
       # The key omits TARGET and the macros because neither changes what
       # OpenSSL builds.
       - name: Cache OpenSSL build
-        if: matrix.crypto == 'openssl'
+        if: matrix.crypto == 'openssl' && matrix.openssl_binary != 'true'
         uses: actions/cache@v6
         with:
           path: build/os_stub/openssllib
           key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
           restore-keys: |
             openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-
+
+      # A binary build does not build the ExternalProject above. Its OpenSSL is
+      # installed into a prefix that, like that tree, depends only on the
+      # OpenSSL revision and the runner, so it is cached the same way.
+      - name: Cache OpenSSL binaries
+        if: matrix.openssl_binary == 'true'
+        uses: actions/cache@v6
+        with:
+          path: openssl-binary
+          key: openssl-binary-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          restore-keys: |
+            openssl-binary-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.ossl.outputs.sha }}-
+
+      # The commands are written to a script so that the reproducer runs exactly
+      # what this step ran.
+      - name: Build OpenSSL binaries
+        if: matrix.openssl_binary == 'true'
+        shell: bash
+        run: |
+          cat > build_openssl_binary.sh <<'OPENSSL'
+          # The prefix is not on the linker's search path, so only the libraries
+          # given to CMake can satisfy the link.
+          export OPENSSL_BINARY="$PWD/openssl-binary"
+          if [ ! -e "$OPENSSL_BINARY/lib/libcrypto.so" ]; then
+            mkdir -p build-openssl-binary
+            (cd build-openssl-binary &&
+              ../os_stub/openssllib/openssl/Configure shared no-tests no-docs \
+                --prefix="$OPENSSL_BINARY" --libdir=lib &&
+              make -j"$(getconf _NPROCESSORS_ONLN)" build_libs &&
+              make install_dev)
+          fi
+          OPENSSL
+          . ./build_openssl_binary.sh
+          echo "OPENSSL_BINARY=$OPENSSL_BINARY" >> "$GITHUB_ENV"
 
       - name: Configure
         shell: bash
@@ -436,12 +484,23 @@ jobs:
             sudo apt-get install --no-install-recommends -y llvm
           fi
 
+          # A binary build takes the OpenSSL libraries as paths, and their
+          # headers from the include path, ahead of any OpenSSL on the image.
+          binary=()
+          if [ "${{ matrix.openssl_binary }}" = "true" ]; then
+            CFLAGS="$CFLAGS -I$OPENSSL_BINARY/include"
+            binary=(-DENABLE_BINARY_BUILD=1
+                    "-DCOMPILED_LIBCRYPTO_PATH=$OPENSSL_BINARY/lib/libcrypto.so"
+                    "-DCOMPILED_LIBSSL_PATH=$OPENSSL_BINARY/lib/libssl.so")
+          fi
+
           cmake -B build \
             -DARCH=${{ matrix.arch }} \
             -DTOOLCHAIN=${{ matrix.toolchain }} \
             -DTARGET=${{ matrix.target }} \
             -DCRYPTO=${{ matrix.crypto }} \
-            ${{ matrix.cmake_extra }}
+            ${{ matrix.cmake_extra }} \
+            "${binary[@]}"
 
       - name: Build
         shell: bash
@@ -687,10 +746,19 @@ jobs:
               echo "$pins" | sed 's/^/# pinned: /'
               echo
               echo "export CFLAGS='${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}'"
+              # The OpenSSL prefix is under the clone, so these lines are
+              # emitted unexpanded.
+              binary=""
+              if [ "${{ matrix.openssl_binary }}" = "true" ]; then
+                # Absent only if the job failed before "Build OpenSSL binaries".
+                if [ -f build_openssl_binary.sh ]; then cat build_openssl_binary.sh; fi
+                echo 'export CFLAGS="$CFLAGS -I$OPENSSL_BINARY/include"'
+                binary=' -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH="$OPENSSL_BINARY/lib/libcrypto.so" -DCOMPILED_LIBSSL_PATH="$OPENSSL_BINARY/lib/libssl.so"'
+              fi
               if [ -n "${{ matrix.generator }}" ]; then
-                echo "cmake -B build -G \"${{ matrix.generator }}\" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }}"
+                echo "cmake -B build -G \"${{ matrix.generator }}\" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }}$binary"
               else
-                echo "cmake -B build -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }}"
+                echo "cmake -B build -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }}$binary"
               fi
               echo "cmake --build build --target copy_sample_key"
               echo "cmake --build build --parallel \"\$(getconf _NPROCESSORS_ONLN)\""
@@ -1778,13 +1846,15 @@ jobs:
 #     CLANG         x Mbed TLS 4   CLANG         x OpenSSL 6
 #     MinGW GCC     x Mbed TLS 1   MinGW GCC     x OpenSSL 1
 #
-#   Configuration sweep, 10 jobs on a reference platform except
-#   config-classical-crypto, whose macro domain depends on CRYPTO:
+#   Configuration sweep, 11 jobs on a reference platform except
+#   config-classical-crypto, whose macro domain depends on CRYPTO, and
+#   config-binary-build, as libspdm supports binary builds only with OpenSSL:
 #     config-fips                  config-respond-if-ready-off
 #     config-msg-log-off           config-record-transcript
 #     config-minimal-caps          config-all-off
 #     config-x509-relaxed          config-shared-lib
-#     config-classical-crypto      config-disable-tests
+#     config-classical-crypto      config-binary-build
+#     config-disable-tests
 #
 #   Extended unit tests run where their requirement is met:
 #     test_spdm_fips -> config-fips.

@@ -36,6 +36,7 @@ libspdm's compile time configuration knobs that can be adjusted within GitHub's 
     - `X509_IGNORE_CRITICAL`
     - `DEVICE`
     - `DISABLE_TESTS`
+    - `ENABLE_BINARY_BUILD`
     - `ENABLE_CODEQL`
     - `MARCH`
     - `USING_LTO`
