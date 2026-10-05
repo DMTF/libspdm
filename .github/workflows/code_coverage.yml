@@ -62,9 +62,13 @@ jobs:
             "${GITHUB_WORKSPACE}/library/*" \
             --output-file coverage.info
           # Without --prefix, genhtml drops library/ from the page paths and
-          # shows include/ under the runner's absolute path.
+          # shows include/ under the runner's absolute path. genhtml escapes
+          # --title but writes --header-title as HTML, so the link to the
+          # measured commit goes in the banner.
+          tree_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/tree/${GITHUB_SHA}"
           genhtml --rc branch_coverage=1 \
             --title "${GITHUB_SHA}" --prefix "${GITHUB_WORKSPACE}" \
+            --header-title "Code coverage report for <a href=\"${tree_url}\">${GITHUB_REPOSITORY}</a>" \
             coverage.info --output-directory /tmp/coverage_log
           git fetch origin
           git checkout github_pages
