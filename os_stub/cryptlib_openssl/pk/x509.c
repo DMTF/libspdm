@@ -2841,7 +2841,9 @@ bool libspdm_gen_x509_csr(
     }
 
     X509_REQ_add_extensions(x509_req, exts);
+    /* exts also holds extensions that base_cert owns, so only the one created here is freed. */
     sk_X509_EXTENSION_free(exts);
+    X509_EXTENSION_free(basic_constraints_ext);
 
     /*sign for x509 req*/
     if (pqc_asym_nid != 0) {
