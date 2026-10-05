@@ -659,6 +659,9 @@ jobs:
               echo "git submodule update --init --recursive || exit /b 1"
               echo "$pins" | sed 's/^/REM pinned: /'
               echo
+              if [ "${{ matrix.toolchain }}" = "CLANG" ]; then
+                echo "set \"PATH=%ProgramFiles%\\LLVM\\bin;%PATH%\""
+              fi
               echo "set CFLAGS=${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}"
               echo "cmake -B build -G \"${{ matrix.generator }}\" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }} || exit /b 1"
               echo "cmake --build build --target copy_sample_key"
@@ -794,6 +797,28 @@ jobs:
             msvc_arch: x64
             generator: NMake Makefiles
 
+          # CLANG on Windows compiles with clang-cl and links with lld-link,
+          # using the developer environment's headers and libraries. OpenSSL's
+          # build still uses cl, so the OpenSSL job also links clang-cl code
+          # against an MSVC-built OpenSSL.
+          - name: windows-x64-clang-openssl-debug
+            os: windows-latest
+            arch: x64
+            toolchain: CLANG
+            crypto: openssl
+            target: Debug
+            msvc_arch: x64
+            generator: NMake Makefiles
+
+          - name: windows-ia32-clang-mbedtls-release
+            os: windows-latest
+            arch: ia32
+            toolchain: CLANG
+            crypto: mbedtls
+            target: Release
+            msvc_arch: x86
+            generator: NMake Makefiles
+
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -881,6 +906,20 @@ jobs:
         uses: TheMrMilchmann/setup-msvc-dev@368ef7d1ee4d1171b31d4a7f67f4d954f903f5a9 # v4.1.0
         with:
           arch: ${{ matrix.msvc_arch }}
+
+      # The CLANG toolchain runs clang-cl and lld-link from PATH. Put the
+      # image's LLVM there explicitly rather than depend on whether the image
+      # or the developer environment already does.
+      - name: Set up LLVM
+        if: matrix.toolchain == 'CLANG'
+        run: |
+          $llvm = "$env:ProgramFiles\LLVM\bin"
+          if (-not (Test-Path "$llvm\clang-cl.exe")) {
+            Write-Output "::error::clang-cl.exe not found in $llvm"
+            exit 1
+          }
+          Add-Content -Path $env:GITHUB_PATH -Value $llvm
+          & "$llvm\clang-cl.exe" --version
 
       # Windows/MSVC uses the default shell rather than bash: OpenSSL's
       # Configure is a Perl script, and under Git Bash `perl` resolves to the
@@ -1106,6 +1145,9 @@ jobs:
               echo "git submodule update --init --recursive || exit /b 1"
               echo "$pins" | sed 's/^/REM pinned: /'
               echo
+              if [ "${{ matrix.toolchain }}" = "CLANG" ]; then
+                echo "set \"PATH=%ProgramFiles%\\LLVM\\bin;%PATH%\""
+              fi
               echo "set CFLAGS=${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}"
               echo "cmake -B build -G \"${{ matrix.generator }}\" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }} || exit /b 1"
               echo "cmake --build build --target copy_sample_key"
@@ -1522,6 +1564,9 @@ jobs:
               echo "git submodule update --init --recursive || exit /b 1"
               echo "$pins" | sed 's/^/REM pinned: /'
               echo
+              if [ "${{ matrix.toolchain }}" = "CLANG" ]; then
+                echo "set \"PATH=%ProgramFiles%\\LLVM\\bin;%PATH%\""
+              fi
               echo "set CFLAGS=${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}"
               echo "cmake -B build -G \"${{ matrix.generator }}\" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }} || exit /b 1"
               echo "cmake --build build --target copy_sample_key"
@@ -1700,7 +1745,7 @@ jobs:
 # Platform jobs are named os-arch-toolchain-crypto-target, so every line below
 # can be re-derived from the matrix rather than trusted. Figures are job counts.
 #
-#   Platform sweep, library defaults, 23 jobs:
+#   Platform sweep, library defaults, 25 jobs:
 #     linux-x64-gcc-mbedtls-debug          linux-x64-clang-openssl-release
 #     linux-aarch64-gcc-mbedtls-debug      macos-aarch64-clang-openssl-release
 #     linux-x64-gcc-openssl-release        linux-x64-clang-mbedtls-debug
@@ -1711,25 +1756,26 @@ jobs:
 #     windows-ia32-vs-mbedtls-debug        windows-ia32-vs-openssl-release
 #     windows-x64-vs-openssl-debug         windows-x64-vs-mbedtls-debug
 #     windows-ia32-vs-openssl-debug        windows-x64-vs-mbedtls-release
-#     windows-x64-vs-openssl-release       windows-x64-mingw-mbedtls-release
+#     windows-x64-vs-openssl-release       windows-x64-clang-openssl-debug
+#     windows-ia32-clang-mbedtls-release   windows-x64-mingw-mbedtls-release
 #     windows-x64-mingw-openssl-debug
 #
 #   Every value of every dimension is exercised:
-#     OS         Linux 11  macOS 3   Windows 9
-#     ARCH       ia32 3    x64 15    aarch64 5
-#     TOOLCHAIN  Visual Studio 7   Native GCC 6      MinGW GCC 2       CLANG 8
-#     CRYPTO     Mbed TLS 10  OpenSSL 13
-#     TARGET     Debug 12     Release 11
+#     OS         Linux 11  macOS 3   Windows 11
+#     ARCH       ia32 4    x64 16    aarch64 5
+#     TOOLCHAIN  Visual Studio 7   Native GCC 6      MinGW GCC 2       CLANG 10
+#     CRYPTO     Mbed TLS 11  OpenSSL 14
+#     TARGET     Debug 13     Release 12
 #
 #   Full ARCH x CRYPTO cross, the stated exception to sparse crossing:
-#     ia32    x Mbed TLS 1   ia32    x OpenSSL 2
-#     x64     x Mbed TLS 7   x64     x OpenSSL 8
+#     ia32    x Mbed TLS 2   ia32    x OpenSSL 2
+#     x64     x Mbed TLS 7   x64     x OpenSSL 9
 #     aarch64 x Mbed TLS 2   aarch64 x OpenSSL 3
 #
 #   TOOLCHAIN x CRYPTO, complete:
 #     Visual Studio x Mbed TLS 3   Visual Studio x OpenSSL 4
 #     Native GCC    x Mbed TLS 3   Native GCC    x OpenSSL 3
-#     CLANG         x Mbed TLS 3   CLANG         x OpenSSL 5
+#     CLANG         x Mbed TLS 4   CLANG         x OpenSSL 6
 #     MinGW GCC     x Mbed TLS 1   MinGW GCC     x OpenSSL 1
 #
 #   Configuration sweep, 10 jobs on a reference platform except
