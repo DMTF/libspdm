@@ -67,51 +67,58 @@ bool libspdm_write_csr_to_file(const void * csr_pointer, size_t csr_len, uint32_
     return true;
 }
 
+/* Returns whether the certificate directory path, whose size len includes the terminating NUL, is
+ * name. The lengths are compared first so that neither string is read past its end. */
+static bool libspdm_is_cert_dir(const char *path, size_t len, const char *name)
+{
+    return (strlen(name) == len - 1) && libspdm_consttime_is_mem_equal(path, name, len - 1);
+}
+
 size_t libspdm_get_aysm_nid_from_file_name(char *Path, size_t len)
 {
-    if (libspdm_consttime_is_mem_equal(Path, "ecp256", len - 1)) {
+    if (libspdm_is_cert_dir(Path, len, "ecp256")) {
         return LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256;
-    } else if (libspdm_consttime_is_mem_equal(Path, "ecp384", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "ecp384")) {
         return LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384;
-    } else if (libspdm_consttime_is_mem_equal(Path, "rsa2048", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "rsa2048")) {
         return LIBSPDM_CRYPTO_NID_RSASSA2048;
-    } else if (libspdm_consttime_is_mem_equal(Path, "rsa3072", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "rsa3072")) {
         return LIBSPDM_CRYPTO_NID_RSASSA3072;
-    } else if (libspdm_consttime_is_mem_equal(Path, "sm2", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "sm2")) {
         return LIBSPDM_CRYPTO_NID_SM2_DSA_P256;
-    } else if (libspdm_consttime_is_mem_equal(Path, "ed25519", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "ed25519")) {
         return LIBSPDM_CRYPTO_NID_EDDSA_ED25519;
-    } else if (libspdm_consttime_is_mem_equal(Path, "ed448", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "ed448")) {
         return LIBSPDM_CRYPTO_NID_EDDSA_ED448;
-    } else if (libspdm_consttime_is_mem_equal(Path, "mldsa44", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "mldsa44")) {
         return LIBSPDM_CRYPTO_NID_ML_DSA_44;
-    } else if (libspdm_consttime_is_mem_equal(Path, "mldsa65", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "mldsa65")) {
         return LIBSPDM_CRYPTO_NID_ML_DSA_65;
-    } else if (libspdm_consttime_is_mem_equal(Path, "mldsa87", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "mldsa87")) {
         return LIBSPDM_CRYPTO_NID_ML_DSA_87;
-    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-sha2-128s", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "slh-dsa-sha2-128s")) {
         return LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_128S;
-    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-sha2-128f", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "slh-dsa-sha2-128f")) {
         return LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_128F;
-    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-sha2-192s", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "slh-dsa-sha2-192s")) {
         return LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_192S;
-    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-sha2-192f", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "slh-dsa-sha2-192f")) {
         return LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_192F;
-    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-sha2-256s", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "slh-dsa-sha2-256s")) {
         return LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_256S;
-    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-sha2-256f", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "slh-dsa-sha2-256f")) {
         return LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_256F;
-    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-shake-128s", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "slh-dsa-shake-128s")) {
         return LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_128S;
-    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-shake-128f", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "slh-dsa-shake-128f")) {
         return LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_128F;
-    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-shake-192s", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "slh-dsa-shake-192s")) {
         return LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_192S;
-    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-shake-192f", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "slh-dsa-shake-192f")) {
         return LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_192F;
-    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-shake-256s", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "slh-dsa-shake-256s")) {
         return LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_256S;
-    } else if (libspdm_consttime_is_mem_equal(Path, "slh-dsa-shake-256f", len - 1)) {
+    } else if (libspdm_is_cert_dir(Path, len, "slh-dsa-shake-256f")) {
         return LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_256F;
     } else {
         return LIBSPDM_CRYPTO_NID_NULL;
