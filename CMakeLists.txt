@@ -661,7 +661,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
         set(CMAKE_STATIC_LINKER_FLAGS "")
 
-        set(CMAKE_EXE_LINKER_FLAGS "/NOLOGO /SUBSYSTEM:CONSOLE /NODEFAULTLIB:libcmt.lib /MLLVM:-exception-model=wineh /lldmap /OPT:REF")
+        set(CMAKE_EXE_LINKER_FLAGS "/NOLOGO /SUBSYSTEM:CONSOLE /MLLVM:-exception-model=wineh /lldmap /OPT:REF")
 
         if(ARCH STREQUAL "x64")
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:AMD64")
@@ -669,14 +669,14 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:I386")
         endif()
 
-        set(CMAKE_C_FLAGS_RELEASE     "-Oz")
-        set(CMAKE_C_FLAGS_DEBUG       "-O0 -gcodeview")
+        # clang-cl ignores -Oz, and -gcodeview turns on debug information only from LLVM 22.
+        set(CMAKE_C_FLAGS_RELEASE     "/O1")
+        set(CMAKE_C_FLAGS_DEBUG       "/Od /Z7")
 
         set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/DEBUG:GHASH")
 
-        # These link libraries choose the C runtime, so CMake must not add -MD or -MDd.
-        set(CMAKE_MSVC_RUNTIME_LIBRARY "")
-        set(CMAKE_C_STANDARD_LIBRARIES "Kernel32.lib MSVCRTD.lib vcruntimed.lib ucrtd.lib Gdi32.lib User32.lib Winmm.lib Advapi32.lib ws2_32.lib")
+        # CMake selects the DLL C runtime, /MD or /MDd, whose objects name its libraries.
+        set(CMAKE_C_STANDARD_LIBRARIES "Kernel32.lib Gdi32.lib User32.lib Winmm.lib Advapi32.lib ws2_32.lib")
 
     elseif(TOOLCHAIN STREQUAL "ARM_DS2022")
         set(CMAKE_OBJCOPY       "fromelf.exe")
@@ -705,6 +705,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
         set(CMAKE_STATIC_LINKER_FLAGS "")
 
+        # clang_rt.fuzzer names the static C runtime, libcmt.lib, which /MD builds must not link.
         set(CMAKE_EXE_LINKER_FLAGS "/NOLOGO /SUBSYSTEM:CONSOLE /NODEFAULTLIB:libcmt.lib /MLLVM:-exception-model=wineh /lldmap /OPT:REF")
 
         if(ARCH STREQUAL "x64")
@@ -713,18 +714,20 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:I386")
         endif()
 
-        set(CMAKE_C_FLAGS_RELEASE     "-Oz")
-        set(CMAKE_C_FLAGS_DEBUG       "-O0 -gcodeview")
+        # clang-cl ignores -Oz, and -gcodeview turns on debug information only from LLVM 22.
+        set(CMAKE_C_FLAGS_RELEASE     "/O1")
+        set(CMAKE_C_FLAGS_DEBUG       "/Od /Z7")
 
         set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/DEBUG:GHASH")
 
-        # These link libraries choose the C runtime, so CMake must not add -MD or -MDd.
-        set(CMAKE_MSVC_RUNTIME_LIBRARY "")
+        # The ASan runtime does not support the debug C runtime, so Debug builds also use /MD, whose
+        # objects name its libraries.
+        set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreadedDLL)
         if(ARCH STREQUAL "x64")
-            set(CMAKE_C_STANDARD_LIBRARIES "Kernel32.lib MSVCRTD.lib vcruntimed.lib ucrtd.lib Gdi32.lib User32.lib Winmm.lib Advapi32.lib ws2_32.lib")
+            set(CMAKE_C_STANDARD_LIBRARIES "Kernel32.lib Gdi32.lib User32.lib Winmm.lib Advapi32.lib ws2_32.lib")
             set(CMAKE_C_STANDARD_LIBRARIES "${CMAKE_C_STANDARD_LIBRARIES} C:/LLVM/lib/clang/13.0.0/lib/windows/clang_rt.asan_dynamic-x86_64.lib C:/LLVM/lib/clang/13.0.0/lib/windows/clang_rt.asan_dynamic_runtime_thunk-x86_64.lib C:/LLVM/lib/clang/13.0.0/lib/windows/clang_rt.fuzzer-x86_64.lib")
         elseif(ARCH STREQUAL "ia32")
-            set(CMAKE_C_STANDARD_LIBRARIES "Kernel32.lib MSVCRTD.lib vcruntimed.lib ucrtd.lib Gdi32.lib User32.lib Winmm.lib Advapi32.lib ws2_32.lib clang_rt.asan_dynamic-i386.lib clang_rt.asan_dynamic_runtime_thunk-i386.lib clang_rt.fuzzer-i386.lib")
+            set(CMAKE_C_STANDARD_LIBRARIES "Kernel32.lib Gdi32.lib User32.lib Winmm.lib Advapi32.lib ws2_32.lib clang_rt.asan_dynamic-i386.lib clang_rt.asan_dynamic_runtime_thunk-i386.lib clang_rt.fuzzer-i386.lib")
         endif()
 
     else()

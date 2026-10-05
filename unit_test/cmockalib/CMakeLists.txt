@@ -7,8 +7,8 @@ set(BUILD_SHARED_LIBS OFF)
 set(WITH_EXAMPLES OFF)
 
 # cmocka's configure checks link test programs, which the toolchain blocks' linker flags break (for
-# example /NODEFAULTLIB:libcmt.lib for clang-cl and -fsanitize=fuzzer for LIBFUZZER), so the checks use
-# the cached defaults. cmocka itself is a static library, so it is not linked with them either way.
+# example -fsanitize=fuzzer for LIBFUZZER), so the checks use the cached defaults. cmocka itself is a
+# static library, so it is not linked with them either way.
 unset(CMAKE_EXE_LINKER_FLAGS)
 
 # The bare-metal toolchains' compiler checks only compile, so cmocka's checks would find these
