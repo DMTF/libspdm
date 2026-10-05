@@ -110,6 +110,11 @@ uint32_t libspdm_get_cert_chain_slot_storage_size(
     return SPDM_MAX_CERTIFICATE_CHAIN_SIZE_14;
 }
 
+/* The certificate chain that libspdm_update_local_cert_chain allocated and installed in each slot.
+ * The sample models a single device with one chain per slot, so the next call for a slot frees the
+ * chain that the previous call installed, even if the Integrator has since replaced it. */
+static uint8_t *m_libspdm_installed_cert_chain[SPDM_MAX_SLOT_COUNT];
+
 bool libspdm_update_local_cert_chain(
     void *spdm_context,
     const uint32_t *session_id,
@@ -290,12 +295,9 @@ set_cert:
         return false;
     }
 
-    /* `old_cert_chain` can be freed at this point. We can't
-     * free() the const version supplied to this function and
-     * stored in libspdm, so implementations need to keep track
-     * of the buffer manually, probably by storing it in
-     * `app_context_data_ptr`.
-     */
+    /* libspdm no longer refers to the chain that was installed here before. */
+    free(m_libspdm_installed_cert_chain[slot_id]);
+    m_libspdm_installed_cert_chain[slot_id] = new_buffer;
 
     return true;
 }

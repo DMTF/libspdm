@@ -1209,7 +1209,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
                                                 cert_chain_b, &tmp_cert_size,
                                                 SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT,
                                                 NULL, NULL));
-    free((void *)(uintptr_t)installed_chain);
+    /* The sample frees the chain that it installed before, so the test does not. */
 
     installed_chain = spdm_context->local_context.local_cert_chain_provision[0];
     installed_chain_size = spdm_context->local_context.local_cert_chain_provision_size[0];
@@ -1220,7 +1220,6 @@ static void rsp_set_certificate_rsp_case14(void **state)
     assert_memory_equal(installed_chain, cert_chain_b, cert_chain_b_size);
 
     /* Alias Cert, existing slot*/
-    free((void *)(uintptr_t)installed_chain);
 
     /* Read in the entire chain */
     assert_true(libspdm_read_responder_public_certificate_chain_alias_cert(
@@ -1257,7 +1256,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
 
     free(alias_chain);
 
-    free((void *)(uintptr_t)installed_chain);
+    /* The sample still owns the installed chain, and frees it when slot 0 is next written. */
     free((void *)(uintptr_t)orig_alias_chain);
     spdm_context->local_context.local_cert_chain_provision[0] = NULL;
     spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
