@@ -314,7 +314,7 @@ if((TOOLCHAIN STREQUAL "ARM_DS2022") OR (TOOLCHAIN STREQUAL "RISCV_NONE") OR (TO
     set(LIBSPDM_WARNING_OPTIONS "")
 elseif(MSVC)
     if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
-        # clang-cl builds have always disabled warnings, and CI does not build them.
+        # clang-cl builds have always disabled warnings.
         set(LIBSPDM_WARNING_OPTIONS /w)
     else()
         set(LIBSPDM_WARNING_OPTIONS /W4 /WX /wd4100 /wd4127 /wd4701 /wd4703)
