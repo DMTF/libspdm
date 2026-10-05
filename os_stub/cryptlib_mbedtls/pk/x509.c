@@ -1244,8 +1244,6 @@ libspdm_internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const ui
     status = false;
     ptr = start;
 
-    ret = 0;
-
     while (true) {
         /*
          * Extension  ::=  SEQUENCE  {
@@ -1291,7 +1289,6 @@ libspdm_internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const ui
 
         /* move to next*/
         ptr = extension_ptr + header_len + find_extension_len;
-        ret = 0;
     }
 
     return status;
