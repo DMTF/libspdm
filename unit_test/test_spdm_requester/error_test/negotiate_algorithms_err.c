@@ -24,7 +24,6 @@ typedef struct {
 } libspdm_algorithms_response_spdm11_t;
 #pragma pack()
 
-static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE];
 
 static libspdm_return_t send_message(
@@ -99,10 +98,8 @@ static libspdm_return_t send_message(
     case 0x20: {
         const uint8_t *ptr = (const uint8_t *)request;
 
-        m_libspdm_local_buffer_size = 0;
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                          &ptr[1], request_size - 1);
-        m_libspdm_local_buffer_size += (request_size - 1);
     }
         return LIBSPDM_STATUS_SUCCESS;
     case 0x21:

@@ -314,8 +314,9 @@ if((TOOLCHAIN STREQUAL "ARM_DS2022") OR (TOOLCHAIN STREQUAL "RISCV_NONE") OR (TO
     set(LIBSPDM_WARNING_OPTIONS "")
 elseif(MSVC)
     if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
-        # clang-cl builds have always disabled warnings.
-        set(LIBSPDM_WARNING_OPTIONS /w)
+        # Clang-cl reads -Wall as /Wall, which is -Weverything, so /W3 and /WX stand in for -Wall
+        # and -Werror.
+        set(LIBSPDM_WARNING_OPTIONS /W3 /WX -Werror-implicit-function-declaration -Wcast-qual)
     else()
         set(LIBSPDM_WARNING_OPTIONS /W4 /WX /wd4100 /wd4127 /wd4701 /wd4703)
     endif()
