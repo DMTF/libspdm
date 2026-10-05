@@ -24,7 +24,7 @@ static uint8_t m_cert_chain_buffer[SPDM_MAX_CERTIFICATE_CHAIN_SIZE];
 libspdm_return_t spdm_device_acquire_sender_buffer (
     void *context, void **msg_buf_ptr)
 {
-    LIBSPDM_ASSERT (!m_sender_buffer_acquired && !m_receiver_buffer_acquired);
+    assert_true (!m_sender_buffer_acquired && !m_receiver_buffer_acquired);
     if (m_error_acquire_sender_buffer) {
         return LIBSPDM_STATUS_ACQUIRE_FAIL;
     } else {
@@ -38,8 +38,8 @@ libspdm_return_t spdm_device_acquire_sender_buffer (
 
 void spdm_device_release_sender_buffer (void *context, const void *msg_buf_ptr)
 {
-    LIBSPDM_ASSERT (m_sender_buffer_acquired && !m_receiver_buffer_acquired);
-    LIBSPDM_ASSERT (msg_buf_ptr == m_send_receive_buffer);
+    assert_true (m_sender_buffer_acquired && !m_receiver_buffer_acquired);
+    assert_ptr_equal (msg_buf_ptr, m_send_receive_buffer);
 
     m_sender_buffer_acquired = false;
 }
@@ -47,7 +47,7 @@ void spdm_device_release_sender_buffer (void *context, const void *msg_buf_ptr)
 libspdm_return_t spdm_device_acquire_receiver_buffer (
     void *context, void **msg_buf_ptr)
 {
-    LIBSPDM_ASSERT (!m_sender_buffer_acquired && !m_receiver_buffer_acquired);
+    assert_true (!m_sender_buffer_acquired && !m_receiver_buffer_acquired);
 
     if (m_error_acquire_receiver_buffer) {
         return LIBSPDM_STATUS_ACQUIRE_FAIL;
@@ -62,8 +62,8 @@ libspdm_return_t spdm_device_acquire_receiver_buffer (
 
 void spdm_device_release_receiver_buffer (void *context, const void *msg_buf_ptr)
 {
-    LIBSPDM_ASSERT (!m_sender_buffer_acquired && m_receiver_buffer_acquired);
-    LIBSPDM_ASSERT (msg_buf_ptr == m_send_receive_buffer);
+    assert_true (!m_sender_buffer_acquired && m_receiver_buffer_acquired);
+    assert_ptr_equal (msg_buf_ptr, m_send_receive_buffer);
 
     m_receiver_buffer_acquired = false;
 }
@@ -151,7 +151,7 @@ int libspdm_unit_test_group_teardown(void **state)
 {
     libspdm_test_context_t *spdm_test_context;
 
-    LIBSPDM_ASSERT (!m_sender_buffer_acquired && !m_receiver_buffer_acquired);
+    assert_true (!m_sender_buffer_acquired && !m_receiver_buffer_acquired);
 
     spdm_test_context = *state;
 

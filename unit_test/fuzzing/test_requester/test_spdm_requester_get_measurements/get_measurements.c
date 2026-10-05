@@ -12,7 +12,6 @@
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 bool m_secured_on_off;
-static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE];
 
 uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
@@ -68,13 +67,11 @@ libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_
     size_t header_size;
     size_t message_size;
 
-    m_libspdm_local_buffer_size = 0;
     header_size = sizeof(libspdm_test_message_header_t);
     message_size = libspdm_test_get_measurement_request_size(
         spdm_context, (const uint8_t *)request + header_size, request_size - header_size);
     libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                      (const uint8_t *)request + header_size, message_size);
-    m_libspdm_local_buffer_size += message_size;
     return LIBSPDM_STATUS_SUCCESS;
 }
 

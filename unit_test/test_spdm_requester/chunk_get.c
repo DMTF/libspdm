@@ -23,7 +23,6 @@ static uint8_t m_libspdm_local_response_buffer_for_chunk_seq_no_wrap_test[
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
 
-static size_t m_libspdm_local_request_buffer_size;
 static uint8_t m_libspdm_local_request_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
 static uint8_t m_libspdm_local_certificate_chain_test_case_4[LIBSPDM_MAX_CERT_CHAIN_SIZE];
@@ -388,10 +387,8 @@ static libspdm_return_t send_message(
 
     spdm_test_context = libspdm_get_test_context();
 
-    m_libspdm_local_request_buffer_size = 0;
     libspdm_copy_mem(m_libspdm_local_request_buffer, sizeof(m_libspdm_local_request_buffer),
                      (const uint8_t *)request + header_size, request_size - header_size);
-    m_libspdm_local_request_buffer_size += request_size - header_size;
 
     if (spdm_test_context->case_id == 0x1) {
         const spdm_get_certificate_request_t *spdm_request =
