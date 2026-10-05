@@ -188,6 +188,17 @@ jobs:
             cflags: -DLIBSPDM_FIPS_MODE=1
             extra_tests: test_spdm_fips
 
+          # Mbed TLS pins EdDSA and the PQC algorithms to 0, so their FIPS
+          # self-tests run only against OpenSSL.
+          - name: config-fips-openssl
+            os: ubuntu-latest
+            arch: x64
+            toolchain: GCC
+            crypto: openssl
+            target: Debug
+            cflags: -DLIBSPDM_FIPS_MODE=1
+            extra_tests: test_spdm_fips
+
           - name: config-respond-if-ready-off
             os: ubuntu-latest
             arch: x64
@@ -1846,17 +1857,18 @@ jobs:
 #     CLANG         x Mbed TLS 4   CLANG         x OpenSSL 6
 #     MinGW GCC     x Mbed TLS 1   MinGW GCC     x OpenSSL 1
 #
-#   Configuration sweep, 11 jobs on a reference platform except
-#   config-classical-crypto, whose macro domain depends on CRYPTO, and
-#   config-binary-build, as libspdm supports binary builds only with OpenSSL:
-#     config-fips                  config-respond-if-ready-off
-#     config-msg-log-off           config-record-transcript
-#     config-minimal-caps          config-all-off
-#     config-x509-relaxed          config-shared-lib
-#     config-classical-crypto      config-binary-build
-#     config-disable-tests
+#   Configuration sweep, 12 jobs on a reference platform except
+#   config-fips-openssl and config-classical-crypto, whose macro domains
+#   depend on CRYPTO, and config-binary-build, as libspdm supports binary
+#   builds only with OpenSSL:
+#     config-fips                  config-fips-openssl
+#     config-respond-if-ready-off  config-msg-log-off
+#     config-record-transcript     config-minimal-caps
+#     config-all-off               config-x509-relaxed
+#     config-shared-lib            config-classical-crypto
+#     config-binary-build          config-disable-tests
 #
 #   Extended unit tests run where their requirement is met:
-#     test_spdm_fips -> config-fips.
+#     test_spdm_fips -> config-fips, config-fips-openssl.
 #
 # ---------------------------------------------------------------------------
