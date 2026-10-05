@@ -45,9 +45,14 @@ jobs:
           CI_COMMIT_AUTHOR: Continuous Integration
         run: |
           mkdir /tmp/coverage_log
+          # Leave out the branches of LIBSPDM_ASSERT lines, whose failure side a
+          # passing run never takes. genhtml ignores lcov_excl_br_line, so both
+          # captures set it.
           lcov --rc branch_coverage=1 --rc geninfo_gcov_all_blocks=1 \
+            --rc lcov_excl_br_line='LCOV_EXCL_BR_LINE|LIBSPDM_ASSERT' \
             --capture --initial --directory ./build --output-file coverage_base.info
           lcov --rc branch_coverage=1 --rc geninfo_gcov_all_blocks=1 \
+            --rc lcov_excl_br_line='LCOV_EXCL_BR_LINE|LIBSPDM_ASSERT' \
             --capture --directory ./build --output-file coverage_test.info
           lcov --rc branch_coverage=1 \
             --add-tracefile coverage_base.info --add-tracefile coverage_test.info \
