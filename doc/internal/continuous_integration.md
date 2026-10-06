@@ -99,11 +99,11 @@ its worst case, 20 minutes to build and run to completion, then a 30 minute time
 
 ### Sanitizers
 
-Address (ASAN) and undefined behavior (UBSAN) sanitizers monitor the execution of production and
-test code and flag illegal operations or behavior. For the purpose of continuous integration, they
-should produce a pass / fail signal when illegal behavior is detected. In the case of UBSAN, this
-may be accomplished by adding `UBSAN_OPTIONS=halt_on_error=1` so that the test exits with a non-zero
-return code to alert the runner of a test failure.
+Address (ASAN), undefined behavior (UBSAN), and memory (MSAN) sanitizers monitor the execution of
+production and test code and flag illegal operations or behavior. For the purpose of continuous
+integration, they should produce a pass / fail signal when illegal behavior is detected. In the case
+of UBSAN, this may be accomplished by adding `UBSAN_OPTIONS=halt_on_error=1` so that the test exits
+with a non-zero return code to alert the runner of a test failure.
 
 ### Reproducers
 
@@ -135,3 +135,19 @@ All tier 1 tests must pass before a pull request that targets production code or
 into `main` or any of the release branches.
 
 For execution time, when all tests pass, the total test time should be less than 30 minutes.
+
+### Tier 2 - Daily Coverage
+
+Tier 2 executes the core unit tests, without any sanitizer monitoring, against all legal
+combinations of operating system, host hardware, toolchain, cryptography library, and build target
+that the CMake build files support. Code configuration sweeps alter finer-grained macro values with
+ASAN/UBSAN/MSAN monitoring. If a test fails then maintainers are notified via the creation of a
+GitHub issue with a `Daily Test Failure` label.
+
+Test failures at this tier point to bugs arising from:
+1. Unforeseen combinations of configuration parameters in library or unit test code.
+2. Undefined or implementation-defined behavior that may vary based on compiler or operating system.
+
+For execution time, when all tests pass, the total test time should be less than two hours. This
+tier should also include a max-parallel cap so that pull requests and pushes can still run while the
+daily builds and tests run.
