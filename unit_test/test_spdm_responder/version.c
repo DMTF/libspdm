@@ -492,7 +492,7 @@ static void libspdm_test_version_teardown_callback(
 }
 
 /* Exercise both reset entry points, including mixed states and unused slots. */
-static void rsp_version_session_teardown(void **state)
+static void rsp_version_case11(void **state)
 {
     libspdm_test_context_t *test_context;
     libspdm_context_t *context;
@@ -565,7 +565,7 @@ static void rsp_version_session_teardown(void **state)
 }
 
 /* Free and terminate notify once; unused and already-not-started slots do not. */
-static void rsp_version_free_session_teardown(void **state)
+static void rsp_version_case12(void **state)
 {
     libspdm_test_context_t *test_context;
     libspdm_context_t *context;
@@ -639,8 +639,8 @@ int libspdm_rsp_version_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(rsp_version_case1),
-        cmocka_unit_test(rsp_version_session_teardown),
-        cmocka_unit_test(rsp_version_free_session_teardown),
+        cmocka_unit_test(rsp_version_case11),
+        cmocka_unit_test(rsp_version_case12),
         /* Invalid request*/
         cmocka_unit_test(rsp_version_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/

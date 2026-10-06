@@ -2379,7 +2379,7 @@ static libspdm_return_t libspdm_test_teardown_encode(
 }
 
 /* Cover both encode failure branches, DecryptError ordering, and normal END_SESSION. */
-static void libspdm_test_responder_encode_teardown(void **state)
+static void libspdm_test_responder_receive_send_rsp_case26(void **state)
 {
     libspdm_test_context_t *test_context;
     libspdm_context_t *context;
@@ -2451,7 +2451,7 @@ static void libspdm_test_responder_encode_teardown(void **state)
 int libspdm_rsp_receive_send_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test_setup(libspdm_test_responder_encode_teardown,
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case26,
                                libspdm_unit_test_reset_context),
         /* response message size is larger than requester data_transfer_size */
         cmocka_unit_test(libspdm_test_responder_receive_send_rsp_case1),
