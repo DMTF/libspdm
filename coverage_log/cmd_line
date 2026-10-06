@@ -1,0 +1,1 @@
+genhtml --rc branch_coverage=1 --title 2311e44271ea3df45db344b33b35a317349762d0 --prefix /home/runner/work/libspdm/libspdm --header-title 'Code coverage report for <a href="https://github.com/DMTF/libspdm/tree/2311e44271ea3df45db344b33b35a317349762d0">DMTF/libspdm</a>' coverage.info --output-directory /tmp/coverage_log
