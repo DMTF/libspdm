@@ -5,7 +5,6 @@
  **/
 
 #include "internal/libspdm_secured_message_lib.h"
-#include "library/spdm_responder_lib.h"
 
 /**
  * Notify the session state to a session APP.

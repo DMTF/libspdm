@@ -146,20 +146,6 @@ libspdm_return_t libspdm_generate_extended_error_response(
     size_t *spdm_response_size, void *spdm_response);
 
 /**
- * Notify the session state to a session APP.
- * Active session teardown, including reset and error cleanup, reports NOT_STARTED
- * before the original session ID is invalidated. The callback must not reset or
- * destroy this context, or allocate or free its sessions.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    The session_id of a session.
- * @param  session_state                 The state of a session.
- **/
-typedef void (*libspdm_session_state_callback_func)(
-    void *spdm_context, uint32_t session_id,
-    libspdm_session_state_t session_state);
-
-/**
  * Register an SPDM state callback function.
  *
  * This function can be called multiple times to let different session APPs register their own callbacks.
