@@ -31,7 +31,7 @@ Refer to spdm_client_init() in [spdm_requester_spdm.c](https://github.com/DMTF/s
 
    0.4, choose required SPDM transport libs, such as [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h)
 
-   0.5, implement required SPDM device IO functions - `libspdm_device_send_message_func` and `libspdm_device_receive_message_func` according to [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h). The `timeout`, in microseconds (us) units, is for the execution of the message. For a Requester, the timeout value to send a message is `RTT` and the timeout value to receive a message is `T1 = RTT + ST1` or `T2 = RTT + CT = RTT + 2^ct_exponent`.
+   0.5, implement required SPDM device IO functions - `libspdm_device_send_message_func` and `libspdm_device_receive_message_func` according to [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h). The `timeout`, in microseconds (us) units, is for the execution of the message. For a Requester, the timeout value to send a message is `RTT` and the timeout value to receive a message is `T1 = RTT + ST1` or `T2 = RTT + CT = RTT + 2^ct_exponent`. Also implement the device buffer functions `libspdm_device_acquire_sender_buffer_func`, `libspdm_device_release_sender_buffer_func`, `libspdm_device_acquire_receiver_buffer_func`, and `libspdm_device_release_receiver_buffer_func`.
 
 1. Initialize SPDM context
 
@@ -69,7 +69,7 @@ Refer to spdm_client_init() in [spdm_requester_spdm.c](https://github.com/DMTF/s
    1.2, register the device io functions, transport layer functions, and device buffer functions, then set up the scratch buffer.
    The libspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
    The SPDM device driver need provide device IO send/receive function.
-   The final sent and received message will be in the sender buffer and receiver buffer.
+   [Buffer Configuration](#buffer-configuration) describes how to choose `LIBSPDM_MAX_SPDM_MSG_SIZE`, `LIBSPDM_SENDER_BUFFER_SIZE`, and `LIBSPDM_RECEIVER_BUFFER_SIZE`.
    Refer to [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md) for the usage of those APIs.
 
    ```C
@@ -104,12 +104,7 @@ Refer to spdm_client_init() in [spdm_requester_spdm.c](https://github.com/DMTF/s
    libspdm_set_scratch_buffer (spdm_context, scratch_buffer, scratch_buffer_size);
    ```
 
-   Optionally, the Integrator can calculate `scratch_buffer_size` statically from the values given
-   to `libspdm_register_transport_layer_func()`, following the internal function
-   `libspdm_get_scratch_buffer_capacity()` in
-   [libspdm_com_context_data.c](https://github.com/DMTF/libspdm/blob/main/library/spdm_common_lib/libspdm_com_context_data.c).
-   Note that the size requirement depends on `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP` and
-   `LIBSPDM_RESPOND_IF_READY_SUPPORT`.
+   To allocate the scratch buffer statically, see [Scratch Buffer](#scratch-buffer) for its size.
 
    1.3, set capabilities and choose algorithms, based upon need.
    ```C
@@ -319,7 +314,7 @@ Refer to spdm_server_init() in [spdm_responder_spdm.c](https://github.com/DMTF/s
 
    0.4, choose required SPDM transport libs, such as [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h)
 
-   0.5, implement required SPDM device IO functions - `libspdm_device_send_message_func` and `libspdm_device_receive_message_func` according to [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h).
+   0.5, implement required SPDM device IO functions - `libspdm_device_send_message_func` and `libspdm_device_receive_message_func` according to [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h). Also implement the device buffer functions `libspdm_device_acquire_sender_buffer_func`, `libspdm_device_release_sender_buffer_func`, `libspdm_device_acquire_receiver_buffer_func`, and `libspdm_device_release_receiver_buffer_func`.
 
    0.6, if the device does not have access to a real-time clock then build with `-DX509_IGNORE_TIME=ON` so that the validity period of certificates is not checked. This applies to both the OpenSSL and Mbed TLS cryptography libraries.
 
@@ -361,7 +356,7 @@ Refer to spdm_server_init() in [spdm_responder_spdm.c](https://github.com/DMTF/s
    1.2, register the device io functions, transport layer functions, and device buffer functions, then set up the scratch buffer.
    The libspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
    The SPDM device driver need provide device IO send/receive function.
-   The final sent and received message will be in the sender buffer and receiver buffer.
+   [Buffer Configuration](#buffer-configuration) describes how to choose `LIBSPDM_MAX_SPDM_MSG_SIZE`, `LIBSPDM_SENDER_BUFFER_SIZE`, and `LIBSPDM_RECEIVER_BUFFER_SIZE`.
    Refer to [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md) for the usage of those APIs.
 
    ```C
@@ -396,12 +391,7 @@ Refer to spdm_server_init() in [spdm_responder_spdm.c](https://github.com/DMTF/s
    libspdm_set_scratch_buffer (spdm_context, scratch_buffer, scratch_buffer_size);
    ```
 
-   Optionally, the Integrator can calculate `scratch_buffer_size` statically from the values given
-   to `libspdm_register_transport_layer_func()`, following the internal function
-   `libspdm_get_scratch_buffer_capacity()` in
-   [libspdm_com_context_data.c](https://github.com/DMTF/libspdm/blob/main/library/spdm_common_lib/libspdm_com_context_data.c).
-   Note that the size requirement depends on `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP` and
-   `LIBSPDM_RESPOND_IF_READY_SUPPORT`.
+   To allocate the scratch buffer statically, see [Scratch Buffer](#scratch-buffer) for its size.
 
    1.3, set capabilities and choose algorithms, based upon need.
    ```C
@@ -529,6 +519,90 @@ Refer to spdm_server_init() in [spdm_responder_spdm.c](https://github.com/DMTF/s
    ```C
    libspdm_deinit_context(spdm_context);
    ```
+
+## Buffer Configuration
+
+In step 1.2 the Integrator gives libspdm three sizes.
+
+| Size | Function | Description |
+|---|---|---|
+| `max_spdm_msg_size` | `libspdm_register_transport_layer_func` | The size of the largest SPDM message that the endpoint receives, which libspdm reports as `MaxSPDMmsgSize` in `GET_CAPABILITIES` / `CAPABILITIES`. The SPDM messages that libspdm sends are also limited to this size. |
+| `sender_buffer_size` | `libspdm_register_device_buffer_func` | The size of the sender buffer, which holds one transport layer message to send. |
+| `receiver_buffer_size` | `libspdm_register_device_buffer_func` | The size of the receiver buffer, which holds one received transport layer message. |
+
+`libspdm_register_transport_layer_func` also takes the transport layer's maximum header and tail
+sizes, such as `LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE` and `LIBSPDM_MCTP_TRANSPORT_TAIL_SIZE`. These
+include any alignment padding and, if the endpoint supports secure sessions, the headers, random
+data, and MAC of a secured message. libspdm subtracts them from each buffer size to get the largest
+SPDM message that fits in a single transfer.
+- `receiver_buffer_size - transport_header_size - transport_tail_size` is the `DataTransferSize`
+  that libspdm reports in `GET_CAPABILITIES` / `CAPABILITIES`.
+- `sender_buffer_size - transport_header_size - transport_tail_size` is the largest SPDM message
+  that libspdm sends in a single transfer.
+
+The sizes must meet the following requirements.
+- Both of the values above must be at least `SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12` (42 bytes) and
+  at most `max_spdm_msg_size`.
+- If the endpoint does not support chunking (`CHUNK_CAP`), then `max_spdm_msg_size` must equal
+  `DataTransferSize`.
+- If the endpoint supports chunking, then `max_spdm_msg_size` must be large enough for the largest
+  SPDM message that the endpoint sends or receives. For example, each local certificate chain plus
+  the `CERTIFICATE` response header must fit in `max_spdm_msg_size`. libspdm sends and receives
+  SPDM messages that are larger than a single transfer in chunks only if both endpoints support
+  chunking. If either endpoint does not support chunking, then the Requester returns an error
+  instead of sending a request that does not fit in a single transfer, and the Responder responds
+  with an `ERROR` message whose `ErrorCode` is `ResponseTooLarge` (`Unspecified` before SPDM 1.2)
+  instead of sending a response that does not fit in a single transfer.
+
+If `LIBSPDM_CHECK_SPDM_CONTEXT` is set then `libspdm_check_context` checks the minimum and
+maximum sizes once the SPDM context has been configured.
+
+The sender buffer and the receiver buffer may have different sizes. However, the SPDM messages that
+libspdm sends are limited to `max_spdm_msg_size`, so if the endpoint does not support chunking then
+the sender buffer must not be larger than the receiver buffer. This limit comes from libspdm, not
+from DSP0274, which does not limit the messages that an endpoint sends by its own `MaxSPDMmsgSize`.
+It mostly affects Responders, which usually send larger messages than they receive: a libspdm
+Responder that does not support chunking cannot send a response that is larger than its own
+`DataTransferSize`. If the endpoint supports chunking then the sender buffer is limited only by
+`max_spdm_msg_size`, even when the peer does not support chunking. Raising `max_spdm_msg_size` to
+send larger messages also raises the size of the largest SPDM message that the endpoint receives,
+and the size of the scratch buffer.
+
+The sender buffer and the receiver buffer may also be the same buffer, as libspdm releases each
+buffer before it acquires the other. If `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP` is set then libspdm
+still acquires and releases the sender and receiver buffers around each message, but some messages
+are in the scratch buffer instead.
+- For a Requester, libspdm builds each request in the scratch buffer and receives each response into
+  the scratch buffer. The message given to `libspdm_device_send_message_func` and the buffer given
+  to `libspdm_device_receive_message_func` are therefore inside the scratch buffer.
+- For a Responder, libspdm receives each request into the receiver buffer, but
+  `libspdm_responder_dispatch_message` builds each response in the scratch buffer. The message given
+  to `libspdm_device_send_message_func` is therefore inside the scratch buffer.
+
+### Scratch Buffer
+
+`libspdm_get_sizeof_required_scratch_buffer` returns the required size of the scratch buffer. To
+allocate the scratch buffer statically, use the following sizes, where `M` is `max_spdm_msg_size`
+and `T` is `transport_header_size + transport_tail_size`. The layout of the scratch buffer may
+change between libspdm releases, so check that the static size is at least the value that
+`libspdm_get_sizeof_required_scratch_buffer` returns.
+
+| `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP` | `LIBSPDM_RESPOND_IF_READY_SUPPORT` | Scratch buffer size |
+|---|---|---|
+| 0 | 0 | `2 * M + T` |
+| 0 | 1 | `3 * M + T` |
+| 1 | 0 | `5 * M + 3 * T` |
+| 1 | 1 | `6 * M + 3 * T` |
+
+Which row applies depends on how libspdm is built, not on the capabilities that the endpoint
+advertises.
+
+For example, consider an MCTP endpoint that supports secure sessions, for which `T` is 60, with
+1024-byte sender and receiver buffers. Its `DataTransferSize` is 964 bytes. If libspdm is built
+without `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP` then `max_spdm_msg_size` is also 964, and with
+`LIBSPDM_RESPOND_IF_READY_SUPPORT` set, the scratch buffer is `3 * 964 + 60` = 2952 bytes. If
+libspdm is built with both set and `max_spdm_msg_size` is 8192, then the scratch buffer is
+`6 * 8192 + 3 * 60` = 49332 bytes.
 
 ## Message Logging
 libspdm allows an Integrator to log request and response messages to an Integrator-provided buffer.

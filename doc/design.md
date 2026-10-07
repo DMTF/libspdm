@@ -98,7 +98,13 @@
 
    These APIs send and receive transport layer messages to and from an SPDM device.
 
-   The size of scratch buffer can be got via `libspdm_get_sizeof_required_scratch_buffer` at runtime or pre-calculated via `libspdm_get_scratch_buffer_capacity` statically.
+   The size of the scratch buffer is returned by `libspdm_get_sizeof_required_scratch_buffer`. The [user guide](https://github.com/DMTF/libspdm/blob/main/doc/user_guide.md#buffer-configuration) describes how to choose the buffer sizes, and how to calculate the size of the scratch buffer to allocate it statically.
+
+   The flows below show how the buffers are used if `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP` is not set. If it is set then libspdm still acquires and releases the sender and receiver buffers around each message, but some messages are in the scratch buffer instead.
+
+   For a Requester, libspdm builds each request in the scratch buffer and receives each response into the scratch buffer. The message given to `send_message` and the buffer given to `receive_message` are therefore inside the scratch buffer.
+
+   For a Responder, libspdm receives each request into the receiver buffer, but `libspdm_responder_dispatch_message` builds each response in the scratch buffer. The message given to `send_message` is therefore inside the scratch buffer.
 
    ```
    The sender flow is:
@@ -263,8 +269,9 @@
    The buffers have the following properties:
 
    * libspdm never writes data to the receive buffer so the buffer may be read-only.
-   * libspdm both reads from and writes to the send buffer. Note that in a future release libspdm
-     may never read from the send buffer, allowing it to be write-only.
+   * If `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP` is not set then libspdm both reads from and writes to
+     the send buffer. Note that in a future release libspdm may never read from the send buffer,
+     allowing it to be write-only.
    * libspdm always releases the send buffer before acquiring the receive buffer and releases the
      receive buffer before acquiring the send buffer. Because of this the send buffer and receive
      buffer may overlap or be the same buffer.
