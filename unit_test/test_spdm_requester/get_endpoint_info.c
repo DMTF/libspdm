@@ -1115,9 +1115,14 @@ static void req_get_endpoint_info_case6(void **state)
 /**
  * Test 7: Successful response to get a session based endpoint info with signature
  * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty session_transcript.message_e
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP and LIBSPDM_ENABLE_CAPABILITY_PSK_CAP are both
+ * disabled or LIBSPDM_AEAD_AES_256_GCM_SUPPORT is disabled, as the case runs in a session that
+ * uses AES-256-GCM.
  **/
 static void req_get_endpoint_info_case7(void **state)
 {
+#if ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) && \
+    (LIBSPDM_AEAD_AES_256_GCM_SUPPORT)
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -1224,6 +1229,9 @@ static void req_get_endpoint_info_case7(void **state)
     assert_null(session_info->session_transcript.digest_context_il1il2);
 #endif
     free(data);
+#else
+    skip();
+#endif
 }
 
 int libspdm_req_get_endpoint_info_test(void)

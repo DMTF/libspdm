@@ -5375,9 +5375,14 @@ static void req_get_measurements_case33(void **state) {
 /**
  * Test 34: Successful response to get a session based measurement with signature
  * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty session_transcript.message_m
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP and LIBSPDM_ENABLE_CAPABILITY_PSK_CAP are both
+ * disabled or LIBSPDM_AEAD_AES_256_GCM_SUPPORT is disabled, as the case runs in a session that
+ * uses AES-256-GCM.
  **/
 static void req_get_measurements_case34(void **state)
 {
+#if ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) && \
+    (LIBSPDM_AEAD_AES_256_GCM_SUPPORT)
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -5458,6 +5463,9 @@ static void req_get_measurements_case34(void **state)
     assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
 #endif
     free(data);
+#else
+    skip();
+#endif
 }
 
 /**

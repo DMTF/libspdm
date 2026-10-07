@@ -736,7 +736,7 @@ static libspdm_return_t receive_message(
         spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
                              libspdm_get_hash_size (m_libspdm_use_hash_algo) +
                              SPDM_NONCE_SIZE +
-                             libspdm_get_hash_size (m_libspdm_use_hash_algo) +
+                             0 +
                              sizeof(uint16_t) + 0 +
                              libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1033,7 +1033,7 @@ static libspdm_return_t receive_message(
                              libspdm_get_hash_size (m_libspdm_use_hash_algo) +
                              SPDM_NONCE_SIZE +
                              0 +
-                             sizeof(uint16_t) + 8 +
+                             sizeof(uint16_t) + strlen("libspdm") +
                              libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);

@@ -5489,6 +5489,9 @@ static void req_key_exchange_case4(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_free_session_id(spdm_context, spdm_context->session_info[0].session_id);
+    }
     spdm_test_context->case_id = 0x4;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -5557,6 +5560,9 @@ static void req_key_exchange_case5(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_free_session_id(spdm_context, spdm_context->session_info[0].session_id);
+    }
     spdm_test_context->case_id = 0x5;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -5702,6 +5708,9 @@ static void req_key_exchange_case7(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_free_session_id(spdm_context, spdm_context->session_info[0].session_id);
+    }
     spdm_test_context->case_id = 0x7;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -5772,6 +5781,9 @@ static void req_key_exchange_case8(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_free_session_id(spdm_context, spdm_context->session_info[0].session_id);
+    }
     spdm_test_context->case_id = 0x8;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -5921,6 +5933,9 @@ static void req_key_exchange_case10(void **state) {
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_free_session_id(spdm_context, spdm_context->session_info[0].session_id);
+    }
     spdm_test_context->case_id = 0xA;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -6002,6 +6017,9 @@ static void req_key_exchange_case11(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_free_session_id(spdm_context, spdm_context->session_info[0].session_id);
+    }
     spdm_test_context->case_id = 0xB;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -7775,6 +7793,7 @@ static void req_key_exchange_case31(void **state)
     heartbeat_period = 0;
     responder_opaque_data_size = sizeof(responder_opaque_data);
     requester_opaque_data_size = sizeof(requester_opaque_data);
+    libspdm_zero_mem(requester_opaque_data, sizeof(requester_opaque_data));
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange_ex(
         spdm_context,

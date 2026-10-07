@@ -1157,7 +1157,14 @@ static void rsp_algorithms_case6(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
+/**
+ * Test 7: SPDM 1.1 NEGOTIATE_ALGORITHMS when both sides set KEY_EX_CAP, ENCRYPT_CAP, MAC_CAP,
+ * MUT_AUTH_CAP and PSK_CAP.
+ * Expected behavior: ALGORITHMS selects the local DHE group, AEAD, ReqBaseAsymAlg and key schedule.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as the case negotiates a DHE group.
+ **/
 static void rsp_algorithms_case7(void **state) {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1222,6 +1229,9 @@ static void rsp_algorithms_case7(void **state) {
                       spdm_context->local_context.algorithm.req_base_asym_alg);
     assert_int_equal (spdm_response->struct_table[3].alg_supported,
                       spdm_context->local_context.algorithm.key_schedule);
+#else
+    skip();
+#endif
 }
 
 static void rsp_algorithms_case8(void **state) {
@@ -1903,8 +1913,17 @@ static void rsp_algorithms_case19(void **state) {
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-/* When both of requester and responder support multiple algorithms, then defaults to choose the strongest available algorithm*/
+/**
+ * Test 20: both the Requester and the Responder support several algorithms of each kind.
+ * Expected behavior: ALGORITHMS selects the strongest common ones: SHA-512, ECDSA P-521 and
+ * secp384r1.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP, LIBSPDM_SHA512_SUPPORT,
+ * LIBSPDM_ECDSA_P521_SUPPORT or LIBSPDM_ECDHE_P384_SUPPORT is disabled, as the case checks for
+ * those selections.
+ **/
 static void rsp_algorithms_case20(void **state) {
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (LIBSPDM_SHA512_SUPPORT) && \
+    (LIBSPDM_ECDSA_P521_SUPPORT) && (LIBSPDM_ECDHE_P384_SUPPORT)
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1989,9 +2008,19 @@ static void rsp_algorithms_case20(void **state) {
                       spdm_context->connection_info.algorithm.req_base_asym_alg);
     assert_int_equal (spdm_response->struct_table[3].alg_supported,
                       spdm_context->connection_info.algorithm.key_schedule);
+#else
+    skip();
+#endif
 }
 
+/**
+ * Test 21: as test 7, with message A already holding data.
+ * Expected behavior: ALGORITHMS selects the local DHE group, AEAD, ReqBaseAsymAlg and key schedule,
+ * and the request and response are appended to message A.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as the case negotiates a DHE group.
+ **/
 static void rsp_algorithms_case21(void **state) {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -2070,10 +2099,21 @@ static void rsp_algorithms_case21(void **state) {
                         m_libspdm_negotiate_algorithm_request3_size);
     assert_memory_equal(spdm_context->transcript.message_a.buffer + arbitrary_size +
                         m_libspdm_negotiate_algorithm_request3_size, response, response_size);
+#else
+    skip();
+#endif
 }
 
+/**
+ * Test 22: SPDM 1.2 NEGOTIATE_ALGORITHMS when both sides set KEY_EX_CAP, ENCRYPT_CAP, MAC_CAP,
+ * MUT_AUTH_CAP and PSK_CAP.
+ * Expected behavior: ALGORITHMS carries four algorithm structures with the local DHE group, AEAD,
+ * ReqBaseAsymAlg and key schedule.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as the case negotiates a DHE group.
+ **/
 static void rsp_algorithms_case22(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2141,10 +2181,21 @@ static void rsp_algorithms_case22(void **state)
                       spdm_context->local_context.algorithm.req_base_asym_alg);
     assert_int_equal (spdm_response->struct_table[3].alg_supported,
                       spdm_context->local_context.algorithm.key_schedule);
+#else
+    skip();
+#endif
 }
 
+/**
+ * Test 23: SPDM 1.2 NEGOTIATE_ALGORITHMS selecting the opaque data format, with KEY_EX_CAP,
+ * ENCRYPT_CAP, MAC_CAP, MUT_AUTH_CAP and PSK_CAP set on both sides.
+ * Expected behavior: ALGORITHMS selects OpaqueDataFmt1 when it is supported, ignores
+ * MULTI_KEY_CONN in SPDM 1.2, and prefers OpaqueDataFmt1 when both formats are offered.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as the case negotiates a DHE group.
+ **/
 static void rsp_algorithms_case23(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2262,10 +2313,20 @@ static void rsp_algorithms_case23(void **state)
     assert_int_equal(spdm_response->other_params_selection, SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1);
     assert_int_equal(spdm_context->connection_info.algorithm.other_params_support,
                      SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1);
+#else
+    skip();
+#endif
 }
 
+/**
+ * Test 24: the Responder sets MEAS_CAP_SIG but the Requester's NEGOTIATE_ALGORITHMS offers no
+ * measurement specification.
+ * Expected behavior: ALGORITHMS selects no measurement specification and no measurement hash.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as it also negotiates a DHE group.
+ **/
 static void rsp_algorithms_case24(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2327,6 +2388,9 @@ static void rsp_algorithms_case24(void **state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
     assert_int_equal(spdm_response->measurement_hash_algo, 0);
     assert_int_equal(spdm_response->measurement_specification_sel, 0);
+#else
+    skip();
+#endif
 }
 
 static void rsp_algorithms_case25(void **state)
@@ -3199,15 +3263,13 @@ static void rsp_algorithms_case36_zero_alg_supported(void **state)
 /**
  * Test 37: SPDM 1.4 responder handles PQC-first and traditional-first success paths.
  * Expected behavior: the response zeros the deprioritized algorithm family.
- *
- * This test requires a PQC asymmetric algorithm to be supported by the crypto
- * backend (e.g. it is skipped when built with LIBSPDM_ML_DSA_44_SUPPORT=0, as
- * is the case for the mbedtls backend), since LIBSPDM_TEST_PQC_ASYM_ALGO_1
- * would otherwise never be selected by the responder.
+ * Skipped if no ML-DSA or no ML-KEM parameter set is enabled (as with Mbed TLS), as the Responder
+ * then selects neither LIBSPDM_TEST_PQC_ASYM_ALGO_1 nor LIBSPDM_TEST_KEM_ALGO_1.
  **/
-#if LIBSPDM_ML_DSA_44_SUPPORT || LIBSPDM_ML_DSA_65_SUPPORT || LIBSPDM_ML_DSA_87_SUPPORT
 static void rsp_algorithms_case37(void **state)
 {
+#if ((LIBSPDM_ML_DSA_44_SUPPORT) || (LIBSPDM_ML_DSA_65_SUPPORT) || (LIBSPDM_ML_DSA_87_SUPPORT)) && \
+    ((LIBSPDM_ML_KEM_512_SUPPORT) || (LIBSPDM_ML_KEM_768_SUPPORT) || (LIBSPDM_ML_KEM_1024_SUPPORT))
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -3303,8 +3365,10 @@ static void rsp_algorithms_case37(void **state)
     assert_int_equal(spdm_response->struct_table[5].alg_supported, 0);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_NEGOTIATED);
+#else
+    skip();
+#endif
 }
-#endif /* LIBSPDM_ML_DSA_44_SUPPORT || LIBSPDM_ML_DSA_65_SUPPORT || LIBSPDM_ML_DSA_87_SUPPORT */
 
 /**
  * Test 38: invalid MULTI_KEY_CAP request bits are rejected in SPDM 1.3.
@@ -3400,6 +3464,10 @@ static uint8_t rsp_algorithms_ep_info(libspdm_context_t *spdm_context, uint32_t 
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_message_header_t *spdm_response;
 
+    /* An SPDM 1.3 negotiation does not overwrite pqc_asym_algo, so clear what earlier cases
+     * negotiated. */
+    libspdm_zero_mem(&spdm_context->connection_info.algorithm,
+                     sizeof(spdm_context->connection_info.algorithm));
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
@@ -3528,9 +3596,7 @@ int libspdm_rsp_algorithms_test(void)
         cmocka_unit_test(rsp_algorithms_case35_request_validation),
         /* Each known algorithm structure type rejects AlgSupported == 0 */
         cmocka_unit_test(rsp_algorithms_case36_zero_alg_supported),
-#if LIBSPDM_ML_DSA_44_SUPPORT || LIBSPDM_ML_DSA_65_SUPPORT || LIBSPDM_ML_DSA_87_SUPPORT
         cmocka_unit_test(rsp_algorithms_case37),
-#endif
         cmocka_unit_test(rsp_algorithms_case38),
         cmocka_unit_test(rsp_algorithms_case39),
         /* EP_INFO_CAP_SIG needs a hash and a signing algorithm */

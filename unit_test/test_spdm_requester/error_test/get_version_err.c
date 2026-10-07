@@ -7,12 +7,16 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_requester_lib.h"
 
+/* The mock VERSION responses list up to five entries, however many the Requester tolerates. */
+#define LIBSPDM_TEST_VERSION_ENTRY_COUNT \
+    ((LIBSPDM_MAX_VERSION_COUNT) > 5 ? (LIBSPDM_MAX_VERSION_COUNT) : 5)
+
 #pragma pack(1)
 typedef struct {
     spdm_message_header_t header;
     uint8_t reserved;
     uint8_t version_number_entry_count;
-    spdm_version_number_t version_number_entry[LIBSPDM_MAX_VERSION_COUNT];
+    spdm_version_number_t version_number_entry[LIBSPDM_TEST_VERSION_ENTRY_COUNT];
 } libspdm_version_response_mine_t;
 #pragma pack()
 
@@ -662,14 +666,14 @@ static void req_get_version_err_case8(void **state)
 /**
  * Test 9: Number of version entries are larger than what the Requester can tolerate.
  * Expected behavior: returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ * Skipped if LIBSPDM_MAX_VERSION_COUNT is 255, as VersionNumberEntryCount cannot exceed it.
  **/
 static void req_get_version_err_case9(void **state)
 {
+#if (LIBSPDM_MAX_VERSION_COUNT) < 255
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-
-    LIBSPDM_ASSERT(LIBSPDM_MAX_VERSION_COUNT != 255);
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -677,6 +681,9 @@ static void req_get_version_err_case9(void **state)
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+#else
+    skip();
+#endif
 }
 
 /**

@@ -3934,9 +3934,12 @@ static void req_get_certificate_case24(void **state)
 /**
  * Test 25: Normal case, request a certificate chain
  * Expected Behavior: receives a valid certificate chain with the correct number of Certificate messages
+ * Skipped if LIBSPDM_MAX_ROOT_CERT_SUPPORT is less than 2, as the case provisions two root
+ * certificates.
  **/
 static void req_get_certificate_case25(void **state)
 {
+#if (LIBSPDM_MAX_ROOT_CERT_SUPPORT) >= 2
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -4027,15 +4030,23 @@ static void req_get_certificate_case25(void **state)
 
     free(data);
     free(data1);
+#else
+    skip();
+#endif
 }
 #endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
 
 /**
  * Test 26: Normal case, request a certificate chain in a session
  * Expected Behavior: receives a valid certificate chain with the correct number of Certificate messages
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP and LIBSPDM_ENABLE_CAPABILITY_PSK_CAP are both
+ * disabled or LIBSPDM_AEAD_AES_256_GCM_SUPPORT is disabled, as the case runs in a session that
+ * uses AES-256-GCM.
  **/
 static void req_get_certificate_case26(void **state)
 {
+#if ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) && \
+    (LIBSPDM_AEAD_AES_256_GCM_SUPPORT)
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -4112,6 +4123,9 @@ static void req_get_certificate_case26(void **state)
     assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
 #endif
     free(data);
+#else
+    skip();
+#endif
 }
 
 /**

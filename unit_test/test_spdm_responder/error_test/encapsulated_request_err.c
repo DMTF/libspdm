@@ -22,6 +22,7 @@ static libspdm_return_t encap_flow_handler(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 static void set_standard_state(libspdm_context_t *spdm_context)
 {
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
@@ -46,7 +47,6 @@ static void set_standard_state(libspdm_context_t *spdm_context)
     libspdm_register_encap_flow_handler(spdm_context, encap_flow_handler);
 }
 
-#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 /* The Integrator's buffer for the Requester's certificate chain. */
 static uint8_t m_cert_chain_buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 

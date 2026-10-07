@@ -2253,8 +2253,15 @@ static void req_negotiate_algorithms_case21(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 22: SPDM 1.1 ALGORITHMS when both sides set KEY_EX_CAP, ENCRYPT_CAP, MAC_CAP, MUT_AUTH_CAP
+ * and PSK_CAP.
+ * Expected behavior: returns LIBSPDM_STATUS_SUCCESS.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as the response selects a DHE group.
+ **/
 static void req_negotiate_algorithms_case22(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -2287,10 +2294,20 @@ static void req_negotiate_algorithms_case22(void **state)
 
     status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+#else
+    skip();
+#endif
 }
 
+/**
+ * Test 23: as test 22, with the Responder also setting MEAS_CAP.
+ * Expected behavior: returns LIBSPDM_STATUS_SUCCESS; with LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT,
+ * message A holds the request and response.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as the response selects a DHE group.
+ **/
 static void req_negotiate_algorithms_case23(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -2340,6 +2357,9 @@ static void req_negotiate_algorithms_case23(void **state)
                       sizeof(spdm_negotiate_algorithms_request_t) + 4*
                       sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
                       sizeof(libspdm_algorithms_response_spdm11_t));
+#endif
+#else
+    skip();
 #endif
 }
 
@@ -2546,7 +2566,14 @@ static void req_negotiate_algorithms_case31(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 32: as test 23, with message A already holding data.
+ * Expected behavior: returns LIBSPDM_STATUS_SUCCESS; with LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT,
+ * the request and response are appended to message A.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as the response selects a DHE group.
+ **/
 static void req_negotiate_algorithms_case32(void **state) {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -2610,9 +2637,20 @@ static void req_negotiate_algorithms_case32(void **state) {
     assert_memory_equal(spdm_context->transcript.message_a.buffer + arbitrary_size,
                         m_libspdm_local_buffer, m_libspdm_local_buffer_size);
 #endif
+#else
+    skip();
+#endif
 }
 
+/**
+ * Test 33: SPDM 1.2 ALGORITHMS selecting OpaqueDataFmt1, with KEY_EX_CAP, ENCRYPT_CAP, MAC_CAP,
+ * MUT_AUTH_CAP and PSK_CAP set on both sides.
+ * Expected behavior: returns LIBSPDM_STATUS_SUCCESS with OpaqueDataFmt1 negotiated, including when
+ * the Requester also offers MULTI_KEY_CONN.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as the response selects a DHE group.
+ **/
 static void req_negotiate_algorithms_case33(void **state) {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -2681,11 +2719,19 @@ static void req_negotiate_algorithms_case33(void **state) {
                       sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
                       sizeof(libspdm_algorithms_response_spdm11_t));
 #endif
+#else
+    skip();
+#endif
 }
 
-
+/**
+ * Test 34: SPDM 1.2 ALGORITHMS when the Requester supports no other parameters.
+ * Expected behavior: returns LIBSPDM_STATUS_SUCCESS with no opaque data format negotiated.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as the response selects a DHE group.
+ **/
 static void req_negotiate_algorithms_case34(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -2710,6 +2756,9 @@ static void req_negotiate_algorithms_case34(void **state)
     status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.algorithm.other_params_support, 0);
+#else
+    skip();
+#endif
 }
 
 /**
@@ -2874,9 +2923,11 @@ static void req_negotiate_algorithms_case35_multi_key_conn(void **state)
  *  ---------------------------------------------------------------------------------------------------------+
  * | Not set  | 0                          | 0                           | LIBSPDM_STATUS_SUCCESS            |
  *  ----------------------------------------------------------------------------------------------------------
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as the response selects a DHE group.
  **/
 static void req_negotiate_algorithms_case36_mel_matrix(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -2985,14 +3036,19 @@ static void req_negotiate_algorithms_case36_mel_matrix(void **state)
     spdm_context->local_context.algorithm.mel_spec = 0;
     status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+#else
+    skip();
+#endif
 }
 
 /**
  * Test 37: EP_INFO_CAP_SIG is negotiated and req_base_asym_alg in the ALGORITHMS response is valid.
  * Expected behavior: returns with status LIBSPDM_STATUS_SUCCESS.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as the response selects a DHE group.
  **/
 static void req_negotiate_algorithms_case37(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -3018,6 +3074,9 @@ static void req_negotiate_algorithms_case37(void **state)
 
     status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+#else
+    skip();
+#endif
 }
 
 /**

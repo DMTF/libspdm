@@ -529,7 +529,7 @@ void libspdm_test_verify_peer_cert_chain_buffer_case5(void **state)
     const void *trust_anchor;
     size_t trust_anchor_size;
     bool result;
-    uint8_t root_cert_index;
+    size_t root_cert_index;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -596,7 +596,7 @@ void libspdm_test_verify_peer_cert_chain_buffer_case6(void **state)
     const void *trust_anchor;
     size_t trust_anchor_size;
     bool result;
-    uint8_t root_cert_index;
+    size_t root_cert_index;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -666,9 +666,13 @@ void libspdm_test_verify_peer_cert_chain_buffer_case6(void **state)
  * there is no match root cert;                      return false
  * there is one match root cert in the end;          return true, and the return trust_anchor is root cert.
  * there is one match root cert in the middle;       return true, and the return trust_anchor is root cert.
+ *
+ * Skipped if LIBSPDM_MAX_ROOT_CERT_SUPPORT is less than 2, as the first case then provisions no
+ * root certificate.
  **/
 void libspdm_test_verify_peer_cert_chain_buffer_case7(void **state)
 {
+#if (LIBSPDM_MAX_ROOT_CERT_SUPPORT) >= 2
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -689,7 +693,7 @@ void libspdm_test_verify_peer_cert_chain_buffer_case7(void **state)
     const void *trust_anchor;
     size_t trust_anchor_size;
     bool result;
-    uint8_t root_cert_index;
+    size_t root_cert_index;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -765,6 +769,9 @@ void libspdm_test_verify_peer_cert_chain_buffer_case7(void **state)
 
     free(data);
     free(data_test);
+#else
+    skip();
+#endif
 }
 
 
@@ -798,7 +805,7 @@ void libspdm_test_verify_peer_cert_chain_buffer_case8(void **state)
     const void *trust_anchor;
     size_t trust_anchor_size;
     bool result;
-    uint8_t root_cert_index;
+    size_t root_cert_index;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -896,7 +903,7 @@ static void libspdm_test_set_data_case9(void **state)
     uint8_t root_cert_buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
     size_t root_cert_size;
 
-    uint8_t root_cert_index;
+    size_t root_cert_index;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1443,8 +1450,15 @@ static void libspdm_test_check_context_case20(void **state)
 }
 #endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
 
+/**
+ * Test 21: Allocate DHE and PSK session IDs up to the local maximums, for six splits of
+ * LIBSPDM_MAX_SESSION_COUNT between the two.
+ * Expected Behavior: each allocation within a maximum succeeds, and the next one fails.
+ * Skipped if LIBSPDM_MAX_SESSION_COUNT is less than 2, as the first split needs two sessions.
+ **/
 static void libspdm_test_max_session_count_case21(void **state)
 {
+#if (LIBSPDM_MAX_SESSION_COUNT) >= 2
     libspdm_context_t *spdm_context;
     libspdm_data_parameter_t parameter;
     size_t index;
@@ -1566,6 +1580,9 @@ static void libspdm_test_max_session_count_case21(void **state)
 
         free(spdm_context);
     }
+#else
+    skip();
+#endif
 }
 
 #pragma pack(1)
@@ -2787,8 +2804,10 @@ static const libspdm_test_data_item_t m_libspdm_test_round_trip_items[] = {
     { LIBSPDM_DATA_APP_CONTEXT_DATA, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(void *), 0x1000 },
     { LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint8_t),
       LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_DROP_ON_DECRYPT_ERROR },
+    /* The two maximums cannot sum to more than LIBSPDM_MAX_SESSION_COUNT, which can be 1. */
     { LIBSPDM_DATA_MAX_DHE_SESSION_COUNT, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint32_t), 1 },
-    { LIBSPDM_DATA_MAX_PSK_SESSION_COUNT, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint32_t), 1 },
+    { LIBSPDM_DATA_MAX_PSK_SESSION_COUNT, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint32_t),
+      LIBSPDM_MAX_SESSION_COUNT - 1 },
     { LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER, LIBSPDM_DATA_LOCATION_LOCAL,
       sizeof(uint64_t), 0xFFFF },
     { LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN, LIBSPDM_DATA_LOCATION_LOCAL,

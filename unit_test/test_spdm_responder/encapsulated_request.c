@@ -2264,9 +2264,11 @@ static void rsp_encapsulated_response_ack_case11(void **State)
  * Test 13 (GET_ENCAPSULATED_REQUEST) in two secure sessions, with both flows open at once.
  * Expected behavior: an encapsulated flow in one session does not prevent a flow from being
  * started in another session, and each session tracks its own flow.
+ * Skipped if LIBSPDM_MAX_SESSION_COUNT is less than 2, as the case opens two sessions.
  **/
 static void rsp_encapsulated_request_case13(void **State)
 {
+#if (LIBSPDM_MAX_SESSION_COUNT) >= 2
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *spdm_response_requester;
@@ -2355,6 +2357,9 @@ static void rsp_encapsulated_request_case13(void **State)
     session_info_1->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_NONE;
     session_info_2->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_NONE;
     spdm_context->last_spdm_request_session_id_valid = false;
+#else
+    skip();
+#endif
 }
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 

@@ -1870,7 +1870,7 @@ static const libspdm_asym_algo_entry_t m_libspdm_asym_algo_table[] = {
     { SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521, "ecp521",
       SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, true,
       LIBSPDM_ECDSA_P521_SUPPORT ? 66 * 2 : 0 },
-    /* The SM2 signature algorithm is defined with SM3. */
+    /* SPDM signs with the negotiated hash, but the SM2 wrappers in os_stub support only SM3. */
     { SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256, "sm2",
       SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256, false,
       LIBSPDM_SM2_DSA_P256_SUPPORT ? 32 * 2 : 0 },
@@ -2222,6 +2222,11 @@ static void libspdm_test_asym_sweep(bool is_requester)
 
         /* The algorithm is compiled out, so its arms assert rather than dispatch. */
         if (entry->signature_size == 0) {
+            continue;
+        }
+
+        /* The hash the entry signs with is compiled out, as SM3 can be while SM2 is not. */
+        if (libspdm_get_hash_size(entry->base_hash_algo) == 0) {
             continue;
         }
 
