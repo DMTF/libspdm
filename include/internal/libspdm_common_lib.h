@@ -848,7 +848,7 @@ void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
  * +--------------------------+-----------------+-----------------+
  * |    SENDER_RECEIVER       |MAX_SPDM_MSG_SIZE|MAX_SPDM_MSG_SIZE|
  * +--------------------------+-----------------+-----------------+
- * |<-Snd/Rcv buf for chunk ->|<-last request ->|<-cache request->|
+ * |<-      Secure msg      ->|<-last request ->|<-cache request->|
  *
  *
  * If chunking is supported, it should be at least below.
@@ -857,6 +857,7 @@ void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
  * +---------------+--------------+--------------------------+------------------------------+-----------------+-----------------+
  * |<-Secure msg ->|<-Large msg ->|<-Snd/Rcv buf for chunk ->|<-Snd/Rcv buf for large msg ->|<-last request ->|<-cache request->|
  *
+ * The cache request section is present only if LIBSPDM_RESPOND_IF_READY_SUPPORT is set.
  *
  * The value is configurable based on max_spdm_msg_size.
  * The value MAY be changed in different libspdm version.
