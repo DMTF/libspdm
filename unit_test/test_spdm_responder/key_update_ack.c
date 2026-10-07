@@ -2056,8 +2056,29 @@ static void rsp_key_update_ack_case27(void **state)
                         m_rsp_secret_buffer, secured_message_context->hash_size);
 }
 
+/* Every key update callback seen by the current test, in order. */
+typedef struct {
+    libspdm_key_update_operation_t op;
+    libspdm_key_update_action_t action;
+} rsp_key_update_ack_callback_event_t;
+
+#define RSP_KEY_UPDATE_ACK_MAX_CALLBACK_EVENTS 8
+
+static rsp_key_update_ack_callback_event_t
+    m_callback_events[RSP_KEY_UPDATE_ACK_MAX_CALLBACK_EVENTS];
+static size_t m_callback_event_count;
+
+static void rsp_key_update_ack_record_callback(void *spdm_context, uint32_t session_id,
+                                               libspdm_key_update_operation_t key_update_op,
+                                               libspdm_key_update_action_t key_update_action)
+{
+    assert_true(m_callback_event_count < RSP_KEY_UPDATE_ACK_MAX_CALLBACK_EVENTS);
+    m_callback_events[m_callback_event_count].op = key_update_op;
+    m_callback_events[m_callback_event_count].action = key_update_action;
+    m_callback_event_count++;
+}
+
 static libspdm_secured_message_context_t *m_case28_secured_message_context;
-static uint32_t m_case28_requester_discard_count;
 
 /* Once the Requester direction has been updated, make the Responder direction
  * fail. HKDF-Expand rejects an output longer than 255 * hash_size per RFC 5869
@@ -2067,14 +2088,13 @@ static void rsp_key_update_ack_case28_callback(void *spdm_context, uint32_t sess
                                                libspdm_key_update_operation_t key_update_op,
                                                libspdm_key_update_action_t key_update_action)
 {
-    if (key_update_action != LIBSPDM_KEY_UPDATE_ACTION_REQUESTER) {
-        return;
-    }
-    if (key_update_op == LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE) {
+    rsp_key_update_ack_record_callback(spdm_context, session_id, key_update_op,
+                                       key_update_action);
+
+    if ((key_update_action == LIBSPDM_KEY_UPDATE_ACTION_REQUESTER) &&
+        (key_update_op == LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE)) {
         m_case28_secured_message_context->aead_key_size =
             255 * m_case28_secured_message_context->hash_size + 1;
-    } else if (key_update_op == LIBSPDM_KEY_UPDATE_OPERATION_DISCARD_UPDATE) {
-        m_case28_requester_discard_count++;
     }
 }
 
@@ -2120,7 +2140,7 @@ static void rsp_key_update_ack_case28(void **state)
     /* Let the Requester direction succeed, then fail the Responder direction. */
     original_aead_key_size = secured_message_context->aead_key_size;
     m_case28_secured_message_context = secured_message_context;
-    m_case28_requester_discard_count = 0;
+    m_callback_event_count = 0;
     libspdm_register_key_update_callback_func(spdm_context, rsp_key_update_ack_case28_callback);
 
     response_size = sizeof(response);
@@ -2134,8 +2154,13 @@ static void rsp_key_update_ack_case28(void **state)
 
     assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
 
-    /* The Requester update was announced through the callback, so its rollback must be too. */
-    assert_int_equal(m_case28_requester_discard_count, 1);
+    /* The Requester update was announced through the callback, so its rollback must be
+     * too. The failed Responder update was never announced, so nothing else may be. */
+    assert_int_equal(m_callback_event_count, 2);
+    assert_int_equal(m_callback_events[0].op, LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE);
+    assert_int_equal(m_callback_events[0].action, LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
+    assert_int_equal(m_callback_events[1].op, LIBSPDM_KEY_UPDATE_OPERATION_DISCARD_UPDATE);
+    assert_int_equal(m_callback_events[1].action, LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
 
     /* Both directions must still hold the pre-update secrets. */
     assert_memory_equal(secured_message_context
@@ -2193,13 +2218,20 @@ static void rsp_key_update_ack_first_create_failure(void **state, uint32_t case_
     original_aead_key_size = secured_message_context->aead_key_size;
     secured_message_context->aead_key_size = 255 * secured_message_context->hash_size + 1;
 
+    m_callback_event_count = 0;
+    libspdm_register_key_update_callback_func(spdm_context, rsp_key_update_ack_record_callback);
+
     response_size = sizeof(response);
     status = libspdm_get_response_key_update(spdm_context, request_size, request,
                                              &response_size, response);
 
+    libspdm_register_key_update_callback_func(spdm_context, NULL);
     secured_message_context->aead_key_size = original_aead_key_size;
 
     assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+
+    /* No key was created, so the callback must not announce any update or rollback. */
+    assert_int_equal(m_callback_event_count, 0);
 
     assert_memory_equal(secured_message_context
                         ->application_secret.request_data_secret,
