@@ -719,19 +719,6 @@ typedef libspdm_return_t (*libspdm_transport_decode_message_func)(
     size_t *message_size, void **message);
 
 /**
- * Return the maximum transport layer message header size.
- * Transport Message Header Size + sizeof(spdm_secured_message_cipher_header_t))
- *
- * For MCTP, Transport Message Header Size = sizeof(mctp_message_header_t)
- * For PCI_DOE, Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
- *
- * @param  spdm_context  A pointer to the SPDM context.
- *
- * @return size of maximum transport layer message header size
- **/
-typedef uint32_t (*libspdm_transport_get_header_size_func)(void *spdm_context);
-
-/**
  * Register SPDM transport layer encode/decode functions for SPDM or APP messages.
  *
  * This function must be called after libspdm_init_context, and before any SPDM communication.
