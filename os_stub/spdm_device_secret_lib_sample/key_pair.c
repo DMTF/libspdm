@@ -617,6 +617,8 @@ bool libspdm_write_key_pair_info(
                 free(cached_key_pair_info);
             }
 
+            /* The whole struct is written to a file, so zero its padding too. */
+            libspdm_zero_mem(&current_key_pair_info, sizeof(current_key_pair_info));
             current_key_pair_info.operation = operation;
             current_key_pair_info.key_pair_id = key_pair_id;
             current_key_pair_info.desired_key_usage = desired_key_usage;
