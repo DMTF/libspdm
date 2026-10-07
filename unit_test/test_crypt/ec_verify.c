@@ -246,6 +246,7 @@ bool libspdm_validate_crypt_ec(void)
 
     /* Verify EC-DSA */
     hash_size = sizeof(hash_value);
+    libspdm_set_mem(hash_value, hash_size, 0x5A);
     sig_size = sizeof(signature);
     libspdm_my_print("\n- EC-DSA Signing ... ");
     status = libspdm_ecdsa_sign(ec1, LIBSPDM_CRYPTO_NID_SHA256, hash_value, hash_size,

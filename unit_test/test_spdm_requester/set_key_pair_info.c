@@ -36,13 +36,13 @@ static libspdm_return_t receive_message(
     switch (spdm_test_context->case_id) {
 
     case 0x1: {
-        spdm_key_pair_info_response_t *spdm_response;
+        spdm_set_key_pair_info_ack_response_t *spdm_response;
         size_t spdm_response_size;
         size_t transport_header_size;
 
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
-        spdm_response_size = sizeof(spdm_key_pair_info_response_t);
+        spdm_response_size = sizeof(spdm_set_key_pair_info_ack_response_t);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
         spdm_response->header.request_response_code = SPDM_SET_KEY_PAIR_INFO_ACK;
@@ -56,13 +56,13 @@ static libspdm_return_t receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
     case 0x2: {
-        spdm_key_pair_info_response_t *spdm_response;
+        spdm_set_key_pair_info_ack_response_t *spdm_response;
         size_t spdm_response_size;
         size_t transport_header_size;
 
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
-        spdm_response_size = sizeof(spdm_key_pair_info_response_t);
+        spdm_response_size = sizeof(spdm_set_key_pair_info_ack_response_t);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
         spdm_response->header.request_response_code = SPDM_SET_KEY_PAIR_INFO_ACK;
@@ -77,13 +77,13 @@ static libspdm_return_t receive_message(
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x3: {
-        spdm_key_pair_info_response_t *spdm_response;
+        spdm_set_key_pair_info_ack_response_t *spdm_response;
         size_t spdm_response_size;
         size_t transport_header_size;
 
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
-        spdm_response_size = sizeof(spdm_key_pair_info_response_t);
+        spdm_response_size = sizeof(spdm_set_key_pair_info_ack_response_t);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
         spdm_response->header.request_response_code = SPDM_KEY_PAIR_INFO;

@@ -144,9 +144,15 @@ void libspdm_test_responder_chunk_send_ack_setup_algo_state(libspdm_context_t* s
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 }
 
-/* Test sending large NegAlg Request in multiple chunks. */
+/**
+ * Test 0: Responder receives a large NEGOTIATE_ALGORITHMS request in multiple CHUNK_SEND requests.
+ * Expected Behavior: the last CHUNK_SEND_ACK carries the ALGORITHMS response, and the large message
+ * state and scratch buffer are cleared.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as it negotiates a DHE group.
+ **/
 static void rsp_chunk_send_ack_case0(void** state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
 
     libspdm_test_context_t* spdm_test_context;
@@ -276,6 +282,9 @@ static void rsp_chunk_send_ack_case0(void** state)
     for (i = 0; i < large_message_capacity; i++) {
         assert_int_equal(large_message[i], 0);
     }
+#else
+    skip();
+#endif
 }
 
 /**
@@ -1942,9 +1951,15 @@ static void rsp_chunk_send_ack_case21(void** state)
 }
 
 
-/* Test sending large NegAlg Request in multiple chunks, spdm 1.4 */
+/**
+ * Test 22: as test 0, in SPDM 1.4.
+ * Expected Behavior: the last CHUNK_SEND_ACK carries the ALGORITHMS response, and the large message
+ * state and scratch buffer are cleared.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP is disabled, as it negotiates a DHE group.
+ **/
 static void rsp_chunk_send_ack_case22(void** state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_return_t status;
 
     libspdm_test_context_t* spdm_test_context;
@@ -2079,6 +2094,9 @@ static void rsp_chunk_send_ack_case22(void** state)
     for (i = 0; i < large_message_capacity; i++) {
         assert_int_equal(large_message[i], 0);
     }
+#else
+    skip();
+#endif
 }
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP

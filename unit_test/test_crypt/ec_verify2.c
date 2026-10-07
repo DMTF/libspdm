@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -129,6 +129,7 @@ bool libspdm_validate_crypt_ec_2(void)
 
     /* Sign EC-DSA */
     hash_size = sizeof(hash_value);
+    libspdm_set_mem(hash_value, hash_size, 0x5A);
     sig_size = sizeof(signature);
     libspdm_my_print("\n- EC-DSA Signing ... ");
     status = libspdm_ecdsa_sign(ec_priv_key, LIBSPDM_CRYPTO_NID_SHA256, hash_value,

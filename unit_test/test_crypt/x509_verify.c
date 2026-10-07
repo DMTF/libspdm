@@ -185,6 +185,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     size_t csr_size;
     void *x509_ca_cert;
     void *context;
+    void (*context_free)(void *);
 #endif
 
     test_cert = NULL;
@@ -196,6 +197,8 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
     x509_ca_cert = NULL;
     csr = NULL;
+    context = NULL;
+    context_free = NULL;
 #endif
 
     libspdm_zero_mem(file_name_buffer, 1024);
@@ -581,6 +584,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     case LIBSPDM_CRYPTO_NID_RSASSA3072:
         status = libspdm_rsa_get_private_key_from_pem(
             test_private_key, test_private_key_len, NULL, &context);
+        context_free = libspdm_rsa_free;
         break;
     #endif /* LIBSPDM_RSA_SSA_SUPPORT */
     #if LIBSPDM_ECDSA_SUPPORT
@@ -588,12 +592,14 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384:
         status = libspdm_ec_get_private_key_from_pem(
             test_private_key, test_private_key_len, NULL, &context);
+        context_free = libspdm_ec_free;
         break;
     #endif /* LIBSPDM_ECDSA_SUPPORT */
     #if LIBSPDM_SM2_DSA_SUPPORT
     case LIBSPDM_CRYPTO_NID_SM2_DSA_P256:
         status = libspdm_sm2_get_private_key_from_pem(
             test_private_key, test_private_key_len, NULL, &context);
+        context_free = libspdm_sm2_dsa_free;
         break;
     #endif /* LIBSPDM_SM2_DSA_SUPPORT */
     #if LIBSPDM_EDDSA_SUPPORT
@@ -601,6 +607,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     case LIBSPDM_CRYPTO_NID_EDDSA_ED448:
         status = libspdm_ecd_get_private_key_from_pem(
             test_private_key, test_private_key_len, NULL, &context);
+        context_free = libspdm_ecd_free;
         break;
     #endif /* LIBSPDM_EDDSA_SUPPORT */
     #if LIBSPDM_ML_DSA_SUPPORT
@@ -609,6 +616,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     case LIBSPDM_CRYPTO_NID_ML_DSA_87:
         status = libspdm_mldsa_get_private_key_from_pem(
             test_private_key, test_private_key_len, NULL, &context);
+        context_free = libspdm_mldsa_free;
         break;
     #endif /* LIBSPDM_ML_DSA_SUPPORT */
     #if LIBSPDM_SLH_DSA_SUPPORT
@@ -626,6 +634,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_256F:
         status = libspdm_slhdsa_get_private_key_from_pem(
             test_private_key, test_private_key_len, NULL, &context);
+        context_free = libspdm_slhdsa_free;
         break;
     #endif /* LIBSPDM_SLH_DSA_SUPPORT */
     default:
@@ -690,6 +699,9 @@ cleanup:
     }
     if (x509_ca_cert != NULL) {
         libspdm_x509_free(x509_ca_cert);
+    }
+    if (context != NULL) {
+        context_free(context);
     }
 #endif
     return result;

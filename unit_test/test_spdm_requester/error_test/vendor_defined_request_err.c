@@ -340,8 +340,6 @@ static void req_vendor_defined_request_err_case1(void **state)
     assert_int_equal(
         spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT,
         SPDM_MESSAGE_VERSION_10);
-
-    printf("case 1 %d\n", response_data[0]);
 }
 
 /**
@@ -392,8 +390,6 @@ static void req_vendor_defined_request_err_case2(void **state)
                                                           response.vendor_id, &response_data_len,
                                                           response_data);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
-
-    printf("case 2 %d\n", response_data[0]);
 }
 
 /**
@@ -444,8 +440,6 @@ static void req_vendor_defined_request_err_case3(void **state)
                                                           response.vendor_id, &response_data_len,
                                                           response_data);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
-
-    printf("case 3 %d\n", response_data[0]);
 }
 
 /**
@@ -496,8 +490,6 @@ static void req_vendor_defined_request_err_case4(void **state)
                                                           response.vendor_id, &response_data_len,
                                                           response_data);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
-
-    printf("case 4 %d\n", response_data[0]);
 }
 
 int libspdm_req_vendor_defined_request_error_test(void)

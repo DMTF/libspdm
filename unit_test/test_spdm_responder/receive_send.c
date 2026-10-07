@@ -2043,9 +2043,14 @@ static void libspdm_test_responder_receive_send_rsp_case20(void** state)
  * SPDM_ERROR_CODE_DECRYPT_ERROR. Covers both the "generate error response and send it"
  * branch (drop-on-decrypt-error policy bit not set) and the "silently drop" branch
  * (policy bit set).
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP and LIBSPDM_ENABLE_CAPABILITY_PSK_CAP are both
+ * disabled or LIBSPDM_AEAD_AES_256_GCM_SUPPORT is disabled, as the case runs in a session that
+ * uses AES-256-GCM.
  **/
 static void libspdm_test_responder_receive_send_rsp_case21(void** state)
 {
+#if ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) && \
+    (LIBSPDM_AEAD_AES_256_GCM_SUPPORT)
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -2150,6 +2155,9 @@ static void libspdm_test_responder_receive_send_rsp_case21(void** state)
     libspdm_release_sender_buffer(spdm_context);
 
     libspdm_zero_mem(&spdm_context->last_spdm_error, sizeof(spdm_context->last_spdm_error));
+#else
+    skip();
+#endif
 }
 
 /**

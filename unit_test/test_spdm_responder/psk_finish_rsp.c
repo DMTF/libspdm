@@ -1158,6 +1158,8 @@ static void rsp_psk_finish_rsp_case12(void **state)
     uint32_t session_id;
     uint32_t hash_size;
     uint32_t hmac_size;
+    uint8_t request[sizeof(spdm_psk_finish_request_t) + 2 * LIBSPDM_MAX_HASH_SIZE];
+    size_t request_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1217,13 +1219,16 @@ static void rsp_psk_finish_rsp_case12(void **state)
                      libspdm_get_managed_buffer_size(&th_curr), hash_data);
     libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                      request_finished_key, hash_size, ptr);
-    libspdm_copy_mem(ptr, sizeof(m_libspdm_psk_finish_request1.verify_data),
-                     ptr + hmac_size, hmac_size); /* 2x HMAC size*/
-    m_libspdm_psk_finish_request1_size = sizeof(spdm_psk_finish_request_t) + 2*hmac_size;
+    /* The request is the header and the MAC, followed by the MAC again. verify_data holds only
+     * LIBSPDM_MAX_HASH_SIZE bytes, so the request is built in a buffer with room for both. */
+    libspdm_copy_mem(request, sizeof(request), &m_libspdm_psk_finish_request1,
+                     sizeof(spdm_psk_finish_request_t) + hmac_size);
+    libspdm_copy_mem(request + sizeof(spdm_psk_finish_request_t) + hmac_size,
+                     sizeof(request) - sizeof(spdm_psk_finish_request_t) - hmac_size,
+                     ptr, hmac_size);
+    request_size = sizeof(spdm_psk_finish_request_t) + 2 * hmac_size;
     response_size = sizeof(response);
-    status = libspdm_get_response_psk_finish(spdm_context,
-                                             m_libspdm_psk_finish_request1_size,
-                                             &m_libspdm_psk_finish_request1,
+    status = libspdm_get_response_psk_finish(spdm_context, request_size, request,
                                              &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
