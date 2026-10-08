@@ -13,7 +13,7 @@
 static void init_encap_state(libspdm_context_t *spdm_context)
 {
     spdm_context->encap_context.request_id = 0;
-    spdm_context->encap_context.last_encap_request_size = 0;
+    spdm_context->encap_context.has_last_encap_request = false;
     libspdm_zero_mem(&spdm_context->encap_context.last_encap_request_header,
                      sizeof(spdm_context->encap_context.last_encap_request_header));
     spdm_context->encap_context.payload_buffer_size = 0;

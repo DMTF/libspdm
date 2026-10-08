@@ -641,8 +641,7 @@ static void rsp_encap_key_update_case15(void **state)
     assert_int_equal(
         session_info->encap_context.last_encap_request_header.request_response_code,
         SPDM_KEY_UPDATE);
-    assert_int_equal(session_info->encap_context.last_encap_request_size,
-                     sizeof(spdm_key_update_request_t));
+    assert_true(session_info->encap_context.has_last_encap_request);
 }
 
 /**

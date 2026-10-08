@@ -159,9 +159,9 @@ static void rsp_encap_send_event_case3(void **state)
 
 /**
  * Test 4: the Responder records SEND_EVENT as the outstanding encapsulated request.
- * Expected Behavior: last_encap_request_header names SEND_EVENT and last_encap_request_size is the
- * size of the request that was built, so that the encapsulated EVENT_ACK is dispatched to the
- * event acknowledgement processing function rather than being treated as unsolicited.
+ * Expected Behavior: last_encap_request_header names SEND_EVENT and has_last_encap_request is set,
+ * so that the encapsulated EVENT_ACK is dispatched to the event acknowledgement processing
+ * function rather than being treated as unsolicited.
  **/
 static void rsp_encap_send_event_case4(void **state)
 {
@@ -180,7 +180,7 @@ static void rsp_encap_send_event_case4(void **state)
 
     /* The flow begins with nothing outstanding, as libspdm_get_response_encapsulated_request
      * leaves it. */
-    session_info->encap_context.last_encap_request_size = 0;
+    session_info->encap_context.has_last_encap_request = false;
     libspdm_zero_mem(&session_info->encap_context.last_encap_request_header,
                      sizeof(session_info->encap_context.last_encap_request_header));
 
@@ -194,7 +194,7 @@ static void rsp_encap_send_event_case4(void **state)
                      SPDM_SEND_EVENT);
     assert_int_equal(session_info->encap_context.last_encap_request_header.spdm_version,
                      SPDM_MESSAGE_VERSION_13);
-    assert_int_equal(session_info->encap_context.last_encap_request_size, request_buffer_size);
+    assert_true(session_info->encap_context.has_last_encap_request);
 }
 
 int libspdm_rsp_encap_send_event_test(void)

@@ -453,7 +453,7 @@ bool libspdm_is_request_unexpected_for_mut_auth_encap(libspdm_context_t *spdm_co
         /* This only constrains the first request after KEY_EXCHANGE_RSP. Once the
          * encapsulated flow has issued a request the messages that advance it are governed
          * by the per-channel enforcement below. */
-        encap_flow_started = (mut_auth_session_info->encap_context.last_encap_request_size != 0);
+        encap_flow_started = mut_auth_session_info->encap_context.has_last_encap_request;
         #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
         session_state = libspdm_secured_message_get_session_state(
@@ -491,13 +491,12 @@ bool libspdm_is_request_unexpected_for_mut_auth_encap(libspdm_context_t *spdm_co
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
     /* During basic mutual authentication, once the Responder has signaled mutual
      * authentication in its CHALLENGE_AUTH response, the next request from the Requester
-     * must be GET_ENCAPSULATED_REQUEST. The flow has not yet issued an encapsulated
-     * request while last_encap_request_size is 0. GET_VERSION is excluded because it
-     * resets the connection, and the chunk transfer messages are excluded because a
-     * large CHALLENGE_AUTH is delivered by CHUNK_GET. */
+     * must be GET_ENCAPSULATED_REQUEST, until the flow has issued an encapsulated request.
+     * GET_VERSION is excluded because it resets the connection, and the chunk transfer
+     * messages are excluded because a large CHALLENGE_AUTH is delivered by CHUNK_GET. */
     if ((session_id == NULL) &&
         (spdm_context->encap_context.flow_type == LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH) &&
-        (spdm_context->encap_context.last_encap_request_size == 0) &&
+        !spdm_context->encap_context.has_last_encap_request &&
         (request_code != SPDM_GET_ENCAPSULATED_REQUEST) && (request_code != SPDM_CHUNK_GET) &&
         (request_code != SPDM_CHUNK_SEND) && (request_code != SPDM_GET_VERSION)) {
         *error_code = SPDM_ERROR_CODE_UNEXPECTED_REQUEST;

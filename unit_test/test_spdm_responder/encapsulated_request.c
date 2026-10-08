@@ -2409,13 +2409,13 @@ static void rsp_encapsulated_request_case14(void **State)
     /* The state that KEY_EXCHANGE_RSP with MutAuthRequested bit 1 leaves behind. */
     session_info->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH;
     session_info->encap_context.request_id = 0;
-    session_info->encap_context.last_encap_request_size = 0;
+    session_info->encap_context.has_last_encap_request = false;
 
     /* The message is sent outside of a session, as the handshake is in the clear. The non-session
      * context is cleared so that it can be shown to be untouched below. */
     spdm_context->last_spdm_request_session_id_valid = false;
     spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_NONE;
-    spdm_context->encap_context.last_encap_request_size = 0;
+    spdm_context->encap_context.has_last_encap_request = false;
 
     response_size = sizeof(response);
     status = libspdm_get_response_encapsulated_request(spdm_context,
@@ -2432,9 +2432,9 @@ static void rsp_encapsulated_request_case14(void **State)
 
     /* The flow advanced in the session's context, not the non-session one. */
     assert_int_equal(session_info->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH);
-    assert_int_not_equal(session_info->encap_context.last_encap_request_size, 0);
+    assert_true(session_info->encap_context.has_last_encap_request);
     assert_int_equal(spdm_context->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
-    assert_int_equal(spdm_context->encap_context.last_encap_request_size, 0);
+    assert_false(spdm_context->encap_context.has_last_encap_request);
 
     /* Without handshake in the clear the same message belongs to the non-session context, so a
      * pending session flow must not capture it. */
@@ -2926,7 +2926,7 @@ static void rsp_encapsulated_response_ack_case16(void **State)
     spdm_context->encap_context.response_not_ready_data.rd_exponent = 1;
     spdm_context->encap_context.response_not_ready_data.rd_tm = 1;
     spdm_context->encap_context.last_encap_request_header.request_response_code = SPDM_GET_DIGESTS;
-    spdm_context->encap_context.last_encap_request_size = sizeof(spdm_message_header_t);
+    spdm_context->encap_context.has_last_encap_request = true;
     spdm_context->encap_context.request_id = 3;
 
     response_size = sizeof(response);
@@ -3142,7 +3142,7 @@ static void rsp_encapsulated_request_case16(void **State)
                         : &spdm_context->encap_context;
         encap_context->flow_type = cases[index].flow_type;
         encap_context->request_id = 0;
-        encap_context->last_encap_request_size = 0;
+        encap_context->has_last_encap_request = false;
 
         m_legality_request_code = cases[index].request_code;
 
@@ -3202,7 +3202,7 @@ static void rsp_encapsulated_request_case17(void **State)
 
     /* The state that CHALLENGE_AUTH with the basic mutual authentication bit leaves behind. */
     spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH;
-    spdm_context->encap_context.last_encap_request_size = 0;
+    spdm_context->encap_context.has_last_encap_request = false;
 
     response_size = sizeof(response);
     status = libspdm_get_response_encapsulated_request(spdm_context,
@@ -3241,7 +3241,7 @@ static void deliver_encap_error(libspdm_context_t *spdm_context, uint8_t last_re
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
     spdm_context->encap_context.last_encap_request_header.request_response_code = last_request_code;
-    spdm_context->encap_context.last_encap_request_size = sizeof(spdm_message_header_t);
+    spdm_context->encap_context.has_last_encap_request = true;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     spdm_context->encap_context.response_not_ready = false;
 #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
@@ -3469,7 +3469,7 @@ static void rsp_encapsulated_request_case18(void **State)
     spdm_context->last_spdm_request_session_id_valid = false;
     spdm_context->latest_session_id = INVALID_SESSION_ID;
     spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_NONE;
-    spdm_context->encap_context.last_encap_request_size = 0;
+    spdm_context->encap_context.has_last_encap_request = false;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     spdm_context->encap_context.response_not_ready = false;
 #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
@@ -3520,7 +3520,7 @@ static void rsp_encapsulated_request_case19(void **State)
     spdm_context->encap_context.response_not_ready = true;
     spdm_context->encap_context.response_not_ready_flow_type = LIBSPDM_ENCAP_FLOW_GENERAL;
     /* Nothing was retained, so there is no request to reissue. */
-    spdm_context->encap_context.last_encap_request_size = 0;
+    spdm_context->encap_context.has_last_encap_request = false;
     libspdm_register_encap_flow_handler(spdm_context, encap_flow_handler);
 
     response_size = sizeof(response);
@@ -3567,7 +3567,7 @@ static void rsp_encapsulated_request_case20(void **State)
     spdm_context->last_spdm_request_session_id_valid = false;
     spdm_context->latest_session_id = INVALID_SESSION_ID;
     spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_NONE;
-    spdm_context->encap_context.last_encap_request_size = 0;
+    spdm_context->encap_context.has_last_encap_request = false;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     spdm_context->encap_context.response_not_ready = false;
 #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
@@ -3662,7 +3662,7 @@ static void rsp_encapsulated_request_case21(void **State)
     /* The outstanding request is recorded, so the EVENT_ACK can be attributed to it. */
     assert_int_equal(session_info->encap_context.last_encap_request_header.request_response_code,
                      SPDM_SEND_EVENT);
-    assert_int_not_equal(session_info->encap_context.last_encap_request_size, 0);
+    assert_true(session_info->encap_context.has_last_encap_request);
 
     /* The Requester delivers the EVENT_ACK. */
     spdm_request = (void *)temp_buf;

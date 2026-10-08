@@ -1484,7 +1484,7 @@ static void libspdm_test_responder_receive_send_rsp_case14(void **state)
         spdm_context->encap_context.response_not_ready_data.token = 0x5A;
         spdm_context->encap_context.last_encap_request_header.request_response_code =
             SPDM_GET_DIGESTS;
-        spdm_context->encap_context.last_encap_request_size = sizeof(spdm_message_header_t);
+        spdm_context->encap_context.has_last_encap_request = true;
 
         libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
         /* GET_VERSION always carries the 1.0 version, unlike the rest of the connection. */
@@ -1567,38 +1567,38 @@ static void libspdm_test_responder_receive_send_rsp_case15(void **state)
     const struct {
         uint8_t mut_auth_requested;
         uint8_t code;
-        size_t last_encap_request_size;
+        bool has_last_encap_request;
         /* The enforcement error expected, or 0 if the request must not be rejected. */
         uint8_t expected_error;
     } cases[] = {
         /* Bit 1: the flow has not issued a request, so only GET_ENCAPSULATED_REQUEST
          * advances it. */
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST,
-          SPDM_GET_CAPABILITIES, 0, SPDM_ERROR_CODE_UNEXPECTED_REQUEST },
+          SPDM_GET_CAPABILITIES, false, SPDM_ERROR_CODE_UNEXPECTED_REQUEST },
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST,
-          SPDM_DELIVER_ENCAPSULATED_RESPONSE, 0, SPDM_ERROR_CODE_UNEXPECTED_REQUEST },
+          SPDM_DELIVER_ENCAPSULATED_RESPONSE, false, SPDM_ERROR_CODE_UNEXPECTED_REQUEST },
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST,
-          SPDM_GET_ENCAPSULATED_REQUEST, 0, 0 },
+          SPDM_GET_ENCAPSULATED_REQUEST, false, 0 },
         /* GET_VERSION resets the connection, so it is legal outside of a session. */
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST,
-          SPDM_GET_VERSION, 0, 0 },
+          SPDM_GET_VERSION, false, 0 },
         /* The flow has issued a request, so the message that delivers its response is legal. */
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST,
-          SPDM_DELIVER_ENCAPSULATED_RESPONSE, sizeof(spdm_message_header_t), 0 },
+          SPDM_DELIVER_ENCAPSULATED_RESPONSE, true, 0 },
         /* Anything that does not advance the flow is rejected on that channel. */
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST,
-          SPDM_GET_CAPABILITIES, sizeof(spdm_message_header_t), SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
+          SPDM_GET_CAPABILITIES, true, SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
 
         /* Bit 2 embeds GET_DIGESTS in KEY_EXCHANGE_RSP, so the next non-session message is
          * DELIVER_ENCAPSULATED_RESPONSE rather than GET_ENCAPSULATED_REQUEST. */
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS,
-          SPDM_DELIVER_ENCAPSULATED_RESPONSE, 0, 0 },
+          SPDM_DELIVER_ENCAPSULATED_RESPONSE, false, 0 },
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS,
-          SPDM_GET_ENCAPSULATED_REQUEST, 0, SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
+          SPDM_GET_ENCAPSULATED_REQUEST, false, SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS,
-          SPDM_GET_CAPABILITIES, 0, SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
+          SPDM_GET_CAPABILITIES, false, SPDM_ERROR_CODE_REQUEST_IN_FLIGHT },
         { SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS,
-          SPDM_GET_VERSION, 0, 0 },
+          SPDM_GET_VERSION, false, 0 },
     };
 
     spdm_test_context = *state;
@@ -1621,7 +1621,7 @@ static void libspdm_test_responder_receive_send_rsp_case15(void **state)
 
         /* Basic mutual authentication is not in play here. */
         spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_NONE;
-        spdm_context->encap_context.last_encap_request_size = 0;
+        spdm_context->encap_context.has_last_encap_request = false;
 
         /* The state that KEY_EXCHANGE_RSP with MutAuthRequested bit 1 leaves behind. */
         session_info = &spdm_context->session_info[0];
@@ -1632,7 +1632,7 @@ static void libspdm_test_responder_receive_send_rsp_case15(void **state)
         spdm_context->latest_session_id = session_id;
         session_info->mut_auth_requested = cases[index].mut_auth_requested;
         session_info->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH;
-        session_info->encap_context.last_encap_request_size = cases[index].last_encap_request_size;
+        session_info->encap_context.has_last_encap_request = cases[index].has_last_encap_request;
 
         libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
         spdm_request.spdm_version = (cases[index].code == SPDM_GET_VERSION) ?
@@ -1735,7 +1735,7 @@ static void libspdm_test_responder_receive_send_rsp_case16(void **state)
         session_info->encap_context.response_not_ready_data.rd_tm = 1;
         session_info->encap_context.last_encap_request_header.request_response_code =
             SPDM_GET_DIGESTS;
-        session_info->encap_context.last_encap_request_size = sizeof(spdm_message_header_t);
+        session_info->encap_context.has_last_encap_request = true;
 
         /* The request arrives on the session's channel, so that is the channel the enforcement
          * resolves to. */

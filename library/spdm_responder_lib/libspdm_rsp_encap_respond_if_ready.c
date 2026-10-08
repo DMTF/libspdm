@@ -25,7 +25,7 @@ libspdm_return_t libspdm_get_encap_request_respond_if_ready(void *context,
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
-    if (encap_context->last_encap_request_size == 0) {
+    if (!encap_context->has_last_encap_request) {
         /* There is no outstanding encapsulated request to ask about. */
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
