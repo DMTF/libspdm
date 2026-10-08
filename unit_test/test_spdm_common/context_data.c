@@ -2760,8 +2760,10 @@ static void libspdm_test_assert_digest(uint32_t base_hash_algo, const void *hash
 static const libspdm_test_data_item_t m_libspdm_test_round_trip_items[] = {
     { LIBSPDM_DATA_SPDM_VERSION, LIBSPDM_DATA_LOCATION_CONNECTION, sizeof(spdm_version_number_t),
       SPDM_MESSAGE_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT },
+    /* libspdm_set_data asserts on a local flag whose LIBSPDM_ENABLE_CAPABILITY_*_CAP is 0, and no
+     * such switch covers PUB_KEY_ID_CAP. */
     { LIBSPDM_DATA_CAPABILITY_FLAGS, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint32_t),
-      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP },
+      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PUB_KEY_ID_CAP },
     { LIBSPDM_DATA_CAPABILITY_FLAGS, LIBSPDM_DATA_LOCATION_CONNECTION, sizeof(uint32_t),
       SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP },
     { LIBSPDM_DATA_CAPABILITY_EXT_FLAGS, LIBSPDM_DATA_LOCATION_LOCAL, sizeof(uint16_t), 0x0001 },
