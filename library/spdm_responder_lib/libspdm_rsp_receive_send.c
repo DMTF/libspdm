@@ -565,6 +565,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     size_t scratch_buffer_size;
     uint8_t request_response_code;
     uint32_t actual_size;
+    bool is_large_response;
 
     #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
     bool result;
@@ -758,24 +759,33 @@ response_dispatched:
         LIBSPDM_ASSERT (my_response_size <= context->local_context.capability.max_spdm_msg_size);
         /* large SPDM message is the SPDM message whose size is greater than the DataTransferSize of the receiving
          * SPDM endpoint or greater than the transmit buffer size of the sending SPDM endpoint */
-        if ((context->connection_info.capability.max_spdm_msg_size != 0) &&
-            (my_response_size > context->connection_info.capability.max_spdm_msg_size)) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "my_response_size > req max_spdm_msg_size\n"));
-            actual_size = (uint32_t)my_response_size;
-            status = libspdm_generate_extended_error_response(context,
-                                                              SPDM_ERROR_CODE_RESPONSE_TOO_LARGE,
-                                                              0,
-                                                              sizeof(uint32_t),
-                                                              (uint8_t *)&actual_size,
-                                                              &my_response_size, my_response);
-        } else if ((((context->connection_info.capability.data_transfer_size != 0) &&
-                     (my_response_size > context->connection_info.capability.data_transfer_size)) ||
-                    ((context->local_context.capability.sender_data_transfer_size != 0) &&
-                     (my_response_size >
-                      context->local_context.capability.sender_data_transfer_size))) &&
-                   libspdm_is_capabilities_flag_supported(
-                       context, false, SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
-                       SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
+        is_large_response =
+            ((context->connection_info.capability.data_transfer_size != 0) &&
+             (my_response_size > context->connection_info.capability.data_transfer_size)) ||
+            ((context->local_context.capability.sender_data_transfer_size != 0) &&
+             (my_response_size > context->local_context.capability.sender_data_transfer_size));
+
+        /* The response is too large if it is larger than the Requester's MaxSPDMmsgSize, or if it
+         * is a large SPDM message and the endpoints cannot transfer it in chunks. */
+        if (((context->connection_info.capability.max_spdm_msg_size != 0) &&
+             (my_response_size > context->connection_info.capability.max_spdm_msg_size)) ||
+            (is_large_response &&
+             !libspdm_is_capabilities_flag_supported(
+                 context, false, SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
+                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP))) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "response size (0x%zx) is too large\n",
+                           my_response_size));
+            if (libspdm_get_connection_version(context) >= SPDM_MESSAGE_VERSION_12) {
+                actual_size = (uint32_t)my_response_size;
+                status = libspdm_generate_extended_error_response(
+                    context, SPDM_ERROR_CODE_RESPONSE_TOO_LARGE, 0, sizeof(uint32_t),
+                    (uint8_t *)&actual_size, &my_response_size, my_response);
+            } else {
+                /* ResponseTooLarge is not defined before SPDM 1.2. */
+                status = libspdm_generate_error_response(
+                    context, SPDM_ERROR_CODE_UNSPECIFIED, 0, &my_response_size, my_response);
+            }
+        } else if (is_large_response) {
             #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
             get_info = &context->chunk_context.get;
@@ -829,14 +839,6 @@ response_dispatched:
                                                               SPDM_ERROR_CODE_LARGE_RESPONSE, 0,
                                                               sizeof(uint8_t),
                                                               &get_info->chunk_handle,
-                                                              &my_response_size, my_response);
-            #else
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                           "Warning: Could not save chunk. Scratch buffer too small.\n"));
-
-            status = libspdm_generate_extended_error_response(context,
-                                                              SPDM_ERROR_CODE_LARGE_RESPONSE,
-                                                              0, 0, NULL,
                                                               &my_response_size, my_response);
             #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
