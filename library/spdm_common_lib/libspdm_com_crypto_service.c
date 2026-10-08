@@ -713,7 +713,7 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
 {
     const uint8_t *root_cert;
     size_t root_cert_size;
-    uint8_t root_cert_index;
+    size_t root_cert_index;
     size_t root_cert_hash_size;
     uint8_t root_cert_hash[LIBSPDM_MAX_HASH_SIZE];
     const uint8_t *received_root_cert;

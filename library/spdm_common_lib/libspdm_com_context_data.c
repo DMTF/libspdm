@@ -156,7 +156,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
     uint32_t data32;
     libspdm_session_info_t *session_info;
     uint8_t slot_id;
-    uint8_t root_cert_index;
+    size_t root_cert_index;
     uint16_t data16;
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && LIBSPDM_CERT_PARSE_SUPPORT
     bool status;
