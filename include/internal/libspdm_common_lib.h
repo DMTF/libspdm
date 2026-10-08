@@ -486,7 +486,8 @@ typedef struct {
     uint8_t mut_auth_req_slot_id;
     spdm_message_header_t last_encap_request_header;
     /* Whether this flow has issued an encapsulated request, whose header is then in
-     * last_encap_request_header. */
+     * last_encap_request_header. The GET_DIGESTS that KEY_EXCHANGE_RSP implies counts as
+     * issued once the Requester answers it. */
     bool has_last_encap_request;
     uint8_t req_context[SPDM_REQ_CONTEXT_SIZE];
     uint8_t req_attributes;

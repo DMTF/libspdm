@@ -96,8 +96,6 @@ This resumption requires `LIBSPDM_RESPOND_IF_READY_SUPPORT`. When that macro is 
 retain the outstanding request, and the flow is not resumed. Even with the macro set, libspdm does
 not resume the flow in the following cases:
 - The outstanding request is `KEY_UPDATE`.
-- The outstanding request is the implicit `GET_DIGESTS` request of
-  `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS`.
 - The flow is session-based mutual authentication and both endpoints have set
   `HANDSHAKE_IN_THE_CLEAR_CAP`.
 
