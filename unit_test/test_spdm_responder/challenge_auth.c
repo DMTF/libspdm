@@ -1279,7 +1279,7 @@ static void rsp_challenge_auth_case20(void **state)
      * effect is distinguishable from a context that was already zero. */
     spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_NONE;
     spdm_context->encap_context.request_id = 0xAA;
-    spdm_context->encap_context.last_encap_request_size = 1;
+    spdm_context->encap_context.has_last_encap_request = true;
 
     g_start_basic_mut_auth = true;
     response_size = sizeof(response);
@@ -1297,7 +1297,7 @@ static void rsp_challenge_auth_case20(void **state)
                      SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ);
     assert_int_equal(spdm_context->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH);
     assert_int_equal(spdm_context->encap_context.request_id, 0);
-    assert_int_equal(spdm_context->encap_context.last_encap_request_size, 0);
+    assert_false(spdm_context->encap_context.has_last_encap_request);
     free(data1);
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */

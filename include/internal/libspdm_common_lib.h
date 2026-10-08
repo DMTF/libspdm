@@ -485,7 +485,9 @@ typedef struct {
     uint8_t req_slot_id;
     uint8_t mut_auth_req_slot_id;
     spdm_message_header_t last_encap_request_header;
-    size_t last_encap_request_size;
+    /* Whether this flow has issued an encapsulated request, whose header is then in
+     * last_encap_request_header. */
+    bool has_last_encap_request;
     uint8_t req_context[SPDM_REQ_CONTEXT_SIZE];
     uint8_t req_attributes;
     uint32_t cert_chain_total_len;

@@ -334,7 +334,7 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
              * KEY_EXCHANGE_RSP. */
             encap_context->flow_type = LIBSPDM_ENCAP_FLOW_GENERAL;
             encap_context->request_id = 0;
-            encap_context->last_encap_request_size = 0;
+            encap_context->has_last_encap_request = false;
             libspdm_zero_mem(&encap_context->last_encap_request_header,
                              sizeof(encap_context->last_encap_request_header));
         }

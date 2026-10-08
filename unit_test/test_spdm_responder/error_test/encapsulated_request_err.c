@@ -424,7 +424,7 @@ static void deliver_encap_error(libspdm_context_t *spdm_context, uint8_t last_re
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
     spdm_context->encap_context.last_encap_request_header.request_response_code = last_request_code;
-    spdm_context->encap_context.last_encap_request_size = sizeof(spdm_message_header_t);
+    spdm_context->encap_context.has_last_encap_request = true;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     spdm_context->encap_context.response_not_ready = false;
 #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
@@ -560,7 +560,7 @@ static void rsp_encapsulated_request_err_case7(void **state)
     spdm_context->encap_context.request_id = 0xFF;
     spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_GENERAL;
     spdm_context->encap_context.last_encap_request_header.request_response_code = SPDM_GET_DIGESTS;
-    spdm_context->encap_context.last_encap_request_size = sizeof(spdm_message_header_t);
+    spdm_context->encap_context.has_last_encap_request = true;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     spdm_context->encap_context.response_not_ready = false;
 #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
@@ -670,7 +670,7 @@ static void rsp_encapsulated_request_err_case9(void **state)
         spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH;
         spdm_context->encap_context.last_encap_request_header.request_response_code =
             SPDM_GET_DIGESTS;
-        spdm_context->encap_context.last_encap_request_size = sizeof(spdm_message_header_t);
+        spdm_context->encap_context.has_last_encap_request = true;
         spdm_context->encap_context.response_not_ready = false;
         spdm_context->connection_info.capability.flags |=
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
@@ -919,7 +919,7 @@ static void rsp_encapsulated_request_err_case12(void **state)
     spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_GENERAL;
     spdm_context->encap_context.last_encap_request_header.request_response_code =
         SPDM_GET_ENDPOINT_INFO;
-    spdm_context->encap_context.last_encap_request_size = sizeof(spdm_message_header_t);
+    spdm_context->encap_context.has_last_encap_request = true;
     spdm_context->encap_context.req_slot_id = 0;
     spdm_context->encap_context.req_attributes = 0;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT

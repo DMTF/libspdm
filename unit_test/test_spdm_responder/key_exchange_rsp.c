@@ -2829,7 +2829,7 @@ static void rsp_key_exchange_rsp_case30(void **state)
     assert_non_null(session_info);
     assert_int_equal(session_info->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH);
     assert_int_equal(session_info->encap_context.request_id, 0);
-    assert_int_equal(session_info->encap_context.last_encap_request_size, 0);
+    assert_false(session_info->encap_context.has_last_encap_request);
 
     free(data1);
 }
@@ -2935,7 +2935,7 @@ static void rsp_key_exchange_rsp_case31(void **state)
     assert_non_null(session_info);
     assert_int_equal(session_info->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH);
     assert_int_equal(session_info->encap_context.request_id, 0);
-    assert_int_equal(session_info->encap_context.last_encap_request_size, 0);
+    assert_false(session_info->encap_context.has_last_encap_request);
     /* The Responder never sends this request on the wire, but it must behave as though it had. */
     assert_int_equal(session_info->encap_context.last_encap_request_header.request_response_code,
                      SPDM_GET_DIGESTS);
