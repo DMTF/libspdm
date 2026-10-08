@@ -4765,6 +4765,41 @@ static void libspdm_test_check_context_pub_key_id_case76(void **state)
 }
 #endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
 
+/**
+ * Test 77: The scratch buffer is larger than libspdm_get_sizeof_required_scratch_buffer returns.
+ * Expected Behavior: libspdm_get_scratch_buffer returns the same space as for a buffer of the
+ * required size, which ends where libspdm's copy of the last request starts.
+ **/
+static void libspdm_test_get_scratch_buffer_oversized_case77(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t buffer_size;
+    uint8_t *buffer;
+    void *scratch_buffer;
+    size_t scratch_buffer_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x4D;
+
+    buffer_size = libspdm_get_sizeof_required_scratch_buffer(spdm_context) + 64;
+    buffer = malloc(buffer_size);
+    assert_non_null(buffer);
+    libspdm_set_scratch_buffer(spdm_context, buffer, buffer_size);
+
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+
+    assert_ptr_equal(scratch_buffer, buffer);
+    assert_ptr_equal((uint8_t *)scratch_buffer + scratch_buffer_size,
+                     spdm_context->last_spdm_request);
+
+    /* Give the SPDM context back the scratch buffer that the test context owns. */
+    libspdm_set_scratch_buffer(spdm_context, spdm_test_context->scratch_buffer,
+                               spdm_test_context->scratch_buffer_size);
+    free(buffer);
+}
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -4977,6 +5012,9 @@ int libspdm_common_context_data_test_main(void)
         /* A Responder with PUB_KEY_ID_CAP cannot support SPDM 1.0. */
         cmocka_unit_test(libspdm_test_check_context_pub_key_id_case76),
 #endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
+        /* an oversized scratch buffer does not overlap the copy of the last request */
+        cmocka_unit_test_setup(libspdm_test_get_scratch_buffer_oversized_case77,
+                               libspdm_unit_test_reset_context),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);
