@@ -2260,6 +2260,78 @@ static void libspdm_test_responder_receive_send_rsp_case25(void** state)
     assert_int_equal(spdm_context->last_spdm_error.error_code, SPDM_ERROR_CODE_INVALID_SESSION);
 }
 
+static libspdm_return_t libspdm_test_get_response_func_transfer_size(
+    void *spdm_context, const uint32_t *session_id, bool is_app_message,
+    size_t request_size, const void *request, size_t *response_size,
+    void *response)
+{
+    libspdm_set_mem(response, CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE, 0xA5);
+    *response_size = CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+/**
+ * Test 26: Neither endpoint supports chunking, and the response is the size of both the
+ * DataTransferSize of the Requester and the transmit buffer of the Responder.
+ * Expected behavior: the Responder sends the response.
+ **/
+static void libspdm_test_responder_receive_send_rsp_case26(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t *response;
+    spdm_message_header_t *spdm_response;
+    spdm_message_header_t spdm_request;
+    void *message;
+    size_t message_size;
+    uint32_t transport_header_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 26;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.capability.flags &=
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.sender_data_transfer_size =
+        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.capability.data_transfer_size =
+        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.max_spdm_msg_size =
+        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+
+    /* libspdm has no handler for this request code, so the Integrator's function answers it. */
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    spdm_request.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_request.request_response_code = 0x00;
+    libspdm_copy_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
+                     &spdm_request, sizeof(spdm_request));
+    spdm_context->last_spdm_request_size = sizeof(spdm_request);
+    libspdm_register_get_response_func(spdm_context,
+                                       libspdm_test_get_response_func_transfer_size);
+
+    status = libspdm_acquire_sender_buffer(spdm_context, &message_size, (void **)&message);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    response = message;
+    response_size = message_size;
+    libspdm_zero_mem(response, response_size);
+
+    status = libspdm_build_response(spdm_context, NULL, false, &response_size,
+                                    (void **)&response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
+    spdm_response = (spdm_message_header_t *)((uint8_t *)message + transport_header_size);
+    assert_int_equal(spdm_response->request_response_code, 0xA5);
+
+    libspdm_release_sender_buffer(spdm_context);
+}
+
 int libspdm_rsp_receive_send_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -2357,6 +2429,9 @@ int libspdm_rsp_receive_send_test(void)
                                libspdm_unit_test_reset_context),
         /* secured message with session ID 0 is rejected as InvalidSession */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case25,
+                               libspdm_unit_test_reset_context),
+        /* a response that fits in a single transfer is sent without chunking */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case26,
                                libspdm_unit_test_reset_context),
     };
 

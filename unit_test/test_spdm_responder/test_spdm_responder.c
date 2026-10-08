@@ -101,6 +101,7 @@ int libspdm_rsp_chunk_response_test(void);
 int libspdm_rsp_receive_send_test(void);
 int libspdm_rsp_chunk_send_ack_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+int libspdm_rsp_receive_send_error_test(void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
 int libspdm_rsp_supported_event_types_test(void);
@@ -309,6 +310,10 @@ int main(void)
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+
+    if (libspdm_rsp_receive_send_error_test() != 0) {
+        return_value = 1;
+    }
 
     #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
     if (libspdm_rsp_supported_event_types_test() != 0) {
