@@ -255,10 +255,10 @@ bool libspdm_update_local_cert_chain(
         new_cert_chain->length = (uint32_t)new_cert_chain_size;
 
         /* Get Root Certificate*/
-        status = libspdm_x509_get_cert_from_cert_chain(new_buffer + header_size, new_cert_chain_size - header_size, 0,
+        result = libspdm_x509_get_cert_from_cert_chain(new_buffer + header_size, new_cert_chain_size - header_size, 0,
                                                        &root_cert,
                                                        &root_cert_len);
-        if (!status) {
+        if (!result) {
             free(new_buffer);
             return false;
         }
