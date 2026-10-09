@@ -1,10 +1,11 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #include "base.h"
+#include "library/debuglib.h"
 
 bool libspdm_consttime_is_mem_equal(const void *destination_buffer,
                                     const void *source_buffer, size_t length)
@@ -12,6 +13,9 @@ bool libspdm_consttime_is_mem_equal(const void *destination_buffer,
     const volatile uint8_t *pointer_dst;
     const volatile uint8_t *pointer_src;
     uint8_t delta;
+
+    LIBSPDM_ASSERT(destination_buffer != NULL);
+    LIBSPDM_ASSERT(source_buffer != NULL);
 
     pointer_dst = (const uint8_t *)destination_buffer;
     pointer_src = (const uint8_t *)source_buffer;
