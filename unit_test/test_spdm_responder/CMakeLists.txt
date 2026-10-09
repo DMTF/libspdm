@@ -85,6 +85,7 @@ target_link_libraries(test_spdm_responder
         spdm_secured_message_lib
         spdm_device_secret_lib_${DEVICE}
         spdm_transport_test_lib
+        spdm_transport_pcidoe_lib
         cmockalib
         platform_lib
 )
