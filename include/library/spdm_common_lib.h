@@ -1036,6 +1036,20 @@ typedef void (*libspdm_meas_log_reset_callback_func)(
     const uint32_t *session_id);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
+/**
+ * Notify the session state to a session APP.
+ * Active session teardown, including reset and error cleanup, reports NOT_STARTED
+ * before the original session ID is invalidated. The callback must not reset or
+ * destroy this context, or allocate or free its sessions.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    The session_id of a session.
+ * @param  session_state                 The state of a session.
+ **/
+typedef void (*libspdm_session_state_callback_func)(
+    void *spdm_context, uint32_t session_id,
+    libspdm_session_state_t session_state);
+
 #ifdef __cplusplus
 }
 #endif

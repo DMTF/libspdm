@@ -1869,6 +1869,17 @@ libspdm_session_info_t *libspdm_assign_session_id(libspdm_context_t *spdm_contex
                                                   bool use_psk);
 
 /**
+ * Set session_state to an SPDM secured message context and trigger callback.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicate the SPDM session ID.
+ * @param  session_state                 Indicate the SPDM session state.
+ */
+void libspdm_set_session_state(libspdm_context_t *spdm_context,
+                               uint32_t session_id,
+                               libspdm_session_state_t session_state);
+
+/**
  * This function frees a session ID.
  *
  * @param  spdm_context  A pointer to the SPDM context.
