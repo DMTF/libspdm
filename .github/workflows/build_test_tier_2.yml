@@ -2188,6 +2188,8 @@ jobs:
       actions: read
       # To open or update the Daily Test Failure issue.
       issues: write
+      # To name the pull request that merged each commit in that issue.
+      pull-requests: read
     env:
       # Budgets from doc/internal/continuous_integration.md, Tier 2: total wall clock under two
       # hours, worst case single job 20 minutes. Exceeding either is reported
@@ -2273,10 +2275,60 @@ jobs:
                   f.write("\n".join(lines) + "\n")
           TIMING
 
+      # For the issue below: the commits that went into main after the commit
+      # that the previous scheduled run tested, oldest first. A failure here
+      # leaves them out of the issue rather than losing the issue, so the list
+      # is written only once it is complete.
+      - name: List the commits since the previous scheduled run
+        if: github.event_name == 'schedule' && !cancelled()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          sha=${{ github.sha }}
+          read -r workflow created < <(gh api "repos/$GH_REPO/actions/runs/${{ github.run_id }}" \
+            --jq '"\(.workflow_id) \(.created_at)"')
+          # The latest completed scheduled run created before this one. A
+          # re-run keeps the creation time of the run it repeats.
+          prev=$(CREATED=$created gh api \
+            "repos/$GH_REPO/actions/workflows/$workflow/runs?event=schedule&branch=main&status=completed&per_page=100" \
+            --jq '[.workflow_runs[] | select(.created_at < env.CREATED
+              and .conclusion != "startup_failure")][0] // empty
+              | "\(.head_sha) \(.html_url) \(.conclusion)"')
+          {
+            if [ -z "$prev" ]; then
+              echo "There is no earlier scheduled run to compare with."
+            else
+              read -r prev_sha prev_url prev_conclusion <<< "$prev"
+              if [ "$prev_sha" = "$sha" ]; then
+                echo "The previous scheduled run, $prev_url ($prev_conclusion), tested the same commit."
+              else
+                compare="repos/$GH_REPO/compare/$prev_sha...$sha"
+                echo "Commits since the previous scheduled run, $prev_url ($prev_conclusion), oldest first:"
+                echo
+                gh api "$compare" --jq '.commits[] | "\(.sha) \(.commit.message | split("\n")[0])"' |
+                  while read -r commit subject; do
+                    pr=$(gh api "repos/$GH_REPO/commits/$commit/pulls" \
+                      --jq '[.[] | select(.merged_at != null)][0].number // empty')
+                    echo "- $commit $subject${pr:+ (#$pr)}"
+                  done
+                # The compare API lists at most 250 commits.
+                more=$(gh api "$compare" --jq '.total_commits - (.commits | length)')
+                if [ "$more" -gt 0 ]; then
+                  echo "- $more more: ${{ github.server_url }}/$GH_REPO/compare/$prev_sha...$sha"
+                fi
+              fi
+            fi
+          } > commits.tmp
+          mv commits.tmp commits.md
+
       # doc/internal/continuous_integration.md: maintainers are notified of a
       # failure by an issue with the Daily Test Failure label. One open issue
       # collects the failures until it is closed. Only scheduled runs report. A
-      # cancelled run does not, but a job that reaches its timeout does.
+      # cancelled run does not, but a job that reaches its timeout does. Each
+      # report lists the failed jobs and the commits since the previous
+      # scheduled run.
       - name: Open or update the Daily Test Failure issue
         if: >-
           ${{ github.event_name == 'schedule' && !cancelled()
@@ -2298,6 +2350,12 @@ jobs:
             gh api --paginate "repos/$GH_REPO/actions/runs/${{ github.run_id }}/jobs?per_page=100" \
               --jq '.jobs[] | select(.conclusion == "failure" or .conclusion == "timed_out"
                 or .conclusion == "cancelled") | "- [\(.name)](\(.html_url))"'
+            echo
+            if [ -f commits.md ]; then
+              cat commits.md
+            else
+              echo "The commits since the previous scheduled run could not be listed."
+            fi
           } > failure.md
           gh label create "$LABEL" --color B60205 \
             --description "A scheduled test run on main failed" 2>/dev/null || true
