@@ -49,8 +49,15 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v7
-      with:
-        submodules: recursive
+
+    - name: Fetch submodules
+      run: git submodule update --init --depth 1 --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls
+
+    # libspdm builds OpenSSL from the pinned commit's source alone, so neither
+    # its history nor its own submodules are fetched.
+    - name: Fetch OpenSSL
+      if: matrix.crypto == 'openssl'
+      run: git submodule update --init --depth 1 os_stub/openssllib/openssl
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL

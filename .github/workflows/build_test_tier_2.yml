@@ -128,22 +128,26 @@ jobs:
           # Retry rather than fail the job on a transient fetch error. A cache hit
           # means cmocka is already present, so it is not fetched at all.
           fetch() {
+            local path=$1
+            shift
             for attempt in 1 2 3; do
-              if git submodule update --init --recursive "$1"; then
+              if git submodule update --init "$@" "$path"; then
                 return 0
               fi
-              echo "fetch of $1 failed, attempt $attempt"
+              echo "fetch of $path failed, attempt $attempt"
               sleep $((attempt * 15))
             done
             return 1
           }
 
           if [ "${{ steps.cmocka-cache.outputs.cache-hit }}" != "true" ]; then
-            fetch unit_test/cmockalib/cmocka
+            fetch unit_test/cmockalib/cmocka --recursive
           fi
-          fetch os_stub/mbedtlslib/mbedtls
+          fetch os_stub/mbedtlslib/mbedtls --recursive
+          # libspdm builds OpenSSL from the pinned commit's source alone, so
+          # neither its history nor its own submodules are fetched.
           if [ "${{ matrix.crypto }}" = "openssl" ]; then
-            fetch os_stub/openssllib/openssl
+            fetch os_stub/openssllib/openssl --depth 1
           fi
       # OpenSSL is an ExternalProject with its own CFLAGS, so no LIBSPDM_*
       # macro reaches it: one entry serves every configuration on a given
@@ -452,7 +456,10 @@ jobs:
               echo "cd libspdm-repro || exit /b 1"
               if [ -n "$fetch_ref" ]; then echo "$fetch_ref || exit /b 1"; fi
               echo "$checkout_ref || exit /b 1"
-              echo "git submodule update --init --recursive || exit /b 1"
+              echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls || exit /b 1"
+              if [ "${{ matrix.crypto }}" = "openssl" ]; then
+                echo "git submodule update --init --depth 1 os_stub/openssllib/openssl || exit /b 1"
+              fi
               echo "$pins" | sed 's/^/REM pinned: /'
               echo
               if [ "${{ matrix.toolchain }}" = "CLANG" ]; then
@@ -479,7 +486,10 @@ jobs:
               echo "cd libspdm-repro"
               if [ -n "$fetch_ref" ]; then echo "$fetch_ref"; fi
               echo "$checkout_ref"
-              echo "git submodule update --init --recursive"
+              echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+              if [ "${{ matrix.crypto }}" = "openssl" ]; then
+                echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
+              fi
               echo "$pins" | sed 's/^/# pinned: /'
               echo
               echo "export CFLAGS='${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}'"
@@ -592,22 +602,26 @@ jobs:
           # Retry rather than fail the job on a transient fetch error. A cache hit
           # means cmocka is already present, so it is not fetched at all.
           fetch() {
+            local path=$1
+            shift
             for attempt in 1 2 3; do
-              if git submodule update --init --recursive "$1"; then
+              if git submodule update --init "$@" "$path"; then
                 return 0
               fi
-              echo "fetch of $1 failed, attempt $attempt"
+              echo "fetch of $path failed, attempt $attempt"
               sleep $((attempt * 15))
             done
             return 1
           }
 
           if [ "${{ steps.cmocka-cache.outputs.cache-hit }}" != "true" ]; then
-            fetch unit_test/cmockalib/cmocka
+            fetch unit_test/cmockalib/cmocka --recursive
           fi
-          fetch os_stub/mbedtlslib/mbedtls
+          fetch os_stub/mbedtlslib/mbedtls --recursive
+          # libspdm builds OpenSSL from the pinned commit's source alone, so
+          # neither its history nor its own submodules are fetched.
           if [ "${{ matrix.crypto }}" = "openssl" ]; then
-            fetch os_stub/openssllib/openssl
+            fetch os_stub/openssllib/openssl --depth 1
           fi
       # OpenSSL is an ExternalProject with its own CFLAGS, so no LIBSPDM_*
       # macro reaches it: one entry serves every configuration on a given
@@ -879,7 +893,10 @@ jobs:
               echo "cd libspdm-repro || exit /b 1"
               if [ -n "$fetch_ref" ]; then echo "$fetch_ref || exit /b 1"; fi
               echo "$checkout_ref || exit /b 1"
-              echo "git submodule update --init --recursive || exit /b 1"
+              echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls || exit /b 1"
+              if [ "${{ matrix.crypto }}" = "openssl" ]; then
+                echo "git submodule update --init --depth 1 os_stub/openssllib/openssl || exit /b 1"
+              fi
               echo "$pins" | sed 's/^/REM pinned: /'
               echo
               if [ "${{ matrix.toolchain }}" = "CLANG" ]; then
@@ -906,7 +923,10 @@ jobs:
               echo "cd libspdm-repro"
               if [ -n "$fetch_ref" ]; then echo "$fetch_ref"; fi
               echo "$checkout_ref"
-              echo "git submodule update --init --recursive"
+              echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+              if [ "${{ matrix.crypto }}" = "openssl" ]; then
+                echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
+              fi
               echo "$pins" | sed 's/^/# pinned: /'
               echo
               echo "export CFLAGS='${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}'"
@@ -1011,22 +1031,26 @@ jobs:
           # Retry rather than fail the job on a transient fetch error. A cache hit
           # means cmocka is already present, so it is not fetched at all.
           fetch() {
+            local path=$1
+            shift
             for attempt in 1 2 3; do
-              if git submodule update --init --recursive "$1"; then
+              if git submodule update --init "$@" "$path"; then
                 return 0
               fi
-              echo "fetch of $1 failed, attempt $attempt"
+              echo "fetch of $path failed, attempt $attempt"
               sleep $((attempt * 15))
             done
             return 1
           }
 
           if [ "${{ steps.cmocka-cache.outputs.cache-hit }}" != "true" ]; then
-            fetch unit_test/cmockalib/cmocka
+            fetch unit_test/cmockalib/cmocka --recursive
           fi
-          fetch os_stub/mbedtlslib/mbedtls
+          fetch os_stub/mbedtlslib/mbedtls --recursive
+          # libspdm builds OpenSSL from the pinned commit's source alone, so
+          # neither its history nor its own submodules are fetched.
           if [ "${{ matrix.crypto }}" = "openssl" ]; then
-            fetch os_stub/openssllib/openssl
+            fetch os_stub/openssllib/openssl --depth 1
           fi
 
       - name: Set up MSYS2
@@ -1293,7 +1317,10 @@ jobs:
               echo "cd libspdm-repro || exit /b 1"
               if [ -n "$fetch_ref" ]; then echo "$fetch_ref || exit /b 1"; fi
               echo "$checkout_ref || exit /b 1"
-              echo "git submodule update --init --recursive || exit /b 1"
+              echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls || exit /b 1"
+              if [ "${{ matrix.crypto }}" = "openssl" ]; then
+                echo "git submodule update --init --depth 1 os_stub/openssllib/openssl || exit /b 1"
+              fi
               echo "$pins" | sed 's/^/REM pinned: /'
               echo
               if [ "${{ matrix.toolchain }}" = "CLANG" ]; then
@@ -1320,7 +1347,10 @@ jobs:
               echo "cd libspdm-repro"
               if [ -n "$fetch_ref" ]; then echo "$fetch_ref"; fi
               echo "$checkout_ref"
-              echo "git submodule update --init --recursive"
+              echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+              if [ "${{ matrix.crypto }}" = "openssl" ]; then
+                echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
+              fi
               echo "$pins" | sed 's/^/# pinned: /'
               echo
               echo "export CFLAGS='${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}'"
