@@ -2,26 +2,63 @@ name: Code Coverage
 
 on:
   schedule:
-    - cron:  '0 8 * * 0'
+    # Off the hour, when GitHub is less likely to delay or drop scheduled runs.
+    - cron: '25 8 * * 0'
   workflow_dispatch:
+
+# Runs on one ref wait for each other rather than race the force-push to
+# github_pages.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  # As in Tier 1. CHECK_MACRO rejects an illegal configuration at compile time,
+  # and ASSERT_CONFIG=3 makes a failing assert exit rather than deadloop.
+  BASE_CFLAGS: -DLIBSPDM_CHECK_MACRO=1 -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=3
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Pinned so that the lcov version, which affects the report, changes only
+    # when this file does.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          # Only the publish job writes to the repository.
+          persist-credentials: false
 
       - name: Fetch submodules
-        run: git submodule update --init --depth 1 --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls
+        run: |
+          # Retry rather than fail the run on a transient fetch error.
+          fetch() {
+            local path=$1
+            shift
+            for attempt in 1 2 3; do
+              if git submodule update --init "$@" "$path"; then
+                return 0
+              fi
+              echo "fetch of $path failed, attempt $attempt"
+              sleep $((attempt * 15))
+            done
+            return 1
+          }
+
+          fetch unit_test/cmockalib/cmocka --depth 1 --recursive
+          fetch os_stub/mbedtlslib/mbedtls --depth 1 --recursive
 
       - name: Build - Linux
         run: |
           sudo apt-get update
-          sudo apt-get install lcov
+          sudo apt-get install --no-install-recommends -y lcov
           mkdir build
           cd build
-          cmake -E env CFLAGS="-DLIBSPDM_FIPS_MODE=1" cmake -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=mbedtls -DGCOV=ON ..
+          cmake -E env CFLAGS="${{ env.BASE_CFLAGS }} -DLIBSPDM_FIPS_MODE=1" cmake -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=mbedtls -DGCOV=ON ..
           make -j`nproc`
           make copy_sample_key
           make copy_seed
@@ -41,9 +78,6 @@ jobs:
           ./run_initial_seed.sh
 
       - name: Generate Coverage
-        env:
-          CI_COMMIT_MESSAGE: Publish code coverage.
-          CI_COMMIT_AUTHOR: Continuous Integration
         run: |
           mkdir /tmp/coverage_log
           # Leave out the branches of LIBSPDM_ASSERT lines, whose failure side a
@@ -71,13 +105,44 @@ jobs:
             --title "${GITHUB_SHA}" --prefix "${GITHUB_WORKSPACE}" \
             --header-title "Code coverage report for <a href=\"${tree_url}\">${GITHUB_REPOSITORY}</a>" \
             coverage.info --output-directory /tmp/coverage_log
-          git fetch origin
-          git checkout github_pages
-          rm -rf ./coverage_log
-          mv /tmp/coverage_log ./
-          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
-          git config --global user.email "void@void.net"
-          git add -f coverage_log/\*
-          git commit -am "${{ env.CI_COMMIT_MESSAGE }}"
-          git reset $(git commit-tree HEAD^{tree} -m "${{ env.CI_COMMIT_MESSAGE }}")
-          git push --force origin github_pages
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage_log
+          path: /tmp/coverage_log
+          # The artifact only carries the report to the publish job.
+          retention-days: 7
+
+  # A run on any other branch measures coverage but does not publish it.
+  publish:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout github_pages
+        uses: actions/checkout@v7
+        with:
+          ref: github_pages
+
+      - name: Remove previous report
+        run: rm -rf coverage_log
+
+      - name: Download coverage report
+        uses: actions/download-artifact@v8
+        with:
+          name: coverage_log
+          path: coverage_log
+
+      - name: Publish
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -f coverage_log
+          # github_pages holds a single parentless commit, so its history does
+          # not grow.
+          commit=$(git commit-tree "$(git write-tree)" -m "Publish code coverage.")
+          git push --force origin "$commit:refs/heads/github_pages"
