@@ -120,12 +120,14 @@ jobs:
             crypto: openssl
             target: Release
 
+          # Also replays the fuzzing seeds; see fuzz-libfuzzer-mbedtls-debug.
           - name: linux-x64-gcc-openssl-debug
             os: ubuntu-latest
             arch: x64
             toolchain: GCC
             crypto: openssl
             target: Debug
+            seeds: 'true'
 
           - name: linux-aarch64-clang-openssl-debug
             os: ubuntu-24.04-arm
@@ -355,6 +357,22 @@ jobs:
             openssl_binary: 'true'
             cmake_extra: -DBUILD_LINUX_SHARED_LIB=ON
 
+          # == Fuzzing seed replay ============================================
+          # unit_test/fuzzing/run_initial_seed.sh runs the fuzzing harnesses on
+          # their seeds. With LIBFUZZER, CMake builds only the harnesses, and
+          # compiles everything it builds, Mbed TLS included, with
+          # AddressSanitizer. OpenSSL is built outside that, so
+          # linux-x64-gcc-openssl-debug replays the seeds against OpenSSL.
+
+          - name: fuzz-libfuzzer-mbedtls-debug
+            os: ubuntu-latest
+            arch: x64
+            toolchain: LIBFUZZER
+            crypto: mbedtls
+            target: Debug
+            expect_tests: 'false'
+            seeds: 'true'
+
           # == Pass/fail signal for a build that produces no tests ============
 
           - name: config-disable-tests
@@ -492,9 +510,12 @@ jobs:
         env:
           CFLAGS: ${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}
         run: |
-          # The CLANG toolchain archives static libraries with llvm-ar,
-          # which is not present on the stock Linux image.
-          if [ "${{ matrix.toolchain }}" = "CLANG" ] && [ "${{ runner.os }}" = "Linux" ]; then
+          # The CLANG and LIBFUZZER toolchains archive static libraries with
+          # llvm-ar, which is not present on the stock Linux image. The same
+          # package provides llvm-symbolizer, which AddressSanitizer needs for
+          # function names.
+          if { [ "${{ matrix.toolchain }}" = "CLANG" ] || [ "${{ matrix.toolchain }}" = "LIBFUZZER" ]; } &&
+             [ "${{ runner.os }}" = "Linux" ]; then
             sudo apt-get update
             sudo apt-get install --no-install-recommends -y llvm
           fi
@@ -527,9 +548,13 @@ jobs:
           echo "Building with --parallel $jobs"
 
           # copy_sample_key stages certificates into build/bin, which only
-          # exists when unit tests are built.
-          if [ "${{ matrix.expect_tests }}" != "false" ]; then
+          # exists when unit tests or fuzzing harnesses are built. copy_seed
+          # stages the seeds and run_initial_seed.sh there.
+          if [ "${{ matrix.expect_tests }}" != "false" ] || [ "${{ matrix.seeds }}" = "true" ]; then
             cmake --build build --target copy_sample_key
+          fi
+          if [ "${{ matrix.seeds }}" = "true" ]; then
+            cmake --build build --target copy_seed
           fi
           cmake --build build --parallel "$jobs"
 
@@ -541,7 +566,7 @@ jobs:
       # viewer's truncation point. The shared runner keeps the binary lookup
       # and the timeout guard in one place rather than in six copies.
       - name: Prepare test runner
-        if: matrix.expect_tests != 'false'
+        if: matrix.expect_tests != 'false' || matrix.seeds == 'true'
         shell: bash
         run: |
           cat > run_test.sh <<'RUNNER'
@@ -621,11 +646,21 @@ jobs:
         shell: bash
         run: ./run_test.sh test_spdm_fips
 
+      # unit_test/fuzzing/run_initial_seed.sh runs each harness it lists on that
+      # harness's seeds and fails if any of them fails. The runner bounds the
+      # whole replay, as it does each unit test.
+      - name: Replay fuzzing seeds
+        if: matrix.seeds == 'true'
+        shell: bash
+        run: ./run_test.sh run_initial_seed.sh
+
       # DISABLE_TESTS gates 87 test subdirectories, so this checks that nothing
       # test-shaped was produced, and that libraries still were -- otherwise an
-      # empty build tree would satisfy the check vacuously.
+      # empty build tree would satisfy the check vacuously. It keys on
+      # DISABLE_TESTS rather than expect_tests because a LIBFUZZER build has
+      # no unit tests either, but does build the fuzzing harnesses.
       - name: Verify no tests were built
-        if: matrix.expect_tests == 'false'
+        if: contains(matrix.cmake_extra, '-DDISABLE_TESTS=1')
         shell: bash
         run: |
           # build/bin does not exist when tests are disabled. Redirecting find's
@@ -781,16 +816,22 @@ jobs:
               else
                 echo "cmake -B build -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }}$binary"
               fi
-              # build/bin exists only when unit tests are built; see the Build
-              # step.
-              if [ "${{ matrix.expect_tests }}" != "false" ]; then
+              # build/bin exists only when unit tests or fuzzing harnesses are
+              # built; see the Build step.
+              if [ "${{ matrix.expect_tests }}" != "false" ] || [ "${{ matrix.seeds }}" = "true" ]; then
                 echo "cmake --build build --target copy_sample_key"
               fi
+              if [ "${{ matrix.seeds }}" = "true" ]; then
+                echo "cmake --build build --target copy_seed"
+              fi
               echo "cmake --build build --parallel \"\$(getconf _NPROCESSORS_ONLN)\""
-              if [ "${{ matrix.expect_tests }}" != "false" ]; then
+              if [ "${{ matrix.expect_tests }}" != "false" ] || [ "${{ matrix.seeds }}" = "true" ]; then
                 echo
                 echo "cd build/bin"
                 for t in $UNIT_TESTS ${{ matrix.extra_tests }}; do echo "if [ -x ./$t ]; then ./$t; fi"; done
+              fi
+              if [ "${{ matrix.seeds }}" = "true" ]; then
+                echo "./run_initial_seed.sh"
               fi
             } > "$f"
             chmod +x "$f"
@@ -1906,5 +1947,9 @@ jobs:
 #
 #   Extended unit tests run where their requirement is met:
 #     test_spdm_fips -> config-fips, config-fips-openssl.
+#
+#   Fuzzing seed replay, 2 jobs:
+#     fuzz-libfuzzer-mbedtls-debug   AddressSanitizer, Mbed TLS
+#     linux-x64-gcc-openssl-debug    OpenSSL, as a step of the platform job
 #
 # ---------------------------------------------------------------------------

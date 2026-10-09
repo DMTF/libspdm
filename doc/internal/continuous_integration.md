@@ -96,6 +96,12 @@ tests were compiled. Reasonable runner timeouts should be specified so that if a
 runner will detect the hang and produce a failing result. For example, if a passing test takes, in
 its worst case, 20 minutes to build and run to completion, then a 30 minute timeout is reasonable.
 
+### Fuzzing Seeds
+
+`unit_test/fuzzing/run_initial_seed.sh` runs the fuzzing harnesses that it lists on their seed
+inputs in `unit_test/fuzzing/seeds`. With `TOOLCHAIN=LIBFUZZER`, CMake builds the harnesses, but
+not the unit tests, with AddressSanitizer.
+
 ## Test Utilities
 
 ### Sanitizers
@@ -131,6 +137,9 @@ above, but need not be exhaustive in their combinations. In addition, the config
 alter coarse macros present in `spdm_lib_config.h` that greatly alter the size and behavior of the
 library. Examples of such macros include `LIBSPDM_FIPS_MODE` and
 `LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT`.
+
+Tier 1 also replays the fuzzing seeds against each cryptography library, and under
+AddressSanitizer in a `LIBFUZZER` build.
 
 All tier 1 tests must pass before a pull request that targets production code or tests is merged
 into `main` or any of the release branches.
