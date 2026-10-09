@@ -127,6 +127,8 @@ static int rsp_key_exchange_rsp_setup(void **state)
     }
     /* A test that starts an encapsulated flow leaves the response state set. */
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    /* A test that negotiates Heartbeat leaves the HeartbeatPeriod set. */
+    spdm_context->local_context.heartbeat_period = 0;
 
     g_key_exchange_start_mut_auth = 0;
     g_key_exchange_req_slot_id = 0;
@@ -2945,6 +2947,146 @@ static void rsp_key_exchange_rsp_case31(void **state)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
+/* Sends KEY_EXCHANGE when both endpoints support Heartbeat and the Integrator has set
+ * heartbeat_period. Returns the HeartbeatPeriod in KEY_EXCHANGE_RSP, and the session that it
+ * starts in *session_info. */
+static uint8_t rsp_key_exchange_rsp_send_with_heartbeat(libspdm_context_t *spdm_context,
+                                                        uint8_t heartbeat_period,
+                                                        libspdm_session_info_t **session_info)
+{
+    libspdm_return_t status;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_key_exchange_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t dhe_key_size;
+    void *dhe_context;
+    size_t opaque_key_exchange_req_size;
+
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_free_session_id(spdm_context, spdm_context->session_info[0].session_id);
+    }
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP;
+    spdm_context->local_context.heartbeat_period = heartbeat_period;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        assert_true(false);
+        return 0;
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->local_context.secured_message_version.secured_message_version_count = 1;
+
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request1.random_data);
+    m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
+    m_libspdm_key_exchange_request1.reserved = 0;
+    ptr = m_libspdm_key_exchange_request1.exchange_data;
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
+                                  false);
+    libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    ptr += dhe_key_size;
+    libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
+    ptr += sizeof(uint16_t);
+    libspdm_build_opaque_data_supported_version_data(
+        spdm_context, &opaque_key_exchange_req_size, ptr);
+    response_size = sizeof(response);
+    status = libspdm_get_response_key_exchange(
+        spdm_context, m_libspdm_key_exchange_request1_size,
+        &m_libspdm_key_exchange_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_KEY_EXCHANGE_RSP);
+
+    *session_info = libspdm_get_session_info_via_session_id(spdm_context,
+                                                            spdm_context->latest_session_id);
+    assert_non_null(*session_info);
+
+    free(data1);
+    return spdm_response->header.param1;
+}
+
+/**
+ * Test 32: both endpoints support Heartbeat, and the Integrator has set a non-zero
+ * HeartbeatPeriod.
+ * Expected behavior: the Responder sends the HeartbeatPeriod in KEY_EXCHANGE_RSP, and records it in
+ * the session.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP is disabled.
+ **/
+static void rsp_key_exchange_rsp_case32(void **state)
+{
+#if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    uint8_t heartbeat_period;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x20;
+
+    heartbeat_period = rsp_key_exchange_rsp_send_with_heartbeat(spdm_context, 2, &session_info);
+    assert_int_equal(heartbeat_period, 2);
+    assert_int_equal(session_info->heartbeat_period, 2);
+#else
+    skip();
+#endif
+}
+
+/**
+ * Test 33: as test 32, but libspdm is built without LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP, so the
+ * Responder has no watchdog to enforce a HeartbeatPeriod.
+ * Expected behavior: the Responder sends a HeartbeatPeriod of 0 in KEY_EXCHANGE_RSP, and records 0
+ * in the session.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP is enabled.
+ **/
+static void rsp_key_exchange_rsp_case33(void **state)
+{
+#if !(LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP)
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    uint8_t heartbeat_period;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x21;
+
+    heartbeat_period = rsp_key_exchange_rsp_send_with_heartbeat(spdm_context, 2, &session_info);
+    assert_int_equal(heartbeat_period, 0);
+    assert_int_equal(session_info->heartbeat_period, 0);
+#else
+    skip();
+#endif
+}
+
 int libspdm_rsp_key_exchange_rsp_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -3012,6 +3154,10 @@ int libspdm_rsp_key_exchange_rsp_test(void)
         cmocka_unit_test_setup(rsp_key_exchange_rsp_case31, rsp_key_exchange_rsp_setup),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
         #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+        /* HeartbeatPeriod when both endpoints support Heartbeat */
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case32, rsp_key_exchange_rsp_setup),
+        /* The same, when LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP is disabled */
+        cmocka_unit_test_setup(rsp_key_exchange_rsp_case33, rsp_key_exchange_rsp_setup),
     };
 
     libspdm_test_context_t test_context = {

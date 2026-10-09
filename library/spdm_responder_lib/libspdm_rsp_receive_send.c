@@ -58,7 +58,9 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
 
     #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
     case SPDM_END_SESSION: return libspdm_get_response_end_session;
+    #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
     case SPDM_HEARTBEAT: return libspdm_get_response_heartbeat;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
     case SPDM_KEY_UPDATE: return libspdm_get_response_key_update;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 

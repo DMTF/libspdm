@@ -335,6 +335,62 @@ static void rsp_receive_send_err_case6(void **state)
 #endif
 }
 
+/**
+ * Test 7: Both endpoints support Heartbeat, the Requester sends HEARTBEAT, and libspdm is built
+ * without a HEARTBEAT handler.
+ * Expected behavior: the Responder returns an ERROR message with ErrorCode=UnsupportedRequest.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP is enabled along with
+ * LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP or LIBSPDM_ENABLE_CAPABILITY_PSK_CAP, as libspdm then has a
+ * HEARTBEAT handler.
+ **/
+static void rsp_receive_send_err_case7(void **state)
+{
+#if !((LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP) && \
+    ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)))
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_heartbeat_request_t spdm_request;
+    void *transport_message;
+    size_t transport_message_size;
+    const spdm_error_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x7;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
+
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_request.header.request_response_code = SPDM_HEARTBEAT;
+    libspdm_copy_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
+                     &spdm_request, sizeof(spdm_request));
+    spdm_context->last_spdm_request_size = sizeof(spdm_request);
+
+    libspdm_zero_mem(m_transport_message, sizeof(m_transport_message));
+    transport_message = m_transport_message;
+    transport_message_size = sizeof(m_transport_message);
+    status = libspdm_build_response(spdm_context, NULL, false, &transport_message_size,
+                                    &transport_message);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    spdm_response = (const void *)(m_transport_message +
+                                   spdm_context->local_context.capability.transport_header_size);
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal(spdm_response->header.param2, SPDM_HEARTBEAT);
+#else
+    skip();
+#endif
+}
+
 int libspdm_rsp_receive_send_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -344,6 +400,7 @@ int libspdm_rsp_receive_send_error_test(void)
         cmocka_unit_test_setup(rsp_receive_send_err_case4, libspdm_unit_test_reset_context),
         cmocka_unit_test_setup(rsp_receive_send_err_case5, libspdm_unit_test_reset_context),
         cmocka_unit_test_setup(rsp_receive_send_err_case6, libspdm_unit_test_reset_context),
+        cmocka_unit_test_setup(rsp_receive_send_err_case7, libspdm_unit_test_reset_context),
     };
 
     libspdm_test_context_t test_context = {

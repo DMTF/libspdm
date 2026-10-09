@@ -735,6 +735,7 @@ libspdm_return_t libspdm_send_receive_spdm_data(void *spdm_context,
                                                 void *response, size_t *response_size);
 
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
+#if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
 /**
  * This function sends HEARTBEAT
  * to an SPDM Session.
@@ -743,6 +744,7 @@ libspdm_return_t libspdm_send_receive_spdm_data(void *spdm_context,
  * @param  session_id    The session ID of the session.
  **/
 libspdm_return_t libspdm_heartbeat(void *spdm_context, uint32_t session_id);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
 
 /**
  * This function sends KEY_UPDATE
