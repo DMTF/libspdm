@@ -2670,12 +2670,9 @@ void libspdm_get_scratch_buffer (
     LIBSPDM_ASSERT (context->scratch_buffer_size >=
                     libspdm_get_scratch_buffer_capacity(spdm_context));
     *scratch_buffer = context->scratch_buffer;
-    *scratch_buffer_size = context->scratch_buffer_size;
-    /* need to remove last 2 sections, because they are for libspdm internal state track. */
-    *scratch_buffer_size -= libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context);
-#if LIBSPDM_RESPOND_IF_READY_SUPPORT
-    *scratch_buffer_size -= libspdm_get_scratch_buffer_cache_spdm_request_capacity(spdm_context);
-#endif
+    /* The sections for libspdm's internal state start at a fixed offset, so the returned space ends
+     * there even if the scratch buffer is larger than required. */
+    *scratch_buffer_size = libspdm_get_scratch_buffer_last_spdm_request_offset(spdm_context);
 }
 
 libspdm_return_t libspdm_acquire_sender_buffer (
