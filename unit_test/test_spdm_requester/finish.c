@@ -3874,6 +3874,7 @@ static void req_finish_case26(void **state)
         spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
         libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    libspdm_free_peer_leaf_cert_public_key(spdm_context, 0);
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         m_libspdm_use_hash_algo,
         spdm_context->connection_info.algorithm.base_asym_algo,
