@@ -183,14 +183,6 @@
 #endif
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
-/* libspdm allows an Integrator to specify multiple root certificates as trust anchors when
- * verifying certificate chains from an endpoint. This value specifies the maximum number of root
- * certificates that libspdm can support.
- */
-#ifndef LIBSPDM_MAX_ROOT_CERT_SUPPORT
-#define LIBSPDM_MAX_ROOT_CERT_SUPPORT 10
-#endif
-
 /* If the Responder supports it a Requester is allowed to establish multiple secure sessions with
  * the Responder. This value specifies the maximum number of sessions libspdm can support.
  */
@@ -438,6 +430,16 @@
 #ifndef LIBSPDM_CERT_PARSE_SUPPORT
 #define LIBSPDM_CERT_PARSE_SUPPORT 1
 #endif
+
+#if LIBSPDM_CERT_PARSE_SUPPORT
+/* libspdm allows an Integrator to specify multiple root certificates as trust anchors when
+ * verifying certificate chains from an endpoint. This value specifies the maximum number of root
+ * certificates that libspdm can support.
+ */
+#ifndef LIBSPDM_MAX_ROOT_CERT_SUPPORT
+#define LIBSPDM_MAX_ROOT_CERT_SUPPORT 10
+#endif
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 /*
  * MinDataTransferSize = 42
