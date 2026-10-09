@@ -156,7 +156,9 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
     uint32_t data32;
     libspdm_session_info_t *session_info;
     uint8_t slot_id;
+#if LIBSPDM_CERT_PARSE_SUPPORT
     size_t root_cert_index;
+#endif
     uint16_t data16;
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && LIBSPDM_CERT_PARSE_SUPPORT
     bool status;
@@ -506,6 +508,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->response_state = libspdm_read_uint32((const uint8_t *)data);
         break;
+#if LIBSPDM_CERT_PARSE_SUPPORT
     case LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT:
         if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -520,6 +523,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         context->local_context.peer_root_cert_provision_size[root_cert_index] = data_size;
         context->local_context.peer_root_cert_provision[root_cert_index] = data;
         break;
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
     case LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN:
         if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;

@@ -42,6 +42,7 @@ bool libspdm_read_dice_certificate_chain(
 
 void libspdm_test_spdm_verify_cert_chain_callback_function(void **state)
 {
+#if LIBSPDM_CERT_PARSE_SUPPORT
     bool status;
     libspdm_context_t *spdm_context;
     uint8_t slot_id;
@@ -83,6 +84,9 @@ void libspdm_test_spdm_verify_cert_chain_callback_function(void **state)
     free(spdm_root_cert_for_dicetcbinfo);
     free(spdm_cert_chain_with_dicetcbinfo);
     free(spdm_context);
+#else
+    skip();
+#endif
 }
 
 void libspdm_test_spdm_verify_cert_dicetcdinfo(void **state)

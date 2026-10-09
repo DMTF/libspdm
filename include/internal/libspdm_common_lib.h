@@ -124,9 +124,11 @@ typedef struct {
     const void *local_public_key_provision;
     size_t local_public_key_provision_size;
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
     /* Peer Root Certificate */
     const void *peer_root_cert_provision[LIBSPDM_MAX_ROOT_CERT_SUPPORT];
     size_t peer_root_cert_provision_size[LIBSPDM_MAX_ROOT_CERT_SUPPORT];
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
     /* Peer raw public key (slot_id - 0xFF) */
     const void *peer_public_key_provision;
     size_t peer_public_key_provision_size;

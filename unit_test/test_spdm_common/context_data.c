@@ -21,6 +21,7 @@ void spdm_device_release_receiver_buffer (void *context, const void *msg_buf_ptr
 
 static uint32_t libspdm_opaque_data = 0xDEADBEEF;
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
 /**
  * This function verifies peer certificate chain buffer including spdm_cert_chain_t header.
  *
@@ -59,6 +60,7 @@ static bool libspdm_verify_peer_cert_chain_buffer(void *spdm_context,
 
     return true;
 }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 /**
  * Return the size in bytes of multi element opaque data supported version.
@@ -514,9 +516,12 @@ static void libspdm_test_common_context_data_case4(void **state)
 /**
  * Test 5: There is no root cert.
  * Expected Behavior: Return true result.
+ *
+ * Skipped if LIBSPDM_CERT_PARSE_SUPPORT is disabled.
  **/
 void libspdm_test_verify_peer_cert_chain_buffer_case5(void **state)
 {
+#if LIBSPDM_CERT_PARSE_SUPPORT
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -565,6 +570,9 @@ void libspdm_test_verify_peer_cert_chain_buffer_case5(void **state)
     assert_int_equal (result, true);
 
     free(data);
+#else
+    skip();
+#endif
 }
 
 /**
@@ -573,9 +581,12 @@ void libspdm_test_verify_peer_cert_chain_buffer_case5(void **state)
  * case                                              Expected Behavior
  * there is one match root cert;                     return false
  * there is one mismatch root cert;                  return true, and the return trust_anchor is root cert.
+ *
+ * Skipped if LIBSPDM_CERT_PARSE_SUPPORT is disabled.
  **/
 void libspdm_test_verify_peer_cert_chain_buffer_case6(void **state)
 {
+#if LIBSPDM_CERT_PARSE_SUPPORT
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -657,6 +668,9 @@ void libspdm_test_verify_peer_cert_chain_buffer_case6(void **state)
 
     free(data);
     free(data_test);
+#else
+    skip();
+#endif
 }
 
 /**
@@ -667,12 +681,12 @@ void libspdm_test_verify_peer_cert_chain_buffer_case6(void **state)
  * there is one match root cert in the end;          return true, and the return trust_anchor is root cert.
  * there is one match root cert in the middle;       return true, and the return trust_anchor is root cert.
  *
- * Skipped if LIBSPDM_MAX_ROOT_CERT_SUPPORT is less than 2, as the first case then provisions no
- * root certificate.
+ * Skipped if LIBSPDM_CERT_PARSE_SUPPORT is disabled, or if LIBSPDM_MAX_ROOT_CERT_SUPPORT is less
+ * than 2, as the first case then provisions no root certificate.
  **/
 void libspdm_test_verify_peer_cert_chain_buffer_case7(void **state)
 {
-#if (LIBSPDM_MAX_ROOT_CERT_SUPPORT) >= 2
+#if LIBSPDM_CERT_PARSE_SUPPORT && (LIBSPDM_MAX_ROOT_CERT_SUPPORT) >= 2
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -782,9 +796,12 @@ void libspdm_test_verify_peer_cert_chain_buffer_case7(void **state)
  * there is no match root cert;                      return false
  * there is one match root cert in the end;          return true, and the return trust_anchor is root cert.
  * there is one match root cert in the middle;       return true, and the return trust_anchor is root cert.
+ *
+ * Skipped if LIBSPDM_CERT_PARSE_SUPPORT is disabled.
  **/
 void libspdm_test_verify_peer_cert_chain_buffer_case8(void **state)
 {
+#if LIBSPDM_CERT_PARSE_SUPPORT
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -879,6 +896,9 @@ void libspdm_test_verify_peer_cert_chain_buffer_case8(void **state)
 
     free(data);
     free(data_test);
+#else
+    skip();
+#endif
 }
 
 /**
@@ -887,9 +907,12 @@ void libspdm_test_verify_peer_cert_chain_buffer_case8(void **state)
  * case                                              Expected Behavior
  * there is null root cert;                          return LIBSPDM_STATUS_SUCCESS, and the root cert is set successfully.
  * there is full root cert;                          return RETURN_OUT_OF_RESOURCES.
+ *
+ * Skipped if LIBSPDM_CERT_PARSE_SUPPORT is disabled.
  **/
 static void libspdm_test_set_data_case9(void **state)
 {
+#if LIBSPDM_CERT_PARSE_SUPPORT
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -944,6 +967,9 @@ static void libspdm_test_set_data_case9(void **state)
     assert_int_equal (status, LIBSPDM_STATUS_BUFFER_FULL);
 
     free(data);
+#else
+    skip();
+#endif
 }
 
 
@@ -2892,7 +2918,9 @@ static const libspdm_test_data_item_t m_libspdm_test_set_wrong_location_items[] 
     { LIBSPDM_DATA_ALGO_PRIORITY_PQC_FIRST, LIBSPDM_DATA_LOCATION_CONNECTION, sizeof(bool), 0 },
     { LIBSPDM_DATA_CONNECTION_STATE, LIBSPDM_DATA_LOCATION_LOCAL,
       sizeof(libspdm_connection_state_t), 0 },
+#if LIBSPDM_CERT_PARSE_SUPPORT
     { LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, LIBSPDM_DATA_LOCATION_CONNECTION, sizeof(uint64_t), 0 },
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
     { LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, LIBSPDM_DATA_LOCATION_CONNECTION, sizeof(uint64_t),
       0 },
     { LIBSPDM_DATA_LOCAL_SUPPORTED_SLOT_MASK, LIBSPDM_DATA_LOCATION_CONNECTION, sizeof(uint8_t),
