@@ -8,7 +8,8 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
+#if (LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP) && \
+    ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP))
 
 static uint8_t m_libspdm_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
 static uint8_t m_libspdm_dummy_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
@@ -1753,4 +1754,4 @@ int libspdm_req_heartbeat_test(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP) && (...) */
