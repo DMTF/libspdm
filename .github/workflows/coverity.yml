@@ -30,8 +30,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v7
-      with:
-        submodules: recursive
+
+    - name: Fetch submodules
+      run: git submodule update --init --depth 1 --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls
 
     - name: Download, Build, and Submit
       run: |
