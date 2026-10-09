@@ -313,6 +313,8 @@ static void rsp_respond_if_ready_case1(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_libspdm_local_certificate_chain);
+    /* SupportedSlotMask shall cover the populated slot. */
+    spdm_context->local_context.local_supported_slot_mask = 0x01;
     libspdm_set_mem (m_libspdm_local_certificate_chain, sizeof(m_libspdm_local_certificate_chain),
                      (uint8_t)(0xFF));
 
@@ -1088,6 +1090,8 @@ static void rsp_respond_if_ready_case10(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_libspdm_local_certificate_chain);
+    /* SupportedSlotMask shall cover the populated slot. */
+    spdm_context->local_context.local_supported_slot_mask = 0x01;
     libspdm_set_mem (m_libspdm_local_certificate_chain, sizeof(m_libspdm_local_certificate_chain),
                      (uint8_t)(0xFF));
 
@@ -1155,6 +1159,8 @@ static void rsp_respond_if_ready_case11(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_libspdm_local_certificate_chain);
+    /* SupportedSlotMask shall cover the populated slot. */
+    spdm_context->local_context.local_supported_slot_mask = 0x01;
     libspdm_set_mem (m_libspdm_local_certificate_chain, sizeof(m_libspdm_local_certificate_chain),
                      (uint8_t)(0xFF));
 
@@ -1224,6 +1230,8 @@ static void rsp_respond_if_ready_case12(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_libspdm_local_certificate_chain);
+    /* SupportedSlotMask shall cover the populated slot. */
+    spdm_context->local_context.local_supported_slot_mask = 0x01;
     libspdm_set_mem (m_libspdm_local_certificate_chain, sizeof(m_libspdm_local_certificate_chain),
                      (uint8_t)(0xFF));
 
@@ -1296,6 +1304,8 @@ static void rsp_respond_if_ready_case13(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_libspdm_local_certificate_chain);
+    /* SupportedSlotMask shall cover the populated slot. */
+    spdm_context->local_context.local_supported_slot_mask = 0x01;
     libspdm_set_mem (m_libspdm_local_certificate_chain, sizeof(m_libspdm_local_certificate_chain),
                      (uint8_t)(0xFF));
 
@@ -1361,6 +1371,8 @@ static void rsp_respond_if_ready_case14(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_libspdm_local_certificate_chain);
+    /* SupportedSlotMask shall cover the populated slot. */
+    spdm_context->local_context.local_supported_slot_mask = 0x01;
     libspdm_set_mem (m_libspdm_local_certificate_chain, sizeof(m_libspdm_local_certificate_chain),
                      (uint8_t)(0xFF));
 
@@ -1422,6 +1434,8 @@ static void rsp_respond_if_ready_case15(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(m_libspdm_local_certificate_chain);
+    /* SupportedSlotMask shall cover the populated slot. */
+    spdm_context->local_context.local_supported_slot_mask = 0x01;
     libspdm_set_mem (m_libspdm_local_certificate_chain, sizeof(m_libspdm_local_certificate_chain),
                      (uint8_t)(0xFF));
 

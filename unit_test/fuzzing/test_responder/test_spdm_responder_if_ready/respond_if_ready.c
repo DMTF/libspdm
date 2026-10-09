@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -53,6 +53,8 @@ void libspdm_test_responder_respond_if_ready(void **State)
         local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(local_certificate_chain);
+    /* SupportedSlotMask shall cover the populated slot. */
+    spdm_context->local_context.local_supported_slot_mask = 0x01;
     libspdm_set_mem(local_certificate_chain, sizeof(local_certificate_chain),
                     (uint8_t)(0xFF));
 
@@ -110,6 +112,8 @@ void libspdm_test_responder_respond_if_ready_case2(void **State)
         local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(local_certificate_chain);
+    /* SupportedSlotMask shall cover the populated slot. */
+    spdm_context->local_context.local_supported_slot_mask = 0x01;
     libspdm_set_mem(local_certificate_chain, sizeof(local_certificate_chain),
                     (uint8_t)(0xFF));
 
@@ -167,6 +171,8 @@ void libspdm_test_responder_respond_if_ready_case3(void **State)
         local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         sizeof(local_certificate_chain);
+    /* SupportedSlotMask shall cover the populated slot. */
+    spdm_context->local_context.local_supported_slot_mask = 0x01;
     libspdm_set_mem(local_certificate_chain, sizeof(local_certificate_chain),
                     (uint8_t)(0xFF));
 
