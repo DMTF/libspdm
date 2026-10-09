@@ -781,11 +781,17 @@ jobs:
               else
                 echo "cmake -B build -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ${{ matrix.cmake_extra }}$binary"
               fi
-              echo "cmake --build build --target copy_sample_key"
+              # build/bin exists only when unit tests are built; see the Build
+              # step.
+              if [ "${{ matrix.expect_tests }}" != "false" ]; then
+                echo "cmake --build build --target copy_sample_key"
+              fi
               echo "cmake --build build --parallel \"\$(getconf _NPROCESSORS_ONLN)\""
-              echo
-              echo "cd build/bin"
-              for t in $UNIT_TESTS ${{ matrix.extra_tests }}; do echo "if [ -x ./$t ]; then ./$t; fi"; done
+              if [ "${{ matrix.expect_tests }}" != "false" ]; then
+                echo
+                echo "cd build/bin"
+                for t in $UNIT_TESTS ${{ matrix.extra_tests }}; do echo "if [ -x ./$t ]; then ./$t; fi"; done
+              fi
             } > "$f"
             chmod +x "$f"
           fi
