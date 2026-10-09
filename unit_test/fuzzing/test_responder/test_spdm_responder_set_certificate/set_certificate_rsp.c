@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -35,6 +35,8 @@ void libspdm_test_responder_set_certificate_case1(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
 
     response_size = sizeof(response);
     libspdm_get_response_set_certificate(spdm_context,
