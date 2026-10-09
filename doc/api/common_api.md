@@ -275,7 +275,8 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
 - `LIBSPDM_DATA_HEARTBEAT_PERIOD`
     - Specifies the Responder's `HeartbeatPeriod` in units of seconds. This value is communicated to
       the Requester in the `KEY_EXCHANGE_RSP` and `PSK_EXCHANGE_RSP` messages. The actual timeout
-      limit is twice the `HeartbeatPeriod`.
+      limit is twice the `HeartbeatPeriod`. If `LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP` is disabled
+      then the Responder sends a `HeartbeatPeriod` of 0 instead.
 - `LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER`
     - Specifies the number of messages that can encrypted or decrypted before an error is returned
       to the Integrator. The sequence number used to track these messages is 64 bits and the

@@ -581,23 +581,29 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_KEY_EXCHANGE_RSP;
 
+    #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
         spdm_response->header.param1 = spdm_context->local_context.heartbeat_period;
-    } else {
+    } else
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
+    {
         spdm_response->header.param1 = 0x00;
     }
 
     session_info->local_used_cert_chain_slot_id = slot_id;
 
+    #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
         session_info->heartbeat_period = spdm_context->local_context.heartbeat_period;
-    } else {
+    } else
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
+    {
         session_info->heartbeat_period = 0x00;
     }
 

@@ -49,7 +49,9 @@ int libspdm_req_psk_finish_test(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
+#if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
 int libspdm_req_heartbeat_test(void);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
 int libspdm_req_key_update_test(void);
 int libspdm_req_end_session_test(void);
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
@@ -217,9 +219,11 @@ int main(void)
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 
     #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
+    #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
     if (libspdm_req_heartbeat_test() != 0) {
         return_value = 1;
     }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
     if (libspdm_req_key_update_test() != 0) {
         return_value = 1;
     }
