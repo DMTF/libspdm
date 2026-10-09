@@ -146,26 +146,26 @@ int main(int argc, char **argv)
     bool res;
     void *test_buffer;
     size_t test_buffer_size;
-    char *file_name;
+    int index;
 
     if (argc <= 1) {
         printf("error - missing input file\n");
         exit(1);
     }
 
-    file_name = argv[1];
-
-    /* 1. Initialize test_buffer*/
-    res = libspdm_init_test_buffer(file_name, libspdm_get_max_buffer_size(), &test_buffer,
-                                   &test_buffer_size);
-    if (!res) {
-        printf("error - fail to init test buffer\n");
-        return 0;
+    for (index = 1; index < argc; index++) {
+        /* 1. Initialize test_buffer*/
+        res = libspdm_init_test_buffer(argv[index], libspdm_get_max_buffer_size(), &test_buffer,
+                                       &test_buffer_size);
+        if (!res) {
+            printf("error - fail to init test buffer\n");
+            return 1;
+        }
+        /* 2. Run test*/
+        libspdm_run_test_harness(test_buffer, test_buffer_size);
+        /* 3. Clean up*/
+        free(test_buffer);
     }
-    /* 2. Run test*/
-    libspdm_run_test_harness(test_buffer, test_buffer_size);
-    /* 3. Clean up*/
-    free(test_buffer);
     return 0;
 }
 #endif
