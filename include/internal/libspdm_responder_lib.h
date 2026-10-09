@@ -342,6 +342,7 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t*spdm_context,
                                                  size_t *response_size,
                                                  void *response);
 
+#if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
 /**
  * Process the SPDM HEARTBEAT request and return the response.
  *
@@ -360,6 +361,7 @@ libspdm_return_t libspdm_get_response_heartbeat(libspdm_context_t *spdm_context,
                                                 const void *request,
                                                 size_t *response_size,
                                                 void *response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP

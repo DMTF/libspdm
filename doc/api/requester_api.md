@@ -342,7 +342,7 @@ The SPDM context.
 The session to be kept alive.
 
 ### Details
-TBD
+Only available when `LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP` is enabled.
 
 
 ---
