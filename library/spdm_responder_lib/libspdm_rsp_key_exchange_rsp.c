@@ -670,7 +670,8 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             /* If Integrator requires mutual authentication but Requester does not support mutual
              * authentication, or Integrator requires the encapsulated mutual authentication flow
              * and Requester does not support encapsulated messages, then return an error to
-             * Requester. */
+             * Requester. If it is not required then the session is established without mutual
+             * authentication. */
             if (mandatory_mut_auth && (!req_mut_auth_cap || (need_encap && !req_encap_cap))) {
                 if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
                     libspdm_free_session_id(spdm_context, session_id);
@@ -685,7 +686,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                 }
             }
 
-            if (!need_encap) {
+            if (req_mut_auth_cap && !need_encap) {
                 spdm_response->mut_auth_requested = mut_auth_requested;
                 spdm_response->req_slot_id_param = req_slot_id;
                 /* There is no encapsulated flow to retrieve the Requester's certificate chain,
@@ -697,7 +698,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                     req_pub_key_id_cap ? 0xFF : req_slot_id;
             }
             #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
-            else if (need_encap && req_encap_cap) {
+            else if (req_mut_auth_cap && need_encap && req_encap_cap) {
                 spdm_response->mut_auth_requested = mut_auth_requested;
                 session_info->peer_used_cert_chain_slot_id = req_slot_id;
                 init_encap_state(spdm_context, session_info, mut_auth_requested, req_slot_id);

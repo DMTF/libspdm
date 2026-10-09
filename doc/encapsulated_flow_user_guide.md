@@ -183,9 +183,11 @@ If `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS` is returned 
 then the encapsulated flow is initiated with an implicit `GET_DIGESTS` request sent to the
 Requester.
 
-These two encapsulated flows require the Requester to have set `ENCAP_CAP`. If it has not, libspdm
-returns an error to the Requester when the Integrator has set `*mandatory_mut_auth` to `true`, and
-otherwise does not request mutual authentication, so the session is established without it.
+Mutual authentication requires the Requester to have set `MUT_AUTH_CAP`, and these two encapsulated
+flows also require `ENCAP_CAP`. If the Requester has not set what the returned value requires,
+libspdm returns an error to the Requester when the Integrator has set `*mandatory_mut_auth` to
+`true`, and otherwise does not request mutual authentication, so the session is established
+without it.
 
 ```C
 libspdm_return_t encap_flow_handler(
