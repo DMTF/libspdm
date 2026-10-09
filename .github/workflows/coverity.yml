@@ -20,36 +20,70 @@ on:
             - '0'
             - '1'
 
+permissions:
+  contents: read
+
 jobs:
   coverity:
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        cc: [gcc]
-    runs-on: ${{ matrix.os }}
+    # Pinned so that the compiler stays one that the Coverity release supports.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
     - name: Checkout
       uses: actions/checkout@v7
+      with:
+        # Nothing after this step needs to talk to the repository.
+        persist-credentials: false
 
     - name: Fetch submodules
-      run: git submodule update --init --depth 1 --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls
+      run: |
+        # Retry rather than fail the run on a transient fetch error.
+        fetch() {
+          local path=$1
+          shift
+          for attempt in 1 2 3; do
+            if git submodule update --init "$@" "$path"; then
+              return 0
+            fi
+            echo "fetch of $path failed, attempt $attempt"
+            sleep $((attempt * 15))
+          done
+          return 1
+        }
+
+        fetch unit_test/cmockalib/cmocka --depth 1 --recursive
+        fetch os_stub/mbedtlslib/mbedtls --depth 1 --recursive
 
     - name: Download, Build, and Submit
+      shell: bash
+      env:
+        COVERITY_SCAN_TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
       run: |
-        curl https://scan.coverity.com/download/cxx/linux64/ \
-             --data "token=${{ secrets.COVERITY_SCAN_TOKEN }}&project=libspdm" \
-             --output cov-analysis.tar.gz
+        # The token goes to curl on stdin so that it is on no command line.
+        # --fail-with-body makes an HTTP error from Coverity fail the step.
+        printf '%s' "$COVERITY_SCAN_TOKEN" |
+          curl --fail-with-body https://scan.coverity.com/download/cxx/linux64/ \
+               --data-urlencode "token@-" --data "project=libspdm" \
+               --output cov-analysis.tar.gz
         mkdir cov-analysis
         tar -C ./cov-analysis -xzf cov-analysis.tar.gz --strip-components=1
         PATH=$PATH:$(pwd)/cov-analysis/bin
         mkdir build
         cd build
-        cmake -E env CFLAGS="-DLIBSPDM_FIPS_MODE=1 -DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=${{ inputs.transcript }}" cmake -DTOOLCHAIN=GCC -DTARGET=${{ inputs.build }} -DCRYPTO=mbedtls ..
-        cov-build --dir cov-int make -j`nproc`
+        # CHECK_MACRO rejects an illegal configuration at compile time.
+        cmake -E env CFLAGS="-DLIBSPDM_CHECK_MACRO=1 -DLIBSPDM_FIPS_MODE=1 -DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=${{ inputs.transcript }}" cmake -DTOOLCHAIN=GCC -DTARGET=${{ inputs.build }} -DCRYPTO=mbedtls ..
+        cov-build --dir cov-int make -j`nproc` 2>&1 | tee cov-build.log
+        # A compiler that this Coverity release cannot capture still builds, so
+        # check that every compilation unit is ready for analysis.
+        if ! grep -q 'C/C++ compilation units (100%) are ready for analysis' cov-build.log; then
+          echo "::error::cov-build did not capture every compilation unit"
+          exit 1
+        fi
         tar czf libspdm.tgz cov-int
-        curl --form token=${{ secrets.COVERITY_SCAN_TOKEN }} \
-             --form email=sbellock@nvidia.com \
-             --form file=@libspdm.tgz \
-             --form version="" \
-             --form description="${{ inputs.build }} build" \
-             https://scan.coverity.com/builds?project=libspdm
+        printf '%s' "$COVERITY_SCAN_TOKEN" |
+          curl --fail-with-body --form "token=<-" \
+               --form email=sbellock@nvidia.com \
+               --form file=@libspdm.tgz \
+               --form version="$GITHUB_SHA" \
+               --form description="${{ inputs.build }} build" \
+               https://scan.coverity.com/builds?project=libspdm
