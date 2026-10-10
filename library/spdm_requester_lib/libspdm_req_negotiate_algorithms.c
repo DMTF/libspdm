@@ -88,12 +88,19 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     size_t transport_header_size;
     uint8_t alg_type_pre;
     uint8_t req_param1 = 0;
+    libspdm_device_algorithm_t algorithm_before;
 
     /* -=[Verify State Phase]=- */
     if (spdm_context->connection_info.connection_state !=
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
+
+    /* The selected algorithms are written into connection_info.algorithm before
+    * they are validated. Keep a copy to restore if the response is rejected. */
+    libspdm_copy_mem(&algorithm_before, sizeof(algorithm_before),
+                     &spdm_context->connection_info.algorithm,
+                     sizeof(spdm_context->connection_info.algorithm));
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_NEGOTIATE_ALGORITHMS);
 
@@ -766,6 +773,11 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
 
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        libspdm_copy_mem(&spdm_context->connection_info.algorithm,
+                         sizeof(spdm_context->connection_info.algorithm),
+                         &algorithm_before, sizeof(algorithm_before));
+    }
     return status;
 }
 
