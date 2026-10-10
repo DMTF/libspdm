@@ -3162,6 +3162,50 @@ static void req_negotiate_algorithms_case39(void **state)
                      m_libspdm_use_hash_algo);
 }
 
+/**
+ * Test 40: the response passes the first checks, so its selections are written
+ * into connection_info.algorithm, and then fails validation (as in test 10, the
+ * Responder selects no measurement hash algorithm).
+ * Expected behavior: libspdm_negotiate_algorithms() returns
+ * LIBSPDM_STATUS_NEGOTIATION_FAIL and connection_info.algorithm is exactly as
+ * it was before the call.
+ **/
+static void req_negotiate_algorithms_case40(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_device_algorithm_t algorithm_before;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xA;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
+    spdm_context->local_context.algorithm.measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+    libspdm_reset_message_a(spdm_context);
+
+    libspdm_zero_mem(&spdm_context->connection_info.algorithm,
+                     sizeof(spdm_context->connection_info.algorithm));
+    libspdm_copy_mem(&algorithm_before, sizeof(algorithm_before),
+                     &spdm_context->connection_info.algorithm,
+                     sizeof(spdm_context->connection_info.algorithm));
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
+
+    assert_int_equal(spdm_context->connection_info.connection_state,
+                     LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES);
+    assert_memory_equal(&spdm_context->connection_info.algorithm, &algorithm_before,
+                        sizeof(algorithm_before));
+}
+
 int libspdm_req_negotiate_algorithms_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -3204,6 +3248,8 @@ int libspdm_req_negotiate_algorithms_test(void)
         cmocka_unit_test(req_negotiate_algorithms_case37),
         cmocka_unit_test(req_negotiate_algorithms_case38),
         cmocka_unit_test(req_negotiate_algorithms_case39),
+        /* A rejected response must not leave any algorithm selected */
+        cmocka_unit_test(req_negotiate_algorithms_case40),
     };
 
     libspdm_test_context_t test_context = {
