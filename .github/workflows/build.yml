@@ -138,7 +138,7 @@ jobs:
         if: matrix.toolchain == 'GCC' && matrix.arch == 'x64' && matrix.os == 'windows-latest'
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: UCRT64
           update: true
           install: >-
             git

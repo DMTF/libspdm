@@ -787,7 +787,7 @@ jobs:
             { echo "#!/usr/bin/env bash"
               echo "$header" | sed 's/^/# /'
               if [ -n "${{ matrix.shell }}" ]; then
-                echo "# Run inside an MSYS2 MINGW64 shell."
+                echo "# Run inside an MSYS2 UCRT64 shell."
               fi
               echo "set -euo pipefail"
               echo
@@ -1304,7 +1304,7 @@ jobs:
             { echo "#!/usr/bin/env bash"
               echo "$header" | sed 's/^/# /'
               if [ -n "${{ matrix.shell }}" ]; then
-                echo "# Run inside an MSYS2 MINGW64 shell."
+                echo "# Run inside an MSYS2 UCRT64 shell."
               fi
               echo "set -euo pipefail"
               echo
@@ -1450,7 +1450,7 @@ jobs:
       - name: Set up MSYS2
         uses: msys2/setup-msys2@66cd2cce69caa17b53920067426061ca1de3a884 # v2.32.0
         with:
-          msystem: MINGW64
+          msystem: UCRT64
           update: true
           install: git make
           pacboy: toolchain:p cmake:p make:p
@@ -1468,18 +1468,19 @@ jobs:
           echo "sha=$(git -C os_stub/openssllib/openssl rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       # MSYS2 installs MinGW's GCC when the job runs, so the runner image says
-      # nothing about the compiler that builds OpenSSL. Record that compiler
-      # instead. GITHUB_OUTPUT is a Windows path, which cygpath converts.
+      # nothing about the compiler that builds OpenSSL. Record that compiler,
+      # and the MSYS2 environment that selects its C runtime, instead.
+      # GITHUB_OUTPUT is a Windows path, which cygpath converts.
       - name: MinGW compiler
         id: mingw_cc
         shell: 'msys2 {0}'
         run: |
-          echo "version=gcc-$(gcc -dumpfullversion)" >> "$(cygpath -u "$GITHUB_OUTPUT")"
+          echo "version=$MSYSTEM-gcc-$(gcc -dumpfullversion)" >> "$(cygpath -u "$GITHUB_OUTPUT")"
 
       # The key names the compiler that builds OpenSSL, so it changes only
-      # when the OpenSSL revision or MinGW's GCC does. Both need a rebuild,
-      # so there is no fallback to restore. The key omits TARGET and the
-      # macros because neither changes what OpenSSL builds.
+      # when the OpenSSL revision, MinGW's GCC or its environment does. Each
+      # needs a rebuild, so there is no fallback to restore. The key omits
+      # TARGET and the macros because neither changes what OpenSSL builds.
       - name: Cache OpenSSL build
         if: matrix.crypto == 'openssl'
         uses: actions/cache@v6
@@ -1512,7 +1513,7 @@ jobs:
           # The test step runs under Git Bash, which needs the MinGW runtime
           # DLLs on PATH to launch binaries this toolchain produced.
           # $GITHUB_PATH is a Windows path, so convert it for the MSYS2 shell.
-          cygpath -w /mingw64/bin >> "$(cygpath -u "$GITHUB_PATH")"
+          cygpath -w /ucrt64/bin >> "$(cygpath -u "$GITHUB_PATH")"
 
       # Implements "For any configuration, run all basic unit tests", plus any
       # extended unit test whose requirement this configuration satisfies.
@@ -1733,7 +1734,7 @@ jobs:
             { echo "#!/usr/bin/env bash"
               echo "$header" | sed 's/^/# /'
               if [ -n "${{ matrix.shell }}" ]; then
-                echo "# Run inside an MSYS2 MINGW64 shell."
+                echo "# Run inside an MSYS2 UCRT64 shell."
               fi
               echo "set -euo pipefail"
               echo

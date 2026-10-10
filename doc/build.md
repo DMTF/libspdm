@@ -9,8 +9,8 @@
 a) [ARM Development Studio 2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) for ARM/AARCH64.
   - Install [MSYS2](https://www.msys2.org/).
   - Install ARM DS2022. Change the default installation path C:\ArmStudio.
-  - Launch MSYS2 -> MSYS2 MINGW64.
-  - Install cmake and make, with `pacman -S mingw-w64-x86_64-cmake` and `pacman -S make`.
+  - Launch MSYS2 -> MSYS2 UCRT64.
+  - Install cmake and make, with `pacman -S mingw-w64-ucrt-x86_64-cmake` and `pacman -S make`.
   - Setup build environment
       ```bash
       export PATH=$PATH:/c/ArmStudio/sw/ARMCompiler6.18/bin
@@ -153,7 +153,7 @@ a) [LOONGARCH64_GNU](https://github.com/loongson/build-tools/)
 
 ### Windows Builds for ARM/AARCH64
 
-   For ARM DS2022 build (arm or aarch64) on Windows, Launch `MSYS2 -> MSYS2 MINGW64` command prompt.
+   For ARM DS2022 build (arm or aarch64) on Windows, Launch `MSYS2 -> MSYS2 UCRT64` command prompt.
    ```bash
    cd libspdm
    mkdir build
