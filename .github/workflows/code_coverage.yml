@@ -25,7 +25,12 @@ jobs:
     # Pinned so that the lcov version, which affects the report, changes only
     # when this file does.
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        # Mbed TLS provides neither EdDSA nor the PQC algorithms, so only the
+        # OpenSSL build compiles and tests them.
+        crypto: [mbedtls, openssl]
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -50,7 +55,13 @@ jobs:
           }
 
           fetch unit_test/cmockalib/cmocka --depth 1 --recursive
-          fetch os_stub/mbedtlslib/mbedtls --depth 1 --recursive
+          if [ "${{ matrix.crypto }}" = "mbedtls" ]; then
+            fetch os_stub/mbedtlslib/mbedtls --depth 1 --recursive
+          else
+            # libspdm builds OpenSSL from the pinned commit's source alone, so
+            # neither its history nor its own submodules are fetched.
+            fetch os_stub/openssllib/openssl --depth 1
+          fi
 
       - name: Build - Linux
         run: |
@@ -58,7 +69,7 @@ jobs:
           sudo apt-get install --no-install-recommends -y lcov
           mkdir build
           cd build
-          cmake -E env CFLAGS="${{ env.BASE_CFLAGS }} -DLIBSPDM_FIPS_MODE=1" cmake -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=mbedtls -DGCOV=ON ..
+          cmake -E env CFLAGS="${{ env.BASE_CFLAGS }} -DLIBSPDM_FIPS_MODE=1" cmake -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=${{ matrix.crypto }} -DGCOV=ON ..
           make -j`nproc`
           make copy_sample_key
           make copy_seed
@@ -77,9 +88,8 @@ jobs:
           # libraries are only executed by the fuzzing harnesses.
           ./run_initial_seed.sh
 
-      - name: Generate Coverage
+      - name: Capture Coverage
         run: |
-          mkdir /tmp/coverage_log
           # Leave out the branches of LIBSPDM_ASSERT lines, whose failure side a
           # passing run never takes. genhtml ignores lcov_excl_br_line, so both
           # captures set it.
@@ -95,6 +105,44 @@ jobs:
           lcov --rc branch_coverage=1 --extract coverage_all.info \
             "${GITHUB_WORKSPACE}/include/*" \
             "${GITHUB_WORKSPACE}/library/*" \
+            --output-file coverage-${{ matrix.crypto }}.info
+
+      - name: Upload tracefile
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-${{ matrix.crypto }}
+          path: coverage-${{ matrix.crypto }}.info
+          # The artifact only carries the tracefile to the report job.
+          retention-days: 7
+
+  report:
+    needs: build
+    # Pinned to the build job's image, so that genhtml matches the lcov that
+    # captured the tracefiles.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      # genhtml reads the sources at the path that the build jobs measured.
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Download tracefiles
+        uses: actions/download-artifact@v8
+        with:
+          pattern: coverage-*
+          merge-multiple: true
+          path: tracefiles
+
+      - name: Generate Coverage
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y lcov
+          mkdir /tmp/coverage_log
+          lcov --rc branch_coverage=1 \
+            --add-tracefile tracefiles/coverage-mbedtls.info \
+            --add-tracefile tracefiles/coverage-openssl.info \
             --output-file coverage.info
           # Without --prefix, genhtml drops library/ from the page paths and
           # shows include/ under the runner's absolute path. genhtml escapes
@@ -116,7 +164,7 @@ jobs:
 
   # A run on any other branch measures coverage but does not publish it.
   publish:
-    needs: build
+    needs: report
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
