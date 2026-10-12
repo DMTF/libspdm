@@ -164,6 +164,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     size_t test_end_cert_len;
     uint8_t *test_private_key;
     size_t test_private_key_len;
+    uint8_t *x509_stack;
     size_t subject_size;
     uint8_t *subject;
     size_t common_name_size;
@@ -252,6 +253,20 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     /* X509 Certificate Verification.*/
     libspdm_my_print("\n- X509 Certificate Verification with Trusted CA ...");
     status = libspdm_x509_verify_cert(test_cert, test_cert_len, test_ca_cert, test_ca_cert_len);
+    if (!status) {
+        libspdm_my_print("[Fail]\n");
+        goto cleanup;
+    } else {
+        libspdm_my_print("[Pass]\n");
+    }
+
+    /* X509 Certificate Stack Construction.*/
+    libspdm_my_print("- X509 Certificate Stack Construction ...");
+    x509_stack = NULL;
+    status = libspdm_x509_construct_certificate_stack(&x509_stack,
+                                                      test_ca_cert, test_ca_cert_len,
+                                                      test_cert, test_cert_len, NULL);
+    libspdm_x509_stack_free(x509_stack);
     if (!status) {
         libspdm_my_print("[Fail]\n");
         goto cleanup;
