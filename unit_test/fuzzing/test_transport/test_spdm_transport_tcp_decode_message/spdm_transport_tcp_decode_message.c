@@ -1,11 +1,12 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #include "internal/libspdm_responder_lib.h"
 #include "spdm_transport_tcp_lib.h"
+#include "industry_standard/spdm_tcp_binding.h"
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
@@ -20,6 +21,7 @@ void libspdm_test_transport_tcp_decode_message(void **State)
     libspdm_context_t *spdm_context;
     size_t transport_message_size;
     uint8_t *transport_message;
+    uint32_t *session_id;
     bool is_app_message;
     bool is_requester;
     spdm_test_context = *State;
@@ -27,11 +29,17 @@ void libspdm_test_transport_tcp_decode_message(void **State)
     is_requester = spdm_test_context->is_requester;
     is_app_message = false;
 
+    /* The caller must pass an SPDM message after the TCP binding header. A message of the header
+     * alone, such as a role inquiry, goes to libspdm_tcp_decode_discovery_message instead. */
+    if (spdm_test_context->test_buffer_size <= sizeof(spdm_tcp_binding_header_t)) {
+        return;
+    }
+
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     transport_message_size = spdm_test_context->test_buffer_size;
 
-    libspdm_transport_tcp_decode_message(spdm_context, NULL, &is_app_message, is_requester,
+    libspdm_transport_tcp_decode_message(spdm_context, &session_id, &is_app_message, is_requester,
                                          spdm_test_context->test_buffer_size,
                                          spdm_test_context->test_buffer, &transport_message_size,
                                          (void **)&transport_message);
@@ -41,6 +49,18 @@ libspdm_test_context_t m_libspdm_transport_tcp_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
+
+void libspdm_test_transport_tcp_decode_discovery(void **State)
+{
+    libspdm_test_context_t *spdm_test_context;
+    uint8_t message_type;
+
+    spdm_test_context = *State;
+
+    libspdm_tcp_decode_discovery_message(spdm_test_context->test_buffer_size,
+                                         spdm_test_context->test_buffer,
+                                         &message_type);
+}
 
 void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
@@ -54,6 +74,8 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_unit_test_group_setup(&State);
 
     libspdm_test_transport_tcp_decode_message(&State);
+
+    libspdm_test_transport_tcp_decode_discovery(&State);
 
     libspdm_unit_test_group_teardown(&State);
 }

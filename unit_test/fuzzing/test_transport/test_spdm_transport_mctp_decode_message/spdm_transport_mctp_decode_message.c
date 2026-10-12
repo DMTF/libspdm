@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -20,6 +20,7 @@ void libspdm_test_transport_mctp_decode_message(void **State)
     libspdm_context_t *spdm_context;
     size_t transport_message_size;
     uint8_t *transport_message;
+    uint32_t *session_id;
     bool is_app_message;
     bool is_requester;
     spdm_test_context = *State;
@@ -27,11 +28,16 @@ void libspdm_test_transport_mctp_decode_message(void **State)
     is_requester = spdm_test_context->is_requester;
     is_app_message = false;
 
+    /* The caller must pass a message larger than the MCTP message header. */
+    if (spdm_test_context->test_buffer_size <= sizeof(mctp_message_header_t)) {
+        return;
+    }
+
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     transport_message_size = spdm_test_context->test_buffer_size;
 
-    libspdm_transport_mctp_decode_message(spdm_context, NULL, &is_app_message, is_requester,
+    libspdm_transport_mctp_decode_message(spdm_context, &session_id, &is_app_message, is_requester,
                                           spdm_test_context->test_buffer_size,
                                           spdm_test_context->test_buffer, &transport_message_size,
                                           (void **)&transport_message);
