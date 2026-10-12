@@ -111,6 +111,7 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
                                    size_t *csr_len, uint8_t *csr_pointer,
                                    bool is_device_cert_model)
 {
+#if LIBSPDM_CERT_PARSE_SUPPORT
     bool result;
     size_t hash_nid;
     size_t asym_nid;
@@ -259,6 +260,10 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
         result = false;
     }
     return result;
+#else
+    /* The sample cryptography libraries generate CSRs only with certificate parsing. */
+    return false;
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 }
 
 bool libspdm_gen_csr(

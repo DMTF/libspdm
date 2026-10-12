@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024-2025 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -108,6 +108,7 @@ bool libspdm_read_responder_public_certificate_chain_by_size(
     const uint8_t *root_cert;
     size_t root_cert_len;
     size_t digest_size;
+#if LIBSPDM_CERT_PARSE_SUPPORT
     bool is_requester_cert;
     uint8_t cert_model;
 
@@ -115,6 +116,7 @@ bool libspdm_read_responder_public_certificate_chain_by_size(
 
     /*default is device cert*/
     cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
     *data = NULL;
     *size = 0;
@@ -157,6 +159,7 @@ bool libspdm_read_responder_public_certificate_chain_by_size(
     }
     cert_chain->length = (uint32_t)cert_chain_size;
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
     res = libspdm_verify_cert_chain_data(
         SPDM_MESSAGE_VERSION_12,
         file_data, file_size,
@@ -167,11 +170,12 @@ bool libspdm_read_responder_public_certificate_chain_by_size(
         free(cert_chain);
         return res;
     }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 
     /* Get Root Certificate and calculate hash value*/
 
-    res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
+    res = libspdm_get_root_cert_from_cert_chain(file_data, file_size, &root_cert,
                                                 &root_cert_len);
     if (!res) {
         free(file_data);

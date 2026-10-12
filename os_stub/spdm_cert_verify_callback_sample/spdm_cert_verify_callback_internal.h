@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -9,6 +9,7 @@
 
 #include "internal/libspdm_common_lib.h"
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
 /**
  * The callback function for verifying cert_chain DiceTcbInfo extension.
  *
@@ -44,5 +45,6 @@ bool libspdm_verify_spdm_cert_chain_with_dice(void *spdm_context, uint8_t slot_i
  **/
 bool libspdm_verify_cert_dicetcbinfo(const void *cert, size_t cert_size,
                                      size_t *spdm_get_dice_tcb_info_size);
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 #endif

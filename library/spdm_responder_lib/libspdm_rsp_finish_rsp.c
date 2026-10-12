@@ -121,10 +121,12 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
     uint8_t *th_curr_data;
     size_t th_curr_data_size;
     libspdm_th_managed_buffer_t th_curr;
+#if LIBSPDM_CERT_PARSE_SUPPORT
     const uint8_t *mut_cert_chain_data;
     size_t mut_cert_chain_data_size;
     const uint8_t *mut_cert_buffer;
     size_t mut_cert_buffer_size;
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 #endif
 #if ((LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && (LIBSPDM_DEBUG_BLOCK_ENABLE)) || \
     !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
@@ -218,7 +220,7 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
             return false;
         }
     } else {
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#if (LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && (LIBSPDM_CERT_PARSE_SUPPORT)
         /* Get leaf cert from cert chain*/
         libspdm_get_peer_cert_chain_data(spdm_context,
                                          slot_id,
@@ -245,6 +247,8 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
         if (!result) {
             return false;
         }
+#elif LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        return false;
 #else
         context = spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key;
         LIBSPDM_ASSERT(context != NULL);

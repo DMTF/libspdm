@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -432,6 +432,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain(
     const uint8_t *root_cert;
     size_t root_cert_len;
     size_t digest_size;
+#if LIBSPDM_CERT_PARSE_SUPPORT
     bool is_requester_cert;
     uint8_t cert_model;
 
@@ -439,6 +440,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain(
 
     /*default is device cert*/
     cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
     *data = NULL;
     *size = 0;
@@ -518,6 +520,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain(
     }
     cert_chain->length = (uint32_t)cert_chain_size;
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
     res = libspdm_verify_cert_chain_data(
         SPDM_MESSAGE_VERSION_14,
         file_data, file_size,
@@ -528,11 +531,12 @@ bool libspdm_read_pqc_responder_public_certificate_chain(
         free(cert_chain);
         return res;
     }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 
     /* Get Root Certificate and calculate hash value*/
 
-    res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
+    res = libspdm_get_root_cert_from_cert_chain(file_data, file_size, &root_cert,
                                                 &root_cert_len);
     if (!res) {
         free(file_data);
@@ -577,9 +581,10 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert_till_dev_cer
     char *file;
     const uint8_t *root_cert;
     size_t root_cert_len;
+    size_t digest_size;
+#if LIBSPDM_CERT_PARSE_SUPPORT
     const uint8_t *leaf_cert;
     size_t leaf_cert_len;
-    size_t digest_size;
     bool is_requester_cert;
     uint8_t cert_model;
 
@@ -587,6 +592,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert_till_dev_cer
 
     /*default is alias cert*/
     cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
     *data = NULL;
     *size = 0;
@@ -666,6 +672,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert_till_dev_cer
     }
     cert_chain->length = (uint32_t)cert_chain_size;
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
     /* Get leaf Certificate*/
     res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, -1, &leaf_cert,
                                                 &leaf_cert_len);
@@ -685,9 +692,10 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert_till_dev_cer
         free(cert_chain);
         return res;
     }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
     /* Get Root Certificate*/
-    res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
+    res = libspdm_get_root_cert_from_cert_chain(file_data, file_size, &root_cert,
                                                 &root_cert_len);
     if (!res) {
         free(file_data);
@@ -695,6 +703,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert_till_dev_cer
         return res;
     }
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
     /*verify cert_chain*/
     res = libspdm_x509_verify_cert_chain(root_cert, root_cert_len, file_data, file_size);
     if (!res) {
@@ -702,6 +711,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert_till_dev_cer
         free(cert_chain);
         return res;
     }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
     /*calculate hash value*/
     res = libspdm_hash_all(base_hash_algo, root_cert, root_cert_len,
@@ -741,9 +751,10 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert(
     char *file;
     const uint8_t *root_cert;
     size_t root_cert_len;
+    size_t digest_size;
+#if LIBSPDM_CERT_PARSE_SUPPORT
     const uint8_t *leaf_cert;
     size_t leaf_cert_len;
-    size_t digest_size;
     bool is_requester_cert;
     uint8_t cert_model;
 
@@ -751,6 +762,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert(
 
     /*default is alias cert*/
     cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
     *data = NULL;
     *size = 0;
@@ -830,6 +842,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert(
     }
     cert_chain->length = (uint32_t)cert_chain_size;
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
     /* Get leaf Certificate*/
     res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, -1, &leaf_cert,
                                                 &leaf_cert_len);
@@ -849,9 +862,10 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert(
         free(cert_chain);
         return res;
     }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
     /* Get Root Certificate*/
-    res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
+    res = libspdm_get_root_cert_from_cert_chain(file_data, file_size, &root_cert,
                                                 &root_cert_len);
     if (!res) {
         free(file_data);
@@ -859,6 +873,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert(
         return res;
     }
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
     /*verify cert_chain*/
     res = libspdm_x509_verify_cert_chain(root_cert, root_cert_len, file_data, file_size);
     if (!res) {
@@ -866,6 +881,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert(
         free(cert_chain);
         return res;
     }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
     /*calculate hash value*/
     res = libspdm_hash_all(base_hash_algo, root_cert, root_cert_len,
@@ -905,6 +921,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_per_slot(
     const uint8_t *root_cert;
     size_t root_cert_len;
     size_t digest_size;
+#if LIBSPDM_CERT_PARSE_SUPPORT
     bool is_requester_cert;
     uint8_t cert_model;
 
@@ -912,6 +929,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_per_slot(
 
     /*default is device cert*/
     cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
     *data = NULL;
     *size = 0;
@@ -1096,6 +1114,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_per_slot(
     }
     cert_chain->length = (uint32_t)cert_chain_size;
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
     res = libspdm_verify_cert_chain_data(
         SPDM_MESSAGE_VERSION_14,
         file_data, file_size,
@@ -1106,11 +1125,12 @@ bool libspdm_read_pqc_responder_public_certificate_chain_per_slot(
         free(cert_chain);
         return res;
     }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 
     /* Get Root Certificate and calculate hash value*/
 
-    res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
+    res = libspdm_get_root_cert_from_cert_chain(file_data, file_size, &root_cert,
                                                 &root_cert_len);
     if (!res) {
         free(file_data);
@@ -1156,6 +1176,7 @@ bool libspdm_read_pqc_requester_public_certificate_chain(
     const uint8_t *root_cert;
     size_t root_cert_len;
     size_t digest_size;
+#if LIBSPDM_CERT_PARSE_SUPPORT
     bool is_requester_cert;
     uint8_t cert_model;
 
@@ -1163,6 +1184,7 @@ bool libspdm_read_pqc_requester_public_certificate_chain(
 
     /*default is device cert*/
     cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
     *data = NULL;
     *size = 0;
@@ -1242,6 +1264,7 @@ bool libspdm_read_pqc_requester_public_certificate_chain(
     }
     cert_chain->length = (uint32_t)cert_chain_size;
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
     res = libspdm_verify_cert_chain_data(
         SPDM_MESSAGE_VERSION_14,
         file_data, file_size,
@@ -1252,11 +1275,12 @@ bool libspdm_read_pqc_requester_public_certificate_chain(
         free(cert_chain);
         return res;
     }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 
     /* Get Root Certificate and calculate hash value*/
 
-    res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, 0, &root_cert,
+    res = libspdm_get_root_cert_from_cert_chain(file_data, file_size, &root_cert,
                                                 &root_cert_len);
     if (!res) {
         free(file_data);

@@ -68,6 +68,10 @@ extern bool g_private_key_mode;
 
 /* read pub cert */
 
+/* Get the root certificate, which is the first one in a DER-encoded certificate chain. */
+bool libspdm_get_root_cert_from_cert_chain(const uint8_t *cert_chain, size_t cert_chain_size,
+                                           const uint8_t **root_cert, size_t *root_cert_size);
+
 bool libspdm_read_responder_public_certificate_chain(
     uint32_t base_hash_algo, uint32_t base_asym_algo, void **data,
     size_t *size, void **hash, size_t *hash_size);

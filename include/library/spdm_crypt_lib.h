@@ -1141,8 +1141,6 @@ bool libspdm_get_pqc_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_alg
                                                           size_t cert_chain_data_size,
                                                           void **public_key);
 
-#endif
-
 /**
  * Verify req info format refer to PKCS#10.
  *
@@ -1157,6 +1155,7 @@ bool libspdm_get_pqc_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_alg
  **/
 bool libspdm_verify_req_info(uint8_t *req_info, uint16_t req_info_len);
 
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 /**
  * This function returns the SPDM asymmetric algorithm size.

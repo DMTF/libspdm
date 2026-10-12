@@ -1,11 +1,13 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #include <base.h>
 #include "spdm_cert_verify_callback_internal.h"
+
+#if LIBSPDM_CERT_PARSE_SUPPORT
 
 /**
  * tcg-dice-TcbInfo OID: 2.23.133.5.4.1
@@ -287,3 +289,5 @@ bool libspdm_verify_spdm_cert_chain_with_dice(void *spdm_context, uint8_t slot_i
         return false;
     }
 }
+
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */

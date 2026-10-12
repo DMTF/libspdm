@@ -147,6 +147,7 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
         }
     }
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
     result = libspdm_verify_req_info(requester_info, requester_info_length);
     if (!result) {
         return libspdm_generate_error_response(
@@ -154,6 +155,7 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
             SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);
     }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_csr_response_t));
 
