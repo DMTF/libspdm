@@ -525,6 +525,19 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("- [Pass]");
     }
 
+    /* A prefix of an extension's OID does not match that extension. */
+    asn1_buffer_len = 1024;
+    status = libspdm_x509_get_extension_data(test_end_cert, test_end_cert_len,
+                                             m_libspdm_oid_subject_alt_name,
+                                             sizeof(m_libspdm_oid_subject_alt_name) - 1,
+                                             asn1_buffer, &asn1_buffer_len);
+    if (!status || (asn1_buffer_len != 0)) {
+        libspdm_my_print("\n  - Retrieving extension by OID prefix - [Fail]");
+        goto cleanup;
+    } else {
+        libspdm_my_print("\n  - Retrieving extension by OID prefix - [Pass]");
+    }
+
     /* Get X509 Validity*/
     end_cert_from_len = 64;
     end_cert_to_len = 64;
