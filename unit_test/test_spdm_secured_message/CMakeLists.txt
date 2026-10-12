@@ -17,6 +17,7 @@ target_sources(test_spdm_secured_message
         test_spdm_secured_message.c
         encode_decode.c
         key_update.c
+        context_data.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c

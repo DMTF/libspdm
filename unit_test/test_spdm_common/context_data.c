@@ -4802,6 +4802,76 @@ static void libspdm_test_get_scratch_buffer_oversized_case77(void **state)
     free(buffer);
 }
 
+/**
+ * Test 78: Get the secured message context of a session through its session info.
+ * Expected Behavior: libspdm_get_secured_message_context_via_session_info returns the secured
+ * message context of the session.
+ **/
+static void libspdm_test_get_secured_message_context_via_session_info_case78(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x4E;
+
+    session_info = &spdm_context->session_info[0];
+
+    assert_non_null(session_info->secured_message_context);
+    assert_ptr_equal(libspdm_get_secured_message_context_via_session_info(session_info),
+                     session_info->secured_message_context);
+}
+
+/**
+ * Test 79: Get the secured message context through a NULL session info.
+ * Expected Behavior: libspdm_get_secured_message_context_via_session_info returns NULL.
+ **/
+static void libspdm_test_get_secured_message_context_via_null_session_info_case79(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+
+    spdm_test_context = *state;
+    spdm_test_context->case_id = 0x4F;
+
+    assert_null(libspdm_get_secured_message_context_via_session_info(NULL));
+}
+
+/**
+ * Test 80: Get the certificate chain data of a provisioned local slot.
+ * Expected Behavior: libspdm_get_local_cert_chain_data returns the certificate chain that follows
+ * the spdm_cert_chain_t header and the root hash.
+ **/
+static void libspdm_test_get_local_cert_chain_data_case80(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t cert_chain[0x100];
+    const void *cert_chain_data;
+    size_t cert_chain_data_size;
+    size_t hash_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x50;
+
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    spdm_context->local_context.local_cert_chain_provision[0] = cert_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = sizeof(cert_chain);
+
+    assert_true(libspdm_get_local_cert_chain_data(spdm_context, 0, &cert_chain_data,
+                                                  &cert_chain_data_size));
+    assert_ptr_equal(cert_chain_data, cert_chain + sizeof(spdm_cert_chain_t) + hash_size);
+    assert_int_equal(cert_chain_data_size,
+                     sizeof(cert_chain) - sizeof(spdm_cert_chain_t) - hash_size);
+
+    /* The SPDM context must not keep a pointer to the stack. */
+    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+}
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -5016,6 +5086,13 @@ int libspdm_common_context_data_test_main(void)
 #endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
         /* an oversized scratch buffer does not overlap the copy of the last request */
         cmocka_unit_test_setup(libspdm_test_get_scratch_buffer_oversized_case77,
+                               libspdm_unit_test_reset_context),
+        cmocka_unit_test_setup(libspdm_test_get_secured_message_context_via_session_info_case78,
+                               libspdm_unit_test_reset_context),
+        cmocka_unit_test_setup(
+            libspdm_test_get_secured_message_context_via_null_session_info_case79,
+            libspdm_unit_test_reset_context),
+        cmocka_unit_test_setup(libspdm_test_get_local_cert_chain_data_case80,
                                libspdm_unit_test_reset_context),
     };
 

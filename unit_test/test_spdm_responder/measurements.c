@@ -2608,6 +2608,66 @@ static void rsp_measurements_case36(void **state)
     free(data);
 }
 
+static size_t m_meas_log_reset_count;
+static bool m_meas_log_reset_in_session;
+
+static void meas_log_reset_callback(void *spdm_context, const uint32_t *session_id)
+{
+    m_meas_log_reset_count++;
+    m_meas_log_reset_in_session = (session_id != NULL);
+}
+
+/**
+ * Test 37: A GET_MEASUREMENTS request outside a session, whose SPDM version differs from the
+ * connection's, with a measurement log reset callback registered.
+ * Expected Behavior: the Responder returns ERROR(VersionMismatch) and resets L1/L2, which calls
+ * the callback once, without a session ID.
+ **/
+static void rsp_measurements_case37(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_get_measurements_request_t spdm_request;
+    spdm_error_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 37;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->last_spdm_request_session_id_valid = false;
+
+    m_meas_log_reset_count = 0;
+    m_meas_log_reset_in_session = true;
+    status = libspdm_register_meas_log_reset_callback(spdm_context, meas_log_reset_callback);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    /* {ERROR} The request's SPDM version is not the connection's. */
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_request.header.request_response_code = SPDM_GET_MEASUREMENTS;
+    spdm_request.header.param1 = 0;
+    spdm_request.header.param2 =
+        SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_measurements(spdm_context, sizeof(spdm_message_header_t),
+                                               &spdm_request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_VERSION_MISMATCH);
+    assert_int_equal(m_meas_log_reset_count, 1);
+    assert_false(m_meas_log_reset_in_session);
+
+    libspdm_register_meas_log_reset_callback(spdm_context, NULL);
+}
+
 int libspdm_rsp_measurements_test(void)
 {
     m_libspdm_get_measurements_request11.slot_id_param = SPDM_MAX_SLOT_COUNT - 1;
@@ -2686,6 +2746,8 @@ int libspdm_rsp_measurements_test(void)
         cmocka_unit_test(rsp_measurements_case35),
         /* The key usage bit mask is not set, failed Case*/
         cmocka_unit_test(rsp_measurements_case36),
+        /* A registered measurement log reset callback is called when L1/L2 is reset. */
+        cmocka_unit_test(rsp_measurements_case37),
     };
 
     libspdm_test_context_t test_context = {
