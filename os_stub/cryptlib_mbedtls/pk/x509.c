@@ -255,6 +255,7 @@ void libspdm_x509_stack_free(void *x509_stack)
     }
 
     mbedtls_x509_crt_free(x509_stack);
+    free_pool(x509_stack);
 }
 
 /**
