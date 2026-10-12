@@ -99,6 +99,32 @@ static void libspdm_test_common_read_write_uint64(void **state)
     assert_int_equal(libspdm_read_uint64(buffer), UINT64_C(0x0000000000000000));
 }
 
+/**
+ * Test 6: Test libspdm_module_version.
+ * Expected Behavior: byte 3 holds the major version, byte 2 the minor version, byte 1 the patch
+ * version and byte 0 the alpha value.
+ **/
+static void libspdm_test_common_module_version(void **state)
+{
+    uint32_t version;
+
+    version = libspdm_module_version();
+
+    assert_int_equal((version >> 24) & 0xFF, LIBSPDM_MAJOR_VERSION);
+    assert_int_equal((version >> 16) & 0xFF, LIBSPDM_MINOR_VERSION);
+    assert_int_equal((version >> 8) & 0xFF, LIBSPDM_PATCH_VERSION);
+    assert_int_equal(version & 0xFF, LIBSPDM_ALPHA);
+}
+
+/**
+ * Test 7: Test libspdm_get_fips_mode.
+ * Expected Behavior: it returns whether libspdm was built with LIBSPDM_FIPS_MODE.
+ **/
+static void libspdm_test_common_get_fips_mode(void **state)
+{
+    assert_int_equal(libspdm_get_fips_mode(), LIBSPDM_FIPS_MODE);
+}
+
 int libspdm_common_support_test_main(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -107,6 +133,8 @@ int libspdm_common_support_test_main(void)
         cmocka_unit_test(libspdm_test_common_read_write_uint24),
         cmocka_unit_test(libspdm_test_common_read_write_uint32),
         cmocka_unit_test(libspdm_test_common_read_write_uint64),
+        cmocka_unit_test(libspdm_test_common_module_version),
+        cmocka_unit_test(libspdm_test_common_get_fips_mode),
 
     };
 

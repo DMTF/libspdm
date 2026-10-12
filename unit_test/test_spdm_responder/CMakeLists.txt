@@ -60,6 +60,7 @@ target_sources(test_spdm_responder
         set_certificate_rsp.c
         csr.c
         receive_send.c
+        communication.c
         chunk_response.c
         chunk_send_ack.c
         key_pair_info.c
