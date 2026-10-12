@@ -1975,9 +1975,6 @@ jobs:
           # Leaks that are already tracked, each until its fix is merged. Any
           # other leak still fails the job.
           cat > lsan.supp <<'SUPPRESSIONS'
-          # #4058, fixed by #4072: the sample libspdm_update_local_cert_chain()
-          # leaks the certificate chains that it installs.
-          leak:libspdm_update_local_cert_chain
           SUPPRESSIONS
 
           # The suppressions match function names, which needs the symbolizer.
