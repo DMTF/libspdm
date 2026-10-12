@@ -134,10 +134,12 @@ extern bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_
  *
  * @param[in, out]  x509_stack  On input, pointer to an existing or NULL X509 stack object.
  *                              On output, pointer to the X509 stack object with new
- *                              inserted X509 certificate.
+ *                              inserted X509 certificate. Whether or not the construction
+ *                              succeeds, the caller frees it with libspdm_x509_stack_free().
  * @param           ...         A list of DER-encoded single certificate data followed
  *                              by certificate size. A NULL terminates the list. The
  *                              pairs are the arguments to libspdm_x509_construct_certificate().
+ *                              The list may be empty.
  *
  * @retval  true   The X509 stack construction succeeded.
  * @retval  false  The construction operation failed.

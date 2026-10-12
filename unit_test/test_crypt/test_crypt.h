@@ -122,6 +122,16 @@ bool libspdm_validate_crypt_x509_verify_cert_chain_pathlen_constraints(void);
 bool libspdm_validate_crypt_x509_verify_cert_chain_name_constraints(void);
 
 /**
+ * Validate that libspdm_x509_construct_certificate_stack() accepts an empty list, and that the
+ * caller still owns its stack after the function fails to add a certificate to it.
+ *
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
+ *
+ **/
+bool libspdm_validate_crypt_x509_construct_certificate_stack(void);
+
+/**
  * Validate Crypto DH Interfaces.
  *
  * @retval  true  Validation succeeded.
