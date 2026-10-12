@@ -8,6 +8,8 @@
 
 int libspdm_transport_mctp_test_main(void);
 int libspdm_transport_mctp_error_test_main(void);
+int libspdm_transport_pci_doe_test_main(void);
+int libspdm_transport_pci_doe_error_test_main(void);
 
 int main(void)
 {
@@ -17,6 +19,13 @@ int main(void)
         return_value = 1;
     }
     if (libspdm_transport_mctp_error_test_main() != 0) {
+        return_value = 1;
+    }
+
+    if (libspdm_transport_pci_doe_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_transport_pci_doe_error_test_main() != 0) {
         return_value = 1;
     }
 
