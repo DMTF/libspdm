@@ -22,6 +22,7 @@ env:
 
 jobs:
   build:
+    if: github.repository == 'DMTF/libspdm' || github.event_name != 'schedule'
     # Pinned so that the lcov version, which affects the report, changes only
     # when this file does.
     runs-on: ubuntu-24.04
