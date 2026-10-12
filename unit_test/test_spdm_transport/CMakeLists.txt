@@ -16,8 +16,10 @@ target_sources(test_spdm_transport
         test_spdm_transport.c
         mctp.c
         pci_doe.c
+        tcp.c
         error_test/mctp_err.c
         error_test/pci_doe_err.c
+        error_test/tcp_err.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
@@ -40,6 +42,7 @@ target_link_libraries(test_spdm_transport
         spdm_device_secret_lib_${DEVICE}
         spdm_transport_mctp_lib
         spdm_transport_pcidoe_lib
+        spdm_transport_tcp_lib
         spdm_transport_test_lib
         cmockalib
         platform_lib_null
