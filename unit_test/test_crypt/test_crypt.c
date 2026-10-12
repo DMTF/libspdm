@@ -90,6 +90,11 @@ bool libspdm_cryptest_main(void)
     }
     #endif /* !LIBSPDM_SKIP_NAME_CONSTRAINTS_CHECK */
 
+    status = libspdm_validate_crypt_x509_construct_certificate_stack();
+    if (!status) {
+        return status;
+    }
+
     status = libspdm_validate_crypt_x509("ecp384", sizeof("ecp384"));
     if (!status) {
         return status;

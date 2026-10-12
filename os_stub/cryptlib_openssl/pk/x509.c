@@ -110,7 +110,9 @@ bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
         return false;
     }
 
-    res = false;
+    /* An empty list is not an error.*/
+
+    res = true;
 
 
     /* Initialize X509 stack object.*/
@@ -119,7 +121,7 @@ bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
     if (cert_stack == NULL) {
         cert_stack = sk_X509_new_null();
         if (cert_stack == NULL) {
-            return res;
+            return false;
         }
     }
 
@@ -160,10 +162,13 @@ bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
         }
     }
 
-    if (!res) {
-        sk_X509_pop_free(cert_stack, X509_free);
-    } else {
+    if (res) {
         *x509_stack = (uint8_t *)cert_stack;
+    } else if (*x509_stack == NULL) {
+
+        /* Free only a stack created here, as the caller owns any stack that it passed in.*/
+
+        sk_X509_pop_free(cert_stack, X509_free);
     }
 
     return res;

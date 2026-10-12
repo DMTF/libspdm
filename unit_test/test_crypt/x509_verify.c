@@ -1111,6 +1111,86 @@ bool libspdm_validate_crypt_x509_verify_cert_chain_name_constraints(void)
     return true;
 }
 
+/**
+ * Validate that libspdm_x509_construct_certificate_stack() accepts an empty list, and that the
+ * caller still owns its stack after the function fails to add a certificate to it.
+ *
+ * @retval  true   Validation succeeded.
+ * @retval  false  Validation failed.
+ **/
+bool libspdm_validate_crypt_x509_construct_certificate_stack(void)
+{
+    bool status;
+    bool result;
+    uint8_t *x509_stack;
+    uint8_t *caller_stack;
+    uint8_t root_cert[sizeof(m_pathlen_root_cert)];
+    uint8_t inter_cert[sizeof(m_pathlen_inter_cert)];
+
+    libspdm_my_print("\nCrypto X509 construct_certificate_stack Testing:\n");
+
+    result = false;
+
+    /* Any valid certificates will do. The list passes them as uint8_t *, so copy them. */
+    libspdm_copy_mem(root_cert, sizeof(root_cert),
+                     m_pathlen_root_cert, sizeof(m_pathlen_root_cert));
+    libspdm_copy_mem(inter_cert, sizeof(inter_cert),
+                     m_pathlen_inter_cert, sizeof(m_pathlen_inter_cert));
+
+    libspdm_my_print("- empty list ... ");
+    x509_stack = NULL;
+    status = libspdm_x509_construct_certificate_stack(&x509_stack, NULL);
+    if (!status) {
+        libspdm_my_print("[Fail]\n");
+        goto cleanup;
+    }
+    libspdm_my_print("[Pass]\n");
+
+    libspdm_my_print("- add a certificate ... ");
+    status = libspdm_x509_construct_certificate_stack(&x509_stack,
+                                                      root_cert, sizeof(root_cert), NULL);
+    if (!status) {
+        libspdm_my_print("[Fail]\n");
+        goto cleanup;
+    }
+    libspdm_my_print("[Pass]\n");
+    caller_stack = x509_stack;
+
+    /* A truncated certificate does not parse, but the stack must remain the caller's. */
+    libspdm_my_print("- fail to add a certificate ... ");
+    status = libspdm_x509_construct_certificate_stack(&x509_stack,
+                                                      inter_cert, sizeof(inter_cert) - 1, NULL);
+    if (status || (x509_stack != caller_stack)) {
+        libspdm_my_print("[Fail]\n");
+        goto cleanup;
+    }
+    libspdm_my_print("[Pass]\n");
+
+    libspdm_my_print("- add a certificate after a failure ... ");
+    status = libspdm_x509_construct_certificate_stack(&x509_stack,
+                                                      inter_cert, sizeof(inter_cert), NULL);
+    if (!status || (x509_stack != caller_stack)) {
+        libspdm_my_print("[Fail]\n");
+        goto cleanup;
+    }
+    libspdm_my_print("[Pass]\n");
+
+    libspdm_my_print("- empty list with a stack ... ");
+    status = libspdm_x509_construct_certificate_stack(&x509_stack, NULL);
+    if (!status || (x509_stack != caller_stack)) {
+        libspdm_my_print("[Fail]\n");
+        goto cleanup;
+    }
+    libspdm_my_print("[Pass]\n");
+
+    result = true;
+
+cleanup:
+    libspdm_x509_stack_free(x509_stack);
+
+    return result;
+}
+
 void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size)
 {
     size_t index;
