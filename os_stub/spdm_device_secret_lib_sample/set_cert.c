@@ -194,6 +194,7 @@ bool libspdm_update_local_cert_chain(
         libspdm_copy_mem(new_buffer, *cert_chain_size,
                          new_chain_bytes, *cert_chain_size);
     } else if (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT) {
+#if LIBSPDM_CERT_PARSE_SUPPORT
         /* Alias Cert Model, the new `cert_chain` shall contain a partial
          * certificate chain from the root CA to the Device Certificate CA.
          *
@@ -274,6 +275,10 @@ bool libspdm_update_local_cert_chain(
             root_cert,
             root_cert_len,
             new_buffer + 4);
+#else
+        /* Finding the Device Certificate CA requires parsing the certificates' extensions. */
+        return false;
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
     } else {
         return false;
     }

@@ -20,10 +20,12 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     libspdm_l1l2_managed_buffer_t l1l2;
     uint8_t *l1l2_buffer;
     size_t l1l2_buffer_size;
+#if LIBSPDM_CERT_PARSE_SUPPORT
     const uint8_t *cert_chain_data;
     size_t cert_chain_data_size;
     const uint8_t *cert_buffer;
     size_t cert_buffer_size;
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 #else
     uint8_t l1l2_hash[LIBSPDM_MAX_HASH_SIZE];
     size_t l1l2_hash_size;
@@ -63,7 +65,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
             return false;
         }
     } else {
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#if (LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && (LIBSPDM_CERT_PARSE_SUPPORT)
         libspdm_get_peer_cert_chain_data(
             spdm_context, slot_id, (const void **)&cert_chain_data, &cert_chain_data_size);
 
@@ -87,6 +89,8 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
         if (!result) {
             return false;
         }
+#elif LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        return false;
 #else
         context = spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key;
         LIBSPDM_ASSERT(context != NULL);

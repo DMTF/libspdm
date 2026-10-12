@@ -254,12 +254,10 @@ jobs:
           # and the only build without secured sessions. With CERT/CHAL/KEY_EX
           # off the macro check also requires the signing and key exchange
           # algorithms off, and Mbed TLS already pins EdDSA, SM2, SM3, SM4 and
-          # the PQC algorithms to 0. Three stay on: SHA-256, because
-          # LIBSPDM_MAX_HASH_SIZE is undefined with no hash algorithm;
-          # CERT_PARSE_SUPPORT, because the os_stub samples call the X.509
-          # functions it removes; and CHECK_MACRO, from BASE_CFLAGS. The unit
-          # tests assume a signing or key exchange algorithm, so only the
-          # library is built.
+          # the PQC algorithms to 0. Two stay on: SHA-256, because
+          # LIBSPDM_MAX_HASH_SIZE is undefined with no hash algorithm; and
+          # CHECK_MACRO, from BASE_CFLAGS. The unit tests assume a signing or
+          # key exchange algorithm, so only the library is built.
           - name: config-all-off
             os: ubuntu-latest
             arch: x64
@@ -284,6 +282,7 @@ jobs:
               -DLIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP=0
               -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=0
               -DLIBSPDM_SEND_GET_CERTIFICATE_SUPPORT=0
+              -DLIBSPDM_CERT_PARSE_SUPPORT=0
               -DLIBSPDM_SEND_CHALLENGE_SUPPORT=0
               -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=0
               -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=0
