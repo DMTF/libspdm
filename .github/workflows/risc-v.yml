@@ -66,3 +66,7 @@ jobs:
         run: |
           cd build/bin
           ./test_spdm_secured_message
+      - name: Test Transport
+        run: |
+          cd build/bin
+          ./test_spdm_transport

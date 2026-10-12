@@ -83,9 +83,9 @@ jobs:
           ./test_spdm_crypt
           ./test_crypt
           ./test_spdm_secured_message
+          ./test_spdm_transport
           ./test_spdm_fips
-          # The unit tests link spdm_transport_test_lib, so the transport
-          # libraries are only executed by the fuzzing harnesses.
+          # The fuzzing seeds reach paths that the unit tests do not.
           ./run_initial_seed.sh
 
       - name: Capture Coverage
