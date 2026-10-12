@@ -79,6 +79,7 @@ The core unit tests are:
 - test_spdm_responder
 - test_spdm_crypt
 - test_spdm_secured_message
+- test_spdm_transport
 - test_spdm_common
 - test_crypt
 

@@ -36,6 +36,7 @@ env:
     test_spdm_responder
     test_spdm_crypt
     test_spdm_secured_message
+    test_spdm_transport
     test_spdm_common
     test_crypt
 
@@ -346,6 +347,11 @@ jobs:
         if: matrix.expect_tests != 'false'
         shell: bash
         run: ./run_test.sh test_spdm_secured_message
+
+      - name: Test Transport
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_transport
 
       # Extended unit test: runs only where its requirement is satisfied.
       - name: Test FIPS
@@ -784,6 +790,11 @@ jobs:
         shell: bash
         run: ./run_test.sh test_spdm_secured_message
 
+      - name: Test Transport
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_transport
+
       # Extended unit test: runs only where its requirement is satisfied.
       - name: Test FIPS
         if: contains(matrix.extra_tests, 'test_spdm_fips')
@@ -1209,6 +1220,11 @@ jobs:
         if: matrix.expect_tests != 'false'
         shell: bash
         run: ./run_test.sh test_spdm_secured_message
+
+      - name: Test Transport
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_transport
 
       # Extended unit test: runs only where its requirement is satisfied.
       - name: Test FIPS
@@ -2045,6 +2061,11 @@ jobs:
         if: matrix.expect_tests != 'false'
         shell: bash
         run: ./run_test.sh test_spdm_secured_message
+
+      - name: Test Transport
+        if: matrix.expect_tests != 'false'
+        shell: bash
+        run: ./run_test.sh test_spdm_transport
 
       - name: Test FIPS
         if: contains(matrix.extra_tests, 'test_spdm_fips')
