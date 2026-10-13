@@ -1,11 +1,11 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 /** @file
- * Definitions in CXL 3.1 specification.
+ * Definitions in CXL 4.0 specification.
  **/
 
 #ifndef CXL_TSP_H
@@ -91,7 +91,8 @@ typedef struct {
     uint16_t memory_encryption_number_of_range_based_keys;
     uint16_t reserved;
     uint16_t te_state_change_and_access_control_features_supported;
-    uint16_t reserved2;
+    uint8_t additional_capabilities;
+    uint8_t reserved2;
     uint32_t supported_explicit_oob_te_state_granularity;
     uint32_t supported_explicit_ib_te_state_granularity;
     uint16_t configuration_features_supported;
@@ -119,6 +120,8 @@ typedef struct {
 #define CXL_TSP_TE_STATE_CHANGE_AND_ACCESS_CONTROL_FEATURES_EXPLICIT_OOB_TE_STATE_CHANGE 0x8
 #define CXL_TSP_TE_STATE_CHANGE_AND_ACCESS_CONTROL_FEATURES_EXPLICIT_IB_TE_STATE_CHANGE 0x10
 #define CXL_TSP_TE_STATE_CHANGE_AND_ACCESS_CONTROL_FEATURES_EXPLICIT_TE_STATE_CHANGE_SANITIZE 0x20
+
+#define CXL_TSP_ADDITIONAL_CAPABILITIES_INITIATOR_ACTIONS_REQUIRED_FOLLOWING_TE_STATE_MISMATCH 0x1
 
 #define CXL_TSP_EXPLICIT_OOB_TE_STATE_CHANGE_GRANULARITY_64B 0x1
 #define CXL_TSP_EXPLICIT_OOB_TE_STATE_CHANGE_GRANULARITY_128B 0x2
@@ -289,11 +292,13 @@ typedef struct {
     /* uint8_t pcie_dvsec_for_cxl_devices[0x3c];
      * uint8_t pcie_dvsec_for_flex_bus_port[0x20];
      * uint8_t cxl_link_capability_structure[0x38];
-     * uint8_t cxl_timeout_and_isolation_capability_structure[0x10];
+     * uint8_t reserved[0x10];
      * uint8_t cxl_hdm_decoder_capability_structure[0x10];
      * uint8_t cxl_hdm_decoder[decoder_count];
      * uint8_t cxl_ide_capability_structure[0x24]; */
 } cxl_tsp_target_configuration_report_t;
+
+#define CXL_TSP_VALID_TSP_REPORT_FIELDS_CXL_IDE_CAPABILITY_STRUCTURE_VALID 0x1
 
 /* Lock Target Configuration */
 
@@ -318,6 +323,8 @@ typedef struct {
     uint8_t reserved[0xc];
     /* cxl_tsp_memory_range_t memory_ranges[number_of_memory_ranges] */
 } cxl_tsp_set_target_te_state_req_t;
+
+#define CXL_TSP_TE_STATE_TO_TEE_EXCLUSIVE 1
 
 typedef struct {
     uint64_t starting_address;
@@ -344,8 +351,8 @@ typedef struct {
     uint8_t tweak_key[0x20];
 } cxl_tsp_set_target_ckid_specific_key_req_t;
 
-#define CXL_TSP_SET_CKID_SPECIFIC_KEY_CKID_TYPE_TVM_CKID 1
-#define CXL_TSP_SET_CKID_SPECIFIC_KEY_CKID_TYPE_OS_CKID 2
+#define CXL_TSP_SET_CKID_SPECIFIC_KEY_CKID_TYPE_TVM_CKID 0
+#define CXL_TSP_SET_CKID_SPECIFIC_KEY_CKID_TYPE_OS_CKID 1
 
 #define CXL_TSP_KEY_VALIDITY_FLAGS_DATA_ENC_KEY 0x1
 #define CXL_TSP_KEY_VALIDITY_FLAGS_TWEAK_KEY 0x2
