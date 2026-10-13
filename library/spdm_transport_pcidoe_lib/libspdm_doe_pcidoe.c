@@ -332,7 +332,7 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_response(size_t transport_mess
         }
         message = (uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t);
         if (vendor_id != NULL) {
-            *vendor_id = *message;
+            *vendor_id = libspdm_read_uint16(message);
         }
         if (protocol != NULL) {
             *protocol = *(message + sizeof(uint16_t));

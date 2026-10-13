@@ -516,6 +516,35 @@ static void libspdm_test_transport_pci_doe_case14(void **state)
     assert_int_equal(libspdm_pci_doe_get_secured_spdm_version(version), version);
 }
 
+/**
+ * Test 15: Decode a DOE Discovery response whose vendor ID does not fit in a byte.
+ * Expected Behavior: returns the whole vendor ID.
+ **/
+static void libspdm_test_transport_pci_doe_case15(void **state)
+{
+    pci_doe_discovery_response_t response;
+    uint8_t transport_message[sizeof(pci_doe_data_object_header_t) + sizeof(response)];
+    size_t transport_message_size;
+    uint16_t vendor_id;
+    uint8_t protocol;
+    uint8_t next_index;
+
+    /* The CXL vendor ID. */
+    response.vendor_id = 0x1E98;
+    response.data_object_type = 2;
+    response.next_index = 0;
+    transport_message_size = build_data_object(PCI_DOE_DATA_OBJECT_TYPE_DOE_DISCOVERY, &response,
+                                               sizeof(response), transport_message);
+
+    assert_int_equal(libspdm_pci_doe_decode_discovery_response(transport_message_size,
+                                                               transport_message, &vendor_id,
+                                                               &protocol, &next_index),
+                     LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(vendor_id, 0x1E98);
+    assert_int_equal(protocol, 2);
+    assert_int_equal(next_index, 0);
+}
+
 int libspdm_transport_pci_doe_test_main(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -539,6 +568,7 @@ int libspdm_transport_pci_doe_test_main(void)
         cmocka_unit_test(libspdm_test_transport_pci_doe_case12),
         cmocka_unit_test(libspdm_test_transport_pci_doe_case13),
         cmocka_unit_test(libspdm_test_transport_pci_doe_case14),
+        cmocka_unit_test(libspdm_test_transport_pci_doe_case15),
     };
 
     libspdm_test_context_t test_context = {
