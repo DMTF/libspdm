@@ -32,7 +32,7 @@ extern bool libspdm_is_in_trusted_environment(void *spdm_context, const uint32_t
  *
  * @return size of storage space for the certificate chain.
  **/
-uint32_t libspdm_get_cert_chain_slot_storage_size(
+extern uint32_t libspdm_get_cert_chain_slot_storage_size(
     void *spdm_context,
     uint8_t slot_id);
 

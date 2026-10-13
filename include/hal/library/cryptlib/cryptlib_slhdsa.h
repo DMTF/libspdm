@@ -124,11 +124,11 @@ extern bool libspdm_slhdsa_sign(void *dsa_context,
  * @retval  false  sig_size is too small.
  * @retval  false  This interface is not supported.
  **/
-bool libspdm_slhdsa_sign_ex(void *dsa_context,
-                            const uint8_t *context, size_t context_size,
-                            const uint8_t *message, size_t message_size,
-                            uint8_t *signature, size_t *sig_size,
-                            bool deterministic);
+extern bool libspdm_slhdsa_sign_ex(void *dsa_context,
+                                   const uint8_t *context, size_t context_size,
+                                   const uint8_t *message, size_t message_size,
+                                   uint8_t *signature, size_t *sig_size,
+                                   bool deterministic);
 #endif /* LIBSPDM_FIPS_MODE */
 
 /**
