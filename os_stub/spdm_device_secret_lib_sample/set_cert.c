@@ -142,12 +142,18 @@ bool libspdm_update_local_cert_chain(
         return false;
     }
 
+    header_size = sizeof(spdm_cert_chain_t) + hash_size;
+
     if (cert_chain != NULL) {
+        if (*cert_chain_size < header_size) {
+            return false;
+        }
+
         result = libspdm_write_certificate_to_nvm(
             spdm_context,
             slot_id,
-            (const uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + hash_size,
-            *cert_chain_size - (sizeof(spdm_cert_chain_t) + hash_size),
+            (const uint8_t *)cert_chain + header_size,
+            *cert_chain_size - header_size,
             base_hash_algo,
             base_asym_algo,
             pqc_asym_algo,
@@ -173,11 +179,6 @@ bool libspdm_update_local_cert_chain(
     if (cert_chain == NULL || cert_chain_size == NULL || *cert_chain_size == 0) {
         new_buffer = NULL;
         goto set_cert;
-    }
-
-    header_size = sizeof(spdm_cert_chain_t) + hash_size;
-    if (*cert_chain_size < header_size) {
-        return false;
     }
 
     new_chain_bytes = (const uint8_t *)cert_chain;

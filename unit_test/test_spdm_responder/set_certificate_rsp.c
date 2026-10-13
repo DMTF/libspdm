@@ -1095,6 +1095,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t hash_size;
+    bool is_busy;
 
     void *cert_chain_a;
     size_t cert_chain_a_size, tmp_cert_size;
@@ -1151,7 +1152,10 @@ static void rsp_set_certificate_rsp_case14(void **state)
                                                  cert_chain_a, &tmp_cert_size,
                                                  SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT,
                                                  NULL, NULL));
-    /* cert_chain_size smaller than the spdm_cert_chain_t header + root hash. */
+    /* cert_chain_size smaller than the spdm_cert_chain_t header + root hash. The sample is busy,
+     * so it sets is_busy if it tries to write the chain before checking the size. */
+    g_set_cert_is_busy = true;
+    is_busy = false;
     tmp_cert_size = sizeof(spdm_cert_chain_t) + hash_size - 1;
     assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0,
                                                  m_libspdm_use_hash_algo,
@@ -1162,7 +1166,9 @@ static void rsp_set_certificate_rsp_case14(void **state)
                                                  cert_chain_a,
                                                  &tmp_cert_size,
                                                  SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT,
-                                                 NULL, NULL));
+                                                 NULL, &is_busy));
+    g_set_cert_is_busy = false;
+    assert_false(is_busy);
     /* Unsupported cert_model. */
     tmp_cert_size = cert_chain_a_size;
     assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0,
