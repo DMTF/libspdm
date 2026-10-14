@@ -77,8 +77,8 @@ extern bool libspdm_challenge_start_mut_auth(
  * @param  base_asym_algo  Indicates the signing algorithm.
  * @param  base_hash_algo  Indicates the hash algorithm.
  * @param  is_data_hash    Indicate the message type.
- *                         If true, raw message before hash.
- *                         If false, message hash.
+ *                         If true, message hash.
+ *                         If false, raw message before hash.
  * @param  message         A pointer to a message to be signed.
  * @param  message_size    The size, in bytes, of the message to be signed.
  * @param  signature       A pointer to a destination buffer to store the signature.
