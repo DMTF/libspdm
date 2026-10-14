@@ -434,6 +434,10 @@ jobs:
 
           if [ "${{ steps.cmocka-cache.outputs.cache-hit }}" != "true" ]; then
             fetch unit_test/cmockalib/cmocka --recursive
+          else
+            # The cached .git file points into .git/modules, which this
+            # checkout does not have, and git submodule commands fail on it.
+            rm -f unit_test/cmockalib/cmocka/.git
           fi
           fetch os_stub/mbedtlslib/mbedtls --recursive
           # libspdm builds OpenSSL from the pinned commit's source alone, so
@@ -1010,6 +1014,10 @@ jobs:
 
           if [ "${{ steps.cmocka-cache.outputs.cache-hit }}" != "true" ]; then
             fetch unit_test/cmockalib/cmocka --recursive
+          else
+            # The cached .git file points into .git/modules, which this
+            # checkout does not have, and git submodule commands fail on it.
+            rm -f unit_test/cmockalib/cmocka/.git
           fi
           fetch os_stub/mbedtlslib/mbedtls --recursive
           # libspdm builds OpenSSL from the pinned commit's source alone, so
@@ -1449,6 +1457,10 @@ jobs:
 
           if [ "${{ steps.cmocka-cache.outputs.cache-hit }}" != "true" ]; then
             fetch unit_test/cmockalib/cmocka --recursive
+          else
+            # The cached .git file points into .git/modules, which this
+            # checkout does not have, and git submodule commands fail on it.
+            rm -f unit_test/cmockalib/cmocka/.git
           fi
           fetch os_stub/mbedtlslib/mbedtls --recursive
           # libspdm builds OpenSSL from the pinned commit's source alone, so
