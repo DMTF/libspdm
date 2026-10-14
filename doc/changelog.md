@@ -77,6 +77,10 @@
     - `libspdm_get_key_pair_info` and `libspdm_set_key_pair_info`, in the Requester library.
     - `libspdm_read_key_pair_info` and `libspdm_write_key_pair_info`, in the HAL.
       `libspdm_read_key_pair_info` also returns the total number of key pairs.
+- `libspdm_encap_challenge_opaque_data` is declared only when
+  `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP` and
+  `LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP` are all enabled, the only configuration in which the library
+  calls it.
 - New public functions that build the encapsulated requests, for the encapsulated flow handler to
   call:
     - `libspdm_get_encap_request_challenge`

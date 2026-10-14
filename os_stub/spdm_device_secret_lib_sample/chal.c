@@ -57,6 +57,7 @@ bool libspdm_challenge_opaque_data(
     return true;
 }
 
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
 bool libspdm_encap_challenge_opaque_data(
     void *spdm_context,
     spdm_version_number_t spdm_version,
@@ -89,6 +90,7 @@ bool libspdm_encap_challenge_opaque_data(
 
     return true;
 }
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) */
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
     (LIBSPDM_SEND_CHALLENGE_SUPPORT)
