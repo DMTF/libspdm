@@ -1469,6 +1469,63 @@ static void req_communication_case31(void **state)
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
+/**
+ * Test 32: libspdm_start_session_exchange with PSK_EXCHANGE to a Responder that does not support a
+ *          context, followed by libspdm_start_session_finish.
+ * Expected Behavior: The exchange returns LIBSPDM_STATUS_SUCCESS with the session established. The
+ *                    finish returns LIBSPDM_STATUS_SUCCESS without sending PSK_FINISH.
+ *                    Skipped when PSK_CAP support is compiled out.
+ **/
+static void req_communication_case32(void **state)
+{
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    uint32_t session_id;
+    uint8_t heartbeat_period;
+    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x20;
+
+    set_connection_state(spdm_context);
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
+
+    status = libspdm_start_session_exchange(
+        spdm_context, true, LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        &session_id, &heartbeat_period, measurement_hash,
+        NULL, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(session_id, m_session_id);
+    assert_int_equal(m_request_count, 1);
+    assert_int_equal(((spdm_message_header_t *)m_request)->request_response_code,
+                     SPDM_PSK_EXCHANGE);
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    assert_non_null(session_info);
+    assert_int_equal(
+        libspdm_secured_message_get_session_state(session_info->secured_message_context),
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
+
+    status = libspdm_start_session_finish(spdm_context, session_id, NULL, 0, NULL, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(m_request_count, 1);
+    assert_int_equal(
+        libspdm_secured_message_get_session_state(session_info->secured_message_context),
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
+
+    libspdm_free_session_id(spdm_context, session_id);
+    #else
+    skip();
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
+}
+
 int libspdm_req_communication_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1513,6 +1570,7 @@ int libspdm_req_communication_test(void)
         cmocka_unit_test(req_communication_case30),
         cmocka_unit_test(req_communication_case31),
         #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
+        cmocka_unit_test(req_communication_case32),
     };
 
     libspdm_test_context_t test_context = {
