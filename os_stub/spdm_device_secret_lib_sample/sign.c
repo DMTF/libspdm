@@ -51,11 +51,11 @@ bool libspdm_requester_data_sign(
         size_t private_pem_size;
 
         if (req_pqc_asym_alg != 0) {
-            result = libspdm_read_requester_pqc_private_key(
-                req_pqc_asym_alg, &private_pem, &private_pem_size);
+            result = libspdm_read_requester_pqc_private_key_ex(
+                req_pqc_asym_alg, key_pair_id, &private_pem, &private_pem_size);
         } else {
-            result = libspdm_read_requester_private_key(
-                req_base_asym_alg, &private_pem, &private_pem_size);
+            result = libspdm_read_requester_private_key_ex(
+                req_base_asym_alg, key_pair_id, &private_pem, &private_pem_size);
         }
         if (!result) {
             return false;
@@ -107,6 +107,9 @@ bool libspdm_requester_data_sign(
         free(private_pem);
     } else {
 #endif
+    /* RAW key mode does not support multiple keys (no per-slot raw key data); the slot-4
+     * distinct-key example is only exercised in PEM mode (g_private_key_mode = 1). RAW mode
+     * intentionally always uses the default key. */
     if (req_pqc_asym_alg != 0) {
         result = libspdm_get_requester_pqc_private_key_from_raw_data(req_pqc_asym_alg, &context);
     } else {

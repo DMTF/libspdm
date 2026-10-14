@@ -94,6 +94,10 @@ bool libspdm_read_requester_public_certificate_chain(
     uint32_t base_hash_algo, uint16_t req_base_asym_alg, void **data,
     size_t *size, void **hash, size_t *hash_size);
 
+bool libspdm_read_requester_public_certificate_chain_per_slot(
+    uint8_t slot_id, uint32_t base_hash_algo, uint16_t req_base_asym_alg, void **data,
+    size_t *size, void **hash, size_t *hash_size);
+
 bool libspdm_read_responder_root_public_certificate(uint32_t base_hash_algo,
                                                     uint32_t base_asym_algo,
                                                     void **data, size_t *size,
@@ -138,6 +142,10 @@ bool libspdm_read_pqc_responder_public_certificate_chain_per_slot(
 
 bool libspdm_read_pqc_requester_public_certificate_chain(
     uint32_t base_hash_algo, uint32_t req_pqc_asym_alg, void **data,
+    size_t *size, void **hash, size_t *hash_size);
+
+bool libspdm_read_pqc_requester_public_certificate_chain_per_slot(
+    uint8_t slot_id, uint32_t base_hash_algo, uint32_t req_pqc_asym_alg, void **data,
     size_t *size, void **hash, size_t *hash_size);
 
 bool libspdm_read_pqc_responder_root_public_certificate(uint32_t base_hash_algo,
@@ -205,6 +213,10 @@ bool libspdm_read_responder_private_key_ex(uint32_t base_asym_algo, uint8_t key_
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
 bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
                                         void **data, size_t *size);
+/* Same as libspdm_read_requester_private_key, but selects the leaf key by key_pair_id
+ * (the negotiated algorithm's secondary key pair -> end_requester4.key). */
+bool libspdm_read_requester_private_key_ex(uint16_t req_base_asym_alg, uint8_t key_pair_id,
+                                           void **data, size_t *size);
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (...) */
 
 /* read priv key pem pqc */
@@ -221,6 +233,10 @@ bool libspdm_read_responder_pqc_private_key_ex(uint32_t pqc_asym_algo, uint8_t k
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
 bool libspdm_read_requester_pqc_private_key(uint32_t req_pqc_asym_alg,
                                             void **data, size_t *size);
+/* Same as libspdm_read_requester_pqc_private_key, but selects the leaf key by key_pair_id
+ * (the negotiated algorithm's secondary key pair -> end_requester4.key). */
+bool libspdm_read_requester_pqc_private_key_ex(uint32_t req_pqc_asym_alg, uint8_t key_pair_id,
+                                               void **data, size_t *size);
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (...) */
 
 /* read priv key raw data */

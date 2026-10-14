@@ -1312,6 +1312,209 @@ bool libspdm_read_pqc_requester_public_certificate_chain(
     return true;
 }
 
+bool libspdm_read_pqc_requester_public_certificate_chain_per_slot(
+    uint8_t slot_id, uint32_t base_hash_algo, uint32_t req_pqc_asym_alg, void **data,
+    size_t *size, void **hash, size_t *hash_size)
+{
+    bool res;
+    void *file_data;
+    size_t file_size;
+    spdm_cert_chain_t *cert_chain;
+    size_t cert_chain_size;
+    char *file;
+    const uint8_t *root_cert;
+    size_t root_cert_len;
+    size_t digest_size;
+#if LIBSPDM_CERT_PARSE_SUPPORT
+    bool is_requester_cert;
+    uint8_t cert_model;
+
+    is_requester_cert = false;
+
+    /*default is device cert*/
+    cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
+
+    *data = NULL;
+    *size = 0;
+    if (hash != NULL) {
+        *hash = NULL;
+    }
+    if (hash_size != NULL) {
+        *hash_size = 0;
+    }
+
+    if (req_pqc_asym_alg == 0) {
+        return false;
+    }
+
+    if (slot_id == 4) {
+        /* slot 4 uses a different leaf key than slot 0 / slot 1 (multi-key example). */
+        switch (req_pqc_asym_alg) {
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44:
+            file = "mldsa44/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_65:
+            file = "mldsa65/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_87:
+            file = "mldsa87/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128S:
+            file = "slh-dsa-sha2-128s/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128S:
+            file = "slh-dsa-shake-128s/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128F:
+            file = "slh-dsa-sha2-128f/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128F:
+            file = "slh-dsa-shake-128f/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192S:
+            file = "slh-dsa-sha2-192s/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192S:
+            file = "slh-dsa-shake-192s/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192F:
+            file = "slh-dsa-sha2-192f/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192F:
+            file = "slh-dsa-shake-192f/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256S:
+            file = "slh-dsa-sha2-256s/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256S:
+            file = "slh-dsa-shake-256s/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256F:
+            file = "slh-dsa-sha2-256f/bundle_requester.certchain4.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256F:
+            file = "slh-dsa-shake-256f/bundle_requester.certchain4.der";
+            break;
+        default:
+            LIBSPDM_ASSERT(false);
+            return false;
+        }
+    } else {
+        switch (req_pqc_asym_alg) {
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44:
+            file = "mldsa44/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_65:
+            file = "mldsa65/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_87:
+            file = "mldsa87/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128S:
+            file = "slh-dsa-sha2-128s/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128S:
+            file = "slh-dsa-shake-128s/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128F:
+            file = "slh-dsa-sha2-128f/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128F:
+            file = "slh-dsa-shake-128f/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192S:
+            file = "slh-dsa-sha2-192s/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192S:
+            file = "slh-dsa-shake-192s/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192F:
+            file = "slh-dsa-sha2-192f/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192F:
+            file = "slh-dsa-shake-192f/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256S:
+            file = "slh-dsa-sha2-256s/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256S:
+            file = "slh-dsa-shake-256s/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256F:
+            file = "slh-dsa-sha2-256f/bundle_requester.certchain.der";
+            break;
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256F:
+            file = "slh-dsa-shake-256f/bundle_requester.certchain.der";
+            break;
+        default:
+            LIBSPDM_ASSERT(false);
+            return false;
+        }
+    }
+    res = libspdm_read_input_file(file, &file_data, &file_size);
+    if (!res) {
+        return res;
+    }
+
+    digest_size = libspdm_get_hash_size(base_hash_algo);
+
+    cert_chain_size = sizeof(spdm_cert_chain_t) + digest_size + file_size;
+    cert_chain = (void *)malloc(cert_chain_size);
+    if (cert_chain == NULL) {
+        free(file_data);
+        return false;
+    }
+    cert_chain->length = (uint32_t)cert_chain_size;
+
+#if LIBSPDM_CERT_PARSE_SUPPORT
+    res = libspdm_verify_cert_chain_data(
+        SPDM_MESSAGE_VERSION_14,
+        file_data, file_size,
+        0, req_pqc_asym_alg, base_hash_algo,
+        is_requester_cert, cert_model);
+    if (!res) {
+        free(file_data);
+        free(cert_chain);
+        return res;
+    }
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
+
+
+    /* Get Root Certificate and calculate hash value*/
+
+    res = libspdm_get_root_cert_from_cert_chain(file_data, file_size, &root_cert,
+                                                &root_cert_len);
+    if (!res) {
+        free(file_data);
+        free(cert_chain);
+        return res;
+    }
+
+    res = libspdm_hash_all(base_hash_algo, root_cert, root_cert_len,
+                           (uint8_t *)(cert_chain + 1));
+    if (!res) {
+        free(file_data);
+        free(cert_chain);
+        return res;
+    }
+    libspdm_copy_mem((uint8_t *)cert_chain + sizeof(spdm_cert_chain_t) + digest_size,
+                     cert_chain_size - (sizeof(spdm_cert_chain_t) + digest_size),
+                     file_data, file_size);
+
+    *data = cert_chain;
+    *size = cert_chain_size;
+    if (hash != NULL) {
+        *hash = (cert_chain + 1);
+    }
+    if (hash_size != NULL) {
+        *hash_size = digest_size;
+    }
+
+    free(file_data);
+    return true;
+}
+
 bool libspdm_read_responder_pqc_certificate(uint32_t pqc_asym_algo,
                                             void **data, size_t *size)
 {

@@ -79,6 +79,13 @@ bool libspdm_read_pqc_requester_public_certificate_chain(
         base_hash_algo, req_pqc_asym_alg, data, size, hash, hash_size);
 }
 
+bool libspdm_read_pqc_requester_public_certificate_chain_per_slot(
+    uint8_t slot_id, uint32_t base_hash_algo, uint32_t req_pqc_asym_alg, void **data,
+    size_t *size, void **hash, size_t *hash_size) {
+    return libspdm_read_requester_public_certificate_chain_per_slot(
+        slot_id, base_hash_algo, req_pqc_asym_alg, data, size, hash, hash_size);
+}
+
 bool libspdm_read_responder_pqc_certificate(uint32_t pqc_asym_algo, void **data,
                                             size_t *size) {
     return libspdm_read_responder_certificate(pqc_asym_algo, data, size);
