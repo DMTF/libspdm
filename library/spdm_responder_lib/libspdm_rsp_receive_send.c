@@ -163,6 +163,9 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
     size_t backup_decoded_message_size;
     bool result;
     bool reset_key_update;
+    uint32_t data_transfer_size;
+    size_t padding_size;
+    bool oversized_chunk_send;
 
     context = spdm_context;
     size_t transport_header_size;
@@ -281,10 +284,39 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
 
     /*
      * decoded_message may contain padding zeros due to transport layer alignment requirements.
-     * trim the decoded_message size to the maximum data_transfer_size.
+     * trim the decoded_message size to the maximum data_transfer_size, except for a CHUNK_SEND
+     * that exceeds it by more than the padding: per DSP0274 it shall not be altered and its
+     * handler rejects it. A decrypted secured message carries no transport padding.
      */
-    decoded_message_size = LIBSPDM_MIN(decoded_message_size,
-                                       context->local_context.capability.data_transfer_size);
+    data_transfer_size = context->local_context.capability.data_transfer_size;
+    /* PCIe CMA-SPDM pads a plaintext message over DOE with up to three zero bytes. */
+    padding_size = (message_session_id == NULL) ? sizeof(uint32_t) - 1 : 0;
+    oversized_chunk_send = false;
+    if (!(*is_app_message) &&
+        (libspdm_get_connection_version(context) >= SPDM_MESSAGE_VERSION_12) &&
+        (decoded_message_size > data_transfer_size + padding_size) &&
+        (decoded_message_size >= sizeof(spdm_message_header_t))) {
+        oversized_chunk_send =
+            ((spdm_message_header_t *)decoded_message_ptr)->request_response_code ==
+            SPDM_CHUNK_SEND;
+    }
+    if (oversized_chunk_send &&
+        (decoded_message_size >
+         libspdm_get_scratch_buffer_last_spdm_request_capacity(context) + padding_size)) {
+        /* Do not trim an oversized chunk into an apparently valid request, and do not copy
+         * beyond the saved-request buffer. No chunk transfer state has been changed. */
+        libspdm_zero_mem(decoded_message_ptr, decoded_message_size);
+        context->last_spdm_error.error_code = SPDM_ERROR_CODE_REQUEST_TOO_LARGE;
+        context->last_spdm_error.session_id =
+            (message_session_id != NULL) ? *message_session_id : 0;
+        context->last_spdm_request_size = 0;
+        *session_id = (message_session_id != NULL) ? &context->last_spdm_error.session_id : NULL;
+        return LIBSPDM_STATUS_SUCCESS;
+    }
+    decoded_message_size = LIBSPDM_MIN(
+        decoded_message_size,
+        oversized_chunk_send ? libspdm_get_scratch_buffer_last_spdm_request_capacity(context) :
+        data_transfer_size);
 
     context->last_spdm_request_size = decoded_message_size;
     libspdm_copy_mem (context->last_spdm_request,
@@ -613,6 +645,12 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     if (context->last_spdm_error.error_code != 0) {
         /* Error in libspdm_process_request(), and we need send error message directly. */
         switch (context->last_spdm_error.error_code) {
+        case SPDM_ERROR_CODE_REQUEST_TOO_LARGE:
+            /* A CHUNK_SEND exceeded MaxSPDMmsgSize (DSP0274 RequestTooLarge). */
+            status = libspdm_generate_error_response(
+                context, SPDM_ERROR_CODE_REQUEST_TOO_LARGE, 0,
+                &my_response_size, my_response);
+            break;
         case SPDM_ERROR_CODE_DECRYPT_ERROR:
             /* session ID is valid. Use it to encrypt the error message.*/
             if ((context->handle_error_return_policy &
