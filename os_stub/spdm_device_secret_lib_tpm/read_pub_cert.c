@@ -247,6 +247,15 @@ bool libspdm_read_requester_public_certificate_chain(
                                  hash_size, true, true);
 }
 
+/* The TPM only holds one requester cert chain, so every slot returns it. */
+bool libspdm_read_requester_public_certificate_chain_per_slot(
+    uint8_t slot_id, uint32_t base_hash_algo, uint16_t req_base_asym_alg, void **data,
+    size_t *size, void **hash, size_t *hash_size)
+{
+    return libspdm_read_requester_public_certificate_chain(
+        base_hash_algo, req_base_asym_alg, data, size, hash, hash_size);
+}
+
 bool libspdm_read_responder_certificate(uint32_t base_asym_algo,
                                         void **data, size_t *size)
 {
