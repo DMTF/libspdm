@@ -152,7 +152,7 @@ bool libspdm_finish_rsp_opaque_data(
 }
 
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
-extern uint8_t libspdm_key_exchange_start_mut_auth(
+uint8_t libspdm_key_exchange_start_mut_auth(
     void *spdm_context,
     uint32_t session_id,
     spdm_version_number_t spdm_version,
@@ -163,7 +163,7 @@ extern uint8_t libspdm_key_exchange_start_mut_auth(
     const void *opaque_data,
     bool *mandatory_mut_auth)
 {
-    return false;
+    return 0;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP */
