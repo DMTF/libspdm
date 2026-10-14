@@ -298,6 +298,161 @@ static size_t build_psk_exchange_response(libspdm_context_t *spdm_context, uint8
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && \
+    (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
+/* The Requester slot that the Responder selects in ENCAPSULATED_RESPONSE_ACK. */
+static const uint8_t m_encap_req_slot_id = 1;
+
+/* The transcript that KEY_EXCHANGE_RSP signs. */
+static uint8_t m_th[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
+static size_t m_th_size;
+
+static void append_th(const void *data, size_t data_size)
+{
+    libspdm_copy_mem(m_th + m_th_size, sizeof(m_th) - m_th_size, data, data_size);
+    m_th_size += data_size;
+}
+
+/* Builds KEY_EXCHANGE_RSP for the last KEY_EXCHANGE request. The Responder requests mutual
+ * authentication with the encapsulated GET_DIGESTS flow. */
+static size_t build_key_exchange_response(libspdm_context_t *spdm_context, uint8_t *buffer)
+{
+    spdm_key_exchange_response_t *spdm_response;
+    uint32_t hash_size;
+    size_t dhe_key_size;
+    void *dhe_context;
+    uint8_t shared_secret[LIBSPDM_MAX_DHE_SS_SIZE];
+    size_t shared_secret_size;
+    size_t opaque_data_size;
+    void *cert_chain;
+    size_t cert_chain_size;
+    uint8_t cert_chain_hash[LIBSPDM_MAX_HASH_SIZE];
+    size_t signature_size;
+    uint8_t th1_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t handshake_secret[LIBSPDM_MAX_HASH_SIZE];
+    size_t handshake_secret_size;
+    uint8_t request_handshake_secret[LIBSPDM_MAX_HASH_SIZE];
+    size_t request_handshake_secret_size;
+    uint8_t response_handshake_secret[LIBSPDM_MAX_HASH_SIZE];
+    size_t response_handshake_secret_size;
+    uint8_t bin_str7[128];
+    size_t bin_str7_size;
+    uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t *ptr;
+    bool result;
+
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+    opaque_data_size = libspdm_get_opaque_data_version_selection_data_size(spdm_context);
+
+    spdm_response = (void *)buffer;
+    spdm_response->header.spdm_version = libspdm_get_connection_version(spdm_context);
+    spdm_response->header.request_response_code = SPDM_KEY_EXCHANGE_RSP;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.param2 = 0;
+    spdm_response->rsp_session_id = (uint16_t)(m_session_id >> 16);
+    spdm_response->mut_auth_requested =
+        SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS;
+    spdm_response->req_slot_id_param = 0;
+    libspdm_set_mem(spdm_response->random_data, SPDM_RANDOM_DATA_SIZE, 0xA5);
+    ptr = (uint8_t *)(spdm_response + 1);
+
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
+                                  false);
+    assert_non_null(dhe_context);
+    shared_secret_size = sizeof(shared_secret);
+    result = libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size) &&
+             libspdm_dhe_compute_key(m_libspdm_use_dhe_algo, dhe_context,
+                                     (const uint8_t *)spdm_context->last_spdm_request +
+                                     sizeof(spdm_key_exchange_request_t),
+                                     dhe_key_size, shared_secret, &shared_secret_size);
+    libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+    assert_true(result);
+    ptr += dhe_key_size;
+
+    libspdm_write_uint16(ptr, (uint16_t)opaque_data_size);
+    ptr += sizeof(uint16_t);
+    libspdm_build_opaque_data_version_selection_data(
+        spdm_context, SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+            &opaque_data_size, ptr);
+    ptr += opaque_data_size;
+
+    /* The signature covers the VCA, the hash of the certificate chain in slot 0, the request and
+     * the response that precedes it. */
+    result = libspdm_read_responder_public_certificate_chain(
+        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &cert_chain, &cert_chain_size,
+        NULL, NULL);
+    assert_true(result);
+    result = libspdm_hash_all(m_libspdm_use_hash_algo, cert_chain, cert_chain_size,
+                              cert_chain_hash);
+    free(cert_chain);
+    assert_true(result);
+    m_th_size = 0;
+    append_th(libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+              libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
+    append_th(cert_chain_hash, hash_size);
+    append_th(spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
+    append_th(buffer, (size_t)(ptr - buffer));
+
+    signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+    result = libspdm_responder_data_sign(
+        spdm_context, spdm_context->connection_info.version, 0, SPDM_KEY_EXCHANGE_RSP,
+        m_libspdm_use_asym_algo, 0, m_libspdm_use_hash_algo, false,
+        m_th, m_th_size, ptr, &signature_size);
+    assert_true(result);
+    append_th(ptr, signature_size);
+    ptr += signature_size;
+
+    /* ResponderVerifyData covers the same transcript, the signature included. */
+    result = libspdm_hash_all(m_libspdm_use_hash_algo, m_th, m_th_size, th1_hash);
+    assert_true(result);
+    handshake_secret_size = sizeof(handshake_secret);
+    request_handshake_secret_size = sizeof(request_handshake_secret);
+    response_handshake_secret_size = sizeof(response_handshake_secret);
+    result = libspdm_generate_handshake_key(
+        spdm_context->connection_info.version, shared_secret, shared_secret_size, false,
+        NULL, 0, false, m_libspdm_use_hash_algo, th1_hash,
+        handshake_secret, &handshake_secret_size,
+        request_handshake_secret, &request_handshake_secret_size,
+        response_handshake_secret, &response_handshake_secret_size);
+    assert_true(result);
+
+    bin_str7_size = sizeof(bin_str7);
+    libspdm_bin_concat(spdm_context->connection_info.version,
+                       SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+                       NULL, (uint16_t)hash_size, hash_size, bin_str7, &bin_str7_size);
+    result = libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret, hash_size,
+                                 bin_str7, bin_str7_size, response_finished_key, hash_size) &&
+             libspdm_hmac_all(m_libspdm_use_hash_algo, th1_hash, hash_size,
+                              response_finished_key, hash_size, ptr);
+    assert_true(result);
+    ptr += hash_size;
+
+    return (size_t)(ptr - buffer);
+}
+
+/* Builds the ENCAPSULATED_RESPONSE_ACK that ends the encapsulated flow for the
+ * DELIVER_ENCAPSULATED_RESPONSE request in m_request. */
+static size_t build_encapsulated_response_ack(uint8_t *buffer)
+{
+    const spdm_deliver_encapsulated_response_request_t *spdm_request;
+    spdm_encapsulated_response_ack_response_t *spdm_response;
+
+    spdm_request = (const void *)m_request;
+    spdm_response = (void *)buffer;
+    spdm_response->header.spdm_version = spdm_request->header.spdm_version;
+    spdm_response->header.request_response_code = SPDM_ENCAPSULATED_RESPONSE_ACK;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.param2 =
+        SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER;
+    spdm_response->ack_request_id = spdm_request->header.param1;
+    libspdm_zero_mem(spdm_response->reserved, sizeof(spdm_response->reserved));
+    buffer[sizeof(spdm_encapsulated_response_ack_response_t)] = m_encap_req_slot_id;
+
+    return sizeof(spdm_encapsulated_response_ack_response_t) + sizeof(uint8_t);
+}
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (...) */
+
 static libspdm_return_t send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
@@ -413,6 +568,22 @@ static libspdm_return_t receive_message(
             spdm_response_size = sizeof(spdm_psk_finish_response_t);
             break;
         #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
+        #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && \
+            (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
+        case SPDM_KEY_EXCHANGE:
+            spdm_response_size = build_key_exchange_response(spdm_context, (void *)spdm_response);
+            break;
+        case SPDM_DELIVER_ENCAPSULATED_RESPONSE:
+            spdm_response_size = build_encapsulated_response_ack((void *)spdm_response);
+            break;
+        case SPDM_FINISH:
+            spdm_response->spdm_version = spdm_request->spdm_version;
+            spdm_response->request_response_code = SPDM_FINISH_RSP;
+            spdm_response->param1 = 0;
+            spdm_response->param2 = 0;
+            spdm_response_size = sizeof(spdm_finish_response_t);
+            break;
+        #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (...) */
         case SPDM_END_SESSION:
             spdm_response->spdm_version = spdm_request->spdm_version;
             spdm_response->request_response_code = SPDM_END_SESSION_ACK;
@@ -1526,6 +1697,118 @@ static void req_communication_case32(void **state)
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 }
 
+/**
+ * Test 33: libspdm_start_session_exchange with KEY_EXCHANGE to a Responder that requests mutual
+ *          authentication with the encapsulated GET_DIGESTS flow and selects slot 1 in
+ *          ENCAPSULATED_RESPONSE_ACK, followed by libspdm_start_session_finish.
+ * Expected Behavior: Both return LIBSPDM_STATUS_SUCCESS. FINISH is for slot 1, and the session is
+ *                    established.
+ *                    Skipped when KEY_EX_CAP, MUT_AUTH_CAP, ENCAP_CAP or CERT_CAP support is
+ *                    compiled out.
+ **/
+static void req_communication_case33(void **state)
+{
+    #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && \
+    (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    uint32_t session_id;
+    uint8_t heartbeat_period;
+    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+    void *peer_cert_chain;
+    size_t peer_cert_chain_size;
+    void *local_cert_chain;
+    size_t local_cert_chain_size;
+    bool result;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x21;
+
+    set_connection_state(spdm_context);
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+
+    /* The Responder's certificate chain in slot 0. */
+    result = libspdm_read_responder_public_certificate_chain(
+        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &peer_cert_chain,
+        &peer_cert_chain_size, NULL, NULL);
+    assert_true(result);
+    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = peer_cert_chain_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     peer_cert_chain, peer_cert_chain_size);
+    #else
+    result = libspdm_hash_all(m_libspdm_use_hash_algo, peer_cert_chain, peer_cert_chain_size,
+                              spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    assert_true(result);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    result = libspdm_get_leaf_cert_public_key_from_cert_chain(
+        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, peer_cert_chain, peer_cert_chain_size,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+    assert_true(result);
+    #endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+    free(peer_cert_chain);
+
+    /* The Requester's certificate chains in slots 0 and 1. */
+    result = libspdm_read_requester_public_certificate_chain(
+        m_libspdm_use_hash_algo, m_libspdm_use_req_asym_algo, &local_cert_chain,
+        &local_cert_chain_size, NULL, NULL);
+    assert_true(result);
+    spdm_context->local_context.local_cert_chain_provision[0] = local_cert_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = local_cert_chain_size;
+    spdm_context->local_context.local_cert_chain_provision[1] = local_cert_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[1] = local_cert_chain_size;
+
+    status = libspdm_start_session_exchange(
+        spdm_context, false, NULL, 0, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        &session_id, &heartbeat_period, measurement_hash,
+        NULL, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(session_id, m_session_id);
+    assert_int_equal(m_request_count, 2);
+    assert_int_equal(((spdm_message_header_t *)m_request)->request_response_code,
+                     SPDM_DELIVER_ENCAPSULATED_RESPONSE);
+
+    status = libspdm_start_session_finish(spdm_context, session_id, NULL, 0, NULL, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(m_request_count, 3);
+    assert_true(m_request_is_secured);
+    assert_int_equal(((spdm_message_header_t *)m_request)->request_response_code, SPDM_FINISH);
+    assert_int_equal(((spdm_message_header_t *)m_request)->param2, m_encap_req_slot_id);
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    assert_non_null(session_info);
+    assert_int_equal(
+        libspdm_secured_message_get_session_state(session_info->secured_message_context),
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
+
+    libspdm_free_session_id(spdm_context, session_id);
+    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[1] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[1] = 0;
+    free(local_cert_chain);
+    #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    libspdm_free_peer_leaf_cert_public_key(spdm_context, 0);
+    #endif /* !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) */
+    #else
+    skip();
+    #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (...) */
+}
+
 int libspdm_req_communication_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1571,6 +1854,7 @@ int libspdm_req_communication_test(void)
         cmocka_unit_test(req_communication_case31),
         #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
         cmocka_unit_test(req_communication_case32),
+        cmocka_unit_test(req_communication_case33),
     };
 
     libspdm_test_context_t test_context = {
