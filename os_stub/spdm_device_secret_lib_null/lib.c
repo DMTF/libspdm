@@ -12,11 +12,14 @@
 #include "hal/library/responder/asymsignlib.h"
 #include "hal/library/responder/csrlib.h"
 #include "hal/library/responder/measlib.h"
+#include "hal/library/responder/keyexlib.h"
 #include "hal/library/responder/key_pair_info.h"
 #include "hal/library/responder/psklib.h"
 #include "hal/library/responder/setcertlib.h"
 #include "hal/library/requester/reqasymsignlib.h"
 #include "hal/library/requester/psklib.h"
+#include "hal/library/endpointinfolib.h"
+#include "hal/library/eventlib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 libspdm_return_t libspdm_measurement_collection(
