@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2025 DMTF. All rights reserved.
+ *  Copyright 2023-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -43,8 +43,10 @@ extern bool libspdm_requester_data_sign(
     uint32_t base_hash_algo, bool is_data_hash,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size);
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (...) */
 
-#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP)
 /**
  * This functions returns the opaque data in a CHALLENGE_AUTH response.
  *
@@ -72,7 +74,6 @@ extern bool libspdm_encap_challenge_opaque_data(
     const void *request_context,
     void *opaque_data,
     size_t *opaque_data_size);
-#endif/*LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (...) */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
 
 #endif /* REQUESTER_REQASYMSIGNLIB_H */
