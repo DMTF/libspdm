@@ -595,6 +595,10 @@ libspdm_return_t libspdm_start_session_exchange(void *spdm_context, bool use_psk
 /**
  * This function sends FINISH or PSK_FINISH to start an SPDM Session.
  *
+ * If the session uses PSK and the Responder does not support a context then PSK_EXCHANGE has
+ * already established the session, so this function sends nothing and returns
+ * LIBSPDM_STATUS_SUCCESS.
+ *
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  session_id                 The session ID of the session.
  * @param  requester_opaque_data      A buffer to hold the requester opaque data, if not NULL.

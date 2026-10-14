@@ -378,6 +378,8 @@ libspdm_return_t libspdm_start_session_finish(void *spdm_context,
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - libspdm_send_receive_psk_finish - %x\n",
                            status));
+        } else {
+            status = LIBSPDM_STATUS_SUCCESS;
         }
     #else /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
         LIBSPDM_ASSERT(false);
