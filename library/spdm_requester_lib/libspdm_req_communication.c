@@ -282,6 +282,7 @@ libspdm_return_t libspdm_start_session_exchange(void *spdm_context, bool use_psk
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return status;
             }
+            session_info->local_used_cert_chain_slot_id = req_slot_id_param;
 #else
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - unsupported mut_auth_requested - 0x%x\n",
