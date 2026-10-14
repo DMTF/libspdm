@@ -18,7 +18,7 @@
 #include "internal/libspdm_device_secret_lib.h"
 #include "internal/libspdm_common_lib.h"
 
-#ifdef LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
 
 libspdm_return_t libspdm_generate_device_endpoint_info(
     void *spdm_context,

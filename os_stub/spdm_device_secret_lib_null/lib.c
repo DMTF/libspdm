@@ -397,7 +397,7 @@ bool libspdm_write_key_pair_info(
 }
 #endif /* #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
 
-#ifdef LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
 libspdm_return_t libspdm_generate_device_endpoint_info(
     void *spdm_context,
     const uint32_t *session_id,
