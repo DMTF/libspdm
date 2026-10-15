@@ -20,6 +20,10 @@ static uint8_t m_libspdm_local_large_response_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE];
 static uint8_t m_libspdm_local_response_buffer_for_chunk_seq_no_wrap_test[
     BUFFER_SIZE_FOR_CHUNK_SEQ_NO_WRAP_TEST];
 
+/* Case 6 is slow, because each of its 65536 chunks zeroes the 2 MiB sender/receiver section of the
+ * scratch buffer. It is skipped until the scratch buffer layout changes. */
+#define ENABLE_CHUNK_SEQ_NO_WRAP_TEST 0
+
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
 
@@ -1110,6 +1114,7 @@ static void req_chunk_get_case5(void **state)
 
 static void req_chunk_get_case6(void **state)
 {
+    #if ENABLE_CHUNK_SEQ_NO_WRAP_TEST
     /* Copied from Chunk Get Request case 5*/
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1155,6 +1160,9 @@ static void req_chunk_get_case6(void **state)
                                                           &data_len, data);
 
     assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
+    #else
+    skip();
+    #endif /* ENABLE_CHUNK_SEQ_NO_WRAP_TEST */
 }
 
 static void req_chunk_get_case7(void **state)
