@@ -2,7 +2,9 @@
 #   - the core unit tests against every combination of operating system, host
 #     hardware, toolchain, cryptography library and build target that the CMake
 #     build files support, 48 in all, in the posix, windows-msvc and mingw
-#     families, and
+#     families,
+#   - other operating system and compiler versions, sparsely, in the versions
+#     family and in windows-msvc's older MSVC toolsets, and
 #   - the code configuration sweeps under ASan and UBSan, in the configs family.
 #
 # Unlike Tier 1, each platform family's matrix is a cross product, so the matrix
@@ -49,21 +51,21 @@ env:
   BASE_CFLAGS: -DLIBSPDM_CHECK_MACRO=1 -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=3
 
 jobs:
-  # posix, windows-msvc and mingw repeat most of their steps. That is deliberate.
-  # The alternative is one job family whose platform-specific steps are selected
-  # with `if:`, and GitHub has no way to hide work it skips
-  # (https://github.com/orgs/community/discussions/18001).
+  # posix, windows-msvc and mingw repeat most of their steps, and versions and
+  # configs repeat posix's. That is deliberate. The alternative is one job family
+  # whose platform-specific steps are selected with `if:`, and GitHub has no way
+  # to hide work it skips (https://github.com/orgs/community/discussions/18001).
   #
   # max-parallel applies to each job family separately, so posix, windows-msvc,
-  # mingw and configs run at most 5 + 4 + 2 + 5 = 16 jobs at once. That leaves 4
-  # of the 20 runners that doc/internal/continuous_integration.md assumes for
-  # pull requests and pushes. If every job took that document's worst case of 20
-  # minutes, each platform family would finish in at most five rounds, or 100
-  # minutes, within Tier 2's two hours. The configs family cannot meet that worst
-  # case, as its 67 jobs take 14 rounds. Its jobs take about 6 minutes, so it
-  # finishes in about 85 minutes, and the timing report warns if a run takes
-  # longer than two hours. The platform families finish in about half an hour,
-  # after which only configs runs.
+  # mingw and configs run at most 5 + 4 + 2 + 5 = 16 jobs at once, and versions
+  # waits for posix and then takes over its 5. That leaves 4 of the 20 runners
+  # that doc/internal/continuous_integration.md assumes for pull requests and
+  # pushes. If every job took that document's worst case of 20 minutes,
+  # windows-msvc and mingw would finish in at most five rounds, or 100 minutes,
+  # within Tier 2's two hours. configs, at 67 jobs, and posix followed by
+  # versions, at 51, cannot meet that worst case. Their jobs take about 3
+  # minutes, so each finishes in about 40 minutes, and the timing report warns if
+  # a run takes longer than two hours.
 
   posix:
     name: ${{ format('{0}-{1}-{2}-{3}-{4}', matrix.platform, matrix.arch, matrix.tc, matrix.crypto, matrix.tgt) }}
@@ -86,8 +88,10 @@ jobs:
           - platform: macos
             toolchain: GCC
         include:
-          # The runner for each platform and architecture.
-          - {platform: linux, arch: x64, os: ubuntu-latest}
+          # The runner for each platform and architecture. Ubuntu is named by
+          # release, not as ubuntu-latest, so that what Tier 2 covers changes
+          # only with this file. versions runs the other releases.
+          - {platform: linux, arch: x64, os: ubuntu-24.04}
           - {platform: linux, arch: aarch64, os: ubuntu-24.04-arm}
           - {platform: macos, arch: aarch64, os: macos-latest}
           - {platform: macos, arch: x64, os: macos-26-intel}
@@ -558,6 +562,544 @@ jobs:
             build/CMakeCache.txt
           retention-days: 14
 
+  # Other operating system and compiler versions, each with a few combinations
+  # of cryptography library and build target, so crossed sparsely as
+  # doc/internal/continuous_integration.md crosses platforms. The jobs start
+  # once posix has finished, whether or not it passed, and run in the runners
+  # that posix used, so Tier 2 never runs more jobs at once. The steps are
+  # posix's, without those that no job here needs, plus Select compiler.
+  versions:
+    name: ${{ matrix.name }}
+    needs: posix
+    if: >-
+      !cancelled() && (github.repository == 'DMTF/libspdm'
+      || github.event_name != 'schedule')
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    env:
+      JOB_NAME: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        include:
+          # == Ubuntu 26.04 ================================================
+          # GCC 15 and Clang 21 by default. posix runs Ubuntu 24.04.
+
+          - name: ubuntu-26.04-x64-gcc-mbedtls-debug
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+
+          - name: ubuntu-26.04-x64-gcc-mbedtls-release
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Release
+            cflags: -ffat-lto-objects
+
+          - name: ubuntu-26.04-x64-gcc-openssl-debug
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: GCC
+            crypto: openssl
+            target: Debug
+
+          - name: ubuntu-26.04-x64-gcc-openssl-release
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: GCC
+            crypto: openssl
+            target: Release
+            cflags: -ffat-lto-objects
+
+          - name: ubuntu-26.04-x64-clang-mbedtls-debug
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: CLANG
+            crypto: mbedtls
+            target: Debug
+
+          - name: ubuntu-26.04-x64-clang-mbedtls-release
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: CLANG
+            crypto: mbedtls
+            target: Release
+
+          - name: ubuntu-26.04-x64-clang-openssl-debug
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: CLANG
+            crypto: openssl
+            target: Debug
+
+          - name: ubuntu-26.04-x64-clang-openssl-release
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: CLANG
+            crypto: openssl
+            target: Release
+
+          - name: ubuntu-26.04-arm-aarch64-gcc-mbedtls-debug
+            os: ubuntu-26.04-arm
+            arch: aarch64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+
+          - name: ubuntu-26.04-arm-aarch64-gcc-openssl-release
+            os: ubuntu-26.04-arm
+            arch: aarch64
+            toolchain: GCC
+            crypto: openssl
+            target: Release
+            cflags: -ffat-lto-objects
+
+          - name: ubuntu-26.04-arm-aarch64-clang-mbedtls-debug
+            os: ubuntu-26.04-arm
+            arch: aarch64
+            toolchain: CLANG
+            crypto: mbedtls
+            target: Debug
+
+          - name: ubuntu-26.04-arm-aarch64-clang-openssl-release
+            os: ubuntu-26.04-arm
+            arch: aarch64
+            toolchain: CLANG
+            crypto: openssl
+            target: Release
+
+          # == Compiler versions ===========================================
+          # Each GCC and Clang major version on the Ubuntu images that no
+          # other job uses, in an optimized build, where both warn the most.
+          # GitHub retires the Ubuntu 22.04 image on 17-Apr-2027, after
+          # brownouts that would fail its jobs, so remove them before those.
+
+          - name: ubuntu-22.04-x64-gcc-10-mbedtls-release
+            os: ubuntu-22.04
+            arch: x64
+            toolchain: GCC
+            cc: '10'
+            crypto: mbedtls
+            target: Release
+            cflags: -ffat-lto-objects
+
+          - name: ubuntu-22.04-x64-gcc-11-mbedtls-release
+            os: ubuntu-22.04
+            arch: x64
+            toolchain: GCC
+            cc: '11'
+            crypto: mbedtls
+            target: Release
+            cflags: -ffat-lto-objects
+
+          - name: ubuntu-22.04-x64-gcc-12-mbedtls-release
+            os: ubuntu-22.04
+            arch: x64
+            toolchain: GCC
+            cc: '12'
+            crypto: mbedtls
+            target: Release
+            cflags: -ffat-lto-objects
+
+          - name: ubuntu-24.04-x64-gcc-14-mbedtls-release
+            os: ubuntu-24.04
+            arch: x64
+            toolchain: GCC
+            cc: '14'
+            crypto: mbedtls
+            target: Release
+            cflags: -ffat-lto-objects
+
+          - name: ubuntu-22.04-x64-clang-13-mbedtls-release
+            os: ubuntu-22.04
+            arch: x64
+            toolchain: CLANG
+            cc: '13'
+            crypto: mbedtls
+            target: Release
+
+          - name: ubuntu-22.04-x64-clang-14-mbedtls-release
+            os: ubuntu-22.04
+            arch: x64
+            toolchain: CLANG
+            cc: '14'
+            crypto: mbedtls
+            target: Release
+
+          - name: ubuntu-22.04-x64-clang-15-mbedtls-release
+            os: ubuntu-22.04
+            arch: x64
+            toolchain: CLANG
+            cc: '15'
+            crypto: mbedtls
+            target: Release
+
+          - name: ubuntu-24.04-x64-clang-16-mbedtls-release
+            os: ubuntu-24.04
+            arch: x64
+            toolchain: CLANG
+            cc: '16'
+            crypto: mbedtls
+            target: Release
+
+          - name: ubuntu-24.04-x64-clang-17-mbedtls-release
+            os: ubuntu-24.04
+            arch: x64
+            toolchain: CLANG
+            cc: '17'
+            crypto: mbedtls
+            target: Release
+
+          - name: ubuntu-26.04-x64-clang-20-mbedtls-release
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: CLANG
+            cc: '20'
+            crypto: mbedtls
+            target: Release
+
+          - name: ubuntu-26.04-x64-clang-22-mbedtls-release
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: CLANG
+            cc: '22'
+            crypto: mbedtls
+            target: Release
+
+          # == macOS 15 ====================================================
+          # Xcode 16 by default. posix runs macOS 26.
+
+          - name: macos-15-aarch64-clang-mbedtls-debug
+            os: macos-15
+            arch: aarch64
+            toolchain: CLANG
+            crypto: mbedtls
+            target: Debug
+
+          - name: macos-15-aarch64-clang-openssl-release
+            os: macos-15
+            arch: aarch64
+            toolchain: CLANG
+            crypto: openssl
+            target: Release
+
+          - name: macos-15-intel-x64-clang-mbedtls-debug
+            os: macos-15-intel
+            arch: x64
+            toolchain: CLANG
+            crypto: mbedtls
+            target: Debug
+
+          - name: macos-15-intel-x64-clang-openssl-release
+            os: macos-15-intel
+            arch: x64
+            toolchain: CLANG
+            crypto: openssl
+            target: Release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # The submodules are fetched in a later step so that cmocka can be served
+          # from the cache. A fetch failure inside this step aborts the job before
+          # any cache is consulted, which is what makes cmocka's host a source of
+          # unrelated test failures.
+          submodules: false
+          # Nothing after this step needs to talk to the remote, and the jobs
+          # run build scripts from the pull request's own tree.
+          persist-credentials: false
+
+      # cmocka is the only submodule not hosted on github.com, and gitlab.com is
+      # reachable less reliably from the runners. Its source does not vary by
+      # configuration, so a single entry keyed on the pinned revision serves every
+      # matrix entry, and gitlab.com is contacted only when that pin moves.
+      - name: cmocka revision
+        id: cmocka
+        shell: bash
+        run: |
+          echo "sha=$(git ls-tree HEAD unit_test/cmockalib/cmocka | awk '{print $3}')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache cmocka
+        id: cmocka-cache
+        uses: actions/cache@v6
+        with:
+          path: unit_test/cmockalib/cmocka
+          key: cmocka-${{ steps.cmocka.outputs.sha }}
+
+      - name: Fetch submodules
+        shell: bash
+        run: |
+          # Retry rather than fail the job on a transient fetch error. A cache hit
+          # means cmocka is already present, so it is not fetched at all.
+          fetch() {
+            local path=$1
+            shift
+            for attempt in 1 2 3; do
+              if git submodule update --init "$@" "$path"; then
+                return 0
+              fi
+              echo "fetch of $path failed, attempt $attempt"
+              sleep $((attempt * 15))
+            done
+            return 1
+          }
+
+          if [ "${{ steps.cmocka-cache.outputs.cache-hit }}" != "true" ]; then
+            fetch unit_test/cmockalib/cmocka --recursive
+          else
+            # The cached .git file points into .git/modules, which this
+            # checkout does not have, and git submodule commands fail on it.
+            rm -f unit_test/cmockalib/cmocka/.git
+          fi
+          fetch os_stub/mbedtlslib/mbedtls --recursive
+          # libspdm builds OpenSSL from the pinned commit's source alone, so
+          # neither its history nor its own submodules are fetched.
+          if [ "${{ matrix.crypto }}" = "openssl" ]; then
+            fetch os_stub/openssllib/openssl --depth 1
+          fi
+      # As in the posix family. Every job that builds OpenSSL uses its image's
+      # default compiler, so the key needs no compiler version.
+      - name: OpenSSL revision
+        id: ossl
+        shell: bash
+        run: |
+          echo "sha=$(git -C os_stub/openssllib/openssl rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "image=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
+
+      - name: Cache OpenSSL build
+        if: matrix.crypto == 'openssl'
+        uses: actions/cache@v6
+        with:
+          path: build/os_stub/openssllib
+          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          restore-keys: |
+            openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-
+
+      # The GCC and CLANG toolchain files run the unversioned gcc and gcc-ar,
+      # or clang, llvm-ar and llvm-ranlib. A job that names a compiler version
+      # puts links from those names to that version first on PATH.
+      - name: Select compiler
+        if: matrix.cc != ''
+        shell: bash
+        run: |
+          if [ "${{ matrix.toolchain }}" = "GCC" ]; then
+            tools="gcc gcc-ar"
+          else
+            # llvm-N provides llvm-ar-N and llvm-ranlib-N, and the linker
+            # plugin that link-time optimization with clang-N needs.
+            sudo apt-get update
+            sudo apt-get install --no-install-recommends -y "llvm-${{ matrix.cc }}"
+            tools="clang llvm-ar llvm-ranlib"
+          fi
+          bin="$RUNNER_TEMP/compiler-bin"
+          mkdir -p "$bin"
+          for tool in $tools; do
+            path=$(command -v "$tool-${{ matrix.cc }}") || {
+              echo "::error::$tool-${{ matrix.cc }} is not installed"
+              exit 1
+            }
+            ln -s "$path" "$bin/$tool"
+          done
+          echo "$bin" >> "$GITHUB_PATH"
+          "$bin/${tools%% *}" --version
+
+      - name: Configure
+        shell: bash
+        env:
+          CFLAGS: ${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}
+        run: |
+          # The CLANG toolchain archives static libraries with llvm-ar,
+          # which is not present on the stock Linux image. Select compiler
+          # installs it for a job that names a compiler version.
+          if [ "${{ matrix.toolchain }}" = "CLANG" ] && [ "${{ runner.os }}" = "Linux" ] &&
+             [ -z "${{ matrix.cc }}" ]; then
+            sudo apt-get update
+            sudo apt-get install --no-install-recommends -y llvm
+          fi
+
+          cmake -B build \
+            -DARCH=${{ matrix.arch }} \
+            -DTOOLCHAIN=${{ matrix.toolchain }} \
+            -DTARGET=${{ matrix.target }} \
+            -DCRYPTO=${{ matrix.crypto }}
+
+      - name: Build
+        shell: bash
+        run: |
+          # Discover the core count rather than assuming it, so the build keeps
+          # pace if runner specs change. A bare `--parallel` means an unbounded
+          # -j, which exhausts the smaller runners.
+          jobs=$(getconf _NPROCESSORS_ONLN 2>/dev/null || nproc 2>/dev/null || echo 2)
+          echo "Building with --parallel $jobs"
+
+          cmake --build build --target copy_sample_key
+          cmake --build build --parallel "$jobs"
+
+      # As in the posix family: one step per test, each bounded so that a hang
+      # fails the job.
+      - name: Prepare test runner
+        shell: bash
+        run: |
+          cat > run_test.sh <<'RUNNER'
+          #!/usr/bin/env bash
+          set -uo pipefail
+          t="$1"
+
+          if [ ! -x "build/bin/$t" ]; then
+            echo "::error::$t was not built"
+            echo "- \`$t\`: **not built**" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+            exit 1
+          fi
+
+          # macOS has no GNU timeout; fall back to gtimeout, then to perl.
+          if command -v timeout >/dev/null 2>&1; then
+            ( cd build/bin && timeout 600 "./$t" )
+          elif command -v gtimeout >/dev/null 2>&1; then
+            ( cd build/bin && gtimeout 600 "./$t" )
+          else
+            ( cd build/bin && perl -e 'alarm shift; exec @ARGV' 600 "./$t" )
+          fi
+          rc=$?
+
+          if [ "$rc" -eq 0 ]; then
+            echo "- \`$t\`: pass" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          else
+            echo "- \`$t\`: **FAIL** (exit $rc)" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+            echo "::error::$t failed with exit $rc"
+          fi
+          exit $rc
+          RUNNER
+          chmod +x run_test.sh
+          echo "### ${{ env.JOB_NAME }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Test Requester
+        shell: bash
+        run: ./run_test.sh test_spdm_requester
+
+      - name: Test Responder
+        shell: bash
+        run: ./run_test.sh test_spdm_responder
+
+      - name: Test Common
+        shell: bash
+        run: ./run_test.sh test_spdm_common
+
+      - name: Test SPDM Crypt
+        shell: bash
+        run: ./run_test.sh test_spdm_crypt
+
+      - name: Test Crypt
+        shell: bash
+        run: ./run_test.sh test_crypt
+
+      - name: Test Secured Message
+        shell: bash
+        run: ./run_test.sh test_spdm_secured_message
+
+      - name: Test Transport
+        shell: bash
+        run: ./run_test.sh test_spdm_transport
+
+      # As in the posix family, generated from the job's own variables so that
+      # it cannot drift from what ran, including the links that Select compiler
+      # makes.
+      - name: Generate reproducer
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p repro
+
+          ccfile=""
+          if [ -d build/CMakeFiles ]; then
+            ccfile=$(find build/CMakeFiles -name CMakeCCompiler.cmake -print -quit)
+          fi
+          cid=$(sed -n 's/^set(CMAKE_C_COMPILER_ID "\(.*\)")/\1/p' "$ccfile" 2>/dev/null || true)
+          cver=$(sed -n 's/^set(CMAKE_C_COMPILER_VERSION "\(.*\)")/\1/p' "$ccfile" 2>/dev/null || true)
+          compiler="${cid:-unknown} ${cver:-unknown}"
+          image="${ImageOS:-unknown} ${ImageVersion:-unknown}"
+          if [ -r /etc/os-release ]; then
+            osname=$(grep -m1 '^PRETTY_NAME=' /etc/os-release | cut -d= -f2- | tr -d '"' || true)
+          else
+            osname="$(sw_vers -productName) $(sw_vers -productVersion)"
+          fi
+          kernel=$(uname -srm 2>/dev/null)
+          url="${{ github.server_url }}/${{ github.repository }}"
+          run_url="$url/actions/runs/${{ github.run_id }}"
+          pins=$(git submodule status 2>/dev/null | awk '{print $2" "$1}' || true)
+
+          header="Reproduces: ${{ env.JOB_NAME }}
+          Run:        $run_url
+          Runner:     ${{ matrix.os }} (image $image)
+          OS:         ${osname:-unknown}
+          Kernel:     ${kernel:-unknown}
+          Compiler:   $compiler
+          NOTE: this restores the source tree, not the toolchain. If your
+                compiler differs from the one above, a non-reproduction is
+                inconclusive rather than a refutation."
+
+          f=repro/repro.sh
+          { echo "#!/usr/bin/env bash"
+            echo "$header" | sed 's/^/# /'
+            echo "set -euo pipefail"
+            echo
+            echo "git clone $url.git libspdm-repro"
+            echo "cd libspdm-repro"
+            echo "git checkout ${{ github.sha }}"
+            echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+            if [ "${{ matrix.crypto }}" = "openssl" ]; then
+              echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
+            fi
+            echo "$pins" | sed 's/^/# pinned: /'
+            echo
+            if [ -n "${{ matrix.cc }}" ]; then
+              if [ "${{ matrix.toolchain }}" = "GCC" ]; then
+                tools="gcc gcc-ar"
+              else
+                echo "# Needs clang-${{ matrix.cc }} and llvm-${{ matrix.cc }}."
+                tools="clang llvm-ar llvm-ranlib"
+              fi
+              echo "mkdir -p compiler-bin"
+              for tool in $tools; do
+                echo "ln -sf \"\$(command -v $tool-${{ matrix.cc }})\" compiler-bin/$tool"
+              done
+              echo 'export PATH="$PWD/compiler-bin:$PATH"'
+            fi
+            echo "export CFLAGS='${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}'"
+            echo "cmake -B build -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }}"
+            echo "cmake --build build --target copy_sample_key"
+            echo "cmake --build build --parallel \"\$(getconf _NPROCESSORS_ONLN)\""
+            echo
+            echo "cd build/bin"
+            for t in $UNIT_TESTS; do echo "if [ -x ./$t ]; then ./$t; fi"; done
+          } > "$f"
+          chmod +x "$f"
+
+          echo "$header"
+
+          { echo "<details><summary>Reproducer</summary>"
+            echo
+            echo '```'
+            cat "$f"
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reproducer
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: repro-${{ env.JOB_NAME }}
+          path: |
+            repro/
+            build/CMakeCache.txt
+          retention-days: 14
+
   windows-msvc:
     name: ${{ format('windows-{0}-{1}-{2}-{3}', matrix.arch, matrix.tc, matrix.crypto, matrix.tgt) }}
     if: github.repository == 'DMTF/libspdm' || github.event_name != 'schedule'
@@ -573,6 +1115,9 @@ jobs:
         arch: [x64, ia32]
         crypto: [mbedtls, openssl]
         target: [Debug, Release]
+        # The image's default VC++ toolset. The jobs at the end of include name
+        # another, which this value keeps from merging into the jobs above.
+        toolset: ['']
         include:
           - {os: windows-latest, generator: NMake Makefiles}
           - {arch: x64, msvc_arch: x64}
@@ -582,6 +1127,14 @@ jobs:
           - {toolchain: CLANG, tc: clang}
           - {target: Debug, tgt: debug}
           - {target: Release, tgt: release}
+          # Older VC++ toolsets that the image installs beside its default:
+          # VS 2022's and VS 2019's. As with GCC and Clang, the toolchain does
+          # not name the compiler version. They use Mbed TLS, since the
+          # OpenSSL cache key does not name the toolset.
+          - {toolchain: VS2022, toolset: '14.44', tc: vs-14.44, os: windows-latest, generator: NMake Makefiles, arch: x64, msvc_arch: x64, crypto: mbedtls, target: Release, tgt: release}
+          - {toolchain: VS2022, toolset: '14.44', tc: vs-14.44, os: windows-latest, generator: NMake Makefiles, arch: ia32, msvc_arch: x86, crypto: mbedtls, target: Debug, tgt: debug}
+          - {toolchain: VS2022, toolset: '14.29', tc: vs-14.29, os: windows-latest, generator: NMake Makefiles, arch: x64, msvc_arch: x64, crypto: mbedtls, target: Release, tgt: release}
+          - {toolchain: VS2022, toolset: '14.29', tc: vs-14.29, os: windows-latest, generator: NMake Makefiles, arch: ia32, msvc_arch: x86, crypto: mbedtls, target: Debug, tgt: debug}
 
     steps:
       - name: Checkout
@@ -678,6 +1231,8 @@ jobs:
         uses: TheMrMilchmann/setup-msvc-dev@368ef7d1ee4d1171b31d4a7f67f4d954f903f5a9 # v4.1.0
         with:
           arch: ${{ matrix.msvc_arch }}
+          # Empty, which keeps the default, except in the older toolset jobs.
+          toolset: ${{ matrix.toolset }}
 
       # The CLANG toolchain runs clang-cl and lld-link from PATH. Put the
       # image's LLVM there explicitly rather than depend on whether the image
@@ -914,6 +1469,9 @@ jobs:
             { echo "@echo off"
               echo "$header" | sed 's/^/REM /'
               echo "REM Run from a Visual Studio Developer Command Prompt for ${{ matrix.msvc_arch }}."
+              if [ -n "${{ matrix.toolset }}" ]; then
+                echo "REM Open it with -vcvars_ver=${{ matrix.toolset }}."
+              fi
               echo
               echo "git clone $url.git libspdm-repro || exit /b 1"
               echo "cd libspdm-repro || exit /b 1"
@@ -1445,7 +2003,7 @@ jobs:
   configs:
     name: ${{ matrix.name }}
     if: github.repository == 'DMTF/libspdm' || github.event_name != 'schedule'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
       JOB_NAME: ${{ matrix.name }}
@@ -1912,18 +2470,18 @@ jobs:
         uses: actions/cache@v6
         with:
           path: build/os_stub/openssllib
-          key: openssl-ubuntu-latest-x64-CLANG-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          key: openssl-ubuntu-24.04-x64-CLANG-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
           restore-keys: |
-            openssl-ubuntu-latest-x64-CLANG-${{ steps.ossl.outputs.sha }}-
+            openssl-ubuntu-24.04-x64-CLANG-${{ steps.ossl.outputs.sha }}-
 
       - name: Cache OpenSSL binaries
         if: matrix.openssl_binary == 'true'
         uses: actions/cache@v6
         with:
           path: openssl-binary
-          key: openssl-binary-ubuntu-latest-x64-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          key: openssl-binary-ubuntu-24.04-x64-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
           restore-keys: |
-            openssl-binary-ubuntu-latest-x64-${{ steps.ossl.outputs.sha }}-
+            openssl-binary-ubuntu-24.04-x64-${{ steps.ossl.outputs.sha }}-
 
       - name: Build OpenSSL binaries
         if: matrix.openssl_binary == 'true'
@@ -2142,7 +2700,7 @@ jobs:
 
           header="Reproduces: ${{ env.JOB_NAME }}
           Run:        $run_url
-          Runner:     ubuntu-latest (image $image)
+          Runner:     ubuntu-24.04 (image $image)
           OS:         ${osname:-unknown}
           Kernel:     ${kernel:-unknown}
           Compiler:   $compiler
@@ -2216,7 +2774,7 @@ jobs:
   tier2-complete:
     name: Tier 2 complete
     runs-on: ubuntu-latest
-    needs: [posix, windows-msvc, mingw, configs]
+    needs: [posix, versions, windows-msvc, mingw, configs]
     if: >-
       always() && (github.repository == 'DMTF/libspdm'
       || github.event_name != 'schedule')
@@ -2370,6 +2928,7 @@ jobs:
         if: >-
           ${{ github.event_name == 'schedule' && !cancelled()
           && (needs.posix.result != 'success'
+          || needs.versions.result != 'success'
           || needs['windows-msvc'].result != 'success'
           || needs.mingw.result != 'success'
           || needs.configs.result != 'success') }}
@@ -2408,12 +2967,13 @@ jobs:
       - name: Check result
         run: |
           posix="${{ needs.posix.result }}"
+          versions="${{ needs.versions.result }}"
           msvc="${{ needs['windows-msvc'].result }}"
           mingw="${{ needs.mingw.result }}"
           configs="${{ needs.configs.result }}"
-          echo "posix=$posix windows-msvc=$msvc mingw=$mingw configs=$configs"
-          if [ "$posix" != "success" ] || [ "$msvc" != "success" ] || [ "$mingw" != "success" ] ||
-             [ "$configs" != "success" ]; then
-            echo "::error::Tier 2 did not pass (posix=$posix windows-msvc=$msvc mingw=$mingw configs=$configs)"
+          echo "posix=$posix versions=$versions windows-msvc=$msvc mingw=$mingw configs=$configs"
+          if [ "$posix" != "success" ] || [ "$versions" != "success" ] || [ "$msvc" != "success" ] ||
+             [ "$mingw" != "success" ] || [ "$configs" != "success" ]; then
+            echo "::error::Tier 2 did not pass (posix=$posix versions=$versions windows-msvc=$msvc mingw=$mingw configs=$configs)"
             exit 1
           fi
