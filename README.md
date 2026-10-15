@@ -161,7 +161,7 @@ Support [CodeQL](https://codeql.github.com/) tool.
     a) [Visual Studio 2022](https://visualstudio.microsoft.com/vs/older-downloads/), [Visual Studio 2019](https://visualstudio.microsoft.com/vs/older-downloads/)
 
     b) [LLVM](https://llvm.org/) (LLVM13)
-    - Install [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0). Change the LLVM install path to `C:\LLVM`, and add LLVM path `C:\LLVM\bin` in PATH environment for CLANG build on Windows.
+    - Install [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0). Change the LLVM install path to `C:\LLVM`, and add LLVM path `C:\LLVM\bin` in PATH environment for the `CLANG` toolchain on Windows.
     - LLVM13 works good for clang and [libfuzzer](https://llvm.org/docs/LibFuzzer.html) build. Other versions are not validated for clang build.
     - The Visual Studio is needed for nmake.
     - Because the libfuzzer lib path is hard coded in CMakeLists, other versions may fail for libfuzzer build.

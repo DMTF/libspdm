@@ -22,7 +22,7 @@ libspdm's compile time configuration knobs that can be adjusted within GitHub's 
     - Visual Studio
     - Native GCC
     - MinGW GCC
-    - CLANG
+    - Clang
 - Cryptography Library (CMake `CRYPTO`)
     - Mbed TLS
     - OpenSSL
