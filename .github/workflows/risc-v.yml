@@ -41,7 +41,7 @@ jobs:
           cmake -E env CFLAGS="-DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=3" cmake -DARCH=riscv64 -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=Debug -DCRYPTO=${{ matrix.crypto }} ..
           make copy_sample_key
           make copy_seed
-          make -j`nproc`
+          make test_spdm_requester test_spdm_responder test_spdm_common test_spdm_crypt test_crypt test_spdm_secured_message test_spdm_transport -j`nproc`
       - name: Test Requester
         run: |
           cd build/bin
