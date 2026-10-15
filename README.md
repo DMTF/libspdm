@@ -269,8 +269,6 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
    cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=openssl ..
    ```
 
-   Note ia32 build is not supported for CLANG build on Windows.
-
    CMake can also generate Visual Studio project files. For example:
 
    ```
