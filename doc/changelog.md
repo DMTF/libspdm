@@ -296,7 +296,7 @@
   Zephyr.
 - New `X509_IGNORE_TIME` option, which makes the provided cryptography libraries ignore the validity
   period of certificates.
-- Mbed TLS is updated from 3.6.2 to 3.6.7, OpenSSL from 3.5.1 to 3.5.5, and cmocka, which the unit
+- Mbed TLS is updated from 3.6.2 to 3.6.7, OpenSSL from 3.5.1 to 3.5.9, and cmocka, which the unit
   tests use, from 1.1.7 to 1.1.8.
 - OpenSSL is built by its own `Configure` script, which needs Perl, as a shared `libcrypto`, or a
   static one when `TOOLCHAIN=NONE`.
