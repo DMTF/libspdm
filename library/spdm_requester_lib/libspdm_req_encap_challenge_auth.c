@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -92,6 +92,13 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
                 context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                 response_size, response);
         }
+    }
+
+    /* The Responder shall not request a slot that is not provisioned. */
+    if ((slot_id != 0xFF) && (context->local_context.local_cert_chain_provision[slot_id] == NULL)) {
+        return libspdm_generate_encap_error_response(
+            context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+            response_size, response);
     }
 
     libspdm_reset_message_buffer_via_request_code(context, NULL,
