@@ -105,8 +105,7 @@
 
 | Windows System  | ia32 | x64 | arm | aarch64 | riscv32 | riscv64 |
 | --------------- | ---- | --- | --- | ------- | ------- | ------- |
-| [VS2019](https://visualstudio.microsoft.com/vs/older-downloads/) |  cl  |  cl |  -  |    -    |    -    |    -    |
-| [VS2022](https://visualstudio.microsoft.com/vs/older-downloads/) |  cl  |  cl |  -  |    -    |    -    |    -    |
+| [VS](https://visualstudio.microsoft.com/downloads/) |  cl  |  cl |  -  |    -    |    -    |    -    |
 | [ARM_DS2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) |  -   |  -  | armclang | armclang |    -    |    -    |
 | [GCC](https://gcc.gnu.org/) | gcc  | gcc |  -  |    -    |    -    |    -    |
 | [CLANG](https://llvm.org/) | clang-cl | clang-cl |  -  |    -    |    -    |    -    |
@@ -158,7 +157,7 @@ Support [CodeQL](https://codeql.github.com/) tool.
 
 1) Compiler for IA32/X64 (Choose one)
 
-    a) [Visual Studio 2022](https://visualstudio.microsoft.com/vs/older-downloads/), [Visual Studio 2019](https://visualstudio.microsoft.com/vs/older-downloads/)
+    a) [Visual Studio](https://visualstudio.microsoft.com/downloads/) 2019 version 16.8 or later, with Windows SDK 10.0.20348.0 or later
 
     b) [LLVM](https://llvm.org/) (LLVM13)
     - Install [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0). Change the LLVM install path to `C:\LLVM`, and add LLVM path `C:\LLVM\bin` in PATH environment for CLANG build on Windows.
@@ -232,7 +231,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 ### Toolchain Selection
 
    `TOOLCHAIN` selects the compiler and the target flags through `cmake/toolchain/<TOOLCHAIN>.cmake`, which CMake reads before it identifies the compiler.
-   `VS2019`, `VS2022`, and `NONE` have no toolchain file and use the compiler from the environment.
+   `VS` and `NONE` have no toolchain file and use the compiler from the environment.
    A `-DCMAKE_TOOLCHAIN_FILE` on the command line takes precedence.
    A build directory keeps the compiler and target flags it was first configured with, so use a new build directory when changing `TOOLCHAIN` or `ARCH`.
 
@@ -246,7 +245,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
    cd libspdm
    mkdir build
    cd build
-   cmake -G"NMake Makefiles" -DARCH=<x64|ia32> -DTOOLCHAIN=<VS2022|VS2019|CLANG> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   cmake -G"NMake Makefiles" -DARCH=<x64|ia32> -DTOOLCHAIN=<VS|CLANG> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
    nmake copy_sample_key
    nmake
    ```
@@ -254,19 +253,19 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
    Example CMake commands:
 
    ```
-   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Debug -DCRYPTO=mbedtls ..
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS -DTARGET=Debug -DCRYPTO=mbedtls ..
    ```
 
    ```
-   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
 
    ```
-   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Debug -DCRYPTO=openssl ..
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS -DTARGET=Debug -DCRYPTO=openssl ..
    ```
 
    ```
-   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=openssl ..
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS -DTARGET=Release -DCRYPTO=openssl ..
    ```
 
    Note ia32 build is not supported for CLANG build on Windows.
@@ -274,14 +273,14 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
    CMake can also generate Visual Studio project files. For example:
 
    ```
-   cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
+   cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
 
    Support OpenSSL binary build. For example:
 
    ```
    Note: Install the OpenSSL with command `nmake install` before build libspdm.
-   cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.lib -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.lib ..
+   cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.lib -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.lib ..
    ```
 
 For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).

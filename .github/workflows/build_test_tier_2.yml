@@ -1111,7 +1111,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        toolchain: [VS2022, CLANG]
+        toolchain: [VS, CLANG]
         arch: [x64, ia32]
         crypto: [mbedtls, openssl]
         target: [Debug, Release]
@@ -1123,7 +1123,7 @@ jobs:
           - {arch: x64, msvc_arch: x64}
           - {arch: ia32, msvc_arch: x86}
           # Lower-case spellings for the job name.
-          - {toolchain: VS2022, tc: vs}
+          - {toolchain: VS, tc: vs}
           - {toolchain: CLANG, tc: clang}
           - {target: Debug, tgt: debug}
           - {target: Release, tgt: release}
@@ -1131,10 +1131,10 @@ jobs:
           # VS 2022's and VS 2019's. As with GCC and Clang, the toolchain does
           # not name the compiler version. They use Mbed TLS, since the
           # OpenSSL cache key does not name the toolset.
-          - {toolchain: VS2022, toolset: '14.44', tc: vs-14.44, os: windows-latest, generator: NMake Makefiles, arch: x64, msvc_arch: x64, crypto: mbedtls, target: Release, tgt: release}
-          - {toolchain: VS2022, toolset: '14.44', tc: vs-14.44, os: windows-latest, generator: NMake Makefiles, arch: ia32, msvc_arch: x86, crypto: mbedtls, target: Debug, tgt: debug}
-          - {toolchain: VS2022, toolset: '14.29', tc: vs-14.29, os: windows-latest, generator: NMake Makefiles, arch: x64, msvc_arch: x64, crypto: mbedtls, target: Release, tgt: release}
-          - {toolchain: VS2022, toolset: '14.29', tc: vs-14.29, os: windows-latest, generator: NMake Makefiles, arch: ia32, msvc_arch: x86, crypto: mbedtls, target: Debug, tgt: debug}
+          - {toolchain: VS, toolset: '14.44', tc: vs-14.44, os: windows-latest, generator: NMake Makefiles, arch: x64, msvc_arch: x64, crypto: mbedtls, target: Release, tgt: release}
+          - {toolchain: VS, toolset: '14.44', tc: vs-14.44, os: windows-latest, generator: NMake Makefiles, arch: ia32, msvc_arch: x86, crypto: mbedtls, target: Debug, tgt: debug}
+          - {toolchain: VS, toolset: '14.29', tc: vs-14.29, os: windows-latest, generator: NMake Makefiles, arch: x64, msvc_arch: x64, crypto: mbedtls, target: Release, tgt: release}
+          - {toolchain: VS, toolset: '14.29', tc: vs-14.29, os: windows-latest, generator: NMake Makefiles, arch: ia32, msvc_arch: x86, crypto: mbedtls, target: Debug, tgt: debug}
 
     steps:
       - name: Checkout

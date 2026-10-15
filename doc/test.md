@@ -190,7 +190,7 @@ For riscv64 (RISCV64 GCC): `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    Copy all binary under [build32|build64]/bin/Release to [bin32|bin64]. `robocopy /E /is /it [build32|build64]/bin/Release [bin32|bin64]`.
 
-   Build cases with VS2019 toolchain. (non AFL toolchain in Windows).
+   Build cases with VS toolchain. (non AFL toolchain in Windows).
 
    Run cases:
    ```
@@ -585,7 +585,7 @@ For riscv64 (RISCV64 GCC): `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    cd libspdm
    mkdir build
    cd build
-   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS -DTARGET=Release -DCRYPTO=mbedtls ..
    nmake copy_sample_key
    cov-build --config C:\libspdm\CoverityConfig\coverity-config.xml --dir C:\libspdm\coverity-output nmake
    ```

@@ -22,16 +22,16 @@
 ### Note
    1) To verify the CertChain DiceTcbInfo extension, please use the following command to build.
    ```
-   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Debug -DCRYPTO=openssl -DX509_IGNORE_CRITICAL=ON ..
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS -DTARGET=Debug -DCRYPTO=openssl -DX509_IGNORE_CRITICAL=ON ..
    ```
 
    ```
-   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=openssl -DX509_IGNORE_CRITICAL=ON ..
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS -DTARGET=Release -DCRYPTO=openssl -DX509_IGNORE_CRITICAL=ON ..
    ```
    ```
-   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Debug -DCRYPTO=mbedtls -DX509_IGNORE_CRITICAL=ON ..
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS -DTARGET=Debug -DCRYPTO=mbedtls -DX509_IGNORE_CRITICAL=ON ..
    ```
 
    ```
-   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls -DX509_IGNORE_CRITICAL=ON ..
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS -DTARGET=Release -DCRYPTO=mbedtls -DX509_IGNORE_CRITICAL=ON ..
    ```

@@ -45,7 +45,7 @@ jobs:
           - Release
         toolchain:
           - GCC
-          - VS2019
+          - VS
           - LIBFUZZER
           - CLANG
           - ARM_GNU
@@ -57,7 +57,7 @@ jobs:
           - "-DDISABLE_TESTS=1"
         exclude:
           - os: ubuntu-latest
-            toolchain: VS2019
+            toolchain: VS
           - os: ubuntu-latest
             arch: ia32
           - os: macos-latest
@@ -65,7 +65,7 @@ jobs:
           - os: macos-latest
             toolchain: GCC
           - os: macos-latest
-            toolchain: VS2019
+            toolchain: VS
           - os: macos-latest
             toolchain: ARM_GNU
           - os: macos-latest
@@ -95,7 +95,7 @@ jobs:
           - arch: aarch64
             toolchain: GCC
           - arch: aarch64
-            toolchain: VS2019
+            toolchain: VS
           - arch: aarch64
             toolchain: LIBFUZZER
           - os: windows-latest
@@ -119,13 +119,13 @@ jobs:
           - crypto: openssl
             toolchain: ARM_GNU
     steps:
-      - name: Toolchain Setup - VS2019 (x64)
-        if: matrix.toolchain == 'VS2019' && matrix.arch == 'x64'
+      - name: Toolchain Setup - VS (x64)
+        if: matrix.toolchain == 'VS' && matrix.arch == 'x64'
         uses: TheMrMilchmann/setup-msvc-dev@v4
         with:
           arch: x64
-      - name: Toolchain Setup - VS2019 (x86)
-        if: matrix.toolchain == 'VS2019' && matrix.arch == 'ia32'
+      - name: Toolchain Setup - VS (x86)
+        if: matrix.toolchain == 'VS' && matrix.arch == 'ia32'
         uses: TheMrMilchmann/setup-msvc-dev@v4
         with:
           arch: x86

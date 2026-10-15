@@ -882,7 +882,7 @@ jobs:
           - name: windows-ia32-vs-mbedtls-debug
             os: windows-latest
             arch: ia32
-            toolchain: VS2022
+            toolchain: VS
             crypto: mbedtls
             target: Debug
             msvc_arch: x86
@@ -891,7 +891,7 @@ jobs:
           - name: windows-ia32-vs-openssl-release
             os: windows-latest
             arch: ia32
-            toolchain: VS2022
+            toolchain: VS
             crypto: openssl
             target: Release
             msvc_arch: x86
@@ -900,7 +900,7 @@ jobs:
           - name: windows-x64-vs-openssl-debug
             os: windows-latest
             arch: x64
-            toolchain: VS2022
+            toolchain: VS
             crypto: openssl
             target: Debug
             msvc_arch: x64
@@ -909,7 +909,7 @@ jobs:
           - name: windows-x64-vs-mbedtls-debug
             os: windows-latest
             arch: x64
-            toolchain: VS2022
+            toolchain: VS
             crypto: mbedtls
             target: Debug
             msvc_arch: x64
@@ -918,7 +918,7 @@ jobs:
           - name: windows-ia32-vs-openssl-debug
             os: windows-latest
             arch: ia32
-            toolchain: VS2022
+            toolchain: VS
             crypto: openssl
             target: Debug
             msvc_arch: x86
@@ -927,7 +927,7 @@ jobs:
           - name: windows-x64-vs-mbedtls-release
             os: windows-latest
             arch: x64
-            toolchain: VS2022
+            toolchain: VS
             crypto: mbedtls
             target: Release
             msvc_arch: x64
@@ -936,7 +936,7 @@ jobs:
           - name: windows-x64-vs-openssl-release
             os: windows-latest
             arch: x64
-            toolchain: VS2022
+            toolchain: VS
             crypto: openssl
             target: Release
             msvc_arch: x64

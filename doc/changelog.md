@@ -249,7 +249,8 @@
     - `LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT` requires `LIBSPDM_CERT_PARSE_SUPPORT`.
 
 ## Build Changes
-- VS2015 is no longer supported. MSVC builds use `/std:c11`.
+- VS2015 is no longer supported, and `TOOLCHAIN=VS` replaces `VS2019` and `VS2022`. MSVC builds use
+  `/std:c11`, which needs Visual Studio 2019 version 16.8 or later.
 - New `LOONGARCH64_GNU` toolchain.
 - libspdm builds on macOS with `TOOLCHAIN=CLANG`.
 - `os_stub` implementations of the debug and random number libraries, and of `libspdm_sleep`, for
