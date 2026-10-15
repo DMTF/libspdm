@@ -2,7 +2,8 @@
 
 ## New Features
 - Support for SPDM 1.4, aligned with DSP0274 version 1.4.1, and for secured messages version 1.3,
-  aligned with DSP0277 version 1.3.0.
+  aligned with DSP0277 version 1.3.0. `SLOT_MANAGEMENT` and Responder-initiated `END_SESSION` are
+  not yet implemented.
 - Post-quantum cryptography, with OpenSSL only: ML-DSA and SLH-DSA signatures, and ML-KEM key
   establishment, including FIPS known-answer tests.
 - Redesigned Responder encapsulated request flow. The Integrator registers a single flow handler
@@ -122,6 +123,7 @@
     - `libspdm_check_context` - fails for a Responder with `PUB_KEY_ID_CAP` whose SPDM versions
       include 1.0, which has no provisioned public keys. `LIBSPDM_DATA_IS_REQUESTER` should be set
       before it is called.
+    - `libspdm_verify_req_info` - exists only when `LIBSPDM_CERT_PARSE_SUPPORT` is enabled.
 - Library APIs removed:
     - Replaced by the registered encapsulated flow handler:
         - `libspdm_init_get_endpoint_info_encap_state`
@@ -188,6 +190,44 @@
       `CERT_CAP`, `CHAL_CAP`, `MEAS_CAP`, `MEL_CAP`, `KEY_EX_CAP`, `PSK_CAP` and `EP_INFO_CAP`.
     - `LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT` is available only when `LIBSPDM_CERT_PARSE_SUPPORT` is
       enabled.
+
+## Industry Standard Header Changes
+- The `/include/industry_standard` headers add the definitions of SPDM 1.4, DSP0277 1.3, PCIe 6.5
+  (DOE, IDE_KM and TDISP) and CXL 4.0 (TSP).
+- Macros renamed:
+    - `SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY`,
+      `SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS` and
+      `SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY` are renamed to
+      `SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY`, `SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS` and
+      `SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY`.
+    - `SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH` is renamed to `SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM`.
+- Macro values changed:
+    - `SPDM_MAX_VERSION_COUNT` is incremented from 4 to 5 to accommodate SPDM 1.4.
+    - `SECURED_SPDM_MAX_VERSION_COUNT` is incremented from 3 to 4 to accommodate DSP0277 1.3.
+    - `SPDM_REGISTRY_ID_MAX` is incremented from 0xA to 0xB for `SPDM_REGISTRY_ID_DMTF_DSP`.
+    - `SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK` is 0x3, for the `OpaqueDataFmt0` and
+      `OpaqueDataFmt1` bits. It was 0xF.
+    - `SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MASK` is 0x7F, for
+      `DMTFSpecMeasurementValueType[6:0]`. It was 0x7.
+    - `SPDM_MAX_VENDOR_ID_LENGTH` is 9, the size of the longest `VendorID`, an encoded CBOR tag
+      number. It was 255.
+    - `PCI_IDE_KM_KEY_SUB_STREAM_MASK` is 0x70, for the 3-bit Key Sub-Stream field. It was 0xF0.
+    - `CXL_TSP_SET_CKID_SPECIFIC_KEY_CKID_TYPE_TVM_CKID` and
+      `CXL_TSP_SET_CKID_SPECIFIC_KEY_CKID_TYPE_OS_CKID` are 0 and 1, as CXL 4.0 defines them. They
+      were 1 and 2.
+- Structures changed:
+    - `spdm_cert_chain_t` has a single `uint32_t length`, as DSP0274 1.4 defines, in place of
+      `uint16_t length` and `uint16_t reserved`. A chain of at most 0xFFFF bytes is encoded as
+      before, but code that sets `reserved` must drop it.
+    - Reserved fields that SPDM 1.4 defines are renamed. `reserved2` is `ext_flags` in
+      `spdm_get_capabilities_request_t` and `spdm_capabilities_response_t`. The first four bytes of
+      `reserved2` are `pqc_asym_algo` in `spdm_negotiate_algorithms_request_t` and `pqc_asym_sel` in
+      `spdm_algorithms_response_t`.
+    - `pci_ide_km_query_resp_t` - `reserved` is renamed to `caps`.
+    - `pci_tdisp_bind_p2p_stream_request_t` - the new `stream_config` field makes the request one
+      byte longer.
+    - `cxl_tsp_get_target_capabilities_rsp_t` - `uint16_t reserved2` is split into
+      `uint8_t additional_capabilities` and `uint8_t reserved2`.
 
 ## Configuration Macro Changes
 - Configuration macros removed:
@@ -279,8 +319,6 @@
   the files in its own build must update the list.
 
 ## Additional Changes
-- `SPDM_MAX_VERSION_COUNT` is incremented from 4 to 5 to accommodate SPDM 1.4.
-- `SECURED_SPDM_MAX_VERSION_COUNT` is incremented from 3 to 4 to accommodate DSP0277 1.3.
 - Certificate chain verification in the provided cryptography libraries validates the whole path, as
   RFC 5280 describes. Both libraries enforce `pathLenConstraint`, and OpenSSL also evaluates
   `nameConstraints`, which Mbed TLS does not (Mbed-TLS/mbedtls#8759). It can therefore reject chains
