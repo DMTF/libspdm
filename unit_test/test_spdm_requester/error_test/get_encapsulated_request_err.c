@@ -877,6 +877,61 @@ static void req_get_encapsulated_request_err_case22(void **state)
     #endif /* !(LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) */
 }
 
+/**
+ * Test 23: ENCAPSULATED_RESPONSE_ACK designates slot 1 for the Requester, but the Requester has no
+ *          certificate chain provisioned in slot 1.
+ * Expected Behavior: Returns LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ **/
+static void req_get_encapsulated_request_err_case23(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t req_slot_id;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xF;
+
+    set_standard_state(spdm_context);
+    spdm_context->local_context.local_cert_chain_provision[1] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[1] = 0;
+
+    req_slot_id = 0;
+    status = libspdm_encapsulated_request(spdm_context, NULL, 0, &req_slot_id);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
+
+/**
+ * Test 24: ENCAPSULATED_RESPONSE_ACK designates slot 1 for the Requester, and the Requester has a
+ *          certificate chain provisioned in slot 1.
+ * Expected Behavior: Returns LIBSPDM_STATUS_SUCCESS and the designated slot 1.
+ **/
+static void req_get_encapsulated_request_err_case24(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t req_slot_id;
+    static uint8_t cert_chain[1];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xF;
+
+    set_standard_state(spdm_context);
+    spdm_context->local_context.local_cert_chain_provision[1] = cert_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[1] = sizeof(cert_chain);
+
+    req_slot_id = 0;
+    status = libspdm_encapsulated_request(spdm_context, NULL, 0, &req_slot_id);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(req_slot_id, 1);
+
+    spdm_context->local_context.local_cert_chain_provision[1] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[1] = 0;
+}
+
 int libspdm_req_get_encapsulated_request_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -902,6 +957,8 @@ int libspdm_req_get_encapsulated_request_error_test(void)
         cmocka_unit_test(req_get_encapsulated_request_err_case20),
         cmocka_unit_test(req_get_encapsulated_request_err_case21),
         cmocka_unit_test(req_get_encapsulated_request_err_case22),
+        cmocka_unit_test(req_get_encapsulated_request_err_case23),
+        cmocka_unit_test(req_get_encapsulated_request_err_case24),
     };
 
     libspdm_test_context_t test_context = {
