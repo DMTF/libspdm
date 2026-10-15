@@ -644,6 +644,12 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto receive_done;
             }
+            /* The Responder shall not request a slot that is not provisioned. */
+            if (cert_cap && (spdm_context->local_context.local_cert_chain_provision[
+                                 *req_slot_id_param] == NULL)) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto receive_done;
+            }
             if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
                 spdm_context->connection_info.multi_key_conn_req &&
                 (*req_slot_id_param != 0xf)) {

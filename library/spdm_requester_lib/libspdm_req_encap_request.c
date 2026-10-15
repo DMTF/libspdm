@@ -438,6 +438,12 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
                         libspdm_release_receiver_buffer (spdm_context);
                         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
                     }
+                    /* The Responder shall not designate a slot that is not provisioned. */
+                    if (spdm_context->local_context.local_cert_chain_provision[
+                            *req_slot_id_param] == NULL) {
+                        libspdm_release_receiver_buffer (spdm_context);
+                        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                    }
 
                     if ((spdm_encapsulated_response_ack_response->header.spdm_version >=
                          SPDM_MESSAGE_VERSION_13) &&

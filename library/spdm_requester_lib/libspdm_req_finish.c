@@ -411,6 +411,11 @@ static libspdm_return_t libspdm_try_send_receive_finish(
             status = LIBSPDM_STATUS_INVALID_PARAMETER;
             goto error;
         }
+        if ((req_slot_id_param != 0xFF) &&
+            (spdm_context->local_context.local_cert_chain_provision[req_slot_id_param] == NULL)) {
+            status = LIBSPDM_STATUS_INVALID_PARAMETER;
+            goto error;
+        }
     } else {
         if (req_slot_id_param != 0) {
             status = LIBSPDM_STATUS_INVALID_PARAMETER;
