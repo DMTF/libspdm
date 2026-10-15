@@ -202,9 +202,9 @@ For riscv64 (RISCV64 GCC): `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
 3) Fuzzing in Linux with LLVM [LibFuzzer](https://llvm.org/docs/LibFuzzer.html)
 
-   First install LLVM with: `sudo apt install llvm`, and install CLANG with: `sudo apt install clang`.
+   First install LLVM with: `sudo apt install llvm`, and install Clang with: `sudo apt install clang`.
 
-   Ensure LLVM and CLANG binary in PATH environment variable.
+   Ensure that the LLVM and Clang binaries are in the PATH environment variable.
    Use `llvm-ar --version` and `clang --version` to confirm the LLVM version(Take 'Ubuntu 20.04.2 LTS' as an example).
    ```
    ~$ llvm-ar --version
