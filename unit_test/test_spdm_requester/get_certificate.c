@@ -2977,16 +2977,16 @@ static void req_get_certificate_case9(void **state)
     status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
+                LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+        assert_int_equal(spdm_context->transcript.message_b.buffer_size,
+                         sizeof(spdm_get_certificate_request_t) * count +
+                         sizeof(spdm_certificate_response_t) * count + data_size);
+#endif
     } else {
         assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     }
-
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) / LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
-    assert_int_equal(spdm_context->transcript.message_b.buffer_size,
-                     sizeof(spdm_get_certificate_request_t) * count +
-                     sizeof(spdm_certificate_response_t) * count + data_size);
-#endif
     free(data);
 }
 
