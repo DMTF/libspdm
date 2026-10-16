@@ -102,20 +102,21 @@ static libspdm_return_t libspdm_dispatch_encap_need_continue(
     libspdm_context_t *spdm_context, const uint32_t *session_id, uint8_t last_request_code,
     size_t *encap_request_size, void *encap_request)
 {
-    libspdm_encap_context_t *encap_context;
-
-    encap_context = libspdm_get_encap_context(spdm_context, session_id);
-
-    /* session_id comes from the request that libspdm is responding to, so it is necessarily
-     * valid. */
-    LIBSPDM_ASSERT(encap_context != NULL);
-
     switch (last_request_code) {
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
-    case SPDM_GET_CERTIFICATE:
+    case SPDM_GET_CERTIFICATE: {
+        libspdm_encap_context_t *encap_context;
+
+        encap_context = libspdm_get_encap_context(spdm_context, session_id);
+
+        /* session_id comes from the request that libspdm is responding to, so it is necessarily
+         * valid. */
+        LIBSPDM_ASSERT(encap_context != NULL);
+
         return libspdm_get_encap_request_get_certificate_continue(
             spdm_context, session_id, encap_context->req_slot_id,
             encap_request_size, encap_request);
+    }
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
     case SPDM_KEY_UPDATE:
         return libspdm_get_encap_request_key_update(
