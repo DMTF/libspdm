@@ -764,6 +764,7 @@ libspdm_return_t libspdm_heartbeat(void *spdm_context, uint32_t session_id);
 libspdm_return_t libspdm_key_update(void *spdm_context, uint32_t session_id, bool single_direction);
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
 
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 /**
  * This function executes a series of SPDM encapsulated requests and receives SPDM encapsulated responses.
  *
@@ -849,6 +850,7 @@ libspdm_return_t libspdm_generate_encap_extended_error_response(
     const void *spdm_context, uint8_t error_code, uint8_t error_data,
     size_t extended_error_data_size, const uint8_t *extended_error_data,
     size_t *spdm_response_size, void *spdm_response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
 /**
