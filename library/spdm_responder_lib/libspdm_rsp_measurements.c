@@ -379,6 +379,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
         libspdm_write_uint24(spdm_response->measurement_record_length, 0);
         break;
     case SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS:
+#if LIBSPDM_DEBUG_ASSERT_ENABLE
         LIBSPDM_DEBUG_CODE(
             uint8_t index;
             size_t debug_measurements_record_size;
@@ -398,6 +399,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
         }
             LIBSPDM_ASSERT(debug_measurements_record_size == measurements_size);
             );
+#endif /* LIBSPDM_DEBUG_ASSERT_ENABLE */
 
         spdm_response->header.spdm_version = spdm_request->header.spdm_version;
         spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
