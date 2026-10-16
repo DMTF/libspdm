@@ -424,6 +424,7 @@ bool libspdm_hkdf_expand(uint32_t base_hash_algo, const uint8_t *prk,
  **/
 uint32_t libspdm_get_asym_signature_size(uint32_t base_asym_algo);
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
 /**
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
  * based upon negotiated asymmetric algorithm.
@@ -442,6 +443,7 @@ bool libspdm_asym_get_public_key_from_x509(uint32_t base_asym_algo,
                                            const uint8_t *cert,
                                            size_t cert_size,
                                            void **context);
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 /**
  * Retrieve the asymmetric public key from the DER-encoded public key data,
@@ -599,6 +601,7 @@ bool libspdm_asym_sign_hash(
  **/
 uint32_t libspdm_get_req_asym_signature_size(uint16_t req_base_asym_alg);
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
 /**
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
  * based upon negotiated requester asymmetric algorithm.
@@ -617,6 +620,7 @@ bool libspdm_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg,
                                                const uint8_t *cert,
                                                size_t cert_size,
                                                void **context);
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 /**
  * Retrieve the asymmetric public key from the DER-encoded public key data,
@@ -1166,6 +1170,7 @@ bool libspdm_verify_req_info(uint8_t *req_info, uint16_t req_info_len);
  **/
 uint32_t libspdm_get_pqc_asym_signature_size(uint32_t pqc_asym_algo);
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
 /**
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
  * based upon negotiated asymmetric algorithm.
@@ -1184,6 +1189,7 @@ bool libspdm_pqc_asym_get_public_key_from_x509(uint32_t pqc_asym_algo,
                                                const uint8_t *cert,
                                                size_t cert_size,
                                                void **context);
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 /**
  * Retrieve the asymmetric public key from the DER-encoded public key data,
@@ -1315,6 +1321,7 @@ bool libspdm_pqc_asym_sign_hash(
  **/
 uint32_t libspdm_get_req_pqc_asym_signature_size(uint32_t req_pqc_asym_alg);
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
 /**
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
  * based upon negotiated requester asymmetric algorithm.
@@ -1333,6 +1340,7 @@ bool libspdm_req_pqc_asym_get_public_key_from_x509(uint32_t req_pqc_asym_alg,
                                                    const uint8_t *cert,
                                                    size_t cert_size,
                                                    void **context);
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 /**
  * Retrieve the asymmetric public key from the DER-encoded public key data,
