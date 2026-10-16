@@ -6,10 +6,95 @@
 
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
+#include "internal/libspdm_secured_message_lib.h"
+#include "library/spdm_transport_pcidoe_lib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
 #define CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE (64)
+#define CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE (64)
+#define CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE (256)
+
+/* Passes a plaintext PCI DOE CHUNK_SEND (ChunkSeqNo 0) of spdm_request_size bytes to
+ * libspdm_process_request. */
+static libspdm_return_t libspdm_test_process_doe_chunk_send(
+    libspdm_context_t *spdm_context, uint8_t connection_version, uint32_t data_transfer_size,
+    uint32_t max_spdm_msg_size, size_t spdm_request_size)
+{
+    uint8_t request[sizeof(pci_doe_data_object_header_t) +
+                    CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE + sizeof(uint32_t)];
+    size_t transport_request_size;
+    pci_doe_data_object_header_t *doe_header;
+    spdm_chunk_send_request_14_t *chunk_send;
+    uint8_t *large_message;
+    uint32_t *session_id;
+    bool is_app_message;
+
+    transport_request_size = sizeof(pci_doe_data_object_header_t) +
+                             ((spdm_request_size + 3) & ~(size_t)3);
+    assert_true(transport_request_size <= sizeof(request));
+
+    spdm_context->connection_info.version = connection_version <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    libspdm_register_transport_layer_func(
+        spdm_context, LIBSPDM_MAX_SPDM_MSG_SIZE,
+        LIBSPDM_PCI_DOE_TRANSPORT_HEADER_SIZE,
+        LIBSPDM_PCI_DOE_TRANSPORT_TAIL_SIZE,
+        libspdm_transport_pci_doe_encode_message,
+        libspdm_transport_pci_doe_decode_message);
+    spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
+    spdm_context->local_context.capability.max_spdm_msg_size = max_spdm_msg_size;
+    spdm_context->connection_info.capability.data_transfer_size =
+        CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.max_spdm_msg_size =
+        CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE;
+
+    libspdm_zero_mem(request, sizeof(request));
+    doe_header = (pci_doe_data_object_header_t *)request;
+    doe_header->vendor_id = PCI_DOE_VENDOR_ID_PCISIG;
+    doe_header->data_object_type = PCI_DOE_DATA_OBJECT_TYPE_SPDM;
+    doe_header->length = (uint32_t)(transport_request_size / sizeof(uint32_t));
+    chunk_send = (spdm_chunk_send_request_14_t *)(doe_header + 1);
+    chunk_send->header.spdm_version = SPDM_MESSAGE_VERSION_14;
+    chunk_send->header.request_response_code = SPDM_CHUNK_SEND;
+    chunk_send->header.param2 = 1;
+    chunk_send->chunk_seq_no = 0;
+    chunk_send->chunk_size = data_transfer_size - sizeof(*chunk_send) - sizeof(uint32_t);
+    large_message = (uint8_t *)(chunk_send + 1);
+    libspdm_write_uint32(large_message, 128);
+    large_message[sizeof(uint32_t)] = SPDM_MESSAGE_VERSION_14;
+    large_message[sizeof(uint32_t) + 1] = SPDM_SET_CERTIFICATE;
+
+    session_id = NULL;
+    is_app_message = false;
+    return libspdm_process_request(spdm_context, &session_id, &is_app_message,
+                                   transport_request_size, request);
+}
+
+/* Builds the response to the processed plaintext request. The caller must release
+ * the sender buffer. */
+static void *libspdm_test_build_doe_response(libspdm_context_t *spdm_context)
+{
+    libspdm_return_t status;
+    void *message;
+    void *response;
+    size_t message_size;
+
+    libspdm_acquire_sender_buffer(spdm_context, &message_size, &message);
+    libspdm_zero_mem(message, message_size);
+    response = message;
+    status = libspdm_build_response(spdm_context, NULL, false,
+                                    &message_size, &response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    return (uint8_t *)message + spdm_context->local_context.capability.transport_header_size;
+}
 
 typedef struct {
     spdm_message_header_t header;
@@ -2306,6 +2391,341 @@ static void libspdm_test_responder_receive_send_rsp_case26(void **state)
     libspdm_release_sender_buffer(spdm_context);
 }
 
+/**
+ * Test 27: A plaintext PCI DOE CHUNK_SEND that exceeds DataTransferSize by one
+ * trailing DWORD is not trimmed; it is rejected with ERROR(InvalidRequest).
+ **/
+static void libspdm_test_responder_receive_send_rsp_case27(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_error_response_t *error_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 27;
+
+    status = libspdm_test_process_doe_chunk_send(
+        spdm_context, SPDM_MESSAGE_VERSION_14, CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE,
+        CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE,
+        CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE + sizeof(uint32_t));
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->last_spdm_request_size,
+                     CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE + sizeof(uint32_t));
+    error_response = libspdm_test_build_doe_response(spdm_context);
+    assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error_response->header.param1,
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+
+    libspdm_release_sender_buffer(spdm_context);
+}
+
+/**
+ * Test 28: With a DataTransferSize that is not DWORD aligned, 1 to 3 bytes of
+ * PCI DOE padding after a DataTransferSize-sized CHUNK_SEND are trimmed and the
+ * chunk is accepted.
+ **/
+static void libspdm_test_responder_receive_send_rsp_case28(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_chunk_send_ack_response_14_t *chunk_send_ack;
+    uint32_t data_transfer_size;
+    uint32_t padding;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 28;
+
+    for (padding = 1; padding <= 3; padding++) {
+        data_transfer_size = CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE + 4 - padding;
+        libspdm_zero_mem(&spdm_context->chunk_context.send,
+                         sizeof(spdm_context->chunk_context.send));
+
+        status = libspdm_test_process_doe_chunk_send(
+            spdm_context, SPDM_MESSAGE_VERSION_14, data_transfer_size,
+            CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE, data_transfer_size);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+        assert_int_equal(spdm_context->last_spdm_request_size, data_transfer_size);
+        chunk_send_ack = libspdm_test_build_doe_response(spdm_context);
+        assert_int_equal(chunk_send_ack->header.request_response_code,
+                         SPDM_CHUNK_SEND_ACK);
+        assert_int_equal(chunk_send_ack->header.param1, 0);
+        assert_int_equal(chunk_send_ack->chunk_seq_no, 0);
+        assert_true(spdm_context->chunk_context.send.chunk_in_use);
+        assert_int_equal(spdm_context->chunk_context.send.chunk_bytes_transferred,
+                         data_transfer_size - sizeof(spdm_chunk_send_request_14_t) -
+                         sizeof(uint32_t));
+
+        libspdm_release_sender_buffer(spdm_context);
+    }
+}
+
+/**
+ * Test 29: A decoded plaintext PCI DOE CHUNK_SEND larger than the saved-request
+ * capacity (MaxSPDMmsgSize) must not be trimmed to DataTransferSize and ACKed.
+ **/
+static void libspdm_test_responder_receive_send_rsp_case29(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_error_response_t *error_response;
+    size_t decoded_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 29;
+
+    decoded_size = CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE + sizeof(uint32_t);
+    status = libspdm_test_process_doe_chunk_send(
+        spdm_context, SPDM_MESSAGE_VERSION_14, CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE,
+        CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE, decoded_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_true(decoded_size >
+                libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context));
+    assert_int_equal(spdm_context->last_spdm_error.error_code,
+                     SPDM_ERROR_CODE_REQUEST_TOO_LARGE);
+    assert_int_equal(spdm_context->last_spdm_request_size, 0);
+
+    error_response = libspdm_test_build_doe_response(spdm_context);
+    assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_REQUEST_TOO_LARGE);
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+    assert_int_equal(spdm_context->last_spdm_error.error_code, 0);
+    libspdm_release_sender_buffer(spdm_context);
+}
+
+/**
+ * Test 30: Before SPDM 1.2, which defines neither CHUNK_SEND nor RequestTooLarge, a CHUNK_SEND
+ * larger than MaxSPDMmsgSize is answered with ERROR(UnsupportedRequest).
+ **/
+static void libspdm_test_responder_receive_send_rsp_case30(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_error_response_t *error_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 30;
+
+    status = libspdm_test_process_doe_chunk_send(
+        spdm_context, SPDM_MESSAGE_VERSION_11, CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE,
+        CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE,
+        CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE + sizeof(uint32_t));
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->last_spdm_error.error_code, 0);
+    assert_int_equal(spdm_context->last_spdm_request_size,
+                     CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE);
+
+    error_response = libspdm_test_build_doe_response(spdm_context);
+    assert_int_equal(error_response->header.spdm_version, SPDM_MESSAGE_VERSION_11);
+    assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal(error_response->header.param2, SPDM_CHUNK_SEND);
+    libspdm_release_sender_buffer(spdm_context);
+}
+
+/**
+ * Test 33: A plaintext PCI DOE CHUNK_SEND within a MaxSPDMmsgSize that is not DWORD aligned is not
+ * answered with RequestTooLarge because of its padding; it is rejected with ERROR(InvalidRequest).
+ **/
+static void libspdm_test_responder_receive_send_rsp_case33(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_error_response_t *error_response;
+    uint32_t max_spdm_msg_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 33;
+
+    max_spdm_msg_size = CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE - 2;
+    status = libspdm_test_process_doe_chunk_send(
+        spdm_context, SPDM_MESSAGE_VERSION_14, CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE,
+        max_spdm_msg_size, max_spdm_msg_size - 1);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->last_spdm_error.error_code, 0);
+    assert_int_equal(spdm_context->last_spdm_request_size, max_spdm_msg_size);
+
+    error_response = libspdm_test_build_doe_response(spdm_context);
+    assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+    libspdm_release_sender_buffer(spdm_context);
+}
+
+#if ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) && \
+    (LIBSPDM_AEAD_AES_256_GCM_SUPPORT)
+#define CHUNK_SEND_UNIT_TEST_SESSION_ID 0xFFFFFFFF
+
+/* Encrypts a CHUNK_SEND (ChunkSeqNo 0) of spdm_request_size bytes in an established session and
+ * passes it to libspdm_process_request. */
+static libspdm_return_t libspdm_test_process_secured_chunk_send(
+    libspdm_context_t *spdm_context, size_t spdm_request_size, uint32_t **session_id)
+{
+    /* The encoder appends random padding after the message in place. */
+    uint8_t plain_buffer[LIBSPDM_TEST_TRANSPORT_HEADER_SIZE +
+                         CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE + sizeof(uint32_t) +
+                         LIBSPDM_TEST_MAX_RANDOM_NUMBER_COUNT];
+    uint8_t transport_buffer[CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE + 256];
+    uint32_t secured_session_id;
+    libspdm_session_info_t *session_info;
+    libspdm_secured_message_context_t *secured_message_context;
+    uint64_t sequence_number;
+    spdm_chunk_send_request_t *chunk_send;
+    uint8_t *message;
+    uint8_t *large_message;
+    void *transport_message;
+    size_t transport_message_size;
+    bool is_app_message;
+    libspdm_return_t status;
+
+    assert_true(spdm_request_size <= CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE + sizeof(uint32_t));
+
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.data_transfer_size =
+        CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->local_context.capability.max_spdm_msg_size =
+        CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE;
+    spdm_context->connection_info.capability.data_transfer_size =
+        CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.max_spdm_msg_size =
+        CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE;
+
+    secured_session_id = CHUNK_SEND_UNIT_TEST_SESSION_ID;
+    spdm_context->latest_session_id = secured_session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, secured_session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
+    libspdm_secured_message_set_session_state(session_info->secured_message_context,
+                                              LIBSPDM_SESSION_STATE_ESTABLISHED);
+
+    libspdm_zero_mem(plain_buffer, sizeof(plain_buffer));
+    message = plain_buffer + LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+    chunk_send = (spdm_chunk_send_request_t *)message;
+    chunk_send->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    chunk_send->header.request_response_code = SPDM_CHUNK_SEND;
+    chunk_send->header.param2 = 1;
+    chunk_send->chunk_seq_no = 0;
+    chunk_send->chunk_size = CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE -
+                             sizeof(*chunk_send) - sizeof(uint32_t);
+    large_message = (uint8_t *)(chunk_send + 1);
+    libspdm_write_uint32(large_message, 128);
+    large_message[sizeof(uint32_t)] = SPDM_MESSAGE_VERSION_12;
+    large_message[sizeof(uint32_t) + 1] = SPDM_SET_CERTIFICATE;
+
+    /* Encoding advances the request sequence number that decoding expects. */
+    secured_message_context = session_info->secured_message_context;
+    sequence_number = secured_message_context->application_secret.request_data_sequence_number;
+    transport_message = transport_buffer;
+    transport_message_size = sizeof(transport_buffer);
+    status = libspdm_transport_test_encode_message(
+        spdm_context, &secured_session_id, false, true, spdm_request_size, message,
+        &transport_message_size, &transport_message);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    secured_message_context->application_secret.request_data_sequence_number = sequence_number;
+
+    *session_id = NULL;
+    is_app_message = false;
+    return libspdm_process_request(spdm_context, session_id, &is_app_message,
+                                   transport_message_size, transport_message);
+}
+
+/**
+ * Test 31: A CHUNK_SEND in a session that exceeds DataTransferSize by one byte is not trimmed,
+ * as a decrypted secured message carries no transport padding, and is rejected.
+ **/
+static void libspdm_test_responder_receive_send_rsp_case31(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t *session_id;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t response_size;
+    spdm_error_response_t *error_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 31;
+
+    status = libspdm_test_process_secured_chunk_send(
+        spdm_context, CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE + 1, &session_id);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_non_null(session_id);
+    assert_int_equal(*session_id, CHUNK_SEND_UNIT_TEST_SESSION_ID);
+    assert_int_equal(spdm_context->last_spdm_request_size,
+                     CHUNK_SEND_UNIT_TEST_DATA_TRANSFER_SIZE + 1);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_chunk_send(
+        spdm_context, spdm_context->last_spdm_request_size, spdm_context->last_spdm_request,
+        &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    error_response = (spdm_error_response_t *)response;
+    assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+}
+
+/**
+ * Test 32: A CHUNK_SEND in a session larger than MaxSPDMmsgSize is answered with
+ * ERROR(RequestTooLarge) in that session.
+ **/
+static void libspdm_test_responder_receive_send_rsp_case32(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t *session_id;
+    void *message;
+    size_t message_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 32;
+
+    status = libspdm_test_process_secured_chunk_send(
+        spdm_context, CHUNK_SEND_UNIT_TEST_MAX_SPDM_MSG_SIZE + sizeof(uint32_t), &session_id);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->last_spdm_error.error_code,
+                     SPDM_ERROR_CODE_REQUEST_TOO_LARGE);
+    assert_non_null(session_id);
+    assert_int_equal(*session_id, CHUNK_SEND_UNIT_TEST_SESSION_ID);
+    assert_int_equal(spdm_context->last_spdm_request_size, 0);
+
+    status = libspdm_acquire_sender_buffer(spdm_context, &message_size, &message);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    status = libspdm_build_response(spdm_context, session_id, false, &message_size, &message);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->last_spdm_error.error_code, 0);
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+    libspdm_release_sender_buffer(spdm_context);
+}
+#endif /* (KEY_EX_CAP || PSK_CAP) && AES_256_GCM */
+
 int libspdm_rsp_receive_send_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -2407,6 +2827,30 @@ int libspdm_rsp_receive_send_test(void)
         /* a response that fits in a single transfer is sent without chunking */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case26,
                                libspdm_unit_test_reset_context),
+        /* oversized PCI DOE CHUNK_SEND is rejected with InvalidRequest */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case27,
+                               libspdm_unit_test_reset_context),
+        /* 1-3 bytes of PCI DOE padding are trimmed from CHUNK_SEND */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case28,
+                               libspdm_unit_test_reset_context),
+        /* decoded PCI DOE CHUNK_SEND exceeds saved-request capacity */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case29,
+                               libspdm_unit_test_reset_context),
+        /* before SPDM 1.2, an oversized CHUNK_SEND is not answered with RequestTooLarge */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case30,
+                               libspdm_unit_test_reset_context),
+        /* DOE padding beyond an unaligned MaxSPDMmsgSize is not RequestTooLarge */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case33,
+                               libspdm_unit_test_reset_context),
+        #if ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) && \
+        (LIBSPDM_AEAD_AES_256_GCM_SUPPORT)
+        /* CHUNK_SEND in a session one byte over DataTransferSize is not trimmed */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case31,
+                               libspdm_unit_test_reset_context),
+        /* CHUNK_SEND in a session over MaxSPDMmsgSize returns RequestTooLarge */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case32,
+                               libspdm_unit_test_reset_context),
+        #endif /* (KEY_EX_CAP || PSK_CAP) && AES_256_GCM */
     };
 
     libspdm_test_context_t test_context = {
