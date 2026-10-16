@@ -10,6 +10,7 @@
 
 #if LIBSPDM_FIPS_MODE
 
+#if LIBSPDM_ECDSA_SUPPORT
 /*hardcode random for ecdsa*/
 static int libspdm_hardcode_random_number_ecdsa(void *rng_state, unsigned char *output, size_t len)
 {
@@ -24,6 +25,7 @@ static int libspdm_hardcode_random_number_ecdsa(void *rng_state, unsigned char *
 
     return 0;
 }
+#endif /* LIBSPDM_ECDSA_SUPPORT */
 
 void libspdm_fips_selftest_ecdsa(void *fips_selftest_context)
 {
