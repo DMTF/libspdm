@@ -1402,6 +1402,7 @@ static void libspdm_test_responder_receive_send_rsp_case23(void **state)
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
+#if (LIBSPDM_RESPOND_IF_READY_SUPPORT) || (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP)
 /* Minimal handler: ends the flow as soon as libspdm asks for a request. Registered because
  * ENCAP_CAP requires a handler; the tests below are about which requests reach libspdm at all. */
 static libspdm_return_t receive_send_encap_handler(
@@ -1413,6 +1414,7 @@ static libspdm_return_t receive_send_encap_handler(
     *request_size = 0;
     return LIBSPDM_STATUS_SUCCESS;
 }
+#endif /* (LIBSPDM_RESPOND_IF_READY_SUPPORT) || (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) */
 
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
 
