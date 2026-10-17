@@ -4872,6 +4872,71 @@ static void libspdm_test_get_local_cert_chain_data_case80(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
 }
 
+
+/**
+ * Test 81: libspdm_reset_context clears the peer's DIGESTS results and the state of an
+ * in-flight RESPOND_IF_READY exchange.
+ * Expected Behavior: the peer slot masks, key pair IDs, certificate info and key usage masks
+ * of the previous connection are cleared, so libspdm_get_data does not return them for the
+ * next connection, and the cached RESPOND_IF_READY request - plaintext even when it arrived
+ * in a session - is erased along with its session ID and the cached ResponseNotReady data.
+ **/
+static void libspdm_test_reset_context_digests_and_cache_case81(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    uint8_t *cache;
+    size_t cache_capacity;
+    size_t index;
+#endif
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x51;
+
+    /* The DIGESTS results of the previous connection. */
+    spdm_context->connection_info.peer_provisioned_slot_mask = 0x05;
+    spdm_context->connection_info.peer_supported_slot_mask = 0x07;
+    spdm_context->connection_info.peer_key_pair_id[1] = 4;
+    spdm_context->connection_info.peer_cert_info[1] = 2;
+    spdm_context->connection_info.peer_key_usage_bit_mask[1] = 0x0002;
+
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    /* The state of a ResponseNotReady/RespondIfReady exchange in flight. */
+    spdm_context->error_data.rd_exponent = 1;
+    spdm_context->error_data.rd_tm = 2;
+    spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
+    spdm_context->error_data.token = 0xAA;
+    spdm_context->cache_spdm_request_size = 4;
+    spdm_context->cache_spdm_request_session_id_valid = true;
+    spdm_context->cache_spdm_request_session_id = LIBSPDM_TEST_SESSION_ID;
+    cache_capacity = libspdm_get_scratch_buffer_cache_spdm_request_capacity(spdm_context);
+    cache = spdm_context->cache_spdm_request;
+    libspdm_set_mem(cache, cache_capacity, 0xA5);
+#endif
+
+    libspdm_reset_context(spdm_context);
+
+    assert_int_equal(spdm_context->connection_info.peer_provisioned_slot_mask, 0);
+    assert_int_equal(spdm_context->connection_info.peer_supported_slot_mask, 0);
+    assert_int_equal(spdm_context->connection_info.peer_key_pair_id[1], 0);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[1], 0);
+    assert_int_equal(spdm_context->connection_info.peer_key_usage_bit_mask[1], 0);
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    assert_int_equal(spdm_context->cache_spdm_request_size, 0);
+    assert_false(spdm_context->cache_spdm_request_session_id_valid);
+    assert_int_equal(spdm_context->cache_spdm_request_session_id, INVALID_SESSION_ID);
+    for (index = 0; index < cache_capacity; index++) {
+        assert_int_equal(cache[index], 0);
+    }
+#endif
+    assert_int_equal(spdm_context->error_data.rd_exponent, 0);
+    assert_int_equal(spdm_context->error_data.rd_tm, 0);
+    assert_int_equal(spdm_context->error_data.request_code, 0);
+    assert_int_equal(spdm_context->error_data.token, 0);
+}
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -5094,6 +5159,8 @@ int libspdm_common_context_data_test_main(void)
             libspdm_unit_test_reset_context),
         cmocka_unit_test_setup(libspdm_test_get_local_cert_chain_data_case80,
                                libspdm_unit_test_reset_context),
+        /* reset_context clears the peer's DIGESTS results and the cached RESPOND_IF_READY request */
+        cmocka_unit_test(libspdm_test_reset_context_digests_and_cache_case81),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);
