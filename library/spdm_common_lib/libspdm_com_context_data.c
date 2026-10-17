@@ -3103,9 +3103,27 @@ void libspdm_reset_context(void *spdm_context)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
     context->connection_info.multi_key_conn_req = false;
     context->connection_info.multi_key_conn_rsp = false;
+    context->connection_info.peer_provisioned_slot_mask = 0;
+    context->connection_info.peer_supported_slot_mask = 0;
+    libspdm_zero_mem(context->connection_info.peer_key_pair_id,
+                     sizeof(context->connection_info.peer_key_pair_id));
+    libspdm_zero_mem(context->connection_info.peer_cert_info,
+                     sizeof(context->connection_info.peer_cert_info));
+    libspdm_zero_mem(context->connection_info.peer_key_usage_bit_mask,
+                     sizeof(context->connection_info.peer_key_usage_bit_mask));
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     context->cache_spdm_request_size = 0;
+    context->cache_spdm_request_session_id_valid = false;
+    context->cache_spdm_request_session_id = INVALID_SESSION_ID;
+    /* The cached request is plaintext even when the original request arrived in
+     * a session, so erase it rather than leave it in the scratch buffer for the
+     * next connection. */
+    if (context->cache_spdm_request != NULL) {
+        libspdm_zero_mem(context->cache_spdm_request,
+                         libspdm_get_scratch_buffer_cache_spdm_request_capacity(context));
+    }
 #endif
+    libspdm_zero_mem(&context->error_data, sizeof(context->error_data));
     context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     context->current_token = 0;
     context->latest_session_id = INVALID_SESSION_ID;
