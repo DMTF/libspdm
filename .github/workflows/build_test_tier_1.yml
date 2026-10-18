@@ -942,6 +942,24 @@ jobs:
             msvc_arch: x64
             generator: NMake Makefiles
 
+          - name: windows-aarch64-vs-mbedtls-debug
+            os: windows-11-arm
+            arch: aarch64
+            toolchain: VS
+            crypto: mbedtls
+            target: Debug
+            msvc_arch: arm64
+            generator: NMake Makefiles
+
+          - name: windows-aarch64-vs-openssl-release
+            os: windows-11-arm
+            arch: aarch64
+            toolchain: VS
+            crypto: openssl
+            target: Release
+            msvc_arch: arm64
+            generator: NMake Makefiles
+
           # CLANG on Windows compiles with clang-cl and links with lld-link,
           # using the developer environment's headers and libraries. OpenSSL's
           # build still uses cl, so the OpenSSL job also links clang-cl code
@@ -1929,7 +1947,7 @@ jobs:
 # Platform jobs are named os-arch-toolchain-crypto-target, so every line below
 # can be re-derived from the matrix rather than trusted. Figures are job counts.
 #
-#   Platform sweep, library defaults, 25 jobs:
+#   Platform sweep, library defaults, 27 jobs:
 #     linux-x64-gcc-mbedtls-debug          linux-x64-clang-openssl-release
 #     linux-aarch64-gcc-mbedtls-debug      macos-aarch64-clang-openssl-release
 #     linux-x64-gcc-openssl-release        linux-x64-clang-mbedtls-debug
@@ -1940,24 +1958,25 @@ jobs:
 #     windows-ia32-vs-mbedtls-debug        windows-ia32-vs-openssl-release
 #     windows-x64-vs-openssl-debug         windows-x64-vs-mbedtls-debug
 #     windows-ia32-vs-openssl-debug        windows-x64-vs-mbedtls-release
-#     windows-x64-vs-openssl-release       windows-x64-clang-openssl-debug
+#     windows-x64-vs-openssl-release       windows-aarch64-vs-mbedtls-debug
+#     windows-aarch64-vs-openssl-release   windows-x64-clang-openssl-debug
 #     windows-ia32-clang-mbedtls-release   windows-x64-mingw-mbedtls-release
 #     windows-x64-mingw-openssl-debug
 #
 #   Every value of every dimension is exercised:
-#     OS         Linux 11  macOS 3   Windows 11
-#     ARCH       ia32 4    x64 16    aarch64 5
-#     TOOLCHAIN  Visual Studio 7   Native GCC 6      MinGW GCC 2       CLANG 10
-#     CRYPTO     Mbed TLS 11  OpenSSL 14
-#     TARGET     Debug 13     Release 12
+#     OS         Linux 11  macOS 3   Windows 13
+#     ARCH       ia32 4    x64 16    aarch64 7
+#     TOOLCHAIN  Visual Studio 9   Native GCC 6      MinGW GCC 2       CLANG 10
+#     CRYPTO     Mbed TLS 12  OpenSSL 15
+#     TARGET     Debug 14     Release 13
 #
 #   Full ARCH x CRYPTO cross, the stated exception to sparse crossing:
 #     ia32    x Mbed TLS 2   ia32    x OpenSSL 2
 #     x64     x Mbed TLS 7   x64     x OpenSSL 9
-#     aarch64 x Mbed TLS 2   aarch64 x OpenSSL 3
+#     aarch64 x Mbed TLS 3   aarch64 x OpenSSL 4
 #
 #   TOOLCHAIN x CRYPTO, complete:
-#     Visual Studio x Mbed TLS 3   Visual Studio x OpenSSL 4
+#     Visual Studio x Mbed TLS 4   Visual Studio x OpenSSL 5
 #     Native GCC    x Mbed TLS 3   Native GCC    x OpenSSL 3
 #     CLANG         x Mbed TLS 4   CLANG         x OpenSSL 6
 #     MinGW GCC     x Mbed TLS 1   MinGW GCC     x OpenSSL 1

@@ -35,12 +35,20 @@ set(CMAKE_GENERATOR ${CMAKE_GENERATOR} CACHE STRING "Choose the generator of cma
 
 # Detect ARCH only if not set
 if(NOT DEFINED ARCH)
-    string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" DETECTED_ARCH)
+    # MSVC and clang-cl report the architecture that they target, which in a cross-compiling
+    # developer prompt is not the host's.
+    if(MSVC AND CMAKE_C_COMPILER_ARCHITECTURE_ID)
+        string(TOLOWER "${CMAKE_C_COMPILER_ARCHITECTURE_ID}" DETECTED_ARCH)
+    else()
+        string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" DETECTED_ARCH)
+    endif()
 
     if (DETECTED_ARCH STREQUAL "amd64" OR DETECTED_ARCH STREQUAL "x86_64")
         set(DETECTED_ARCH "x64")
     elseif (DETECTED_ARCH STREQUAL "x86" OR DETECTED_ARCH STREQUAL "i386" OR DETECTED_ARCH STREQUAL "i686")
         set(DETECTED_ARCH "ia32")
+    elseif (DETECTED_ARCH STREQUAL "arm64")
+        set(DETECTED_ARCH "aarch64")
     endif()
 
     message(STATUS "Auto-detected ARCH = ${DETECTED_ARCH}")
@@ -672,6 +680,8 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:AMD64")
         elseif(ARCH STREQUAL "ia32")
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:I386")
+        elseif(ARCH STREQUAL "aarch64")
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:ARM64")
         endif()
 
         # clang-cl ignores -Oz, and -gcodeview turns on debug information only from LLVM 22.
@@ -753,6 +763,8 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:AMD64")
         elseif(ARCH STREQUAL "ia32")
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:I386")
+        elseif(ARCH STREQUAL "aarch64")
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MACHINE:ARM64")
         endif()
         # CMake selects the DLL C runtime, /MD or /MDd, whose objects name its libraries.
         set(CMAKE_C_STANDARD_LIBRARIES "Kernel32.lib Gdi32.lib User32.lib Winmm.lib Advapi32.lib ws2_32.lib")
