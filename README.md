@@ -105,10 +105,10 @@
 
 | Windows System  | ia32 | x64 | arm | aarch64 | riscv32 | riscv64 |
 | --------------- | ---- | --- | --- | ------- | ------- | ------- |
-| [VS](https://visualstudio.microsoft.com/downloads/) |  cl  |  cl |  -  |    -    |    -    |    -    |
+| [VS](https://visualstudio.microsoft.com/downloads/) |  cl  |  cl |  -  |   cl    |    -    |    -    |
 | [ARM_DS2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) |  -   |  -  | armclang | armclang |    -    |    -    |
 | [GCC](https://gcc.gnu.org/) | gcc  | gcc |  -  |    -    |    -    |    -    |
-| [CLANG](https://llvm.org/) | clang-cl | clang-cl |  -  |    -    |    -    |    -    |
+| [CLANG](https://llvm.org/) | clang-cl | clang-cl |  -  | clang-cl |    -    |    -    |
 
 | Linux System    | ia32 | x64 | arm | aarch64 | riscv32 | riscv64 | loongarch64 |
 | --------------- | ---- | --- | --- | ------- | ------- | ------- | ----------- |
@@ -155,9 +155,10 @@ Support [CodeQL](https://codeql.github.com/) tool.
 
 ### Build Tools for Windows
 
-1) Compiler for IA32/X64 (Choose one)
+1) Compiler for IA32/X64/AARCH64 (Choose one)
 
     a) [Visual Studio](https://visualstudio.microsoft.com/downloads/) 2019 version 16.8 or later, with Windows SDK 10.0.20348.0 or later
+    - AARCH64 builds also need the MSVC ARM64 build tools component.
 
     b) [LLVM](https://llvm.org/) (LLVM13)
     - Install [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0). Change the LLVM install path to `C:\LLVM`, and add LLVM path `C:\LLVM\bin` in PATH environment for the `CLANG` toolchain on Windows.
@@ -235,17 +236,20 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
    A `-DCMAKE_TOOLCHAIN_FILE` on the command line takes precedence.
    A build directory keeps the compiler and target flags it was first configured with, so use a new build directory when changing `TOOLCHAIN` or `ARCH`.
 
-### Windows Builds for IA32/X64
+### Windows Builds for IA32/X64/AARCH64
    For ia32 builds, use a `x86 Native Tools Command Prompt for Visual Studio...` command prompt.
 
    For x64 builds, use a `x64 Native Tools Command Prompt for Visual Studio...` command prompt.
+
+   For aarch64 builds, use an `ARM64 Native Tools Command Prompt for Visual Studio...` command prompt on Windows on Arm.
+   An `x64_arm64 Cross Tools Command Prompt for Visual Studio...` command prompt builds them on x64, where the tests cannot run.
 
    General build steps: (Note the `..` at the end of the cmake command).
    ```
    cd libspdm
    mkdir build
    cd build
-   cmake -G"NMake Makefiles" -DARCH=<x64|ia32> -DTOOLCHAIN=<VS|CLANG> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   cmake -G"NMake Makefiles" -DARCH=<x64|ia32|aarch64> -DTOOLCHAIN=<VS|CLANG> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
    nmake copy_sample_key
    nmake
    ```

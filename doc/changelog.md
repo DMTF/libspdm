@@ -293,6 +293,8 @@
   `/std:c11`, which needs Visual Studio 2019 version 16.8 or later.
 - New `LOONGARCH64_GNU` toolchain.
 - libspdm builds on macOS with `TOOLCHAIN=CLANG`.
+- libspdm builds on Windows on Arm with `ARCH=aarch64` and `TOOLCHAIN=VS` or `CLANG`. Without
+  `ARCH`, MSVC and clang-cl builds take the architecture that the compiler targets, not the host's.
 - `os_stub` implementations of the debug and random number libraries, and of `libspdm_sleep`, for
   Zephyr.
 - New `X509_IGNORE_TIME` option, which makes the provided cryptography libraries ignore the validity

@@ -8,6 +8,8 @@ if(CMAKE_HOST_WIN32)
         # with /machine:x64.
         set(CMAKE_C_COMPILER_TARGET i686-pc-windows-msvc)
         set(CMAKE_C_FLAGS_INIT "-march=i586")
+    elseif(ARCH STREQUAL "aarch64")
+        set(CMAKE_C_COMPILER_TARGET aarch64-pc-windows-msvc)
     endif()
 elseif(CMAKE_HOST_APPLE)
     set(CMAKE_C_COMPILER clang)

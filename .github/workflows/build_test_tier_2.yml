@@ -1,7 +1,7 @@
 # Implements "Tier 2 - Daily Coverage" from doc/internal/continuous_integration.md:
 #   - the core unit tests against every combination of operating system, host
 #     hardware, toolchain, cryptography library and build target that the CMake
-#     build files support, 48 in all, in the posix, windows-msvc and mingw
+#     build files support, 56 in all, in the posix, windows-msvc and mingw
 #     families,
 #   - other operating system and compiler versions, sparsely, in the versions
 #     family and in windows-msvc's older MSVC toolsets, and
@@ -60,10 +60,10 @@ jobs:
   # mingw and configs run at most 5 + 4 + 2 + 5 = 16 jobs at once, and versions
   # waits for posix and then takes over its 5. That leaves 4 of the 20 runners
   # that doc/internal/continuous_integration.md assumes for pull requests and
-  # pushes. If every job took that document's worst case of 20 minutes,
-  # windows-msvc and mingw would finish in at most five rounds, or 100 minutes,
-  # within Tier 2's two hours. configs, at 67 jobs, and posix followed by
-  # versions, at 51, cannot meet that worst case. Their jobs take about 3
+  # pushes. If every job took that document's worst case of 20 minutes, mingw
+  # would finish in at most four rounds, or 80 minutes, within Tier 2's two
+  # hours. windows-msvc, at 28 jobs, configs, at 67, and posix followed by
+  # versions, at 51, cannot meet that worst case. Their jobs take about 3 to 7
   # minutes, so each finishes in about 40 minutes, and the timing report warns if
   # a run takes longer than two hours.
 
@@ -1112,7 +1112,7 @@ jobs:
       max-parallel: 4
       matrix:
         toolchain: [VS, CLANG]
-        arch: [x64, ia32]
+        arch: [x64, ia32, aarch64]
         crypto: [mbedtls, openssl]
         target: [Debug, Release]
         # The image's default VC++ toolset. The jobs at the end of include name
@@ -1122,6 +1122,9 @@ jobs:
           - {os: windows-latest, generator: NMake Makefiles}
           - {arch: x64, msvc_arch: x64}
           - {arch: ia32, msvc_arch: x86}
+          # include may replace the os that the first entry added, since os is
+          # not a matrix key.
+          - {arch: aarch64, msvc_arch: arm64, os: windows-11-arm}
           # Lower-case spellings for the job name.
           - {toolchain: VS, tc: vs}
           - {toolchain: CLANG, tc: clang}
