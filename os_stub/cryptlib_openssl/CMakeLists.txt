@@ -8,7 +8,6 @@ target_include_directories(cryptlib_openssl
         ${LIBSPDM_DIR}/include/hal
         ${LIBSPDM_DIR}/os_stub/include
         ${LIBSPDM_DIR}/os_stub/cryptlib_openssl
-        ${LIBSPDM_DIR}/os_stub/openssllib/include
 )
 
 target_sources(cryptlib_openssl

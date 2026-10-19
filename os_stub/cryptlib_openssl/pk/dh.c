@@ -19,6 +19,7 @@
 #include <openssl/err.h>
 #include <openssl/dh.h>
 #include <openssl/param_build.h>
+#include <string.h>
 
 #if LIBSPDM_FFDHE_SUPPORT
 
