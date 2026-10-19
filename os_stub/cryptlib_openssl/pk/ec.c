@@ -20,6 +20,7 @@
 #include <openssl/objects.h>
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>
+#include <stdio.h>
 #include <string.h>
 
 #define MAX_CURVE_BYTES 66 /* P-521 */

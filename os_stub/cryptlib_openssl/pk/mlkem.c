@@ -1,12 +1,13 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #include "internal_crypt_lib.h"
 #include "key_context.h"
 
+#include <string.h>
 #include <openssl/evp.h>
 #include <openssl/core_names.h>
 

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -18,7 +18,7 @@
 #include "library/cryptlib.h"
 #include "library/spdm_crypt_lib.h"
 
-#include "crt_support.h"
+#include <limits.h>
 
 #include <openssl/opensslv.h>
 #include <openssl/evp.h>
