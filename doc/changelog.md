@@ -315,7 +315,8 @@
 - The `os_stub` headers `cryptlib_ext.h`, `spdm_crypt_ext_lib.h` and
   `spdm_device_secret_lib_internal.h` move to `os_stub/include`, as `hal/library/cryptlib_ext.h`,
   `library/spdm_crypt_ext_lib.h` and `internal/libspdm_device_secret_lib.h`.
-- `os_stub/openssllib/include/crt_support.h` is removed.
+- `os_stub/openssllib` no longer has `include/crt_support.h`, `buildinf.h`, `process_files.pl`,
+  `rand_pool.c` or `timer_wrapper.c`.
 - 14 core library source files are renamed after the message that they send, such as
   `libspdm_rsp_finish.c` to `libspdm_rsp_finish_rsp.c`, and 17 are added. An Integrator that lists
   the files in its own build must update the list.
