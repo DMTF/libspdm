@@ -62,7 +62,7 @@ jobs:
   # that doc/internal/continuous_integration.md assumes for pull requests and
   # pushes. If every job took that document's worst case of 20 minutes, mingw
   # would finish in at most four rounds, or 80 minutes, within Tier 2's two
-  # hours. windows-msvc, at 28 jobs, configs, at 67, and posix followed by
+  # hours. windows-msvc, at 28 jobs, configs, at 77, and posix followed by
   # versions, at 51, cannot meet that worst case. Their jobs take about 3 to 7
   # minutes, so each finishes in about 40 minutes, and the timing report warns if
   # a run takes longer than two hours.
@@ -2406,6 +2406,188 @@ jobs:
               -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=0
               -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=0
               -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=0
+
+          # == Pairwise ====================================================
+          # The rows above change one toggle at a time. Together these ten set
+          # every pair of values of 26 toggles: the 16 capabilities,
+          # vendor-defined messages, the four Requester send options,
+          # respond-if-ready, the message log, the context check, transcript
+          # recording and FIPS mode. Two of the 1,300 pairs cannot occur, since
+          # the macro check requires GET_KEY_PAIR_INFO_CAP with
+          # SET_KEY_PAIR_INFO_CAP and ENCAP_CAP with EVENT_RECIPIENT_SUPPORT.
+          # Every row keeps CERT_CAP, CHAL_CAP or KEY_EX_CAP on, since the unit
+          # tests need a signing algorithm, and the DHE algorithms go off with
+          # KEY_EX_CAP.
+
+          - name: config-pairwise-01
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_PSK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEL_CAP=0
+              -DLIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES=0
+              -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=0
+              -DLIBSPDM_CHECK_SPDM_CONTEXT=0
+              -DLIBSPDM_FIPS_MODE=1
+            extra_tests: test_spdm_fips
+
+          - name: config-pairwise-02
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CSR_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_EVENT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=0
+              -DLIBSPDM_SEND_GET_CERTIFICATE_SUPPORT=0
+              -DLIBSPDM_SEND_CHALLENGE_SUPPORT=0
+              -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=0
+              -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=0
+              -DLIBSPDM_RESPOND_IF_READY_SUPPORT=0
+              -DLIBSPDM_ENABLE_MSG_LOG=0
+              -DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1
+
+          - name: config-pairwise-03
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_PSK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CSR_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_EVENT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=0
+              -DLIBSPDM_RESPOND_IF_READY_SUPPORT=0
+              -DLIBSPDM_ENABLE_MSG_LOG=0
+              -DLIBSPDM_CHECK_SPDM_CONTEXT=0
+              -DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1
+              -DLIBSPDM_FFDHE_2048_SUPPORT=0 -DLIBSPDM_FFDHE_3072_SUPPORT=0 -DLIBSPDM_FFDHE_4096_SUPPORT=0
+              -DLIBSPDM_ECDHE_P256_SUPPORT=0 -DLIBSPDM_ECDHE_P384_SUPPORT=0 -DLIBSPDM_ECDHE_P521_SUPPORT=0
+
+          - name: config-pairwise-04
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES=0
+              -DLIBSPDM_SEND_GET_CERTIFICATE_SUPPORT=0
+              -DLIBSPDM_SEND_CHALLENGE_SUPPORT=0
+              -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=0
+              -DLIBSPDM_FIPS_MODE=1
+              -DLIBSPDM_FFDHE_2048_SUPPORT=0 -DLIBSPDM_FFDHE_3072_SUPPORT=0 -DLIBSPDM_FFDHE_4096_SUPPORT=0
+              -DLIBSPDM_ECDHE_P256_SUPPORT=0 -DLIBSPDM_ECDHE_P384_SUPPORT=0 -DLIBSPDM_ECDHE_P521_SUPPORT=0
+            extra_tests: test_spdm_fips
+
+          - name: config-pairwise-05
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_PSK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CSR_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=0
+              -DLIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES=0
+              -DLIBSPDM_SEND_GET_CERTIFICATE_SUPPORT=0
+              -DLIBSPDM_SEND_CHALLENGE_SUPPORT=0
+              -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=0
+              -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=0
+              -DLIBSPDM_CHECK_SPDM_CONTEXT=0
+              -DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1
+              -DLIBSPDM_FIPS_MODE=1
+              -DLIBSPDM_FFDHE_2048_SUPPORT=0 -DLIBSPDM_FFDHE_3072_SUPPORT=0 -DLIBSPDM_FFDHE_4096_SUPPORT=0
+              -DLIBSPDM_ECDHE_P256_SUPPORT=0 -DLIBSPDM_ECDHE_P384_SUPPORT=0 -DLIBSPDM_ECDHE_P521_SUPPORT=0
+            extra_tests: test_spdm_fips
+
+          - name: config-pairwise-06
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CSR_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_EVENT_CAP=0
+              -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=0
+              -DLIBSPDM_RESPOND_IF_READY_SUPPORT=0
+              -DLIBSPDM_ENABLE_MSG_LOG=0
+              -DLIBSPDM_FFDHE_2048_SUPPORT=0 -DLIBSPDM_FFDHE_3072_SUPPORT=0 -DLIBSPDM_FFDHE_4096_SUPPORT=0
+              -DLIBSPDM_ECDHE_P256_SUPPORT=0 -DLIBSPDM_ECDHE_P384_SUPPORT=0 -DLIBSPDM_ECDHE_P521_SUPPORT=0
+
+          - name: config-pairwise-07
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=0
+              -DLIBSPDM_RESPOND_IF_READY_SUPPORT=0
+              -DLIBSPDM_CHECK_SPDM_CONTEXT=0
+              -DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1
+
+          - name: config-pairwise-08
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_PSK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_EVENT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=0
+              -DLIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES=0
+              -DLIBSPDM_SEND_CHALLENGE_SUPPORT=0
+              -DLIBSPDM_ENABLE_MSG_LOG=0
+              -DLIBSPDM_CHECK_SPDM_CONTEXT=0
+
+          - name: config-pairwise-09
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_PSK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_EVENT_CAP=0
+              -DLIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES=0
+              -DLIBSPDM_SEND_GET_CERTIFICATE_SUPPORT=0
+              -DLIBSPDM_SEND_CHALLENGE_SUPPORT=0
+              -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=0
+              -DLIBSPDM_RESPOND_IF_READY_SUPPORT=0
+              -DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1
+              -DLIBSPDM_FIPS_MODE=1
+            extra_tests: test_spdm_fips
+
+          - name: config-pairwise-10
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CSR_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=0
+              -DLIBSPDM_SEND_GET_CERTIFICATE_SUPPORT=0
+              -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=0
+              -DLIBSPDM_ENABLE_MSG_LOG=0
+              -DLIBSPDM_FIPS_MODE=1
+            extra_tests: test_spdm_fips
 
     steps:
       - name: Checkout
