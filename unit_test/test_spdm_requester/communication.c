@@ -29,6 +29,11 @@ static const uint8_t m_app_request[] = {0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7
 static const uint8_t m_app_response[] = {
     0xB1, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xBB, 0xBC
 };
+/* Application data whose second and third bytes, where an SPDM message has its request response
+ * code and Param1, are those of an ERROR message with ErrorCode=DecryptError. */
+static const uint8_t m_app_response_decrypt_error[] = {
+    0xB1, SPDM_ERROR, SPDM_ERROR_CODE_DECRYPT_ERROR, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8
+};
 
 static void set_standard_state(libspdm_context_t *spdm_context)
 {
@@ -538,7 +543,11 @@ static libspdm_return_t receive_message(
         spdm_response = (void *)((uint8_t *)*response + LIBSPDM_TEST_TRANSPORT_HEADER_SIZE);
     }
 
-    if (m_request_is_app_message) {
+    if (m_request_is_app_message && (spdm_test_context->case_id == 0x22)) {
+        libspdm_copy_mem(spdm_response, sizeof(m_app_response_decrypt_error),
+                         m_app_response_decrypt_error, sizeof(m_app_response_decrypt_error));
+        spdm_response_size = sizeof(m_app_response_decrypt_error);
+    } else if (m_request_is_app_message) {
         libspdm_copy_mem(spdm_response, sizeof(m_app_response),
                          m_app_response, sizeof(m_app_response));
         spdm_response_size = sizeof(m_app_response);
@@ -1809,6 +1818,45 @@ static void req_communication_case33(void **state)
     #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && (...) */
 }
 
+/**
+ * Test 34: The Responder answers application data with application data whose second and third
+ *          bytes are those of an ERROR message with ErrorCode=DecryptError.
+ * Expected Behavior: libspdm_send_receive_data returns LIBSPDM_STATUS_SUCCESS and the application
+ *                    data, and the session remains.
+ **/
+static void req_communication_case34(void **state)
+{
+    #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t response[sizeof(m_app_response_decrypt_error)];
+    size_t response_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x22;
+
+    set_session_state(spdm_context, LIBSPDM_SESSION_STATE_ESTABLISHED, false);
+
+    session_id = m_session_id;
+    response_size = sizeof(response);
+    status = libspdm_send_receive_data(spdm_context, &session_id, true,
+                                       m_app_request, sizeof(m_app_request),
+                                       response, &response_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(m_app_response_decrypt_error));
+    assert_memory_equal(response, m_app_response_decrypt_error,
+                        sizeof(m_app_response_decrypt_error));
+    assert_non_null(libspdm_get_session_info_via_session_id(spdm_context, m_session_id));
+
+    libspdm_free_session_id(spdm_context, m_session_id);
+    #else
+    skip();
+    #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
+}
+
 int libspdm_req_communication_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1855,6 +1903,7 @@ int libspdm_req_communication_test(void)
         #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
         cmocka_unit_test(req_communication_case32),
         cmocka_unit_test(req_communication_case33),
+        cmocka_unit_test(req_communication_case34),
     };
 
     libspdm_test_context_t test_context = {

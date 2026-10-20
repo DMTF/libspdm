@@ -471,7 +471,7 @@ libspdm_return_t libspdm_receive_data(void *spdm_context, const uint32_t *sessio
         return status;
     }
 
-    if (spdm_response->header.request_response_code == SPDM_ERROR) {
+    if (!is_app_message && (spdm_response->header.request_response_code == SPDM_ERROR)) {
         if ((spdm_response->header.param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) &&
             (session_id != NULL)) {
             libspdm_free_session_id(context, *session_id);

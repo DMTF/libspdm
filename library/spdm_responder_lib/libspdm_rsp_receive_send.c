@@ -888,7 +888,13 @@ response_dispatched:
         goto done;
     }
 
-    request_response_code = spdm_response->request_response_code;
+    if (is_app_message) {
+        /* Application data has no request response code, and 0 matches none of the cases below. */
+        request_response_code = 0;
+    } else {
+        request_response_code = spdm_response->request_response_code;
+    }
+
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     switch (request_response_code) {
     case SPDM_CHUNK_SEND_ACK:
