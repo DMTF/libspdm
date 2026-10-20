@@ -35,7 +35,6 @@ bool libspdm_validate_crypt_hmac(void)
 {
     #if (LIBSPDM_SHA256_SUPPORT) || (LIBSPDM_SHA3_256_SUPPORT) || \
     (LIBSPDM_SM3_256_SUPPORT)
-    void *hmac_ctx;
     uint8_t digest[MAX_DIGEST_SIZE];
     bool status;
 
@@ -47,36 +46,12 @@ bool libspdm_validate_crypt_hmac(void)
     libspdm_my_print("- HMAC-SHA-256: ");
 
     libspdm_zero_mem(digest, MAX_DIGEST_SIZE);
-    hmac_ctx = libspdm_hmac_sha256_new();
-    if (hmac_ctx == NULL) {
-        libspdm_my_print("[Fail]");
-        return false;
-    }
-
-    status = libspdm_hmac_sha256_set_key(hmac_ctx, m_libspdm_hmac_sha256_key, 20);
+    status = libspdm_hmac_sha256_all(m_libspdm_hmac_data, 8, m_libspdm_hmac_sha256_key, 20,
+                                     digest);
     if (!status) {
         libspdm_my_print("[Fail]");
-        libspdm_hmac_sha256_free(hmac_ctx);
         return false;
     }
-
-    libspdm_my_print("Update... ");
-    status = libspdm_hmac_sha256_update(hmac_ctx, m_libspdm_hmac_data, 8);
-    if (!status) {
-        libspdm_my_print("[Fail]");
-        libspdm_hmac_sha256_free(hmac_ctx);
-        return false;
-    }
-
-    libspdm_my_print("Finalize... ");
-    status = libspdm_hmac_sha256_final(hmac_ctx, digest);
-    if (!status) {
-        libspdm_my_print("[Fail]");
-        libspdm_hmac_sha256_free(hmac_ctx);
-        return false;
-    }
-
-    libspdm_hmac_sha256_free(hmac_ctx);
 
     libspdm_my_print("Check value... ");
     if (memcmp(digest, m_libspdm_hmac_sha256_digest, LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
@@ -92,36 +67,13 @@ bool libspdm_validate_crypt_hmac(void)
     libspdm_my_print("- HMAC-SHA3-256: ");
 
     libspdm_zero_mem(digest, MAX_DIGEST_SIZE);
-    hmac_ctx = libspdm_hmac_sha3_256_new();
-    if (hmac_ctx == NULL) {
-        libspdm_my_print("[Fail]\n");
-        return false;
-    }
-
-    status = libspdm_hmac_sha3_256_set_key(hmac_ctx, m_libspdm_hmac_sha256_key, 20);
+    status = libspdm_hmac_sha3_256_all(m_libspdm_hmac_data, 8, m_libspdm_hmac_sha256_key, 20,
+                                       digest);
     if (!status) {
         libspdm_my_print("[Fail]");
-        libspdm_hmac_sha3_256_free(hmac_ctx);
         return false;
     }
 
-    libspdm_my_print("Update... ");
-    status = libspdm_hmac_sha3_256_update(hmac_ctx, m_libspdm_hmac_data, 8);
-    if (!status) {
-        libspdm_my_print("[Fail]");
-        libspdm_hmac_sha3_256_free(hmac_ctx);
-        return false;
-    }
-
-    libspdm_my_print("Finalize... ");
-    status = libspdm_hmac_sha3_256_final(hmac_ctx, digest);
-    if (!status) {
-        libspdm_my_print("[Fail]");
-        libspdm_hmac_sha3_256_free(hmac_ctx);
-        return false;
-    }
-
-    libspdm_hmac_sha3_256_free(hmac_ctx);
     libspdm_my_print("[Pass]\n");
     #endif /* LIBSPDM_SHA3_256_SUPPORT */
 
@@ -130,36 +82,13 @@ bool libspdm_validate_crypt_hmac(void)
     libspdm_my_print("- HMAC-SM3-256: ");
 
     libspdm_zero_mem(digest, MAX_DIGEST_SIZE);
-    hmac_ctx = libspdm_hmac_sm3_256_new();
-    if (hmac_ctx == NULL) {
-        libspdm_my_print("[Fail]\n");
-        return false;
-    }
-
-    status = libspdm_hmac_sm3_256_set_key(hmac_ctx, m_libspdm_hmac_sha256_key, 20);
+    status = libspdm_hmac_sm3_256_all(m_libspdm_hmac_data, 8, m_libspdm_hmac_sha256_key, 20,
+                                      digest);
     if (!status) {
         libspdm_my_print("[Fail]");
-        libspdm_hmac_sm3_256_free(hmac_ctx);
         return false;
     }
 
-    libspdm_my_print("Update... ");
-    status = libspdm_hmac_sm3_256_update(hmac_ctx, m_libspdm_hmac_data, 8);
-    if (!status) {
-        libspdm_my_print("[Fail]");
-        libspdm_hmac_sm3_256_free(hmac_ctx);
-        return false;
-    }
-
-    libspdm_my_print("Finalize... ");
-    status = libspdm_hmac_sm3_256_final(hmac_ctx, digest);
-    if (!status) {
-        libspdm_my_print("[Fail]");
-        libspdm_hmac_sm3_256_free(hmac_ctx);
-        return false;
-    }
-
-    libspdm_hmac_sm3_256_free(hmac_ctx);
     libspdm_my_print("[Pass]\n");
     #endif /* LIBSPDM_SM3_256_SUPPORT */
 
