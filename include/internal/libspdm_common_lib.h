@@ -2207,6 +2207,18 @@ uint8_t libspdm_mask_mel_specification(libspdm_context_t *spdm_context, uint8_t 
 uint32_t libspdm_mask_base_asym_algo(libspdm_context_t *spdm_context, uint32_t base_asym_algo);
 
 /**
+ * Returns the AlgSupported of an AlgStruct that is masked by the negotiated SPDM version.
+ *
+ * @param  spdm_context   A pointer to the SPDM context.
+ * @param  alg_type       AlgType of the AlgStruct.
+ * @param  alg_supported  Unmasked AlgSupported.
+ *
+ * @return The masked AlgSupported.
+ */
+uint16_t libspdm_mask_alg_supported(libspdm_context_t *spdm_context, uint8_t alg_type,
+                                    uint16_t alg_supported);
+
+/**
  * Check if the combination of SVH ID and VendorIDLen are legal.
  *
  * @param  id             Registry or standards body identifier (SPDM_REGISTRY_ID_*).
