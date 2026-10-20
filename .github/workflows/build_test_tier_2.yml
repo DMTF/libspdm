@@ -8,8 +8,8 @@
 #   - the code configuration sweeps under ASan and UBSan, in the configs family,
 #     and a few of the same configurations with MSVC and MinGW, in windows-msvc
 #     and mingw, and
-#   - MSan on the defaults and a selection of those configurations, in the
-#     sanitizers family.
+#   - MSan on the defaults and a selection of those configurations, and ASan
+#     and UBSan with GCC and on aarch64, in the sanitizers family.
 #
 # Unlike Tier 1, each platform family's matrix is a cross product, so the matrix
 # itself shows that every combination is covered. The family split and the one
@@ -67,8 +67,8 @@ jobs:
   # doc/internal/continuous_integration.md assumes for pull requests and
   # pushes. If every job took that document's worst case of 20 minutes, mingw
   # would finish in at most five rounds, or 100 minutes, within Tier 2's two
-  # hours. windows-msvc, at 34 jobs, configs, at 77, and posix followed by
-  # versions and then sanitizers, at 66, cannot meet that worst case. Their
+  # hours. windows-msvc, at 34 jobs, configs, at 81, and posix followed by
+  # versions and then sanitizers, at 72, cannot meet that worst case. Their
   # jobs take about 3 to 10 minutes, so each finishes in about 40 minutes, and
   # the timing report warns if a run takes longer than two hours.
 
@@ -2205,6 +2205,41 @@ jobs:
           - name: config-defaults-release
             target: Release
 
+          # == Release =====================================================
+          # Tier 1's coarse configurations, optimized, since the optimizer can
+          # expose behavior that a Debug build hides.
+
+          - name: config-defaults-openssl-release
+            crypto: openssl
+            target: Release
+
+          - name: config-fips-release
+            target: Release
+            cflags: -DLIBSPDM_FIPS_MODE=1
+            extra_tests: test_spdm_fips
+
+          - name: config-record-transcript-release
+            target: Release
+            cflags: -DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1
+
+          - name: config-minimal-caps-release
+            target: Release
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_PSK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CSR_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_EVENT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=0
+              -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=0
+              -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=0
+
           # == One capability off ==========================================
           # Where the macro check requires another macro off with it, that
           # one is off too.
@@ -3069,19 +3104,20 @@ jobs:
             build/CMakeCache.txt
           retention-days: 14
 
-  # MemorySanitizer, which cannot share a build with ASan, on the defaults, on
-  # Tier 1's coarse configurations and on the pairwise rows of configs. The
-  # jobs start once versions and mingw have finished, whether or not they
-  # passed, and run in the runners that those families used, so Tier 2 never
-  # runs more jobs at once. The steps are configs', without those that no job
-  # here needs, plus Select sanitizer.
+  # Sanitizer runs that configs does not make: MemorySanitizer, which cannot
+  # share a build with ASan, on the defaults, on Tier 1's coarse configurations
+  # and on the pairwise rows of configs, and ASan and UBSan with GCC and on
+  # aarch64. The jobs start once versions and mingw have finished, whether or
+  # not they passed, and run in the runners that those families used, so Tier
+  # 2 never runs more jobs at once. The steps are configs', without those that
+  # no job here needs, plus Select sanitizer.
   sanitizers:
     name: ${{ matrix.name }}
     needs: [versions, mingw]
     if: >-
       !cancelled() && (github.repository == 'DMTF/libspdm'
       || github.event_name != 'schedule')
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.os || 'ubuntu-24.04' }}
     timeout-minutes: 45
     env:
       JOB_NAME: ${{ matrix.name }}
@@ -3310,6 +3346,49 @@ jobs:
               -DLIBSPDM_FIPS_MODE=1
             extra_tests: test_spdm_fips
 
+          # == ASan and UBSan elsewhere ====================================
+          # configs runs these with Clang on x64. GCC instruments the code
+          # differently, and aarch64 differs in ABI.
+
+          - name: gcc-asan-defaults
+            sanitizer: address
+            os: ubuntu-24.04
+            arch: x64
+            toolchain: GCC
+
+          - name: gcc-asan-defaults-openssl
+            sanitizer: address
+            os: ubuntu-24.04
+            arch: x64
+            toolchain: GCC
+            crypto: openssl
+
+          - name: gcc-asan-fips
+            sanitizer: address
+            os: ubuntu-24.04
+            arch: x64
+            toolchain: GCC
+            cflags: -DLIBSPDM_FIPS_MODE=1
+            extra_tests: test_spdm_fips
+
+          - name: gcc-asan-record-transcript
+            sanitizer: address
+            os: ubuntu-24.04
+            arch: x64
+            toolchain: GCC
+            cflags: -DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1
+
+          - name: linux-aarch64-asan-defaults
+            sanitizer: address
+            os: ubuntu-24.04-arm
+            arch: aarch64
+
+          - name: linux-aarch64-asan-defaults-openssl
+            sanitizer: address
+            os: ubuntu-24.04-arm
+            arch: aarch64
+            crypto: openssl
+
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -3355,18 +3434,48 @@ jobs:
             rm -f unit_test/cmockalib/cmocka/.git
           fi
           fetch os_stub/mbedtlslib/mbedtls --recursive
+          # libspdm builds OpenSSL from the pinned commit's source alone, so
+          # neither its history nor its own submodules are fetched.
+          if [ "${{ matrix.crypto || 'mbedtls' }}" = "openssl" ]; then
+            fetch os_stub/openssllib/openssl --depth 1
+          fi
+
+      - name: OpenSSL revision
+        if: matrix.crypto == 'openssl'
+        id: ossl
+        shell: bash
+        run: |
+          echo "sha=$(git -C os_stub/openssllib/openssl rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "image=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
+
+      # The same key as the posix family's jobs on the same runner and
+      # toolchain: OpenSSL takes neither the macros nor the sanitizer flags, so
+      # their trees are interchangeable.
+      - name: Cache OpenSSL build
+        if: matrix.crypto == 'openssl'
+        uses: actions/cache@v6
+        with:
+          path: build/os_stub/openssllib
+          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain || 'CLANG' }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          restore-keys: |
+            openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain || 'CLANG' }}-${{ steps.ossl.outputs.sha }}-
 
       # The commands are written to a script so that the reproducer runs exactly
-      # what this step ran. MemorySanitizer reports a read of uninitialized
-      # memory reliably only if every object is instrumented, and Mbed TLS's
-      # assembly cannot be. Every target reads Mbed TLS's user configuration
-      # file, so it turns the assembly off. -fsanitize-memory-track-origins
-      # would also name where each value came from, but it doubles the run
-      # time, so add it to the reproducer to trace a report.
+      # what this step ran.
+      #   memory   MemorySanitizer reports a read of uninitialized memory
+      #            reliably only if every object is instrumented, and Mbed
+      #            TLS's assembly cannot be. Every target reads Mbed TLS's user
+      #            configuration file, so it turns the assembly off.
+      #            -fsanitize-memory-track-origins would also name where each
+      #            value came from, but it doubles the run time, so add it to
+      #            the reproducer to trace a report.
+      #   address  configs' flags, with alignment checks off until #3852 is
+      #            fixed.
       - name: Select sanitizer
         shell: bash
         run: |
-          cat > sanitizer.sh <<'SANITIZER'
+          if [ "${{ matrix.sanitizer }}" = "memory" ]; then
+            cat > sanitizer.sh <<'SANITIZER'
           cat > msan_mbedtls_user_config.h <<'MBEDTLS'
           #undef MBEDTLS_HAVE_ASM
           #undef MBEDTLS_AESNI_C
@@ -3376,7 +3485,13 @@ jobs:
           export SAN_CFLAGS="-fsanitize=memory -fno-omit-frame-pointer -DMBEDTLS_USER_CONFIG_FILE=\\\"$PWD/msan_mbedtls_user_config.h\\\""
           export SAN_LDFLAGS="-fsanitize=memory"
           SANITIZER
-          echo "Sanitizer: ${{ matrix.sanitizer }}"
+          else
+            cat > sanitizer.sh <<'SANITIZER'
+          export SAN_CFLAGS="-fsanitize=address,undefined -fno-sanitize=alignment -fno-omit-frame-pointer"
+          export SAN_LDFLAGS="-fsanitize=address,undefined"
+          SANITIZER
+          fi
+          cat sanitizer.sh
 
           # Under MSan, the RSA key generation in test_crypt can take longer than
           # the test timeout, so MSan neither builds nor runs it.
@@ -3401,10 +3516,10 @@ jobs:
           export CFLAGS="$BASE_CFLAGS $SAN_CFLAGS ${{ matrix.cflags }}"
           export LDFLAGS="$SAN_LDFLAGS"
           cmake -B build \
-            -DARCH=x64 \
-            -DTOOLCHAIN=CLANG \
+            -DARCH=${{ matrix.arch || 'x64' }} \
+            -DTOOLCHAIN=${{ matrix.toolchain || 'CLANG' }} \
             -DTARGET=${{ matrix.target || 'Debug' }} \
-            -DCRYPTO=mbedtls
+            -DCRYPTO=${{ matrix.crypto || 'mbedtls' }}
 
       - name: Build
         shell: bash
@@ -3421,6 +3536,15 @@ jobs:
           if ! command -v llvm-symbolizer >/dev/null 2>&1; then
             echo "::error::llvm-symbolizer is not on PATH"
             exit 1
+          fi
+
+          # halt_on_error makes a UBSan report fail the test, as ASan's and
+          # LSan's reports already do.
+          if [ "${{ matrix.sanitizer }}" = "address" ]; then
+            {
+              echo "ASAN_OPTIONS=detect_leaks=1"
+              echo "UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1"
+            } >> "$GITHUB_ENV"
           fi
 
           cat > run_test.sh <<'RUNNER'
@@ -3506,7 +3630,7 @@ jobs:
 
           header="Reproduces: ${{ env.JOB_NAME }}
           Run:        $run_url
-          Runner:     ubuntu-24.04 (image $image)
+          Runner:     ${{ matrix.os || 'ubuntu-24.04' }} (image $image)
           OS:         ${osname:-unknown}
           Kernel:     ${kernel:-unknown}
           Compiler:   $compiler
@@ -3523,15 +3647,22 @@ jobs:
             echo "cd libspdm-repro"
             echo "git checkout ${{ github.sha }}"
             echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+            if [ "${{ matrix.crypto || 'mbedtls' }}" = "openssl" ]; then
+              echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
+            fi
             echo "$pins" | sed 's/^/# pinned: /'
             echo
             if [ -f sanitizer.sh ]; then cat sanitizer.sh; fi
             echo "export CFLAGS=\"${{ env.BASE_CFLAGS }} \$SAN_CFLAGS ${{ matrix.cflags }}\""
             echo 'export LDFLAGS="$SAN_LDFLAGS"'
-            echo "cmake -B build -DARCH=x64 -DTOOLCHAIN=CLANG -DTARGET=${{ matrix.target || 'Debug' }} -DCRYPTO=mbedtls"
+            echo "cmake -B build -DARCH=${{ matrix.arch || 'x64' }} -DTOOLCHAIN=${{ matrix.toolchain || 'CLANG' }} -DTARGET=${{ matrix.target || 'Debug' }} -DCRYPTO=${{ matrix.crypto || 'mbedtls' }}"
             echo "cmake --build build --target copy_sample_key"
             echo "cmake --build build --parallel \"\$(getconf _NPROCESSORS_ONLN)\" --target $SAN_TESTS"
             echo
+            if [ "${{ matrix.sanitizer }}" = "address" ]; then
+              echo "export ASAN_OPTIONS=detect_leaks=1"
+              echo "export UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1"
+            fi
             echo "cd build/bin"
             for t in $SAN_TESTS; do echo "./$t"; done
           } > "$f"
