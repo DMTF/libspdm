@@ -24,11 +24,18 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
 
     context = spdm_context;
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                   "libspdm_send_spdm_request[%x] msg %s(0x%x), size (0x%zx): \n",
-                   (session_id != NULL) ? *session_id : 0x0,
-                   libspdm_get_code_str(((spdm_message_header_t *)request)->request_response_code),
-                   ((spdm_message_header_t *)request)->request_response_code, request_size));
+    if (is_app_message) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_send_spdm_request[%x] app msg, size (0x%zx): \n",
+                       (session_id != NULL) ? *session_id : 0x0, request_size));
+    } else {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_send_spdm_request[%x] msg %s(0x%x), size (0x%zx): \n",
+                       (session_id != NULL) ? *session_id : 0x0,
+                       libspdm_get_code_str(((spdm_message_header_t *)request)->
+                                            request_response_code),
+                       ((spdm_message_header_t *)request)->request_response_code, request_size));
+    }
     LIBSPDM_INTERNAL_DUMP_HEX(request, request_size);
 
     transport_header_size = context->local_context.capability.transport_header_size;
@@ -285,6 +292,11 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_receive_spdm_response[%x] status - %x\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
+    } else if (is_app_message) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_receive_spdm_response[%x] app msg, size (0x%zx): \n",
+                       (session_id != NULL) ? *session_id : 0x0, *response_size));
+        LIBSPDM_INTERNAL_DUMP_HEX(*response, *response_size);
     } else {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_receive_spdm_response[%x] msg %s(0x%x), size (0x%zx): \n",
