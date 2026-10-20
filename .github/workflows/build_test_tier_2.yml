@@ -6,7 +6,8 @@
 #   - other operating system and compiler versions, sparsely, in the versions
 #     family and in windows-msvc's older MSVC toolsets,
 #   - the code configuration sweeps under ASan and UBSan, in the configs family,
-#     and
+#     and a few of the same configurations with MSVC and MinGW, in windows-msvc
+#     and mingw, and
 #   - MSan on the defaults and a selection of those configurations, in the
 #     sanitizers family.
 #
@@ -65,8 +66,8 @@ jobs:
   # and mingw and then takes over their 7. That leaves 4 of the 20 runners that
   # doc/internal/continuous_integration.md assumes for pull requests and
   # pushes. If every job took that document's worst case of 20 minutes, mingw
-  # would finish in at most four rounds, or 80 minutes, within Tier 2's two
-  # hours. windows-msvc, at 28 jobs, configs, at 77, and posix followed by
+  # would finish in at most five rounds, or 100 minutes, within Tier 2's two
+  # hours. windows-msvc, at 34 jobs, configs, at 77, and posix followed by
   # versions and then sanitizers, at 66, cannot meet that worst case. Their
   # jobs take about 3 to 10 minutes, so each finishes in about 40 minutes, and
   # the timing report warns if a run takes longer than two hours.
@@ -1105,12 +1106,12 @@ jobs:
           retention-days: 14
 
   windows-msvc:
-    name: ${{ format('windows-{0}-{1}-{2}-{3}', matrix.arch, matrix.tc, matrix.crypto, matrix.tgt) }}
+    name: ${{ format('windows-{0}-{1}-{2}-{3}{4}', matrix.arch, matrix.tc, matrix.crypto, matrix.tgt, matrix.variant && format('-{0}', matrix.variant) || '') }}
     if: github.repository == 'DMTF/libspdm' || github.event_name != 'schedule'
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     env:
-      JOB_NAME: ${{ format('windows-{0}-{1}-{2}-{3}', matrix.arch, matrix.tc, matrix.crypto, matrix.tgt) }}
+      JOB_NAME: ${{ format('windows-{0}-{1}-{2}-{3}{4}', matrix.arch, matrix.tc, matrix.crypto, matrix.tgt, matrix.variant && format('-{0}', matrix.variant) || '') }}
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -1122,6 +1123,9 @@ jobs:
         # The image's default VC++ toolset. The jobs at the end of include name
         # another, which this value keeps from merging into the jobs above.
         toolset: ['']
+        # The default configuration. The variant jobs at the end of include
+        # change it, and this value keeps them separate in the same way.
+        variant: ['']
         include:
           - {os: windows-latest, generator: NMake Makefiles}
           - {arch: x64, msvc_arch: x64}
@@ -1142,6 +1146,93 @@ jobs:
           - {toolchain: VS, toolset: '14.44', tc: vs-14.44, os: windows-latest, generator: NMake Makefiles, arch: ia32, msvc_arch: x86, crypto: mbedtls, target: Debug, tgt: debug}
           - {toolchain: VS, toolset: '14.29', tc: vs-14.29, os: windows-latest, generator: NMake Makefiles, arch: x64, msvc_arch: x64, crypto: mbedtls, target: Release, tgt: release}
           - {toolchain: VS, toolset: '14.29', tc: vs-14.29, os: windows-latest, generator: NMake Makefiles, arch: ia32, msvc_arch: x86, crypto: mbedtls, target: Debug, tgt: debug}
+          # Configurations that the configs family sweeps on Linux, here with
+          # MSVC, and AddressSanitizer. The sanitizer runs on ia32 because x64
+          # also builds the test_size images, which link without the C runtime
+          # that the sanitizer's runtime needs.
+          - toolchain: VS
+            variant: fips
+            tc: vs
+            os: windows-latest
+            generator: NMake Makefiles
+            arch: x64
+            msvc_arch: x64
+            crypto: mbedtls
+            target: Debug
+            tgt: debug
+            cflags: -DLIBSPDM_FIPS_MODE=1
+            extra_tests: test_spdm_fips
+          - toolchain: VS
+            variant: fips
+            tc: vs
+            os: windows-latest
+            generator: NMake Makefiles
+            arch: x64
+            msvc_arch: x64
+            crypto: openssl
+            target: Debug
+            tgt: debug
+            cflags: -DLIBSPDM_FIPS_MODE=1
+            extra_tests: test_spdm_fips
+          - toolchain: VS
+            variant: fips
+            tc: vs
+            os: windows-latest
+            generator: NMake Makefiles
+            arch: ia32
+            msvc_arch: x86
+            crypto: mbedtls
+            target: Debug
+            tgt: debug
+            cflags: -DLIBSPDM_FIPS_MODE=1
+            extra_tests: test_spdm_fips
+          - toolchain: VS
+            variant: record-transcript
+            tc: vs
+            os: windows-latest
+            generator: NMake Makefiles
+            arch: x64
+            msvc_arch: x64
+            crypto: mbedtls
+            target: Debug
+            tgt: debug
+            cflags: -DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1
+          - toolchain: VS
+            variant: minimal-caps
+            tc: vs
+            os: windows-latest
+            generator: NMake Makefiles
+            arch: x64
+            msvc_arch: x64
+            crypto: mbedtls
+            target: Debug
+            tgt: debug
+            cflags: >-
+              -DLIBSPDM_ENABLE_CAPABILITY_PSK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CSR_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_MEL_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_EVENT_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP=0
+              -DLIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP=0
+              -DLIBSPDM_EVENT_RECIPIENT_SUPPORT=0
+              -DLIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT=0
+          - toolchain: VS
+            variant: asan
+            tc: vs
+            os: windows-latest
+            generator: NMake Makefiles
+            arch: ia32
+            msvc_arch: x86
+            crypto: mbedtls
+            target: Debug
+            tgt: debug
+            cflags: /fsanitize=address
 
     steps:
       - name: Checkout
@@ -1564,12 +1655,12 @@ jobs:
   # enumerate every matrix job.
 
   mingw:
-    name: ${{ format('windows-{0}-mingw-{1}-{2}', matrix.arch, matrix.crypto, matrix.tgt) }}
+    name: ${{ format('windows-{0}-mingw-{1}-{2}{3}', matrix.arch, matrix.crypto, matrix.tgt, matrix.variant && format('-{0}', matrix.variant) || '') }}
     if: github.repository == 'DMTF/libspdm' || github.event_name != 'schedule'
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     env:
-      JOB_NAME: ${{ format('windows-{0}-mingw-{1}-{2}', matrix.arch, matrix.crypto, matrix.tgt) }}
+      JOB_NAME: ${{ format('windows-{0}-mingw-{1}-{2}{3}', matrix.arch, matrix.crypto, matrix.tgt, matrix.variant && format('-{0}', matrix.variant) || '') }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1577,6 +1668,9 @@ jobs:
         arch: [x64, ia32]
         crypto: [mbedtls, openssl]
         target: [Debug, Release]
+        # The default configuration. The variant job at the end of include
+        # changes it, which this value keeps from merging into the jobs above.
+        variant: ['']
         include:
           - {os: windows-latest, toolchain: GCC, shell: 'msys2 {0}', generator: MSYS Makefiles}
           # The MSYS2 environment for each architecture. MSYS2 has no 32-bit
@@ -1586,6 +1680,21 @@ jobs:
           # Lower-case spellings for the job name.
           - {target: Debug, tgt: debug}
           - {target: Release, tgt: release}
+          # FIPS mode, which the configs family sweeps on Linux, here with
+          # MinGW.
+          - arch: x64
+            crypto: mbedtls
+            target: Debug
+            variant: fips
+            os: windows-latest
+            toolchain: GCC
+            shell: 'msys2 {0}'
+            generator: MSYS Makefiles
+            msystem: UCRT64
+            mingw_prefix: /ucrt64
+            tgt: debug
+            cflags: -DLIBSPDM_FIPS_MODE=1
+            extra_tests: test_spdm_fips
 
     steps:
       - name: Checkout
