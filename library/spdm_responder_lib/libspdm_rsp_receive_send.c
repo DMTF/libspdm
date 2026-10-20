@@ -311,12 +311,18 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
         context->last_spdm_request_session_id_valid = true;
     }
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmReceiveRequest[%x] msg %s(0x%x), size (0x%zx): \n",
-                   (message_session_id != NULL) ? *message_session_id : 0,
-                   libspdm_get_code_str(((spdm_message_header_t *)context->last_spdm_request)->
-                                        request_response_code),
-                   ((spdm_message_header_t *)context->last_spdm_request)->request_response_code,
-                   context->last_spdm_request_size));
+    if (*is_app_message) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmReceiveRequest[%x] app msg, size (0x%zx): \n",
+                       (message_session_id != NULL) ? *message_session_id : 0,
+                       context->last_spdm_request_size));
+    } else {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmReceiveRequest[%x] msg %s(0x%x), size (0x%zx): \n",
+                       (message_session_id != NULL) ? *message_session_id : 0,
+                       libspdm_get_code_str(((spdm_message_header_t *)context->last_spdm_request)->
+                                            request_response_code),
+                       ((spdm_message_header_t *)context->last_spdm_request)->request_response_code,
+                       context->last_spdm_request_size));
+    }
     LIBSPDM_INTERNAL_DUMP_HEX((uint8_t *)context->last_spdm_request,
                               context->last_spdm_request_size);
 
@@ -868,11 +874,16 @@ response_dispatched:
         }
     }
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x]: msg %s(0x%x), size (0x%zx): \n",
-                   (session_id != NULL) ? *session_id : 0,
-                   libspdm_get_code_str(spdm_response->request_response_code),
-                   spdm_response->request_response_code,
-                   my_response_size));
+    if (is_app_message) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x]: app msg, size (0x%zx): \n",
+                       (session_id != NULL) ? *session_id : 0, my_response_size));
+    } else {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x]: msg %s(0x%x), size (0x%zx): \n",
+                       (session_id != NULL) ? *session_id : 0,
+                       libspdm_get_code_str(spdm_response->request_response_code),
+                       spdm_response->request_response_code,
+                       my_response_size));
+    }
     LIBSPDM_INTERNAL_DUMP_HEX(my_response, my_response_size);
 
     status = context->transport_encode_message(
