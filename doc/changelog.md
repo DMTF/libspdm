@@ -37,8 +37,9 @@
     - `libspdm_write_certificate_to_nvm` - replaced by `libspdm_update_local_cert_chain`.
     - `libspdm_gen_csr_ex` - merged into `libspdm_gen_csr`, which also takes the post-quantum
       algorithm.
-    - The HMAC context duplication functions in `cryptlib/cryptlib_mac.h`, such as
-      `libspdm_hmac_sha256_duplicate`.
+    - The HMAC context functions in `cryptlib/cryptlib_mac.h`, such as `libspdm_hmac_sha256_new`,
+      `libspdm_hmac_sha256_update` and `libspdm_hmac_sha256_duplicate`. Only the one-shot
+      functions, such as `libspdm_hmac_sha256_all`, remain.
 - The SPDM context is now always the first parameter of these HAL functions, because
   `LIBSPDM_HAL_PASS_SPDM_CONTEXT` has been removed:
     - `libspdm_challenge_opaque_data`
@@ -135,7 +136,9 @@
       ID and vendor ID of the request.
     - `libspdm_secured_message_import_dhe_secret` - replaced by
       `libspdm_secured_message_import_shared_secret`.
-    - `libspdm_hmac_duplicate`
+    - `libspdm_hmac_new`, `libspdm_hmac_free`, `libspdm_hmac_init`, `libspdm_hmac_update`,
+      `libspdm_hmac_final` and `libspdm_hmac_duplicate` - unused by the library, which computes
+      every HMAC with `libspdm_hmac_all`.
     - `libspdm_transport_get_header_size_func` - unused by the library.
 - Library APIs added:
     - `libspdm_register_encap_flow_handler` - registers the Responder encapsulated request flow.

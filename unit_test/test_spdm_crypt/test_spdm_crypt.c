@@ -1554,10 +1554,9 @@ static void libspdm_test_crypt_hmac_all_algos(void **state)
 {
     size_t index;
     const libspdm_hash_algo_entry_t *entry;
-    uint8_t one_shot[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t incremental[LIBSPDM_MAX_HASH_SIZE];
-    void *context;
-    bool one_shot_result;
+    uint8_t hash_value[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t hmac_value[LIBSPDM_MAX_HASH_SIZE];
+    bool hashed;
 
     for (index = 0; index < LIBSPDM_HASH_ALGO_TABLE_COUNT; index++) {
         entry = &m_libspdm_hash_algo_table[index];
@@ -1566,38 +1565,17 @@ static void libspdm_test_crypt_hmac_all_algos(void **state)
             continue;
         }
 
-        one_shot_result = libspdm_hmac_all(entry->base_hash_algo,
-                                           m_libspdm_hash_sweep_message,
-                                           sizeof(m_libspdm_hash_sweep_message),
-                                           m_libspdm_hash_sweep_key,
-                                           sizeof(m_libspdm_hash_sweep_key), one_shot);
+        hashed = libspdm_hash_all(entry->base_hash_algo, m_libspdm_hash_sweep_message,
+                                  sizeof(m_libspdm_hash_sweep_message), hash_value);
 
-        context = libspdm_hmac_new(entry->base_hash_algo);
-        if (context == NULL) {
-            assert_false(one_shot_result);
-            continue;
-        }
-
-        assert_true(one_shot_result);
-        assert_true(libspdm_hmac_init(entry->base_hash_algo, context,
-                                      m_libspdm_hash_sweep_key,
-                                      sizeof(m_libspdm_hash_sweep_key)));
-        assert_true(libspdm_hmac_update(entry->base_hash_algo, context,
-                                        m_libspdm_hash_sweep_message,
-                                        LIBSPDM_HASH_SWEEP_SPLIT));
-        assert_true(libspdm_hmac_update(entry->base_hash_algo, context,
-                                        m_libspdm_hash_sweep_message + LIBSPDM_HASH_SWEEP_SPLIT,
-                                        sizeof(m_libspdm_hash_sweep_message) -
-                                        LIBSPDM_HASH_SWEEP_SPLIT));
-        assert_true(libspdm_hmac_final(entry->base_hash_algo, context, incremental));
-
-        assert_memory_equal(one_shot, incremental, entry->hash_size);
-
-        libspdm_hmac_free(entry->base_hash_algo, context);
+        /* HMAC is backed by the same digest, so the two stand or fall together. */
+        assert_int_equal(libspdm_hmac_all(entry->base_hash_algo,
+                                          m_libspdm_hash_sweep_message,
+                                          sizeof(m_libspdm_hash_sweep_message),
+                                          m_libspdm_hash_sweep_key,
+                                          sizeof(m_libspdm_hash_sweep_key), hmac_value),
+                         hashed);
     }
-
-    /* Freeing no context does nothing. */
-    libspdm_hmac_free(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, NULL);
 }
 
 static void libspdm_test_crypt_hkdf_all_algos(void **state)

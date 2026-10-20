@@ -327,67 +327,6 @@ bool libspdm_secured_message_kem_decapsulate(
     void *spdm_secured_message_context);
 
 /**
- * Allocates and initializes one HMAC context for subsequent use, with request_finished_key.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- *
- * @return Pointer to the HMAC context that has been initialized.
- **/
-void *libspdm_hmac_new_with_request_finished_key(void *spdm_secured_message_context);
-
-/**
- * Release the specified HMAC context, with request_finished_key.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  hmac_ctx                   Pointer to the HMAC context to be released.
- **/
-void libspdm_hmac_free_with_request_finished_key(
-    void *spdm_secured_message_context, void *hmac_ctx);
-
-/**
- * Set request_finished_key for subsequent use. It must be done before any
- * calling to hmac_update().
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  hmac_ctx  Pointer to HMAC context.
- *
- * @retval true   The key is set successfully.
- * @retval false  The key is set unsuccessfully.
- **/
-bool libspdm_hmac_init_with_request_finished_key(
-    void *spdm_secured_message_context, void *hmac_ctx);
-
-/**
- * Digests the input data and updates HMAC context, with request_finished_key.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  hmac_ctx     Pointer to HMAC context being copied.
- * @param  data              Pointer to the buffer containing the data to be digested.
- * @param  data_size          size of data buffer in bytes.
- *
- * @retval true   HMAC data digest succeeded.
- * @retval false  HMAC data digest failed.
- **/
-bool libspdm_hmac_update_with_request_finished_key(
-    void *spdm_secured_message_context,
-    void *hmac_ctx, const void *data,
-    size_t data_size);
-
-/**
- * Completes computation of the HMAC digest value, with request_finished_key.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  hmac_ctx     Pointer to HMAC context being copied.
- * @param  hmac_value          Pointer to a buffer that receives the HMAC digest value
- *
- * @retval true   HMAC data digest succeeded.
- * @retval false  HMAC data digest failed.
- **/
-bool libspdm_hmac_final_with_request_finished_key(
-    void *spdm_secured_message_context,
-    void *hmac_ctx,  uint8_t *hmac_value);
-
-/**
  * Computes the HMAC of a input data buffer, with request_finished_key.
  *
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
@@ -401,67 +340,6 @@ bool libspdm_hmac_final_with_request_finished_key(
 bool libspdm_hmac_all_with_request_finished_key(void *spdm_secured_message_context,
                                                 const void *data, size_t data_size,
                                                 uint8_t *hmac_value);
-
-/**
- * Allocates and initializes one HMAC context for subsequent use, with response_finished_key.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- *
- * @return Pointer to the HMAC context that has been initialized.
- **/
-void *libspdm_hmac_new_with_response_finished_key(void *spdm_secured_message_context);
-
-/**
- * Release the specified HMAC context, with response_finished_key.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  hmac_ctx                   Pointer to the HMAC context to be released.
- **/
-void libspdm_hmac_free_with_response_finished_key(
-    void *spdm_secured_message_context, void *hmac_ctx);
-
-/**
- * Set response_finished_key for subsequent use. It must be done before any
- * calling to hmac_update().
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  hmac_ctx  Pointer to HMAC context.
- *
- * @retval true   The key is set successfully.
- * @retval false  The key is set unsuccessfully.
- **/
-bool libspdm_hmac_init_with_response_finished_key(
-    void *spdm_secured_message_context, void *hmac_ctx);
-
-/**
- * Digests the input data and updates HMAC context, with response_finished_key.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  hmac_ctx     Pointer to HMAC context being copied.
- * @param  data              Pointer to the buffer containing the data to be digested.
- * @param  data_size          size of data buffer in bytes.
- *
- * @retval true   HMAC data digest succeeded.
- * @retval false  HMAC data digest failed.
- **/
-bool libspdm_hmac_update_with_response_finished_key(
-    void *spdm_secured_message_context,
-    void *hmac_ctx, const void *data,
-    size_t data_size);
-
-/**
- * Completes computation of the HMAC digest value, with response_finished_key.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  hmac_ctx     Pointer to HMAC context being copied.
- * @param  hmac_value          Pointer to a buffer that receives the HMAC digest value
- *
- * @retval true   HMAC data digest succeeded.
- * @retval false  HMAC data digest failed.
- **/
-bool libspdm_hmac_final_with_response_finished_key(
-    void *spdm_secured_message_context,
-    void *hmac_ctx,  uint8_t *hmac_value);
 
 /**
  * Computes the HMAC of a input data buffer, with response_finished_key.
