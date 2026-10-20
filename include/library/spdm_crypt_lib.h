@@ -190,8 +190,7 @@ void *libspdm_hash_new(uint32_t base_hash_algo);
 void libspdm_hash_free(uint32_t base_hash_algo, void *hash_context);
 
 /**
- * Initializes user-supplied memory pointed by hash_context as hash context for
- * subsequent use.
+ * Initializes a hash context, which libspdm_hash_new() allocated, for subsequent use.
  *
  * @param  base_hash_algo  SPDM base_hash_algo
  * @param  hash_context    Pointer to hash context being initialized.
@@ -207,8 +206,9 @@ bool libspdm_hash_init(uint32_t base_hash_algo, void *hash_context);
  * If hash_ctx is NULL, then return false.
  * If new_hash_ctx is NULL, then return false.
  *
- * @param[in]  hash_ctx      Pointer to hash context being copied.
- * @param[out] new_hash_ctx  Pointer to new hash context.
+ * @param[in]  base_hash_algo  SPDM base_hash_algo
+ * @param[in]  hash_ctx        Pointer to hash context being copied.
+ * @param[out] new_hash_ctx    Pointer to new hash context.
  *
  * @retval true   Hash context copy succeeded.
  * @retval false  Hash context copy failed.
@@ -220,14 +220,15 @@ bool libspdm_hash_duplicate(uint32_t base_hash_algo, const void *hash_ctx, void 
  *
  * This function performs hash digest on a data buffer of the specified size.
  * It can be called multiple times to compute the digest of long or discontinuous data streams.
- * Hash context should be already correctly initialized by hash_init(), and should not be finalized
- * by hash_final(). Behavior with invalid context is undefined.
+ * Hash context should be already correctly initialized by libspdm_hash_init(), and should not be
+ * finalized by libspdm_hash_final(). Behavior with invalid context is undefined.
  *
  * If hash_context is NULL, then return false.
  *
- * @param[in, out]  hash_context  Pointer to the MD context.
- * @param[in]       data          Pointer to the buffer containing the data to be hashed.
- * @param[in]       data_size     Size of data buffer in bytes.
+ * @param[in]       base_hash_algo  SPDM base_hash_algo
+ * @param[in, out]  hash_context    Pointer to the MD context.
+ * @param[in]       data            Pointer to the buffer containing the data to be hashed.
+ * @param[in]       data_size       Size of data buffer in bytes.
  *
  * @retval true   Hash data digest succeeded.
  * @retval false  Hash data digest failed.
@@ -241,14 +242,15 @@ bool libspdm_hash_update(uint32_t base_hash_algo, void *hash_context,
  * This function completes hash computation and retrieves the digest value into
  * the specified memory. After this function has been called, the hash context cannot
  * be used again.
- * hash context should be already correctly initialized by hash_init(), and should not be
- * finalized by hash_final(). Behavior with invalid hash context is undefined.
+ * hash context should be already correctly initialized by libspdm_hash_init(), and should not be
+ * finalized by libspdm_hash_final(). Behavior with invalid hash context is undefined.
  *
  * If hash_context is NULL, then return false.
  * If hash_value is NULL, then return false.
  *
- * @param[in, out]  hash_context  Pointer to the hash context.
- * @param[out]      hash_value    Pointer to a buffer that receives the hash digest value.
+ * @param[in]       base_hash_algo  SPDM base_hash_algo
+ * @param[in, out]  hash_context    Pointer to the hash context.
+ * @param[out]      hash_value      Pointer to a buffer that receives the hash digest value.
  *
  * @retval true   Hash digest computation succeeded.
  * @retval false  Hash digest computation failed.
@@ -356,6 +358,7 @@ bool libspdm_hash_all(uint32_t base_hash_algo, const void *data,
  *
  * @return SPDM measurement hash algorithm size.
  * @return 0xFFFFFFFF for RAW_BIT_STREAM_ONLY.
+ * @return 0 if measurement_hash_algo is 0, unknown, or has more than one bit set.
  **/
 uint32_t libspdm_get_measurement_hash_size(uint32_t measurement_hash_algo);
 
@@ -382,12 +385,16 @@ bool libspdm_hmac_all(uint32_t base_hash_algo, const void *data,
  * Derive HMAC-based Extract key Derivation Function (HKDF) Extract, based upon the negotiated HKDF
  * algorithm.
  *
- * @param  ikm           Pointer to the input key material.
- * @param  ikm_size      Key size in bytes.
- * @param  salt          Pointer to the salt value.
- * @param  salt_size     Salt size in bytes.
- * @param  prk_out       Pointer to buffer to receive hkdf value.
- * @param  prk_out_size  Size of hkdf bytes to generate.
+ * The pseudorandom key is the size of the base_hash_algo digest, and prk_out_size must be that
+ * size.
+ *
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  ikm             Pointer to the input key material.
+ * @param  ikm_size        Key size in bytes.
+ * @param  salt            Pointer to the salt value.
+ * @param  salt_size       Salt size in bytes.
+ * @param  prk_out         Pointer to buffer to receive hkdf value.
+ * @param  prk_out_size    Size of the prk_out buffer in bytes.
  *
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
@@ -475,6 +482,16 @@ void libspdm_asym_free(uint32_t base_asym_algo, void *context);
 
 /**
  * Copies signature buffers from src to dst swapping endianness in the process.
+ *
+ * An RSA signature is reversed as a whole, and an ECDSA signature is reversed as its two halves.
+ * Other algorithms are not supported. src and dst can be the same buffer, of the same size, for an
+ * in-place swap. Otherwise they must not overlap, and dst_size must be at least src_size.
+ *
+ * @param  base_asym_algo  SPDM base_asym_algo
+ * @param  dst             Pointer to the buffer that receives the swapped signature.
+ * @param  dst_size        Size of the dst buffer in bytes.
+ * @param  src             Pointer to the signature to be swapped.
+ * @param  src_size        Size of the signature in bytes.
  */
 void libspdm_copy_signature_swap_endian(
     uint32_t base_asym_algo,
@@ -487,6 +504,8 @@ void libspdm_copy_signature_swap_endian(
 /**
  * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
  *
+ * @param  spdm_version    The SPDM version number.
+ * @param  op_code         The SPDM request or response code of the signed message.
  * @param  base_asym_algo  SPDM base_asym_algo
  * @param  base_hash_algo  SPDM base_hash_algo
  * @param  context         Pointer to asymmetric context for signature verification.
@@ -505,6 +524,31 @@ bool libspdm_asym_verify(
     const uint8_t *message, size_t message_size,
     const uint8_t *signature, size_t sig_size);
 
+/**
+ * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm, in the byte orders
+ * that endian selects.
+ *
+ * For SPDM 1.0 and 1.1, endian selects the byte orders of the signature to try, as one of the
+ * LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_* values. If it is
+ * LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE and the signature verifies, then endian
+ * is set to the byte order that verified, unless the signature is the same in both byte orders.
+ * For SPDM 1.2 and later, endian is ignored.
+ *
+ * @param  spdm_version    The SPDM version number.
+ * @param  op_code         The SPDM request or response code of the signed message.
+ * @param  base_asym_algo  SPDM base_asym_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  context         Pointer to asymmetric context for signature verification.
+ * @param  message         Pointer to octet message to be checked (before hash).
+ * @param  message_size    Size of the message in bytes.
+ * @param  signature       Pointer to asymmetric signature to be verified.
+ * @param  sig_size        Size of signature in bytes.
+ * @param  endian          On input, the byte orders to try.
+ *                         On output, the byte order that verified.
+ *
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
+ **/
 bool libspdm_asym_verify_ex(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
@@ -516,6 +560,8 @@ bool libspdm_asym_verify_ex(
 /**
  * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
  *
+ * @param  spdm_version    The SPDM version number.
+ * @param  op_code         The SPDM request or response code of the signed message.
  * @param  base_asym_algo  SPDM base_asym_algo
  * @param  base_hash_algo  SPDM base_hash_algo
  * @param  context         Pointer to asymmetric context for signature verification.
@@ -533,6 +579,31 @@ bool libspdm_asym_verify_hash(
     const uint8_t *message_hash, size_t hash_size,
     const uint8_t *signature, size_t sig_size);
 
+/**
+ * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm, in the byte orders
+ * that endian selects.
+ *
+ * For SPDM 1.0 and 1.1, endian selects the byte orders of the signature to try, as one of the
+ * LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_* values. If it is
+ * LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE and the signature verifies, then endian
+ * is set to the byte order that verified, unless the signature is the same in both byte orders.
+ * For SPDM 1.2 and later, endian is ignored.
+ *
+ * @param  spdm_version    The SPDM version number.
+ * @param  op_code         The SPDM request or response code of the signed message.
+ * @param  base_asym_algo  SPDM base_asym_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  context         Pointer to asymmetric context for signature verification.
+ * @param  message_hash    Pointer to octet message hash to be checked (after hash).
+ * @param  hash_size       Size of the hash in bytes.
+ * @param  signature       Pointer to asymmetric signature to be verified.
+ * @param  sig_size        Size of signature in bytes.
+ * @param  endian          On input, the byte orders to try.
+ *                         On output, the byte order that verified.
+ *
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
+ **/
 bool libspdm_asym_verify_hash_ex(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo, void* context,
@@ -546,6 +617,8 @@ bool libspdm_asym_verify_hash_ex(
  * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
+ * @param  spdm_version    The SPDM version number.
+ * @param  op_code         The SPDM request or response code of the signed message.
  * @param  base_asym_algo  SPDM base_asym_algo
  * @param  base_hash_algo  SPDM base_hash_algo
  * @param  context         Pointer to asymmetric context for signature generation.
@@ -572,6 +645,8 @@ bool libspdm_asym_sign(
  * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
+ * @param  spdm_version    The SPDM version number.
+ * @param  op_code         The SPDM request or response code of the signed message.
  * @param  base_asym_algo  SPDM base_asym_algo
  * @param  base_hash_algo  SPDM base_hash_algo
  * @param  context         Pointer to asymmetric context for signature generation.
@@ -652,6 +727,8 @@ void libspdm_req_asym_free(uint16_t req_base_asym_alg, void *context);
 /**
  * Verifies the asymmetric signature, based upon negotiated requester asymmetric algorithm.
  *
+ * @param  spdm_version       The SPDM version number.
+ * @param  op_code            The SPDM request or response code of the signed message.
  * @param  req_base_asym_alg  SPDM req_base_asym_alg
  * @param  base_hash_algo     SPDM base_hash_algo
  * @param  context            Pointer to asymmetric context for signature verification.
@@ -670,6 +747,31 @@ bool libspdm_req_asym_verify(
     const uint8_t *message, size_t message_size,
     const uint8_t *signature, size_t sig_size);
 
+/**
+ * Verifies the asymmetric signature, based upon negotiated requester asymmetric algorithm, in the
+ * byte orders that endian selects.
+ *
+ * For SPDM 1.0 and 1.1, endian selects the byte orders of the signature to try, as one of the
+ * LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_* values. If it is
+ * LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE and the signature verifies, then endian
+ * is set to the byte order that verified, unless the signature is the same in both byte orders.
+ * For SPDM 1.2 and later, endian is ignored.
+ *
+ * @param  spdm_version       The SPDM version number.
+ * @param  op_code            The SPDM request or response code of the signed message.
+ * @param  req_base_asym_alg  SPDM req_base_asym_alg
+ * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  context            Pointer to asymmetric context for signature verification.
+ * @param  message            Pointer to octet message to be checked (before hash).
+ * @param  message_size       Size of the message in bytes.
+ * @param  signature          Pointer to asymmetric signature to be verified.
+ * @param  sig_size           Size of signature in bytes.
+ * @param  endian             On input, the byte orders to try.
+ *                            On output, the byte order that verified.
+ *
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
+ **/
 bool libspdm_req_asym_verify_ex(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
@@ -680,6 +782,8 @@ bool libspdm_req_asym_verify_ex(
 /**
  * Verifies the asymmetric signature, based upon negotiated requester asymmetric algorithm.
  *
+ * @param  spdm_version       The SPDM version number.
+ * @param  op_code            The SPDM request or response code of the signed message.
  * @param  req_base_asym_alg  SPDM req_base_asym_alg
  * @param  base_hash_algo     SPDM base_hash_algo
  * @param  context            Pointer to asymmetric context for signature verification.
@@ -698,6 +802,31 @@ bool libspdm_req_asym_verify_hash(
     const uint8_t *message_hash, size_t hash_size,
     const uint8_t *signature, size_t sig_size);
 
+/**
+ * Verifies the asymmetric signature, based upon negotiated requester asymmetric algorithm, in the
+ * byte orders that endian selects.
+ *
+ * For SPDM 1.0 and 1.1, endian selects the byte orders of the signature to try, as one of the
+ * LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_* values. If it is
+ * LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE and the signature verifies, then endian
+ * is set to the byte order that verified, unless the signature is the same in both byte orders.
+ * For SPDM 1.2 and later, endian is ignored.
+ *
+ * @param  spdm_version       The SPDM version number.
+ * @param  op_code            The SPDM request or response code of the signed message.
+ * @param  req_base_asym_alg  SPDM req_base_asym_alg
+ * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  context            Pointer to asymmetric context for signature verification.
+ * @param  message_hash       Pointer to octet message hash to be checked (after hash).
+ * @param  hash_size          Size of the hash in bytes.
+ * @param  signature          Pointer to asymmetric signature to be verified.
+ * @param  sig_size           Size of signature in bytes.
+ * @param  endian             On input, the byte orders to try.
+ *                            On output, the byte order that verified.
+ *
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
+ **/
 bool libspdm_req_asym_verify_hash_ex(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
@@ -711,6 +840,8 @@ bool libspdm_req_asym_verify_hash_ex(
  * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
+ * @param  spdm_version       The SPDM version number.
+ * @param  op_code            The SPDM request or response code of the signed message.
  * @param  req_base_asym_alg  SPDM req_base_asym_alg
  * @param  base_hash_algo     SPDM base_hash_algo
  * @param  context            Pointer to asymmetric context for signature generation.
@@ -737,6 +868,8 @@ bool libspdm_req_asym_sign(
  * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
+ * @param  spdm_version       The SPDM version number.
+ * @param  op_code            The SPDM request or response code of the signed message.
  * @param  req_base_asym_alg  SPDM req_base_asym_alg
  * @param  base_hash_algo     SPDM base_hash_algo
  * @param  context            Pointer to asymmetric context for signature generation.
@@ -779,6 +912,7 @@ uint32_t libspdm_get_dhe_shared_secret_size(uint16_t dhe_named_group);
  * Allocates and Initializes one Diffie-Hellman Ephemeral (DHE) context for subsequent use,
  * based upon negotiated DHE algorithm.
  *
+ * @param  spdm_version     The SPDM version number.
  * @param  dhe_named_group  SPDM dhe_named_group
  * @param  is_initiator     If the caller is initiator.
  *
@@ -871,19 +1005,21 @@ uint32_t libspdm_get_aead_tag_size(uint16_t aead_cipher_suite);
  * Performs AEAD authenticated encryption on a data buffer and additional authenticated data (AAD),
  * based upon negotiated AEAD algorithm.
  *
- * @param  aead_cipher_suite  SPDM aead_cipher_suite
- * @param  key                Pointer to the encryption key.
- * @param  key_size           Size of the encryption key in bytes.
- * @param  iv                 Pointer to the IV value.
- * @param  iv_size            Size of the IV value in bytes.
- * @param  a_data             Pointer to the additional authenticated data (AAD).
- * @param  a_data_size        Size of the additional authenticated data (AAD) in bytes.
- * @param  data_in            Pointer to the input data buffer to be encrypted.
- * @param  data_in_size       Size of the input data buffer in bytes.
- * @param  tag_out            Pointer to a buffer that receives the authentication tag output.
- * @param  tag_size           Size of the authentication tag in bytes.
- * @param  data_out           Pointer to a buffer that receives the encryption output.
- * @param  data_out_size      Size of the output data buffer in bytes.
+ * @param  secured_message_version  The version specified in binding specification and
+ *                                  negotiated in KEY_EXCHANGE/KEY_EXCHANGE_RSP.
+ * @param  aead_cipher_suite        SPDM aead_cipher_suite
+ * @param  key                      Pointer to the encryption key.
+ * @param  key_size                 Size of the encryption key in bytes.
+ * @param  iv                       Pointer to the IV value.
+ * @param  iv_size                  Size of the IV value in bytes.
+ * @param  a_data                   Pointer to the additional authenticated data (AAD).
+ * @param  a_data_size              Size of the additional authenticated data (AAD) in bytes.
+ * @param  data_in                  Pointer to the input data buffer to be encrypted.
+ * @param  data_in_size             Size of the input data buffer in bytes.
+ * @param  tag_out                  Pointer to a buffer that receives the authentication tag.
+ * @param  tag_size                 Size of the authentication tag in bytes.
+ * @param  data_out                 Pointer to a buffer that receives the encryption output.
+ * @param  data_out_size            Size of the output data buffer in bytes.
  *
  * @retval true   AEAD authenticated encryption succeeded.
  * @retval false  AEAD authenticated encryption failed.
@@ -901,19 +1037,21 @@ bool libspdm_aead_encryption(const spdm_version_number_t secured_message_version
  * Performs AEAD authenticated decryption on a data buffer and additional authenticated data (AAD),
  * based upon negotiated AEAD algorithm.
  *
- * @param  aead_cipher_suite  SPDM aead_cipher_suite
- * @param  key                Pointer to the encryption key.
- * @param  key_size           Size of the encryption key in bytes.
- * @param  iv                 Pointer to the IV value.
- * @param  iv_size            Size of the IV value in bytes.
- * @param  a_data             Pointer to the additional authenticated data (AAD).
- * @param  a_data_size        Size of the additional authenticated data (AAD) in bytes.
- * @param  data_in            Pointer to the input data buffer to be decrypted.
- * @param  data_in_size       Size of the input data buffer in bytes.
- * @param  tag                Pointer to a buffer that contains the authentication tag.
- * @param  tag_size           Size of the authentication tag in bytes.
- * @param  data_out           Pointer to a buffer that receives the decryption output.
- * @param  data_out_size      Size of the output data buffer in bytes.
+ * @param  secured_message_version  The version specified in binding specification and
+ *                                  negotiated in KEY_EXCHANGE/KEY_EXCHANGE_RSP.
+ * @param  aead_cipher_suite        SPDM aead_cipher_suite
+ * @param  key                      Pointer to the encryption key.
+ * @param  key_size                 Size of the encryption key in bytes.
+ * @param  iv                       Pointer to the IV value.
+ * @param  iv_size                  Size of the IV value in bytes.
+ * @param  a_data                   Pointer to the additional authenticated data (AAD).
+ * @param  a_data_size              Size of the additional authenticated data (AAD) in bytes.
+ * @param  data_in                  Pointer to the input data buffer to be decrypted.
+ * @param  data_in_size             Size of the input data buffer in bytes.
+ * @param  tag                      Pointer to a buffer that contains the authentication tag.
+ * @param  tag_size                 Size of the authentication tag in bytes.
+ * @param  data_out                 Pointer to a buffer that receives the decryption output.
+ * @param  data_out_size            Size of the output data buffer in bytes.
  *
  * @retval true   AEAD authenticated decryption succeeded.
  * @retval false  AEAD authenticated decryption failed.
@@ -949,7 +1087,7 @@ bool libspdm_get_random_number(size_t size, uint8_t *rand);
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  pqc_asym_algo         SPDM pqc_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
+ * @param[in]  is_requester          Whether the certificate is a Requester certificate.
  * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
  *
  * @retval  true   Success.
@@ -968,8 +1106,9 @@ bool libspdm_x509_certificate_check(
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
+ * @param[in]  pqc_asym_algo         SPDM pqc_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
+ * @param[in]  is_requester          Whether the certificate is a Requester certificate.
  * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
  *
  * @retval  true   Success.
@@ -984,7 +1123,7 @@ bool libspdm_x509_set_cert_certificate_check(
 /**
  * Returns whether the given certificate contains the SPDM hardware identity OID.
  *
- * The hardware identity OID is required to be present in the Device
+ * The hardware identity OID should be present in the Device
  * Certificate CA when using the alias certificate model.
  *
  * @param[in]  cert       Pointer to the DER-encoded certificate data.
@@ -1004,6 +1143,9 @@ bool libspdm_contains_hardware_id_oid(const uint8_t *cert, size_t cert_size);
  *      - It is self-signed
  *      - cA is present and its value is true
  *
+ * The function also returns false if the DER-encoded Issuer or Subject Name is longer than
+ * LIBSPDM_MAX_NAME_SIZE bytes, which defaults to 100.
+ *
  * @param[in]  cert       Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size  The size of certificate data in bytes.
  *
@@ -1015,16 +1157,17 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size);
 /**
  * Retrieve the SubjectAltName from SubjectAltName Bytes.
  *
+ * If name_buffer_size is too small then false is returned and name_buffer_size is set to the
+ * size needed, including the final null. To get the size, pass a name_buffer_size of 0 and a
+ * NULL name_buffer. Otherwise name_buffer must not be NULL.
+ *
  * @param[in]      buffer            Pointer to subjectAltName oct bytes.
  * @param[in]      len               Size of buffer in bytes.
  * @param[out]     name_buffer       Buffer to contain the retrieved certificate
  *                                   SubjectAltName. At most name_buffer_size bytes will be
- *                                   written. May be NULL in order to determine the size
- *                                   buffer needed.
+ *                                   written.
  * @param[in,out]  name_buffer_size  The size in bytes of the name buffer on input,
  *                                   and the size of buffer returned name on output.
- *                                   If name_buffer is NULL then the amount of space needed
- *                                   in buffer (including the final null) is returned.
  * @param[out]     oid               OID of otherName
  * @param[in,out]  oid_size          The buffer size for required OID
  *
@@ -1039,16 +1182,17 @@ bool libspdm_get_dmtf_subject_alt_name_from_bytes(
 /**
  * Retrieve the SubjectAltName from one X.509 certificate.
  *
+ * If name_buffer_size is too small then false is returned and name_buffer_size is set to the
+ * size needed, including the final null. To get the size, pass a name_buffer_size of 0 and a
+ * NULL name_buffer. Otherwise name_buffer must not be NULL.
+ *
  * @param[in]      cert              Pointer to the DER-encoded X509 certificate.
  * @param[in]      cert_size         Size of the X509 certificate in bytes.
  * @param[out]     name_buffer       Buffer to contain the retrieved certificate
  *                                   SubjectAltName. At most name_buffer_size bytes will be
- *                                   written. May be NULL in order to determine the size
- *                                   buffer needed.
+ *                                   written.
  * @param[in,out]  name_buffer_size  The size in bytes of the name buffer on input,
  *                                   and the size of buffer returned name on output.
- *                                   If name_buffer is NULL then the amount of space needed
- *                                   in buffer (including the final null) is returned.
  * @param[out]     oid               OID of otherName
  * @param[in,out]  oid_size          The buffer size for required OID
  *
@@ -1105,9 +1249,8 @@ bool libspdm_verify_certificate_chain_buffer(
     bool is_requester_cert, uint8_t cert_model);
 
 /**
- * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
+ * Retrieve the asymmetric public key from the leaf certificate of an SPDM certificate chain,
  * based upon negotiated asymmetric or requester asymmetric algorithm.
- *
  *
  * @param  base_hash_algo        SPDM base_hash_algo.
  * @param  base_asym_alg         SPDM base_asym_algo or req_base_asym_alg.
@@ -1126,7 +1269,7 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
                                                       void **public_key);
 
 /**
- * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
+ * Retrieve the asymmetric public key from the leaf certificate of an SPDM certificate chain,
  * based upon negotiated asymmetric or requester asymmetric algorithm.
  *
  * @param  base_hash_algo        SPDM base_hash_algo.
@@ -1221,6 +1364,8 @@ void libspdm_pqc_asym_free(uint32_t pqc_asym_algo, void *context);
 /**
  * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
  *
+ * @param  spdm_version    The SPDM version number.
+ * @param  op_code         The SPDM request or response code of the signed message.
  * @param  pqc_asym_algo   SPDM pqc_asym_algo
  * @param  base_hash_algo  SPDM base_hash_algo
  * @param  context         Pointer to asymmetric context for signature verification.
@@ -1242,6 +1387,8 @@ bool libspdm_pqc_asym_verify(
 /**
  * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
  *
+ * @param  spdm_version    The SPDM version number.
+ * @param  op_code         The SPDM request or response code of the signed message.
  * @param  pqc_asym_algo   SPDM pqc_asym_algo
  * @param  base_hash_algo  SPDM base_hash_algo
  * @param  context         Pointer to asymmetric context for signature verification.
@@ -1266,6 +1413,8 @@ bool libspdm_pqc_asym_verify_hash(
  * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
+ * @param  spdm_version    The SPDM version number.
+ * @param  op_code         The SPDM request or response code of the signed message.
  * @param  pqc_asym_algo   SPDM pqc_asym_algo
  * @param  base_hash_algo  SPDM base_hash_algo
  * @param  context         Pointer to asymmetric context for signature generation.
@@ -1292,6 +1441,8 @@ bool libspdm_pqc_asym_sign(
  * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
+ * @param  spdm_version    The SPDM version number.
+ * @param  op_code         The SPDM request or response code of the signed message.
  * @param  pqc_asym_algo   SPDM pqc_asym_algo
  * @param  base_hash_algo  SPDM base_hash_algo
  * @param  context         Pointer to asymmetric context for signature generation.
@@ -1372,6 +1523,8 @@ void libspdm_req_pqc_asym_free(uint32_t req_pqc_asym_alg, void *context);
 /**
  * Verifies the asymmetric signature, based upon negotiated requester asymmetric algorithm.
  *
+ * @param  spdm_version       The SPDM version number.
+ * @param  op_code            The SPDM request or response code of the signed message.
  * @param  req_pqc_asym_alg   SPDM req_pqc_asym_alg
  * @param  base_hash_algo     SPDM base_hash_algo
  * @param  context            Pointer to asymmetric context for signature verification.
@@ -1393,6 +1546,8 @@ bool libspdm_req_pqc_asym_verify(
 /**
  * Verifies the asymmetric signature, based upon negotiated requester asymmetric algorithm.
  *
+ * @param  spdm_version       The SPDM version number.
+ * @param  op_code            The SPDM request or response code of the signed message.
  * @param  req_pqc_asym_alg   SPDM req_pqc_asym_alg
  * @param  base_hash_algo     SPDM base_hash_algo
  * @param  context            Pointer to asymmetric context for signature verification.
@@ -1417,6 +1572,8 @@ bool libspdm_req_pqc_asym_verify_hash(
  * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
+ * @param  spdm_version       The SPDM version number.
+ * @param  op_code            The SPDM request or response code of the signed message.
  * @param  req_pqc_asym_alg   SPDM req_pqc_asym_alg
  * @param  base_hash_algo     SPDM base_hash_algo
  * @param  context            Pointer to asymmetric context for signature generation.
@@ -1443,6 +1600,8 @@ bool libspdm_req_pqc_asym_sign(
  * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
+ * @param  spdm_version       The SPDM version number.
+ * @param  op_code            The SPDM request or response code of the signed message.
  * @param  req_pqc_asym_alg   SPDM req_pqc_asym_alg
  * @param  base_hash_algo     SPDM base_hash_algo
  * @param  context            Pointer to asymmetric context for signature generation.
@@ -1494,8 +1653,9 @@ uint32_t libspdm_get_kem_shared_secret_size(uint32_t kem_alg);
  * Allocates and Initializes one KEM context for subsequent use,
  * based upon negotiated KEM algorithm.
  *
- * @param  kem_alg  SPDM kem_alg
- * @param  is_initiator     If the caller is initiator.
+ * @param  spdm_version  The SPDM version number.
+ * @param  kem_alg       SPDM kem_alg
+ * @param  is_initiator  If the caller is initiator.
  *
  * @return  Pointer to the KEM context that has been initialized.
  **/
@@ -1577,6 +1737,7 @@ bool libspdm_kem_decapsulate(uint32_t kem_alg, void *context,
 /**
  * This function concatenates binary data, which is used as info in HKDF expand later.
  *
+ * @param  spdm_version The SPDM version number.
  * @param  label        An ascii string label for the libspdm_bin_concat.
  * @param  label_size   The size in bytes of the ASCII string label, not including NULL terminator.
  * @param  context      A pre-defined hash value as the context for the libspdm_bin_concat.
@@ -1668,7 +1829,17 @@ bool libspdm_generate_data_key (
     uint8_t *export_master_secret, size_t *export_master_secret_size);
 
 #if LIBSPDM_FIPS_MODE
-/*run all of the self-tests and returns the results.*/
+/**
+ * Runs the FIPS self-tests and returns the results.
+ *
+ * fips_selftest_context must be initialized by libspdm_init_fips_selftest_context(). A self-test
+ * that has already run is not run again, and no self-test runs after one has failed.
+ *
+ * @param  fips_selftest_context  A pointer to the FIPS self-test context.
+ *
+ * @retval true   Every self-test that has run passed.
+ * @retval false  A self-test failed.
+ **/
 bool libspdm_fips_run_selftest(void *fips_selftest_context);
 #endif
 

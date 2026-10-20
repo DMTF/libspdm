@@ -43,7 +43,7 @@ extern "C" {
  *
  * The APP message is encoded to a secured message directly in SPDM session.
  * The APP message format is defined by the transport layer.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ * Take MCTP and PLDM as an example: APP message == MCTP header (MCTP_MESSAGE_TYPE_PLDM) + PLDM payload
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
@@ -74,7 +74,10 @@ libspdm_return_t libspdm_transport_mctp_encode_message(
  *
  * The APP message is decoded from a secured message directly in SPDM session.
  * The APP message format is defined by the transport layer.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ * Take MCTP and PLDM as an example: APP message == MCTP header (MCTP_MESSAGE_TYPE_PLDM) + PLDM payload
+ *
+ * A decoded normal message, or a message from a MAC-only session, is inside the receiver buffer.
+ * An encrypted message is decrypted into the scratch buffer that message points to on input.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
@@ -88,8 +91,7 @@ libspdm_return_t libspdm_transport_mctp_encode_message(
  * @param  message_size                  size in bytes of the message data buffer.
  * @param  message                      A pointer to a destination buffer to store the message.
  *                                      On input, it shall point to the scratch buffer in spdm_context.
- *                                      On output, for normal message, it will point to the original receiver buffer.
- *                                      On output, for secured message, it will point to the scratch buffer in spdm_context.
+ *                                      On output, a pointer to the decoded message.
  **/
 libspdm_return_t libspdm_transport_mctp_decode_message(
     void *spdm_context, uint32_t **session_id,

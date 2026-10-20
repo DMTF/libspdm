@@ -22,7 +22,7 @@
 #define LIBSPDM_TCP_TRANSPORT_HEADER_SIZE  (4 + 4 + 2 + 2)
 #define LIBSPDM_TCP_TRANSPORT_TAIL_SIZE    (16 + 3 + 31)
 
-/*
+/**
  * Encode an SPDM or APP message to a transport layer message.
  *
  * For normal SPDM message, it adds the transport layer wrapper.
@@ -64,6 +64,9 @@ libspdm_return_t libspdm_transport_tcp_encode_message(
  * The APP message format is defined by the transport layer.
  * Take TCP as example: APP message == TCP-SPDM-BINDING-HEADER + SPDM message (For out-of-session message)
  *
+ * A decoded normal message, or a message from a MAC-only session, is inside the receiver buffer.
+ * An encrypted message is decrypted into the scratch buffer that message points to on input.
+ *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
  *                                     If *session_id is NULL, it is a normal message.
@@ -76,8 +79,7 @@ libspdm_return_t libspdm_transport_tcp_encode_message(
  * @param  message_size                  size in bytes of the message data buffer.
  * @param  message                      A pointer to a destination buffer to store the message.
  *                                      On input, it shall point to the scratch buffer in spdm_context.
- *                                      On output, for normal message, it will point to the original receiver buffer.
- *                                      On output, for secured message, it will point to the scratch buffer in spdm_context.
+ *                                      On output, a pointer to the decoded message.
  **/
 libspdm_return_t libspdm_transport_tcp_decode_message(
     void *spdm_context, uint32_t **session_id,
@@ -128,7 +130,6 @@ libspdm_return_t libspdm_tcp_decode_discovery_message(size_t transport_message_s
  *   Transport Message Header Size + sizeof(spdm_secured_message_cipher_header_t))
  *
  *   For TCP, Transport Message Header Size = sizeof(spdm_tcp_binding_header_t)
- *   For PCI_DOE, Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  *

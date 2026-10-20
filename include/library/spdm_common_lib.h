@@ -416,7 +416,8 @@ size_t libspdm_get_fips_selftest_buffer_size(void);
  * @param[in]      fips_selftest_context_size  The size of fips_selftest_context.
  *
  * @retval true   import fips_selftest_context successful.
- * @retval false  spdm_context or fips_selftest_context is null.
+ * @retval false  spdm_context or fips_selftest_context is null, or fips_selftest_context_size is
+ *                not the size of the FIPS self-test context.
  */
 bool libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context,
                                                           void *fips_selftest_context,
@@ -430,7 +431,8 @@ bool libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context,
  * @param[in]          fips_selftest_context_size  The size of fips_selftest_context.
  *
  * @retval true   export fips_selftest_context successful.
- * @retval false  spdm_context or fips_selftest_context is null.
+ * @retval false  spdm_context or fips_selftest_context is null, or fips_selftest_context_size is
+ *                not the size of the FIPS self-test context.
  */
 bool libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context,
                                                             void *fips_selftest_context,
@@ -667,7 +669,7 @@ void libspdm_register_device_buffer_func(
  *
  * The APP message is encoded to a secured message directly in SPDM session.
  * The APP message format is defined by the transport layer.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ * Take MCTP and PLDM as an example: APP message == MCTP header (MCTP_MESSAGE_TYPE_PLDM) + PLDM payload
  *
  * At least transport_header_size bytes precede the message in its buffer, so that headers can be
  * added in place. A normal message is inside the buffer that transport_message points to, and a
@@ -704,7 +706,7 @@ typedef libspdm_return_t (*libspdm_transport_encode_message_func)(
  *
  * The APP message is decoded from a secured message directly in SPDM session.
  * The APP message format is defined by the transport layer.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ * Take MCTP and PLDM as an example: APP message == MCTP header (MCTP_MESSAGE_TYPE_PLDM) + PLDM payload
  *
  * For a Requester, *session_id points to the session ID on input if the Requester expects a
  * secured message, and is NULL otherwise.
@@ -714,8 +716,9 @@ typedef libspdm_return_t (*libspdm_transport_encode_message_func)(
  * Transports whose messages do not indicate if they are secured, such as storage, use the input
  * session ID to decode the message.
  *
- * A secured message is decrypted into the buffer that message points to on input, which is inside
- * the scratch buffer. A decoded normal message is inside transport_message.
+ * An encrypted message is decrypted into the buffer that message points to on input, which is
+ * inside the scratch buffer. A decoded normal message, or a message from a MAC-only session, is
+ * inside transport_message.
  *
  * @param  spdm_context            A pointer to the SPDM context.
  * @param  session_id              On input, a pointer to the expected session ID, or NULL.
@@ -843,6 +846,10 @@ void libspdm_get_scratch_buffer (
  *                            returned from GET_CERTIFICATE. It starts with spdm_cert_chain_t.
  * @param  trust_anchor       A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
  * @param  trust_anchor_size  A buffer to hold the trust_anchor_size, if not NULL.
+ *
+ * @retval true   The certificate chain is verified.
+ * @retval false  The certificate chain is not verified, and libspdm returns
+ *                LIBSPDM_STATUS_VERIF_FAIL.
  **/
 typedef bool (*libspdm_verify_spdm_cert_chain_func)(
     void *spdm_context, uint8_t slot_id,
@@ -902,11 +909,9 @@ void *libspdm_get_secured_message_context_via_session_info(void *spdm_session_in
  * This function returns peer certificate chain buffer including spdm_cert_chain_t header.
  *
  * @param  spdm_context            A pointer to the SPDM context.
+ * @param  slot_id                 The number of slot for the certificate chain.
  * @param  cert_chain_buffer       Certificate chain buffer including spdm_cert_chain_t header.
  * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
- *
- * @retval true  Peer certificate chain buffer including spdm_cert_chain_t header is returned.
- * @retval false Peer certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
 void libspdm_get_peer_cert_chain_buffer(void *spdm_context,
                                         uint8_t slot_id,
@@ -917,11 +922,9 @@ void libspdm_get_peer_cert_chain_buffer(void *spdm_context,
  * This function returns peer certificate chain data without spdm_cert_chain_t header.
  *
  * @param  spdm_context          A pointer to the SPDM context.
+ * @param  slot_id               The number of slot for the certificate chain.
  * @param  cert_chain_data       Certificate chain data without spdm_cert_chain_t header.
  * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
- *
- * @retval true  Peer certificate chain data without spdm_cert_chain_t header is returned.
- * @retval false Peer certificate chain data without spdm_cert_chain_t header is not found.
  **/
 void libspdm_get_peer_cert_chain_data(void *spdm_context,
                                       uint8_t slot_id,
@@ -932,7 +935,10 @@ void libspdm_get_peer_cert_chain_data(void *spdm_context,
 /**
  * This function returns local used certificate chain buffer including spdm_cert_chain_t header.
  *
+ * The slot must hold a local certificate chain.
+ *
  * @param  spdm_context            A pointer to the SPDM context.
+ * @param  slot_id                 The number of slot for the certificate chain.
  * @param  cert_chain_buffer       Certificate chain buffer including spdm_cert_chain_t header.
  * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
  **/
@@ -944,12 +950,14 @@ void libspdm_get_local_cert_chain_buffer(void *spdm_context,
 /**
  * This function returns local used certificate chain data without spdm_cert_chain_t header.
  *
+ * The slot must hold a local certificate chain.
+ *
  * @param  spdm_context          A pointer to the SPDM context.
+ * @param  slot_id               The number of slot for the certificate chain.
  * @param  cert_chain_data       Certificate chain data without spdm_cert_chain_t header.
  * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
  *
  * @retval true  Local used certificate chain data without spdm_cert_chain_t header is returned.
- * @retval false Local used certificate chain data without spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_local_cert_chain_data(void *spdm_context,
                                        uint8_t slot_id,
@@ -985,15 +993,24 @@ bool libspdm_get_local_public_key_buffer(void *spdm_context,
                                          size_t *local_public_key_buffer_size);
 
 /**
+ * Returns the version of libspdm.
+ *
  * byte3 - libspdm major version
  * byte2 - libspdm minor version
  * byte1 - libspdm patch version
  * byte0 - libspdm alpha
  *         (official release with tag: 0, release candidate with tag: 1, non official release: 0xFF)
+ *
+ * @return  The version of libspdm.
  **/
 uint32_t libspdm_module_version(void);
 
-/*true: FIPS enabled, false: FIPS disabled*/
+/**
+ * Returns whether libspdm is built in FIPS mode.
+ *
+ * @retval  true   LIBSPDM_FIPS_MODE is set.
+ * @retval  false  LIBSPDM_FIPS_MODE is not set.
+ **/
 bool libspdm_get_fips_mode(void);
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES

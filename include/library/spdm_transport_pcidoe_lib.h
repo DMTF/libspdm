@@ -35,15 +35,13 @@ extern "C" {
                                                 (LIBSPDM_PCI_DOE_ALIGNMENT - 1))
 
 /**
- * Encode an SPDM or APP message to a transport layer message.
+ * Encode an SPDM message to a transport layer message.
  *
  * For normal SPDM message, it adds the transport layer wrapper.
  * For secured SPDM message, it encrypts a secured message then adds the transport layer wrapper.
- * For secured APP message, it encrypts a secured message then adds the transport layer wrapper.
  *
- * The APP message is encoded to a secured message directly in SPDM session.
- * The APP message format is defined by the transport layer.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ * PCI DOE does not support APP messages, so LIBSPDM_STATUS_UNSUPPORTED_CAP is returned if
+ * is_app_message is true.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
@@ -68,28 +66,33 @@ libspdm_return_t libspdm_transport_pci_doe_encode_message(
 /**
  * Encode a DOE discovery message.
  *
+ * The PCI DOE header is added in place before message, so the transport message buffer must
+ * start sizeof(pci_doe_data_object_header_t) bytes before message.
+ *
  * @param  message_size                         Size in bytes of the message data buffer.
  * @param  message                              A pointer to a source buffer to store the message.
- * @param  transport_message_size               Size in bytes of the transport message data buffer.
- * @param  transport_message                    A pointer to a destination buffer to store the transport message.
+ * @param  transport_message_size               On input, the size in bytes of the buffer.
+ *                                              On output, the size of the transport message.
+ * @param  transport_message                    On output, a pointer to the transport message.
  *
  * @retval LIBSPDM_STATUS_SUCCESS               The message is encoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
+ * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL      transport_message_size is too small.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL           The message is too large for PCI DOE.
  **/
 libspdm_return_t libspdm_pci_doe_encode_discovery(size_t message_size, void *message,
                                                   size_t *transport_message_size,
                                                   void **transport_message);
 
 /**
- * Decode an SPDM or APP message from a transport layer message.
+ * Decode an SPDM message from a transport layer message.
  *
  * For normal SPDM message, it removes the transport layer wrapper,
  * For secured SPDM message, it removes the transport layer wrapper, then decrypts and verifies a secured message.
- * For secured APP message, it removes the transport layer wrapper, then decrypts and verifies a secured message.
  *
- * The APP message is decoded from a secured message directly in SPDM session.
- * The APP message format is defined by the transport layer.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ * PCI DOE does not support APP messages, so is_app_message is always set to false.
+ *
+ * A decoded normal message, or a message from a MAC-only session, is inside the receiver buffer.
+ * An encrypted message is decrypted into the scratch buffer that message points to on input.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
@@ -103,8 +106,7 @@ libspdm_return_t libspdm_pci_doe_encode_discovery(size_t message_size, void *mes
  * @param  message_size                  size in bytes of the message data buffer.
  * @param  message                      A pointer to a destination buffer to store the message.
  *                                      On input, it shall point to the scratch buffer in spdm_context.
- *                                      On output, for normal message, it will point to the original receiver buffer.
- *                                      On output, for secured message, it will point to the scratch buffer in spdm_context.
+ *                                      On output, a pointer to the decoded message.
  **/
 libspdm_return_t libspdm_transport_pci_doe_decode_message(
     void *spdm_context, uint32_t **session_id,
@@ -120,7 +122,9 @@ libspdm_return_t libspdm_transport_pci_doe_decode_message(
  * @param  index                                A pointer to a destination to store the index.
  *
  * @retval LIBSPDM_STATUS_SUCCESS               The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the transport_message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE      The transport message size is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD     The transport message contains an invalid field.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP       The message is not a DOE discovery message.
  **/
 libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_message_size,
                                                           const void *transport_message,
@@ -135,7 +139,9 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_messa
  * @param  version                              A pointer to a destination to store the DOE Discovery Version.
  *
  * @retval LIBSPDM_STATUS_SUCCESS               The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the transport_message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE      The transport message size is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD     The transport message contains an invalid field.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP       The message is not a DOE discovery message.
  **/
 libspdm_return_t libspdm_pci_doe_decode_discovery_request_version(size_t transport_message_size,
                                                                   const void *transport_message,
@@ -151,7 +157,9 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_request_version(size_t transpo
  * @param  next_index                           A pointer to a destination to store the next_index.
  *
  * @retval LIBSPDM_STATUS_SUCCESS               The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the transport_message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE      The transport message size is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD     The transport message contains an invalid field.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP       The message is not a DOE discovery message.
  **/
 libspdm_return_t libspdm_pci_doe_decode_discovery_response(size_t transport_message_size,
                                                            void *transport_message,
@@ -163,7 +171,6 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_response(size_t transport_mess
  * Return the maximum transport layer message header size.
  *   Transport Message Header Size + sizeof(spdm_secured_message_cipher_header_t))
  *
- *   For MCTP, Transport Message Header Size = sizeof(mctp_message_header_t)
  *   For PCI_DOE, Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
  *
  * @param  spdm_context                  A pointer to the SPDM context.

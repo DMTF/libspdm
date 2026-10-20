@@ -72,7 +72,7 @@ libspdm_return_t libspdm_get_supported_algorithms(void *spdm_context,
  * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
  *         Cannot send GET_DIGESTS due to Requester's state.
  * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP
- *         Cannot send GET_DIGESTS because the Requester's and/or Responder's CERT_CAP = 0.
+ *         Cannot send GET_DIGESTS because the Responder's CERT_CAP = 0.
  * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
  *         The size of the DIGESTS response is invalid.
  * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
@@ -95,8 +95,10 @@ libspdm_return_t libspdm_get_digest(void *spdm_context, const uint32_t *session_
  * This function verify the integrity of the certificate chain.
  * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
  *
- * If the peer root certificate hash is deployed,
- * this function also verifies the digest with the root hash in the certificate chain.
+ * If root certificates are provisioned with LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, then this
+ * function also compares their hashes with the root hash in the certificate chain. If the chain
+ * does not match one of them, then this function returns the warning
+ * LIBSPDM_STATUS_VERIF_NO_AUTHORITY, and the certificate chain is still kept.
  *
  * @param  spdm_context     A pointer to the SPDM context.
  * @param  session_id       Indicates if it is a secured message protected via SPDM session.
@@ -111,7 +113,7 @@ libspdm_return_t libspdm_get_digest(void *spdm_context, const uint32_t *session_
  * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
  *         Cannot send GET_CERTIFICATE due to Requester's state.
  * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP
- *         Cannot send GET_CERTIFICATE because the Requester's and/or Responder's CERT_CAP = 0.
+ *         Cannot send GET_CERTIFICATE because the Responder's CERT_CAP = 0.
  * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
  *         The size of the CERTIFICATE response is invalid.
  * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
@@ -128,6 +130,8 @@ libspdm_return_t libspdm_get_digest(void *spdm_context, const uint32_t *session_
  *         The cert_chain buffer is too small to hold the certificate chain.
  * @retval LIBSPDM_STATUS_VERIF_FAIL
  *         Verification of the certificate chain failed.
+ * @retval LIBSPDM_STATUS_VERIF_NO_AUTHORITY
+ *         The certificate chain does not match a provisioned root certificate.
  * @retval LIBSPDM_STATUS_INVALID_CERT
  *         The certificate is unable to be parsed or contains invalid field values.
  * @retval LIBSPDM_STATUS_CRYPTO_ERROR
@@ -146,8 +150,10 @@ libspdm_return_t libspdm_get_certificate(void *spdm_context,
  * This function verifies the integrity of the certificate chain:
  * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
  *
- * If the peer root certificate hash is deployed, this function also verifies the digest with the
- * root hash in the certificate chain.
+ * If root certificates are provisioned with LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, then this
+ * function also compares their hashes with the root hash in the certificate chain. If the chain
+ * does not match one of them, then this function returns the warning
+ * LIBSPDM_STATUS_VERIF_NO_AUTHORITY, and the certificate chain is still kept.
  *
  * @param  spdm_context       A pointer to the SPDM context.
  * @param  session_id         Indicates if it is a secured message protected via SPDM session.
@@ -281,6 +287,11 @@ libspdm_return_t libspdm_challenge_ex2(void *spdm_context, void *reserved,
  *
  * If the signature is requested, this function verifies the signature of the measurement.
  *
+ * If measurement_operation is
+ * SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS, then
+ * number_of_blocks is set to the total number of measurements, and measurement_record_length and
+ * measurement_record are not used.
+ *
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  session_id                 Indicates if it is a secured message protected via SPDM session.
  *                                    If session_id is NULL, it is a normal message.
@@ -307,6 +318,11 @@ libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *ses
  * This function sends GET_MEASUREMENTS to get measurements from the device.
  *
  * If the signature is requested, this function verifies the signature of the measurement.
+ *
+ * If measurement_operation is
+ * SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS, then
+ * number_of_blocks is set to the total number of measurements, and measurement_record_length and
+ * measurement_record are not used.
  *
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  session_id                 Indicates if it is a secured message protected via SPDM session.
@@ -346,6 +362,11 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
  * This function sends GET_MEASUREMENTS to get measurements from the device.
  *
  * If the signature is requested, this function verifies the signature of the measurement.
+ *
+ * If measurement_operation is
+ * SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS, then
+ * number_of_blocks is set to the total number of measurements, and measurement_record_length and
+ * measurement_record are not used.
  *
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  session_id                 Indicates if it is a secured message protected via SPDM session.
@@ -602,8 +623,7 @@ libspdm_return_t libspdm_start_session_exchange(void *spdm_context, bool use_psk
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  session_id                 The session ID of the session.
  * @param  requester_opaque_data      A buffer to hold the requester opaque data, if not NULL.
- *                                    If not NULL, this function will not generate any opaque data,
- *                                    including secured message versions.
+ *                                    If NULL, no opaque data is sent.
  *                                    This parameter is only used for SPDM 1.4 and later
  * @param  requester_opaque_data_size The size of the opaque data, if requester_opaque_data is not NULL.
  *                                    This parameter is only used for SPDM 1.4 and later
@@ -639,7 +659,7 @@ libspdm_return_t libspdm_stop_session(void *spdm_context, uint32_t session_id,
  *
  * The APP message is encoded to a secured message directly in SPDM session.
  * The APP message format is defined by the transport layer.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ * Take MCTP and PLDM as an example: APP message == MCTP header (MCTP_MESSAGE_TYPE_PLDM) + PLDM payload
  *
  * @param  spdm_context    A pointer to the SPDM context.
  * @param  session_id      Indicates if it is a secured message protected via SPDM session.
@@ -660,7 +680,7 @@ libspdm_return_t libspdm_send_data(void *spdm_context, const uint32_t *session_i
  *
  * The APP message is encoded to a secured message directly in SPDM session.
  * The APP message format is defined by the transport layer.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ * Take MCTP and PLDM as an example: APP message == MCTP header (MCTP_MESSAGE_TYPE_PLDM) + PLDM payload
  *
  * @param  spdm_context    A pointer to the SPDM context.
  * @param  session_id      Indicates if it is a secured message protected via SPDM session.
@@ -688,7 +708,7 @@ libspdm_return_t libspdm_receive_data(void *spdm_context, const uint32_t *sessio
  * The APP message is encoded to a secured message directly in SPDM session.
  * The APP message format is defined by the transport layer.
  * This API does not handle APP message chunking.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ * Take MCTP and PLDM as an example: APP message == MCTP header (MCTP_MESSAGE_TYPE_PLDM) + PLDM payload
  *
  * @param  spdm_context    A pointer to the SPDM context.
  * @param  session_id      Indicates if it is a secured message protected via SPDM session.
@@ -815,14 +835,14 @@ void libspdm_register_get_encap_response_func(void *spdm_context,
  *
  * This function can be called in libspdm_get_encap_response_func.
  *
+ * The response data buffer must be large enough to hold the ERROR message. This function always
+ * returns LIBSPDM_STATUS_SUCCESS.
+ *
  * @param  spdm_context        A pointer to the SPDM context.
  * @param  error_code          The error code of the message.
  * @param  error_data          The error data of the message.
- * @param  spdm_response_size  Size in bytes of the response data.
- *                             On output, it means the size in bytes of copied response data buffer
- *                             if LIBSPDM_STATUS_SUCCESS is returned, and means the size in bytes of
- *                             desired response data buffer if LIBSPDM_STATUS_BUFFER_TOO_SMALL is
- *                             returned.
+ * @param  spdm_response_size  On input, the size in bytes of the response data buffer.
+ *                             On output, the size in bytes of the response data.
  * @param  spdm_response       A pointer to the response data.
  **/
 libspdm_return_t libspdm_generate_encap_error_response(
@@ -834,16 +854,16 @@ libspdm_return_t libspdm_generate_encap_error_response(
  *
  * This function can be called in libspdm_get_encap_response_func.
  *
+ * The response data buffer must be large enough to hold the ERROR message and the extended error
+ * data. This function always returns LIBSPDM_STATUS_SUCCESS.
+ *
  * @param  spdm_context              A pointer to the SPDM context.
  * @param  error_code                The error code of the message.
  * @param  error_data                The error data of the message.
  * @param  extended_error_data_size  The size in bytes of the extended error data.
  * @param  extended_error_data       A pointer to the extended error data.
- * @param  spdm_response_size        Size in bytes of the response data.
- *                                   On output, it means the size in bytes of copied response data
- *                                   buffer if LIBSPDM_STATUS_SUCCESS is returned, and means the
- *                                   size in bytes of desired response data buffer if
- *                                   LIBSPDM_STATUS_BUFFER_TOO_SMALL is returned.
+ * @param  spdm_response_size        On input, the size in bytes of the response data buffer.
+ *                                   On output, the size in bytes of the response data.
  * @param  spdm_response             A pointer to the response data.
  **/
 libspdm_return_t libspdm_generate_encap_extended_error_response(
@@ -1066,9 +1086,11 @@ void libspdm_reset_msg_log (void *spdm_context);
  * @param  req_size             Length of the request
  * @param  req_data             The vendor defined request
  * @param  resp_standard_id     Registry or Standards body used for response
- * @param  resp_vendor_id_len   Length in bytes of the vendor id field for the response
+ * @param  resp_vendor_id_len   On input, the size in bytes of the resp_vendor_id buffer.
+ *                              On output, the length in bytes of the response vendor id field.
  * @param  resp_vendor_id       Vendor ID assigned by the Registry or Standards Body. Little-endian format
- * @param  resp_size            Length of the response
+ * @param  resp_size            On input, the size in bytes of the resp_data buffer.
+ *                              On output, the length of the response.
  * @param  resp_data            The vendor defined response
  *
  * @retval LIBSPDM_STATUS_SUCCESS
@@ -1081,8 +1103,6 @@ void libspdm_reset_msg_log (void *spdm_context);
  *         The Responder continually returned Busy error messages.
  * @retval LIBSPDM_STATUS_RESYNCH_PEER
  *         The Responder returned a RequestResynch error message.
- * @retval LIBSPDM_STATUS_BUFFER_FULL
- *         The buffer used to store transcripts is exhausted.
  **/
 libspdm_return_t libspdm_vendor_send_request_receive_response(
     void *spdm_context,
