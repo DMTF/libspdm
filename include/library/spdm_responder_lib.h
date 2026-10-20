@@ -19,7 +19,7 @@ extern "C" {
  *
  * The APP message is encoded to a secured message directly in SPDM session.
  * The APP message format is defined by the transport layer.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ * Take MCTP and PLDM as an example: APP message == MCTP header (MCTP_MESSAGE_TYPE_PLDM) + PLDM payload
  *
  * @param  spdm_context        A pointer to the SPDM context.
  * @param  session_id          Indicates if it is a secured message protected via SPDM session.
@@ -56,15 +56,13 @@ void libspdm_register_get_response_func(
 /**
  * Process a SPDM request from a device.
  *
- * @param  spdm_context                  The SPDM context for the device.
- * @param  session_id                    Indicate if the request is a secured message.
- *                                     If session_id is NULL, it is a normal message.
- *                                     If session_id is NOT NULL, it is a secured message.
- * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
- * @param  request_size                  size in bytes of the request data buffer.
- * @param  request                      A pointer to a destination buffer to store the request.
- *                                     The caller is responsible for having
- *                                     either implicit or explicit ownership of the buffer.
+ * @param  spdm_context    The SPDM context for the device.
+ * @param  session_id      On output, a pointer to the session ID for a secured message, or NULL.
+ * @param  is_app_message  On output, indicates if it is an APP message or SPDM message.
+ * @param  request_size    size in bytes of the request data buffer.
+ * @param  request         A pointer to the received transport message.
+ *                         The caller is responsible for having
+ *                         either implicit or explicit ownership of the buffer.
  **/
 libspdm_return_t libspdm_process_request(void *spdm_context,
                                          uint32_t **session_id,
@@ -105,15 +103,14 @@ libspdm_return_t libspdm_responder_dispatch_message(void *spdm_context);
  *
  * This function can be called in libspdm_get_response_func.
  *
+ * The response data buffer must be large enough to hold the ERROR message. This function always
+ * returns LIBSPDM_STATUS_SUCCESS.
+ *
  * @param  spdm_context        A pointer to the SPDM context.
  * @param  error_code          The error code of the message.
  * @param  error_data          The error data of the message.
- * @param  spdm_response_size  size in bytes of the response data.
- *                             On input, it means the size in bytes of response data buffer.
- *                             On output, it means the size in bytes of copied response data buffer
- *                             if LIBSPDM_STATUS_SUCCESS is returned, and means the size in bytes of
- *                             desired response data buffer if LIBSPDM_STATUS_BUFFER_TOO_SMALL is
- *                             returned.
+ * @param  spdm_response_size  On input, the size in bytes of the response data buffer.
+ *                             On output, the size in bytes of the response data.
  * @param  spdm_response       A pointer to the response data.
  **/
 libspdm_return_t libspdm_generate_error_response(const void *spdm_context,
@@ -127,18 +124,17 @@ libspdm_return_t libspdm_generate_error_response(const void *spdm_context,
  *
  * This function can be called in libspdm_get_response_func.
  *
- * @param  spdm_context        A pointer to the SPDM context.
- * @param  error_code          The error code of the message.
- * @param  error_data          The error data of the message.
+ * The response data buffer must be large enough to hold the ERROR message and the extended error
+ * data. This function always returns LIBSPDM_STATUS_SUCCESS.
+ *
+ * @param  spdm_context              A pointer to the SPDM context.
+ * @param  error_code                The error code of the message.
+ * @param  error_data                The error data of the message.
  * @param  extended_error_data_size  The size in bytes of the extended error data.
- * @param  extended_error_data A pointer to the extended error data.
- * @param  spdm_response_size  size in bytes of the response data.
- *                             On input, it means the size in bytes of response data buffer.
- *                             On output, it means the size in bytes of copied response data buffer
- *                             if LIBSPDM_STATUS_SUCCESS is returned, and means the size in bytes of
- *                             desired response data buffer if LIBSPDM_STATUS_BUFFER_TOO_SMALL is
- *                             returned.
- * @param  spdm_response                 A pointer to the response data.
+ * @param  extended_error_data       A pointer to the extended error data.
+ * @param  spdm_response_size        On input, the size in bytes of the response data buffer.
+ *                                   On output, the size in bytes of the response data.
+ * @param  spdm_response             A pointer to the response data.
  **/
 libspdm_return_t libspdm_generate_extended_error_response(
     const void *spdm_context, uint8_t error_code, uint8_t error_data,
@@ -159,7 +155,7 @@ typedef void (*libspdm_session_state_callback_func)(
 /**
  * Register an SPDM state callback function.
  *
- * This function can be called multiple times to let different session APPs register their own callbacks.
+ * Each call replaces the callback that was registered before.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  spdm_session_state_callback     The function to be called in SPDM session state change.
@@ -180,7 +176,7 @@ typedef void (*libspdm_connection_state_callback_func)(
 /**
  * Register an SPDM connection state callback function.
  *
- * This function can be called multiple times to let different register its own callback.
+ * Each call replaces the callback that was registered before.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  spdm_connection_state_callback  The function to be called in SPDM connection state change.
@@ -216,7 +212,7 @@ void libspdm_trigger_key_update_callback(
 /**
  * Register a key update callback function.
  *
- * This function can be called multiple times to register multiple callbacks.
+ * Each call replaces the callback that was registered before.
  *
  * @param  spdm_context              A pointer to the SPDM context.
  * @param  spdm_key_update_callback  The function to be called in key update operation.
@@ -475,11 +471,12 @@ libspdm_return_t libspdm_get_encap_request_send_event(
  *
  * This is useful for creating unique responses to devices.
  *
+ * A NULL resp_callback unregisters the callback.
+ *
  * @param  spdm_context     A pointer to the SPDM context.
  * @param  resp_callback    Response callback function
  *
  * @retval LIBSPDM_STATUS_SUCCESS Success
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
  **/
 libspdm_return_t libspdm_register_vendor_callback_func(void *spdm_context,
                                                        libspdm_vendor_response_callback_func resp_callback);
@@ -491,11 +488,12 @@ libspdm_return_t libspdm_register_vendor_callback_func(void *spdm_context,
  * This function registers the callback function for notify
  * integrator L1L2 is reset.
  *
+ * A NULL spdm_meas_log_reset_callback unregisters the callback.
+ *
  * @param  spdm_context                 A pointer to the SPDM context.
  * @param  spdm_meas_log_reset_callback     L1L2 reset callback function
  *
  * @retval LIBSPDM_STATUS_SUCCESS Success
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
  */
 libspdm_return_t libspdm_register_meas_log_reset_callback(
     void *spdm_context, libspdm_meas_log_reset_callback_func spdm_meas_log_reset_callback);

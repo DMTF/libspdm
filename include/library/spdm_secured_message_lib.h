@@ -66,6 +66,9 @@ libspdm_session_state_t libspdm_secured_message_get_session_state(
  * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
  * @param  shared_secret                 Indicate the shared secret.
  * @param  shared_secret_size            The size, in bytes, of the shared secret.
+ *
+ * @retval true   The shared secret is imported.
+ * @retval false  shared_secret_size is too large.
  */
 bool libspdm_secured_message_import_shared_secret(void *spdm_secured_message_context,
                                                   const void *shared_secret,
@@ -83,6 +86,8 @@ bool libspdm_secured_message_import_shared_secret(void *spdm_secured_message_con
  * @param  export_master_secret_size     On input, the size of the destination buffer.
  *                                       On output, the lesser of either the size of the destination
  *                                       buffer or the size of the Export Master Secret.
+ *
+ * @retval true  The Export Master Secret is copied.
  */
 bool libspdm_secured_message_export_master_secret(
     void *spdm_secured_message_context, void *export_master_secret,
@@ -121,6 +126,9 @@ typedef struct {
  *                                       libspdm_secure_session_keys_struct_t.
  * @param  session_keys_size             The size in bytes of the session_keys in
  *                                       libspdm_secure_session_keys_struct_t.
+ *
+ * @retval true   The session keys are exported.
+ * @retval false  session_keys_size is too small, and is set to the required size.
  */
 bool libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
                                                  void *session_keys,
@@ -130,10 +138,14 @@ bool libspdm_secured_message_export_session_keys(void *spdm_secured_message_cont
  * Import the session_keys into an SPDM secured message context.
  *
  * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
- * @param  session_keys                  Indicate the buffer to store the session_keys in
+ * @param  session_keys                  A pointer to the session_keys to import, in
  *                                       libspdm_secure_session_keys_struct_t.
  * @param  session_keys_size             The size in bytes of the session_keys in
  *                                       libspdm_secure_session_keys_struct_t.
+ *
+ * @retval true   The session keys are imported.
+ * @retval false  The size, version, key size or IV size of session_keys does not match the
+ *                context.
  */
 bool libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
                                                  const void *session_keys,
@@ -245,6 +257,10 @@ libspdm_return_t libspdm_encode_secured_message(
 /**
  * Decode an application message from a secured message.
  *
+ * For an encrypted session, the application message is decrypted into the buffer that
+ * app_message points to on input. For a MAC-only session, app_message is set to point into
+ * secured_message.
+ *
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  * @param  session_id                      The session ID of the SPDM session.
  * @param  is_request_message              Indicates if it is a request message.
@@ -255,7 +271,7 @@ libspdm_return_t libspdm_encode_secured_message(
  * @param  app_message                     A pointer to a destination buffer to store the application message.
  *                                         It shall point to the scratch buffer in spdm_context.
  *                                         On input, the app_message pointer shall point to a big enough buffer to hold the decrypted message
- *                                         On output, the app_message pointer shall be inside of [app_message, app_message + app_message_size]
+ *                                         On output, a pointer to the application message.
  * @param  spdm_secured_message_callbacks  A pointer to a secured message callback functions structure.
  **/
 libspdm_return_t libspdm_decode_secured_message(

@@ -73,11 +73,11 @@ typedef struct {
  * @param  connection_id               Indicates the connection ID of the message.
  * @param  transport_message_size      size in bytes of the transport message data buffer.
  * @param  transport_message           A pointer to a source buffer to store the transport message.
- * @param  message_size                size in bytes of the message data buffer.
- * @param  message                     A pointer to a destination buffer to store the message.
+ * @param  message_size                On output, the size in bytes of the message.
+ * @param  message                     On output, a pointer to the message in transport_message.
  *
  * @retval LIBSPDM_STATUS_SUCCESS              The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the transport_message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     transport_message_size is too small.
  * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD    The message field is incorrect.
  **/
 libspdm_return_t libspdm_storage_decode_message(uint32_t **session_id,
@@ -87,20 +87,22 @@ libspdm_return_t libspdm_storage_decode_message(uint32_t **session_id,
                                                 size_t *message_size,
                                                 void **message);
 /**
- * Decode an SPDM or APP message from a storage transport layer message.
+ * Decode an SPDM message from a storage transport layer message.
  *
  * For normal SPDM message, it removes the transport layer wrapper,
  * For secured SPDM message, it removes the transport layer wrapper, then decrypts and verifies a secured message.
- * For secured APP message, it removes the transport layer wrapper, then decrypts and verifies a secured message.
  *
- * The APP message is decoded from a secured message directly in SPDM session.
- * The APP message format is defined by the transport layer.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ * Storage does not support APP messages, so is_app_message is always set to false.
+ *
+ * session_id must not be NULL. A storage response does not indicate if it is secured, so
+ * *session_id on input decides how a response is decoded.
+ *
+ * A decoded normal message, or a message from a MAC-only session, is inside the receiver buffer.
+ * An encrypted message is decrypted into the scratch buffer that message points to on input.
  *
  * @param  spdm_context            A pointer to the SPDM context.
- * @param  session_id              Indicates if it is a secured message protected via SPDM session.
- *                                 If session_id is NULL, it is a normal message.
- *                                 If session_id is not NULL, it is a secured message.
+ * @param  session_id              On input, a pointer to the expected session ID, or NULL.
+ *                                 On output, a pointer to the message's session ID, or NULL.
  * @param  is_app_message          Indicates if it is an APP message or SPDM message.
  * @param  is_request_message      Indicates if it is a request message.
  * @param  transport_message_size  Size in bytes of the transport message data buffer.
@@ -109,11 +111,10 @@ libspdm_return_t libspdm_storage_decode_message(uint32_t **session_id,
  * @param  message_size            Size in bytes of the message data buffer.
  * @param  message                 A pointer to a destination buffer to store the message.
  *                                 On input, it shall point to the scratch buffer in spdm_context.
- *                                 On output, for normal message, it will point to the original receiver buffer.
- *                                 On output, for secured message, it will point to the scratch buffer in spdm_context.
+ *                                 On output, a pointer to the decoded message.
  *
  * @retval LIBSPDM_STATUS_SUCCESS              The message is decoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The transport message size is invalid.
  * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD    The message field is incorrect.
  * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP      The transport_message is unsupported.
  **/
@@ -127,15 +128,18 @@ libspdm_return_t libspdm_transport_storage_decode_message(
 /**
  * Encode a normal message or secured message to a storage transport message.
  *
+ * The storage header is added in place before message, so the transport message buffer must
+ * start LIBSPDM_STORAGE_TRANSPORT_HEADER_SIZE bytes before message.
+ *
  * @param  session_id                  Indicates if it is a secured message protected via SPDM session.
- *                                     If *session_id is NULL, it is a normal message.
- *                                     If *session_id is NOT NULL, it is a secured message.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
  * @param  connection_id               Indicates the connection ID of the message.
  * @param  message_size                size in bytes of the message data buffer.
  * @param  message                     A pointer to a source buffer to store the message.
  * @param  transport_message_size      Size in bytes of the transport message data buffer.
  *                                     On return, length of the transport message.
- * @param  transport_message           A pointer to a destination buffer to store the transport message.
+ * @param  transport_message           On output, a pointer to the transport message.
  *
  * @retval LIBSPDM_STATUS_SUCCESS              The message is encoded successfully.
  * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size/transport_message_size is zero.
@@ -149,7 +153,10 @@ libspdm_return_t libspdm_storage_encode_message(const uint32_t *session_id,
                                                 void **transport_message);
 
 /**
- * Encode an SPDM or APP message into a transport layer message.
+ * Encode an SPDM message into a transport layer message.
+ *
+ * Storage does not support APP messages, so LIBSPDM_STATUS_UNSUPPORTED_CAP is returned if
+ * is_app_message is true.
  *
  * @param  spdm_context            A pointer to the SPDM context.
  * @param  session_id              Indicates if it is a secured message protected via SPDM session.
@@ -167,7 +174,8 @@ libspdm_return_t libspdm_storage_encode_message(const uint32_t *session_id,
  *                                 On output, it will point to acquired sender buffer.
  *
  * @retval LIBSPDM_STATUS_SUCCESS              The message is encoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     transport_message_size or transport_message is
+ *                                             NULL, or *transport_message_size is zero.
  * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD    The message field is incorrect.
  * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP      The transport_message is unsupported.
  **/
@@ -204,10 +212,11 @@ libspdm_return_t libspdm_transport_storage_decode_management_cmd(
  * @param  transport_message_size  Size in bytes of the transport message data buffer.
  *                                 On return, the length of the encoded message
  * @param  allocation_length       Storage buffer allocation length
- * @param  transport_message       A pointer to a transport message buffer.
+ * @param  transport_message       A pointer to a transport message buffer. It must not be NULL.
  *
  * @retval LIBSPDM_STATUS_SUCCESS              The message is encoded successfully.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     The message is NULL or the transport_message_size is zero.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE     transport_message_size or allocation_length is
+ *                                             NULL, or *transport_message_size is zero.
  * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD    The message field is incorrect.
  * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL     Insufficient transport buffer size
  **/
