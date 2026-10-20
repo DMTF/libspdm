@@ -29,6 +29,23 @@ static libspdm_return_t rsp_receive_send_err_get_response(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
+#if ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) && \
+    (LIBSPDM_AEAD_AES_256_GCM_SUPPORT)
+/* Application data whose second byte, where an SPDM message has its request response code, is that
+ * of END_SESSION_ACK. */
+static const uint8_t m_app_response[] = {0xB1, SPDM_END_SESSION_ACK, 0xB3, 0xB4};
+
+static libspdm_return_t rsp_receive_send_err_get_app_response(
+    void *spdm_context, const uint32_t *session_id, bool is_app_message,
+    size_t request_size, const void *request, size_t *response_size, void *response)
+{
+    libspdm_copy_mem(response, *response_size, m_app_response, sizeof(m_app_response));
+    *response_size = sizeof(m_app_response);
+
+    return LIBSPDM_STATUS_SUCCESS;
+}
+#endif /* ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) && (..) */
+
 /* Builds the response to a request that libspdm has no handler for. The Integrator's
  * get_response_func answers the request with a response of response_size bytes. Returns the SPDM
  * message that libspdm_build_response builds. */
@@ -391,6 +408,79 @@ static void rsp_receive_send_err_case7(void **state)
 #endif
 }
 
+/**
+ * Test 8: In a session, the Integrator answers application data with application data whose second
+ * byte, where an SPDM message has its request response code, is that of END_SESSION_ACK.
+ * Expected behavior: libspdm_build_response returns success, and the session stays established.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP and LIBSPDM_ENABLE_CAPABILITY_PSK_CAP are both
+ * disabled or LIBSPDM_AEAD_AES_256_GCM_SUPPORT is disabled, as the case runs in a session that
+ * uses AES-256-GCM.
+ **/
+static void rsp_receive_send_err_case8(void **state)
+{
+#if ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) && \
+    (LIBSPDM_AEAD_AES_256_GCM_SUPPORT)
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    uint32_t session_id;
+    const uint8_t app_request[] = {0xA1, 0xA2, 0xA3, 0xA4};
+    void *transport_message;
+    size_t transport_message_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x8;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    libspdm_secured_message_set_session_state(session_info->secured_message_context,
+                                              LIBSPDM_SESSION_STATE_ESTABLISHED);
+
+    libspdm_copy_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
+                     app_request, sizeof(app_request));
+    spdm_context->last_spdm_request_size = sizeof(app_request);
+    spdm_context->last_spdm_request_session_id = session_id;
+    spdm_context->last_spdm_request_session_id_valid = true;
+
+    /* {ERROR} The application data of the response looks like END_SESSION_ACK. */
+    libspdm_register_get_response_func(spdm_context, rsp_receive_send_err_get_app_response);
+
+    libspdm_zero_mem(m_transport_message, sizeof(m_transport_message));
+    transport_message = m_transport_message;
+    transport_message_size = sizeof(m_transport_message);
+    status = libspdm_build_response(spdm_context, &session_id, true, &transport_message_size,
+                                    &transport_message);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    assert_non_null(session_info);
+    assert_int_equal(libspdm_secured_message_get_session_state(
+                         session_info->secured_message_context),
+                     LIBSPDM_SESSION_STATE_ESTABLISHED);
+#else
+    skip();
+#endif
+}
+
 int libspdm_rsp_receive_send_error_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -401,6 +491,7 @@ int libspdm_rsp_receive_send_error_test(void)
         cmocka_unit_test_setup(rsp_receive_send_err_case5, libspdm_unit_test_reset_context),
         cmocka_unit_test_setup(rsp_receive_send_err_case6, libspdm_unit_test_reset_context),
         cmocka_unit_test_setup(rsp_receive_send_err_case7, libspdm_unit_test_reset_context),
+        cmocka_unit_test_setup(rsp_receive_send_err_case8, libspdm_unit_test_reset_context),
     };
 
     libspdm_test_context_t test_context = {
