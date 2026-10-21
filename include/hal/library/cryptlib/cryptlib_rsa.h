@@ -60,7 +60,7 @@ extern bool libspdm_rsa_get_public_key_from_der(const uint8_t *der_data,
 /**
  * Release the specified RSA context.
  *
- * If rsa_context is NULL, then return false.
+ * If rsa_context is NULL, then this function does nothing.
  *
  * @param[in]  rsa_context  Pointer to the RSA context to be released.
  **/

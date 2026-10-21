@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -12,8 +12,12 @@
  *=====================================================================================*/
 
 /**
- * Generates a random byte stream of the specified size. If initialization, testing, or seeding of
- * the (pseudo)random number generator is required it should be done before this function is called.
+ * Generates a random byte stream of the specified size.
+ *
+ * The bytes must come from a cryptographically secure random number generator, because they are
+ * used for nonces and other protocol values, and can be used to generate keys and signatures. If
+ * initialization, testing, or seeding of the random number generator is required it should be done
+ * before this function is called.
  *
  * If output is NULL, then return false.
  * If this interface is not supported, then return false.

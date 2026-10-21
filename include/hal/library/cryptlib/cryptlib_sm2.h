@@ -15,10 +15,12 @@
 /**
  * Allocates and Initializes one Shang-Mi2 context for subsequent use.
  *
+ * nid is LIBSPDM_CRYPTO_NID_SM2_DSA_P256. This function can also generate a key pair.
+ *
  * @param nid cipher NID
  *
  * @return  Pointer to the Shang-Mi2 context that has been initialized.
- *          If the allocation fails, libspdm_sm2_dsa_new_by_nid() returns NULL.
+ *          If the context cannot be created, libspdm_sm2_dsa_new_by_nid() returns NULL.
  **/
 extern void *libspdm_sm2_dsa_new_by_nid(size_t nid);
 
@@ -62,9 +64,11 @@ extern void libspdm_sm2_dsa_free(void *sm2_context);
  * If sm2_context is NULL, then return false.
  * If message is NULL, then return false.
  * hash_nid must be SM3_256.
- * If sig_size is large enough but signature is NULL, then return false.
+ * If signature is NULL, then return false.
  *
- * The id_a_size must be smaller than 2^16-1.
+ * id_a_size must be smaller than 8191, because ENTL, the size of ID-A in bits, is a 16-bit value.
+ * An id_a_size of 0 means the empty ID, not the default ID of GB/T 32918.2, and libspdm always
+ * passes the empty ID.
  * The sig_size is 64. first 32-byte is R, second 32-byte is S.
  *
  * @param[in]       sm2_context  Pointer to sm2 context for signature generation.
@@ -94,7 +98,9 @@ extern bool libspdm_sm2_dsa_sign(const void *sm2_context, size_t hash_nid,
  * If signature is NULL, then return false.
  * hash_nid must be SM3_256.
  *
- * The id_a_size must be smaller than 2^16-1.
+ * id_a_size must be smaller than 8191, because ENTL, the size of ID-A in bits, is a 16-bit value.
+ * An id_a_size of 0 means the empty ID, not the default ID of GB/T 32918.2, and libspdm always
+ * passes the empty ID.
  * The sig_size is 64. first 32-byte is R, second 32-byte is S.
  *
  * @param[in]  sm2_context  Pointer to SM2 context for signature verification.
@@ -138,13 +144,17 @@ extern void libspdm_sm2_key_exchange_free(void *sm2_context);
 /**
  * Initialize the specified sm2 context.
  *
- * @param[in]  sm2_context   Pointer to the sm2 context to be initialized.
- * @param[in]  hash_nid      hash NID, only SM3 is valid.
- * @param[in]  id_a          The ID-A of the key exchange context.
- * @param[in]  id_a_size     Size of ID-A key exchange context.
- * @param[in]  id_b          The ID-B of the key exchange context.
- * @param[in]  id_b_size     Size of ID-B key exchange context.
- * @param[in]  is_initiator  If the caller is initiator.
+ * This function stores its arguments in sm2_context, although sm2_context is declared const. ID-A
+ * is always the Requester's ID and ID-B the Responder's, whichever side calls this function, and
+ * is_initiator is true for the Requester. id_a_size and id_b_size must be smaller than 8191.
+ *
+ * @param[in, out]  sm2_context   Pointer to the sm2 context to be initialized.
+ * @param[in]       hash_nid      hash NID, only SM3 is valid.
+ * @param[in]       id_a          The ID-A of the key exchange context.
+ * @param[in]       id_a_size     Size of ID-A key exchange context.
+ * @param[in]       id_b          The ID-B of the key exchange context.
+ * @param[in]       id_b_size     Size of ID-B key exchange context.
+ * @param[in]       is_initiator  If the caller is initiator.
  *
  * @retval true   sm2 context is initialized.
  * @retval false  sm2 context is not initialized.
@@ -196,7 +206,6 @@ extern bool libspdm_sm2_key_exchange_generate_key(void *sm2_context, uint8_t *pu
  * If peer_public_size is 0, then return false.
  * If key is NULL, then return false.
  *
- * The id_a_size and id_b_size must be smaller than 2^16-1.
  * The peer_public_size is 64. first 32-byte is X, second 32-byte is Y.
  * The key_size must be smaller than 2^32-1, limited by KDF function.
  *

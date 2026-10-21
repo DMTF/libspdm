@@ -58,8 +58,11 @@ extern void libspdm_ecd_free(void *ecd_context);
  * For ed25519, the public_key_size is 32.
  * For ed448, the public_key_size is 57.
  *
+ * This function can replace any key that the context holds. So to set both keys, call this function
+ * before libspdm_ecd_set_pri_key().
+ *
  * @param[in, out]  ecd_context      Pointer to Ed context being set.
- * @param[in]       public_key       Pointer to the buffer to receive generated public X,Y.
+ * @param[in]       public_key       Pointer to the public key, encoded as in RFC 8032.
  * @param[in]       public_key_size  The size of public_key buffer in bytes.
  *
  * @retval  true   Ed public key component was set successfully.
@@ -74,8 +77,11 @@ extern bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key
  * For ed25519, the private_key_size is 32.
  * For ed448, the private_key_size is 57.
  *
+ * This function can replace any key that the context holds, and derive the public key from the
+ * private key. So to set both keys, call libspdm_ecd_set_pub_key() before this function.
+ *
  * @param[in, out]  ecd_context       Pointer to Ed context being set.
- * @param[in]       private_key       Pointer to the buffer to receive generated private X,Y.
+ * @param[in]       private_key       Pointer to the private key, encoded as in RFC 8032.
  * @param[in]       private_key_size  The size of private_key buffer in bytes.
  *
  * @retval  true   Ed private key component was set successfully.
@@ -92,7 +98,8 @@ extern bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_ke
  * For ed448, the public_key_size is 57.
  *
  * @param[in, out]  ecd_context      Pointer to Ed context.
- * @param[out]      public_key       Pointer to the buffer to receive generated public X,Y.
+ * @param[out]      public_key       Pointer to the buffer to receive the public key, encoded as in
+ *                                   RFC 8032.
  * @param[in, out]  public_key_size  On input, the size of public_key buffer in bytes.
  *                                   On output, the size of data returned in public_key buffer in bytes.
  *
