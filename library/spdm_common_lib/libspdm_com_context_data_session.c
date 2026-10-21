@@ -326,6 +326,20 @@ void libspdm_free_session_id(libspdm_context_t *spdm_context, uint32_t session_i
         spdm_context->latest_session_id = INVALID_SESSION_ID;
     }
 
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+    /* A chunk transfer belongs to the session that started it. */
+    if (spdm_context->chunk_context.get.chunk_in_use &&
+        spdm_context->chunk_context.get.session_id_valid &&
+        (spdm_context->chunk_context.get.session_id == session_id)) {
+        libspdm_reset_chunk_info(&spdm_context->chunk_context.get);
+    }
+    if (spdm_context->chunk_context.send.chunk_in_use &&
+        spdm_context->chunk_context.send.session_id_valid &&
+        (spdm_context->chunk_context.send.session_id == session_id)) {
+        libspdm_reset_chunk_info(&spdm_context->chunk_context.send);
+    }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+
     session_info = spdm_context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == session_id) {

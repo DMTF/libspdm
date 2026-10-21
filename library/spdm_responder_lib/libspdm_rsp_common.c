@@ -173,3 +173,15 @@ libspdm_return_t libspdm_process_opaque_data_supported_version_data(
 
     return LIBSPDM_STATUS_SUCCESS;
 }
+
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+bool libspdm_chunk_is_same_session(const libspdm_context_t *spdm_context,
+                                   const libspdm_chunk_info_t *chunk_info)
+{
+    if (chunk_info->session_id_valid != spdm_context->last_spdm_request_session_id_valid) {
+        return false;
+    }
+    return !chunk_info->session_id_valid ||
+           (chunk_info->session_id == spdm_context->last_spdm_request_session_id);
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */

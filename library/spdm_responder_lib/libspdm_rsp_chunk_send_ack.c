@@ -102,6 +102,13 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
 
     send_info = &spdm_context->chunk_context.send;
 
+    if (send_info->chunk_in_use && !libspdm_chunk_is_same_session(spdm_context, send_info)) {
+        /* Another session owns the transfer. Leave it untouched. */
+        return libspdm_generate_error_response(
+            spdm_context, SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+            response_size, response);
+    }
+
     if (!send_info->chunk_in_use) {
 
         if (request_size < sizeof(spdm_chunk_send_request_t) + sizeof(uint32_t)) {
@@ -143,6 +150,8 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
                                        &scratch_buffer_size);
 
             send_info->chunk_in_use = true;
+            send_info->session_id_valid = spdm_context->last_spdm_request_session_id_valid;
+            send_info->session_id = spdm_context->last_spdm_request_session_id;
             send_info->chunk_handle = spdm_request->header.param2;
             send_info->chunk_seq_no = chunk_seq_no;
             send_info->large_message = scratch_buffer +

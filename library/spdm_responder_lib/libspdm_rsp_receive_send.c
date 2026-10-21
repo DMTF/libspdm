@@ -815,6 +815,8 @@ response_dispatched:
             large_buffer_size = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
 
             get_info->chunk_in_use = true;
+            get_info->session_id_valid = context->last_spdm_request_session_id_valid;
+            get_info->session_id = context->last_spdm_request_session_id;
             /* Increment chunk_handle here as opposed to end of chunk_get handler
              * in case requester never issues chunk_get. */
             get_info->chunk_handle++;

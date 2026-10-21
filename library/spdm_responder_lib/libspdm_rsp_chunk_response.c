@@ -101,6 +101,13 @@ libspdm_return_t libspdm_get_response_chunk_get(
             response_size, response);
     }
 
+    if (!libspdm_chunk_is_same_session(spdm_context, get_info)) {
+        return libspdm_generate_error_response(
+            spdm_context,
+            SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+            response_size, response);
+    }
+
     if (spdm_request->header.param2 != get_info->chunk_handle) {
         return libspdm_generate_error_response(
             spdm_context,
