@@ -185,3 +185,15 @@ bool libspdm_chunk_is_same_session(const libspdm_context_t *spdm_context,
            (chunk_info->session_id == spdm_context->last_spdm_request_session_id);
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+void libspdm_start_encap_flow(libspdm_encap_context_t *encap_context,
+                              libspdm_encap_flow_type_t flow_type)
+{
+    encap_context->flow_type = flow_type;
+    encap_context->request_id = 0;
+    encap_context->has_last_encap_request = false;
+    libspdm_zero_mem(&encap_context->last_encap_request_header,
+                     sizeof(encap_context->last_encap_request_header));
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
