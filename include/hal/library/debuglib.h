@@ -55,7 +55,7 @@ extern void libspdm_debug_assert(const char *file_name, size_t line_number,
 /**
  * LIBSPDM_ASSERT(expression) - Macro that calls libspdm_debug_assert() if an expression evaluates
  *                              to false. It is enabled through the LIBSPDM_DEBUG_ASSERT_ENABLE
- *                              macro.
+ *                              macro, which LIBSPDM_DEBUG_ENABLE overrides if it is defined.
  *
  * @param  expression  Boolean expression.
  **/
@@ -71,9 +71,11 @@ extern void libspdm_debug_assert(const char *file_name, size_t line_number,
 #endif
 
 /**
- * LIBSPDM_DEBUG(level, format_string, argument_list...) - Macro that calls libspdm_debug_print().
- *                                                         It is enabled through the
- *                                                         LIBSPDM_DEBUG_PRINT_ENABLE macro.
+ * LIBSPDM_DEBUG((level, format_string, argument_list...)) - Macro that calls libspdm_debug_print().
+ *
+ * The arguments are enclosed in a second pair of parentheses. The macro is enabled through the
+ * LIBSPDM_DEBUG_PRINT_ENABLE macro, which LIBSPDM_DEBUG_ENABLE overrides if it is defined.
+ *
  * @param level          Either LIBSPDM_DEBUG_INFO or LIBSPDM_DEBUG_ERROR.
  * @param format_string  Formatted string.
  * @param argument_list  List of arguments.
@@ -98,7 +100,8 @@ extern void libspdm_debug_assert(const char *file_name, size_t line_number,
 
 /**
  * LIBSPDM_DEBUG_CODE(expression) - Macro that defines a section of debug source code.
- *                                  It is enabled through the LIBSPDM_DEBUG_BLOCK_ENABLE macro.
+ *                                  It is enabled through the LIBSPDM_DEBUG_BLOCK_ENABLE macro,
+ *                                  which LIBSPDM_DEBUG_ENABLE overrides if it is defined.
  *
  * @param expression  One or more lines of expressions that are used for debugging and should not
  *                    affect the behavior of functional code.

@@ -15,8 +15,9 @@
 /**
  * Populate the SupportedEventGroupsList field in the SUPPORTED_EVENT_TYPES response.
  *
- * The SPDM specification mandates that, at a minimum, the event notifier must support the DMTF
- * event types and the EventLost event.
+ * The SPDM specification mandates that, at a minimum, the event notifier must support the EventLost
+ * event of the DMTF event group. The Requester also calls this function, and a Requester shall not
+ * support the MeasurementChanged or MeasurementPreUpdate event types.
  *
  * @param  spdm_context  A pointer to the SPDM context.
  * @param  spdm_version  Indicates the negotiated version.
@@ -58,6 +59,12 @@ extern bool libspdm_event_get_types(
  *
  * Events can only be sent when the session state is LIBSPDM_SESSION_STATE_ESTABLISHED.
  *
+ * Subscriptions are per session. libspdm calls this function for SUBSCRIBE_EVENT_TYPES, where
+ * LIBSPDM_EVENT_SUBSCRIBE_LIST replaces the current subscription, and for a KEY_EXCHANGE request
+ * that sets EventAllPolicy, before the session is established. It does not call this function when
+ * the session ends. subscribe_list points into the request, which libspdm has only checked for
+ * length, and it is valid only during the call.
+ *
  * @param  spdm_context                 A pointer to the SPDM context.
  * @param  spdm_version                 Indicates the negotiated version.
  * @param  session_id                   Secure session identifier.
@@ -80,6 +87,10 @@ extern bool libspdm_event_subscribe(
 
 /**
  * Generate a list of events to send via SEND_EVENT.
+ *
+ * On success, event_count and events_list_size must not be 0, because libspdm asserts these. If
+ * false is returned then libspdm_get_encap_request_send_event() returns
+ * LIBSPDM_STATUS_INVALID_STATE_LOCAL.
  *
  * @param  spdm_context     A pointer to the SPDM context.
  * @param  spdm_version     Indicates the negotiated version.
