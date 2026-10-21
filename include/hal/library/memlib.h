@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -25,6 +25,8 @@
  * The implementer of this function is free to check that these properties hold and take action,
  * such as assertion handling, if the properties are violated.
  *
+ * If src_len is 0 then nothing is copied.
+ *
  * @param    dst_buf   Destination buffer to copy to.
  * @param    dst_len   Size, in bytes, of the destination buffer.
  * @param    src_buf   Source buffer to copy from.
@@ -44,6 +46,9 @@ extern void libspdm_set_mem(void *buffer, size_t length, uint8_t value);
 
 /**
  * Fills a target buffer with zeros.
+ *
+ * libspdm uses this function to erase secrets, so the compiler must not remove the writes, even
+ * when the buffer is not read afterwards.
  *
  * @param  buffer      The pointer to the target buffer to fill with zeros.
  * @param  length      The number of bytes in buffer to fill with zeros.

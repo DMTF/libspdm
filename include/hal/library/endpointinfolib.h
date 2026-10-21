@@ -15,8 +15,12 @@
 #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
 
 /**
- * Endpoint Info Response Get Device Class Identifier Function Pointer.
- * Required to be able to return the Device Class Identifier correctly
+ * Gets the device class identifier for an ENDPOINT_INFO response.
+ *
+ * The Responder calls this function for GET_ENDPOINT_INFO, and the Requester calls it for an
+ * encapsulated GET_ENDPOINT_INFO. For any error libspdm sends ERROR(UnsupportedRequest), and it
+ * does not use endpoint_info_size. On success libspdm does not check endpoint_info_size against the
+ * size of the buffer, so it must not be larger than its input value.
  *
  * @param  spdm_context         A pointer to the SPDM context.
  * @param  session_id           Indicates the session in which the request was received.
