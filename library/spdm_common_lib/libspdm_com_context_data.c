@@ -3029,12 +3029,14 @@ libspdm_return_t libspdm_init_context(void *spdm_context)
 }
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-static void libspdm_reset_chunk_info(libspdm_chunk_info_t *chunk_info)
+void libspdm_reset_chunk_info(libspdm_chunk_info_t *chunk_info)
 {
     if (chunk_info->large_message != NULL) {
         libspdm_zero_mem(chunk_info->large_message, chunk_info->large_message_capacity);
     }
     chunk_info->chunk_in_use = false;
+    chunk_info->session_id_valid = false;
+    chunk_info->session_id = 0;
     chunk_info->chunk_seq_no = 0;
     chunk_info->chunk_bytes_transferred = 0;
     chunk_info->large_message = NULL;

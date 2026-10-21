@@ -532,6 +532,9 @@ typedef struct {
 typedef struct {
     bool chunk_in_use;
     uint8_t chunk_handle;
+    /* The session that started the transfer. Only that session can continue it. */
+    bool session_id_valid;
+    uint32_t session_id;
     uint32_t chunk_seq_no;
     size_t chunk_bytes_transferred;
 
@@ -1878,6 +1881,15 @@ libspdm_session_info_t *libspdm_assign_session_id(libspdm_context_t *spdm_contex
  * @param  session_id    The SPDM session ID.
  **/
 void libspdm_free_session_id(libspdm_context_t *spdm_context, uint32_t session_id);
+
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+/**
+ * This function ends a chunk transfer and clears its buffer.
+ *
+ * @param  chunk_info  The chunk transfer to reset.
+ **/
+void libspdm_reset_chunk_info(libspdm_chunk_info_t *chunk_info);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*

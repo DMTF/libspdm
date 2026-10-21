@@ -680,6 +680,16 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
                                                  size_t* response_size,
                                                  void* response);
 
+/**
+ * Return whether the current request is in the same session as the one that started the
+ * chunk transfer.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  chunk_info    The chunk transfer in progress.
+ **/
+bool libspdm_chunk_is_same_session(const libspdm_context_t *spdm_context,
+                                   const libspdm_chunk_info_t *chunk_info);
+
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
