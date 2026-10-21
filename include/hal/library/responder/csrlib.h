@@ -16,16 +16,26 @@
 /**
  * Generate a PKCS #10 certificate signing request.
  *
+ * req_cert_model is the CertModel of the GET_CSR request, which is 0 on SPDM 1.3 and later if
+ * LIBSPDM_DATA_MULTI_KEY_CONN_RSP is false. Before SPDM 1.3, libspdm sets it to DEVICE_CERT, or to
+ * ALIAS_CERT if the Responder sets ALIAS_CERT_CAP.
+ *
+ * The CSR must not be larger than 65535 bytes, because CSRLength is a 16-bit field. If false is
+ * returned and neither is_busy nor unexpected_request is true, then libspdm sends
+ * ERROR(InvalidRequest).
+ *
  *   Table for parameters and results when device requires a reset to process CSRs.
  *   Only valid if Responder sets CERT_INSTALL_RESET_CAP (SPDM 1.3 and higher).
+ *   need_reset is true on input, so the function must clear it to return the CSR. If need_reset
+ *   stays true then the function must set a non-zero req_csr_tracking_tag.
  *
  *   | Overwrite | CSRTrackingTag | Pending CSR | Reset |       Resulting Action       |
  *   |-----------| ---------------|-------------|-------|------------------------------|
- *   |    No     |     0          |      No     |   -   |          Return true         |
+ *   |    No     |     0          |      No     |   -   |       Assert need_reset      |
  *   |    No     |     0          |      Yes    |   -   | Assert need_reset or is_busy |
  *   |    No     |   Non-0        |   No Match  |   -   |  Assert unexpected_request   |
  *   |    No     |   Non-0        |     Match   | Before|        Assert is_busy        |
- *   |    No     |   Non-0        |     Match   | After |          Return true         |
+ *   |    No     |   Non-0        |     Match   | After | Return CSR, clear need_reset |
  *   |    Yes    |     0          |       -     |   -   |       Assert need_reset      |
  *
  * @param[in]     spdm_context    A pointer to the SPDM context.
@@ -49,8 +59,6 @@
  *                                        On output, the size, in bytes, of the CSR.
  * @param[in,out]  csr_pointer            A pointer to the buffer to store the CSR.
  * @param[in]      req_cert_model         Indicates the desired certificate model of the CSR.
- *                                        For pre-1.3 connections this is DEVICE_CERT for the
- *                                        DeviceCert model and ALIAS_CERT for the AliasCert model.
  * @param[in,out]  req_csr_tracking_tag   For SPDM 1.3 and higher: on input, the CSRTrackingTag of
  *                                        the GET_CSR request; on output, the CSRTrackingTag for the
  *                                        ResetRequired error.
