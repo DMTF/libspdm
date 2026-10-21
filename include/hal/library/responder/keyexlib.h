@@ -16,6 +16,16 @@
 /**
  * Generates the OpaqueData field of the KEY_EXCHANGE_RSP message.
  *
+ * libspdm calls this function only if the KEY_EXCHANGE request has OpaqueData, and then up to three
+ * times. The first call has a NULL opaque_data and asks for the size, which can be larger than the
+ * final size. If it returns false then libspdm generates its own OpaqueData instead. Otherwise the
+ * second and third calls fill opaque_data, and they must return the same data. If either of them
+ * returns false then libspdm sends ERROR(Unspecified).
+ *
+ * The OpaqueData must contain a secured message version selection, which sets the secured message
+ * version of the session. When this function generates the OpaqueData, libspdm does not check
+ * req_opaque_data, so this function must check it.
+ *
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  spdm_version               Indicates the negotiated version.
  * @param  measurement_hash_type      The measurement hash type in the KEY_EXCHANGE request.
@@ -49,6 +59,11 @@ extern bool libspdm_key_exchange_rsp_opaque_data(
 /**
  * Processes the OpaqueData field of the FINISH_RSP message.
  *
+ * libspdm calls this function only for SPDM 1.4 and later, and only if an OpaqueDataFmt was
+ * selected. The opaque data must use that format, which LIBSPDM_DATA_OTHER_PARAMS_SUPPORT gives,
+ * and should not be larger than SPDM_MAX_OPAQUE_DATA_SIZE. If false is returned then libspdm sends
+ * ERROR(Unspecified), so to send no opaque data, return true and set opaque_data_size to 0.
+ *
  * @param  spdm_context            A pointer to the SPDM context.
  * @param  session_id              Secure session identifier.
  * @param  spdm_version            Indicates the negotiated version.
@@ -77,6 +92,12 @@ extern bool libspdm_finish_rsp_opaque_data(
 /**
  * Queries whether session-based mutual authentication should be initiated or not.
  *
+ * If the return value is not 0 then mandatory_mut_auth must be set. A return value that is not
+ * listed below, or an encapsulated variant when the Requester sets PUB_KEY_ID_CAP, makes libspdm
+ * send ERROR(Unspecified). If mandatory_mut_auth is true and the Requester does not set
+ * MUT_AUTH_CAP, or an encapsulated variant is returned and the Requester does not set ENCAP_CAP,
+ * then libspdm sends ERROR(InvalidPolicy), or ERROR(Unspecified) before SPDM 1.3.
+ *
  * @param  spdm_context  A pointer to the SPDM context.
  * @param  session_id    Secure session identifier.
  * @param  spdm_version  Indicates the negotiated version.
@@ -101,8 +122,12 @@ extern bool libspdm_finish_rsp_opaque_data(
  *
  * @retval 0  Do not initiate the session-based mutual authentication flow.
  * @retval SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED
+ *         Request mutual authentication without the encapsulated request flow.
  * @retval SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST
+ *         Request mutual authentication with the encapsulated request flow.
  * @retval SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS
+ *         Request mutual authentication with the encapsulated request flow, starting with an
+ *         implicit GET_DIGESTS request.
  */
 extern uint8_t libspdm_key_exchange_start_mut_auth(
     void *spdm_context,

@@ -15,6 +15,10 @@
 /**
  * return if current code is running in a trusted environment.
  *
+ * libspdm calls this function for each SET_CERTIFICATE request, but the result matters only for a
+ * request that is not in a session and is for a slot other than 0, which libspdm refuses unless the
+ * function returns true. Slot 0, and every slot within a session, can be set whatever it returns.
+ *
  * @param[in]  spdm_context  A pointer to the SPDM context.
  * @param[in]  session_id    Indicates the session in which the request was received.
  *                           If NULL then the request was not received in a session.
@@ -26,6 +30,10 @@ extern bool libspdm_is_in_trusted_environment(void *spdm_context, const uint32_t
 
 /**
  * Get the size of storage space for a certificate chain in a specific slot.
+ *
+ * The size is in bytes. libspdm returns it when a GET_CERTIFICATE request sets SlotSizeRequested,
+ * in the LargeRemainderLength field of a large CERTIFICATE response, or otherwise in the 16-bit
+ * RemainderLength field, so a size above 0xFFFF is reported correctly only in a large response.
  *
  * @param[in]  spdm_context  A pointer to the SPDM context.
  * @param[in]  slot_id       The number of slot for the certificate chain.
@@ -45,8 +53,10 @@ extern uint32_t libspdm_get_cert_chain_slot_storage_size(
  *
  * This function should store the new certificate chain in
  * non-volatile memory.
- * If the cert_chain is NULL and cert_chain_size is 0,
- * the feature is to erase the certificate chain.
+ *
+ * If cert_chain and cert_chain_size are NULL then the certificate chain in slot_id is erased, which
+ * libspdm requests only for SPDM 1.3 and later. base_hash_algo, base_asym_algo, pqc_asym_algo and
+ * hash_size are then 0. libspdm does not read *cert_chain_size back.
  *
  * If a reset isn't required, then it is the implementations
  * responsibility to allocate memory to store the new certificate
@@ -85,8 +95,7 @@ extern uint32_t libspdm_get_cert_chain_slot_storage_size(
  * @param[in]      cert_chain       The new SPDM certificate chain (including
  *                                  the spdm_cert_chain_t header and root hash).
  * @param[in,out]  cert_chain_size  Size of the new SPDM certificate chain, in
- *                                  bytes. This needs be updated with the final
- *                                  size.
+ *                                  bytes.
  * @param[in]      cert_model       The certificate model (one of
  *                                  SPDM_CERTIFICATE_INFO_CERT_MODEL_*) that
  *                                  applies to the certificate chain being

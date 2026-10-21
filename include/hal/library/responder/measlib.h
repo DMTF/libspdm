@@ -19,7 +19,13 @@
  * libspdm will call this function to retrieve the measurements for a device.
  * The "measurement_index" parameter indicates the measurement requested.
  *
+ * On success, measurements_count must not be 0, and for a single measurement index it must be 1
+ * with a non-zero measurements_size, because libspdm asserts these. content_changed must always be
+ * set. libspdm has not validated slot_id_param when it calls this function.
+ *
  * @param  spdm_context  A pointer to the SPDM context.
+ * @param  session_id    Indicates the session in which the request was received.
+ *                       If NULL then the request was not received in a session.
  * @param  spdm_version  Indicates the negotiated SPDM version.
  *
  * @param  measurement_specification  Indicates the measurement specification.
@@ -56,6 +62,11 @@
  * @param  request_context       If spdm_version is greater than 1.2, then it is a pointer to the
  *                               Context field in the request message, else it is NULL and ignore
  *
+ * @param  content_changed
+ * The content change field of the MEASUREMENTS response, which is one of the
+ * SPDM_MEASUREMENTS_RESPONSE_CONTENT_* values. libspdm uses it for SPDM 1.2 and later when the
+ * response is signed.
+ *
  * @param  measurements_count
  * When "measurement_index" is zero, returns the total count of
  * measurements available for the device. None of the actual measurements are
@@ -75,6 +86,11 @@
  * On output, indicates the total size in bytes of all device measurement
  * blocks in the buffer. This field should only be modified if "measurement_index" is non-zero.
  * The maximum size is SPDM_MAX_MEASUREMENT_RECORD_LENGTH (2^24 - 1 bytes).
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS             The measurements were collected.
+ * @retval LIBSPDM_STATUS_MEAS_INVALID_INDEX  measurement_index is not supported. libspdm sends
+ *                                            ERROR(InvalidRequest).
+ * @retval Others                             libspdm sends ERROR(Unspecified).
  **/
 extern libspdm_return_t libspdm_measurement_collection(
     void *spdm_context,
@@ -99,7 +115,15 @@ extern libspdm_return_t libspdm_measurement_collection(
  * It is called immediately after libspdm_measurement_collection() is called and allows the opaque
  * data field to vary based on the GET_MEASUREMENTS request.
  *
+ * When SPDM 1.2 or later is negotiated, libspdm calls this function only if an OpaqueDataFmt was
+ * selected, and the opaque data must use that format, which LIBSPDM_DATA_OTHER_PARAMS_SUPPORT
+ * gives. The opaque data should not be larger than SPDM_MAX_OPAQUE_DATA_SIZE. If false is returned
+ * then libspdm sends ERROR(Unspecified), so to send no opaque data, return true and set
+ * opaque_data_size to 0.
+ *
  * @param  spdm_context  A pointer to the SPDM context.
+ * @param  session_id    Indicates the session in which the request was received.
+ *                       If NULL then the request was not received in a session.
  * @param  spdm_version  Indicates the negotiated SPDM version.
  *
  * @param  measurement_specification  Indicates the measurement specification.
@@ -123,6 +147,9 @@ extern libspdm_return_t libspdm_measurement_collection(
  * @param opaque_data_size
  * On input, indicates the size, in bytes, of the destination buffer.
  * On output, indicates the size of the opaque data.
+ *
+ * @retval true   The opaque data was returned.
+ * @retval false  The opaque data could not be returned.
  **/
 extern bool libspdm_measurement_opaque_data(
     void *spdm_context,
@@ -140,11 +167,15 @@ extern bool libspdm_measurement_opaque_data(
 /**
  * This function calculates the measurement summary hash.
  *
+ * The hash is the MeasurementSummaryHash field as DSP0274 defines it, and libspdm does not compute
+ * any part of it. libspdm passes a pointer into the CHALLENGE_AUTH, KEY_EXCHANGE_RSP or
+ * PSK_EXCHANGE_RSP response as measurement_summary_hash, so this function writes the field in
+ * place.
+ *
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  spdm_version               The SPDM version.
  * @param  base_hash_algo             The hash algo to use on summary.
- * @param  measurement_specification  Indicates the measurement specification.
- *                                    It must align with measurement_specification.
+ * @param  measurement_specification  Indicates the negotiated measurement specification.
  *                                    (SPDM_MEASUREMENT_SPECIFICATION_*)
  * @param  measurement_hash_algo      Indicates the measurement hash algorithm.
  *                                    (SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_*)
@@ -173,19 +204,24 @@ extern bool libspdm_generate_measurement_summary_hash(
 /**
  * Collect the measurement extension log.
  *
+ * libspdm calls this function for each MEASUREMENT_EXTENSION_LOG request. *spdm_mel must remain
+ * valid after this function returns, because libspdm copies from it afterwards. A Requester can
+ * read the MEL with several requests, and new entries can be appended between them, but existing
+ * bytes must not change. If true is returned with an spdm_mel_size of 0 then libspdm sends
+ * ERROR(InvalidRequest), and if false is returned then it sends ERROR(OperationFailed).
+ *
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  session_id                 Indicates the session in which the request was received.
  *                                    If NULL then the request was not received in a session.
  * @param  mel_specification          Indicates the measurement extension log specification.
- * @param  measurement_specification  Indicates the measurement specification.
- *                                    It must align with measurement_specification.
+ * @param  measurement_specification  Indicates the negotiated measurement specification.
  *                                    (SPDM_MEASUREMENT_SPECIFICATION_*)
  * @param  measurement_hash_algo  Indicates the measurement hash algorithm.
  *                                Must be SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_* value in spdm.h.
  * @param  spdm_mel               Return the pointer of MEL.
  * @param  spdm_mel_size          Return the size of MEL.
  *
- * @retval true  measurement extension log is generated or skipped.
+ * @retval true  measurement extension log is generated.
  * @retval false measurement extension log is not generated.
  **/
 extern bool libspdm_measurement_extension_log_collection(
