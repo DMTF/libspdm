@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -21,18 +21,23 @@
  * key_size must be 16 or 32, otherwise false is returned.
  * tag_size must be 12, 13, 14, 15, 16, otherwise false is returned.
  *
- * @param[in]   key            Pointer to the encryption key.
- * @param[in]   key_size       Size of the encryption key in bytes.
- * @param[in]   iv             Pointer to the IV value.
- * @param[in]   iv_size        Size of the IV value in bytes.
- * @param[in]   a_data         Pointer to the additional authenticated data.
- * @param[in]   a_data_size    Size of the additional authenticated data in bytes.
- * @param[in]   data_in        Pointer to the input data buffer to be encrypted.
- * @param[in]   data_in_size   Size of the input data buffer in bytes.
- * @param[out]  tag_out        Pointer to a buffer that receives the authentication tag output.
- * @param[in]   tag_size       Size of the authentication tag in bytes.
- * @param[out]  data_out       Pointer to a buffer that receives the encryption output.
- * @param[out]  data_out_size  Size of the output data buffer in bytes.
+ * data_out_size can be NULL. Otherwise *data_out_size must be at least data_in_size, and it is set
+ * to data_in_size on success. libspdm passes NULL for data_in, data_out and data_out_size, and 0
+ * for data_in_size, when a session only authenticates messages.
+ *
+ * @param[in]       key            Pointer to the encryption key.
+ * @param[in]       key_size       Size of the encryption key in bytes.
+ * @param[in]       iv             Pointer to the IV value.
+ * @param[in]       iv_size        Size of the IV value in bytes.
+ * @param[in]       a_data         Pointer to the additional authenticated data.
+ * @param[in]       a_data_size    Size of the additional authenticated data in bytes.
+ * @param[in]       data_in        Pointer to the input data buffer to be encrypted.
+ * @param[in]       data_in_size   Size of the input data buffer in bytes.
+ * @param[out]      tag_out        Pointer to a buffer that receives the authentication tag output.
+ * @param[in]       tag_size       Size of the authentication tag in bytes.
+ * @param[out]      data_out       Pointer to a buffer that receives the encryption output.
+ * @param[in, out]  data_out_size  On input, the size of the data_out buffer in bytes.
+ *                                 On output, the size of the output data in bytes.
  *
  * @retval true   AEAD AES-GCM authenticated encryption succeeded.
  * @retval false  AEAD AES-GCM authenticated encryption failed.
@@ -54,18 +59,26 @@ extern bool libspdm_aead_aes_gcm_encrypt(const uint8_t *key, size_t key_size,
  *
  * If data verification fails, false is returned.
  *
- * @param[in]   key            Pointer to the encryption key.
- * @param[in]   key_size       Size of the encryption key in bytes.
- * @param[in]   iv             Pointer to the IV value.
- * @param[in]   iv_size        Size of the IV value in bytes.
- * @param[in]   a_data         Pointer to the additional authenticated data.
- * @param[in]   a_data_size    Size of the additional authenticated data in bytes.
- * @param[in]   data_in        Pointer to the input data buffer to be decrypted.
- * @param[in]   data_in_size   Size of the input data buffer in bytes.
- * @param[in]   tag            Pointer to a buffer that contains the authentication tag.
- * @param[in]   tag_size       Size of the authentication tag in bytes.
- * @param[out]  data_out       Pointer to a buffer that receives the decryption output.
- * @param[out]  data_out_size  Size of the output data buffer in bytes.
+ * data_out_size can be NULL. Otherwise *data_out_size must be at least data_in_size, and it is set
+ * to data_in_size on success. libspdm passes NULL for data_in, data_out and data_out_size, and 0
+ * for data_in_size, when a session only authenticates messages.
+ *
+ * When false is returned, *data_out_size must not be changed, because libspdm retries a failed
+ * decryption with the same size.
+ *
+ * @param[in]       key            Pointer to the encryption key.
+ * @param[in]       key_size       Size of the encryption key in bytes.
+ * @param[in]       iv             Pointer to the IV value.
+ * @param[in]       iv_size        Size of the IV value in bytes.
+ * @param[in]       a_data         Pointer to the additional authenticated data.
+ * @param[in]       a_data_size    Size of the additional authenticated data in bytes.
+ * @param[in]       data_in        Pointer to the input data buffer to be decrypted.
+ * @param[in]       data_in_size   Size of the input data buffer in bytes.
+ * @param[in]       tag            Pointer to a buffer that contains the authentication tag.
+ * @param[in]       tag_size       Size of the authentication tag in bytes.
+ * @param[out]      data_out       Pointer to a buffer that receives the decryption output.
+ * @param[in, out]  data_out_size  On input, the size of the data_out buffer in bytes.
+ *                                 On output, the size of the output data in bytes.
  *
  * @retval true   AEAD AES-GCM authenticated decryption succeeded.
  * @retval false  AEAD AES-GCM authenticated decryption failed.
@@ -87,18 +100,23 @@ extern bool libspdm_aead_aes_gcm_decrypt(const uint8_t *key, size_t key_size,
  * key_size must be 32, otherwise false is returned.
  * tag_size must be 16, otherwise false is returned.
  *
- * @param[in]   key            Pointer to the encryption key.
- * @param[in]   key_size       Size of the encryption key in bytes.
- * @param[in]   iv             Pointer to the IV value.
- * @param[in]   iv_size        Size of the IV value in bytes.
- * @param[in]   a_data         Pointer to the additional authenticated data.
- * @param[in]   a_data_size    Size of the additional authenticated data in bytes.
- * @param[in]   data_in        Pointer to the input data buffer to be encrypted.
- * @param[in]   data_in_size   Size of the input data buffer in bytes.
- * @param[out]  tag_out        Pointer to a buffer that receives the authentication tag output.
- * @param[in]   tag_size       Size of the authentication tag in bytes.
- * @param[out]  data_out       Pointer to a buffer that receives the encryption output.
- * @param[out]  data_out_size  Size of the output data buffer in bytes.
+ * data_out_size can be NULL. Otherwise *data_out_size must be at least data_in_size, and it is set
+ * to data_in_size on success. libspdm passes NULL for data_in, data_out and data_out_size, and 0
+ * for data_in_size, when a session only authenticates messages.
+ *
+ * @param[in]       key            Pointer to the encryption key.
+ * @param[in]       key_size       Size of the encryption key in bytes.
+ * @param[in]       iv             Pointer to the IV value.
+ * @param[in]       iv_size        Size of the IV value in bytes.
+ * @param[in]       a_data         Pointer to the additional authenticated data.
+ * @param[in]       a_data_size    Size of the additional authenticated data in bytes.
+ * @param[in]       data_in        Pointer to the input data buffer to be encrypted.
+ * @param[in]       data_in_size   Size of the input data buffer in bytes.
+ * @param[out]      tag_out        Pointer to a buffer that receives the authentication tag output.
+ * @param[in]       tag_size       Size of the authentication tag in bytes.
+ * @param[out]      data_out       Pointer to a buffer that receives the encryption output.
+ * @param[in, out]  data_out_size  On input, the size of the data_out buffer in bytes.
+ *                                 On output, the size of the output data in bytes.
  *
  * @retval true   AEAD ChaCha20Poly1305 authenticated encryption succeeded.
  * @retval false  AEAD ChaCha20Poly1305 authenticated encryption failed.
@@ -118,18 +136,26 @@ extern bool libspdm_aead_chacha20_poly1305_encrypt(
  *
  * If data verification fails, false is returned.
  *
- * @param[in]   key            Pointer to the encryption key.
- * @param[in]   key_size       Size of the encryption key in bytes.
- * @param[in]   iv             Pointer to the IV value.
- * @param[in]   iv_size        Size of the IV value in bytes.
- * @param[in]   a_data         Pointer to the additional authenticated data.
- * @param[in]   a_data_size    Size of the additional authenticated data in bytes.
- * @param[in]   data_in        Pointer to the input data buffer to be decrypted.
- * @param[in]   data_in_size   Size of the input data buffer in bytes.
- * @param[in]   tag            Pointer to a buffer that contains the authentication tag.
- * @param[in]   tag_size       Size of the authentication tag in bytes.
- * @param[out]  data_out       Pointer to a buffer that receives the decryption output.
- * @param[out]  data_out_size  Size of the output data buffer in bytes.
+ * data_out_size can be NULL. Otherwise *data_out_size must be at least data_in_size, and it is set
+ * to data_in_size on success. libspdm passes NULL for data_in, data_out and data_out_size, and 0
+ * for data_in_size, when a session only authenticates messages.
+ *
+ * When false is returned, *data_out_size must not be changed, because libspdm retries a failed
+ * decryption with the same size.
+ *
+ * @param[in]       key            Pointer to the encryption key.
+ * @param[in]       key_size       Size of the encryption key in bytes.
+ * @param[in]       iv             Pointer to the IV value.
+ * @param[in]       iv_size        Size of the IV value in bytes.
+ * @param[in]       a_data         Pointer to the additional authenticated data.
+ * @param[in]       a_data_size    Size of the additional authenticated data in bytes.
+ * @param[in]       data_in        Pointer to the input data buffer to be decrypted.
+ * @param[in]       data_in_size   Size of the input data buffer in bytes.
+ * @param[in]       tag            Pointer to a buffer that contains the authentication tag.
+ * @param[in]       tag_size       Size of the authentication tag in bytes.
+ * @param[out]      data_out       Pointer to a buffer that receives the decryption output.
+ * @param[in, out]  data_out_size  On input, the size of the data_out buffer in bytes.
+ *                                 On output, the size of the output data in bytes.
  *
  * @retval true   AEAD ChaCha20Poly1305 authenticated decryption succeeded.
  * @retval false  AEAD ChaCha20Poly1305 authenticated decryption failed.
@@ -151,18 +177,23 @@ extern bool libspdm_aead_chacha20_poly1305_decrypt(
  * key_size must be 16, otherwise false is returned.
  * tag_size must be 16, otherwise false is returned.
  *
- * @param[in]   key            Pointer to the encryption key.
- * @param[in]   key_size       Size of the encryption key in bytes.
- * @param[in]   iv             Pointer to the IV value.
- * @param[in]   iv_size        Size of the IV value in bytes.
- * @param[in]   a_data         Pointer to the additional authenticated data.
- * @param[in]   a_data_size    Size of the additional authenticated data in bytes.
- * @param[in]   data_in        Pointer to the input data buffer to be encrypted.
- * @param[in]   data_in_size   Size of the input data buffer in bytes.
- * @param[out]  tag_out        Pointer to a buffer that receives the authentication tag output.
- * @param[in]   tag_size       Size of the authentication tag in bytes.
- * @param[out]  data_out       Pointer to a buffer that receives the encryption output.
- * @param[out]  data_out_size  Size of the output data buffer in bytes.
+ * data_out_size can be NULL. Otherwise *data_out_size must be at least data_in_size, and it is set
+ * to data_in_size on success. libspdm passes NULL for data_in, data_out and data_out_size, and 0
+ * for data_in_size, when a session only authenticates messages.
+ *
+ * @param[in]       key            Pointer to the encryption key.
+ * @param[in]       key_size       Size of the encryption key in bytes.
+ * @param[in]       iv             Pointer to the IV value.
+ * @param[in]       iv_size        Size of the IV value in bytes.
+ * @param[in]       a_data         Pointer to the additional authenticated data.
+ * @param[in]       a_data_size    Size of the additional authenticated data in bytes.
+ * @param[in]       data_in        Pointer to the input data buffer to be encrypted.
+ * @param[in]       data_in_size   Size of the input data buffer in bytes.
+ * @param[out]      tag_out        Pointer to a buffer that receives the authentication tag output.
+ * @param[in]       tag_size       Size of the authentication tag in bytes.
+ * @param[out]      data_out       Pointer to a buffer that receives the encryption output.
+ * @param[in, out]  data_out_size  On input, the size of the data_out buffer in bytes.
+ *                                 On output, the size of the output data in bytes.
  *
  * @retval true   AEAD SM4-GCM authenticated encryption succeeded.
  * @retval false  AEAD SM4-GCM authenticated encryption failed.
@@ -184,18 +215,26 @@ extern bool libspdm_aead_sm4_gcm_encrypt(const uint8_t *key, size_t key_size,
  *
  * If data verification fails, false is returned.
  *
- * @param[in]   key            Pointer to the encryption key.
- * @param[in]   key_size       Size of the encryption key in bytes.
- * @param[in]   iv             Pointer to the IV value.
- * @param[in]   iv_size        Size of the IV value in bytes.
- * @param[in]   a_data         Pointer to the additional authenticated data.
- * @param[in]   a_data_size    Size of the additional authenticated data in bytes.
- * @param[in]   data_in        Pointer to the input data buffer to be decrypted.
- * @param[in]   data_in_size   Size of the input data buffer in bytes.
- * @param[in]   tag            Pointer to a buffer that contains the authentication tag.
- * @param[in]   tag_size       Size of the authentication tag in bytes.
- * @param[out]  data_out       Pointer to a buffer that receives the decryption output.
- * @param[out]  data_out_size  Size of the output data buffer in bytes.
+ * data_out_size can be NULL. Otherwise *data_out_size must be at least data_in_size, and it is set
+ * to data_in_size on success. libspdm passes NULL for data_in, data_out and data_out_size, and 0
+ * for data_in_size, when a session only authenticates messages.
+ *
+ * When false is returned, *data_out_size must not be changed, because libspdm retries a failed
+ * decryption with the same size.
+ *
+ * @param[in]       key            Pointer to the encryption key.
+ * @param[in]       key_size       Size of the encryption key in bytes.
+ * @param[in]       iv             Pointer to the IV value.
+ * @param[in]       iv_size        Size of the IV value in bytes.
+ * @param[in]       a_data         Pointer to the additional authenticated data.
+ * @param[in]       a_data_size    Size of the additional authenticated data in bytes.
+ * @param[in]       data_in        Pointer to the input data buffer to be decrypted.
+ * @param[in]       data_in_size   Size of the input data buffer in bytes.
+ * @param[in]       tag            Pointer to a buffer that contains the authentication tag.
+ * @param[in]       tag_size       Size of the authentication tag in bytes.
+ * @param[out]      data_out       Pointer to a buffer that receives the decryption output.
+ * @param[in, out]  data_out_size  On input, the size of the data_out buffer in bytes.
+ *                                 On output, the size of the output data in bytes.
  *
  * @retval true   AEAD SM4-GCM authenticated decryption succeeded.
  * @retval false  AEAD SM4-GCM authenticated decryption failed.

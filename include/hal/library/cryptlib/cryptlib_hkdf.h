@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -15,12 +15,15 @@
 /**
  * Derive SHA-256 HMAC-based Extract key Derivation Function (HKDF).
  *
+ * prk_out_size must be the SHA-256 digest size, 32 bytes, because that is the size of the
+ * pseudorandom key. key and salt must not be NULL, even when their sizes are 0.
+ *
  * @param[in]   key           Pointer to the user-supplied key.
  * @param[in]   key_size      Key size in bytes.
  * @param[in]   salt          Pointer to the salt value.
  * @param[in]   salt_size     Salt size in bytes.
- * @param[out]  prk_out       Pointer to buffer to receive prk value.
- * @param[in]   prk_out_size  Size of prk bytes to generate.
+ * @param[out]  prk_out       Pointer to buffer to receive the pseudorandom key.
+ * @param[in]   prk_out_size  Size of the prk_out buffer in bytes.
  *
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
@@ -31,6 +34,10 @@ extern bool libspdm_hkdf_sha256_extract(const uint8_t *key, size_t key_size,
 
 /**
  * Derive SHA256 HMAC-based Expand key Derivation Function (HKDF).
+ *
+ * prk_size must be the SHA-256 digest size, 32 bytes, and out_size must not be larger than 255
+ * times that size. info must not be NULL, even when info_size is 0. out can be the same buffer as
+ * prk if out_size is not larger than the digest size.
  *
  * @param[in]   prk        Pointer to the user-supplied key.
  * @param[in]   prk_size   Key size in bytes.
@@ -51,12 +58,15 @@ extern bool libspdm_hkdf_sha256_expand(const uint8_t *prk, size_t prk_size,
 /**
  * Derive SHA384 HMAC-based Extract key Derivation Function (HKDF).
  *
+ * prk_out_size must be the SHA-384 digest size, 48 bytes, because that is the size of the
+ * pseudorandom key. key and salt must not be NULL, even when their sizes are 0.
+ *
  * @param[in]   key           Pointer to the user-supplied key.
  * @param[in]   key_size      Key size in bytes.
  * @param[in]   salt          Pointer to the salt value.
  * @param[in]   salt_size     Salt size in bytes.
- * @param[out]  prk_out       Pointer to buffer to receive hkdf value.
- * @param[in]   prk_out_size  Size of hkdf bytes to generate.
+ * @param[out]  prk_out       Pointer to buffer to receive the pseudorandom key.
+ * @param[in]   prk_out_size  Size of the prk_out buffer in bytes.
  *
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
@@ -67,6 +77,10 @@ extern bool libspdm_hkdf_sha384_extract(const uint8_t *key, size_t key_size,
 
 /**
  * Derive SHA384 HMAC-based Expand key Derivation Function (HKDF).
+ *
+ * prk_size must be the SHA-384 digest size, 48 bytes, and out_size must not be larger than 255
+ * times that size. info must not be NULL, even when info_size is 0. out can be the same buffer as
+ * prk if out_size is not larger than the digest size.
  *
  * @param[in]   prk        Pointer to the user-supplied key.
  * @param[in]   prk_size   Key size in bytes.
@@ -87,12 +101,15 @@ extern bool libspdm_hkdf_sha384_expand(const uint8_t *prk, size_t prk_size,
 /**
  * Derive SHA512 HMAC-based Extract key Derivation Function (HKDF).
  *
+ * prk_out_size must be the SHA-512 digest size, 64 bytes, because that is the size of the
+ * pseudorandom key. key and salt must not be NULL, even when their sizes are 0.
+ *
  * @param[in]   key           Pointer to the user-supplied key.
  * @param[in]   key_size      Key size in bytes.
  * @param[in]   salt          Pointer to the salt value.
  * @param[in]   salt_size     Salt size in bytes.
- * @param[out]  prk_out       Pointer to buffer to receive hkdf value.
- * @param[in]   prk_out_size  Size of hkdf bytes to generate.
+ * @param[out]  prk_out       Pointer to buffer to receive the pseudorandom key.
+ * @param[in]   prk_out_size  Size of the prk_out buffer in bytes.
  *
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
@@ -103,6 +120,10 @@ extern bool libspdm_hkdf_sha512_extract(const uint8_t *key, size_t key_size,
 
 /**
  * Derive SHA512 HMAC-based Expand key Derivation Function (HKDF).
+ *
+ * prk_size must be the SHA-512 digest size, 64 bytes, and out_size must not be larger than 255
+ * times that size. info must not be NULL, even when info_size is 0. out can be the same buffer as
+ * prk if out_size is not larger than the digest size.
  *
  * @param[in]   prk        Pointer to the user-supplied key.
  * @param[in]   prk_size   Key size in bytes.
@@ -123,12 +144,15 @@ extern bool libspdm_hkdf_sha512_expand(const uint8_t *prk, size_t prk_size,
 /**
  * Derive SHA3_256 HMAC-based Extract key Derivation Function (HKDF).
  *
+ * prk_out_size must be the SHA3-256 digest size, 32 bytes, because that is the size of the
+ * pseudorandom key. key and salt must not be NULL, even when their sizes are 0.
+ *
  * @param[in]   key           Pointer to the user-supplied key.
  * @param[in]   key_size      Key size in bytes.
  * @param[in]   salt          Pointer to the salt value.
  * @param[in]   salt_size     Salt size in bytes.
- * @param[out]  prk_out       Pointer to buffer to receive hkdf value.
- * @param[in]   prk_out_size  Size of hkdf bytes to generate.
+ * @param[out]  prk_out       Pointer to buffer to receive the pseudorandom key.
+ * @param[in]   prk_out_size  Size of the prk_out buffer in bytes.
  *
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
@@ -139,6 +163,10 @@ extern bool libspdm_hkdf_sha3_256_extract(const uint8_t *key, size_t key_size,
 
 /**
  * Derive SHA3_256 HMAC-based Expand key Derivation Function (HKDF).
+ *
+ * prk_size must be the SHA3-256 digest size, 32 bytes, and out_size must not be larger than 255
+ * times that size. info must not be NULL, even when info_size is 0. out can be the same buffer as
+ * prk if out_size is not larger than the digest size.
  *
  * @param[in]   prk        Pointer to the user-supplied key.
  * @param[in]   prk_size   Key size in bytes.
@@ -159,12 +187,15 @@ extern bool libspdm_hkdf_sha3_256_expand(const uint8_t *prk, size_t prk_size,
 /**
  * Derive SHA3_384 HMAC-based Extract key Derivation Function (HKDF).
  *
+ * prk_out_size must be the SHA3-384 digest size, 48 bytes, because that is the size of the
+ * pseudorandom key. key and salt must not be NULL, even when their sizes are 0.
+ *
  * @param[in]   key           Pointer to the user-supplied key.
  * @param[in]   key_size      Key size in bytes.
  * @param[in]   salt          Pointer to the salt value.
  * @param[in]   salt_size     Salt size in bytes.
- * @param[out]  prk_out       Pointer to buffer to receive hkdf value.
- * @param[in]   prk_out_size  Size of hkdf bytes to generate.
+ * @param[out]  prk_out       Pointer to buffer to receive the pseudorandom key.
+ * @param[in]   prk_out_size  Size of the prk_out buffer in bytes.
  *
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
@@ -175,6 +206,10 @@ extern bool libspdm_hkdf_sha3_384_extract(const uint8_t *key, size_t key_size,
 
 /**
  * Derive SHA3_384 HMAC-based Expand key Derivation Function (HKDF).
+ *
+ * prk_size must be the SHA3-384 digest size, 48 bytes, and out_size must not be larger than 255
+ * times that size. info must not be NULL, even when info_size is 0. out can be the same buffer as
+ * prk if out_size is not larger than the digest size.
  *
  * @param[in]   prk        Pointer to the user-supplied key.
  * @param[in]   prk_size   Key size in bytes.
@@ -195,12 +230,15 @@ extern bool libspdm_hkdf_sha3_384_expand(const uint8_t *prk, size_t prk_size,
 /**
  * Derive SHA3_512 HMAC-based Extract key Derivation Function (HKDF).
  *
+ * prk_out_size must be the SHA3-512 digest size, 64 bytes, because that is the size of the
+ * pseudorandom key. key and salt must not be NULL, even when their sizes are 0.
+ *
  * @param[in]   key           Pointer to the user-supplied key.
  * @param[in]   key_size      Key size in bytes.
  * @param[in]   salt          Pointer to the salt value.
  * @param[in]   salt_size     Salt size in bytes.
- * @param[out]  prk_out       Pointer to buffer to receive hkdf value.
- * @param[in]   prk_out_size  Size of hkdf bytes to generate.
+ * @param[out]  prk_out       Pointer to buffer to receive the pseudorandom key.
+ * @param[in]   prk_out_size  Size of the prk_out buffer in bytes.
  *
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
@@ -211,6 +249,10 @@ extern bool libspdm_hkdf_sha3_512_extract(const uint8_t *key, size_t key_size,
 
 /**
  * Derive SHA3_512 HMAC-based Expand key Derivation Function (HKDF).
+ *
+ * prk_size must be the SHA3-512 digest size, 64 bytes, and out_size must not be larger than 255
+ * times that size. info must not be NULL, even when info_size is 0. out can be the same buffer as
+ * prk if out_size is not larger than the digest size.
  *
  * @param[in]   prk        Pointer to the user-supplied key.
  * @param[in]   prk_size   Key size in bytes.
@@ -231,12 +273,15 @@ extern bool libspdm_hkdf_sha3_512_expand(const uint8_t *prk, size_t prk_size,
 /**
  * Derive SM3_256 HMAC-based Extract key Derivation Function (HKDF).
  *
+ * prk_out_size must be the SM3-256 digest size, 32 bytes, because that is the size of the
+ * pseudorandom key. key and salt must not be NULL, even when their sizes are 0.
+ *
  * @param[in]   key           Pointer to the user-supplied key.
  * @param[in]   key_size      Key size in bytes.
  * @param[in]   salt          Pointer to the salt value.
  * @param[in]   salt_size     Salt size in bytes.
- * @param[out]  prk_out       Pointer to buffer to receive hkdf value.
- * @param[in]   prk_out_size  Size of hkdf bytes to generate.
+ * @param[out]  prk_out       Pointer to buffer to receive the pseudorandom key.
+ * @param[in]   prk_out_size  Size of the prk_out buffer in bytes.
  *
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
@@ -247,6 +292,10 @@ extern bool libspdm_hkdf_sm3_256_extract(const uint8_t *key, size_t key_size,
 
 /**
  * Derive SM3_256 HMAC-based Expand key Derivation Function (HKDF).
+ *
+ * prk_size must be the SM3-256 digest size, 32 bytes, and out_size must not be larger than 255
+ * times that size. info must not be NULL, even when info_size is 0. out can be the same buffer as
+ * prk if out_size is not larger than the digest size.
  *
  * @param[in]   prk        Pointer to the user-supplied key.
  * @param[in]   prk_size   Key size in bytes.

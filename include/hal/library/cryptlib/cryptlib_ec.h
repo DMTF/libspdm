@@ -15,10 +15,16 @@
 /**
  * Allocates and Initializes one Elliptic Curve context for subsequent use with the NID.
  *
+ * nid is LIBSPDM_CRYPTO_NID_SECP256R1, LIBSPDM_CRYPTO_NID_SECP384R1 or
+ * LIBSPDM_CRYPTO_NID_SECP521R1, or LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256,
+ * LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384 or LIBSPDM_CRYPTO_NID_ECDSA_NIST_P521. The SECP and ECDSA
+ * NIDs of a curve select the same curve, and each must be accepted for both ECDH and ECDSA. libspdm
+ * passes the SECP NIDs for ECDHE, and the FIPS self-tests pass the ECDSA NIDs, including for ECDH.
+ *
  * @param nid cipher NID
  *
  * @return  Pointer to the Elliptic Curve context that has been initialized.
- *          If the allocations fails, libspdm_ec_new_by_nid() returns NULL.
+ *          If nid is not supported or the allocation fails, libspdm_ec_new_by_nid() returns NULL.
  **/
 extern void *libspdm_ec_new_by_nid(size_t nid);
 
@@ -56,7 +62,7 @@ extern bool libspdm_ec_set_priv_key(void *ec_context, const uint8_t *private_key
  * For P-521, the public_key_size is 132. first 66-byte is X, second 66-byte is Y.
  *
  * @param[in, out]  ec_context       Pointer to EC context being set.
- * @param[in]       public_key       Pointer to the buffer to receive generated public X,Y.
+ * @param[in]       public_key       Pointer to the public key, X followed by Y.
  * @param[in]       public_key_size  The size of public_key buffer in bytes.
  *
  * @retval  true   EC public key component was set successfully.
@@ -197,6 +203,13 @@ extern bool libspdm_ecdsa_sign(void *ec_context, size_t hash_nid,
 /**
  * Carries out the EC-DSA signature with caller input random function. This API can be used for FIPS test.
  *
+ * random_func is called with NULL as its first argument. It must fill the buffer that its second
+ * argument points to with the number of bytes that its third argument gives, and return 0 on
+ * success. This function uses these bytes as the secret per-message number k, so a random_func that
+ * returns fixed bytes gives a fixed signature, which the FIPS self-test relies on. This function
+ * can call random_func more than once, and the number of bytes that it requests can depend on the
+ * curve.
+ *
  * @param[in]       ec_context    Pointer to EC context for signature generation.
  * @param[in]       hash_nid      hash NID
  * @param[in]       message_hash  Pointer to octet message hash to be signed.
@@ -204,7 +217,7 @@ extern bool libspdm_ecdsa_sign(void *ec_context, size_t hash_nid,
  * @param[out]      signature     Pointer to buffer to receive EC-DSA signature.
  * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
  *                                On output, the size of data returned in signature buffer in bytes.
- * @param[in]       random_func   random number function
+ * @param[in]       random_func   Function that generates the bytes for k.
  *
  * @retval  true   signature successfully generated in EC-DSA.
  * @retval  false  signature generation failed.
