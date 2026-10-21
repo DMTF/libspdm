@@ -306,6 +306,7 @@
   tests use, from 1.1.7 to 1.1.8.
 - OpenSSL is built by its own `Configure` script, which needs Perl, as a shared `libcrypto`, or a
   static one when `TOOLCHAIN=NONE`.
+- `ENABLE_BINARY_BUILD=1` no longer disables EdDSA.
 - CMake 3.16 or later is required, and 3.19 or later for `ARM_DS2022`. `TOOLCHAIN` selects a
   toolchain file from `cmake/toolchain`, unless `CMAKE_TOOLCHAIN_FILE` is given.
 - libspdm's own targets build as C99, except that MSVC, which has no C99 mode, uses C11, and the
