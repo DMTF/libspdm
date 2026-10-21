@@ -1456,6 +1456,103 @@ static void rsp_chunk_response_case18(void** state)
     }
 }
 
+/**
+ * Test 19: CHUNK_GET from a session other than the one that started the transfer, spdm 1.4.
+ * Expected Behavior: the request is rejected with UNEXPECTED_REQUEST and the transfer is intact.
+ *                    The same session then retrieves the chunk.
+ **/
+static void rsp_chunk_response_case19(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t* error_response;
+    spdm_chunk_response_response_14_t* spdm_response;
+    spdm_chunk_get_request_14_t spdm_request;
+    void* scratch_buffer;
+    size_t scratch_buffer_size;
+    uint8_t chunk_handle;
+    uint32_t data_transfer_size;
+    uint32_t large_message_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 19;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+
+    data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+    scratch_buffer = (uint8_t*)scratch_buffer +
+                     libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    libspdm_zero_mem(scratch_buffer, data_transfer_size * 2);
+    large_message_size = data_transfer_size * 2;
+
+    /* The transfer was started by session 0xFFFFFFFE. */
+    chunk_handle = (uint8_t) spdm_test_context->case_id;
+    spdm_context->chunk_context.get.chunk_in_use = true;
+    spdm_context->chunk_context.get.session_id_valid = true;
+    spdm_context->chunk_context.get.session_id = 0xFFFFFFFE;
+    spdm_context->chunk_context.get.chunk_handle = chunk_handle;
+    spdm_context->chunk_context.get.chunk_seq_no = 0;
+    spdm_context->chunk_context.get.large_message = scratch_buffer;
+    spdm_context->chunk_context.get.large_message_size = large_message_size;
+    spdm_context->chunk_context.get.chunk_bytes_transferred = 0;
+
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_14;
+    spdm_request.header.request_response_code = SPDM_CHUNK_GET;
+    spdm_request.header.param2 = chunk_handle;
+    spdm_request.chunk_seq_no = 0;
+
+    /* The request is outside any session. */
+    spdm_context->last_spdm_request_session_id_valid = false;
+    response_size = sizeof(response);
+    status = libspdm_get_response_chunk_get(
+        spdm_context, sizeof(spdm_request), &spdm_request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    error_response = (spdm_error_response_t*) response;
+    assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_true(spdm_context->chunk_context.get.chunk_in_use);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_seq_no, 0);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_bytes_transferred, 0);
+
+    /* Another session. */
+    spdm_context->last_spdm_request_session_id_valid = true;
+    spdm_context->last_spdm_request_session_id = 0xFFFFFFFD;
+    response_size = sizeof(response);
+    status = libspdm_get_response_chunk_get(
+        spdm_context, sizeof(spdm_request), &spdm_request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_seq_no, 0);
+
+    /* The session that started the transfer. */
+    spdm_context->last_spdm_request_session_id = 0xFFFFFFFE;
+    response_size = sizeof(response);
+    status = libspdm_get_response_chunk_get(
+        spdm_context, sizeof(spdm_request), &spdm_request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (spdm_chunk_response_response_14_t*) response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CHUNK_RESPONSE);
+    assert_int_equal(spdm_response->header.param2, chunk_handle);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_seq_no, 1);
+
+    spdm_context->last_spdm_request_session_id_valid = false;
+    libspdm_zero_mem(&spdm_context->chunk_context.get, sizeof(spdm_context->chunk_context.get));
+}
+
 
 int libspdm_rsp_chunk_response_test(void)
 {
@@ -1496,6 +1593,8 @@ int libspdm_rsp_chunk_response_test(void)
         cmocka_unit_test(rsp_chunk_response_case17),
         /* Successful request of last chunk where chunk size is exactly 1 byte, spdm 1.4 */
         cmocka_unit_test(rsp_chunk_response_case18),
+        /* CHUNK_GET from a session other than the one that started the transfer, spdm 1.4 */
+        cmocka_unit_test(rsp_chunk_response_case19),
     };
 
     libspdm_test_context_t test_context = {

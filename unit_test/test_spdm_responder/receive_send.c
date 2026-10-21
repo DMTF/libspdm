@@ -2306,6 +2306,125 @@ static void libspdm_test_responder_receive_send_rsp_case26(void **state)
     libspdm_release_sender_buffer(spdm_context);
 }
 
+/**
+ * Test 27: A large response is bound to the session of the request that produced it.
+ * Expected Behavior: the Responder returns ErrorCode=LargeResponse, and CHUNK_GET for that handle
+ *                    is rejected from any other session, or outside a session, and accepted from
+ *                    the session of the request.
+ **/
+static void libspdm_test_responder_receive_send_rsp_case27(void** state)
+{
+#if ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) && \
+    (LIBSPDM_AEAD_AES_256_GCM_SUPPORT)
+    libspdm_return_t status;
+    libspdm_session_info_t* session_info;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t* response;
+    spdm_error_response_t* spdm_error;
+    my_spdm_vendor_defined_request_msg_t spdm_request;
+    spdm_chunk_get_request_t chunk_get_request;
+    uint8_t chunk_get_response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t chunk_get_response_size;
+    void* message;
+    size_t message_size;
+    uint8_t chunk_handle;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 27;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+
+    spdm_context->local_context.capability.flags |=
+        (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP
+         | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.sender_data_transfer_size =
+        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_request.header.request_response_code = SPDM_VENDOR_DEFINED_REQUEST;
+    libspdm_copy_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
+                     &spdm_request, sizeof(spdm_request));
+    spdm_context->last_spdm_request_size = sizeof(spdm_request);
+
+    /* The request that produces the large response is in session 0xFFFFFFFE. */
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, 0xFFFFFFFE,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
+    libspdm_secured_message_set_session_state(session_info->secured_message_context,
+                                              LIBSPDM_SESSION_STATE_ESTABLISHED);
+    spdm_context->last_spdm_request_session_id_valid = true;
+    spdm_context->last_spdm_request_session_id = 0xFFFFFFFE;
+    spdm_context->get_response_func = (void *)my_test_get_response_func;
+
+    libspdm_acquire_sender_buffer(spdm_context, &message_size, (void**) &message);
+    response = message;
+    response_size = message_size;
+    libspdm_zero_mem(response, response_size);
+
+    status = libspdm_build_response(spdm_context, NULL, false, &response_size, (void**)&response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    libspdm_release_sender_buffer(spdm_context);
+
+    assert_true(spdm_context->chunk_context.get.chunk_in_use);
+    assert_true(spdm_context->chunk_context.get.session_id_valid);
+    assert_int_equal(spdm_context->chunk_context.get.session_id, 0xFFFFFFFE);
+    chunk_handle = spdm_context->chunk_context.get.chunk_handle;
+
+    libspdm_zero_mem(&chunk_get_request, sizeof(chunk_get_request));
+    chunk_get_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    chunk_get_request.header.request_response_code = SPDM_CHUNK_GET;
+    chunk_get_request.header.param2 = chunk_handle;
+    chunk_get_request.chunk_seq_no = 0;
+
+    /* Outside a session. */
+    spdm_context->last_spdm_request_session_id_valid = false;
+    chunk_get_response_size = sizeof(chunk_get_response);
+    status = libspdm_get_response_chunk_get(
+        spdm_context, sizeof(chunk_get_request), &chunk_get_request,
+        &chunk_get_response_size, chunk_get_response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_error = (spdm_error_response_t*) chunk_get_response;
+    assert_int_equal(spdm_error->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_error->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+
+    /* Another session. */
+    spdm_context->last_spdm_request_session_id_valid = true;
+    spdm_context->last_spdm_request_session_id = 0xFFFFFFFD;
+    chunk_get_response_size = sizeof(chunk_get_response);
+    status = libspdm_get_response_chunk_get(
+        spdm_context, sizeof(chunk_get_request), &chunk_get_request,
+        &chunk_get_response_size, chunk_get_response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_error->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_error->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_true(spdm_context->chunk_context.get.chunk_in_use);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_seq_no, 0);
+
+    /* The session of the request. */
+    spdm_context->last_spdm_request_session_id = 0xFFFFFFFE;
+    chunk_get_response_size = sizeof(chunk_get_response);
+    status = libspdm_get_response_chunk_get(
+        spdm_context, sizeof(chunk_get_request), &chunk_get_request,
+        &chunk_get_response_size, chunk_get_response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_error->header.request_response_code, SPDM_CHUNK_RESPONSE);
+    assert_int_equal(spdm_context->chunk_context.get.chunk_seq_no, 1);
+
+    spdm_context->last_spdm_request_session_id_valid = false;
+#endif
+}
+
+
 int libspdm_rsp_receive_send_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -2406,6 +2525,9 @@ int libspdm_rsp_receive_send_test(void)
                                libspdm_unit_test_reset_context),
         /* a response that fits in a single transfer is sent without chunking */
         cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case26,
+                               libspdm_unit_test_reset_context),
+        /* a large response is bound to the session of the request that produced it */
+        cmocka_unit_test_setup(libspdm_test_responder_receive_send_rsp_case27,
                                libspdm_unit_test_reset_context),
     };
 
