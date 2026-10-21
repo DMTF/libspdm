@@ -513,6 +513,15 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
  **/
 void libspdm_reset_all_encap_state(libspdm_context_t *spdm_context);
 
+/**
+ * Starts an encapsulated flow, which has not yet issued an encapsulated request.
+ *
+ * @param  encap_context  A pointer to the encapsulated context of the flow.
+ * @param  flow_type      The type of encapsulated flow.
+ **/
+void libspdm_start_encap_flow(libspdm_encap_context_t *encap_context,
+                              libspdm_encap_flow_type_t flow_type);
+
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 /**
  * Build the next encapsulated GET_CERTIFICATE request of an in-progress retrieval, using the

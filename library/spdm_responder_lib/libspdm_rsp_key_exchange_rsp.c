@@ -200,14 +200,9 @@ static void init_encap_state(libspdm_context_t *spdm_context,
     LIBSPDM_ASSERT(req_slot_id < SPDM_MAX_SLOT_COUNT);
 
     encap_context = &session_info->encap_context;
+    libspdm_start_encap_flow(encap_context, LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH);
     encap_context->req_slot_id = req_slot_id;
     encap_context->mut_auth_req_slot_id = req_slot_id;
-    encap_context->request_id = 0;
-    encap_context->has_last_encap_request = false;
-    encap_context->flow_type = LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH;
-
-    libspdm_zero_mem(&encap_context->last_encap_request_header,
-                     sizeof(encap_context->last_encap_request_header));
     encap_context->payload_buffer_size = 0;
 
     /* Clear cache. */
