@@ -297,14 +297,9 @@ if(ENABLE_BINARY_BUILD STREQUAL "1")
         message(FATAL_ERROR "enabling binary build requires path to libssl.")
     endif()
 
-    # Disable EDDSA when binary builds are enabled. EDDSA may be enabled in the future.
-    list(APPEND LIBSPDM_CONFIG_DEFINITIONS LIBSPDM_EDDSA_ED25519_SUPPORT=0)
-    list(APPEND LIBSPDM_CONFIG_DEFINITIONS LIBSPDM_EDDSA_ED448_SUPPORT=0)
-
     message("ENABLE_BINARY_BUILD=1")
     message("COMPILED_LIBCRYPTO_PATH=${COMPILED_LIBCRYPTO_PATH}")
     message("COMPILED_LIBSSL_PATH=${COMPILED_LIBSSL_PATH}")
-    message("Disabling EDDSA support due to ENABLE_BINARY_BUILD=1")
 
     set(CRYPTO_LIB_PATHS ${COMPILED_LIBCRYPTO_PATH} ${COMPILED_LIBSSL_PATH})
 
