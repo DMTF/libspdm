@@ -2529,6 +2529,110 @@ static void libspdm_test_reset_context_chunk_case32(void **state)
         }
     }
 }
+
+/**
+ * Test 83: libspdm_free_session_id ends a chunk transfer that belongs to that session.
+ * Expected Behavior: a CHUNK_GET or CHUNK_SEND transfer started by the freed session is ended and
+ * its large message is erased. A transfer of another session, or outside a session, is untouched.
+ **/
+static void libspdm_test_free_session_id_chunk_case83(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    void *scratch_buffer;
+    size_t scratch_buffer_size;
+    uint8_t *large_message;
+    size_t large_message_capacity;
+    libspdm_chunk_info_t *chunk_info[2];
+    uint16_t req_id;
+    uint16_t rsp_id;
+    uint32_t session_id;
+    size_t index;
+    size_t byte_index;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x53;
+
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+    large_message = (uint8_t *)scratch_buffer +
+                    libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    large_message_capacity = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
+
+    chunk_info[0] = &spdm_context->chunk_context.get;
+    chunk_info[1] = &spdm_context->chunk_context.send;
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(chunk_info); index++) {
+        req_id = libspdm_allocate_req_session_id(spdm_context, false);
+        rsp_id = libspdm_allocate_rsp_session_id(spdm_context, false);
+        session_id = libspdm_generate_session_id(req_id, rsp_id);
+        assert_ptr_not_equal(libspdm_assign_session_id(
+                                 spdm_context, session_id,
+                                 SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                     false), NULL);
+
+        libspdm_set_mem(large_message, large_message_capacity, 0xa5);
+        chunk_info[index]->chunk_in_use = true;
+        chunk_info[index]->session_id_valid = true;
+        chunk_info[index]->session_id = session_id;
+        chunk_info[index]->chunk_seq_no = 2;
+        chunk_info[index]->chunk_bytes_transferred = large_message_capacity / 2;
+        chunk_info[index]->large_message = large_message;
+        chunk_info[index]->large_message_size = large_message_capacity;
+        chunk_info[index]->large_message_capacity = large_message_capacity;
+
+        /* A transfer of another session is untouched. */
+        chunk_info[index]->session_id = session_id ^ 1;
+        libspdm_free_session_id(spdm_context, session_id);
+        assert_true(chunk_info[index]->chunk_in_use);
+        assert_ptr_equal(chunk_info[index]->large_message, large_message);
+        assert_int_equal(large_message[0], 0xa5);
+
+        /* A transfer outside a session is untouched. */
+        req_id = libspdm_allocate_req_session_id(spdm_context, false);
+        rsp_id = libspdm_allocate_rsp_session_id(spdm_context, false);
+        session_id = libspdm_generate_session_id(req_id, rsp_id);
+        assert_ptr_not_equal(libspdm_assign_session_id(
+                                 spdm_context, session_id,
+                                 SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                     false), NULL);
+        chunk_info[index]->session_id_valid = false;
+        chunk_info[index]->session_id = session_id;
+        libspdm_free_session_id(spdm_context, session_id);
+        assert_true(chunk_info[index]->chunk_in_use);
+        assert_int_equal(large_message[0], 0xa5);
+
+        /* The transfer of the freed session is ended and its message is erased. */
+        req_id = libspdm_allocate_req_session_id(spdm_context, false);
+        rsp_id = libspdm_allocate_rsp_session_id(spdm_context, false);
+        session_id = libspdm_generate_session_id(req_id, rsp_id);
+        assert_ptr_not_equal(libspdm_assign_session_id(
+                                 spdm_context, session_id,
+                                 SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                     false), NULL);
+        chunk_info[index]->session_id_valid = true;
+        chunk_info[index]->session_id = session_id;
+        libspdm_free_session_id(spdm_context, session_id);
+
+        assert_false(chunk_info[index]->chunk_in_use);
+        assert_false(chunk_info[index]->session_id_valid);
+        assert_int_equal(chunk_info[index]->chunk_seq_no, 0);
+        assert_int_equal(chunk_info[index]->chunk_bytes_transferred, 0);
+        assert_null(chunk_info[index]->large_message);
+        assert_int_equal(chunk_info[index]->large_message_size, 0);
+        assert_int_equal(chunk_info[index]->large_message_capacity, 0);
+        for (byte_index = 0; byte_index < large_message_capacity; byte_index++) {
+            assert_int_equal(large_message[byte_index], 0);
+        }
+    }
+}
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && LIBSPDM_CERT_PARSE_SUPPORT
@@ -5017,6 +5121,8 @@ int libspdm_common_context_data_test_main(void)
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
         /* reset_context ends a chunk transfer in either direction */
         cmocka_unit_test(libspdm_test_reset_context_chunk_case32),
+        /* free_session_id ends a chunk transfer that belongs to that session */
+        cmocka_unit_test(libspdm_test_free_session_id_chunk_case83),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && LIBSPDM_CERT_PARSE_SUPPORT
         /* The peer leaf key is parsed with the peer's asymmetric algorithm. */
