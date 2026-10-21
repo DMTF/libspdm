@@ -270,6 +270,9 @@ bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
     size_t current_element_len;
     size_t total_element_len;
     uint8_t zero_padding[4] = {0};
+    const secured_message_opaque_element_table_header_t *sm_element_table_header;
+    const secured_message_opaque_element_header_t *sm_element_header;
+    uint8_t sm_data_id_seen[32] = {0};
 
     total_element_len = 0;
 
@@ -339,6 +342,26 @@ bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
                         return false;
                     }
                 }
+
+                /* A DMTF SMDATA element with the same SMDataID shall not appear twice. */
+                if ((opaque_element_table_header->id == SPDM_REGISTRY_ID_DMTF) &&
+                    (opaque_element_table_header->vendor_len == 0) &&
+                    (opaque_element_data_len >= sizeof(secured_message_opaque_element_header_t))) {
+                    sm_element_table_header =
+                        (const secured_message_opaque_element_table_header_t *)
+                        opaque_element_table_header;
+                    sm_element_header = (const void *)(sm_element_table_header + 1);
+                    if (sm_element_header->sm_data_version ==
+                        SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION) {
+                        if ((sm_data_id_seen[sm_element_header->sm_data_id >> 3] &
+                             (1 << (sm_element_header->sm_data_id & 7))) != 0) {
+                            return false;
+                        }
+                        sm_data_id_seen[sm_element_header->sm_data_id >> 3] |=
+                            (uint8_t)(1 << (sm_element_header->sm_data_id & 7));
+                    }
+                }
+
                 /* Add Padding*/
                 current_element_len = (current_element_len + 3) & ~3;
 
