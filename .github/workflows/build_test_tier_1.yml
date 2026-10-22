@@ -514,14 +514,27 @@ jobs:
         env:
           CFLAGS: ${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}
         run: |
+          # A stalled mirror can outlast apt-get's own timeouts, so each attempt
+          # is bounded, and a failed one is retried.
+          apt_install() {
+            for attempt in 1 2 3; do
+              if sudo timeout -k 10 300 apt-get update &&
+                 sudo timeout -k 10 300 apt-get install --no-install-recommends -y "$@"; then
+                return 0
+              fi
+              echo "apt-get install $* failed, attempt $attempt"
+              sleep $((attempt * 15))
+            done
+            return 1
+          }
+
           # The CLANG and LIBFUZZER toolchains archive static libraries with
           # llvm-ar, which is not present on the stock Linux image. The same
           # package provides llvm-symbolizer, which AddressSanitizer needs for
           # function names.
           if { [ "${{ matrix.toolchain }}" = "CLANG" ] || [ "${{ matrix.toolchain }}" = "LIBFUZZER" ]; } &&
              [ "${{ runner.os }}" = "Linux" ]; then
-            sudo apt-get update
-            sudo apt-get install --no-install-recommends -y llvm
+            apt_install llvm
           fi
 
           # A binary build takes the OpenSSL libraries as paths, and their
