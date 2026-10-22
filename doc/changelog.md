@@ -195,8 +195,8 @@
       enabled.
 
 ## Industry Standard Header Changes
-- The `/include/industry_standard` headers add the definitions of SPDM 1.4, DSP0277 1.3, PCIe 6.5
-  (DOE, IDE_KM and TDISP) and CXL 4.0 (TSP).
+- The `/include/industry_standard` headers add the definitions of SPDM 1.4, DSP0277 1.3, the
+  DSP0239 1.12 MCTP message types, PCIe 6.5 (DOE, IDE_KM and TDISP) and CXL 4.0 (TSP).
 - Macros renamed:
     - `SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY`,
       `SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS` and
