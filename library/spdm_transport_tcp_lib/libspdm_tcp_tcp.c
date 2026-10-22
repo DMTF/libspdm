@@ -45,6 +45,10 @@ libspdm_return_t libspdm_tcp_encode_message(const uint32_t *session_id, size_t m
     uint32_t data32;
     spdm_tcp_binding_header_t *tcp_message_header;
 
+    if (message_size > UINT16_MAX) {
+        return LIBSPDM_STATUS_BUFFER_FULL;
+    }
+
     if (*transport_message_size <
         message_size + sizeof(spdm_tcp_binding_header_t)) {
         *transport_message_size = message_size +
@@ -123,7 +127,12 @@ libspdm_return_t libspdm_tcp_decode_message(uint32_t **session_id,
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    *message_size = transport_message_size - sizeof(spdm_tcp_binding_header_t);
+    if (tcp_message_header->payload_length >
+        transport_message_size - sizeof(spdm_tcp_binding_header_t)) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+
+    *message_size = tcp_message_header->payload_length;
     *message = (uint8_t *)transport_message + sizeof(spdm_tcp_binding_header_t);
 
     return LIBSPDM_STATUS_SUCCESS;
