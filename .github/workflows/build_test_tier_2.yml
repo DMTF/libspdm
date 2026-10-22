@@ -4,7 +4,8 @@
 #     build files support, 56 in all, in the posix, windows-msvc and mingw
 #     families,
 #   - other operating system and compiler versions, sparsely, in the versions
-#     family and in windows-msvc's older MSVC toolsets,
+#     family and in windows-msvc's older MSVC toolsets, including the newest
+#     GCC and LLVM releases before any runner image has them,
 #   - the code configuration sweeps under ASan and UBSan, in the configs family,
 #     and a few of the same configurations with MSVC and MinGW, in windows-msvc
 #     and mingw, and
@@ -68,8 +69,8 @@ jobs:
   # pushes. If every job took that document's worst case of 20 minutes, mingw
   # would finish in at most five rounds, or 100 minutes, within Tier 2's two
   # hours. windows-msvc, at 34 jobs, configs, at 81, and posix followed by
-  # versions and then sanitizers, at 72, cannot meet that worst case. Their
-  # jobs take about 3 to 10 minutes, so each finishes in about 40 minutes, and
+  # versions and then sanitizers, at 84, cannot meet that worst case. Their
+  # jobs take about 2 to 10 minutes, so each finishes in about 50 minutes, and
   # the timing report warns if a run takes longer than two hours.
 
   posix:
@@ -585,7 +586,8 @@ jobs:
   # doc/internal/continuous_integration.md crosses platforms. The jobs start
   # once posix has finished, whether or not it passed, and run in the runners
   # that posix used, so Tier 2 never runs more jobs at once. The steps are
-  # posix's, without those that no job here needs, plus Select compiler.
+  # posix's, without those that no job here needs, plus Prepare container and
+  # Select compiler.
   versions:
     name: ${{ matrix.name }}
     needs: posix
@@ -593,6 +595,8 @@ jobs:
       !cancelled() && (github.repository == 'DMTF/libspdm'
       || github.event_name != 'schedule')
     runs-on: ${{ matrix.os }}
+    # Empty, and so no container, except in the jobs that name one.
+    container: ${{ matrix.container }}
     timeout-minutes: 45
     env:
       JOB_NAME: ${{ matrix.name }}
@@ -789,6 +793,123 @@ jobs:
             crypto: mbedtls
             target: Release
 
+          # == Newest compiler releases ====================================
+          # The newest GCC and LLVM releases, before any runner image has
+          # them, with the Ubuntu 26.04 jobs' combinations of architecture,
+          # cryptography library and build target. GCC runs in the official
+          # gcc image, which is Debian 13. Clang is the LLVM release's own
+          # build, checked against the SHA-256 digest that GitHub lists for
+          # the release asset, as in
+          #   gh release view llvmorg-23.1.4 -R llvm/llvm-project --json assets
+          # Update these to each new release. Once an image provides a major
+          # version, replace its jobs here with one among the compiler
+          # versions above.
+
+          - name: debian-13-x64-gcc-16-mbedtls-debug
+            os: ubuntu-26.04
+            container: gcc:16.2.0
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+
+          - name: debian-13-x64-gcc-16-mbedtls-release
+            os: ubuntu-26.04
+            container: gcc:16.2.0
+            arch: x64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Release
+            cflags: -ffat-lto-objects
+
+          - name: debian-13-x64-gcc-16-openssl-debug
+            os: ubuntu-26.04
+            container: gcc:16.2.0
+            arch: x64
+            toolchain: GCC
+            crypto: openssl
+            target: Debug
+
+          - name: debian-13-x64-gcc-16-openssl-release
+            os: ubuntu-26.04
+            container: gcc:16.2.0
+            arch: x64
+            toolchain: GCC
+            crypto: openssl
+            target: Release
+            cflags: -ffat-lto-objects
+
+          - name: debian-13-aarch64-gcc-16-mbedtls-debug
+            os: ubuntu-26.04-arm
+            container: gcc:16.2.0
+            arch: aarch64
+            toolchain: GCC
+            crypto: mbedtls
+            target: Debug
+
+          - name: debian-13-aarch64-gcc-16-openssl-release
+            os: ubuntu-26.04-arm
+            container: gcc:16.2.0
+            arch: aarch64
+            toolchain: GCC
+            crypto: openssl
+            target: Release
+            cflags: -ffat-lto-objects
+
+          - name: ubuntu-26.04-x64-clang-23-mbedtls-debug
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: CLANG
+            llvm: '23.1.4'
+            llvm_sha256: efdd1dbd089b99bfcfcde7b8eb1236163f2e88df5a981cca4f783ec9cb5e0378
+            crypto: mbedtls
+            target: Debug
+
+          - name: ubuntu-26.04-x64-clang-23-mbedtls-release
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: CLANG
+            llvm: '23.1.4'
+            llvm_sha256: efdd1dbd089b99bfcfcde7b8eb1236163f2e88df5a981cca4f783ec9cb5e0378
+            crypto: mbedtls
+            target: Release
+
+          - name: ubuntu-26.04-x64-clang-23-openssl-debug
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: CLANG
+            llvm: '23.1.4'
+            llvm_sha256: efdd1dbd089b99bfcfcde7b8eb1236163f2e88df5a981cca4f783ec9cb5e0378
+            crypto: openssl
+            target: Debug
+
+          - name: ubuntu-26.04-x64-clang-23-openssl-release
+            os: ubuntu-26.04
+            arch: x64
+            toolchain: CLANG
+            llvm: '23.1.4'
+            llvm_sha256: efdd1dbd089b99bfcfcde7b8eb1236163f2e88df5a981cca4f783ec9cb5e0378
+            crypto: openssl
+            target: Release
+
+          - name: ubuntu-26.04-arm-aarch64-clang-23-mbedtls-debug
+            os: ubuntu-26.04-arm
+            arch: aarch64
+            toolchain: CLANG
+            llvm: '23.1.4'
+            llvm_sha256: 0975f753e0f9b5f83146a7a2f4678bc143e713496b56520716a4de047a63f99f
+            crypto: mbedtls
+            target: Debug
+
+          - name: ubuntu-26.04-arm-aarch64-clang-23-openssl-release
+            os: ubuntu-26.04-arm
+            arch: aarch64
+            toolchain: CLANG
+            llvm: '23.1.4'
+            llvm_sha256: 0975f753e0f9b5f83146a7a2f4678bc143e713496b56520716a4de047a63f99f
+            crypto: openssl
+            target: Release
+
           # == macOS 15 ====================================================
           # Xcode 16 by default. posix runs macOS 26.
 
@@ -821,6 +942,32 @@ jobs:
             target: Release
 
     steps:
+      # The gcc image runs as root, without sudo, and has the git that Checkout
+      # clones with, but not CMake. With zstd, actions/cache compresses as it
+      # does outside a container, and so finds cmocka's entry.
+      - name: Prepare container
+        if: matrix.container != ''
+        shell: bash
+        run: |
+          # As in Configure, but as root.
+          apt_install() {
+            for attempt in 1 2 3; do
+              if timeout -k 10 300 apt-get update &&
+                 timeout -k 10 300 apt-get install --no-install-recommends -y "$@"; then
+                return 0
+              fi
+              echo "apt-get install $* failed, attempt $attempt"
+              sleep $((attempt * 15))
+            done
+            return 1
+          }
+
+          apt_install cmake zstd
+
+          # The workspace belongs to the runner's user rather than root, so git
+          # refuses it as dubious. Checkout marks it safe only for its own step.
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Checkout
         uses: actions/checkout@v7
         with:
@@ -881,8 +1028,8 @@ jobs:
           if [ "${{ matrix.crypto }}" = "openssl" ]; then
             fetch os_stub/openssllib/openssl --depth 1
           fi
-      # As in the posix family. Every job that builds OpenSSL uses its image's
-      # default compiler, so the key needs no compiler version.
+      # As in the posix family, except that the key names the compiler: the
+      # image's default, the container's, or the LLVM release.
       - name: OpenSSL revision
         id: ossl
         shell: bash
@@ -895,15 +1042,16 @@ jobs:
         uses: actions/cache@v6
         with:
           path: build/os_stub/openssllib
-          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ matrix.container || matrix.llvm || 'default' }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
           restore-keys: |
-            openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-
+            openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ matrix.container || matrix.llvm || 'default' }}-${{ steps.ossl.outputs.sha }}-
 
       # The GCC and CLANG toolchain files run the unversioned gcc and gcc-ar,
       # or clang, llvm-ar and llvm-ranlib. A job that names a compiler version
-      # puts links from those names to that version first on PATH.
+      # puts links from those names to that version first on PATH, and a job
+      # that names an LLVM release puts the release's own build there.
       - name: Select compiler
-        if: matrix.cc != ''
+        if: matrix.cc != '' || matrix.llvm != ''
         shell: bash
         run: |
           # A stalled mirror can outlast apt-get's own timeouts, so each attempt
@@ -919,6 +1067,48 @@ jobs:
             done
             return 1
           }
+
+          if [ -n "${{ matrix.llvm }}" ]; then
+            release="${{ matrix.llvm }}"
+            if [ "${{ matrix.arch }}" = "x64" ]; then
+              asset="LLVM-$release-Linux-X64.tar.zst"
+            else
+              asset="LLVM-$release-Linux-ARM64.tar.zst"
+            fi
+            url="https://github.com/llvm/llvm-project/releases/download/llvmorg-$release/$asset"
+            # For the reproducer.
+            echo "LLVM_URL=$url" >> "$GITHUB_ENV"
+            for attempt in 1 2 3; do
+              if curl -fsSL --connect-timeout 30 --max-time 900 -o "$RUNNER_TEMP/$asset" "$url"; then
+                break
+              fi
+              echo "download of $asset failed, attempt $attempt"
+              if [ "$attempt" -eq 3 ]; then
+                exit 1
+              fi
+              sleep $((attempt * 15))
+            done
+            echo "${{ matrix.llvm_sha256 }}  $RUNNER_TEMP/$asset" | sha256sum --check --strict
+
+            # The archive expands to 12 GB, and zstd decodes its 2 GiB window
+            # only when told to. The build needs about 0.6 GB of it.
+            llvm="$RUNNER_TEMP/llvm"
+            mkdir -p "$llvm"
+            zstd --decompress --long=31 --stdout "$RUNNER_TEMP/$asset" |
+              tar -x -C "$llvm" --strip-components=1 --wildcards \
+                '*/bin/clang' "*/bin/clang-${release%%.*}" '*/bin/lld' '*/bin/ld.lld' \
+                '*/bin/llvm-ar' '*/bin/llvm-ranlib' '*/lib/clang/*'
+            rm "$RUNNER_TEMP/$asset"
+
+            # The release has no LLVMgold.so, the plugin with which the system
+            # linker runs link-time optimization, so clang links with the
+            # release's lld. A configuration file reaches every link, including
+            # test_size's, whose linker flags replace LDFLAGS.
+            echo "-fuse-ld=lld" > "$llvm/bin/clang.cfg"
+            echo "$llvm/bin" >> "$GITHUB_PATH"
+            "$llvm/bin/clang" --version
+            exit 0
+          fi
 
           if [ "${{ matrix.toolchain }}" = "GCC" ]; then
             tools="gcc gcc-ar"
@@ -961,9 +1151,10 @@ jobs:
 
           # The CLANG toolchain archives static libraries with llvm-ar,
           # which is not present on the stock Linux image. Select compiler
-          # installs it for a job that names a compiler version.
+          # installs it for a job that names a compiler version or an LLVM
+          # release.
           if [ "${{ matrix.toolchain }}" = "CLANG" ] && [ "${{ runner.os }}" = "Linux" ] &&
-             [ -z "${{ matrix.cc }}" ]; then
+             [ -z "${{ matrix.cc }}" ] && [ -z "${{ matrix.llvm }}" ]; then
             apt_install llvm
           fi
 
@@ -1051,8 +1242,8 @@ jobs:
         run: ./run_test.sh test_spdm_transport
 
       # As in the posix family, generated from the job's own variables so that
-      # it cannot drift from what ran, including the links that Select compiler
-      # makes.
+      # it cannot drift from what ran, including the links or LLVM release
+      # that Select compiler installs.
       - name: Generate reproducer
         if: always()
         shell: bash
@@ -1067,6 +1258,10 @@ jobs:
           cver=$(sed -n 's/^set(CMAKE_C_COMPILER_VERSION "\(.*\)")/\1/p' "$ccfile" 2>/dev/null || true)
           compiler="${cid:-unknown} ${cver:-unknown}"
           image="${ImageOS:-unknown} ${ImageVersion:-unknown}"
+          runner="${{ matrix.os }} (image $image)"
+          if [ -n "${{ matrix.container }}" ]; then
+            runner="$runner, container ${{ matrix.container }}"
+          fi
           if [ -r /etc/os-release ]; then
             osname=$(grep -m1 '^PRETTY_NAME=' /etc/os-release | cut -d= -f2- | tr -d '"' || true)
           else
@@ -1079,7 +1274,7 @@ jobs:
 
           header="Reproduces: ${{ env.JOB_NAME }}
           Run:        $run_url
-          Runner:     ${{ matrix.os }} (image $image)
+          Runner:     $runner
           OS:         ${osname:-unknown}
           Kernel:     ${kernel:-unknown}
           Compiler:   $compiler
@@ -1092,6 +1287,12 @@ jobs:
             echo "$header" | sed 's/^/# /'
             echo "set -euo pipefail"
             echo
+            if [ -n "${{ matrix.container }}" ]; then
+              echo "# Run this in the ${{ matrix.container }} image, with CMake installed:"
+              echo "#   docker run --rm -it ${{ matrix.container }} bash"
+              echo "#   apt-get update && apt-get install -y cmake"
+              echo
+            fi
             echo "git clone $url.git libspdm-repro"
             echo "cd libspdm-repro"
             echo "git checkout ${{ github.sha }}"
@@ -1113,6 +1314,15 @@ jobs:
                 echo "ln -sf \"\$(command -v $tool-${{ matrix.cc }})\" compiler-bin/$tool"
               done
               echo 'export PATH="$PWD/compiler-bin:$PATH"'
+            fi
+            if [ -n "${LLVM_URL:-}" ]; then
+              asset=$(basename "$LLVM_URL")
+              echo "curl -fsSLO $LLVM_URL"
+              echo "echo '${{ matrix.llvm_sha256 }}  $asset' | sha256sum --check --strict"
+              echo "mkdir -p llvm"
+              echo "zstd --decompress --long=31 --stdout $asset | tar -x -C llvm --strip-components=1"
+              echo "echo -fuse-ld=lld > llvm/bin/clang.cfg"
+              echo 'export PATH="$PWD/llvm/bin:$PATH"'
             fi
             echo "export CFLAGS='${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}'"
             echo "cmake -B build -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }}"
