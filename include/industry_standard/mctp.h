@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -9,7 +9,7 @@
  * version 1.3.1 in Distributed Management Task Force (DMTF).
  *
  * Definitions of DSP0239 Management Component Transport Protocol (MCTP) IDs and Codes
- * version 1.7.0 in Distributed Management Task Force (DMTF).
+ * version 1.12.0 in Distributed Management Task Force (DMTF).
  *
  * Definitions of DSP0275 SPDM over MCTP Binding Specification
  * version 1.0.0 in Distributed Management Task Force (DMTF).
@@ -53,6 +53,9 @@ typedef struct {
 #define MCTP_MESSAGE_TYPE_NVME_MANAGEMENT 0x04
 #define MCTP_MESSAGE_TYPE_SPDM 0x05
 #define MCTP_MESSAGE_TYPE_SECURED_MCTP 0x06
+#define MCTP_MESSAGE_TYPE_CXL_FM_API 0x07
+#define MCTP_MESSAGE_TYPE_CXL_CCI 0x08
+#define MCTP_MESSAGE_TYPE_PCIE_MI 0x09
 #define MCTP_MESSAGE_TYPE_VENDOR_DEFINED_PCI 0x7E
 #define MCTP_MESSAGE_TYPE_VENDOR_DEFINED_IANA 0x7F
 
