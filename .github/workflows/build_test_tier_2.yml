@@ -239,11 +239,24 @@ jobs:
         env:
           CFLAGS: ${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}
         run: |
+          # A stalled mirror can outlast apt-get's own timeouts, so each attempt
+          # is bounded, and a failed one is retried.
+          apt_install() {
+            for attempt in 1 2 3; do
+              if sudo timeout -k 10 300 apt-get update &&
+                 sudo timeout -k 10 300 apt-get install --no-install-recommends -y "$@"; then
+                return 0
+              fi
+              echo "apt-get install $* failed, attempt $attempt"
+              sleep $((attempt * 15))
+            done
+            return 1
+          }
+
           # The CLANG toolchain archives static libraries with llvm-ar,
           # which is not present on the stock Linux image.
           if [ "${{ matrix.toolchain }}" = "CLANG" ] && [ "${{ runner.os }}" = "Linux" ]; then
-            sudo apt-get update
-            sudo apt-get install --no-install-recommends -y llvm
+            apt_install llvm
           fi
 
           # A binary build takes the OpenSSL libraries as paths, and their
@@ -893,13 +906,26 @@ jobs:
         if: matrix.cc != ''
         shell: bash
         run: |
+          # A stalled mirror can outlast apt-get's own timeouts, so each attempt
+          # is bounded, and a failed one is retried.
+          apt_install() {
+            for attempt in 1 2 3; do
+              if sudo timeout -k 10 300 apt-get update &&
+                 sudo timeout -k 10 300 apt-get install --no-install-recommends -y "$@"; then
+                return 0
+              fi
+              echo "apt-get install $* failed, attempt $attempt"
+              sleep $((attempt * 15))
+            done
+            return 1
+          }
+
           if [ "${{ matrix.toolchain }}" = "GCC" ]; then
             tools="gcc gcc-ar"
           else
             # llvm-N provides llvm-ar-N and llvm-ranlib-N, and the linker
             # plugin that link-time optimization with clang-N needs.
-            sudo apt-get update
-            sudo apt-get install --no-install-recommends -y "llvm-${{ matrix.cc }}"
+            apt_install "llvm-${{ matrix.cc }}"
             tools="clang llvm-ar llvm-ranlib"
           fi
           bin="$RUNNER_TEMP/compiler-bin"
@@ -919,13 +945,26 @@ jobs:
         env:
           CFLAGS: ${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}
         run: |
+          # A stalled mirror can outlast apt-get's own timeouts, so each attempt
+          # is bounded, and a failed one is retried.
+          apt_install() {
+            for attempt in 1 2 3; do
+              if sudo timeout -k 10 300 apt-get update &&
+                 sudo timeout -k 10 300 apt-get install --no-install-recommends -y "$@"; then
+                return 0
+              fi
+              echo "apt-get install $* failed, attempt $attempt"
+              sleep $((attempt * 15))
+            done
+            return 1
+          }
+
           # The CLANG toolchain archives static libraries with llvm-ar,
           # which is not present on the stock Linux image. Select compiler
           # installs it for a job that names a compiler version.
           if [ "${{ matrix.toolchain }}" = "CLANG" ] && [ "${{ runner.os }}" = "Linux" ] &&
              [ -z "${{ matrix.cc }}" ]; then
-            sudo apt-get update
-            sudo apt-get install --no-install-recommends -y llvm
+            apt_install llvm
           fi
 
           cmake -B build \
@@ -2857,11 +2896,24 @@ jobs:
           CFLAGS: ${{ env.BASE_CFLAGS }} ${{ env.SAN_CFLAGS }} ${{ matrix.cflags }}
           LDFLAGS: ${{ env.SAN_LDFLAGS }}
         run: |
+          # A stalled mirror can outlast apt-get's own timeouts, so each attempt
+          # is bounded, and a failed one is retried.
+          apt_install() {
+            for attempt in 1 2 3; do
+              if sudo timeout -k 10 300 apt-get update &&
+                 sudo timeout -k 10 300 apt-get install --no-install-recommends -y "$@"; then
+                return 0
+              fi
+              echo "apt-get install $* failed, attempt $attempt"
+              sleep $((attempt * 15))
+            done
+            return 1
+          }
+
           # The CLANG toolchain archives static libraries with llvm-ar, which is
           # not present on the stock Linux image. The same package provides
           # llvm-symbolizer, which the sanitizers need for function names.
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends -y llvm
+          apt_install llvm
 
           binary=()
           if [ "${{ matrix.openssl_binary }}" = "true" ]; then
@@ -3506,11 +3558,24 @@ jobs:
       - name: Configure
         shell: bash
         run: |
+          # A stalled mirror can outlast apt-get's own timeouts, so each attempt
+          # is bounded, and a failed one is retried.
+          apt_install() {
+            for attempt in 1 2 3; do
+              if sudo timeout -k 10 300 apt-get update &&
+                 sudo timeout -k 10 300 apt-get install --no-install-recommends -y "$@"; then
+                return 0
+              fi
+              echo "apt-get install $* failed, attempt $attempt"
+              sleep $((attempt * 15))
+            done
+            return 1
+          }
+
           # The CLANG toolchain archives static libraries with llvm-ar, which is
           # not present on the stock Linux image. The same package provides
           # llvm-symbolizer, which the sanitizers need for function names.
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends -y llvm
+          apt_install llvm
 
           . ./sanitizer.sh
           export CFLAGS="$BASE_CFLAGS $SAN_CFLAGS ${{ matrix.cflags }}"
