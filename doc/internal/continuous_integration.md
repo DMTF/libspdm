@@ -15,7 +15,7 @@ libspdm's compile time configuration knobs that can be adjusted within GitHub's 
     - Linux
     - macOS
 - Host Hardware (CMake `ARCH`)
-    - ia32 (via WoW64)
+    - ia32 (on x64, via WoW64 on Windows and `-m32` on Linux)
     - x64
     - aarch64
 - Toolchain (CMake `TOOLCHAIN`)
