@@ -255,18 +255,19 @@ bool libspdm_get_sm_data_element_from_opaque_data (libspdm_context_t *spdm_conte
     return false;
 }
 
-bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
-                                               size_t data_in_size,
-                                               const void *data_in)
+/**
+ * Check the elements of a general opaque data table.
+ *
+ * @param  opaque_element_table_header  The header of opaque element table.
+ * @param  data_element_size            Size in bytes of the elements, including padding.
+ * @param  element_num                  Number of elements.
+ **/
+static bool libspdm_check_opaque_element_list(
+    const opaque_element_table_header_t *opaque_element_table_header,
+    size_t data_element_size, uint8_t element_num)
 {
-    const spdm_general_opaque_data_table_header_t
-    *spdm_general_opaque_data_table_header;
-    const opaque_element_table_header_t
-    *opaque_element_table_header;
-    uint8_t element_num;
     uint8_t element_index;
     uint16_t opaque_element_data_len;
-    size_t data_element_size;
     size_t current_element_len;
     size_t total_element_len;
     uint8_t zero_padding[4] = {0};
@@ -275,6 +276,93 @@ bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
     uint8_t sm_data_id_seen[32] = {0};
 
     total_element_len = 0;
+
+    for (element_index = 0; element_index < element_num; element_index++) {
+        /*ensure the opaque_element_table_header is valid*/
+        if (total_element_len + sizeof(opaque_element_table_header_t) +
+            sizeof(opaque_element_data_len) >
+            data_element_size) {
+            return false;
+        }
+
+        /*check element header id*/
+        if (opaque_element_table_header->id > SPDM_REGISTRY_ID_MAX) {
+            return false;
+        }
+
+        /*ensure the vendor_id and opaque_element_data_len field are within the buffer*/
+        if (total_element_len + sizeof(opaque_element_table_header_t) +
+            opaque_element_table_header->vendor_len +
+            sizeof(opaque_element_data_len) >
+            data_element_size) {
+            return false;
+        }
+
+        opaque_element_data_len = libspdm_read_uint16(
+            (const uint8_t *)(opaque_element_table_header + 1) +
+            opaque_element_table_header->vendor_len);
+
+        current_element_len = sizeof(opaque_element_table_header_t) +
+                              opaque_element_table_header->vendor_len +
+                              sizeof(opaque_element_data_len) +
+                              opaque_element_data_len;
+
+        /*ensure the element with padding is within the buffer before reading it*/
+        if (total_element_len + ((current_element_len + 3) & ~3) >
+            data_element_size) {
+            return false;
+        }
+
+        if ((current_element_len & 3) != 0) {
+            if (!libspdm_consttime_is_mem_equal(zero_padding,
+                                                (uint8_t *)(size_t)
+                                                (opaque_element_table_header) +
+                                                current_element_len,
+                                                4 - (current_element_len & 3))) {
+                return false;
+            }
+        }
+
+        /* A DMTF SMDATA element with the same SMDataID shall not appear twice. */
+        if ((opaque_element_table_header->id == SPDM_REGISTRY_ID_DMTF) &&
+            (opaque_element_table_header->vendor_len == 0) &&
+            (opaque_element_data_len >= sizeof(secured_message_opaque_element_header_t))) {
+            sm_element_table_header =
+                (const secured_message_opaque_element_table_header_t *)
+                opaque_element_table_header;
+            sm_element_header = (const void *)(sm_element_table_header + 1);
+            if (sm_element_header->sm_data_version ==
+                SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION) {
+                if ((sm_data_id_seen[sm_element_header->sm_data_id >> 3] &
+                     (1 << (sm_element_header->sm_data_id & 7))) != 0) {
+                    return false;
+                }
+                sm_data_id_seen[sm_element_header->sm_data_id >> 3] |=
+                    (uint8_t)(1 << (sm_element_header->sm_data_id & 7));
+            }
+        }
+
+        /* Add Padding*/
+        current_element_len = (current_element_len + 3) & ~3;
+
+        total_element_len += current_element_len;
+
+        /*move to next element*/
+        opaque_element_table_header =
+            (const opaque_element_table_header_t *)
+            ((const uint8_t *)opaque_element_table_header +
+             current_element_len);
+    }
+
+    return true;
+}
+
+bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
+                                               size_t data_in_size,
+                                               const void *data_in)
+{
+    const spdm_general_opaque_data_table_header_t
+    *spdm_general_opaque_data_table_header;
 
     if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) {
         if ((spdm_context->connection_info.algorithm.other_params_support &
@@ -291,92 +379,46 @@ bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
             if (spdm_general_opaque_data_table_header->total_elements < 1) {
                 return false;
             }
-            opaque_element_table_header = (const void *)(spdm_general_opaque_data_table_header + 1);
 
-            element_num = spdm_general_opaque_data_table_header->total_elements;
-
-            data_element_size = data_in_size - sizeof(spdm_general_opaque_data_table_header_t);
-
-            for (element_index = 0; element_index < element_num; element_index++) {
-                /*ensure the opaque_element_table_header is valid*/
-                if (total_element_len + sizeof(opaque_element_table_header_t) +
-                    sizeof(opaque_element_data_len) >
-                    data_element_size) {
-                    return false;
-                }
-
-                /*check element header id*/
-                if (opaque_element_table_header->id > SPDM_REGISTRY_ID_MAX) {
-                    return false;
-                }
-
-                /*ensure the vendor_id and opaque_element_data_len field are within the buffer*/
-                if (total_element_len + sizeof(opaque_element_table_header_t) +
-                    opaque_element_table_header->vendor_len +
-                    sizeof(opaque_element_data_len) >
-                    data_element_size) {
-                    return false;
-                }
-
-                opaque_element_data_len = libspdm_read_uint16(
-                    (const uint8_t *)(opaque_element_table_header + 1) +
-                    opaque_element_table_header->vendor_len);
-
-                current_element_len = sizeof(opaque_element_table_header_t) +
-                                      opaque_element_table_header->vendor_len +
-                                      sizeof(opaque_element_data_len) +
-                                      opaque_element_data_len;
-
-                /*ensure the element with padding is within the buffer before reading it*/
-                if (total_element_len + ((current_element_len + 3) & ~3) >
-                    data_element_size) {
-                    return false;
-                }
-
-                if ((current_element_len & 3) != 0) {
-                    if (!libspdm_consttime_is_mem_equal(zero_padding,
-                                                        (uint8_t *)(size_t)
-                                                        (opaque_element_table_header) +
-                                                        current_element_len,
-                                                        4 - (current_element_len & 3))) {
-                        return false;
-                    }
-                }
-
-                /* A DMTF SMDATA element with the same SMDataID shall not appear twice. */
-                if ((opaque_element_table_header->id == SPDM_REGISTRY_ID_DMTF) &&
-                    (opaque_element_table_header->vendor_len == 0) &&
-                    (opaque_element_data_len >= sizeof(secured_message_opaque_element_header_t))) {
-                    sm_element_table_header =
-                        (const secured_message_opaque_element_table_header_t *)
-                        opaque_element_table_header;
-                    sm_element_header = (const void *)(sm_element_table_header + 1);
-                    if (sm_element_header->sm_data_version ==
-                        SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION) {
-                        if ((sm_data_id_seen[sm_element_header->sm_data_id >> 3] &
-                             (1 << (sm_element_header->sm_data_id & 7))) != 0) {
-                            return false;
-                        }
-                        sm_data_id_seen[sm_element_header->sm_data_id >> 3] |=
-                            (uint8_t)(1 << (sm_element_header->sm_data_id & 7));
-                    }
-                }
-
-                /* Add Padding*/
-                current_element_len = (current_element_len + 3) & ~3;
-
-                total_element_len += current_element_len;
-
-                /*move to next element*/
-                opaque_element_table_header =
-                    (const opaque_element_table_header_t *)
-                    ((const uint8_t *)opaque_element_table_header +
-                     current_element_len);
-            }
+            return libspdm_check_opaque_element_list(
+                (const void *)(spdm_general_opaque_data_table_header + 1),
+                data_in_size - sizeof(spdm_general_opaque_data_table_header_t),
+                spdm_general_opaque_data_table_header->total_elements);
         }
     }
 
     return true;
+}
+
+bool libspdm_process_secured_message_opaque_data_check(libspdm_context_t *spdm_context,
+                                                       size_t data_in_size,
+                                                       const void *data_in)
+{
+    const secured_message_general_opaque_data_table_header_t *general_opaque_data_table_header;
+
+    if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+        return libspdm_process_general_opaque_data_check(spdm_context, data_in_size, data_in);
+    }
+
+    /* Check byte alignment */
+    if ((data_in_size & 3) != 0) {
+        return false;
+    }
+
+    general_opaque_data_table_header = data_in;
+    if (data_in_size < sizeof(secured_message_general_opaque_data_table_header_t)) {
+        return false;
+    }
+    if ((general_opaque_data_table_header->spec_id != SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID) ||
+        (general_opaque_data_table_header->opaque_version != SECURED_MESSAGE_OPAQUE_VERSION) ||
+        (general_opaque_data_table_header->total_elements < 1)) {
+        return false;
+    }
+
+    return libspdm_check_opaque_element_list(
+        (const void *)(general_opaque_data_table_header + 1),
+        data_in_size - sizeof(secured_message_general_opaque_data_table_header_t),
+        general_opaque_data_table_header->total_elements);
 }
 
 /**

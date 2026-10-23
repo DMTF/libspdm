@@ -473,8 +473,9 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
         }
 
         if (use_default_opaque_data) {
-            result = libspdm_process_general_opaque_data_check(spdm_context, opaque_data_length,
-                                                               req_opaque_data);
+            result = libspdm_process_secured_message_opaque_data_check(spdm_context,
+                                                                       opaque_data_length,
+                                                                       req_opaque_data);
             if (!result) {
                 return libspdm_generate_error_response(spdm_context,
                                                        SPDM_ERROR_CODE_INVALID_REQUEST, 0,
