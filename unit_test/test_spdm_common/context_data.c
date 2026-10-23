@@ -1815,6 +1815,80 @@ static void libspdm_test_process_opaque_data_duplicate_sm_data_case82(void **sta
                     spdm_context, sizeof(opaque_data), opaque_data));
 }
 
+/**
+ * Test case 84.
+ * Before SPDM 1.2, the secured message opaque data check validates the DSP0277 table, and rejects
+ * two DMTF elements with the same SMDataID. The general opaque data check is not applied.
+ **/
+static void libspdm_test_secured_message_opaque_data_check_case84(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t opaque_data[8 + 2 * 8];
+    uint8_t *element;
+    size_t index;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x54;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    libspdm_zero_mem(opaque_data, sizeof(opaque_data));
+    libspdm_write_uint32(opaque_data, SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID);
+    opaque_data[4] = SECURED_MESSAGE_OPAQUE_VERSION;
+    opaque_data[5] = 2; /* total_elements */
+    for (index = 0; index < 2; index++) {
+        element = opaque_data + 8 + index * 8;
+        element[0] = SPDM_REGISTRY_ID_DMTF;
+        element[1] = 0; /* vendor_id_len */
+        element[2] = 4; /* opaque_element_data_len */
+        element[4] = SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
+        element[5] = SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION;
+    }
+
+    /* Same SMDataID. */
+    assert_false(libspdm_process_secured_message_opaque_data_check(
+                     spdm_context, sizeof(opaque_data), opaque_data));
+
+    /* Different SMDataID. */
+    opaque_data[8 + 8 + 5] = SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION;
+    assert_true(libspdm_process_secured_message_opaque_data_check(
+                    spdm_context, sizeof(opaque_data), opaque_data));
+
+    /* Same bytes, but not the DMTF registry. */
+    opaque_data[8 + 8 + 5] = SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION;
+    opaque_data[8] = SPDM_REGISTRY_ID_VESA;
+    opaque_data[8 + 8] = SPDM_REGISTRY_ID_VESA;
+    assert_true(libspdm_process_secured_message_opaque_data_check(
+                    spdm_context, sizeof(opaque_data), opaque_data));
+    opaque_data[8] = SPDM_REGISTRY_ID_DMTF;
+    opaque_data[8 + 8] = SPDM_REGISTRY_ID_DMTF;
+    opaque_data[8 + 8 + 5] = SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION;
+
+    /* Bad table header. */
+    opaque_data[4] = SECURED_MESSAGE_OPAQUE_VERSION + 1;
+    assert_false(libspdm_process_secured_message_opaque_data_check(
+                     spdm_context, sizeof(opaque_data), opaque_data));
+    opaque_data[4] = SECURED_MESSAGE_OPAQUE_VERSION;
+    opaque_data[0] ^= 1;
+    assert_false(libspdm_process_secured_message_opaque_data_check(
+                     spdm_context, sizeof(opaque_data), opaque_data));
+    opaque_data[0] ^= 1;
+
+    /* Truncated and unaligned. */
+    assert_false(libspdm_process_secured_message_opaque_data_check(
+                     spdm_context, sizeof(opaque_data) - 8, opaque_data));
+    assert_false(libspdm_process_secured_message_opaque_data_check(
+                     spdm_context, sizeof(opaque_data) - 1, opaque_data));
+
+    /* The general opaque data check does not apply before SPDM 1.2. */
+    opaque_data[0] ^= 1;
+    assert_true(libspdm_process_general_opaque_data_check(
+                    spdm_context, sizeof(opaque_data), opaque_data));
+}
+
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
 /**
  * Test 23: libspdm_reset_context empties the peer certificate chain slots.
@@ -5145,6 +5219,8 @@ int libspdm_common_context_data_test_main(void)
         cmocka_unit_test(libspdm_test_process_opaque_data_case22),
         /* Duplicate SMDataID elements are rejected */
         cmocka_unit_test(libspdm_test_process_opaque_data_duplicate_sm_data_case82),
+        /* Secured message opaque data check before SPDM 1.2 */
+        cmocka_unit_test(libspdm_test_secured_message_opaque_data_check_case84),
 
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
         /* reset_context empties the peer certificate chain slots */
