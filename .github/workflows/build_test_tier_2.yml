@@ -1,7 +1,7 @@
 # Implements "Tier 2 - Daily Coverage" from doc/internal/continuous_integration.md:
 #   - the core unit tests against every combination of operating system, host
 #     hardware, toolchain, cryptography library and build target that the CMake
-#     build files support, 56 in all, in the posix, windows-msvc and mingw
+#     build files support, 64 in all, in the posix, windows-msvc and mingw
 #     families,
 #   - other operating system and compiler versions, sparsely, in the versions
 #     family and in windows-msvc's older MSVC toolsets, including the newest
@@ -13,8 +13,8 @@
 #     and UBSan with GCC and on aarch64, in the sanitizers family.
 #
 # Unlike Tier 1, each platform family's matrix is a cross product, so the matrix
-# itself shows that every combination is covered. The family split and the one
-# exclusion encode which combinations are legal. The steps are copied from
+# itself shows that every combination is covered. The family split and the
+# exclusions encode which combinations are legal. The steps are copied from
 # build_test_tier_1.yml and must be kept in step with it.
 
 name: Tier 2 Build and Test
@@ -69,7 +69,7 @@ jobs:
   # pushes. If every job took that document's worst case of 20 minutes, mingw
   # would finish in at most five rounds, or 100 minutes, within Tier 2's two
   # hours. windows-msvc, at 34 jobs, configs, at 81, and posix followed by
-  # versions and then sanitizers, at 84, cannot meet that worst case. Their
+  # versions and then sanitizers, at 92, cannot meet that worst case. Their
   # jobs take about 2 to 10 minutes, so each finishes in about 50 minutes, and
   # the timing report warns if a run takes longer than two hours.
 
@@ -85,7 +85,7 @@ jobs:
       max-parallel: 5
       matrix:
         platform: [linux, macos]
-        arch: [x64, aarch64]
+        arch: [x64, aarch64, ia32]
         toolchain: [GCC, CLANG]
         crypto: [mbedtls, openssl]
         target: [Debug, Release]
@@ -93,12 +93,17 @@ jobs:
           # The CMake build files support only Clang on macOS.
           - platform: macos
             toolchain: GCC
+          # macOS no longer builds or runs 32-bit programs.
+          - platform: macos
+            arch: ia32
         include:
           # The runner for each platform and architecture. Ubuntu is named by
           # release, not as ubuntu-latest, so that what Tier 2 covers changes
-          # only with this file. versions runs the other releases.
+          # only with this file. versions runs the other releases. ia32 is
+          # built and run on x64, with the -m32 that the toolchain files add.
           - {platform: linux, arch: x64, os: ubuntu-24.04}
           - {platform: linux, arch: aarch64, os: ubuntu-24.04-arm}
+          - {platform: linux, arch: ia32, os: ubuntu-24.04}
           - {platform: macos, arch: aarch64, os: macos-latest}
           - {platform: macos, arch: x64, os: macos-26-intel}
           # Lower-case spellings for the job name.
@@ -109,6 +114,14 @@ jobs:
           # As in Tier 1, fat LTO objects make GCC report its late warnings
           # when compiling, under -Werror.
           - {platform: linux, arch: x64, toolchain: GCC, target: Release, cflags: -ffat-lto-objects}
+          - {platform: linux, arch: ia32, toolchain: GCC, target: Release, cflags: -ffat-lto-objects}
+          # Mbed TLS's overlap check in mbedtls_gcm_update subtracts pointers
+          # to unrelated buffers (Mbed-TLS/mbedtls#4538). test_crypt's buffers
+          # lie more than 2 GiB apart in a 32-bit process, and GCC's link-time
+          # optimization turns the overflowing difference into a rejection of
+          # its AES-GCM test, so this job skips test_crypt until Mbed TLS fixes
+          # the check (#4237).
+          - {platform: linux, arch: ia32, toolchain: GCC, crypto: mbedtls, target: Release, skip_tests: test_crypt}
 
     steps:
       - name: Checkout
@@ -255,9 +268,17 @@ jobs:
           }
 
           # The CLANG toolchain archives static libraries with llvm-ar,
-          # which is not present on the stock Linux image.
+          # which is not present on the stock Linux image. Nor is the 32-bit C
+          # library that -m32 links with, for Clang as for GCC.
+          packages=()
           if [ "${{ matrix.toolchain }}" = "CLANG" ] && [ "${{ runner.os }}" = "Linux" ]; then
-            apt_install llvm
+            packages+=(llvm)
+          fi
+          if [ "${{ matrix.arch }}" = "ia32" ] && [ "${{ runner.os }}" = "Linux" ]; then
+            packages+=(gcc-multilib)
+          fi
+          if [ ${#packages[@]} -gt 0 ]; then
+            apt_install "${packages[@]}"
           fi
 
           # A binary build takes the OpenSSL libraries as paths, and their
@@ -367,7 +388,7 @@ jobs:
         run: ./run_test.sh test_spdm_crypt
 
       - name: Test Crypt
-        if: matrix.expect_tests != 'false'
+        if: matrix.expect_tests != 'false' && !contains(matrix.skip_tests, 'test_crypt')
         shell: bash
         run: ./run_test.sh test_crypt
 
@@ -520,6 +541,9 @@ jobs:
               if [ -n "${{ matrix.shell }}" ]; then
                 echo "# Run inside an MSYS2 ${{ matrix.msystem }} shell."
               fi
+              if [ "${{ matrix.arch }}" = "ia32" ] && [ "${{ runner.os }}" = "Linux" ]; then
+                echo "# -m32 needs the 32-bit C library, as Ubuntu's gcc-multilib installs."
+              fi
               echo "set -euo pipefail"
               echo
               echo "git clone $url.git libspdm-repro"
@@ -551,7 +575,13 @@ jobs:
               echo "cmake --build build --parallel \"\$(getconf _NPROCESSORS_ONLN)\""
               echo
               echo "cd build/bin"
-              for t in $UNIT_TESTS ${{ matrix.extra_tests }}; do echo "if [ -x ./$t ]; then ./$t; fi"; done
+              # A test that the job skips is left out here too.
+              for t in $UNIT_TESTS ${{ matrix.extra_tests }}; do
+                case " ${{ matrix.skip_tests }} " in
+                  *" $t "*) echo "# $t is skipped in this job." ;;
+                  *) echo "if [ -x ./$t ]; then ./$t; fi" ;;
+                esac
+              done
             } > "$f"
             chmod +x "$f"
           fi
