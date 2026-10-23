@@ -80,6 +80,14 @@ if(NOT BUILD_LINUX_SHARED_LIB)
     set(BUILD_LINUX_SHARED_LIB "OFF")
 endif()
 
+# Programs link the libraries into PIE executables, as Rust does by default, and into shared
+# objects, so the code is position-independent whatever the compiler's default. NONE leaves the
+# flags to the build environment, and the other toolchains listed are bare metal.
+if(NOT DEFINED CMAKE_POSITION_INDEPENDENT_CODE AND
+   NOT TOOLCHAIN MATCHES "^(NONE|ARM_DS2022|ARM_GNU_BARE_METAL|NIOS2_GCC|RISCV_NONE|RISCV_XPACK)$")
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
+
 # The shared libraries are linked from the objects of the static libraries, so every target
 # must be position-independent.
 if((BUILD_LINUX_SHARED_LIB STREQUAL "ON") AND (CMAKE_SYSTEM_NAME MATCHES "Linux"))
