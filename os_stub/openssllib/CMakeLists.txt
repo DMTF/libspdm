@@ -77,6 +77,10 @@ set(OPENSSL_CONFIGURE_OPTIONS
 
 set(OPENSSL_CC ${CMAKE_C_COMPILER})
 set(OPENSSL_CFLAGS "-O2")
+# On Linux the toolchains build ia32 with -m32. OpenSSL needs it too, or its libraries are 64-bit.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND ARCH STREQUAL "ia32")
+    string(APPEND OPENSSL_CFLAGS " -m32")
+endif()
 
     set(OPENSSL_LIB_DIR "${OPENSSL_INSTALL_DIR}/lib")
 list(APPEND OPENSSL_CONFIGURE_OPTIONS --libdir=lib)
