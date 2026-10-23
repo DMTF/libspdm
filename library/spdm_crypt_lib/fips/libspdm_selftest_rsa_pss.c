@@ -30,13 +30,11 @@ void libspdm_fips_selftest_rsa_pss(void *fips_selftest_context)
     }
 
     uint8_t signature[512];
-    uint8_t digest[LIBSPDM_MAX_HASH_SIZE];
     size_t sig_size;
     void *rsa;
 
     sig_size = sizeof(signature);
     libspdm_zero_mem(signature, sig_size);
-    libspdm_zero_mem(digest, LIBSPDM_MAX_HASH_SIZE);
 
     /*test vectors from: https://github.com/openssl/openssl/blob/OpenSSL-fips-2_0-stable/fips/rsa/fips_rsa_selftest.c*/
     const uint8_t public_n[] = {
@@ -93,7 +91,13 @@ void libspdm_fips_selftest_rsa_pss(void *fips_selftest_context)
         0xEA, 0xBE, 0x60, 0x71
     };
 
-    const char kat_tbs[] = "OpenSSL FIPS 140-2 Public Key RSA KAT";
+    /* SHA-256 of "OpenSSL FIPS 140-2 Public Key RSA KAT". */
+    const uint8_t message_hash[] = {
+        0x2B, 0xF6, 0x5D, 0x83, 0x7E, 0x6C, 0x8A, 0x89, 0x6B, 0x01, 0x3E, 0x9C,
+        0x37, 0x25, 0xF6, 0x8B, 0xFF, 0x42, 0x0A, 0x71, 0xC7, 0x15, 0xEF, 0x21,
+        0x08, 0x08, 0xF7, 0xD4, 0xFE, 0xD8, 0x5F, 0xAA
+    };
+
     const uint8_t kat_RSA_PSS_SHA256[] = {
         0x51, 0x4F, 0x0B, 0x8A, 0xE6, 0x7F, 0xF0, 0x39, 0x9B, 0x5F, 0x21, 0x26,
         0x99, 0x71, 0xDC, 0x64, 0x5A, 0x60, 0x9B, 0xFB, 0xB9, 0x48, 0xE3, 0xD4,
@@ -118,12 +122,6 @@ void libspdm_fips_selftest_rsa_pss(void *fips_selftest_context)
         0x26, 0x3A, 0xCD, 0x44, 0x77, 0xF2, 0x59, 0xBB, 0xDF, 0x77, 0x3B, 0x98,
         0xC5, 0x57, 0xB7, 0x5D
     };
-
-    result = libspdm_sha256_hash_all(kat_tbs, sizeof(kat_tbs) - 1, digest);
-    if (!result) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Hash sha256 failed \n"));
-        goto update;
-    }
 
     rsa = libspdm_rsa_new();
     if (rsa == NULL) {
@@ -157,7 +155,7 @@ void libspdm_fips_selftest_rsa_pss(void *fips_selftest_context)
     }
 
     result = libspdm_rsa_pss_sign_fips(rsa, LIBSPDM_CRYPTO_NID_SHA256,
-                                       digest, LIBSPDM_SHA256_DIGEST_SIZE,
+                                       message_hash, sizeof(message_hash),
                                        signature, &sig_size);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_PSS rsa sign failed \n"));
@@ -176,7 +174,7 @@ void libspdm_fips_selftest_rsa_pss(void *fips_selftest_context)
     }
 
     result = libspdm_rsa_pss_verify_fips(rsa, LIBSPDM_CRYPTO_NID_SHA256,
-                                         digest, LIBSPDM_SHA256_DIGEST_SIZE,
+                                         message_hash, sizeof(message_hash),
                                          signature, sig_size);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_PSS selftest failed \n"));
