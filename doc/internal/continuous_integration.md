@@ -155,10 +155,11 @@ that the CMake build files support. It also covers other operating system and co
 sparsely, each with a few combinations of cryptography library and build target: other Ubuntu and
 macOS releases, every GCC and Clang major version on the Ubuntu runners, the newest GCC and Clang
 releases before the runners have them, and older Visual Studio toolsets. Code configuration sweeps
-alter finer-grained macro values with ASAN/UBSAN/MSAN monitoring. If a test fails then maintainers
-are notified via the creation of a GitHub issue with a `Daily Test Failure` label. Tier 2 can also
-be run manually with `workflow_dispatch`, on any branch and in a fork, and a test failure within a
-manual run does not open an issue.
+alter finer-grained macro values with ASAN/UBSAN/MSAN monitoring, and with Clang's check for
+implicit integer conversions that truncate a value in libspdm's own code. If a test fails then
+maintainers are notified via the creation of a GitHub issue with a `Daily Test Failure` label.
+Tier 2 can also be run manually with `workflow_dispatch`, on any branch and in a fork, and a test
+failure within a manual run does not open an issue.
 
 Test failures at this tier point to bugs arising from:
 1. Unforeseen combinations of configuration parameters in library or unit test code.
