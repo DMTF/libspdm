@@ -6,9 +6,9 @@
 #   - other operating system and compiler versions, sparsely, in the versions
 #     family and in windows-msvc's older MSVC toolsets, including the newest
 #     GCC and LLVM releases before any runner image has them,
-#   - the code configuration sweeps under ASan and UBSan, in the configs family,
-#     and a few of the same configurations with MSVC and MinGW, in windows-msvc
-#     and mingw, and
+#   - the code configuration sweeps under ASan, UBSan and Clang's implicit
+#     integer truncation check, in the configs family, and a few of the same
+#     configurations with MSVC and MinGW, in windows-msvc and mingw, and
 #   - MSan on the defaults and a selection of those configurations, and ASan
 #     and UBSan with GCC and on aarch64, in the sanitizers family.
 #
@@ -2385,9 +2385,10 @@ jobs:
 
   # Implements the code configuration sweeps of "Tier 2 - Daily Coverage":
   # finer-grained macro values under ASan and UBSan, on the document's reference
-  # platform, Linux x64. MSan is not run yet. Only the unit tests are built, as
-  # the test_size images link with -nostdlib and cannot carry a sanitizer
-  # runtime.
+  # platform, Linux x64, with Clang's check for implicit conversions that
+  # truncate a value. MSan runs in the sanitizers family. Only the unit tests
+  # are built, as the test_size images link with -nostdlib and cannot carry a
+  # sanitizer runtime.
   #
   # Tier 1 runs its configurations without sanitizers, so the ten of them that
   # build tests are swept here too. Three configurations are left out until they
@@ -2403,8 +2404,9 @@ jobs:
     env:
       JOB_NAME: ${{ matrix.name }}
       # Alignment checks stay off until #3852 is fixed, since its misaligned
-      # session ID loads would fail every job.
-      SAN_CFLAGS: -fsanitize=address,undefined -fno-sanitize=alignment -fno-omit-frame-pointer
+      # session ID loads would fail every job. The truncation check covers
+      # libspdm's own code only, as Configure explains.
+      SAN_CFLAGS: -fsanitize=address,undefined,implicit-integer-truncation -fno-sanitize=alignment -fno-omit-frame-pointer
       SAN_LDFLAGS: -fsanitize=address,undefined
     strategy:
       fail-fast: false
@@ -3155,6 +3157,17 @@ jobs:
           # llvm-symbolizer, which the sanitizers need for function names.
           apt_install llvm
 
+          # The truncation check is for libspdm's own code. Mbed TLS narrows
+          # values implicitly by design, and the unit tests are not the code
+          # under test, so both are left out of that check, though not out of
+          # ASan and UBSan.
+          cat > sanitizer_ignorelist.txt <<'IGNORELIST'
+          [implicit-integer-truncation]
+          src:*/unit_test/*
+          src:*/os_stub/mbedtlslib/*
+          IGNORELIST
+          CFLAGS="$CFLAGS -fsanitize-ignorelist=$PWD/sanitizer_ignorelist.txt"
+
           binary=()
           if [ "${{ matrix.openssl_binary }}" = "true" ]; then
             CFLAGS="$CFLAGS -I$OPENSSL_BINARY/include"
@@ -3350,6 +3363,12 @@ jobs:
             if [ -f no_debug_enable.sh ]; then cat no_debug_enable.sh; fi
             echo "export CFLAGS='${{ env.BASE_CFLAGS }} $SAN_CFLAGS ${{ matrix.cflags }}'"
             echo "export LDFLAGS='$SAN_LDFLAGS'"
+            if [ -f sanitizer_ignorelist.txt ]; then
+              echo "cat > sanitizer_ignorelist.txt <<'IGNORELIST'"
+              cat sanitizer_ignorelist.txt
+              echo "IGNORELIST"
+              echo 'export CFLAGS="$CFLAGS -fsanitize-ignorelist=$PWD/sanitizer_ignorelist.txt"'
+            fi
             binary=""
             if [ "${{ matrix.openssl_binary }}" = "true" ]; then
               if [ -f build_openssl_binary.sh ]; then cat build_openssl_binary.sh; fi
@@ -3761,8 +3780,9 @@ jobs:
       #            -fsanitize-memory-track-origins would also name where each
       #            value came from, but it doubles the run time, so add it to
       #            the reproducer to trace a report.
-      #   address  configs' flags, with alignment checks off until #3852 is
-      #            fixed.
+      #   address  ASan and UBSan as configs runs them, with alignment checks
+      #            off until #3852 is fixed. The truncation check stays in
+      #            configs, since GCC does not have it.
       - name: Select sanitizer
         shell: bash
         run: |
