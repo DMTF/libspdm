@@ -24,8 +24,34 @@ on:
     - cron: '25 10 * * *'
   # Scheduled runs test main in DMTF/libspdm only, so a fork does not run Tier 2
   # every day. A manual run tests the branch that it is dispatched on, in
-  # DMTF/libspdm or in a fork.
+  # DMTF/libspdm or in a fork. It runs every job family by default, and can
+  # leave any of them out.
   workflow_dispatch:
+    inputs:
+      posix:
+        description: 'posix: Linux and macOS'
+        type: boolean
+        default: true
+      versions:
+        description: 'versions: other operating system and compiler versions'
+        type: boolean
+        default: true
+      windows-msvc:
+        description: 'windows-msvc: Windows with the VS and CLANG toolchains'
+        type: boolean
+        default: true
+      mingw:
+        description: 'mingw: Windows with MinGW'
+        type: boolean
+        default: true
+      configs:
+        description: 'configs: code configuration sweeps'
+        type: boolean
+        default: true
+      sanitizers:
+        description: 'sanitizers: MSan, and ASan and UBSan with GCC and on aarch64'
+        type: boolean
+        default: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -75,7 +101,9 @@ jobs:
 
   posix:
     name: ${{ format('{0}-{1}-{2}-{3}-{4}', matrix.platform, matrix.arch, matrix.tc, matrix.crypto, matrix.tgt) }}
-    if: github.repository == 'DMTF/libspdm' || github.event_name != 'schedule'
+    if: >-
+      (github.repository == 'DMTF/libspdm' || github.event_name != 'schedule')
+      && (github.event_name != 'workflow_dispatch' || inputs.posix)
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     env:
@@ -615,15 +643,16 @@ jobs:
   # of cryptography library and build target, so crossed sparsely as
   # doc/internal/continuous_integration.md crosses platforms. The jobs start
   # once posix has finished, whether or not it passed, and run in the runners
-  # that posix used, so Tier 2 never runs more jobs at once. The steps are
-  # posix's, without those that no job here needs, plus Prepare container and
-  # Select compiler.
+  # that posix used, so Tier 2 never runs more jobs at once. A manual run that
+  # leaves posix out starts them at once. The steps are posix's, without those
+  # that no job here needs, plus Prepare container and Select compiler.
   versions:
     name: ${{ matrix.name }}
     needs: posix
     if: >-
       !cancelled() && (github.repository == 'DMTF/libspdm'
       || github.event_name != 'schedule')
+      && (github.event_name != 'workflow_dispatch' || inputs.versions)
     runs-on: ${{ matrix.os }}
     # Empty, and so no container, except in the jobs that name one.
     container: ${{ matrix.container }}
@@ -1386,7 +1415,9 @@ jobs:
 
   windows-msvc:
     name: ${{ format('windows-{0}-{1}-{2}-{3}{4}', matrix.arch, matrix.tc, matrix.crypto, matrix.tgt, matrix.variant && format('-{0}', matrix.variant) || '') }}
-    if: github.repository == 'DMTF/libspdm' || github.event_name != 'schedule'
+    if: >-
+      (github.repository == 'DMTF/libspdm' || github.event_name != 'schedule')
+      && (github.event_name != 'workflow_dispatch' || inputs['windows-msvc'])
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     env:
@@ -1935,7 +1966,9 @@ jobs:
 
   mingw:
     name: ${{ format('windows-{0}-mingw-{1}-{2}{3}', matrix.arch, matrix.crypto, matrix.tgt, matrix.variant && format('-{0}', matrix.variant) || '') }}
-    if: github.repository == 'DMTF/libspdm' || github.event_name != 'schedule'
+    if: >-
+      (github.repository == 'DMTF/libspdm' || github.event_name != 'schedule')
+      && (github.event_name != 'workflow_dispatch' || inputs.mingw)
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     env:
@@ -2398,7 +2431,9 @@ jobs:
   #   config-psk-only         the unit tests assume a signing algorithm.
   configs:
     name: ${{ matrix.name }}
-    if: github.repository == 'DMTF/libspdm' || github.event_name != 'schedule'
+    if: >-
+      (github.repository == 'DMTF/libspdm' || github.event_name != 'schedule')
+      && (github.event_name != 'workflow_dispatch' || inputs.configs)
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
@@ -3420,14 +3455,16 @@ jobs:
   # and on the pairwise rows of configs, and ASan and UBSan with GCC and on
   # aarch64. The jobs start once versions and mingw have finished, whether or
   # not they passed, and run in the runners that those families used, so Tier
-  # 2 never runs more jobs at once. The steps are configs', without those that
-  # no job here needs, plus Select sanitizer.
+  # 2 never runs more jobs at once. A manual run does not wait for a family
+  # that it leaves out. The steps are configs', without those that no job here
+  # needs, plus Select sanitizer.
   sanitizers:
     name: ${{ matrix.name }}
     needs: [versions, mingw]
     if: >-
       !cancelled() && (github.repository == 'DMTF/libspdm'
       || github.event_name != 'schedule')
+      && (github.event_name != 'workflow_dispatch' || inputs.sanitizers)
     runs-on: ${{ matrix.os || 'ubuntu-24.04' }}
     timeout-minutes: 45
     env:
@@ -4206,7 +4243,11 @@ jobs:
               --body-file failure.md
           fi
 
+      # Every family that the run selected must pass. A family that a manual
+      # run leaves out is skipped.
       - name: Check result
+        env:
+          MANUAL: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
           posix="${{ needs.posix.result }}"
           versions="${{ needs.versions.result }}"
@@ -4215,8 +4256,27 @@ jobs:
           configs="${{ needs.configs.result }}"
           sanitizers="${{ needs.sanitizers.result }}"
           echo "posix=$posix versions=$versions windows-msvc=$msvc mingw=$mingw configs=$configs sanitizers=$sanitizers"
-          if [ "$posix" != "success" ] || [ "$versions" != "success" ] || [ "$msvc" != "success" ] ||
-             [ "$mingw" != "success" ] || [ "$configs" != "success" ] || [ "$sanitizers" != "success" ]; then
-            echo "::error::Tier 2 did not pass (posix=$posix versions=$versions windows-msvc=$msvc mingw=$mingw configs=$configs sanitizers=$sanitizers)"
+          failed=
+          selected=0
+          # Takes the family, its result, and its input, which only a manual
+          # run has.
+          check() {
+            if [ "$MANUAL" != true ] || [ "$3" = true ]; then
+              selected=$((selected + 1))
+              [ "$2" = success ] || failed="$failed $1=$2"
+            fi
+          }
+          check posix "$posix" "${{ inputs.posix }}"
+          check versions "$versions" "${{ inputs.versions }}"
+          check windows-msvc "$msvc" "${{ inputs['windows-msvc'] }}"
+          check mingw "$mingw" "${{ inputs.mingw }}"
+          check configs "$configs" "${{ inputs.configs }}"
+          check sanitizers "$sanitizers" "${{ inputs.sanitizers }}"
+          if [ "$selected" -eq 0 ]; then
+            echo "::error::The run left out every job family"
+            exit 1
+          fi
+          if [ -n "$failed" ]; then
+            echo "::error::Tier 2 did not pass:$failed"
             exit 1
           fi
