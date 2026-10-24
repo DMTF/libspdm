@@ -316,8 +316,11 @@
   of MINGW64.
 - The KLEE and CBMC toolchains are removed.
 - The VS toolchains build with CMake's default runtime library, `/MD` or `/MDd`.
-- The GCC and Clang toolchains no longer pass `-fshort-wchar`, `-fpie` or `-no-pie`, and Windows
-  ia32 Mbed TLS builds no longer define `EFI32`.
+- The GCC and Clang toolchains no longer pass `-fshort-wchar` or `-no-pie`, and Windows ia32 Mbed
+  TLS builds no longer define `EFI32`.
+- Libraries and executables are position-independent, since `CMAKE_POSITION_INDEPENDENT_CODE`
+  defaults to `ON` except with `TOOLCHAIN=NONE` and the bare-metal toolchains, so the libraries
+  link into PIE executables and shared objects whatever the compiler's default.
 - The `os_stub` headers `cryptlib_ext.h`, `spdm_crypt_ext_lib.h` and
   `spdm_device_secret_lib_internal.h` move to `os_stub/include`, as `hal/library/cryptlib_ext.h`,
   `library/spdm_crypt_ext_lib.h` and `internal/libspdm_device_secret_lib.h`.
