@@ -2043,7 +2043,7 @@ jobs:
           msystem: ${{ matrix.msystem }}
           update: true
           install: git make
-          pacboy: toolchain:p cmake:p make:p
+          pacboy: toolchain:p cmake:p
 
       # OpenSSL is an ExternalProject with its own CFLAGS, so no LIBSPDM_*
       # macro reaches it: one entry serves every configuration on a given
