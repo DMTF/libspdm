@@ -29,27 +29,27 @@ on:
   workflow_dispatch:
     inputs:
       posix:
-        description: 'posix: Linux and macOS'
+        description: 'Linux and macOS'
         type: boolean
         default: true
       versions:
-        description: 'versions: other operating system and compiler versions'
+        description: 'Other operating system and compiler versions'
         type: boolean
         default: true
       windows-msvc:
-        description: 'windows-msvc: Windows with the VS and CLANG toolchains'
+        description: 'Windows with the VS and CLANG toolchains'
         type: boolean
         default: true
       mingw:
-        description: 'mingw: Windows with MinGW'
+        description: 'Windows with MinGW'
         type: boolean
         default: true
       configs:
-        description: 'configs: code configuration sweeps'
+        description: 'Code configuration sweeps'
         type: boolean
         default: true
       sanitizers:
-        description: 'sanitizers: MSan, and ASan and UBSan with GCC and on aarch64'
+        description: 'MSan, and ASan, and UBSan'
         type: boolean
         default: true
 
