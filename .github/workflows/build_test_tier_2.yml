@@ -33,11 +33,11 @@ on:
         type: boolean
         default: true
       versions:
-        description: 'Other operating system and compiler versions'
+        description: 'Other OS and compiler versions'
         type: boolean
         default: true
       windows-msvc:
-        description: 'Windows with the VS and CLANG toolchains'
+        description: 'Windows with VS and CLANG'
         type: boolean
         default: true
       mingw:
@@ -49,7 +49,7 @@ on:
         type: boolean
         default: true
       sanitizers:
-        description: 'MSan, and ASan, and UBSan'
+        description: 'MSan, ASan, and UBSan'
         type: boolean
         default: true
 
