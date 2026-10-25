@@ -2,7 +2,7 @@
 #   - the core unit tests against every combination of operating system, host
 #     hardware, toolchain, cryptography library and build target that the CMake
 #     build files support, 64 in all, in the posix, windows-msvc and mingw
-#     families,
+#     families, plus GCC on RISC-V in DMTF/libspdm,
 #   - other operating system and compiler versions, sparsely, in the versions
 #     family and in windows-msvc's older MSVC toolsets, including the newest
 #     GCC and LLVM releases before any runner image has them,
@@ -92,28 +92,38 @@ jobs:
   # waits for posix and then takes over its 5, and sanitizers waits for versions
   # and mingw and then takes over their 7. That leaves 4 of the 20 runners that
   # doc/internal/continuous_integration.md assumes for pull requests and
-  # pushes. If every job took that document's worst case of 20 minutes, mingw
-  # would finish in at most five rounds, or 100 minutes, within Tier 2's two
-  # hours. windows-msvc, at 34 jobs, configs, at 81, and posix followed by
-  # versions and then sanitizers, at 92, cannot meet that worst case. Their
-  # jobs take about 2 to 10 minutes, so each finishes in about 50 minutes, and
-  # the timing report warns if a run takes longer than two hours.
+  # pushes. posix's riscv64 jobs run on the RISE project's RISC-V runners, not
+  # GitHub's, but they count against posix's 5 all the same. If every job took
+  # that document's worst case of 20 minutes, mingw would finish in at most
+  # five rounds, or 100 minutes, within Tier 2's two hours. windows-msvc, at 34
+  # jobs, configs, at 81, and posix followed by versions and then sanitizers,
+  # at 96, cannot meet that worst case. Their jobs take about 2 to 10 minutes,
+  # and the riscv64 jobs up to about 25, so each finishes within about 55
+  # minutes, and the timing report warns if a run takes longer than two hours.
 
   posix:
     name: ${{ format('{0}-{1}-{2}-{3}-{4}', matrix.platform, matrix.arch, matrix.tc, matrix.crypto, matrix.tgt) }}
     if: >-
       (github.repository == 'DMTF/libspdm' || github.event_name != 'schedule')
       && (github.event_name != 'workflow_dispatch' || inputs.posix)
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 45
+    # Only the riscv64 jobs have no os, as the matrix explains.
+    runs-on: ${{ matrix.os || 'ubuntu-24.04-riscv' }}
+    # The RISC-V runners are several times slower than GitHub's, so the riscv64
+    # jobs, and each of their tests, get longer limits.
+    timeout-minutes: ${{ matrix.arch == 'riscv64' && 90 || 45 }}
     env:
       JOB_NAME: ${{ format('{0}-{1}-{2}-{3}-{4}', matrix.platform, matrix.arch, matrix.tc, matrix.crypto, matrix.tgt) }}
+      TEST_TIMEOUT: ${{ matrix.arch == 'riscv64' && 1800 || 600 }}
     strategy:
       fail-fast: false
       max-parallel: 5
       matrix:
         platform: [linux, macos]
-        arch: [x64, aarch64, ia32]
+        # riscv64 runs on the RISE project's RISC-V runners, which DMTF/libspdm
+        # has and a fork does not, where its jobs would wait for a runner for a
+        # day. It is in no include entry below, because in a fork such an entry
+        # would match no job and so become a job of its own.
+        arch: ${{ fromJSON(github.repository == 'DMTF/libspdm' && '["x64", "aarch64", "ia32", "riscv64"]' || '["x64", "aarch64", "ia32"]') }}
         toolchain: [GCC, CLANG]
         crypto: [mbedtls, openssl]
         target: [Debug, Release]
@@ -124,6 +134,13 @@ jobs:
           # macOS no longer builds or runs 32-bit programs.
           - platform: macos
             arch: ia32
+          # The RISC-V runners are Linux.
+          - platform: macos
+            arch: riscv64
+          # Clang has not been tried on the RISC-V runners, as risc-v.yml used
+          # only GCC.
+          - arch: riscv64
+            toolchain: CLANG
         include:
           # The runner for each platform and architecture. Ubuntu is named by
           # release, not as ubuntu-latest, so that what Tier 2 covers changes
@@ -238,9 +255,9 @@ jobs:
         uses: actions/cache@v6
         with:
           path: build/os_stub/openssllib
-          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          key: openssl-${{ matrix.os || 'ubuntu-24.04-riscv' }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
           restore-keys: |
-            openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-
+            openssl-${{ matrix.os || 'ubuntu-24.04-riscv' }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ steps.ossl.outputs.sha }}-
 
       # A binary build does not build the ExternalProject above. Its OpenSSL is
       # installed into a prefix that, like that tree, depends only on the
@@ -250,9 +267,9 @@ jobs:
         uses: actions/cache@v6
         with:
           path: openssl-binary
-          key: openssl-binary-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          key: openssl-binary-${{ matrix.os || 'ubuntu-24.04-riscv' }}-${{ matrix.arch }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
           restore-keys: |
-            openssl-binary-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.ossl.outputs.sha }}-
+            openssl-binary-${{ matrix.os || 'ubuntu-24.04-riscv' }}-${{ matrix.arch }}-${{ steps.ossl.outputs.sha }}-
 
       # The commands are written to a script so that the reproducer runs exactly
       # what this step ran.
@@ -341,7 +358,13 @@ jobs:
           if [ "${{ matrix.expect_tests }}" != "false" ]; then
             cmake --build build --target copy_sample_key
           fi
-          cmake --build build --parallel "$jobs"
+          # The RISC-V runners are slow and shared with other projects, so the
+          # riscv64 jobs build only the unit tests that the steps below run.
+          if [ "${{ matrix.arch }}" = "riscv64" ]; then
+            cmake --build build --parallel "$jobs" --target $UNIT_TESTS ${{ matrix.extra_tests }}
+          else
+            cmake --build build --parallel "$jobs"
+          fi
 
       # Implements "For any configuration, run all basic unit tests", plus any
       # extended unit test whose requirement this configuration satisfies.
@@ -358,6 +381,7 @@ jobs:
           #!/usr/bin/env bash
           set -uo pipefail
           t="$1"
+          limit=${TEST_TIMEOUT:-600}
 
           exe=""
           if [ -x "build/bin/$t" ]; then
@@ -376,11 +400,11 @@ jobs:
 
           # macOS has no GNU timeout; fall back to gtimeout, then to perl.
           if command -v timeout >/dev/null 2>&1; then
-            ( cd build/bin && timeout 600 "./$exe" )
+            ( cd build/bin && timeout "$limit" "./$exe" )
           elif command -v gtimeout >/dev/null 2>&1; then
-            ( cd build/bin && gtimeout 600 "./$exe" )
+            ( cd build/bin && gtimeout "$limit" "./$exe" )
           else
-            ( cd build/bin && perl -e 'alarm shift; exec @ARGV' 600 "./$exe" )
+            ( cd build/bin && perl -e 'alarm shift; exec @ARGV' "$limit" "./$exe" )
           fi
           rc=$?
 
@@ -527,7 +551,7 @@ jobs:
 
           header="Reproduces: ${{ env.JOB_NAME }}
           Run:        $run_url
-          Runner:     ${{ matrix.os }} (image $image)
+          Runner:     ${{ matrix.os || 'ubuntu-24.04-riscv' }} (image $image)
           OS:         ${osname:-unknown}
           Kernel:     ${kernel:-unknown}
           Compiler:   $compiler

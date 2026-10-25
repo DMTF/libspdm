@@ -18,6 +18,7 @@ libspdm's compile time configuration knobs that can be adjusted within GitHub's 
     - ia32 (on x64, via WoW64 on Windows and `-m32` on Linux)
     - x64
     - aarch64
+    - riscv64 (Linux, on the RISE project's RISC-V runners, in DMTF/libspdm only)
 - Toolchain (CMake `TOOLCHAIN`)
     - Visual Studio
     - Native GCC
