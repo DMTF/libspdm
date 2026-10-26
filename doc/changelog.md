@@ -344,4 +344,6 @@
   1.2 too.
 - The TCP transport sets `PayloadLen` to the size of the SPDM message, as DSP0287 requires, where
   3.8 added 2.
+- The Application Data of a TCP In-Session Message is the SPDM message, as DSP0287 requires, where
+  3.8 put a binding header in front of it.
 - Many bug fixes and further alignment with the SPDM specifications.
