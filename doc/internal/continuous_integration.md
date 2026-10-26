@@ -143,6 +143,10 @@ library. Examples of such macros include `LIBSPDM_FIPS_MODE` and
 Tier 1 also replays the fuzzing seeds against each cryptography library, and under
 AddressSanitizer in a `LIBFUZZER` build.
 
+The core unit tests also run on the library defaults under ASAN and UBSAN, with Clang's check for
+implicit integer conversions that truncate a value in libspdm's own code, against each cryptography
+library, and under MSAN with Mbed TLS.
+
 All tier 1 tests must pass before a pull request that targets production code or tests is merged
 into `main` or any of the release branches.
 
