@@ -5,8 +5,9 @@
 #     families, plus GCC on RISC-V in DMTF/libspdm,
 #   - other operating system, compiler and CMake versions, sparsely, in the
 #     versions family and in windows-msvc's older MSVC toolsets, including the
-#     newest GCC and LLVM releases before any runner image has them, and the
-#     oldest CMake release that CMakeLists.txt accepts,
+#     newest GCC and LLVM releases before any runner image has them, with the
+#     unit tests linked as PIE executables under that GCC, and the oldest CMake
+#     release that CMakeLists.txt accepts,
 #   - the code configuration sweeps under ASan, UBSan and Clang's implicit
 #     integer truncation check, in the configs family, the same configurations
 #     as GCC Release builds, in configs-release, and a few of them with MSVC
@@ -924,6 +925,11 @@ jobs:
           # Update these to each new release. Once an image provides a major
           # version, replace its jobs here with one among the compiler
           # versions above.
+          #
+          # The image's GCC, unlike the runner images', does not build
+          # position-independent executables by default, so its jobs link the
+          # unit tests as PIE executables, as Rust links programs. That fails
+          # unless the libraries are position-independent too.
 
           - name: debian-13-x64-gcc-16-mbedtls-debug
             os: ubuntu-26.04
@@ -932,6 +938,7 @@ jobs:
             toolchain: GCC
             crypto: mbedtls
             target: Debug
+            pie: 'true'
 
           - name: debian-13-x64-gcc-16-mbedtls-release
             os: ubuntu-26.04
@@ -941,6 +948,7 @@ jobs:
             crypto: mbedtls
             target: Release
             cflags: -ffat-lto-objects
+            pie: 'true'
 
           - name: debian-13-x64-gcc-16-openssl-debug
             os: ubuntu-26.04
@@ -949,6 +957,7 @@ jobs:
             toolchain: GCC
             crypto: openssl
             target: Debug
+            pie: 'true'
 
           - name: debian-13-x64-gcc-16-openssl-release
             os: ubuntu-26.04
@@ -958,6 +967,7 @@ jobs:
             crypto: openssl
             target: Release
             cflags: -ffat-lto-objects
+            pie: 'true'
 
           - name: debian-13-aarch64-gcc-16-mbedtls-debug
             os: ubuntu-26.04-arm
@@ -966,6 +976,7 @@ jobs:
             toolchain: GCC
             crypto: mbedtls
             target: Debug
+            pie: 'true'
 
           - name: debian-13-aarch64-gcc-16-openssl-release
             os: ubuntu-26.04-arm
@@ -975,6 +986,7 @@ jobs:
             crypto: openssl
             target: Release
             cflags: -ffat-lto-objects
+            pie: 'true'
 
           - name: ubuntu-26.04-x64-clang-23-mbedtls-debug
             os: ubuntu-26.04
@@ -1286,6 +1298,9 @@ jobs:
         shell: bash
         env:
           CFLAGS: ${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}
+          # CMake reads LDFLAGS into the executables' linker flags, to which
+          # the GCC toolchain appends its own.
+          LDFLAGS: ${{ matrix.pie == 'true' && '-pie' || '' }}
         run: |
           # A stalled mirror can outlast apt-get's own timeouts, so each attempt
           # is bounded, and a failed one is retried.
@@ -1327,6 +1342,28 @@ jobs:
 
           cmake --build build --target copy_sample_key
           cmake --build build --parallel "$jobs"
+
+      # The link alone proves nothing if -pie stops reaching it, so check that
+      # each unit test that was built is a PIE executable, whose ELF type is
+      # DYN rather than EXEC.
+      - name: Check PIE
+        if: matrix.pie == 'true'
+        shell: bash
+        run: |
+          status=0
+          for t in $UNIT_TESTS; do
+            f="build/bin/$t"
+            if [ ! -x "$f" ]; then
+              continue
+            fi
+            if readelf -h "$f" | grep -q 'Type:[[:space:]]*DYN'; then
+              echo "$t is a PIE executable"
+            else
+              echo "::error::$t is not a PIE executable"
+              status=1
+            fi
+          done
+          exit $status
 
       # As in the posix family: one step per test, each bounded so that a hang
       # fails the job.
@@ -1485,6 +1522,9 @@ jobs:
               echo 'export PATH="$PWD/cmake/bin:$PATH"'
             fi
             echo "export CFLAGS='${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}'"
+            if [ "${{ matrix.pie }}" = "true" ]; then
+              echo "export LDFLAGS=-pie"
+            fi
             echo "cmake -B build -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }}"
             echo "cmake --build build --target copy_sample_key"
             echo "cmake --build build --parallel \"\$(getconf _NPROCESSORS_ONLN)\""
