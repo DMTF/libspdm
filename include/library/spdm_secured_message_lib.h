@@ -124,8 +124,8 @@ typedef struct {
  * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
  * @param  session_keys                  Indicate the buffer to store the session_keys in
  *                                       libspdm_secure_session_keys_struct_t.
- * @param  session_keys_size             The size in bytes of the session_keys in
- *                                       libspdm_secure_session_keys_struct_t.
+ * @param  session_keys_size             On input, the size in bytes of the session_keys buffer.
+ *                                       On output, the size in bytes of the exported session keys.
  *
  * @retval true   The session keys are exported.
  * @retval false  session_keys_size is too small, and is set to the required size.

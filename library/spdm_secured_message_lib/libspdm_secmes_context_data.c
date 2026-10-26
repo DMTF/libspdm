@@ -239,6 +239,8 @@ bool libspdm_secured_message_export_session_keys(void *spdm_secured_message_cont
                      &secured_message_context->application_secret.response_data_sequence_number,
                      sizeof(uint64_t));
     ptr += sizeof(uint64_t);
+
+    *session_keys_size = struct_size;
     return true;
 }
 

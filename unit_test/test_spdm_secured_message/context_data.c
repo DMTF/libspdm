@@ -167,6 +167,30 @@ static void libspdm_test_secured_message_context_data_case5(void **state)
     assert_int_equal(m_secured_message_context.shared_key_size, sizeof(shared_secret) - 1);
 }
 
+/**
+ * Test 6: Export the session keys into a buffer that is one byte larger than they are, then import
+ * them.
+ * Expected Behavior: libspdm_secured_message_export_session_keys returns true and the size of the
+ * session keys rather than the size of the buffer, and
+ * libspdm_secured_message_import_session_keys accepts that size.
+ **/
+static void libspdm_test_secured_message_context_data_case6(void **state)
+{
+    uint8_t session_keys[SESSION_KEYS_SIZE + 1];
+    size_t session_keys_size;
+
+    set_application_secret(&m_secured_message_context, 0x01);
+    set_application_secret(&m_peer_secured_message_context, 0x20);
+
+    session_keys_size = sizeof(session_keys);
+    assert_true(libspdm_secured_message_export_session_keys(&m_secured_message_context,
+                                                            session_keys, &session_keys_size));
+    assert_int_equal(session_keys_size, SESSION_KEYS_SIZE);
+
+    assert_true(libspdm_secured_message_import_session_keys(&m_peer_secured_message_context,
+                                                            session_keys, session_keys_size));
+}
+
 static libspdm_test_context_t m_libspdm_secured_message_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -182,6 +206,7 @@ int libspdm_secured_message_context_data_test_main(void)
         cmocka_unit_test(libspdm_test_secured_message_context_data_case3),
         cmocka_unit_test(libspdm_test_secured_message_context_data_case4),
         cmocka_unit_test(libspdm_test_secured_message_context_data_case5),
+        cmocka_unit_test(libspdm_test_secured_message_context_data_case6),
     };
 
     libspdm_setup_test_context(&m_libspdm_secured_message_context_data_test_context);
