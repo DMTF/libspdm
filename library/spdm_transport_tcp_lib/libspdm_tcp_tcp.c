@@ -96,7 +96,6 @@ libspdm_return_t libspdm_tcp_decode_message(uint32_t **session_id,
 {
     const spdm_tcp_binding_header_t *tcp_message_header;
 
-    LIBSPDM_ASSERT(transport_message_size > sizeof(spdm_tcp_binding_header_t));
     if (transport_message_size <= sizeof(spdm_tcp_binding_header_t)) {
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }

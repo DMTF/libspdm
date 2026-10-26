@@ -682,6 +682,34 @@ static void libspdm_test_transport_tcp_err_case18(void **state)
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
 }
 
+/**
+ * Test 19: Decode a role inquiry, which is a TCP binding header alone.
+ * Expected Behavior: returns LIBSPDM_STATUS_INVALID_MSG_SIZE.
+ **/
+static void libspdm_test_transport_tcp_err_case19(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    uint8_t transport_message[sizeof(spdm_tcp_binding_header_t)];
+    size_t transport_message_size;
+    uint32_t *session_id;
+    bool is_app_message;
+    size_t message_size;
+    uint8_t *message;
+
+    spdm_test_context = *state;
+    spdm_test_context->case_id = 0x13;
+
+    /* {ERROR} No SPDM message follows the header. */
+    transport_message_size = build_tcp_message(SPDM_TCP_MESSAGE_TYPE_ROLE_INQUIRY, NULL, 0,
+                                               transport_message);
+
+    status = decode_message(spdm_test_context->spdm_context, &session_id, &is_app_message,
+                            transport_message_size, transport_message, &message_size, &message);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
+}
+
 int libspdm_transport_tcp_error_test_main(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -714,6 +742,8 @@ int libspdm_transport_tcp_error_test_main(void)
         cmocka_unit_test_setup(libspdm_test_transport_tcp_err_case17,
                                libspdm_unit_test_reset_context),
         cmocka_unit_test_setup(libspdm_test_transport_tcp_err_case18,
+                               libspdm_unit_test_reset_context),
+        cmocka_unit_test_setup(libspdm_test_transport_tcp_err_case19,
                                libspdm_unit_test_reset_context),
     };
 
