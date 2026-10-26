@@ -494,6 +494,77 @@ static void libspdm_test_transport_tcp_err_case14(void **state)
                      LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 15: Decode an out-of-session TCP message of a binding version other than 1.
+ * Expected Behavior: returns LIBSPDM_STATUS_UNSUPPORTED_CAP.
+ **/
+static void libspdm_test_transport_tcp_err_case15(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    uint8_t transport_message[sizeof(spdm_tcp_binding_header_t) + sizeof(m_spdm_message)];
+    size_t transport_message_size;
+    uint32_t *session_id;
+    bool is_app_message;
+    size_t message_size;
+    uint8_t *message;
+
+    spdm_test_context = *state;
+    spdm_test_context->case_id = 0xF;
+
+    transport_message_size = build_tcp_message(SPDM_TCP_MESSAGE_TYPE_OUT_OF_SESSION,
+                                               m_spdm_message, sizeof(m_spdm_message),
+                                               transport_message);
+    /* {ERROR} The binding version is 2. */
+    ((spdm_tcp_binding_header_t *)transport_message)->binding_version = 0x02;
+
+    status = decode_message(spdm_test_context->spdm_context, &session_id, &is_app_message,
+                            transport_message_size, transport_message, &message_size, &message);
+
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+}
+
+/**
+ * Test 16: Decode an in-session TCP message of a binding version other than 1.
+ * Expected Behavior: returns LIBSPDM_STATUS_UNSUPPORTED_CAP.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP and LIBSPDM_ENABLE_CAPABILITY_PSK_CAP are both
+ * disabled.
+ **/
+static void libspdm_test_transport_tcp_err_case16(void **state)
+{
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t transport_message_size;
+    uint8_t *transport_message;
+    uint32_t *session_id;
+    bool is_app_message;
+    size_t message_size;
+    uint8_t *message;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x10;
+    set_session(spdm_context);
+
+    status = encode_message(spdm_context, &m_session_id, false, m_spdm_message,
+                            sizeof(m_spdm_message), &transport_message_size, &transport_message);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    /* {ERROR} The binding version is 2. */
+    ((spdm_tcp_binding_header_t *)transport_message)->binding_version = 0x02;
+
+    rewind_sequence_number(spdm_context);
+    status = decode_message(spdm_context, &session_id, &is_app_message, transport_message_size,
+                            transport_message, &message_size, &message);
+
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+#else
+    skip();
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
+}
+
 int libspdm_transport_tcp_error_test_main(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -519,6 +590,10 @@ int libspdm_transport_tcp_error_test_main(void)
         cmocka_unit_test(libspdm_test_transport_tcp_err_case12),
         cmocka_unit_test(libspdm_test_transport_tcp_err_case13),
         cmocka_unit_test(libspdm_test_transport_tcp_err_case14),
+        cmocka_unit_test_setup(libspdm_test_transport_tcp_err_case15,
+                               libspdm_unit_test_reset_context),
+        cmocka_unit_test_setup(libspdm_test_transport_tcp_err_case16,
+                               libspdm_unit_test_reset_context),
     };
 
     libspdm_test_context_t test_context = {
