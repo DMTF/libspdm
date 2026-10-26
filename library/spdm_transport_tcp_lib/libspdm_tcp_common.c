@@ -66,7 +66,7 @@ libspdm_return_t libspdm_transport_tcp_encode_message(
     spdm_secured_message_callbacks.get_secured_spdm_version =
         libspdm_tcp_get_secured_spdm_version;
 
-    if (is_app_message && (session_id == NULL)) {
+    if (is_app_message) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
@@ -80,21 +80,16 @@ libspdm_return_t libspdm_transport_tcp_encode_message(
 
         app_transport_header_size = sizeof(spdm_tcp_binding_header_t);
 
-        if (!is_app_message) {
-            /* SPDM message to APP message*/
-            app_message = NULL;
-            app_message_size = app_transport_header_size + message_size;
-            status = libspdm_tcp_encode_message(NULL, message_size,
-                                                message,
-                                                &app_message_size,
-                                                &app_message);
-            if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %x\n", status));
-                return status;
-            }
-        } else {
-            app_message = (void *)message;
-            app_message_size = message_size;
+        /* SPDM message to APP message*/
+        app_message = NULL;
+        app_message_size = app_transport_header_size + message_size;
+        status = libspdm_tcp_encode_message(NULL, message_size,
+                                            message,
+                                            &app_message_size,
+                                            &app_message);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %x\n", status));
+            return status;
         }
         /* APP message to secured message*/
         secure_transport_header_size = libspdm_transport_tcp_get_header_size(spdm_context);
@@ -165,6 +160,7 @@ libspdm_return_t libspdm_transport_tcp_decode_message(
     if ((session_id == NULL) || (is_app_message == NULL)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
+    *is_app_message = false;
 
     secured_message_session_id = NULL;
     /* Detect received message*/
@@ -212,13 +208,9 @@ libspdm_return_t libspdm_transport_tcp_decode_message(
                                             app_message_size, app_message,
                                             message_size, message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            *is_app_message = true;
-            /* just return APP message.*/
-            *message = app_message;
-            *message_size = app_message_size;
-            return LIBSPDM_STATUS_SUCCESS;
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %x\n", status));
+            return status;
         } else {
-            *is_app_message = false;
             if (secured_message_session_id == NULL) {
                 return LIBSPDM_STATUS_SUCCESS;
             } else {
@@ -241,7 +233,6 @@ libspdm_return_t libspdm_transport_tcp_decode_message(
         }
         LIBSPDM_ASSERT(secured_message_session_id == NULL);
         *session_id = NULL;
-        *is_app_message = false;
         return LIBSPDM_STATUS_SUCCESS;
     }
 }

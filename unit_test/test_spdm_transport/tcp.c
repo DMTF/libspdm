@@ -82,9 +82,6 @@ static size_t build_tcp_message(uint8_t message_type, const void *payload, size_
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 static const uint32_t m_session_id = 0x12345678;
 
-/* An application message whose fourth byte is not a TCP message type that libspdm decodes. */
-static const uint8_t m_app_message[] = {0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7};
-
 /* Establishes a session with m_session_id whose messages are encrypted and authenticated. */
 static void set_session(libspdm_context_t *spdm_context)
 {
@@ -242,49 +239,6 @@ static void libspdm_test_transport_tcp_case3(void **state)
 }
 
 /**
- * Test 4: Encode an application message in a session, then decode it.
- * Expected Behavior: decoding returns the application message in that session.
- * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP and LIBSPDM_ENABLE_CAPABILITY_PSK_CAP are both
- * disabled.
- **/
-static void libspdm_test_transport_tcp_case4(void **state)
-{
-#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    size_t transport_message_size;
-    uint8_t *transport_message;
-    uint32_t *session_id;
-    bool is_app_message;
-    size_t message_size;
-    uint8_t *message;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x4;
-    set_session(spdm_context);
-
-    status = encode_message(spdm_context, &m_session_id, true, m_app_message,
-                            sizeof(m_app_message), &transport_message_size, &transport_message);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-
-    rewind_sequence_number(spdm_context);
-    status = decode_message(spdm_context, &session_id, &is_app_message, transport_message_size,
-                            transport_message, &message_size, &message);
-
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_non_null(session_id);
-    assert_int_equal(*session_id, m_session_id);
-    assert_true(is_app_message);
-    assert_int_equal(message_size, sizeof(m_app_message));
-    assert_memory_equal(message, m_app_message, sizeof(m_app_message));
-#else
-    skip();
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
-}
-
-/**
  * Test 5: Encode a role inquiry.
  * Expected Behavior: the message is a header alone, with a payload length of 0.
  **/
@@ -413,8 +367,6 @@ int libspdm_transport_tcp_test_main(void)
         cmocka_unit_test_setup(libspdm_test_transport_tcp_case2,
                                libspdm_unit_test_reset_context),
         cmocka_unit_test_setup(libspdm_test_transport_tcp_case3,
-                               libspdm_unit_test_reset_context),
-        cmocka_unit_test_setup(libspdm_test_transport_tcp_case4,
                                libspdm_unit_test_reset_context),
         cmocka_unit_test(libspdm_test_transport_tcp_case5),
         cmocka_unit_test(libspdm_test_transport_tcp_case6),
