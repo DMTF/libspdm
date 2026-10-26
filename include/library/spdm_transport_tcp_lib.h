@@ -23,15 +23,13 @@
 #define LIBSPDM_TCP_TRANSPORT_TAIL_SIZE    (16 + 3 + 31)
 
 /**
- * Encode an SPDM or APP message to a transport layer message.
+ * Encode an SPDM message to a transport layer message.
  *
  * For normal SPDM message, it adds the transport layer wrapper.
  * For secured SPDM message, it encrypts a secured message then adds the transport layer wrapper.
- * For secured APP message, it encrypts a secured message then adds the transport layer wrapper.
  *
- * The APP message is encoded to a secured message directly in SPDM session.
- * The APP message format is defined by the transport layer.
- * Take TCP as example: APP message == TCP-SPDM-BINDING-HEADER + SPDM message
+ * SPDM over TCP does not support APP messages, so LIBSPDM_STATUS_UNSUPPORTED_CAP is returned if
+ * is_app_message is true.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
@@ -54,15 +52,12 @@ libspdm_return_t libspdm_transport_tcp_encode_message(
     size_t *transport_message_size, void **transport_message);
 
 /**
- * Decode an SPDM or APP message from a transport layer message.
+ * Decode an SPDM message from a transport layer message.
  *
  * For normal SPDM message, it removes the transport layer wrapper,
  * For secured SPDM message, it removes the transport layer wrapper, then decrypts and verifies a secured message.
- * For secured APP message, it removes the transport layer wrapper, then decrypts and verifies a secured message.
  *
- * The APP message is decoded from a secured message directly in SPDM session.
- * The APP message format is defined by the transport layer.
- * Take TCP as example: APP message == TCP-SPDM-BINDING-HEADER + SPDM message (For out-of-session message)
+ * SPDM over TCP does not support APP messages, so is_app_message is always set to false.
  *
  * A decoded normal message, or a message from a MAC-only session, is inside the receiver buffer.
  * An encrypted message is decrypted into the scratch buffer that message points to on input.
