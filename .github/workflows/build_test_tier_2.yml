@@ -96,18 +96,18 @@ jobs:
   # mingw and configs run at most 5 + 4 + 2 + 5 = 16 jobs at once. versions
   # waits for posix and then takes over its 5, sanitizers waits for versions and
   # mingw and then takes over their 7, and configs-release waits for configs and
-  # then takes over its 5. That leaves 4 of the 20 runners that
-  # doc/internal/continuous_integration.md assumes for pull requests and
+  # windows-msvc and then takes over their 9. That leaves 4 of the 20 runners
+  # that doc/internal/continuous_integration.md assumes for pull requests and
   # pushes. posix's riscv64 jobs run on the RISE project's RISC-V runners, not
   # GitHub's, but they count against posix's 5 all the same. If every job took
   # that document's worst case of 20 minutes, mingw would finish in at most
   # five rounds, or 100 minutes, within Tier 2's two hours. windows-msvc, at 34
   # jobs, configs followed by configs-release, at 162, and posix followed by
   # versions and then sanitizers, at 96, cannot meet that worst case. Their jobs
-  # take about 2 to 10 minutes, and the riscv64 jobs up to about 25, so
-  # windows-msvc and posix's chain finish within about 55 minutes and configs'
-  # within about 80, and the timing report warns if a run takes longer than two
-  # hours.
+  # take about 2 to 10 minutes, and the riscv64 jobs up to about 20, so
+  # windows-msvc finishes within about 45 minutes, configs' chain within about
+  # 60 and posix's within about 65, and the timing report warns if a run takes
+  # longer than two hours.
 
   posix:
     name: ${{ format('{0}-{1}-{2}-{3}-{4}', matrix.platform, matrix.arch, matrix.tc, matrix.crypto, matrix.tgt) }}
@@ -3488,13 +3488,14 @@ jobs:
   # break a configuration that builds and passes as a Clang Debug build. The
   # rows are configs' own, through the YAML anchor on its include, so the five
   # rows that configs already builds as Release have twins that repeat their
-  # Debug rows' twins. The jobs start once configs has finished, whether or not
-  # it passed, and run in the runners that configs used, so Tier 2 never runs
-  # more jobs at once. A manual run that leaves configs out starts them at once.
-  # The steps are configs', without the sanitizers.
+  # Debug rows' twins. The jobs start once configs and windows-msvc have
+  # finished, whether or not they passed, and run in the runners that those
+  # families used, so Tier 2 never runs more jobs at once. A manual run does not
+  # wait for a family that it leaves out. The steps are configs', without the
+  # sanitizers.
   configs-release:
     name: ${{ format('{0}-gcc-release', matrix.name) }}
-    needs: configs
+    needs: [configs, windows-msvc]
     if: >-
       !cancelled() && (github.repository == 'DMTF/libspdm'
       || github.event_name != 'schedule')
@@ -3505,7 +3506,7 @@ jobs:
       JOB_NAME: ${{ format('{0}-gcc-release', matrix.name) }}
     strategy:
       fail-fast: false
-      max-parallel: 5
+      max-parallel: 9
       matrix:
         include: *configs_rows
 
