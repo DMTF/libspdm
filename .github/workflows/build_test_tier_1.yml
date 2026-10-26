@@ -52,9 +52,9 @@ env:
   BASE_CFLAGS: -DLIBSPDM_CHECK_MACRO=1 -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=3
 
 jobs:
-  # posix, windows-msvc and mingw repeat most of their steps. That is deliberate.
-  # The alternative is one job family whose platform-specific steps are selected
-  # with `if:`, and GitHub has no way to hide work it skips
+  # posix, windows-msvc, mingw and sanitizers repeat most of their steps. That
+  # is deliberate. The alternative is one job family whose platform-specific
+  # steps are selected with `if:`, and GitHub has no way to hide work it skips
   # (https://github.com/orgs/community/discussions/18001).
   posix:
     name: ${{ matrix.name }}
@@ -1867,6 +1867,367 @@ jobs:
             build/CMakeCache.txt
           retention-days: 14
 
+  # The library defaults under sanitizers, so that a pull request that adds a
+  # leak, an out-of-bounds access, undefined behavior or a read of
+  # uninitialized memory fails here rather than in the next day's Tier 2 run.
+  #   address  ASan, with LeakSanitizer, and UBSan, plus Clang's check for
+  #            implicit integer conversions that truncate a value in
+  #            libspdm's own code, as Tier 2's configs family runs them.
+  #   memory   MemorySanitizer, which cannot share a build with ASan. It runs
+  #            in Release, since a Debug build takes about 10 minutes, longer
+  #            than any other Tier 1 job.
+  # The jobs run on ubuntu-24.04, the image on which Tier 2 runs these builds
+  # every day, rather than on ubuntu-latest. Only the unit tests are built, as
+  # the test_size images link with -nostdlib and cannot carry a sanitizer
+  # runtime. The steps are those of Tier 2's sanitizers family, with the
+  # reproducer's handling of pull requests from the posix family.
+  sanitizers:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: asan-defaults
+            sanitizer: address
+            crypto: mbedtls
+            target: Debug
+
+          - name: asan-defaults-openssl
+            sanitizer: address
+            crypto: openssl
+            target: Debug
+
+          # Every object must be instrumented, so this uses Mbed TLS, which
+          # CMake builds, rather than OpenSSL.
+          - name: msan-defaults-release
+            sanitizer: memory
+            crypto: mbedtls
+            target: Release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # See the posix family.
+          submodules: false
+          persist-credentials: false
+
+      - name: cmocka revision
+        id: cmocka
+        shell: bash
+        run: |
+          echo "sha=$(git ls-tree HEAD unit_test/cmockalib/cmocka | awk '{print $3}')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache cmocka
+        id: cmocka-cache
+        uses: actions/cache@v6
+        with:
+          path: unit_test/cmockalib/cmocka
+          key: cmocka-${{ steps.cmocka.outputs.sha }}
+
+      - name: Fetch submodules
+        shell: bash
+        run: |
+          fetch() {
+            local path=$1
+            shift
+            for attempt in 1 2 3; do
+              if git submodule update --init "$@" "$path"; then
+                return 0
+              fi
+              echo "fetch of $path failed, attempt $attempt"
+              sleep $((attempt * 15))
+            done
+            return 1
+          }
+
+          if [ "${{ steps.cmocka-cache.outputs.cache-hit }}" != "true" ]; then
+            fetch unit_test/cmockalib/cmocka --recursive
+          else
+            # The cached .git file points into .git/modules, which this
+            # checkout does not have, and git submodule commands fail on it.
+            rm -f unit_test/cmockalib/cmocka/.git
+          fi
+          fetch os_stub/mbedtlslib/mbedtls --recursive
+          # libspdm builds OpenSSL from the pinned commit's source alone, so
+          # neither its history nor its own submodules are fetched.
+          if [ "${{ matrix.crypto }}" = "openssl" ]; then
+            fetch os_stub/openssllib/openssl --depth 1
+          fi
+
+      - name: OpenSSL revision
+        if: matrix.crypto == 'openssl'
+        id: ossl
+        shell: bash
+        run: |
+          echo "sha=$(git -C os_stub/openssllib/openssl rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "image=${ImageOS:-unknown}-${ImageVersion:-unknown}" >> "$GITHUB_OUTPUT"
+
+      # The same key as Tier 2's Clang jobs on this runner: OpenSSL takes
+      # neither the macros nor the sanitizer flags, so their trees are
+      # interchangeable.
+      - name: Cache OpenSSL build
+        if: matrix.crypto == 'openssl'
+        uses: actions/cache@v6
+        with:
+          path: build/os_stub/openssllib
+          key: openssl-ubuntu-24.04-x64-CLANG-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          restore-keys: |
+            openssl-ubuntu-24.04-x64-CLANG-${{ steps.ossl.outputs.sha }}-
+
+      # The commands are written to a script so that the reproducer runs exactly
+      # what this step ran.
+      #   memory   MemorySanitizer reports a read of uninitialized memory
+      #            reliably only if every object is instrumented, and Mbed
+      #            TLS's assembly cannot be. Every target reads Mbed TLS's user
+      #            configuration file, so it turns the assembly off.
+      #   address  Alignment checks are off until #3852 is fixed. Mbed TLS
+      #            narrows values implicitly by design, and the unit tests are
+      #            not the code under test, so both are left out of the
+      #            truncation check, though not out of ASan and UBSan.
+      - name: Select sanitizer
+        shell: bash
+        run: |
+          if [ "${{ matrix.sanitizer }}" = "memory" ]; then
+            cat > sanitizer.sh <<'SANITIZER'
+          cat > msan_mbedtls_user_config.h <<'MBEDTLS'
+          #undef MBEDTLS_HAVE_ASM
+          #undef MBEDTLS_AESNI_C
+          #undef MBEDTLS_AESCE_C
+          #undef MBEDTLS_PADLOCK_C
+          MBEDTLS
+          export SAN_CFLAGS="-fsanitize=memory -fno-omit-frame-pointer -DMBEDTLS_USER_CONFIG_FILE=\\\"$PWD/msan_mbedtls_user_config.h\\\""
+          export SAN_LDFLAGS="-fsanitize=memory"
+          SANITIZER
+          else
+            cat > sanitizer.sh <<'SANITIZER'
+          cat > sanitizer_ignorelist.txt <<'IGNORELIST'
+          [implicit-integer-truncation]
+          src:*/unit_test/*
+          src:*/os_stub/mbedtlslib/*
+          IGNORELIST
+          export SAN_CFLAGS="-fsanitize=address,undefined,implicit-integer-truncation -fno-sanitize=alignment -fno-omit-frame-pointer -fsanitize-ignorelist=$PWD/sanitizer_ignorelist.txt"
+          export SAN_LDFLAGS="-fsanitize=address,undefined"
+          SANITIZER
+          fi
+          cat sanitizer.sh
+
+          # Under MSan, the RSA key generation in test_crypt can take longer than
+          # the test timeout, so MSan neither builds nor runs it.
+          tests=""
+          for t in $UNIT_TESTS; do
+            if [ "${{ matrix.sanitizer }}" != "memory" ] || [ "$t" != "test_crypt" ]; then
+              tests="$tests $t"
+            fi
+          done
+          echo "SAN_TESTS=${tests# }" >> "$GITHUB_ENV"
+
+      - name: Configure
+        shell: bash
+        run: |
+          # A stalled mirror can outlast apt-get's own timeouts, so each attempt
+          # is bounded, and a failed one is retried.
+          apt_install() {
+            for attempt in 1 2 3; do
+              if sudo timeout -k 10 300 apt-get update &&
+                 sudo timeout -k 10 300 apt-get install --no-install-recommends -y "$@"; then
+                return 0
+              fi
+              echo "apt-get install $* failed, attempt $attempt"
+              sleep $((attempt * 15))
+            done
+            return 1
+          }
+
+          # The CLANG toolchain archives static libraries with llvm-ar, which is
+          # not present on the stock Linux image. The same package provides
+          # llvm-symbolizer, which the sanitizers need for function names.
+          apt_install llvm
+
+          . ./sanitizer.sh
+          export CFLAGS="$BASE_CFLAGS $SAN_CFLAGS"
+          export LDFLAGS="$SAN_LDFLAGS"
+          cmake -B build \
+            -DARCH=x64 \
+            -DTOOLCHAIN=CLANG \
+            -DTARGET=${{ matrix.target }} \
+            -DCRYPTO=${{ matrix.crypto }}
+
+      - name: Build
+        shell: bash
+        run: |
+          jobs=$(getconf _NPROCESSORS_ONLN 2>/dev/null || nproc 2>/dev/null || echo 2)
+          echo "Building with --parallel $jobs"
+          cmake --build build --target copy_sample_key
+          cmake --build build --parallel "$jobs" --target $SAN_TESTS
+
+      - name: Prepare test runner
+        shell: bash
+        run: |
+          # The reports name functions only with the symbolizer.
+          if ! command -v llvm-symbolizer >/dev/null 2>&1; then
+            echo "::error::llvm-symbolizer is not on PATH"
+            exit 1
+          fi
+
+          # halt_on_error makes a UBSan report fail the test, as ASan's and
+          # LSan's reports already do.
+          if [ "${{ matrix.sanitizer }}" = "address" ]; then
+            {
+              echo "ASAN_OPTIONS=detect_leaks=1"
+              echo "UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1"
+            } >> "$GITHUB_ENV"
+          fi
+
+          cat > run_test.sh <<'RUNNER'
+          #!/usr/bin/env bash
+          set -uo pipefail
+          t="$1"
+
+          if [ ! -x "build/bin/$t" ]; then
+            echo "::error::$t was not built"
+            echo "- \`$t\`: **not built**" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+            exit 1
+          fi
+
+          ( cd build/bin && timeout 600 "./$t" )
+          rc=$?
+
+          if [ "$rc" -eq 0 ]; then
+            echo "- \`$t\`: pass" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+          else
+            echo "- \`$t\`: **FAIL** (exit $rc)" >> "${GITHUB_STEP_SUMMARY:-/dev/null}"
+            echo "::error::$t failed with exit $rc"
+          fi
+          exit $rc
+          RUNNER
+          chmod +x run_test.sh
+          echo "### ${{ matrix.name }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Test Requester
+        shell: bash
+        run: ./run_test.sh test_spdm_requester
+
+      - name: Test Responder
+        shell: bash
+        run: ./run_test.sh test_spdm_responder
+
+      - name: Test Common
+        shell: bash
+        run: ./run_test.sh test_spdm_common
+
+      - name: Test SPDM Crypt
+        shell: bash
+        run: ./run_test.sh test_spdm_crypt
+
+      - name: Test Crypt
+        if: matrix.sanitizer != 'memory'
+        shell: bash
+        run: ./run_test.sh test_crypt
+
+      - name: Test Secured Message
+        shell: bash
+        run: ./run_test.sh test_spdm_secured_message
+
+      - name: Test Transport
+        shell: bash
+        run: ./run_test.sh test_spdm_transport
+
+      # As in the posix family, generated from the job's own variables so that
+      # it cannot drift from what ran.
+      - name: Generate reproducer
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p repro
+
+          ccfile=""
+          if [ -d build/CMakeFiles ]; then
+            ccfile=$(find build/CMakeFiles -name CMakeCCompiler.cmake -print -quit)
+          fi
+          cid=$(sed -n 's/^set(CMAKE_C_COMPILER_ID "\(.*\)")/\1/p' "$ccfile" 2>/dev/null || true)
+          cver=$(sed -n 's/^set(CMAKE_C_COMPILER_VERSION "\(.*\)")/\1/p' "$ccfile" 2>/dev/null || true)
+          compiler="${cid:-unknown} ${cver:-unknown}"
+          image="${ImageOS:-unknown} ${ImageVersion:-unknown}"
+          osname=$(grep -m1 '^PRETTY_NAME=' /etc/os-release 2>/dev/null | cut -d= -f2- | tr -d '"' || true)
+          kernel=$(uname -srm 2>/dev/null)
+          url="${{ github.server_url }}/${{ github.repository }}"
+          run_url="$url/actions/runs/${{ github.run_id }}"
+
+          # See the posix family.
+          pr="${{ github.event.pull_request.number }}"
+          if [ -n "$pr" ]; then
+            fetch_ref="git fetch origin refs/pull/$pr/merge"
+            checkout_ref="git checkout FETCH_HEAD"
+          else
+            fetch_ref=""
+            checkout_ref="git checkout ${{ github.sha }}"
+          fi
+
+          pins=$(git submodule status 2>/dev/null | awk '{print $2" "$1}' || true)
+
+          header="Reproduces: ${{ matrix.name }}
+          Run:        $run_url
+          Runner:     ubuntu-24.04 (image $image)
+          OS:         ${osname:-unknown}
+          Kernel:     ${kernel:-unknown}
+          Compiler:   $compiler
+          NOTE: this restores the source tree, not the toolchain. If your
+                compiler differs from the one above, a non-reproduction is
+                inconclusive rather than a refutation."
+
+          f=repro/repro.sh
+          { echo "#!/usr/bin/env bash"
+            echo "$header" | sed 's/^/# /'
+            echo "set -euo pipefail"
+            echo
+            echo "git clone $url.git libspdm-repro"
+            echo "cd libspdm-repro"
+            if [ -n "$fetch_ref" ]; then echo "$fetch_ref"; fi
+            echo "$checkout_ref"
+            echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+            if [ "${{ matrix.crypto }}" = "openssl" ]; then
+              echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
+            fi
+            echo "$pins" | sed 's/^/# pinned: /'
+            echo
+            if [ -f sanitizer.sh ]; then cat sanitizer.sh; fi
+            echo "export CFLAGS=\"${{ env.BASE_CFLAGS }} \$SAN_CFLAGS\""
+            echo 'export LDFLAGS="$SAN_LDFLAGS"'
+            echo "cmake -B build -DARCH=x64 -DTOOLCHAIN=CLANG -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }}"
+            echo "cmake --build build --target copy_sample_key"
+            echo "cmake --build build --parallel \"\$(getconf _NPROCESSORS_ONLN)\" --target $SAN_TESTS"
+            echo
+            if [ "${{ matrix.sanitizer }}" = "address" ]; then
+              echo "export ASAN_OPTIONS=detect_leaks=1"
+              echo "export UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1"
+            fi
+            echo "cd build/bin"
+            for t in $SAN_TESTS; do echo "./$t"; done
+          } > "$f"
+          chmod +x "$f"
+
+          echo "$header"
+          { echo "<details><summary>Reproducer</summary>"
+            echo
+            echo '```'
+            cat "$f"
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reproducer
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: repro-${{ matrix.name }}
+          path: |
+            repro/
+            build/CMakeCache.txt
+          retention-days: 14
+
   # Single required status check, so branch protection does not have to
   # enumerate every matrix job.
 
@@ -1875,7 +2236,7 @@ jobs:
   tier1-complete:
     name: Tier 1 complete
     runs-on: ubuntu-latest
-    needs: [posix, windows-msvc, mingw]
+    needs: [posix, windows-msvc, mingw, sanitizers]
     if: always()
     permissions:
       contents: read
@@ -1969,9 +2330,11 @@ jobs:
           posix="${{ needs.posix.result }}"
           msvc="${{ needs['windows-msvc'].result }}"
           mingw="${{ needs.mingw.result }}"
-          echo "posix=$posix windows-msvc=$msvc mingw=$mingw"
-          if [ "$posix" != "success" ] || [ "$msvc" != "success" ] || [ "$mingw" != "success" ]; then
-            echo "::error::Tier 1 did not pass (posix=$posix windows-msvc=$msvc mingw=$mingw)"
+          san="${{ needs.sanitizers.result }}"
+          echo "posix=$posix windows-msvc=$msvc mingw=$mingw sanitizers=$san"
+          if [ "$posix" != "success" ] || [ "$msvc" != "success" ] || [ "$mingw" != "success" ] ||
+             [ "$san" != "success" ]; then
+            echo "::error::Tier 1 did not pass (posix=$posix windows-msvc=$msvc mingw=$mingw sanitizers=$san)"
             exit 1
           fi
 
@@ -2032,5 +2395,10 @@ jobs:
 #   Fuzzing seed replay, 2 jobs:
 #     fuzz-libfuzzer-mbedtls-debug   AddressSanitizer, Mbed TLS
 #     linux-x64-gcc-openssl-debug    OpenSSL, as a step of the platform job
+#
+#   Sanitizers on the library defaults, 3 jobs, Clang on Linux x64:
+#     asan-defaults           ASan, LSan, UBSan and truncation, Mbed TLS
+#     asan-defaults-openssl   ASan, LSan, UBSan and truncation, OpenSSL
+#     msan-defaults-release   MSan, Mbed TLS, Release
 #
 # ---------------------------------------------------------------------------
