@@ -3,9 +3,10 @@
 #     hardware, toolchain, cryptography library and build target that the CMake
 #     build files support, 64 in all, in the posix, windows-msvc and mingw
 #     families, plus GCC on RISC-V in DMTF/libspdm,
-#   - other operating system and compiler versions, sparsely, in the versions
-#     family and in windows-msvc's older MSVC toolsets, including the newest
-#     GCC and LLVM releases before any runner image has them,
+#   - other operating system, compiler and CMake versions, sparsely, in the
+#     versions family and in windows-msvc's older MSVC toolsets, including the
+#     newest GCC and LLVM releases before any runner image has them, and the
+#     oldest CMake release that CMakeLists.txt accepts,
 #   - the code configuration sweeps under ASan, UBSan and Clang's implicit
 #     integer truncation check, in the configs family, the same configurations
 #     as GCC Release builds, in configs-release, and a few of them with MSVC
@@ -34,7 +35,7 @@ on:
         type: boolean
         default: true
       versions:
-        description: 'Other OS and compiler versions'
+        description: 'Other OS, compiler, and CMake versions'
         type: boolean
         default: true
       windows-msvc:
@@ -103,7 +104,7 @@ jobs:
   # that document's worst case of 20 minutes, mingw would finish in at most
   # five rounds, or 100 minutes, within Tier 2's two hours. windows-msvc, at 34
   # jobs, configs followed by configs-release, at 162, and posix followed by
-  # versions and then sanitizers, at 96, cannot meet that worst case. Their jobs
+  # versions and then sanitizers, at 98, cannot meet that worst case. Their jobs
   # take about 2 to 10 minutes, and the riscv64 jobs up to about 20, so
   # windows-msvc finishes within about 45 minutes, configs' chain within about
   # 60 and posix's within about 65, and the timing report warns if a run takes
@@ -884,6 +885,34 @@ jobs:
             crypto: mbedtls
             target: Release
 
+          # == CMake versions ==============================================
+          # The oldest CMake release that CMakeLists.txt accepts, so that the
+          # build files do not come to need a newer one unnoticed. Mbed TLS
+          # builds as a subproject and OpenSSL through ExternalProject, so a
+          # job builds each. CMake is Kitware's own build, checked against the
+          # SHA-256 digest in the release's cmake-3.16.9-SHA-256.txt. Kitware
+          # published no aarch64 build of 3.16. Change these jobs whenever
+          # cmake_minimum_required changes.
+
+          - name: ubuntu-24.04-x64-gcc-mbedtls-debug-cmake-3.16
+            os: ubuntu-24.04
+            arch: x64
+            toolchain: GCC
+            cmake: '3.16.9'
+            cmake_sha256: 96d79367dcafb47d606573a4687021d3cb18dd53d83458fc1d6d9c89bf31b553
+            crypto: mbedtls
+            target: Debug
+
+          - name: ubuntu-24.04-x64-gcc-openssl-release-cmake-3.16
+            os: ubuntu-24.04
+            arch: x64
+            toolchain: GCC
+            cmake: '3.16.9'
+            cmake_sha256: 96d79367dcafb47d606573a4687021d3cb18dd53d83458fc1d6d9c89bf31b553
+            crypto: openssl
+            target: Release
+            cflags: -ffat-lto-objects
+
           # == Newest compiler releases ====================================
           # The newest GCC and LLVM releases, before any runner image has
           # them, with the Ubuntu 26.04 jobs' combinations of architecture,
@@ -1120,7 +1149,9 @@ jobs:
             fetch os_stub/openssllib/openssl --depth 1
           fi
       # As in the posix family, except that the key names the compiler: the
-      # image's default, the container's, or the LLVM release.
+      # image's default, the container's, or the LLVM release. It also names
+      # the CMake release of a job that selects one, because CMake generates
+      # the ExternalProject files that the cached build holds.
       - name: OpenSSL revision
         id: ossl
         shell: bash
@@ -1133,9 +1164,9 @@ jobs:
         uses: actions/cache@v6
         with:
           path: build/os_stub/openssllib
-          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ matrix.container || matrix.llvm || 'default' }}-${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
+          key: openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ matrix.container || matrix.llvm || 'default' }}-${{ matrix.cmake && format('cmake-{0}-', matrix.cmake) || '' }}${{ steps.ossl.outputs.sha }}-${{ steps.ossl.outputs.image }}
           restore-keys: |
-            openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ matrix.container || matrix.llvm || 'default' }}-${{ steps.ossl.outputs.sha }}-
+            openssl-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.toolchain }}-${{ matrix.container || matrix.llvm || 'default' }}-${{ matrix.cmake && format('cmake-{0}-', matrix.cmake) || '' }}${{ steps.ossl.outputs.sha }}-
 
       # The GCC and CLANG toolchain files run the unversioned gcc and gcc-ar,
       # or clang, llvm-ar and llvm-ranlib. A job that names a compiler version
@@ -1220,6 +1251,36 @@ jobs:
           done
           echo "$bin" >> "$GITHUB_PATH"
           "$bin/${tools%% *}" --version
+
+      # A job that names a CMake release puts Kitware's own build of it first
+      # on PATH, ahead of the image's CMake.
+      - name: Select CMake
+        if: matrix.cmake != ''
+        shell: bash
+        run: |
+          release="${{ matrix.cmake }}"
+          asset="cmake-$release-Linux-x86_64.tar.gz"
+          url="https://github.com/Kitware/CMake/releases/download/v$release/$asset"
+          # For the reproducer.
+          echo "CMAKE_RELEASE_URL=$url" >> "$GITHUB_ENV"
+          for attempt in 1 2 3; do
+            if curl -fsSL --connect-timeout 30 --max-time 900 -o "$RUNNER_TEMP/$asset" "$url"; then
+              break
+            fi
+            echo "download of $asset failed, attempt $attempt"
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+            sleep $((attempt * 15))
+          done
+          echo "${{ matrix.cmake_sha256 }}  $RUNNER_TEMP/$asset" | sha256sum --check --strict
+
+          cmake_dir="$RUNNER_TEMP/cmake"
+          mkdir -p "$cmake_dir"
+          tar -xzf "$RUNNER_TEMP/$asset" -C "$cmake_dir" --strip-components=1
+          rm "$RUNNER_TEMP/$asset"
+          echo "$cmake_dir/bin" >> "$GITHUB_PATH"
+          "$cmake_dir/bin/cmake" --version
 
       - name: Configure
         shell: bash
@@ -1334,7 +1395,7 @@ jobs:
 
       # As in the posix family, generated from the job's own variables so that
       # it cannot drift from what ran, including the links or LLVM release
-      # that Select compiler installs.
+      # that Select compiler installs and the CMake release of Select CMake.
       - name: Generate reproducer
         if: always()
         shell: bash
@@ -1414,6 +1475,14 @@ jobs:
               echo "zstd --decompress --long=31 --stdout $asset | tar -x -C llvm --strip-components=1"
               echo "echo -fuse-ld=lld > llvm/bin/clang.cfg"
               echo 'export PATH="$PWD/llvm/bin:$PATH"'
+            fi
+            if [ -n "${CMAKE_RELEASE_URL:-}" ]; then
+              asset=$(basename "$CMAKE_RELEASE_URL")
+              echo "curl -fsSLO $CMAKE_RELEASE_URL"
+              echo "echo '${{ matrix.cmake_sha256 }}  $asset' | sha256sum --check --strict"
+              echo "mkdir -p cmake"
+              echo "tar -xzf $asset -C cmake --strip-components=1"
+              echo 'export PATH="$PWD/cmake/bin:$PATH"'
             fi
             echo "export CFLAGS='${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}'"
             echo "cmake -B build -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }}"
