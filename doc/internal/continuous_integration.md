@@ -156,14 +156,15 @@ For execution time, when all tests pass, the total test time should be less than
 
 Tier 2 executes the core unit tests, without any sanitizer monitoring, against all legal
 combinations of operating system, host hardware, toolchain, cryptography library, and build target
-that the CMake build files support. It also covers other operating system and compiler versions
-sparsely, each with a few combinations of cryptography library and build target: other Ubuntu and
-macOS releases, every GCC and Clang major version on the Ubuntu runners, the newest GCC and Clang
-releases before the runners have them, and older Visual Studio toolsets. Code configuration sweeps
-alter finer-grained macro values with ASAN/UBSAN/MSAN monitoring, and with Clang's check for
-implicit integer conversions that truncate a value in libspdm's own code, and the same
-configurations are built again as optimized GCC builds. If a test fails then maintainers are
-notified via the creation of a GitHub issue with a `Daily Test Failure` label.
+that the CMake build files support. It also covers other operating system, compiler, and CMake
+versions sparsely, each with a few combinations of cryptography library and build target: other
+Ubuntu and macOS releases, every GCC and Clang major version on the Ubuntu runners, the newest GCC
+and Clang releases before the runners have them, older Visual Studio toolsets, and the oldest CMake
+release that the build files accept. Code configuration sweeps alter finer-grained macro values with
+ASAN/UBSAN/MSAN monitoring, and with Clang's check for implicit integer conversions that truncate a
+value in libspdm's own code, and the same configurations are built again as optimized GCC builds.
+If a test fails then maintainers are notified via the creation of a GitHub issue with a
+`Daily Test Failure` label.
 Tier 2 can also be run manually with `workflow_dispatch`, on any branch and in a fork, and a test
 failure within a manual run does not open an issue. A manual run runs all of Tier 2's job families
 by default, and can leave any of them out.
