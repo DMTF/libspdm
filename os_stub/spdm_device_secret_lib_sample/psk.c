@@ -66,6 +66,8 @@ bool libspdm_psk_handshake_secret_hkdf_expand(
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >= SPDM_MESSAGE_VERSION_13) {
         libspdm_set_mem(m_libspdm_my_salt0, sizeof(m_libspdm_my_salt0), 0xff);
+    } else {
+        libspdm_zero_mem(m_libspdm_my_salt0, sizeof(m_libspdm_my_salt0));
     }
 
     if (psk_hint_size == 0) {
