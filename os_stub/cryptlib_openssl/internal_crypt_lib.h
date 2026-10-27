@@ -35,4 +35,12 @@
 
 #endif
 
+#if LIBSPDM_FIPS_MODE
+/* Hash the message of a FIPS signature API, which signs and verifies a message and not a hash.
+ * digest shall hold LIBSPDM_SHA512_DIGEST_SIZE bytes. */
+bool libspdm_fips_hash_message(size_t hash_nid, const uint8_t *message,
+                               size_t message_size, uint8_t *digest,
+                               size_t *digest_size);
+#endif /* LIBSPDM_FIPS_MODE */
+
 #endif
