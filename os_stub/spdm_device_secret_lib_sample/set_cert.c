@@ -80,7 +80,7 @@ static bool libspdm_write_certificate_to_nvm(
         fclose(fp_out);
     #else
         if (cert_chain != NULL) {
-            if ((fp_out = open(file_name, O_WRONLY | O_CREAT, S_IRWXU)) == -1) {
+            if ((fp_out = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU)) == -1) {
                 printf("Unable to open file %s\n", file_name);
                 return false;
             }
@@ -137,6 +137,7 @@ bool libspdm_update_local_cert_chain(
     uint8_t *new_buffer;
     bool result;
     const uint8_t *new_chain_bytes;
+    size_t nvm_chain_size = 0;
 
     if (slot_id >= SPDM_MAX_SLOT_COUNT) {
         return false;
@@ -145,35 +146,10 @@ bool libspdm_update_local_cert_chain(
     header_size = sizeof(spdm_cert_chain_t) + hash_size;
 
     if (cert_chain != NULL) {
-        if (*cert_chain_size < header_size) {
+        if (cert_chain_size == NULL || *cert_chain_size < header_size) {
             return false;
         }
-
-        result = libspdm_write_certificate_to_nvm(
-            spdm_context,
-            slot_id,
-            (const uint8_t *)cert_chain + header_size,
-            *cert_chain_size - header_size,
-            base_hash_algo,
-            base_asym_algo,
-            pqc_asym_algo,
-            need_reset,
-            is_busy);
-    } else {
-        result = libspdm_write_certificate_to_nvm(
-            spdm_context,
-            slot_id,
-            NULL,
-            0,
-            base_hash_algo,
-            base_asym_algo,
-            pqc_asym_algo,
-            need_reset,
-            is_busy);
-    }
-
-    if (!result) {
-        return result;
+        nvm_chain_size = *cert_chain_size - header_size;
     }
 
     if (cert_chain == NULL || cert_chain_size == NULL || *cert_chain_size == 0) {
@@ -285,6 +261,21 @@ bool libspdm_update_local_cert_chain(
     }
 
 set_cert:
+
+    result = libspdm_write_certificate_to_nvm(
+        spdm_context,
+        slot_id,
+        (cert_chain != NULL) ? (const uint8_t *)cert_chain + header_size : NULL,
+        nvm_chain_size,
+        base_hash_algo,
+        base_asym_algo,
+        pqc_asym_algo,
+        need_reset,
+        is_busy);
+    if (!result) {
+        free(new_buffer);
+        return false;
+    }
 
     libspdm_zero_mem(&parameter, sizeof(parameter));
     parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;

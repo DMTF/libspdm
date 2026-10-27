@@ -1085,6 +1085,23 @@ static void rsp_set_certificate_rsp_case13(void **state)
     free(m_libspdm_set_certificate_request);
 }
 
+static size_t rsp_set_certificate_nvm_file_size(uint8_t slot_id)
+{
+    char file_name[] = "slot_id_0_cert_chain.der";
+    FILE *fp;
+    long size;
+
+    file_name[8] = (char)(slot_id + '0');
+    fp = fopen(file_name, "rb");
+    if (fp == NULL) {
+        return 0;
+    }
+    fseek(fp, 0, SEEK_END);
+    size = ftell(fp);
+    fclose(fp);
+    return (size_t)size;
+}
+
 /**
  * Test 14: directly exercises libspdm_update_local_cert_chain to verify the
  * HAL replaces the in-memory local cert chain for both DEVICE_CERT and
@@ -1224,6 +1241,38 @@ static void rsp_set_certificate_rsp_case14(void **state)
     assert_ptr_not_equal(installed_chain, cert_chain_b);
     /* Again a blind copy */
     assert_memory_equal(installed_chain, cert_chain_b, cert_chain_b_size);
+
+    /* A rejected cert_model must not modify the NVM contents. */
+    assert_int_equal(rsp_set_certificate_nvm_file_size(0),
+                     cert_chain_b_size - sizeof(spdm_cert_chain_t) - hash_size);
+    tmp_cert_size = cert_chain_a_size;
+    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0,
+                                                 m_libspdm_use_hash_algo,
+                                                 m_libspdm_use_asym_algo,
+                                                 0,
+                                                 hash_size,
+                                                 NULL, 0,
+                                                 cert_chain_a, &tmp_cert_size,
+                                                 SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE,
+                                                 NULL, NULL));
+    assert_int_equal(rsp_set_certificate_nvm_file_size(0),
+                     cert_chain_b_size - sizeof(spdm_cert_chain_t) - hash_size);
+    assert_ptr_equal(spdm_context->local_context.local_cert_chain_provision[0], installed_chain);
+
+    /* A shorter chain must not leave the tail of the old chain in NVM. */
+    tmp_cert_size = sizeof(spdm_cert_chain_t) + hash_size + 16;
+    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0,
+                                                m_libspdm_use_hash_algo,
+                                                m_libspdm_use_asym_algo,
+                                                0,
+                                                hash_size,
+                                                NULL, 0,
+                                                cert_chain_a, &tmp_cert_size,
+                                                SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT,
+                                                NULL, NULL));
+    assert_int_equal(rsp_set_certificate_nvm_file_size(0), 16);
+    installed_chain = spdm_context->local_context.local_cert_chain_provision[0];
+    installed_chain_size = spdm_context->local_context.local_cert_chain_provision_size[0];
 
     /* Alias Cert, existing slot*/
 
