@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -241,6 +241,44 @@ bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, size_t hash_nid,
     }
     return true;
 }
+
+#if LIBSPDM_FIPS_MODE
+/**
+ * Verifies the RSA-SSA signature with PKCS1-v1_5 encoding scheme for FIPS test.
+ *
+ * This function hashes the message with hash_nid, and then verifies the signature of the hash.
+ *
+ * If rsa_context is NULL, then return false.
+ * If message is NULL, then return false.
+ * If signature is NULL, then return false.
+ *
+ * @param[in]  rsa_context   Pointer to RSA context for signature verification.
+ * @param[in]  hash_nid      hash NID, SHA256, SHA384, SHA512, SHA3_256, SHA3_384 or SHA3_512.
+ * @param[in]  message       Pointer to octet message to verify. It is hashed with hash_nid first.
+ * @param[in]  message_size  size of the message in bytes.
+ * @param[in]  signature     Pointer to RSA PKCS1-v1_5 signature to be verified.
+ * @param[in]  sig_size      size of signature in bytes.
+ *
+ * @retval  true   Valid signature encoded in PKCS1-v1_5.
+ * @retval  false  Invalid signature or invalid RSA context.
+ **/
+bool libspdm_rsa_pkcs1_verify_fips(void *rsa_context, size_t hash_nid,
+                                   const uint8_t *message, size_t message_size,
+                                   const uint8_t *signature, size_t sig_size)
+{
+    uint8_t digest[LIBSPDM_SHA512_DIGEST_SIZE];
+    size_t digest_size;
+
+    if (message == NULL) {
+        return false;
+    }
+    if (!libspdm_fips_hash_message(hash_nid, message, message_size, digest, &digest_size)) {
+        return false;
+    }
+    return libspdm_rsa_pkcs1_verify_with_nid(rsa_context, hash_nid, digest, digest_size,
+                                             signature, sig_size);
+}
+#endif /*LIBSPDM_FIPS_MODE*/
 #endif /* LIBSPDM_RSA_SSA_SUPPORT */
 
 #if LIBSPDM_RSA_PSS_SUPPORT
@@ -350,31 +388,10 @@ bool libspdm_rsa_pss_verify(void *rsa_context, size_t hash_nid,
 }
 
 #if LIBSPDM_FIPS_MODE
-/**
- * Verifies the RSA-SSA signature with EMSA-PSS encoding scheme defined in
- * RSA PKCS#1 v2.2 for FIPS test.
- *
- * The salt length is zero.
- *
- * If rsa_context is NULL, then return false.
- * If message_hash is NULL, then return false.
- * If signature is NULL, then return false.
- * If hash_size need match the hash_nid. nid could be SHA256, SHA384, SHA512, SHA3_256, SHA3_384, SHA3_512.
- *
- * @param[in]  rsa_context   Pointer to RSA context for signature verification.
- * @param[in]  hash_nid      hash NID
- * @param[in]  message_hash  Pointer to octet message hash to be checked.
- * @param[in]  hash_size     size of the message hash in bytes.
- * @param[in]  signature    Pointer to RSA-SSA PSS signature to be verified.
- * @param[in]  sig_size      size of signature in bytes.
- *
- * @retval  true   Valid signature encoded in RSA-SSA PSS.
- * @retval  false  Invalid signature or invalid RSA context.
- *
- **/
-bool libspdm_rsa_pss_verify_fips(void *rsa_context, size_t hash_nid,
-                                 const uint8_t *message_hash, size_t hash_size,
-                                 const uint8_t *signature, size_t sig_size)
+static bool libspdm_rsa_pss_verify_digest_fips(void *rsa_context, size_t hash_nid,
+                                               const uint8_t *message_hash, size_t hash_size,
+                                               size_t salt_size,
+                                               const uint8_t *signature, size_t sig_size)
 {
     int ret;
     mbedtls_md_type_t md_alg;
@@ -450,16 +467,56 @@ bool libspdm_rsa_pss_verify_fips(void *rsa_context, size_t hash_nid,
     mgf1_hash_id = (rsa_key->MBEDTLS_PRIVATE(hash_id) != MBEDTLS_MD_NONE) ?
                    (mbedtls_md_type_t) rsa_key->MBEDTLS_PRIVATE(hash_id) : md_alg;
 
-    /*salt len is 0*/
     ret = mbedtls_rsa_rsassa_pss_verify_ext(rsa_context, md_alg,
                                             (uint32_t)hash_size, message_hash,
                                             mgf1_hash_id,
-                                            0,
+                                            (int)salt_size,
                                             signature);
     if (ret != 0) {
         return false;
     }
     return true;
+}
+
+/**
+ * Verifies the RSA-SSA signature with EMSA-PSS encoding scheme for FIPS test.
+ *
+ * This function hashes the message with hash_nid, and then verifies the signature of the hash with
+ * the RSA PKCS#1 v2.2 EMSA-PSS encoding scheme.
+ *
+ * The salt length shall be salt_size.
+ *
+ * If rsa_context is NULL, then return false.
+ * If message is NULL, then return false.
+ * If signature is NULL, then return false.
+ *
+ * @param[in]  rsa_context   Pointer to RSA context for signature verification.
+ * @param[in]  hash_nid      hash NID, SHA256, SHA384, SHA512, SHA3_256, SHA3_384 or SHA3_512.
+ * @param[in]  message       Pointer to octet message to verify. It is hashed with hash_nid first.
+ * @param[in]  message_size  size of the message in bytes.
+ * @param[in]  salt_size     size of the salt in bytes.
+ * @param[in]  signature     Pointer to RSA-SSA PSS signature to be verified.
+ * @param[in]  sig_size      size of signature in bytes.
+ *
+ * @retval  true   Valid signature encoded in RSA-SSA PSS.
+ * @retval  false  Invalid signature or invalid RSA context.
+ **/
+bool libspdm_rsa_pss_verify_fips(void *rsa_context, size_t hash_nid,
+                                 const uint8_t *message, size_t message_size,
+                                 size_t salt_size, const uint8_t *signature,
+                                 size_t sig_size)
+{
+    uint8_t digest[LIBSPDM_SHA512_DIGEST_SIZE];
+    size_t digest_size;
+
+    if (message == NULL) {
+        return false;
+    }
+    if (!libspdm_fips_hash_message(hash_nid, message, message_size, digest, &digest_size)) {
+        return false;
+    }
+    return libspdm_rsa_pss_verify_digest_fips(rsa_context, hash_nid, digest, digest_size,
+                                              salt_size, signature, sig_size);
 }
 #endif /*LIBSPDM_FIPS_MODE*/
 
