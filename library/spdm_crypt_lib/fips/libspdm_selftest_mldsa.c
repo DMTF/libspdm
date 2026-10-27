@@ -39,10 +39,10 @@ void libspdm_fips_selftest_mldsa(void *fips_selftest_context)
     signature = context->selftest_buffer;
 
     /* KAT Vectors */
-    extern const uint8_t message_hash_mldsa_87[94];
+    extern const uint8_t message_hash_mldsa_87[138];
     extern const uint8_t priv_key_mldsa_87[4896];
     extern const uint8_t public_key_mldsa_87[2592];
-    extern const uint8_t sign_context_mldsa_87[208];
+    extern const uint8_t sign_context_mldsa_87[80];
     extern const uint8_t expected_signature_mldsa_87[4627];
 
     dsa_context = libspdm_mldsa_new(LIBSPDM_CRYPTO_NID_ML_DSA_87);
