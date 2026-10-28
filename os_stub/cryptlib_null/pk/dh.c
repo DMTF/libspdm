@@ -42,6 +42,24 @@ void libspdm_dh_free(void *dh_context)
 }
 
 /**
+ * Sets the private key component into the established DH context. This API can be used for
+ * FIPS test.
+ *
+ * @param[in, out]  dh_context       Pointer to DH context being set.
+ * @param[in]       priv_key         Pointer to the private key buffer.
+ * @param[in]       priv_key_size    The size of private key buffer in bytes.
+ *
+ * @retval  true   DH private key component was set successfully.
+ * @retval  false  Invalid DH private key component.
+ **/
+bool libspdm_dh_set_priv_key(void *dh_context, const uint8_t *priv_key,
+                             size_t priv_key_size)
+{
+    LIBSPDM_ASSERT(false);
+    return false;
+}
+
+/**
  * Generates DH parameter.
  *
  * Given generator g, and length of prime number p in bits, this function generates p,
