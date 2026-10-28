@@ -8,6 +8,8 @@
   establishment, including FIPS known-answer tests.
 - The ECDSA, RSA-SSA and RSA-PSS FIPS known-answer tests use NIST CAVP vectors, and run with any of
   SHA-256, SHA-384 or SHA-512 enabled.
+- The FFDHE FIPS self-test is a known-answer test, with a fixed private key and a NIST ACVP vector,
+  in place of a pairwise consistency test.
 - Redesigned Responder encapsulated request flow. The Integrator registers a single flow handler
   instead of initializing each encapsulated state individually. See the
   [encapsulated flow user guide](encapsulated_flow_user_guide.md).
@@ -38,6 +40,7 @@
     - `cryptlib/cryptlib_ec.h` - `libspdm_ecdsa_verify_fips`, and `cryptlib/cryptlib_rsa.h` -
       `libspdm_rsa_pkcs1_sign_fips` and `libspdm_rsa_pkcs1_verify_fips`, for the ECDSA and RSA-SSA
       FIPS known-answer tests.
+    - `cryptlib/cryptlib_dh.h` - `libspdm_dh_set_priv_key`, for the FFDHE FIPS known-answer test.
 - HAL functions removed:
     - `libspdm_write_certificate_to_nvm` - replaced by `libspdm_update_local_cert_chain`.
     - `libspdm_gen_csr_ex` - merged into `libspdm_gen_csr`, which also takes the post-quantum
