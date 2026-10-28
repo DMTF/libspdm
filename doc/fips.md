@@ -20,7 +20,7 @@ libspdm integrator is expected to choose crypto module and support CMVP.
 | EdDSA               | [NIST.FIPS.186-5](https://doi.org/10.6028/NIST.FIPS.186-5), [NIST.SP.800-186](https://doi.org/10.6028/NIST.SP.800-186), [rfc8032](https://www.rfc-editor.org/rfc/rfc8032)  | KAT  | EdDSA-25519,EdDSA-448 |
 | HMAC                | [NIST.FIPS.198-1](https://doi.org/10.6028/NIST.FIPS.198-1), [rfc2104](https://tools.ietf.org/html/rfc2104)   | KAT  | HMAC-SHA-256/384/512 |
 | AES-GCM             | [NIST.FIPS.197](https://doi.org/10.6028/NIST.FIPS.197), [NIST.SP.800-38D](https://doi.org/10.6028/NIST.SP.800-38D)   | KAT  | AES-GCM-256          |
-| FFDHE               | [NIST.SP.800-56Ar3](https://doi.org/10.6028/NIST.SP.800-56Ar3), [rfc7919](https://www.rfc-editor.org/rfc/rfc7919) | PCT  | FFDHE-2048           |
+| FFDHE               | [NIST.SP.800-56Ar3](https://doi.org/10.6028/NIST.SP.800-56Ar3), [rfc7919](https://www.rfc-editor.org/rfc/rfc7919) | KAT  | FFDHE-2048           |
 | ECDHE               | [NIST.SP.800-56Ar3](https://doi.org/10.6028/NIST.SP.800-56Ar3), [rfc8446](https://www.rfc-editor.org/rfc/rfc8446) | KAT  | ECDHE-P256           |
 | HKDF                | [NIST.SP.800-56Cr2](https://doi.org/10.6028/NIST.SP.800-56Cr2), [rfc5869](https://tools.ietf.org/html/rfc5869) | KAT  | HKDF-HMAC-SHA-256    |
 | ChaCha-Poly (*) | [rfc8439](https://www.rfc-editor.org/rfc/rfc8439) | KAT | not FIPS approved yet |
