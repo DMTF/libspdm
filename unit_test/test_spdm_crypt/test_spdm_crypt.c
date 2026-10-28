@@ -169,6 +169,11 @@ static void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
 
 static void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
 {
+    static const uint8_t versions[] = {
+        SPDM_MESSAGE_VERSION_10, SPDM_MESSAGE_VERSION_11, SPDM_MESSAGE_VERSION_12,
+        SPDM_MESSAGE_VERSION_13, SPDM_MESSAGE_VERSION_14
+    };
+    size_t version_index;
     bool status;
     uint8_t *file_buffer;
     size_t file_buffer_size;
@@ -514,20 +519,42 @@ static void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
             SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
         assert_false(status);
         free(file_buffer);
+    }
 
+    /* Basic Constraints is optional in the leaf certificate for every SPDM version, and if it is
+     * present then CA must be false. */
+    if ((LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
         status = libspdm_read_input_file("ecp256/end_requester_without_basic_constraint.cert.der",
                                          (void **)&file_buffer, &file_buffer_size);
         assert_true(status);
-        status = libspdm_x509_certificate_check(
-            SPDM_MESSAGE_VERSION_13,
-            file_buffer, file_buffer_size,
-            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
-            0,
-            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
-            false,
-            SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
-        /*the expected result is false, because basic_constraint is mandatory in SPDM 1.3*/
-        assert_false(status);
+        for (version_index = 0; version_index < LIBSPDM_ARRAY_SIZE(versions); version_index++) {
+            status = libspdm_x509_certificate_check(
+                versions[version_index],
+                file_buffer, file_buffer_size,
+                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                0,
+                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                false,
+                SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+            assert_true(status);
+        }
+        free(file_buffer);
+
+        /* Despite its file name, this certificate has CA set to true. */
+        status = libspdm_read_input_file("ecp256/end_requester_ca_false.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+        for (version_index = 0; version_index < LIBSPDM_ARRAY_SIZE(versions); version_index++) {
+            status = libspdm_x509_certificate_check(
+                versions[version_index],
+                file_buffer, file_buffer_size,
+                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                0,
+                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                false,
+                SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+            assert_false(status);
+        }
         free(file_buffer);
     }
 
@@ -535,6 +562,10 @@ static void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
 
 static void libspdm_test_crypt_spdm_x509_set_cert_certificate_check(void **state)
 {
+    static const uint8_t versions[] = {
+        SPDM_MESSAGE_VERSION_12, SPDM_MESSAGE_VERSION_13, SPDM_MESSAGE_VERSION_14
+    };
+    size_t version_index;
     bool status;
     uint8_t *file_buffer;
     size_t file_buffer_size;
@@ -602,6 +633,84 @@ static void libspdm_test_crypt_spdm_x509_set_cert_certificate_check(void **state
             true,
             SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
         assert_true(status);
+        free(file_buffer);
+    }
+
+    /* For DeviceCert and GenericCert, Basic Constraints is optional in the leaf certificate, and
+     * if it is present then CA must be false. For AliasCert, the last certificate is the Device
+     * Certificate CA, so Basic Constraints must be present and CA must be true. */
+    if ((LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
+        status = libspdm_read_input_file("ecp256/end_requester_without_basic_constraint.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+        for (version_index = 0; version_index < LIBSPDM_ARRAY_SIZE(versions); version_index++) {
+            status = libspdm_x509_set_cert_certificate_check(
+                versions[version_index],
+                file_buffer, file_buffer_size,
+                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                0,
+                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                false,
+                SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+            assert_true(status);
+
+            status = libspdm_x509_set_cert_certificate_check(
+                versions[version_index],
+                file_buffer, file_buffer_size,
+                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                0,
+                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                false,
+                SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT);
+            assert_true(status);
+
+            status = libspdm_x509_set_cert_certificate_check(
+                versions[version_index],
+                file_buffer, file_buffer_size,
+                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                0,
+                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                false,
+                SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+            assert_false(status);
+        }
+        free(file_buffer);
+
+        /* Despite its file name, this certificate has CA set to true. */
+        status = libspdm_read_input_file("ecp256/end_requester_ca_false.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+        for (version_index = 0; version_index < LIBSPDM_ARRAY_SIZE(versions); version_index++) {
+            status = libspdm_x509_set_cert_certificate_check(
+                versions[version_index],
+                file_buffer, file_buffer_size,
+                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                0,
+                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                false,
+                SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+            assert_false(status);
+
+            status = libspdm_x509_set_cert_certificate_check(
+                versions[version_index],
+                file_buffer, file_buffer_size,
+                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                0,
+                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                false,
+                SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT);
+            assert_false(status);
+
+            status = libspdm_x509_set_cert_certificate_check(
+                versions[version_index],
+                file_buffer, file_buffer_size,
+                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                0,
+                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                false,
+                SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+            assert_true(status);
+        }
         free(file_buffer);
     }
 
