@@ -335,6 +335,10 @@
   RFC 5280 describes. Both libraries enforce `pathLenConstraint`, and OpenSSL also evaluates
   `nameConstraints`, which Mbed TLS does not (Mbed-TLS/mbedtls#8759). It can therefore reject chains
   that 3.8 accepted.
+- A leaf certificate can omit the Basic Constraints extension at every SPDM version, since DMTF
+  reverted the requirement that SPDM 1.3 added. If the extension is present then `cA` must be
+  `FALSE`. 3.8 rejected a leaf certificate without it at SPDM 1.3, and in `SET_CERTIFICATE` at SPDM
+  1.2 too.
 - The TCP transport sets `PayloadLen` to the size of the SPDM message, as DSP0287 requires, where
   3.8 added 2.
 - Many bug fixes and further alignment with the SPDM specifications.
