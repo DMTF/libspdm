@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -111,6 +111,62 @@ void libspdm_dh_free(void *dh_context)
     mbedtls_dhm_free(dh_context);
     free_pool(dh_context);
 }
+
+#if LIBSPDM_FIPS_MODE
+/**
+ * Checks the private key X of the DH context: 1 <= X < q, where q = (P - 1) / 2 because the
+ * RFC 7919 groups are safe primes. This is the q-known range check of OpenSSL
+ * ossl_ffc_validate_private_key(), without the 2^length clipping of named groups.
+ *
+ * @retval  true   The private key is in range.
+ * @retval  false  The private key is out of range.
+ **/
+static bool libspdm_dh_check_priv_key(mbedtls_dhm_context *ctx)
+{
+    mbedtls_mpi q;
+    bool result;
+
+    mbedtls_mpi_init(&q);
+    result = mbedtls_mpi_sub_int(&q, &ctx->MBEDTLS_PRIVATE(P), 1) == 0 &&
+             mbedtls_mpi_shift_r(&q, 1) == 0 &&
+             mbedtls_mpi_cmp_int(&ctx->MBEDTLS_PRIVATE(X), 1) >= 0 &&
+             mbedtls_mpi_cmp_mpi(&ctx->MBEDTLS_PRIVATE(X), &q) < 0;
+    mbedtls_mpi_free(&q);
+
+    return result;
+}
+
+/**
+ * Sets the private key component into the established DH context. This API can be used for
+ * FIPS test.
+ *
+ * @param[in, out]  dh_context       Pointer to DH context being set.
+ * @param[in]       priv_key         Pointer to the private key buffer.
+ * @param[in]       priv_key_size    The size of private key buffer in bytes.
+ *
+ * @retval  true   DH private key component was set successfully.
+ * @retval  false  Invalid DH private key component.
+ **/
+bool libspdm_dh_set_priv_key(void *dh_context, const uint8_t *priv_key,
+                             size_t priv_key_size)
+{
+    mbedtls_dhm_context *ctx;
+
+    if (dh_context == NULL || priv_key == NULL || priv_key_size == 0) {
+        return false;
+    }
+
+    ctx = dh_context;
+    if (mbedtls_mpi_read_binary(&ctx->MBEDTLS_PRIVATE(X), priv_key, priv_key_size) != 0 ||
+        !libspdm_dh_check_priv_key(ctx)) {
+        mbedtls_mpi_free(&ctx->MBEDTLS_PRIVATE(X));
+        mbedtls_mpi_init(&ctx->MBEDTLS_PRIVATE(X));
+        return false;
+    }
+
+    return true;
+}
+#endif /* LIBSPDM_FIPS_MODE */
 
 /**
  * Generates DH parameter.
