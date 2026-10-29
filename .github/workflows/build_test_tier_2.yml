@@ -233,9 +233,9 @@ jobs:
             # checkout does not have, and git submodule commands fail on it.
             rm -f unit_test/cmockalib/cmocka/.git
           fi
-          fetch os_stub/mbedtlslib/mbedtls --recursive
-          # libspdm builds OpenSSL from the pinned commit's source alone, so
-          # neither its history nor its own submodules are fetched.
+          # libspdm builds Mbed TLS and OpenSSL from the pinned commits' sources
+          # alone, so neither their history nor their own submodules are fetched.
+          fetch os_stub/mbedtlslib/mbedtls --depth 1
           if [ "${{ matrix.crypto }}" = "openssl" ]; then
             fetch os_stub/openssllib/openssl --depth 1
           fi
@@ -579,7 +579,7 @@ jobs:
               echo "cd libspdm-repro || exit /b 1"
               if [ -n "$fetch_ref" ]; then echo "$fetch_ref || exit /b 1"; fi
               echo "$checkout_ref || exit /b 1"
-              echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls || exit /b 1"
+              echo "git submodule update --init --depth 1 unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls || exit /b 1"
               if [ "${{ matrix.crypto }}" = "openssl" ]; then
                 echo "git submodule update --init --depth 1 os_stub/openssllib/openssl || exit /b 1"
               fi
@@ -612,7 +612,7 @@ jobs:
               echo "cd libspdm-repro"
               if [ -n "$fetch_ref" ]; then echo "$fetch_ref"; fi
               echo "$checkout_ref"
-              echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+              echo "git submodule update --init --depth 1 unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
               if [ "${{ matrix.crypto }}" = "openssl" ]; then
                 echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
               fi
@@ -1154,9 +1154,9 @@ jobs:
             # checkout does not have, and git submodule commands fail on it.
             rm -f unit_test/cmockalib/cmocka/.git
           fi
-          fetch os_stub/mbedtlslib/mbedtls --recursive
-          # libspdm builds OpenSSL from the pinned commit's source alone, so
-          # neither its history nor its own submodules are fetched.
+          # libspdm builds Mbed TLS and OpenSSL from the pinned commits' sources
+          # alone, so neither their history nor their own submodules are fetched.
+          fetch os_stub/mbedtlslib/mbedtls --depth 1
           if [ "${{ matrix.crypto }}" = "openssl" ]; then
             fetch os_stub/openssllib/openssl --depth 1
           fi
@@ -1485,7 +1485,7 @@ jobs:
             echo "git clone $url.git libspdm-repro"
             echo "cd libspdm-repro"
             echo "git checkout ${{ github.sha }}"
-            echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+            echo "git submodule update --init --depth 1 unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
             if [ "${{ matrix.crypto }}" = "openssl" ]; then
               echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
             fi
@@ -1740,9 +1740,9 @@ jobs:
             # checkout does not have, and git submodule commands fail on it.
             rm -f unit_test/cmockalib/cmocka/.git
           fi
-          fetch os_stub/mbedtlslib/mbedtls --recursive
-          # libspdm builds OpenSSL from the pinned commit's source alone, so
-          # neither its history nor its own submodules are fetched.
+          # libspdm builds Mbed TLS and OpenSSL from the pinned commits' sources
+          # alone, so neither their history nor their own submodules are fetched.
+          fetch os_stub/mbedtlslib/mbedtls --depth 1
           if [ "${{ matrix.crypto }}" = "openssl" ]; then
             fetch os_stub/openssllib/openssl --depth 1
           fi
@@ -2026,7 +2026,7 @@ jobs:
               echo "cd libspdm-repro || exit /b 1"
               if [ -n "$fetch_ref" ]; then echo "$fetch_ref || exit /b 1"; fi
               echo "$checkout_ref || exit /b 1"
-              echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls || exit /b 1"
+              echo "git submodule update --init --depth 1 unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls || exit /b 1"
               if [ "${{ matrix.crypto }}" = "openssl" ]; then
                 echo "git submodule update --init --depth 1 os_stub/openssllib/openssl || exit /b 1"
               fi
@@ -2056,7 +2056,7 @@ jobs:
               echo "cd libspdm-repro"
               if [ -n "$fetch_ref" ]; then echo "$fetch_ref"; fi
               echo "$checkout_ref"
-              echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+              echo "git submodule update --init --depth 1 unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
               if [ "${{ matrix.crypto }}" = "openssl" ]; then
                 echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
               fi
@@ -2204,9 +2204,9 @@ jobs:
             # checkout does not have, and git submodule commands fail on it.
             rm -f unit_test/cmockalib/cmocka/.git
           fi
-          fetch os_stub/mbedtlslib/mbedtls --recursive
-          # libspdm builds OpenSSL from the pinned commit's source alone, so
-          # neither its history nor its own submodules are fetched.
+          # libspdm builds Mbed TLS and OpenSSL from the pinned commits' sources
+          # alone, so neither their history nor their own submodules are fetched.
+          fetch os_stub/mbedtlslib/mbedtls --depth 1
           if [ "${{ matrix.crypto }}" = "openssl" ]; then
             fetch os_stub/openssllib/openssl --depth 1
           fi
@@ -2481,7 +2481,7 @@ jobs:
               echo "cd libspdm-repro || exit /b 1"
               if [ -n "$fetch_ref" ]; then echo "$fetch_ref || exit /b 1"; fi
               echo "$checkout_ref || exit /b 1"
-              echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls || exit /b 1"
+              echo "git submodule update --init --depth 1 unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls || exit /b 1"
               if [ "${{ matrix.crypto }}" = "openssl" ]; then
                 echo "git submodule update --init --depth 1 os_stub/openssllib/openssl || exit /b 1"
               fi
@@ -2511,7 +2511,7 @@ jobs:
               echo "cd libspdm-repro"
               if [ -n "$fetch_ref" ]; then echo "$fetch_ref"; fi
               echo "$checkout_ref"
-              echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+              echo "git submodule update --init --depth 1 unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
               if [ "${{ matrix.crypto }}" = "openssl" ]; then
                 echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
               fi
@@ -3239,9 +3239,9 @@ jobs:
             # checkout does not have, and git submodule commands fail on it.
             rm -f unit_test/cmockalib/cmocka/.git
           fi
-          fetch os_stub/mbedtlslib/mbedtls --recursive
-          # libspdm builds OpenSSL from the pinned commit's source alone, so
-          # neither its history nor its own submodules are fetched.
+          # libspdm builds Mbed TLS and OpenSSL from the pinned commits' sources
+          # alone, so neither their history nor their own submodules are fetched.
+          fetch os_stub/mbedtlslib/mbedtls --depth 1
           if [ "${{ matrix.crypto || 'mbedtls' }}" = "openssl" ]; then
             fetch os_stub/openssllib/openssl --depth 1
           fi
@@ -3531,7 +3531,7 @@ jobs:
             echo "git clone $url.git libspdm-repro"
             echo "cd libspdm-repro"
             echo "git checkout ${{ github.sha }}"
-            echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+            echo "git submodule update --init --depth 1 unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
             if [ "${{ matrix.crypto || 'mbedtls' }}" = "openssl" ]; then
               echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
             fi
@@ -3663,9 +3663,9 @@ jobs:
             # checkout does not have, and git submodule commands fail on it.
             rm -f unit_test/cmockalib/cmocka/.git
           fi
-          fetch os_stub/mbedtlslib/mbedtls --recursive
-          # libspdm builds OpenSSL from the pinned commit's source alone, so
-          # neither its history nor its own submodules are fetched.
+          # libspdm builds Mbed TLS and OpenSSL from the pinned commits' sources
+          # alone, so neither their history nor their own submodules are fetched.
+          fetch os_stub/mbedtlslib/mbedtls --depth 1
           if [ "${{ matrix.crypto || 'mbedtls' }}" = "openssl" ]; then
             fetch os_stub/openssllib/openssl --depth 1
           fi
@@ -3906,7 +3906,7 @@ jobs:
             echo "git clone $url.git libspdm-repro"
             echo "cd libspdm-repro"
             echo "git checkout ${{ github.sha }}"
-            echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+            echo "git submodule update --init --depth 1 unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
             if [ "${{ matrix.crypto || 'mbedtls' }}" = "openssl" ]; then
               echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
             fi
@@ -4283,9 +4283,9 @@ jobs:
             # checkout does not have, and git submodule commands fail on it.
             rm -f unit_test/cmockalib/cmocka/.git
           fi
-          fetch os_stub/mbedtlslib/mbedtls --recursive
-          # libspdm builds OpenSSL from the pinned commit's source alone, so
-          # neither its history nor its own submodules are fetched.
+          # libspdm builds Mbed TLS and OpenSSL from the pinned commits' sources
+          # alone, so neither their history nor their own submodules are fetched.
+          fetch os_stub/mbedtlslib/mbedtls --depth 1
           if [ "${{ matrix.crypto || 'mbedtls' }}" = "openssl" ]; then
             fetch os_stub/openssllib/openssl --depth 1
           fi
@@ -4510,7 +4510,7 @@ jobs:
             echo "git clone $url.git libspdm-repro"
             echo "cd libspdm-repro"
             echo "git checkout ${{ github.sha }}"
-            echo "git submodule update --init --recursive unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
+            echo "git submodule update --init --depth 1 unit_test/cmockalib/cmocka os_stub/mbedtlslib/mbedtls"
             if [ "${{ matrix.crypto || 'mbedtls' }}" = "openssl" ]; then
               echo "git submodule update --init --depth 1 os_stub/openssllib/openssl"
             fi

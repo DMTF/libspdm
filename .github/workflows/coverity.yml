@@ -52,7 +52,9 @@ jobs:
         }
 
         fetch unit_test/cmockalib/cmocka --depth 1 --recursive
-        fetch os_stub/mbedtlslib/mbedtls --depth 1 --recursive
+        # libspdm builds Mbed TLS from the pinned commit's source alone, so
+        # neither its history nor its own submodules are fetched.
+        fetch os_stub/mbedtlslib/mbedtls --depth 1
 
     - name: Download, Build, and Submit
       shell: bash
