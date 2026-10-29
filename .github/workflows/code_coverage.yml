@@ -56,11 +56,11 @@ jobs:
           }
 
           fetch unit_test/cmockalib/cmocka --depth 1 --recursive
+          # libspdm builds Mbed TLS and OpenSSL from the pinned commits' sources
+          # alone, so neither their history nor their own submodules are fetched.
           if [ "${{ matrix.crypto }}" = "mbedtls" ]; then
-            fetch os_stub/mbedtlslib/mbedtls --depth 1 --recursive
+            fetch os_stub/mbedtlslib/mbedtls --depth 1
           else
-            # libspdm builds OpenSSL from the pinned commit's source alone, so
-            # neither its history nor its own submodules are fetched.
             fetch os_stub/openssllib/openssl --depth 1
           fi
 
