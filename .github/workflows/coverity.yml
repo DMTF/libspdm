@@ -23,6 +23,13 @@ on:
 permissions:
   contents: read
 
+env:
+  # git has no transfer timeout, so a connection that stalls leaves a clone or
+  # fetch waiting until the job times out. Abort any git transfer that stays
+  # below 1000 bytes per second for 60 seconds instead, so that it is retried.
+  GIT_HTTP_LOW_SPEED_LIMIT: 1000
+  GIT_HTTP_LOW_SPEED_TIME: 60
+
 jobs:
   coverity:
     # Pinned so that the compiler stays one that the Coverity release supports.

@@ -88,6 +88,12 @@ env:
   #   ASSERT_CONFIG=3  makes a failing assert exit rather than deadloop.
   BASE_CFLAGS: -DLIBSPDM_CHECK_MACRO=1 -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=3
 
+  # git has no transfer timeout, so a connection that stalls leaves a clone or
+  # fetch waiting until the job times out. Abort any git transfer that stays
+  # below 1000 bytes per second for 60 seconds instead, so that it is retried.
+  GIT_HTTP_LOW_SPEED_LIMIT: 1000
+  GIT_HTTP_LOW_SPEED_TIME: 60
+
 jobs:
   # posix, windows-msvc and mingw repeat most of their steps, and versions and
   # configs repeat posix's. That is deliberate. The alternative is one job family
