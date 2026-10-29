@@ -177,11 +177,10 @@ jobs:
           - {platform: linux, arch: x64, toolchain: GCC, target: Release, cflags: -ffat-lto-objects}
           - {platform: linux, arch: ia32, toolchain: GCC, target: Release, cflags: -ffat-lto-objects}
           # Mbed TLS's overlap check in mbedtls_gcm_update subtracts pointers
-          # to unrelated buffers (Mbed-TLS/mbedtls#4538). test_crypt's buffers
-          # lie more than 2 GiB apart in a 32-bit process, and GCC's link-time
-          # optimization turns the overflowing difference into a rejection of
-          # its AES-GCM test, so this job skips test_crypt until Mbed TLS fixes
-          # the check (#4237).
+          # to unrelated buffers. test_crypt's buffers lie more than 2 GiB
+          # apart in a 32-bit process, and GCC's link-time optimization turns
+          # the overflowing difference into a rejection of its AES-GCM test, so
+          # this job skips test_crypt until Mbed TLS fixes the check.
           - {platform: linux, arch: ia32, toolchain: GCC, crypto: mbedtls, target: Release, skip_tests: test_crypt}
 
     steps:
@@ -2573,8 +2572,8 @@ jobs:
   # Tier 1 runs its configurations without sanitizers, so the ten of them that
   # build tests are swept here too. Three configurations are left out until they
   # pass:
-  #   config-cert-parse-off   does not build (#3909).
-  #   config-version-count-1  fails version negotiation (#4091).
+  #   config-cert-parse-off   does not build.
+  #   config-version-count-1  fails version negotiation.
   #   config-psk-only         the unit tests assume a signing algorithm.
   configs:
     name: ${{ matrix.name }}
@@ -2585,9 +2584,10 @@ jobs:
     timeout-minutes: 45
     env:
       JOB_NAME: ${{ matrix.name }}
-      # Alignment checks stay off until #3852 is fixed, since its misaligned
-      # session ID loads would fail every job. The truncation check covers
-      # libspdm's own code only, as Configure explains.
+      # Alignment checks stay off until transport decoding returns an aligned
+      # session ID pointer, since the misaligned loads through it would fail
+      # every job. The truncation check covers libspdm's own code only, as
+      # Configure explains.
       SAN_CFLAGS: -fsanitize=address,undefined,implicit-integer-truncation -fno-sanitize=alignment -fno-omit-frame-pointer
       SAN_LDFLAGS: -fsanitize=address,undefined
     strategy:
@@ -4326,8 +4326,9 @@ jobs:
       #            value came from, but it doubles the run time, so add it to
       #            the reproducer to trace a report.
       #   address  ASan and UBSan as configs runs them, with alignment checks
-      #            off until #3852 is fixed. The truncation check stays in
-      #            configs, since GCC does not have it.
+      #            off until transport decoding returns an aligned session ID
+      #            pointer. The truncation check stays in configs, since GCC
+      #            does not have it.
       - name: Select sanitizer
         shell: bash
         run: |

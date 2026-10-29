@@ -1989,10 +1989,11 @@ jobs:
       #            reliably only if every object is instrumented, and Mbed
       #            TLS's assembly cannot be. Every target reads Mbed TLS's user
       #            configuration file, so it turns the assembly off.
-      #   address  Alignment checks are off until #3852 is fixed. Mbed TLS
-      #            narrows values implicitly by design, and the unit tests are
-      #            not the code under test, so both are left out of the
-      #            truncation check, though not out of ASan and UBSan.
+      #   address  Alignment checks are off until transport decoding returns an
+      #            aligned session ID pointer. Mbed TLS narrows values
+      #            implicitly by design, and the unit tests are not the code
+      #            under test, so both are left out of the truncation check,
+      #            though not out of ASan and UBSan.
       - name: Select sanitizer
         shell: bash
         run: |
