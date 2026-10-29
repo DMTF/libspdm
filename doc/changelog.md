@@ -6,6 +6,8 @@
   not yet implemented.
 - Post-quantum cryptography, with OpenSSL only: ML-DSA and SLH-DSA signatures, and ML-KEM key
   establishment, including FIPS known-answer tests.
+- The ECDSA, RSA-SSA and RSA-PSS FIPS known-answer tests use NIST CAVP vectors, and run with any of
+  SHA-256, SHA-384 or SHA-512 enabled.
 - Redesigned Responder encapsulated request flow. The Integrator registers a single flow handler
   instead of initializing each encapsulated state individually. See the
   [encapsulated flow user guide](encapsulated_flow_user_guide.md).
@@ -33,6 +35,9 @@
       `SEND_EVENT`.
     - `cryptlib/cryptlib_cert.h` - `libspdm_mldsa_get_public_key_from_x509` and
       `libspdm_slhdsa_get_public_key_from_x509`.
+    - `cryptlib/cryptlib_ec.h` - `libspdm_ecdsa_verify_fips`, and `cryptlib/cryptlib_rsa.h` -
+      `libspdm_rsa_pkcs1_sign_fips` and `libspdm_rsa_pkcs1_verify_fips`, for the ECDSA and RSA-SSA
+      FIPS known-answer tests.
 - HAL functions removed:
     - `libspdm_write_certificate_to_nvm` - replaced by `libspdm_update_local_cert_chain`.
     - `libspdm_gen_csr_ex` - merged into `libspdm_gen_csr`, which also takes the post-quantum
@@ -40,6 +45,12 @@
     - The HMAC context functions in `cryptlib/cryptlib_mac.h`, such as `libspdm_hmac_sha256_new`,
       `libspdm_hmac_sha256_update` and `libspdm_hmac_sha256_duplicate`. Only the one-shot
       functions, such as `libspdm_hmac_sha256_all`, remain.
+- HAL functions changed:
+    - `cryptlib/cryptlib_ec.h` - `libspdm_ecdsa_sign_ex` is renamed to `libspdm_ecdsa_sign_fips`,
+      which takes the message instead of its hash, and hashes it with `hash_nid` before signing.
+    - `cryptlib/cryptlib_rsa.h` - `libspdm_rsa_pss_sign_fips` and `libspdm_rsa_pss_verify_fips` take
+      the message instead of its hash, hashing it with `hash_nid`, and take an explicit salt instead
+      of a zero-length one, so the known-answer test is repeatable.
 - The SPDM context is now always the first parameter of these HAL functions, because
   `LIBSPDM_HAL_PASS_SPDM_CONTEXT` has been removed:
     - `libspdm_challenge_opaque_data`

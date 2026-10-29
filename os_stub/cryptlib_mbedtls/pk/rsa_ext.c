@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -354,6 +354,49 @@ bool libspdm_rsa_pkcs1_sign_with_nid(void *rsa_context, size_t hash_nid,
     *sig_size = mbedtls_rsa_get_len(rsa_context);
     return true;
 }
+
+#if LIBSPDM_FIPS_MODE
+/**
+ * Carries out the RSA-SSA signature generation with PKCS1-v1_5 encoding scheme for FIPS test.
+ *
+ * This function hashes the message with hash_nid, and then signs the hash.
+ *
+ * If the signature buffer is too small to hold the contents of signature, false
+ * is returned and sig_size is set to the required buffer size to obtain the signature.
+ *
+ * If rsa_context is NULL, then return false.
+ * If message is NULL, then return false.
+ * If sig_size is large enough but signature is NULL, then return false.
+ *
+ * @param[in]       rsa_context   Pointer to RSA context for signature generation.
+ * @param[in]       hash_nid      hash NID, SHA256, SHA384, SHA512, SHA3_256, SHA3_384 or SHA3_512.
+ * @param[in]       message       Pointer to octet message to sign. It is hashed with hash_nid first.
+ * @param[in]       message_size  size of the message in bytes.
+ * @param[out]      signature     Pointer to buffer to receive RSA PKCS1-v1_5 signature.
+ * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
+ *                                On output, the size of data returned in signature buffer in bytes.
+ *
+ * @retval  true   signature successfully generated in PKCS1-v1_5.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
+ **/
+bool libspdm_rsa_pkcs1_sign_fips(void *rsa_context, size_t hash_nid,
+                                 const uint8_t *message, size_t message_size,
+                                 uint8_t *signature, size_t *sig_size)
+{
+    uint8_t digest[LIBSPDM_SHA512_DIGEST_SIZE];
+    size_t digest_size;
+
+    if (message == NULL) {
+        return false;
+    }
+    if (!libspdm_fips_hash_message(hash_nid, message, message_size, digest, &digest_size)) {
+        return false;
+    }
+    return libspdm_rsa_pkcs1_sign_with_nid(rsa_context, hash_nid, digest, digest_size,
+                                           signature, sig_size);
+}
+#endif /*LIBSPDM_FIPS_MODE*/
 #endif /* LIBSPDM_RSA_SSA_SUPPORT */
 
 #if LIBSPDM_RSA_PSS_SUPPORT
@@ -492,44 +535,46 @@ int libspdm_myrand_rsapss_fips(void *rng_state, unsigned char *output, size_t le
     }
 }
 
-/**
- * Carries out the RSA-SSA signature generation with EMSA-PSS encoding scheme for FIPS test.
- *
- * This function carries out the RSA-SSA signature generation with EMSA-PSS encoding scheme defined in
- * RSA PKCS#1 v2.2 for FIPS test.
- *
- * The salt length is zero.
- *
- * If the signature buffer is too small to hold the contents of signature, false
- * is returned and sig_size is set to the required buffer size to obtain the signature.
- *
- * If rsa_context is NULL, then return false.
- * If message_hash is NULL, then return false.
- * If hash_size need match the hash_nid. nid could be SHA256, SHA384, SHA512, SHA3_256, SHA3_384, SHA3_512.
- * If sig_size is large enough but signature is NULL, then return false.
- *
- * @param[in]       rsa_context   Pointer to RSA context for signature generation.
- * @param[in]       hash_nid      hash NID
- * @param[in]       message_hash  Pointer to octet message hash to be signed.
- * @param[in]       hash_size     size of the message hash in bytes.
- * @param[out]      signature    Pointer to buffer to receive RSA-SSA PSS signature.
- * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
- *                              On output, the size of data returned in signature buffer in bytes.
- *
- * @retval  true   signature successfully generated in RSA-SSA PSS.
- * @retval  false  signature generation failed.
- * @retval  false  sig_size is too small.
- *
- **/
-bool libspdm_rsa_pss_sign_fips(void *rsa_context, size_t hash_nid,
-                               const uint8_t *message_hash, size_t hash_size,
-                               uint8_t *signature, size_t *sig_size)
+/* The salt of the EMSA-PSS encoding is the first random number that the signature asks for. */
+typedef struct {
+    const uint8_t *salt;
+    size_t salt_size;
+    bool salt_used;
+} libspdm_rsapss_fips_salt_t;
+
+static int libspdm_myrand_rsapss_fips_salt(void *rng_state, unsigned char *output, size_t len)
+{
+    libspdm_rsapss_fips_salt_t *salt_state;
+
+    salt_state = (libspdm_rsapss_fips_salt_t *)rng_state;
+    if (len == 0) {
+        return 0;
+    }
+    if (!salt_state->salt_used) {
+        salt_state->salt_used = true;
+        if (len != salt_state->salt_size) {
+            return -1;
+        }
+        libspdm_copy_mem(output, len, salt_state->salt, len);
+        return 0;
+    }
+    return libspdm_myrand_rsapss_fips(NULL, output, len);
+}
+
+static bool libspdm_rsa_pss_sign_digest_fips(void *rsa_context, size_t hash_nid,
+                                             const uint8_t *message_hash, size_t hash_size,
+                                             const uint8_t *salt, size_t salt_size,
+                                             uint8_t *signature, size_t *sig_size)
 {
     int ret;
     mbedtls_md_type_t md_alg;
     mbedtls_rsa_context *rsa_key;
+    libspdm_rsapss_fips_salt_t salt_state;
 
     if (rsa_context == NULL || message_hash == NULL) {
+        return false;
+    }
+    if ((salt_size > hash_size) || ((salt_size != 0) && (salt == NULL))) {
         return false;
     }
 
@@ -595,15 +640,65 @@ bool libspdm_rsa_pss_sign_fips(void *rsa_context, size_t hash_nid,
 
     mbedtls_rsa_set_padding(rsa_context, MBEDTLS_RSA_PKCS_V21, md_alg);
 
-    /*salt len is 0*/
-    ret = mbedtls_rsa_rsassa_pss_sign_ext(rsa_context, libspdm_myrand_rsapss_fips, NULL,
+    salt_state.salt = salt;
+    salt_state.salt_size = salt_size;
+    salt_state.salt_used = (salt_size == 0);
+    ret = mbedtls_rsa_rsassa_pss_sign_ext(rsa_context, libspdm_myrand_rsapss_fips_salt, &salt_state,
                                           md_alg, (uint32_t)hash_size, message_hash,
-                                          0, signature);
+                                          (int)salt_size, signature);
     if (ret != 0) {
         return false;
     }
     *sig_size = mbedtls_rsa_get_len(rsa_context);
     return true;
+}
+
+/**
+ * Carries out the RSA-SSA signature generation with EMSA-PSS encoding scheme for FIPS test.
+ *
+ * This function hashes the message with hash_nid, and then signs the hash with the RSA PKCS#1 v2.2
+ * EMSA-PSS encoding scheme.
+ *
+ * The salt is given by the caller, so that a known-answer test is repeatable.
+ * The salt length is salt_size, which shall not exceed the size of the hash.
+ *
+ * If the signature buffer is too small to hold the contents of signature, false
+ * is returned and sig_size is set to the required buffer size to obtain the signature.
+ *
+ * If rsa_context is NULL, then return false.
+ * If message is NULL, then return false.
+ * If sig_size is large enough but signature is NULL, then return false.
+ *
+ * @param[in]       rsa_context   Pointer to RSA context for signature generation.
+ * @param[in]       hash_nid      hash NID, SHA256, SHA384, SHA512, SHA3_256, SHA3_384 or SHA3_512.
+ * @param[in]       message       Pointer to octet message to sign. It is hashed with hash_nid first.
+ * @param[in]       message_size  size of the message in bytes.
+ * @param[in]       salt          Pointer to the salt, salt_size bytes.
+ * @param[in]       salt_size     size of the salt in bytes.
+ * @param[out]      signature     Pointer to buffer to receive RSA-SSA PSS signature.
+ * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
+ *                                On output, the size of data returned in signature buffer in bytes.
+ *
+ * @retval  true   signature successfully generated in RSA-SSA PSS.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
+ **/
+bool libspdm_rsa_pss_sign_fips(void *rsa_context, size_t hash_nid,
+                               const uint8_t *message, size_t message_size,
+                               const uint8_t *salt, size_t salt_size,
+                               uint8_t *signature, size_t *sig_size)
+{
+    uint8_t digest[LIBSPDM_SHA512_DIGEST_SIZE];
+    size_t digest_size;
+
+    if (message == NULL) {
+        return false;
+    }
+    if (!libspdm_fips_hash_message(hash_nid, message, message_size, digest, &digest_size)) {
+        return false;
+    }
+    return libspdm_rsa_pss_sign_digest_fips(rsa_context, hash_nid, digest, digest_size,
+                                            salt, salt_size, signature, sig_size);
 }
 #endif /*LIBSPDM_FIPS_MODE*/
 

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -757,26 +757,10 @@ bool libspdm_ecdsa_verify(void *ec_context, size_t hash_nid,
 }
 
 #if LIBSPDM_FIPS_MODE
-/**
- * Carries out the EC-DSA signature with caller input random function. This API can be used for FIPS test.
- *
- * @param[in]       ec_context    Pointer to EC context for signature generation.
- * @param[in]       hash_nid      hash NID
- * @param[in]       message_hash  Pointer to octet message hash to be signed.
- * @param[in]       hash_size     Size of the message hash in bytes.
- * @param[out]      signature     Pointer to buffer to receive EC-DSA signature.
- * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
- *                                On output, the size of data returned in signature buffer in bytes.
- * @param[in]       random_func   random number function
- *
- * @retval  true   signature successfully generated in EC-DSA.
- * @retval  false  signature generation failed.
- * @retval  false  sig_size is too small.
- **/
-bool libspdm_ecdsa_sign_ex(void *ec_context, size_t hash_nid,
-                           const uint8_t *message_hash, size_t hash_size,
-                           uint8_t *signature, size_t *sig_size,
-                           int (*random_func)(void *, unsigned char *, size_t))
+static bool libspdm_ecdsa_sign_digest_fips(void *ec_context, size_t hash_nid,
+                                           const uint8_t *message_hash, size_t hash_size,
+                                           uint8_t *signature, size_t *sig_size,
+                                           int (*random_func)(void *, unsigned char *, size_t))
 {
     int ret;
     mbedtls_ecdh_context *ctx;
@@ -890,5 +874,83 @@ bool libspdm_ecdsa_sign_ex(void *ec_context, size_t hash_nid,
     mbedtls_mpi_free(&bn_s);
 
     return true;
+}
+
+/**
+ * Carries out the EC-DSA signature with caller input random function. This API can be used for FIPS test.
+ *
+ * This function hashes the message with hash_nid, and then signs the hash.
+ *
+ * random_func is called with NULL as its first argument. It must fill the buffer that its second
+ * argument points to with the number of bytes that its third argument gives, and return 0 on
+ * success. This function uses these bytes as the secret per-message number k, so a random_func that
+ * returns fixed bytes gives a fixed signature, which the FIPS self-test relies on. This function
+ * can call random_func more than once, and the number of bytes that it requests can depend on the
+ * curve.
+ *
+ * @param[in]       ec_context    Pointer to EC context for signature generation.
+ * @param[in]       hash_nid      hash NID, SHA256, SHA384, SHA512, SHA3_256, SHA3_384 or SHA3_512.
+ * @param[in]       message       Pointer to octet message to sign. It is hashed with hash_nid first.
+ * @param[in]       message_size  Size of the message in bytes.
+ * @param[out]      signature     Pointer to buffer to receive EC-DSA signature.
+ * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
+ *                                On output, the size of data returned in signature buffer in bytes.
+ * @param[in]       random_func   Function that generates the bytes for k.
+ *
+ * @retval  true   signature successfully generated in EC-DSA.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
+ **/
+bool libspdm_ecdsa_sign_fips(void *ec_context, size_t hash_nid,
+                             const uint8_t *message, size_t message_size,
+                             uint8_t *signature, size_t *sig_size,
+                             int (*random_func)(void *, unsigned char *, size_t))
+{
+    uint8_t digest[LIBSPDM_SHA512_DIGEST_SIZE];
+    size_t digest_size;
+
+    if (message == NULL) {
+        return false;
+    }
+    if (!libspdm_fips_hash_message(hash_nid, message, message_size, digest, &digest_size)) {
+        return false;
+    }
+    return libspdm_ecdsa_sign_digest_fips(ec_context, hash_nid, digest, digest_size,
+                                          signature, sig_size, random_func);
+}
+
+/**
+ * Verifies the EC-DSA signature for FIPS test.
+ *
+ * This function hashes the message with hash_nid, and then verifies the signature of the hash.
+ *
+ * If ec_context is NULL, then return false.
+ * If message is NULL, then return false.
+ * If signature is NULL, then return false.
+ *
+ * @param[in]  ec_context    Pointer to EC context for signature verification.
+ * @param[in]  hash_nid      hash NID, SHA256, SHA384, SHA512, SHA3_256, SHA3_384 or SHA3_512.
+ * @param[in]  message       Pointer to octet message to verify. It is hashed with hash_nid first.
+ * @param[in]  message_size  Size of the message in bytes.
+ * @param[in]  signature     Pointer to EC-DSA signature to be verified.
+ * @param[in]  sig_size      Size of signature in bytes.
+ *
+ * @retval  true   Valid signature encoded in EC-DSA.
+ * @retval  false  Invalid signature.
+ **/
+bool libspdm_ecdsa_verify_fips(void *ec_context, size_t hash_nid,
+                               const uint8_t *message, size_t message_size,
+                               const uint8_t *signature, size_t sig_size)
+{
+    uint8_t digest[LIBSPDM_SHA512_DIGEST_SIZE];
+    size_t digest_size;
+
+    if (message == NULL) {
+        return false;
+    }
+    if (!libspdm_fips_hash_message(hash_nid, message, message_size, digest, &digest_size)) {
+        return false;
+    }
+    return libspdm_ecdsa_verify(ec_context, hash_nid, digest, digest_size, signature, sig_size);
 }
 #endif/*LIBSPDM_FIPS_MODE*/

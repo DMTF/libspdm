@@ -36,6 +36,7 @@ target_sources(cryptlib_mbedtls
         pk/ec.c
         pk/ecd.c
         pk/dh.c
+        pk/fips_hash.c
         pk/sm2.c
         pk/rsa_basic.c
         pk/rsa_ext.c
