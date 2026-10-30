@@ -122,6 +122,118 @@ void libspdm_dh_free(void *dh_context)
     free(key_ctx);
 }
 
+#if LIBSPDM_FIPS_MODE
+/**
+ * Sets the private key component into the established DH context. This API can be used for
+ * FIPS test.
+ *
+ * @param[in, out]  dh_context       Pointer to DH context being set.
+ * @param[in]       priv_key         Pointer to the private key buffer.
+ * @param[in]       priv_key_size    The size of private key buffer in bytes.
+ *
+ * @retval  true   DH private key component was set successfully.
+ * @retval  false  Invalid DH private key component.
+ **/
+bool libspdm_dh_set_priv_key(void *dh_context, const uint8_t *priv_key,
+                             size_t priv_key_size)
+{
+    libspdm_key_context *key_ctx;
+    EVP_PKEY *new_key = NULL;
+    EVP_PKEY_CTX *ctx = NULL;
+    EVP_PKEY_CTX *check_ctx = NULL;
+    OSSL_PARAM_BLD *param_bld = NULL;
+    OSSL_PARAM *ossl_params = NULL;
+    BIGNUM *bn_priv = NULL;
+    BIGNUM *bn_pub = NULL;
+    BIGNUM *p = NULL, *g = NULL;
+    BN_CTX *bn_ctx = NULL;
+    bool result = false;
+
+    if (dh_context == NULL || priv_key == NULL || priv_key_size > INT_MAX) {
+        return false;
+    }
+
+    key_ctx = (libspdm_key_context *)dh_context;
+    if (key_ctx->evp_pkey == NULL) {
+        return false;
+    }
+
+    bn_priv = BN_bin2bn(priv_key, (int)priv_key_size, NULL);
+    if (bn_priv == NULL) {
+        return false;
+    }
+
+    if (EVP_PKEY_get_bn_param(key_ctx->evp_pkey, OSSL_PKEY_PARAM_FFC_P, &p) <= 0 ||
+        EVP_PKEY_get_bn_param(key_ctx->evp_pkey, OSSL_PKEY_PARAM_FFC_G, &g) <= 0) {
+        goto cleanup;
+    }
+
+    bn_ctx = BN_CTX_new();
+    bn_pub = BN_new();
+    if (bn_ctx == NULL || bn_pub == NULL) {
+        goto cleanup;
+    }
+
+    /* pub = g^priv mod p */
+    if (!BN_mod_exp(bn_pub, g, bn_priv, p, bn_ctx)) {
+        goto cleanup;
+    }
+
+    param_bld = OSSL_PARAM_BLD_new();
+    if (param_bld == NULL) {
+        goto cleanup;
+    }
+
+    if (!OSSL_PARAM_BLD_push_BN(param_bld, OSSL_PKEY_PARAM_FFC_P, p) ||
+        !OSSL_PARAM_BLD_push_BN(param_bld, OSSL_PKEY_PARAM_FFC_G, g) ||
+        !OSSL_PARAM_BLD_push_BN(param_bld, OSSL_PKEY_PARAM_PRIV_KEY, bn_priv) ||
+        !OSSL_PARAM_BLD_push_BN(param_bld, OSSL_PKEY_PARAM_PUB_KEY, bn_pub)) {
+        goto cleanup;
+    }
+
+    ossl_params = OSSL_PARAM_BLD_to_param(param_bld);
+    if (ossl_params == NULL) {
+        goto cleanup;
+    }
+
+    ctx = EVP_PKEY_CTX_new_from_name(NULL, "DH", NULL);
+    if (ctx == NULL) {
+        goto cleanup;
+    }
+
+    if (EVP_PKEY_fromdata_init(ctx) <= 0) {
+        goto cleanup;
+    }
+
+    if (EVP_PKEY_fromdata(ctx, &new_key, EVP_PKEY_KEYPAIR, ossl_params) <= 0) {
+        goto cleanup;
+    }
+
+    check_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, new_key, NULL);
+    if (check_ctx == NULL || EVP_PKEY_private_check(check_ctx) <= 0) {
+        goto cleanup;
+    }
+
+    EVP_PKEY_free(key_ctx->evp_pkey);
+    key_ctx->evp_pkey = new_key;
+    new_key = NULL;
+    result = true;
+
+cleanup:
+    EVP_PKEY_CTX_free(check_ctx);
+    EVP_PKEY_CTX_free(ctx);
+    EVP_PKEY_free(new_key);
+    OSSL_PARAM_BLD_free(param_bld);
+    OSSL_PARAM_free(ossl_params);
+    BN_clear_free(bn_priv);
+    BN_free(bn_pub);
+    BN_free(p);
+    BN_free(g);
+    BN_CTX_free(bn_ctx);
+    return result;
+}
+#endif /* LIBSPDM_FIPS_MODE */
+
 /**
  * Generates DH parameter.
  *
