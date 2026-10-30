@@ -6,7 +6,6 @@
 
 #include "internal/libspdm_responder_lib.h"
 #include "spdm_transport_tcp_lib.h"
-#include "industry_standard/spdm_tcp_binding.h"
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
@@ -28,12 +27,6 @@ void libspdm_test_transport_tcp_decode_message(void **State)
     spdm_context = spdm_test_context->spdm_context;
     is_requester = spdm_test_context->is_requester;
     is_app_message = false;
-
-    /* The caller must pass an SPDM message after the TCP binding header. A message of the header
-     * alone, such as a role inquiry, goes to libspdm_tcp_decode_discovery_message instead. */
-    if (spdm_test_context->test_buffer_size <= sizeof(spdm_tcp_binding_header_t)) {
-        return;
-    }
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 

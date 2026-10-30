@@ -125,6 +125,9 @@
       include 1.0, which has no provisioned public keys. `LIBSPDM_DATA_IS_REQUESTER` should be set
       before it is called.
     - `libspdm_verify_req_info` - exists only when `LIBSPDM_CERT_PARSE_SUPPORT` is enabled.
+    - `libspdm_transport_tcp_encode_message` - returns `LIBSPDM_STATUS_UNSUPPORTED_CAP` for an
+      application message, for which DSP0287 defines no format, and
+      `libspdm_transport_tcp_decode_message` never reports one.
 - Library APIs removed:
     - Replaced by the registered encapsulated flow handler:
         - `libspdm_init_get_endpoint_info_encap_state`
@@ -337,4 +340,6 @@
   that 3.8 accepted.
 - The TCP transport sets `PayloadLen` to the size of the SPDM message, as DSP0287 requires, where
   3.8 added 2.
+- The Application Data of a TCP In-Session Message is the SPDM message, as DSP0287 requires, where
+  3.8 put a binding header in front of it.
 - Many bug fixes and further alignment with the SPDM specifications.

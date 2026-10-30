@@ -96,12 +96,15 @@ libspdm_return_t libspdm_tcp_decode_message(uint32_t **session_id,
 {
     const spdm_tcp_binding_header_t *tcp_message_header;
 
-    LIBSPDM_ASSERT(transport_message_size > sizeof(spdm_tcp_binding_header_t));
     if (transport_message_size <= sizeof(spdm_tcp_binding_header_t)) {
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
     tcp_message_header = transport_message;
+
+    if (tcp_message_header->binding_version != 0x01) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
 
     switch (tcp_message_header->message_type) {
     case SPDM_TCP_MESSAGE_TYPE_IN_SESSION:
