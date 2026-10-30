@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -10,7 +10,12 @@
 
 #if LIBSPDM_FIPS_MODE
 #if LIBSPDM_SLH_DSA_SUPPORT
-/* Message hash */
+/* Test vector (key, message, context and signature) from the NIST ACVP-Server:
+ * SLH-DSA-sigGen-FIPS205/internalProjection.json, tgId 19 (SLH-DSA-SHA2-128s,
+ * deterministic, pure), tcId 160.
+ * https://github.com/usnistgov/ACVP-Server/tree/master/gen-val/json-files/SLH-DSA-sigGen-FIPS205
+ */
+/* Message */
 const uint8_t message_hash_sha2_128s[] = {
     0x7e, 0xf3, 0xcf, 0x5e, 0xc1, 0x8a, 0x6e, 0x0c, 0x8c, 0xe2, 0x02, 0x7f,
     0x32, 0xfb, 0xae, 0x4b, 0xf6, 0x38, 0xe0, 0x14, 0xfb, 0x0d, 0x8c, 0x77,
@@ -729,5 +734,6 @@ const uint8_t expected_signature_sha2_128s[] = {
     0x96, 0xb8, 0x5c, 0xb6, 0x0d, 0x64, 0x03, 0x61, 0x6d, 0x1c, 0x7a, 0x2a,
     0x3b, 0x7a, 0x88, 0x90, 0xf1, 0x35, 0x83, 0x0f
 };
+
 #endif/*LIBSPDM_SLH_DSA_SUPPORT*/
 #endif/*LIBSPDM_FIPS_MODE*/
