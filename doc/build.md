@@ -232,7 +232,7 @@ a) [LOONGARCH64_GNU](https://github.com/loongson/build-tools/)
    cd libspdm
    mkdir build
    cd build
-   cmake -DARCH=<arm|aarch64> -DMARCH=<armv4t|...|armv7e-m...|iwmmxt2> -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> -DISABLE_LTO=<1>..
+   cmake -DARCH=<arm|aarch64> -DMARCH=<armv4t|...|armv7e-m...|iwmmxt2> -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=<Debug|Release> -DCRYPTO=mbedtls -DDISABLE_LTO=<1> ..
    make copy_sample_key
    make
    ```
@@ -251,10 +251,10 @@ a) [LOONGARCH64_GNU](https://github.com/loongson/build-tools/)
    cmake -DARCH=arm -DMARCH=armv7e-m -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Debug -DCRYPTO=mbedtls ..
    ```
    ```bash
-   cmake -DARCH=arm -DMARCH=armv4t -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Debug -DCRYPTO=mbedtls -DISABLE_LTO=1 ..
+   cmake -DARCH=arm -DMARCH=armv4t -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Debug -DCRYPTO=mbedtls -DDISABLE_LTO=1 ..
    ```
    ```bash
-   cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Release -DCRYPTO=mbedtls ..
+   cmake -DARCH=aarch64 -DMARCH=armv8-a -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
 
    Note: `make -j` can be used to accelerate the build.
