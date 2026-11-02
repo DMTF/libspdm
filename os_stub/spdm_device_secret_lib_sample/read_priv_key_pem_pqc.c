@@ -88,8 +88,11 @@ bool libspdm_read_responder_pqc_private_key_ex(uint32_t pqc_asym_algo, uint8_t k
 
     /* slot 0 / slot 1 share the default leaf key; slot 4 uses a distinct leaf key
      * (end_responder4.key) to demonstrate multiple keys. The slot-4 key pair is the negotiated
-     * algorithm's SECONDARY key pair; only it selects end_responder4.key. */
-    if (key_pair_id != libspdm_get_key_pair_id_by_slot(0, pqc_asym_algo, 4)) {
+     * algorithm's SECONDARY key pair; only it selects end_responder4.key. KeyPairID 0 (not a
+     * multi-key connection) uses the default key: the lookup also returns 0 when no key pair
+     * of the algorithm backs slot 4, as for SLH-DSA. */
+    if ((key_pair_id == 0) ||
+        (key_pair_id != libspdm_get_key_pair_id_by_slot(0, pqc_asym_algo, 4))) {
         return libspdm_read_responder_pqc_private_key(pqc_asym_algo, data, size);
     }
 
@@ -221,8 +224,11 @@ bool libspdm_read_requester_pqc_private_key_ex(uint32_t req_pqc_asym_alg, uint8_
 
     /* slot 0 / slot 1 share the default leaf key; slot 4 uses a distinct leaf key
      * (end_requester4.key) to demonstrate multiple keys. The slot-4 key pair is the negotiated
-     * algorithm's SECONDARY key pair; only it selects end_requester4.key. */
-    if (key_pair_id != libspdm_get_key_pair_id_by_slot(0, req_pqc_asym_alg, 4)) {
+     * algorithm's SECONDARY key pair; only it selects end_requester4.key. KeyPairID 0 (not a
+     * multi-key connection) uses the default key: the lookup also returns 0 when no key pair
+     * of the algorithm backs slot 4, as for SLH-DSA. */
+    if ((key_pair_id == 0) ||
+        (key_pair_id != libspdm_get_key_pair_id_by_slot(0, req_pqc_asym_alg, 4))) {
         return libspdm_read_requester_pqc_private_key(req_pqc_asym_alg, data, size);
     }
 
