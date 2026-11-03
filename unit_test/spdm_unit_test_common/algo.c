@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -9,7 +9,11 @@
 uint8_t m_libspdm_use_measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
 uint8_t m_libspdm_use_mel_spec = SPDM_MEL_SPECIFICATION_DMTF;
 uint32_t m_libspdm_use_measurement_hash_algo =
+#if LIBSPDM_SHA384_SUPPORT
     SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_384;
+#else
+    SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256;
+#endif
 uint32_t m_libspdm_use_hash_algo = SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
 uint32_t m_libspdm_use_asym_algo =
     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256;
