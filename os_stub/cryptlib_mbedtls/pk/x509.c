@@ -23,6 +23,27 @@
 #include <mbedtls/bignum.h>
 #include <string.h>
 
+/**
+ * Retrieve the tag and length of the tag.
+ *
+ * @param ptr      The position in the ASN.1 data
+ * @param end      end of data
+ * @param length   The variable that will receive the length
+ * @param tag      The expected tag
+ *
+ * @retval      true   Get tag successful
+ * @retval      false  Failed to get tag or tag not match
+ **/
+bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
+                          uint32_t tag)
+{
+    if (mbedtls_asn1_get_tag(ptr, end, length, (int32_t)tag) == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 #if LIBSPDM_CERT_PARSE_SUPPORT
 
 /* OID*/
@@ -256,27 +277,6 @@ void libspdm_x509_stack_free(void *x509_stack)
 
     mbedtls_x509_crt_free(x509_stack);
     free_pool(x509_stack);
-}
-
-/**
- * Retrieve the tag and length of the tag.
- *
- * @param ptr      The position in the ASN.1 data
- * @param end      end of data
- * @param length   The variable that will receive the length
- * @param tag      The expected tag
- *
- * @retval      true   Get tag successful
- * @retval      false  Failed to get tag or tag not match
- **/
-bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
-                          uint32_t tag)
-{
-    if (mbedtls_asn1_get_tag(ptr, end, length, (int32_t)tag) == 0) {
-        return true;
-    } else {
-        return false;
-    }
 }
 
 /**
