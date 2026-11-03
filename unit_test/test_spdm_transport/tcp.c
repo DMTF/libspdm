@@ -82,9 +82,6 @@ static size_t build_tcp_message(uint8_t message_type, const void *payload, size_
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 static const uint32_t m_session_id = 0x12345678;
 
-/* An application message whose fourth byte is not a TCP message type that libspdm decodes. */
-static const uint8_t m_app_message[] = {0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7};
-
 /* Establishes a session with m_session_id whose messages are encrypted and authenticated. */
 static void set_session(libspdm_context_t *spdm_context)
 {
@@ -119,6 +116,50 @@ static void rewind_sequence_number(libspdm_context_t *spdm_context)
 
     secured_message_context = spdm_context->session_info[0].secured_message_context;
     secured_message_context->application_secret.request_data_sequence_number--;
+}
+
+/* The callbacks that the TCP transport gives the secured message library. */
+static const libspdm_secured_message_callbacks_t m_secured_message_callbacks = {
+    LIBSPDM_SECURED_MESSAGE_CALLBACKS_VERSION,
+    libspdm_tcp_get_sequence_number,
+    libspdm_tcp_get_max_random_number_count,
+    libspdm_tcp_get_secured_spdm_version,
+};
+
+/* Builds a request in the transport buffer that is an in-session TCP message whose secured message,
+ * in m_session_id, carries app_data as its Application Data, without the TCP transport. */
+static libspdm_return_t build_secured_tcp_message(libspdm_context_t *spdm_context,
+                                                  const void *app_data, size_t app_data_size,
+                                                  size_t *transport_message_size,
+                                                  uint8_t **transport_message)
+{
+    libspdm_return_t status;
+    uint8_t *app_message;
+    size_t secured_message_size;
+    spdm_tcp_binding_header_t *header;
+
+    /* The secured message library writes the Application Data Length in front of app_message. */
+    app_message = m_scratch_buffer + LIBSPDM_TCP_TRANSPORT_HEADER_SIZE;
+    libspdm_copy_mem(app_message, sizeof(m_scratch_buffer) - LIBSPDM_TCP_TRANSPORT_HEADER_SIZE,
+                     app_data, app_data_size);
+    secured_message_size = sizeof(m_transport_buffer) - sizeof(spdm_tcp_binding_header_t);
+
+    status = libspdm_encode_secured_message(
+        spdm_context->session_info[0].secured_message_context, m_session_id, true, app_data_size,
+        app_message, &secured_message_size, m_transport_buffer + sizeof(spdm_tcp_binding_header_t),
+        &m_secured_message_callbacks);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+
+    header = (void *)m_transport_buffer;
+    header->payload_length = (uint16_t)secured_message_size;
+    header->binding_version = 0x01;
+    header->message_type = SPDM_TCP_MESSAGE_TYPE_IN_SESSION;
+    *transport_message = m_transport_buffer;
+    *transport_message_size = sizeof(spdm_tcp_binding_header_t) + secured_message_size;
+
+    return LIBSPDM_STATUS_SUCCESS;
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
 
@@ -242,8 +283,9 @@ static void libspdm_test_transport_tcp_case3(void **state)
 }
 
 /**
- * Test 4: Encode an application message in a session, then decode it.
- * Expected Behavior: decoding returns the application message in that session.
+ * Test 4: Decode an in-session TCP message whose secured message carries an SPDM message as its
+ * Application Data, as DSP0287 specifies.
+ * Expected Behavior: returns the SPDM message in that session.
  * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP and LIBSPDM_ENABLE_CAPABILITY_PSK_CAP are both
  * disabled.
  **/
@@ -265,8 +307,8 @@ static void libspdm_test_transport_tcp_case4(void **state)
     spdm_test_context->case_id = 0x4;
     set_session(spdm_context);
 
-    status = encode_message(spdm_context, &m_session_id, true, m_app_message,
-                            sizeof(m_app_message), &transport_message_size, &transport_message);
+    status = build_secured_tcp_message(spdm_context, m_spdm_message, sizeof(m_spdm_message),
+                                       &transport_message_size, &transport_message);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     rewind_sequence_number(spdm_context);
@@ -276,9 +318,9 @@ static void libspdm_test_transport_tcp_case4(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_non_null(session_id);
     assert_int_equal(*session_id, m_session_id);
-    assert_true(is_app_message);
-    assert_int_equal(message_size, sizeof(m_app_message));
-    assert_memory_equal(message, m_app_message, sizeof(m_app_message));
+    assert_false(is_app_message);
+    assert_int_equal(message_size, sizeof(m_spdm_message));
+    assert_memory_equal(message, m_spdm_message, sizeof(m_spdm_message));
 #else
     skip();
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
@@ -405,6 +447,51 @@ static void libspdm_test_transport_tcp_case11(void **state)
     assert_int_equal(libspdm_tcp_get_secured_spdm_version(version), version);
 }
 
+/**
+ * Test 12: Encode an SPDM message in a session.
+ * Expected Behavior: the Application Data of the secured message is the SPDM message, as DSP0287
+ * specifies.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP and LIBSPDM_ENABLE_CAPABILITY_PSK_CAP are both
+ * disabled.
+ **/
+static void libspdm_test_transport_tcp_case12(void **state)
+{
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t transport_message_size;
+    uint8_t *transport_message;
+    size_t app_message_size;
+    uint8_t *app_message;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xC;
+    set_session(spdm_context);
+
+    status = encode_message(spdm_context, &m_session_id, false, m_spdm_message,
+                            sizeof(m_spdm_message), &transport_message_size, &transport_message);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    /* Decrypt the secured message without the TCP transport. */
+    rewind_sequence_number(spdm_context);
+    app_message = m_message_buffer;
+    app_message_size = sizeof(m_message_buffer);
+    status = libspdm_decode_secured_message(
+        spdm_context->session_info[0].secured_message_context, m_session_id, true,
+        transport_message_size - sizeof(spdm_tcp_binding_header_t),
+        transport_message + sizeof(spdm_tcp_binding_header_t), &app_message_size,
+        (void **)&app_message, &m_secured_message_callbacks);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(app_message_size, sizeof(m_spdm_message));
+    assert_memory_equal(app_message, m_spdm_message, sizeof(m_spdm_message));
+#else
+    skip();
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
+}
+
 int libspdm_transport_tcp_test_main(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -423,6 +510,8 @@ int libspdm_transport_tcp_test_main(void)
         cmocka_unit_test(libspdm_test_transport_tcp_case9),
         cmocka_unit_test(libspdm_test_transport_tcp_case10),
         cmocka_unit_test(libspdm_test_transport_tcp_case11),
+        cmocka_unit_test_setup(libspdm_test_transport_tcp_case12,
+                               libspdm_unit_test_reset_context),
     };
 
     libspdm_test_context_t test_context = {

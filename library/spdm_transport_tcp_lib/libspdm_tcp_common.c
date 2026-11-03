@@ -48,13 +48,10 @@ libspdm_return_t libspdm_transport_tcp_encode_message(
     size_t *transport_message_size, void **transport_message)
 {
     libspdm_return_t status;
-    void *app_message;
-    size_t app_message_size;
     uint8_t *secured_message;
     size_t secured_message_size;
     libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     void *secured_message_context;
-    size_t app_transport_header_size;
     size_t secure_transport_header_size;
 
     spdm_secured_message_callbacks.version =
@@ -66,7 +63,7 @@ libspdm_return_t libspdm_transport_tcp_encode_message(
     spdm_secured_message_callbacks.get_secured_spdm_version =
         libspdm_tcp_get_secured_spdm_version;
 
-    if (is_app_message && (session_id == NULL)) {
+    if (is_app_message) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
@@ -78,31 +75,13 @@ libspdm_return_t libspdm_transport_tcp_encode_message(
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
 
-        app_transport_header_size = sizeof(spdm_tcp_binding_header_t);
-
-        if (!is_app_message) {
-            /* SPDM message to APP message*/
-            app_message = NULL;
-            app_message_size = app_transport_header_size + message_size;
-            status = libspdm_tcp_encode_message(NULL, message_size,
-                                                message,
-                                                &app_message_size,
-                                                &app_message);
-            if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %x\n", status));
-                return status;
-            }
-        } else {
-            app_message = (void *)message;
-            app_message_size = message_size;
-        }
-        /* APP message to secured message*/
+        /* SPDM message to secured message*/
         secure_transport_header_size = libspdm_transport_tcp_get_header_size(spdm_context);
         secured_message = (uint8_t *)*transport_message + secure_transport_header_size;
         secured_message_size = *transport_message_size - secure_transport_header_size;
         status = libspdm_encode_secured_message(
             secured_message_context, *session_id, is_requester,
-            app_message_size, app_message, &secured_message_size,
+            message_size, message, &secured_message_size,
             secured_message, &spdm_secured_message_callbacks);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_encode_secured_message - %x\n", status));
@@ -141,8 +120,6 @@ libspdm_return_t libspdm_transport_tcp_decode_message(
     uint32_t *secured_message_session_id;
     uint8_t *secured_message;
     size_t secured_message_size;
-    uint8_t *app_message;
-    size_t app_message_size;
     libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     void *secured_message_context;
     libspdm_error_struct_t spdm_error;
@@ -165,6 +142,7 @@ libspdm_return_t libspdm_transport_tcp_decode_message(
     if ((session_id == NULL) || (is_app_message == NULL)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
+    *is_app_message = false;
 
     secured_message_session_id = NULL;
     /* Detect received message*/
@@ -190,13 +168,11 @@ libspdm_return_t libspdm_transport_tcp_decode_message(
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
 
-        /* Secured message to APP message*/
-        app_message = *message;
-        app_message_size = *message_size;
+        /* Secured message to SPDM message*/
         status = libspdm_decode_secured_message(
             secured_message_context, *secured_message_session_id,
             is_requester, secured_message_size, secured_message,
-            &app_message_size, (void **)&app_message,
+            message_size, message,
             &spdm_secured_message_callbacks);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_decode_secured_message - %x\n", status));
@@ -206,29 +182,7 @@ libspdm_return_t libspdm_transport_tcp_decode_message(
                                                &spdm_error);
             return status;
         }
-
-        /* APP message to SPDM message.*/
-        status = libspdm_tcp_decode_message(&secured_message_session_id,
-                                            app_message_size, app_message,
-                                            message_size, message);
-        if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            *is_app_message = true;
-            /* just return APP message.*/
-            *message = app_message;
-            *message_size = app_message_size;
-            return LIBSPDM_STATUS_SUCCESS;
-        } else {
-            *is_app_message = false;
-            if (secured_message_session_id == NULL) {
-                return LIBSPDM_STATUS_SUCCESS;
-            } else {
-                /* get encapsulated secured message - cannot handle it.*/
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                               "transport_decode_message - expect encapsulated normal but got session (%08x)\n",
-                               *secured_message_session_id));
-                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
-            }
-        }
+        return LIBSPDM_STATUS_SUCCESS;
     } else {
         /* get non-secured message*/
         status = libspdm_tcp_decode_message(&secured_message_session_id,
@@ -241,7 +195,6 @@ libspdm_return_t libspdm_transport_tcp_decode_message(
         }
         LIBSPDM_ASSERT(secured_message_session_id == NULL);
         *session_id = NULL;
-        *is_app_message = false;
         return LIBSPDM_STATUS_SUCCESS;
     }
 }
