@@ -626,13 +626,13 @@ bool libspdm_validate_crypt_rsa(void)
 
     free_pool(signature);
     #endif /* LIBSPDM_RSA_PSS_SUPPORT */
+    #endif /* LIBSPDM_SHA256_SUPPORT */
 
     /* Release Resources*/
     libspdm_rsa_free(rsa);
     libspdm_my_print("Release RSA context ... [Pass]");
 
     libspdm_my_print("\n");
-    #endif /* LIBSPDM_SHA256_SUPPORT */
 
     return true;
 }
