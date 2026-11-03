@@ -73,10 +73,12 @@ bool libspdm_cryptest_main(void)
     }
     #endif /* LIBSPDM_RSA_SSA_SUPPORT */
 
+    #if LIBSPDM_ECDSA_SUPPORT
     status = libspdm_validate_crypt_x509("ecp256", sizeof("ecp256"));
     if (!status) {
         return status;
     }
+    #endif /* LIBSPDM_ECDSA_SUPPORT */
 
     status = libspdm_validate_crypt_x509_verify_cert_chain_pathlen_constraints();
     if (!status) {
@@ -95,11 +97,14 @@ bool libspdm_cryptest_main(void)
         return status;
     }
 
+    #if LIBSPDM_ECDSA_SUPPORT
     status = libspdm_validate_crypt_x509("ecp384", sizeof("ecp384"));
     if (!status) {
         return status;
     }
+    #endif /* LIBSPDM_ECDSA_SUPPORT */
 
+    #if LIBSPDM_RSA_SSA_SUPPORT
     status = libspdm_validate_crypt_x509("rsa2048", sizeof("rsa2048"));
     if (!status) {
         return status;
@@ -109,6 +114,7 @@ bool libspdm_cryptest_main(void)
     if (!status) {
         return status;
     }
+    #endif /* LIBSPDM_RSA_SSA_SUPPORT */
 
     status = libspdm_validate_crypt_x509_expiration();
     if (!status) {
