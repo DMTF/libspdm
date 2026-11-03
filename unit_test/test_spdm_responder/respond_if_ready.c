@@ -243,7 +243,6 @@ libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request = {
         0
     },
 };
-size_t m_libspdm_psk_exchange_request_size = sizeof(m_libspdm_psk_exchange_request);
 
 libspdm_psk_finish_request_mine_t m_libspdm_psk_finish_request = {
     {
@@ -884,10 +883,11 @@ static void rsp_respond_if_ready_case7(void **state) {
                                                       ptr);
     ptr += opaque_psk_exchange_req_size;
 
-    spdm_context->last_spdm_request_size = m_libspdm_psk_exchange_request_size;
+    spdm_context->last_spdm_request_size =
+        (size_t)(ptr - (uint8_t *)&m_libspdm_psk_exchange_request);
     libspdm_copy_mem(spdm_context->last_spdm_request,
                      libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
-                     &m_libspdm_psk_exchange_request, m_libspdm_psk_exchange_request_size);
+                     &m_libspdm_psk_exchange_request, spdm_context->last_spdm_request_size);
 
     /*RESPOND_IF_READY specific data*/
     spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
