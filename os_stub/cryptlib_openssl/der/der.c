@@ -14,7 +14,7 @@
 #include <openssl/evp.h>
 #include <openssl/decoder.h>
 
-#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) || (LIBSPDM_ECDSA_SUPPORT) || \
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) || \
     (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) || \
     (LIBSPDM_SM2_DSA_SUPPORT)
 
@@ -51,6 +51,11 @@ done:
     BIO_free(der_bio);
     return result;
 }
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) || (LIBSPDM_EDDSA_ED25519_SUPPORT) || (...) */
+
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) || (LIBSPDM_ECDSA_SUPPORT) || \
+    (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) || \
+    (LIBSPDM_SM2_DSA_SUPPORT)
 
 /**
  * Helper function to allocate and initialize a key context wrapper.
