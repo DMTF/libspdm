@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2025 DMTF. All rights reserved.
+ *  Copyright 2025-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -18,6 +18,8 @@
 #include <openssl/pem.h>
 #include <openssl/bio.h>
 #include <openssl/evp.h>
+
+#if LIBSPDM_CERT_PARSE_SUPPORT
 
 #if LIBSPDM_ML_DSA_SUPPORT
 
@@ -405,3 +407,5 @@ bool libspdm_slhdsa_get_public_key_from_x509(const uint8_t *cert, size_t cert_si
 }
 
 #endif /* LIBSPDM_SLH_DSA_SUPPORT */
+
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */

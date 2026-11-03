@@ -21,13 +21,62 @@
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 
+/*see link:"https://man.openbsd.org/ASN1_get_object.3" */
+#define OPENSSL_ASN1_ERROR_MASK 0x80
+
+/**
+ * Retrieve the tag and length of the tag.
+ *
+ * @param ptr      The position in the ASN.1 data
+ * @param end      end of data
+ * @param length   The variable that will receive the length
+ * @param tag      The expected tag
+ *
+ * @retval      true   Get tag successful
+ * @retval      FALSe  Failed to get tag or tag not match
+ **/
+bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
+                          uint32_t tag)
+{
+    const uint8_t *ptr_old;
+    int32_t obj_tag;
+    int32_t obj_class;
+    long obj_length;
+    int32_t ret;
+
+    /* Save ptr position*/
+
+    ptr_old = *ptr;
+
+    /*when there is no object, return false*/
+    if ((*ptr) == end) {
+        return false;
+    }
+
+    ret = ASN1_get_object((const uint8_t **)(size_t)ptr, &obj_length, &obj_tag, &obj_class,
+                          (int32_t)(end - (*ptr)));
+    /* Either a primitive encoding with a valid tag and definite length, but the content octets won't fit into omax, or parsing failed. */
+    if (ret & OPENSSL_ASN1_ERROR_MASK) {
+        return false;
+    }
+
+    if (obj_tag == (int32_t)(tag & LIBSPDM_CRYPTO_ASN1_TAG_VALUE_MASK) &&
+        obj_class == (int32_t)(tag & LIBSPDM_CRYPTO_ASN1_TAG_CLASS_MASK)) {
+        *length = (size_t)obj_length;
+        return true;
+    } else {
+
+        /* if doesn't match tag, restore ptr to origin ptr*/
+
+        *ptr = (uint8_t *)(size_t)ptr_old;
+        return false;
+    }
+}
+
 #if LIBSPDM_CERT_PARSE_SUPPORT
 
 /*buffer size to store subject object*/
 #define MAX_SBUJECT_NAME_LEN 0x100
-
-/*see link:"https://man.openbsd.org/ASN1_get_object.3" */
-#define OPENSSL_ASN1_ERROR_MASK 0x80
 
 /* OID*/
 #define OID_EXT_KEY_USAGE     { 0x55, 0x1D, 0x25 }
@@ -246,55 +295,6 @@ void libspdm_x509_stack_free(void *x509_stack)
     /* Free OpenSSL X509 stack object.*/
 
     sk_X509_pop_free((STACK_OF(X509) *) x509_stack, X509_free);
-}
-
-/**
- * Retrieve the tag and length of the tag.
- *
- * @param ptr      The position in the ASN.1 data
- * @param end      end of data
- * @param length   The variable that will receive the length
- * @param tag      The expected tag
- *
- * @retval      true   Get tag successful
- * @retval      FALSe  Failed to get tag or tag not match
- **/
-bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
-                          uint32_t tag)
-{
-    const uint8_t *ptr_old;
-    int32_t obj_tag;
-    int32_t obj_class;
-    long obj_length;
-    int32_t ret;
-
-    /* Save ptr position*/
-
-    ptr_old = *ptr;
-
-    /*when there is no object, return false*/
-    if ((*ptr) == end) {
-        return false;
-    }
-
-    ret = ASN1_get_object((const uint8_t **)(size_t)ptr, &obj_length, &obj_tag, &obj_class,
-                          (int32_t)(end - (*ptr)));
-    /* Either a primitive encoding with a valid tag and definite length, but the content octets won't fit into omax, or parsing failed. */
-    if (ret & OPENSSL_ASN1_ERROR_MASK) {
-        return false;
-    }
-
-    if (obj_tag == (int32_t)(tag & LIBSPDM_CRYPTO_ASN1_TAG_VALUE_MASK) &&
-        obj_class == (int32_t)(tag & LIBSPDM_CRYPTO_ASN1_TAG_CLASS_MASK)) {
-        *length = (size_t)obj_length;
-        return true;
-    } else {
-
-        /* if doesn't match tag, restore ptr to origin ptr*/
-
-        *ptr = (uint8_t *)(size_t)ptr_old;
-        return false;
-    }
 }
 
 /**

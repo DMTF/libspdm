@@ -7,8 +7,6 @@
 #ifndef CRYPTLIB_CERT_H
 #define CRYPTLIB_CERT_H
 
-#if LIBSPDM_CERT_PARSE_SUPPORT
-
 /**
  * Retrieve the tag and length of the tag.
  *
@@ -27,6 +25,8 @@
  * @retval  false  Failed to get tag or tag not match.
  **/
 extern bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length, uint32_t tag);
+
+#if LIBSPDM_CERT_PARSE_SUPPORT
 
 /**
  * Retrieve the subject bytes from one X.509 certificate.
