@@ -117,7 +117,7 @@ jobs:
   # runners, not GitHub's, but they count against posix's 5 all the same. If
   # every job took that document's worst case of 20 minutes, mingw would finish
   # in at most five rounds, or 100 minutes, within Tier 2's two hours.
-  # windows-msvc, at 34 jobs, configs followed by configs-release, at 222, and
+  # windows-msvc, at 34 jobs, configs followed by configs-release, at 228, and
   # posix followed by versions and then sanitizers, at 98, cannot meet that
   # worst case. Their jobs take about 2 to 10 minutes, and the riscv64 jobs up
   # to about 20, so windows-msvc finishes within about 45 minutes, configs'
@@ -2838,6 +2838,16 @@ jobs:
           - name: config-chacha20-poly1305-off
             cflags: -DLIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT=0
 
+          # The unit tests use SHA-256 as their base hash, so this builds only
+          # the libraries.
+          - name: config-sha256-off
+            cflags: -DLIBSPDM_SHA256_SUPPORT=0
+            cmake_extra: -DDISABLE_TESTS=1
+            expect_tests: 'false'
+
+          - name: config-sha384-off
+            cflags: -DLIBSPDM_SHA384_SUPPORT=0
+
           - name: config-sha512-off
             cflags: -DLIBSPDM_SHA512_SUPPORT=0
 
@@ -2958,6 +2968,10 @@ jobs:
           # Exactly the size of the sample PSK hint, with its terminating NUL.
           - name: config-psk-hint-12
             cflags: -DLIBSPDM_PSK_MAX_HINT_LENGTH=12
+
+          # The longest hint that the 2-byte PSKHintLength field can describe.
+          - name: config-psk-hint-65535
+            cflags: -DLIBSPDM_PSK_MAX_HINT_LENGTH=65535
 
           # SLH-DSA makes LIBSPDM_MAX_CERT_CHAIN_SIZE largest with OpenSSL,
           # and the transcript buffers with it.
