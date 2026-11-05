@@ -85,6 +85,10 @@ typedef struct {
 #define PCI_IDE_KM_KEY_SUB_STREAM_NPR 0x10
 #define PCI_IDE_KM_KEY_SUB_STREAM_CPL 0x20
 
+/* Reserved if the QUERY_RESP Capability Version is 0, and must be 0 if QUERY_RESP does not set
+ * PCI_IDE_KM_QUERY_RESP_IV_GEN_CAP. */
+#define PCI_IDE_KM_KEY_PROG_USE_INITIAL_IV 0x08
+
 /* IDE_KM KP_ACK */
 typedef struct {
     pci_ide_km_header_t header;
