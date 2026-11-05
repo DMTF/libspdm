@@ -31,6 +31,22 @@ extern void *libspdm_dh_new_by_nid(size_t nid);
  **/
 extern void libspdm_dh_free(void *dh_context);
 
+#if LIBSPDM_FIPS_MODE
+/**
+ * Sets the private key component into the established DH context. This API can be used for
+ * FIPS test.
+ *
+ * @param[in, out]  dh_context       Pointer to DH context being set.
+ * @param[in]       priv_key         Pointer to the private key buffer.
+ * @param[in]       priv_key_size    The size of private key buffer in bytes.
+ *
+ * @retval  true   DH private key component was set successfully.
+ * @retval  false  Invalid DH private key component.
+ **/
+extern bool libspdm_dh_set_priv_key(void *dh_context, const uint8_t *priv_key,
+                                    size_t priv_key_size);
+#endif /* LIBSPDM_FIPS_MODE */
+
 /**
  * Generates DH public key.
  *

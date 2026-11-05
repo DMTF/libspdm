@@ -6,6 +6,8 @@
   not yet implemented.
 - Post-quantum cryptography, with OpenSSL only: ML-DSA and SLH-DSA signatures, and ML-KEM key
   establishment, including FIPS known-answer tests.
+- The FFDHE FIPS self-test is a known-answer test, with a fixed private key and a NIST ACVP vector,
+  in place of a pairwise consistency test.
 - Redesigned Responder encapsulated request flow. The Integrator registers a single flow handler
   instead of initializing each encapsulated state individually. See the
   [encapsulated flow user guide](encapsulated_flow_user_guide.md).
@@ -33,6 +35,7 @@
       `SEND_EVENT`.
     - `cryptlib/cryptlib_cert.h` - `libspdm_mldsa_get_public_key_from_x509` and
       `libspdm_slhdsa_get_public_key_from_x509`.
+    - `cryptlib/cryptlib_dh.h` - `libspdm_dh_set_priv_key`, for the FFDHE FIPS known-answer test.
 - HAL functions removed:
     - `libspdm_write_certificate_to_nvm` - replaced by `libspdm_update_local_cert_chain`.
     - `libspdm_gen_csr_ex` - merged into `libspdm_gen_csr`, which also takes the post-quantum
