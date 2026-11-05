@@ -737,7 +737,9 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     }
     secured_message_version = 0;
     if (opaque_length != 0) {
-        result = libspdm_process_general_opaque_data_check(spdm_context, opaque_length, ptr);
+        result = libspdm_process_secured_message_opaque_data_check(spdm_context,
+                                                                   opaque_length,
+                                                                   ptr);
         if (!result) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;

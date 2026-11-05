@@ -413,8 +413,9 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
           measurement_summary_hash_size + spdm_response->context_length;
     secured_message_version = 0;
     if (spdm_response->opaque_length != 0) {
-        result = libspdm_process_general_opaque_data_check(spdm_context,
-                                                           spdm_response->opaque_length, ptr);
+        result = libspdm_process_secured_message_opaque_data_check(spdm_context,
+                                                                   spdm_response->opaque_length,
+                                                                   ptr);
         if (!result) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;

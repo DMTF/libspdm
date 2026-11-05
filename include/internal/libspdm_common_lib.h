@@ -1329,6 +1329,7 @@ libspdm_return_t libspdm_process_opaque_data_version_selection_data(
 /**
  *  Process general opaque data check
  *
+ * @param  spdm_context                  A pointer to the SPDM context.
  * @param  data_in_size                  size in bytes of the data_in.
  * @param  data_in                       A pointer to the opaque data to check.
  *
@@ -1338,6 +1339,21 @@ libspdm_return_t libspdm_process_opaque_data_version_selection_data(
 bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
                                                size_t data_in_size,
                                                const void *data_in);
+
+/**
+ * Check the opaque data of KEY_EXCHANGE, KEY_EXCHANGE_RSP, PSK_EXCHANGE and PSK_EXCHANGE_RSP.
+ * DSP0277 defines the format of this opaque data for every SPDM version.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  data_in_size                  size in bytes of the data_in.
+ * @param  data_in                       A pointer to the opaque data to check.
+ *
+ * @retval true                           check opaque data successfully
+ * @retval false                          check opaque data failed
+ **/
+bool libspdm_process_secured_message_opaque_data_check(libspdm_context_t *spdm_context,
+                                                       size_t data_in_size,
+                                                       const void *data_in);
 
 /**
  * Return the size in bytes of opaque data supported version.
