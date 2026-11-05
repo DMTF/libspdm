@@ -234,7 +234,8 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
     size_t th_curr_data_size;
     libspdm_th_managed_buffer_t th_curr;
 #endif
-#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || \
+    ((LIBSPDM_DEBUG_PRINT_ENABLE) && (LIBSPDM_DEBUG_BLOCK_ENABLE))
     size_t hash_size;
 #endif
 #if ((LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && (LIBSPDM_DEBUG_BLOCK_ENABLE)) || \
@@ -250,7 +251,8 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.algorithm.req_base_asym_alg);
     }
 
-#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || \
+    ((LIBSPDM_DEBUG_PRINT_ENABLE) && (LIBSPDM_DEBUG_BLOCK_ENABLE))
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 #endif
 
@@ -306,9 +308,11 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
         return false;
     }
 #endif
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_BLOCK_ENABLE)
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hash - "));
     LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+#endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_requester_data_sign(
