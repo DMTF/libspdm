@@ -285,7 +285,7 @@ libspdm_return_t libspdm_handle_error_large_response(
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
         /* chunk seq no wrap not considered in spdm 1.4+ */
         max_chunk_data_transfer_size =
-            ((size_t) spdm_context->local_context.capability.data_transfer_size
+            ((uint64_t) spdm_context->local_context.capability.data_transfer_size
              - sizeof(spdm_chunk_response_response_t)) * 65536 - sizeof(uint32_t);
     }
 
