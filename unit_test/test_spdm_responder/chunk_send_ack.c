@@ -11,6 +11,15 @@
 
 #define CHUNK_SEND_ACK_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE (42)
 
+/* The SPDM 1.2 and 1.3 chunk transfer size limit is
+ * (DataTransferSize - sizeof(spdm_chunk_send_request_t)) * 65536 - sizeof(uint32_t).
+ * 65549 is the smallest DataTransferSize whose limit exceeds UINT32_MAX:
+ * (65549 - 12) * 65536 - 4 = 4295032828, which wraps to 65532 in 32 bits. */
+#define CHUNK_SEND_ACK_RESPONDER_UNIT_TEST_LARGE_DATA_TRANSFER_SIZE (65549)
+
+static uint8_t m_libspdm_chunk_send_large_request[
+    CHUNK_SEND_ACK_RESPONDER_UNIT_TEST_LARGE_DATA_TRANSFER_SIZE];
+
 typedef struct {
     spdm_negotiate_algorithms_request_t spdm_request_version10;
     spdm_negotiate_algorithms_common_struct_table_t struct_table[4];
@@ -2315,6 +2324,81 @@ static void rsp_chunk_send_ack_case24(void** state)
     libspdm_test_responder_chunk_send_ack_reset_send_state(spdm_context);
 }
 
+/**
+ * Test 25: the first CHUNK_SEND of a 65550-byte request, when the Responder's DataTransferSize is
+ * 65549.
+ * Expected Behavior: the Responder accepts the chunk and returns CHUNK_SEND_ACK.
+ **/
+static void rsp_chunk_send_ack_case25(void** state)
+{
+    libspdm_return_t status;
+
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+
+    size_t request_size;
+    size_t response_size;
+
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+
+    spdm_chunk_send_request_t* chunk_send_request;
+    spdm_chunk_send_ack_response_t* chunk_send_ack_response;
+
+    uint32_t data_transfer_size;
+    uint32_t large_message_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 25;
+
+    libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
+
+    data_transfer_size = CHUNK_SEND_ACK_RESPONDER_UNIT_TEST_LARGE_DATA_TRANSFER_SIZE;
+    spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
+
+    /* The request does not fit in one message. */
+    large_message_size = data_transfer_size + 1;
+    spdm_context->local_context.capability.max_spdm_msg_size = large_message_size;
+    libspdm_unit_test_resize_scratch_buffer(spdm_test_context);
+
+    libspdm_zero_mem(m_libspdm_chunk_send_large_request,
+                     sizeof(m_libspdm_chunk_send_large_request));
+    chunk_send_request = (spdm_chunk_send_request_t*) m_libspdm_chunk_send_large_request;
+
+    chunk_send_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    chunk_send_request->header.request_response_code = SPDM_CHUNK_SEND;
+    chunk_send_request->header.param1 = 0;
+    chunk_send_request->header.param2 = (uint8_t) spdm_test_context->case_id; /* chunk_handle */
+    chunk_send_request->chunk_seq_no = 0;
+    chunk_send_request->chunk_size =
+        data_transfer_size - sizeof(spdm_chunk_send_request_t) - sizeof(uint32_t);
+    libspdm_write_uint32((uint8_t*) (chunk_send_request + 1), large_message_size);
+    request_size = data_transfer_size;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_chunk_send(
+        spdm_context,
+        request_size, chunk_send_request,
+        &response_size, response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_chunk_send_ack_response_t));
+
+    chunk_send_ack_response = (spdm_chunk_send_ack_response_t*) response;
+    assert_int_equal(chunk_send_ack_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(chunk_send_ack_response->header.request_response_code, SPDM_CHUNK_SEND_ACK);
+    assert_int_equal(chunk_send_ack_response->header.param1, 0);
+    assert_int_equal(chunk_send_ack_response->header.param2, spdm_test_context->case_id);
+    assert_int_equal(chunk_send_ack_response->chunk_seq_no, 0);
+
+    assert_true(spdm_context->chunk_context.send.chunk_in_use);
+    assert_int_equal(spdm_context->chunk_context.send.large_message_size, large_message_size);
+    assert_int_equal(spdm_context->chunk_context.send.chunk_bytes_transferred,
+                     chunk_send_request->chunk_size);
+
+    libspdm_test_responder_chunk_send_ack_reset_send_state(spdm_context);
+}
+
 
 int libspdm_rsp_chunk_send_ack_test(void)
 {
@@ -2376,6 +2460,8 @@ int libspdm_rsp_chunk_send_ack_test(void)
 
         /* CHUNK_SEND from a session other than the one that started the transfer */
         cmocka_unit_test(rsp_chunk_send_ack_case24),
+        /* First CHUNK_SEND of a request larger than 65532 bytes, with a DataTransferSize of 65549 */
+        cmocka_unit_test(rsp_chunk_send_ack_case25),
     };
 
     libspdm_test_context_t test_context = {
