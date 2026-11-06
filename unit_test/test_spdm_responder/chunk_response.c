@@ -11,6 +11,14 @@
 
 #define CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE (44)
 
+/* 65536 chunks of this DataTransferSize can carry more than 4 GiB, a limit that wraps to 65532
+ * bytes when computed in 32 bits. */
+#define CHUNK_GET_RESPONDER_UNIT_TEST_LARGE_DATA_TRANSFER_SIZE (65549)
+
+/* The response buffer must be larger than the DataTransferSize. */
+static uint8_t m_libspdm_chunk_response_large_buffer[
+    CHUNK_GET_RESPONDER_UNIT_TEST_LARGE_DATA_TRANSFER_SIZE + 1];
+
 /**
  * Test 1: Responder receives a CHUNK_GET request when it is not expecting it.
  * Responder does not have response CHUNK cap set.
@@ -1553,6 +1561,130 @@ static void rsp_chunk_response_case19(void** state)
     libspdm_zero_mem(&spdm_context->chunk_context.get, sizeof(spdm_context->chunk_context.get));
 }
 
+/**
+ * Test 20: a 65550-byte response, when the smaller of the Requester's DataTransferSize and the
+ * Responder's transmit size is 65549.
+ * Expected Behavior: the Responder returns the response in two CHUNK_RESPONSE messages.
+ **/
+static void rsp_chunk_response_case20(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    spdm_chunk_response_response_t* spdm_response;
+    spdm_chunk_get_request_t spdm_request;
+    void* scratch_buffer;
+    size_t scratch_buffer_size;
+    uint8_t* large_message;
+
+    uint8_t chunk_handle;
+    uint32_t data_transfer_size;
+    uint32_t large_message_size;
+    uint32_t first_chunk_size;
+    uint32_t second_chunk_size;
+    uint8_t* chunk_ptr;
+    uint32_t i;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 20;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+
+    data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_LARGE_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.data_transfer_size = data_transfer_size;
+    spdm_context->local_context.capability.sender_data_transfer_size = data_transfer_size;
+
+    /* The response does not fit in one message. */
+    large_message_size = data_transfer_size + 1;
+    spdm_context->local_context.capability.max_spdm_msg_size = large_message_size;
+    libspdm_unit_test_resize_scratch_buffer(spdm_test_context);
+
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+    large_message = (uint8_t*)scratch_buffer +
+                    libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    for (i = 0; i < large_message_size; i++) {
+        large_message[i] = (uint8_t) i;
+    }
+
+    chunk_handle = (uint8_t) spdm_test_context->case_id; /* Any number is fine */
+    libspdm_zero_mem(&spdm_context->chunk_context.get, sizeof(spdm_context->chunk_context.get));
+    spdm_context->chunk_context.get.chunk_in_use = true;
+    spdm_context->chunk_context.get.chunk_handle = chunk_handle;
+    spdm_context->chunk_context.get.chunk_seq_no = 0;
+    spdm_context->chunk_context.get.large_message = large_message;
+    spdm_context->chunk_context.get.large_message_capacity =
+        libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
+    spdm_context->chunk_context.get.large_message_size = large_message_size;
+    spdm_context->chunk_context.get.chunk_bytes_transferred = 0;
+
+    libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_request.header.request_response_code = SPDM_CHUNK_GET;
+    spdm_request.header.param1 = 0;
+    spdm_request.header.param2 = chunk_handle;
+    spdm_request.chunk_seq_no = 0;
+
+    response_size = sizeof(m_libspdm_chunk_response_large_buffer);
+    status = libspdm_get_response_chunk_get(
+        spdm_context,
+        sizeof(spdm_request), &spdm_request,
+        &response_size, m_libspdm_chunk_response_large_buffer);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, data_transfer_size);
+
+    first_chunk_size = data_transfer_size -
+                       (sizeof(spdm_chunk_response_response_t) + sizeof(uint32_t));
+    spdm_response = (spdm_chunk_response_response_t*) m_libspdm_chunk_response_large_buffer;
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CHUNK_RESPONSE);
+    assert_int_equal(spdm_response->header.param1, 0);
+    assert_int_equal(spdm_response->header.param2, chunk_handle);
+    assert_int_equal(spdm_response->chunk_seq_no, 0);
+    assert_int_equal(spdm_response->chunk_size, first_chunk_size);
+    assert_int_equal(libspdm_read_uint32((const uint8_t *)(spdm_response + 1)),
+                     large_message_size);
+
+    chunk_ptr = (uint8_t *)(spdm_response + 1) + sizeof(uint32_t);
+    for (i = 0; i < first_chunk_size; i++) {
+        assert_int_equal(chunk_ptr[i], (uint8_t) i);
+    }
+
+    spdm_request.chunk_seq_no = 1;
+
+    response_size = sizeof(m_libspdm_chunk_response_large_buffer);
+    status = libspdm_get_response_chunk_get(
+        spdm_context,
+        sizeof(spdm_request), &spdm_request,
+        &response_size, m_libspdm_chunk_response_large_buffer);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    second_chunk_size = large_message_size - first_chunk_size;
+    assert_int_equal(response_size, sizeof(spdm_chunk_response_response_t) + second_chunk_size);
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CHUNK_RESPONSE);
+    assert_int_equal(spdm_response->header.param1, SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK);
+    assert_int_equal(spdm_response->header.param2, chunk_handle);
+    assert_int_equal(spdm_response->chunk_seq_no, 1);
+    assert_int_equal(spdm_response->chunk_size, second_chunk_size);
+
+    chunk_ptr = (uint8_t *)(spdm_response + 1);
+    for (i = 0; i < second_chunk_size; i++) {
+        assert_int_equal(chunk_ptr[i], (uint8_t) (first_chunk_size + i));
+    }
+
+    assert_false(spdm_context->chunk_context.get.chunk_in_use);
+}
+
 
 int libspdm_rsp_chunk_response_test(void)
 {
@@ -1595,6 +1727,8 @@ int libspdm_rsp_chunk_response_test(void)
         cmocka_unit_test(rsp_chunk_response_case18),
         /* CHUNK_GET from a session other than the one that started the transfer, spdm 1.4 */
         cmocka_unit_test(rsp_chunk_response_case19),
+        /* Response larger than 65532 bytes, with a DataTransferSize of 65549 */
+        cmocka_unit_test(rsp_chunk_response_case20),
     };
 
     libspdm_test_context_t test_context = {

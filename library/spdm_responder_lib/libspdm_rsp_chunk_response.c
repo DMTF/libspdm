@@ -143,7 +143,7 @@ libspdm_return_t libspdm_get_response_chunk_get(
 
         /* Fail if exceed max chunks */
         max_chunk_data_transfer_size =
-            ((size_t) min_data_transfer_size - sizeof(spdm_chunk_response_response_t)) * 65536 -
+            ((uint64_t) min_data_transfer_size - sizeof(spdm_chunk_response_response_t)) * 65536 -
             sizeof(uint32_t);
 
         /* max_spdm_msg_size already checked in caller */
