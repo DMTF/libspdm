@@ -387,7 +387,7 @@ static libspdm_return_t libspdm_handle_large_request(
         /* chunk seq no wrap not considered in spdm 1.4+ */
 
         max_chunk_data_transfer_size =
-            ((size_t) min_data_transfer_size - sizeof(spdm_chunk_send_request_t)) * 65536 -
+            ((uint64_t) min_data_transfer_size - sizeof(spdm_chunk_send_request_t)) * 65536 -
             sizeof(uint32_t);
         /* max_spdm_msg_size is already checked in caller */
 
