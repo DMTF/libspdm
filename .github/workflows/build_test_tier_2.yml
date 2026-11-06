@@ -322,7 +322,8 @@ jobs:
           CFLAGS: ${{ env.BASE_CFLAGS }} ${{ matrix.cflags }}
         run: |
           # A stalled mirror can outlast apt-get's own timeouts, so each attempt
-          # is bounded, and a failed one is retried.
+          # is bounded, and a failed one is retried. The retries skip the Azure
+          # mirror, since apt keeps a slow mirror for as long as data arrives.
           apt_install() {
             for attempt in 1 2 3; do
               if sudo timeout -k 10 300 apt-get update &&
@@ -330,6 +331,9 @@ jobs:
                 return 0
               fi
               echo "apt-get install $* failed, attempt $attempt"
+              if [ -f /etc/apt/apt-mirrors.txt ]; then
+                sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
+              fi
               sleep $((attempt * 15))
             done
             return 1
@@ -1094,7 +1098,7 @@ jobs:
         if: matrix.container != ''
         shell: bash
         run: |
-          # As in Configure, but as root.
+          # As in Configure, but as root, and with no Azure mirror to skip.
           apt_install() {
             for attempt in 1 2 3; do
               if timeout -k 10 300 apt-get update &&
@@ -1202,7 +1206,8 @@ jobs:
         shell: bash
         run: |
           # A stalled mirror can outlast apt-get's own timeouts, so each attempt
-          # is bounded, and a failed one is retried.
+          # is bounded, and a failed one is retried. The retries skip the Azure
+          # mirror, since apt keeps a slow mirror for as long as data arrives.
           apt_install() {
             for attempt in 1 2 3; do
               if sudo timeout -k 10 300 apt-get update &&
@@ -1210,6 +1215,9 @@ jobs:
                 return 0
               fi
               echo "apt-get install $* failed, attempt $attempt"
+              if [ -f /etc/apt/apt-mirrors.txt ]; then
+                sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
+              fi
               sleep $((attempt * 15))
             done
             return 1
@@ -1316,7 +1324,8 @@ jobs:
           LDFLAGS: ${{ matrix.pie == 'true' && '-pie' || '' }}
         run: |
           # A stalled mirror can outlast apt-get's own timeouts, so each attempt
-          # is bounded, and a failed one is retried.
+          # is bounded, and a failed one is retried. The retries skip the Azure
+          # mirror, since apt keeps a slow mirror for as long as data arrives.
           apt_install() {
             for attempt in 1 2 3; do
               if sudo timeout -k 10 300 apt-get update &&
@@ -1324,6 +1333,9 @@ jobs:
                 return 0
               fi
               echo "apt-get install $* failed, attempt $attempt"
+              if [ -f /etc/apt/apt-mirrors.txt ]; then
+                sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
+              fi
               sleep $((attempt * 15))
             done
             return 1
@@ -3868,7 +3880,8 @@ jobs:
           LDFLAGS: ${{ env.SAN_LDFLAGS }}
         run: |
           # A stalled mirror can outlast apt-get's own timeouts, so each attempt
-          # is bounded, and a failed one is retried.
+          # is bounded, and a failed one is retried. The retries skip the Azure
+          # mirror, since apt keeps a slow mirror for as long as data arrives.
           apt_install() {
             for attempt in 1 2 3; do
               if sudo timeout -k 10 300 apt-get update &&
@@ -3876,6 +3889,9 @@ jobs:
                 return 0
               fi
               echo "apt-get install $* failed, attempt $attempt"
+              if [ -f /etc/apt/apt-mirrors.txt ]; then
+                sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
+              fi
               sleep $((attempt * 15))
             done
             return 1
@@ -4911,7 +4927,8 @@ jobs:
         shell: bash
         run: |
           # A stalled mirror can outlast apt-get's own timeouts, so each attempt
-          # is bounded, and a failed one is retried.
+          # is bounded, and a failed one is retried. The retries skip the Azure
+          # mirror, since apt keeps a slow mirror for as long as data arrives.
           apt_install() {
             for attempt in 1 2 3; do
               if sudo timeout -k 10 300 apt-get update &&
@@ -4919,6 +4936,9 @@ jobs:
                 return 0
               fi
               echo "apt-get install $* failed, attempt $attempt"
+              if [ -f /etc/apt/apt-mirrors.txt ]; then
+                sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
+              fi
               sleep $((attempt * 15))
             done
             return 1
@@ -5221,7 +5241,8 @@ jobs:
         shell: bash
         run: |
           # A stalled mirror can outlast apt-get's own timeouts, so each attempt
-          # is bounded, and a failed one is retried.
+          # is bounded, and a failed one is retried. The retries skip the Azure
+          # mirror, since apt keeps a slow mirror for as long as data arrives.
           apt_install() {
             for attempt in 1 2 3; do
               if sudo timeout -k 10 300 apt-get update &&
@@ -5229,6 +5250,9 @@ jobs:
                 return 0
               fi
               echo "apt-get install $* failed, attempt $attempt"
+              if [ -f /etc/apt/apt-mirrors.txt ]; then
+                sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
+              fi
               sleep $((attempt * 15))
             done
             return 1
