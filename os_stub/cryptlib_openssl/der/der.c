@@ -12,7 +12,6 @@
 #include "key_context.h"
 #include <openssl/x509.h>
 #include <openssl/evp.h>
-#include <openssl/decoder.h>
 
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) || (LIBSPDM_ECDSA_SUPPORT) || \
     (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) || \
@@ -151,52 +150,31 @@ bool libspdm_ec_get_public_key_from_der(const uint8_t *der_data,
                                         size_t der_size,
                                         void **ec_context)
 {
-    bool status;
-    OSSL_DECODER_CTX *dctx = NULL;
     EVP_PKEY *pkey = NULL;
 
     /* Check input parameters.*/
-
     if (der_data == NULL || ec_context == NULL || der_size > INT_MAX) {
         return false;
     }
 
-    status = false;
-
-    /* Read DER data.*/
-
-    dctx = OSSL_DECODER_CTX_new_for_pkey(&pkey, "DER", NULL, "EC",
-                                         OSSL_KEYMGMT_SELECT_PUBLIC_KEY, NULL, NULL);
-    if (dctx == NULL) {
+    /* Read DER data using BIO */
+    if (!get_public_key_from_der_bio(der_data, der_size, &pkey)) {
         return false;
     }
 
-    if (!OSSL_DECODER_from_data(dctx, &der_data, &der_size)) {
-        goto done;
-    }
-
     /* Verify key type */
-    if (EVP_PKEY_get_base_id(pkey) != EVP_PKEY_EC) {
-        goto done;
+    if (EVP_PKEY_base_id(pkey) != EVP_PKEY_EC) {
+        EVP_PKEY_free(pkey);
+        return false;
     }
 
     /* Allocate wrapper structure */
     if (!allocate_key_context(pkey, ec_context)) {
-        goto done;
-    }
-
-    status = true;
-    pkey = NULL; /* ownership moved */
-
-done:
-    /* Release Resources.*/
-    OSSL_DECODER_CTX_free(dctx);
-
-    if (pkey != NULL) {
         EVP_PKEY_free(pkey);
+        return false;
     }
 
-    return status;
+    return true;
 }
 #endif /* LIBSPDM_ECDSA_SUPPORT */
 
