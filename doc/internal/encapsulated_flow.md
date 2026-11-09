@@ -65,6 +65,11 @@ Integrator may
 - Evaluate `FINISH.OpaqueData` to determine whether or not to accept authentication of the
   Requester.
 
+The Integrator may require mutual authentication to succeed before allowing the session to
+transition from the handshake phase to the application phase. In the case where authentication of
+the Requester fails, the Integrator would send an `InvalidPolicy` or `Unspecified` error to the
+Requester, and both the encapsulated flow and session establishment would halt.
+
 ### Secure Session Management
 
 For `KEY_UPDATE` Integrator may specify `UpdateKey` or `UpdateAllKeys`.
