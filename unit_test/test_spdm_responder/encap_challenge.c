@@ -166,7 +166,7 @@ static void rsp_encap_challenge_case2(void **state)
     status =   libspdm_process_encap_response_challenge_auth(spdm_context, response_size,
                                                              spdm_response,
                                                              NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     free(data);
 }
 

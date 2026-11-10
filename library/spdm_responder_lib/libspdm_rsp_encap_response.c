@@ -95,6 +95,39 @@ static bool libspdm_is_local_process_failure(libspdm_return_t status)
 }
 
 /**
+ * Tell the Integrator's handler that the encapsulated flow has ended because the Requester's
+ * encapsulated response could not be processed. The handler cannot continue the flow, so its
+ * result and outputs are ignored.
+ *
+ * @param  spdm_context           A pointer to the SPDM context.
+ * @param  session_id             The session that the flow belonged to, or NULL.
+ * @param  flow_type              The encapsulated flow that has ended.
+ * @param  last_request_code      The encapsulated request that the Requester responded to.
+ * @param  encap_response_status  The error that ended the flow.
+ * @param  error_code             The ErrorCode of the Requester's encapsulated ERROR, or 0x00.
+ * @param  encap_request_size     The size, in bytes, of encap_request.
+ * @param  encap_request          A buffer that the handler may write to.
+ **/
+static void libspdm_report_encap_flow_failure(libspdm_context_t *spdm_context,
+                                              const uint32_t *session_id,
+                                              libspdm_encap_flow_type_t flow_type,
+                                              uint8_t last_request_code,
+                                              libspdm_return_t encap_response_status,
+                                              uint8_t error_code,
+                                              size_t encap_request_size,
+                                              void *encap_request)
+{
+    bool terminate_flow;
+
+    LIBSPDM_ASSERT(LIBSPDM_STATUS_IS_ERROR(encap_response_status));
+
+    terminate_flow = false;
+    ((libspdm_encap_flow_handler_func)spdm_context->encap_flow_handler_callback)(
+        spdm_context, session_id, flow_type, last_request_code, encap_response_status, error_code,
+        &terminate_flow, &encap_request_size, encap_request);
+}
+
+/**
  * When a multi-message operation (GET_CERTIFICATE or KEY_UPDATE) requires a follow-up request,
  * build the next request without calling the Integrator's handler.
  **/
@@ -383,7 +416,7 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
     LIBSPDM_ASSERT(encap_context->flow_type != LIBSPDM_ENCAP_FLOW_NONE);
 
     status = ((libspdm_encap_flow_handler_func)spdm_context->encap_flow_handler_callback)(
-        spdm_context, session_id, encap_context->flow_type, 0, 0,
+        spdm_context, session_id, encap_context->flow_type, 0, LIBSPDM_STATUS_SUCCESS, 0,
         &terminate_flow, &encap_request_size, encap_request);
 
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -479,6 +512,8 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     bool encap_error_received;
     uint8_t last_request_code;
     uint8_t error_code;
+    libspdm_return_t encap_response_status;
+    libspdm_encap_flow_type_t flow_type;
     const uint32_t *session_id;
     libspdm_encap_context_t *encap_context;
 
@@ -577,13 +612,17 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     response_not_ready = false;
     encap_error_received = false;
     error_code = 0;
+    encap_response_status = LIBSPDM_STATUS_SUCCESS;
+    flow_type = encap_context->flow_type;
     last_request_code = encap_context->last_encap_request_header.request_response_code;
     /* This is the session the flow belongs to, which is not necessarily the session the message
      * arrived on. See libspdm_get_encap_session_id_via_last_request. */
     session_id = libspdm_get_encap_session_id_via_last_request(spdm_context);
 
     if (last_request_code != 0) {
-        if ((encap_context->flow_type == LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH) &&
+        const spdm_error_response_t *encap_error = encap_response;
+
+        if ((flow_type == LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH) &&
             (last_request_code == SPDM_GET_DIGESTS) && !encap_context->has_last_encap_request) {
             /* This answers the GET_DIGESTS that KEY_EXCHANGE_RSP implies, which counts as
              * issued from now on. The flow has then moved past its first message, and the
@@ -595,18 +634,23 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
         status = libspdm_dispatch_process_encap_response(
             spdm_context, last_request_code,
             encap_response_size, encap_response, &need_continue);
+        encap_response_status = status;
 
         if ((session_id != NULL) &&
             (libspdm_get_session_info_via_session_id(spdm_context, *session_id) == NULL)) {
             /* Processing the encapsulated response ended the session that the flow belongs to,
-             * which also discarded encap_context. There is no flow left to continue and no state
-             * to give the Integrator. */
+             * which also discarded encap_context. There is no flow left to continue. */
+            if (encap_error->header.request_response_code == SPDM_ERROR) {
+                error_code = encap_error->header.param1;
+            }
+            libspdm_report_encap_flow_failure(spdm_context, session_id, flow_type,
+                                              last_request_code, encap_response_status,
+                                              error_code, encap_request_size, encap_request);
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0, response_size, response);
         }
 
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            const spdm_error_response_t *encap_error = encap_response;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
             const spdm_error_data_response_not_ready_t *not_ready_data;
 #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
@@ -626,24 +670,33 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
                 }
 
                 encap_context->flow_type = LIBSPDM_ENCAP_FLOW_NONE;
+                libspdm_report_encap_flow_failure(spdm_context, session_id, flow_type,
+                                                  last_request_code, encap_response_status, 0,
+                                                  encap_request_size, encap_request);
                 return libspdm_generate_error_response(
                     spdm_context, process_error_code, 0, response_size, response);
             }
 
             if (encap_error->header.param1 == 0) {
-                /* ErrorCode 0x00 is reserved, so this ERROR is malformed. It also cannot be
-                 * reported to the handler, as an error_code of 0 is how the absence of an
-                 * encapsulated ERROR is conveyed. */
+                /* ErrorCode 0x00 is reserved, so this ERROR is malformed. It is reported to the
+                 * handler as a malformed response rather than as an encapsulated ERROR, as an
+                 * error_code of 0 is how the absence of an encapsulated ERROR is conveyed. */
                 encap_context->flow_type = LIBSPDM_ENCAP_FLOW_NONE;
+                libspdm_report_encap_flow_failure(spdm_context, session_id, flow_type,
+                                                  last_request_code,
+                                                  LIBSPDM_STATUS_INVALID_MSG_FIELD, 0,
+                                                  encap_request_size, encap_request);
                 return libspdm_generate_error_response(
                     spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
                     response_size, response);
             }
 
             /* The Requester delivered an encapsulated ERROR. Report its code to the handler so
-             * that the Integrator learns why the flow ended. */
+             * that the Integrator learns why the flow ended. The status is derived from the
+             * ErrorCode alone, so that it does not depend on which request was answered. */
             encap_error_received = true;
             error_code = encap_error->header.param1;
+            encap_response_status = libspdm_handle_encap_error_response_main(error_code);
 
             if (status == LIBSPDM_STATUS_NOT_READY_PEER) {
                 response_not_ready = true;
@@ -656,6 +709,10 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
                     (sizeof(spdm_error_response_t) +
                      sizeof(spdm_error_data_response_not_ready_t))) {
                     encap_context->flow_type = LIBSPDM_ENCAP_FLOW_NONE;
+                    libspdm_report_encap_flow_failure(spdm_context, session_id, flow_type,
+                                                      last_request_code,
+                                                      LIBSPDM_STATUS_INVALID_MSG_SIZE, error_code,
+                                                      encap_request_size, encap_request);
                     return libspdm_generate_error_response(
                         spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
                         response_size, response);
@@ -670,6 +727,10 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
                     (not_ready_data->rd_tm <= 1) ||
                     (not_ready_data->rd_exponent > LIBSPDM_MAX_RDT_EXPONENT)) {
                     encap_context->flow_type = LIBSPDM_ENCAP_FLOW_NONE;
+                    libspdm_report_encap_flow_failure(spdm_context, session_id, flow_type,
+                                                      last_request_code,
+                                                      LIBSPDM_STATUS_INVALID_MSG_FIELD, error_code,
+                                                      encap_request_size, encap_request);
                     return libspdm_generate_error_response(
                         spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
                         response_size, response);
@@ -695,6 +756,9 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
                 /* The failure is local to the Responder; nothing was wrong with the Requester's
                  * encapsulated response. */
                 encap_context->flow_type = LIBSPDM_ENCAP_FLOW_NONE;
+                libspdm_report_encap_flow_failure(spdm_context, session_id, flow_type,
+                                                  last_request_code, status, 0,
+                                                  encap_request_size, encap_request);
                 return libspdm_generate_error_response(
                     spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
                     response_size, response);
@@ -705,9 +769,17 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
         #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
         if (!encap_error_received && (last_request_code == SPDM_CHALLENGE)) {
             /* Basic mutual authentication concludes with the encapsulated CHALLENGE_AUTH
-             * response. The Responder must then terminate the encapsulated flow by clearing
-             * ENCAPSULATED_RESPONSE_ACK.Param2, so the Integrator's handler is not consulted
-             * and cannot continue the flow. */
+             * response, whose signature has been verified, so the Requester is authenticated.
+             * The Responder must then terminate the encapsulated flow by clearing
+             * ENCAPSULATED_RESPONSE_ACK.Param2. The Integrator's handler is told that the
+             * Requester is authenticated, but it cannot continue the flow, so its result and
+             * outputs are ignored. */
+            size_t ignored_request_size;
+
+            ignored_request_size = encap_request_size;
+            ((libspdm_encap_flow_handler_func)spdm_context->encap_flow_handler_callback)(
+                spdm_context, session_id, flow_type, last_request_code, encap_response_status, 0,
+                &terminate_flow, &ignored_request_size, encap_request);
             terminate_flow = true;
             goto set_ack_fields;
         }
@@ -718,8 +790,8 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
 
     /* All response data processed; ask the Integrator what to do next. */
     status = ((libspdm_encap_flow_handler_func)spdm_context->encap_flow_handler_callback)(
-        spdm_context, session_id, encap_context->flow_type,
-        last_request_code, error_code, &terminate_flow, &encap_request_size, encap_request);
+        spdm_context, session_id, encap_context->flow_type, last_request_code,
+        encap_response_status, error_code, &terminate_flow, &encap_request_size, encap_request);
 
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         /* The failure is local to the Responder; nothing was wrong with the Requester's
@@ -730,9 +802,8 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     }
 
     if (encap_error_received) {
-        /* An encapsulated ERROR ends the flow, so the Integrator acknowledges it rather than
-         * supplying another request. */
-        LIBSPDM_ASSERT(terminate_flow);
+        /* An encapsulated ERROR ends the flow, so whatever the handler produced is discarded and
+         * the ERROR is acknowledged instead. */
         terminate_flow = true;
         encap_request_size = 0;
         goto set_ack_fields;
@@ -809,10 +880,15 @@ set_ack_fields:
 
 libspdm_return_t libspdm_handle_encap_error_response_main(uint8_t error_code)
 {
-    if (error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
+    switch (error_code) {
+    case SPDM_ERROR_CODE_RESPONSE_NOT_READY:
         return LIBSPDM_STATUS_NOT_READY_PEER;
+    case SPDM_ERROR_CODE_BUSY:
+        return LIBSPDM_STATUS_BUSY_PEER;
+    case SPDM_ERROR_CODE_DECRYPT_ERROR:
+        return LIBSPDM_STATUS_SESSION_MSG_ERROR;
+    default:
+        return LIBSPDM_STATUS_ERROR_PEER;
     }
-
-    return LIBSPDM_STATUS_UNSUPPORTED_CAP;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */

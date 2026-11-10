@@ -569,12 +569,14 @@ libspdm_return_t libspdm_get_encap_request_respond_if_ready(void *spdm_context,
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
 /**
- * This function handles the encap error response.
+ * Maps the ErrorCode of an encapsulated ERROR that the Requester delivered to a status.
  *
- * @param  error_code                    Indicate the error code.
+ * @param  error_code  The ErrorCode of the encapsulated ERROR.
  *
- * @retval LIBSPDM_STATUS_NOT_READY_PEER   The error code is RESPONSE_NOT_READY.
- * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP  The error code is any other value.
+ * @retval LIBSPDM_STATUS_NOT_READY_PEER     The error code is ResponseNotReady.
+ * @retval LIBSPDM_STATUS_BUSY_PEER          The error code is Busy.
+ * @retval LIBSPDM_STATUS_SESSION_MSG_ERROR  The error code is DecryptError.
+ * @retval LIBSPDM_STATUS_ERROR_PEER         The error code is any other value.
  **/
 libspdm_return_t libspdm_handle_encap_error_response_main(uint8_t error_code);
 
