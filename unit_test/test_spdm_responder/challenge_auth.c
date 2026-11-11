@@ -55,6 +55,14 @@ spdm_challenge_request_t m_libspdm_challenge_request8 = {
 };
 size_t m_libspdm_challenge_request8_size = sizeof(m_libspdm_challenge_request8);
 
+static spdm_challenge_request_t m_libspdm_challenge_request9 = {
+    { SPDM_MESSAGE_VERSION_12, SPDM_CHALLENGE, 0,
+      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH },
+};
+
+/* VCA that cases 21 and 22 put in message_a. */
+static uint8_t m_libspdm_vca[16];
+
 extern size_t libspdm_secret_lib_challenge_opaque_data_size;
 
 /**
@@ -1302,6 +1310,186 @@ static void rsp_challenge_auth_case20(void **state)
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
 
+/* Sets up a CHALLENGE to slot 0 after VCA, for cases 21 and 22. The caller frees *cert_chain. */
+static void setup_challenge_auth_after_vca(libspdm_context_t *spdm_context, uint8_t spdm_version,
+                                           void **cert_chain)
+{
+    size_t cert_chain_size;
+
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.multi_key_conn_rsp = false;
+    spdm_context->local_context.capability.flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.version =
+        (spdm_version_number_t)(spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
+        return;
+    }
+    spdm_context->local_context.local_cert_chain_provision[0] = *cert_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = cert_chain_size;
+
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
+    libspdm_reset_message_a(spdm_context);
+    libspdm_reset_message_b(spdm_context);
+    libspdm_reset_message_c(spdm_context);
+    libspdm_set_mem(m_libspdm_vca, sizeof(m_libspdm_vca), 0xA5);
+    libspdm_append_message_a(spdm_context, m_libspdm_vca, sizeof(m_libspdm_vca));
+}
+
+/* Verifies a CHALLENGE_AUTH signature over m1 with the Responder's public key, for cases 21 and
+ * 22. */
+static bool verify_challenge_auth_signature(uint8_t spdm_version, const uint8_t *m1,
+                                            size_t m1_size, const uint8_t *signature,
+                                            size_t signature_size)
+{
+    void *public_key;
+    size_t public_key_size;
+    void *context;
+    uint8_t endian;
+    bool result;
+
+    if (!libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &public_key,
+                                           &public_key_size)) {
+        return false;
+    }
+    result = libspdm_asym_get_public_key_from_der(m_libspdm_use_asym_algo, public_key,
+                                                  public_key_size, &context);
+    free(public_key);
+    if (!result) {
+        return false;
+    }
+    endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE;
+    result = libspdm_asym_verify_ex((spdm_version_number_t)(spdm_version <<
+                                                            SPDM_VERSION_NUMBER_SHIFT_BIT),
+                                    SPDM_CHALLENGE_AUTH, m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, context, m1, m1_size, signature,
+                                    signature_size, &endian);
+    libspdm_asym_free(m_libspdm_use_asym_algo, context);
+    return result;
+}
+
+/**
+ * Test 21: with SPDM 1.1, a CHALLENGE completes after VCA, which sets M1/M2 to null, and the
+ * Requester then sends a second CHALLENGE. VCA is part of M1/M2 only if it was sent after M1/M2
+ * was last set to null.
+ * Expected behavior: the signature in the second CHALLENGE_AUTH verifies over CHALLENGE and
+ * CHALLENGE_AUTH alone.
+ **/
+static void rsp_challenge_auth_case21(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_challenge_auth_response_t *spdm_response;
+    void *data1;
+    uint8_t m1[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t m1_size;
+    size_t signature_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x15;
+    setup_challenge_auth_after_vca(spdm_context, SPDM_MESSAGE_VERSION_11, &data1);
+    spdm_response = (void *)response;
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_challenge_request1.nonce);
+    status = libspdm_get_response_challenge_auth(
+        spdm_context, m_libspdm_challenge_request1_size,
+        &m_libspdm_challenge_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_challenge_request1.nonce);
+    status = libspdm_get_response_challenge_auth(
+        spdm_context, m_libspdm_challenge_request1_size,
+        &m_libspdm_challenge_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
+
+    signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+    m1_size = 0;
+    libspdm_copy_mem(m1, sizeof(m1), &m_libspdm_challenge_request1,
+                     m_libspdm_challenge_request1_size);
+    m1_size += m_libspdm_challenge_request1_size;
+    libspdm_copy_mem(m1 + m1_size, sizeof(m1) - m1_size, response,
+                     response_size - signature_size);
+    m1_size += response_size - signature_size;
+    assert_true(verify_challenge_auth_signature(SPDM_MESSAGE_VERSION_11, m1, m1_size,
+                                                response + response_size - signature_size,
+                                                signature_size));
+    free(data1);
+}
+
+/**
+ * Test 22: with SPDM 1.2, a CHALLENGE completes after VCA, and the Requester then sends a second
+ * CHALLENGE. In SPDM 1.2 and later VCA is always part of M1/M2.
+ * Expected behavior: the signature in the second CHALLENGE_AUTH verifies over VCA, CHALLENGE and
+ * CHALLENGE_AUTH.
+ **/
+static void rsp_challenge_auth_case22(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_challenge_auth_response_t *spdm_response;
+    void *data1;
+    uint8_t m1[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t m1_size;
+    size_t signature_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x16;
+    setup_challenge_auth_after_vca(spdm_context, SPDM_MESSAGE_VERSION_12, &data1);
+    spdm_response = (void *)response;
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_challenge_request9.nonce);
+    status = libspdm_get_response_challenge_auth(
+        spdm_context, sizeof(m_libspdm_challenge_request9),
+        &m_libspdm_challenge_request9, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_challenge_request9.nonce);
+    status = libspdm_get_response_challenge_auth(
+        spdm_context, sizeof(m_libspdm_challenge_request9),
+        &m_libspdm_challenge_request9, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
+
+    signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+    m1_size = 0;
+    libspdm_copy_mem(m1, sizeof(m1), m_libspdm_vca, sizeof(m_libspdm_vca));
+    m1_size += sizeof(m_libspdm_vca);
+    libspdm_copy_mem(m1 + m1_size, sizeof(m1) - m1_size, &m_libspdm_challenge_request9,
+                     sizeof(m_libspdm_challenge_request9));
+    m1_size += sizeof(m_libspdm_challenge_request9);
+    libspdm_copy_mem(m1 + m1_size, sizeof(m1) - m1_size, response,
+                     response_size - signature_size);
+    m1_size += response_size - signature_size;
+    assert_true(verify_challenge_auth_signature(SPDM_MESSAGE_VERSION_12, m1, m1_size,
+                                                response + response_size - signature_size,
+                                                signature_size));
+    free(data1);
+}
+
 int libspdm_rsp_challenge_auth_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1341,6 +1529,10 @@ int libspdm_rsp_challenge_auth_test(void)
         /* The Integrator starts basic mutual authentication from CHALLENGE_AUTH */
         cmocka_unit_test(rsp_challenge_auth_case20),
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
+        /* SPDM 1.1: CHALLENGE after a completed CHALLENGE is signed without VCA*/
+        cmocka_unit_test(rsp_challenge_auth_case21),
+        /* SPDM 1.2: CHALLENGE after a completed CHALLENGE is signed with VCA*/
+        cmocka_unit_test(rsp_challenge_auth_case22),
 
     };
 
