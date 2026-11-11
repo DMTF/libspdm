@@ -255,6 +255,7 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
 #endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    slot_id = session_info->peer_used_cert_chain_slot_id;
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
     if (slot_id == 0xFF) {
         result = libspdm_get_peer_public_key_buffer(
