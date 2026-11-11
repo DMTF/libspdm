@@ -346,4 +346,7 @@
   3.8 added 2.
 - The Application Data of a TCP In-Session Message is the SPDM message, as DSP0287 requires, where
   3.8 put a binding header in front of it.
+- For SPDM 1.0 and 1.1, the M1/M2 transcript includes VCA only if VCA was sent after M1/M2 was last
+  set to null, as DSP0274 requires, where 3.8 always included it. A `CHALLENGE` that follows a
+  completed `CHALLENGE` is therefore signed over `CHALLENGE` and `CHALLENGE_AUTH` alone.
 - Many bug fixes and further alignment with the SPDM specifications.

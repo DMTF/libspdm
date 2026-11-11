@@ -21,6 +21,24 @@ static uint8_t m_requester_context[SPDM_REQ_CONTEXT_SIZE];
 static uint8_t m_msg_log_buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE * 2];
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
+/* Number of CHALLENGE_AUTH responses sent in cases 0x1D to 0x1F. */
+static size_t m_libspdm_challenge_auth_count;
+
+/* Whether the Responder's M1 starts with VCA in cases 0x1D to 0x1F. In SPDM 1.0 and 1.1, VCA is
+ * part of M1/M2 only if it was sent after M1/M2 was last set to null, which completion of
+ * CHALLENGE and GET_MEASUREMENTS do. In SPDM 1.2 and later, VCA is always part of M1/M2. */
+static bool m1_includes_vca(uint32_t case_id)
+{
+    switch (case_id) {
+    case 0x1D:
+        return m_libspdm_challenge_auth_count == 0;
+    case 0x1E:
+        return true;
+    default:
+        return false;
+    }
+}
+
 static libspdm_return_t send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
@@ -140,6 +158,25 @@ static libspdm_return_t send_message(
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer), &ptr[1],
                          request_size - 1);
         m_libspdm_local_buffer_size += (request_size - 1);
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x1D:
+    case 0x1E:
+    case 0x1F: {
+        libspdm_vca_managed_buffer_t *message_a;
+
+        m_libspdm_local_buffer_size = 0;
+        if (m1_includes_vca(spdm_test_context->case_id)) {
+            message_a = &((libspdm_context_t *)spdm_context)->transcript.message_a;
+            libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
+                             libspdm_get_managed_buffer(message_a),
+                             libspdm_get_managed_buffer_size(message_a));
+            m_libspdm_local_buffer_size = libspdm_get_managed_buffer_size(message_a);
+        }
+        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                         sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
+                         &ptr[1], request_size - 1);
+        m_libspdm_local_buffer_size += (request_size - 1);
+    }
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -1965,6 +2002,64 @@ static libspdm_return_t receive_message(
                                               response);
     }
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x1D:
+    case 0x1E:
+    case 0x1F: { /*CHALLENGE_AUTH signed over the M1 that m1_includes_vca describes*/
+        spdm_challenge_auth_response_t *spdm_response;
+        void *data;
+        size_t data_size;
+        uint8_t *ptr;
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                             m_libspdm_use_asym_algo, &data,
+                                                             &data_size, NULL, NULL)) {
+            assert_true(false);
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
+        }
+        spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
+                             libspdm_get_hash_size(m_libspdm_use_hash_algo) +
+                             SPDM_NONCE_SIZE + sizeof(uint16_t) +
+                             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = (spdm_test_context->case_id == 0x1E) ?
+                                             SPDM_MESSAGE_VERSION_12 : SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = (1 << 0);
+        ptr = (void *)(spdm_response + 1);
+        libspdm_hash_all(m_libspdm_use_hash_algo, data, data_size, ptr);
+        free(data);
+        ptr += libspdm_get_hash_size(m_libspdm_use_hash_algo);
+        libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
+        ptr += SPDM_NONCE_SIZE;
+        libspdm_write_uint16(ptr, 0);
+        ptr += sizeof(uint16_t);
+        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                         sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
+                         spdm_response, (size_t)ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)ptr - (size_t)spdm_response);
+        sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+        libspdm_responder_data_sign(
+            spdm_context,
+            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                0, SPDM_CHALLENGE_AUTH,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
+                false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
+                ptr, &sig_size);
+        ptr += sig_size;
+        m_libspdm_challenge_auth_count++;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
@@ -3351,6 +3446,9 @@ static void req_challenge_case22(void **state)
     size_t data_size;
     void *hash;
     size_t hash_size;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t vca[10];
+#endif
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -3371,8 +3469,8 @@ static void req_challenge_case22(void **state)
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     /*filling all buffers with arbitrary data*/
-    libspdm_set_mem(spdm_context->transcript.message_a.buffer, 10, (uint8_t) 0xFF);
-    spdm_context->transcript.message_a.buffer_size = 10;
+    libspdm_set_mem(vca, sizeof(vca), (uint8_t) 0xFF);
+    libspdm_append_message_a(spdm_context, vca, sizeof(vca));
     libspdm_set_mem(spdm_context->transcript.message_b.buffer, 8, (uint8_t) 0xEE);
     spdm_context->transcript.message_b.buffer_size = 8;
     libspdm_set_mem(spdm_context->transcript.message_c.buffer, 12, (uint8_t) 0xDD);
@@ -3834,6 +3932,139 @@ static void req_challenge_case28(void **state)
     free(data);
 }
 
+/* Sets up a CHALLENGE to slot 0 after VCA, for cases 29 to 31. */
+static void setup_challenge_after_vca(libspdm_context_t *spdm_context, uint8_t spdm_version)
+{
+    void *data;
+    size_t data_size;
+    uint8_t vca[16];
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.version =
+        (spdm_version_number_t)(spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        assert_true(false);
+        return;
+    }
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#else
+    libspdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo, data, data_size,
+                     spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_free_peer_leaf_cert_public_key(spdm_context, 0);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        data, data_size,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+    free(data);
+
+    libspdm_reset_message_a(spdm_context);
+    libspdm_reset_message_b(spdm_context);
+    libspdm_reset_message_c(spdm_context);
+    libspdm_set_mem(vca, sizeof(vca), 0xA5);
+    libspdm_append_message_a(spdm_context, vca, sizeof(vca));
+    m_libspdm_challenge_auth_count = 0;
+}
+
+/**
+ * Test 29: with SPDM 1.1, a CHALLENGE completes after VCA, which sets M1/M2 to null, and the
+ * Requester then sends a second CHALLENGE. VCA is part of M1/M2 only if it was sent after M1/M2
+ * was last set to null, so the Responder signs the second CHALLENGE_AUTH over CHALLENGE and
+ * CHALLENGE_AUTH alone.
+ * Expected behavior: the second CHALLENGE returns LIBSPDM_STATUS_SUCCESS.
+ **/
+static void req_challenge_case29(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1D;
+    setup_challenge_after_vca(spdm_context, SPDM_MESSAGE_VERSION_11);
+
+    libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
+    status = libspdm_challenge(spdm_context, NULL, 0,
+                               SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                               measurement_hash, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    status = libspdm_challenge(spdm_context, NULL, 0,
+                               SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                               measurement_hash, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+}
+
+/**
+ * Test 30: with SPDM 1.2, a CHALLENGE completes after VCA, and the Requester then sends a second
+ * CHALLENGE. In SPDM 1.2 and later VCA is always part of M1/M2, so the Responder signs the second
+ * CHALLENGE_AUTH over VCA, CHALLENGE and CHALLENGE_AUTH.
+ * Expected behavior: the second CHALLENGE returns LIBSPDM_STATUS_SUCCESS.
+ **/
+static void req_challenge_case30(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1E;
+    setup_challenge_after_vca(spdm_context, SPDM_MESSAGE_VERSION_12);
+
+    libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
+    status = libspdm_challenge(spdm_context, NULL, 0,
+                               SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                               measurement_hash, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    status = libspdm_challenge(spdm_context, NULL, 0,
+                               SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                               measurement_hash, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+}
+
+/**
+ * Test 31: with SPDM 1.1, GET_MEASUREMENTS sets M1/M2 to null after VCA, and the Requester then
+ * sends CHALLENGE. VCA is part of M1/M2 only if it was sent after M1/M2 was last set to null, so
+ * the Responder signs CHALLENGE_AUTH over CHALLENGE and CHALLENGE_AUTH alone.
+ * Expected behavior: CHALLENGE returns LIBSPDM_STATUS_SUCCESS.
+ **/
+static void req_challenge_case31(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1F;
+    setup_challenge_after_vca(spdm_context, SPDM_MESSAGE_VERSION_11);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_MEASUREMENTS);
+
+    libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
+    status = libspdm_challenge(spdm_context, NULL, 0,
+                               SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                               measurement_hash, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+}
+
 int libspdm_req_challenge_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -3888,6 +4119,12 @@ int libspdm_req_challenge_test(void)
         cmocka_unit_test(req_challenge_case27),
         /* Error response: challenge context fields are inconsistent*/
         cmocka_unit_test(req_challenge_case28),
+        /* SPDM 1.1: CHALLENGE after a completed CHALLENGE is signed without VCA*/
+        cmocka_unit_test(req_challenge_case29),
+        /* SPDM 1.2: CHALLENGE after a completed CHALLENGE is signed with VCA*/
+        cmocka_unit_test(req_challenge_case30),
+        /* SPDM 1.1: CHALLENGE after GET_MEASUREMENTS is signed without VCA*/
+        cmocka_unit_test(req_challenge_case31),
     };
 
     libspdm_test_context_t test_context = {

@@ -342,16 +342,19 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
             );
 
     } else {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
-        LIBSPDM_INTERNAL_DUMP_HEX(
-            libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
-            libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
-        status = libspdm_append_managed_buffer(
-            m1m2,
-            libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
-            libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
-        if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            return false;
+        if (((spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >
+             SPDM_MESSAGE_VERSION_11) || spdm_context->transcript.message_a_in_m1m2) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
+            LIBSPDM_INTERNAL_DUMP_HEX(
+                libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+                libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
+            status = libspdm_append_managed_buffer(
+                m1m2,
+                libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+                libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return false;
+            }
         }
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_b data :\n"));
@@ -835,6 +838,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
     } else {
         libspdm_reset_message_b(spdm_context);
         libspdm_reset_message_c(spdm_context);
+        spdm_context->transcript.message_a_in_m1m2 = false;
     }
     if (!result) {
         return false;
@@ -1035,6 +1039,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
     if (is_requester) {
         libspdm_reset_message_b(spdm_context);
         libspdm_reset_message_c(spdm_context);
+        spdm_context->transcript.message_a_in_m1m2 = false;
     } else {
         libspdm_reset_message_mut_b(spdm_context);
         libspdm_reset_message_mut_c(spdm_context);

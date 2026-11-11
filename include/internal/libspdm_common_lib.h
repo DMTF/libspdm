@@ -385,6 +385,9 @@ typedef struct {
 typedef struct {
     /* the message_a must be plain text because we do not know the algorithm yet.*/
     libspdm_vca_managed_buffer_t message_a;
+    /* Set when message_a is appended to and cleared when M1/M2 is set to null. For SPDM 1.0 and
+     * 1.1, VCA is part of M1/M2 only while this is set. */
+    bool message_a_in_m1m2;
     libspdm_message_d_managed_buffer_t message_d;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_message_b_managed_buffer_t message_b;
