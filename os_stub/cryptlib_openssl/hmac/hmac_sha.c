@@ -9,7 +9,6 @@
  **/
 
 #include "internal_crypt_lib.h"
-#include <openssl/evp.h>
 #include <openssl/core_names.h>
 
 /**

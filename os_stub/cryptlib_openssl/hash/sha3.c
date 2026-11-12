@@ -9,7 +9,6 @@
  **/
 
 #include "internal_crypt_lib.h"
-#include <openssl/evp.h>
 
 void *hash_md_new(void);
 void hash_md_free(void *md_ctx);

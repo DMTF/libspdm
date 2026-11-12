@@ -11,7 +11,6 @@
 #include "internal_crypt_lib.h"
 #include "key_context.h"
 #include <openssl/x509.h>
-#include <openssl/evp.h>
 
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) || (LIBSPDM_ECDSA_SUPPORT) || \
     (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) || \

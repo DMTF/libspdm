@@ -9,7 +9,6 @@
  **/
 
 #include "internal_crypt_lib.h"
-#include <openssl/evp.h>
 
 /**
  * Allocates and initializes one HASH_CTX context for subsequent MD use.

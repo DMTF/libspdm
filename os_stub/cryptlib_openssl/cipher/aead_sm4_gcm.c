@@ -9,7 +9,6 @@
  **/
 
 #include "internal_crypt_lib.h"
-#include <openssl/evp.h>
 
 /**
  * Performs AEAD SM4-GCM authenticated encryption on a data buffer and additional authenticated data (AAD).

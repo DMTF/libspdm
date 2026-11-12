@@ -19,7 +19,6 @@
 #include <openssl/bn.h>
 #include <openssl/pem.h>
 #include <openssl/bio.h>
-#include <openssl/evp.h>
 
 /*see link:"https://man.openbsd.org/ASN1_get_object.3" */
 #define OPENSSL_ASN1_ERROR_MASK 0x80
