@@ -10,7 +10,6 @@
 
 #include "internal_crypt_lib.h"
 #include <openssl/rand.h>
-#include <openssl/evp.h>
 
 /**
  * Generates a random byte stream of the specified size.

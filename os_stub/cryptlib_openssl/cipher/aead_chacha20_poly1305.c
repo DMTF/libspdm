@@ -13,7 +13,6 @@
 
 #include "internal_crypt_lib.h"
 #include <openssl/aes.h>
-#include <openssl/evp.h>
 
 /**
  * Performs AEAD ChaCha20Poly1305 authenticated encryption on a data buffer and additional authenticated data (AAD).

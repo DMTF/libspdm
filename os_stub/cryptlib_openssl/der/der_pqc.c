@@ -10,7 +10,6 @@
 
 #include "internal_crypt_lib.h"
 #include <openssl/x509.h>
-#include <openssl/evp.h>
 
 #if LIBSPDM_ML_DSA_SUPPORT
 

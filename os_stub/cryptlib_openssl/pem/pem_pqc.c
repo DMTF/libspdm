@@ -11,7 +11,6 @@
 #include "internal_crypt_lib.h"
 #include "key_context.h"
 #include <openssl/pem.h>
-#include <openssl/evp.h>
 
 int PasswordCallback(char *buf, const int size, const int flag, const void *key);
 

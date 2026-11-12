@@ -8,7 +8,6 @@
 #include "key_context.h"
 
 #include <string.h>
-#include <openssl/evp.h>
 #include <openssl/core_names.h>
 
 #if LIBSPDM_ML_KEM_SUPPORT

@@ -16,7 +16,6 @@
 #include <openssl/params.h>
 #include <openssl/bn.h>
 #include <openssl/ec.h>
-#include <openssl/evp.h>
 #include <openssl/objects.h>
 #include <openssl/core_names.h>
 #include <openssl/param_build.h>

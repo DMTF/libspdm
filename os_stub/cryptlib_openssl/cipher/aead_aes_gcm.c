@@ -12,7 +12,6 @@
  **/
 
 #include "internal_crypt_lib.h"
-#include <openssl/evp.h>
 
 /**
  * Get AES-GCM cipher name by key size

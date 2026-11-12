@@ -12,7 +12,6 @@
 
 #include "internal_crypt_lib.h"
 #include "key_context.h"
-#include <openssl/evp.h>
 #include <openssl/core_names.h>
 #include <openssl/params.h>
 #include <openssl/bn.h>

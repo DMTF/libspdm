@@ -11,7 +11,6 @@
  **/
 
 #include "internal_crypt_lib.h"
-#include <openssl/evp.h>
 #include <openssl/kdf.h>
 
 bool hkdf_md_extract_and_expand(const EVP_MD *md, const uint8_t *key,

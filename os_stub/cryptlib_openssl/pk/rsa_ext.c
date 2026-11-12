@@ -19,7 +19,6 @@
 #include "internal_crypt_lib.h"
 
 #include <openssl/bn.h>
-#include <openssl/evp.h>
 #include <openssl/core_names.h>
 #include <openssl/rsa.h>
 #include <openssl/param_build.h>

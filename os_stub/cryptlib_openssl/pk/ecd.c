@@ -16,7 +16,6 @@
 
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
 
-#include <openssl/evp.h>
 
 /**
  * Allocates and Initializes one Edwards-Curve context for subsequent use

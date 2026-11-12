@@ -14,7 +14,6 @@
  */
 
 #include "internal_crypt_lib.h"
-#include <openssl/evp.h>
 #include <openssl/ec.h>
 #include <openssl/bn.h>
 #include <openssl/objects.h>

@@ -17,7 +17,6 @@
 #include <openssl/bn.h>
 #include <openssl/pem.h>
 #include <openssl/bio.h>
-#include <openssl/evp.h>
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
 
