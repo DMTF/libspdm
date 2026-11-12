@@ -1171,6 +1171,18 @@ bool libspdm_verify_certificate_chain_buffer(
     bool is_requester_cert, uint8_t cert_model);
 
 /**
+ * Returns the length field of an SPDM certificate chain header.
+ * The field is 2 bytes followed by 2 reserved bytes before SPDM 1.4, and 4 bytes from SPDM 1.4.
+ *
+ * @param  spdm_version      One of SPDM_MESSAGE_VERSION_* macros.
+ * @param  cert_chain_header The certificate chain header.
+ *
+ * @return The total length of the certificate chain, in bytes.
+ **/
+uint32_t libspdm_get_cert_chain_length(
+    uint8_t spdm_version, const spdm_cert_chain_t *cert_chain_header);
+
+/**
  * Retrieve the asymmetric public key from the leaf certificate of an SPDM certificate chain,
  * based upon negotiated asymmetric or requester asymmetric algorithm.
  *

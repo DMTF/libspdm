@@ -2859,6 +2859,47 @@ static void libspdm_test_crypt_spdm_verify_certificate_chain_buffer_malformed(vo
 #endif /* (LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT) */
 }
 
+static void libspdm_test_crypt_spdm_verify_certificate_chain_buffer_length_width(void **state)
+{
+#if (LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)
+    spdm_cert_chain_t *cert_chain_header;
+    void *data;
+    size_t data_size;
+
+    assert_true(libspdm_read_responder_public_certificate_chain(
+                    SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                    SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                    &data, &data_size, NULL, NULL));
+    cert_chain_header = data;
+
+    /* Before SPDM 1.4 the length is 2 bytes and the following 2 bytes are reserved, so their
+     * value must not affect the length. */
+    cert_chain_header->length = (uint32_t)data_size | 0x414D0000;
+    assert_true(libspdm_verify_certificate_chain_buffer(
+                    SPDM_MESSAGE_VERSION_12, SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                    SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, 0,
+                    data, data_size, false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+    assert_true(libspdm_verify_certificate_chain_buffer(
+                    SPDM_MESSAGE_VERSION_13, SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                    SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, 0,
+                    data, data_size, false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+
+    /* From SPDM 1.4 the length is 4 bytes. */
+    assert_false(libspdm_verify_certificate_chain_buffer(
+                     SPDM_MESSAGE_VERSION_14, SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                     SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, 0,
+                     data, data_size, false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+    cert_chain_header->length = (uint32_t)data_size;
+    assert_true(libspdm_verify_certificate_chain_buffer(
+                    SPDM_MESSAGE_VERSION_14, SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                    SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256, 0,
+                    data, data_size, false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
+    free(data);
+#else
+    skip();
+#endif /* (LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT) */
+}
+
 static void libspdm_test_crypt_verify_req_info(void **state)
 {
     /* A CertificationRequestInfo is a SEQUENCE of an INTEGER version, a subject SEQUENCE, a
@@ -2934,6 +2975,7 @@ static int libspdm_crypt_lib_test_main(void)
         cmocka_unit_test(libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_buffer_size),
         cmocka_unit_test(libspdm_test_crypt_spdm_verify_cert_chain_data_malformed),
         cmocka_unit_test(libspdm_test_crypt_spdm_verify_certificate_chain_buffer_malformed),
+        cmocka_unit_test(libspdm_test_crypt_spdm_verify_certificate_chain_buffer_length_width),
         cmocka_unit_test(libspdm_test_crypt_verify_req_info),
     };
 
