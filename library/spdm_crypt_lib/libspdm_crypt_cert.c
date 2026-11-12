@@ -6,6 +6,15 @@
 
 #include "internal/libspdm_crypt_lib.h"
 
+uint32_t libspdm_get_cert_chain_length(
+    uint8_t spdm_version, const spdm_cert_chain_t *cert_chain_header)
+{
+    if (spdm_version < SPDM_MESSAGE_VERSION_14) {
+        return cert_chain_header->length & 0xFFFF;
+    }
+    return cert_chain_header->length;
+}
+
 #if LIBSPDM_CERT_PARSE_SUPPORT
 
 /**pathLenConstraint is optional.
@@ -1920,7 +1929,7 @@ bool libspdm_verify_certificate_chain_buffer(
     }
 
     cert_chain_header = cert_chain_buffer;
-    if (cert_chain_header->length != cert_chain_buffer_size) {
+    if (libspdm_get_cert_chain_length(spdm_version, cert_chain_header) != cert_chain_buffer_size) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainBuffer - FAIL (cert_chain->length mismatch) !!!\n"));
         return false;

@@ -71,6 +71,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 
     size_t root_cert_hash_size;
     const spdm_cert_chain_t *cert_chain_header;
+    uint32_t cert_chain_length;
 #if LIBSPDM_CERT_PARSE_SUPPORT
     size_t cert_chain_size;
 #endif /*LIBSPDM_CERT_PARSE_SUPPORT*/
@@ -265,20 +266,21 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         cert_chain = (const void*)(spdm_request + 1);
         cert_chain_header = cert_chain;
         full_cert_chain = cert_chain;
-        full_cert_chain_size = cert_chain_header->length;
+        cert_chain_length = libspdm_get_cert_chain_length(spdm_version, cert_chain_header);
+        full_cert_chain_size = cert_chain_length;
 
-        if (cert_chain_header->length < sizeof(spdm_cert_chain_t) + root_cert_hash_size) {
+        if (cert_chain_length < sizeof(spdm_cert_chain_t) + root_cert_hash_size) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
         }
-        if (cert_chain_header->length > request_size - sizeof(spdm_set_certificate_request_t)) {
+        if (cert_chain_length > request_size - sizeof(spdm_set_certificate_request_t)) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
         }
 
-        if ((cert_chain_header->length > SPDM_MAX_CERTIFICATE_CHAIN_SIZE) &&
+        if ((cert_chain_length > SPDM_MAX_CERTIFICATE_CHAIN_SIZE) &&
             (!libspdm_is_capabilities_flag_supported(
                  spdm_context, false, 0,
                  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP))) {
@@ -293,7 +295,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
         /*get actual cert_chain size*/
-        cert_chain_size = cert_chain_header->length - sizeof(spdm_cert_chain_t) -
+        cert_chain_size = cert_chain_length - sizeof(spdm_cert_chain_t) -
                           root_cert_hash_size;
 
         /*check the cert_chain*/
