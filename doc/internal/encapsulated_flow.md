@@ -193,20 +193,20 @@ libspdm_return_t encap_flow_handler(
     const uint32_t *session_id,
     libspdm_encap_flow_type_t encap_flow_type,
     uint8_t last_request_code,
+    libspdm_return_t encap_response_status,
     uint8_t error_code,
     bool *terminate_flow,
     size_t *encap_request_size,
     void *encap_request)
 {
-    if (error_code != 0) {
-        /* The Requester returned an encapsulated ERROR in response to last_request_code. The flow
-         * terminates either way, but for ResponseNotReady libspdm reissues the outstanding request
-         * with RESPOND_IF_READY, so the Integrator retains the state belonging to this flow. */
-        if (error_code != SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
+    if (LIBSPDM_STATUS_IS_ERROR(encap_response_status)) {
+        /* The Requester returned an encapsulated ERROR in response to last_request_code, or its
+         * encapsulated response could not be processed. The flow terminates either way, but for
+         * ResponseNotReady libspdm reissues the outstanding request with RESPOND_IF_READY, so the
+         * Integrator retains the state belonging to this flow. */
+        if (encap_response_status != LIBSPDM_STATUS_NOT_READY_PEER) {
             /* Release the Integrator-defined state associated with this flow. */
         }
-
-        *terminate_flow = true;
 
         return LIBSPDM_STATUS_SUCCESS;
     }

@@ -164,7 +164,7 @@ static void rsp_encap_get_certificate_case2(void **state)
                                                         m_spdm_get_certificate_response2_size,
                                                         &m_spdm_get_certificate_response2,
                                                         &need_continue);
-    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif

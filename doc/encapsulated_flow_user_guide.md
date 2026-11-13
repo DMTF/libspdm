@@ -35,6 +35,7 @@ typedef libspdm_return_t (*libspdm_encap_flow_handler_func)(
     const uint32_t *session_id,
     libspdm_encap_flow_type_t encap_flow_type,
     uint8_t last_request_code,
+    libspdm_return_t encap_response_status,
     uint8_t error_code,
     bool *terminate_flow,
     size_t *encap_request_size,
@@ -72,10 +73,17 @@ one function reports the size of whichever payload the handler is currently bein
 ### Encapsulated Errors
 
 If the Requester cannot fulfil an encapsulated request it returns an encapsulated `ERROR` message.
-libspdm calls the handler with `error_code` set to that `ErrorCode`, so that the Integrator learns
-why the flow ended, and then terminates the flow. The handler must acknowledge this by setting the
-value of `terminate_flow` to `true`; it cannot continue the flow. The value of `error_code` is `0`
-on every other call.
+libspdm calls the handler with `error_code` set to that `ErrorCode`, and `encap_response_status`
+set to the corresponding error, so that the Integrator learns why the flow ended, and then
+terminates the flow. The handler cannot continue the flow, so libspdm ignores `terminate_flow` and
+any request the handler produces. The value of `error_code` is `0` on every other call.
+
+libspdm also calls the handler when it cannot process the Requester's encapsulated response, for
+example because the response is malformed or its signature does not verify. `encap_response_status`
+is then the error that libspdm encountered. libspdm sends an `ERROR` response to the Requester and
+terminates the flow, so here too the handler cannot continue it. A handler can therefore check
+`LIBSPDM_STATUS_IS_ERROR(encap_response_status)` to learn that the flow has ended, whatever the
+reason, as the examples below do.
 
 libspdm terminates the flow with an `ENCAPSULATED_RESPONSE_ACK` that carries no further request,
 and clears its `Param2`. The session-based mutual authentication flow is the exception: its final
@@ -111,12 +119,19 @@ query the Integrator on whether to pursue basic mutual authentication. If this f
 `true` then the basic mutual authentication flow begins, during which the Integrator can send the
 encapsulated `GET_DIGESTS`, `GET_CERTIFICATE`, and `CHALLENGE` requests to the Requester.
 
+Once the signature of the Requester's encapsulated `CHALLENGE_AUTH` response has been verified,
+libspdm calls the handler with `last_request_code` equal to `SPDM_CHALLENGE` and
+`encap_response_status` equal to `LIBSPDM_STATUS_SUCCESS`, and then terminates the flow itself.
+This call is how the Integrator learns that the Requester is authenticated. A flow that ends any
+other way, including one that the Requester abandons, has not authenticated the Requester.
+
 ```C
 libspdm_return_t encap_flow_handler(
     void *spdm_context,
     const uint32_t *session_id,
     libspdm_encap_flow_type_t encap_flow_type,
     uint8_t last_request_code,
+    libspdm_return_t encap_response_status,
     uint8_t error_code,
     bool *terminate_flow,
     size_t *encap_request_size,
@@ -129,11 +144,9 @@ libspdm_return_t encap_flow_handler(
     LIBSPDM_ASSERT(session_id == NULL);
     LIBSPDM_ASSERT(encap_flow_type == LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH);
 
-    if (error_code != 0) {
-        /* The Requester returned an encapsulated ERROR, whose ErrorCode is in error_code, so this
-         * flow ends here. */
-        *terminate_flow = true;
-
+    if (LIBSPDM_STATUS_IS_ERROR(encap_response_status)) {
+        /* The Requester returned an encapsulated ERROR, whose ErrorCode is in error_code, or its
+         * encapsulated response could not be processed, so this flow ends here. */
         return LIBSPDM_STATUS_SUCCESS;
     }
 
@@ -149,11 +162,13 @@ libspdm_return_t encap_flow_handler(
                                                          sizeof(cert_chain), cert_chain,
                                                          encap_request_size, encap_request);
     case SPDM_GET_CERTIFICATE:
-        /* Send CHALLENGE request to Requester using certificate chain slot 5. libspdm terminates
-         * the flow itself once the Requester delivers CHALLENGE_AUTH, so this handler is not
-         * called again. */
+        /* Send CHALLENGE request to Requester using certificate chain slot 5. */
         return libspdm_get_encap_request_challenge(spdm_context, 5, NULL,
                                                    encap_request_size, encap_request);
+    case SPDM_CHALLENGE:
+        /* The signature of the Requester's CHALLENGE_AUTH has been verified, so the Requester is
+         * authenticated. libspdm terminates the flow itself, so no request is produced. */
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         *terminate_flow = true;
 
@@ -195,6 +210,7 @@ libspdm_return_t encap_flow_handler(
     const uint32_t *session_id,
     libspdm_encap_flow_type_t encap_flow_type,
     uint8_t last_request_code,
+    libspdm_return_t encap_response_status,
     uint8_t error_code,
     bool *terminate_flow,
     size_t *encap_request_size,
@@ -207,14 +223,13 @@ libspdm_return_t encap_flow_handler(
     LIBSPDM_ASSERT(session_id != NULL);
     LIBSPDM_ASSERT(encap_flow_type == LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH);
 
-    if (error_code != 0) {
-        /* The Requester returned an encapsulated ERROR, whose ErrorCode is in error_code. If the
-         * ErrorCode is ResponseNotReady then libspdm resumes the flow later, except in the cases
+    if (LIBSPDM_STATUS_IS_ERROR(encap_response_status)) {
+        /* The Requester returned an encapsulated ERROR, whose ErrorCode is in error_code, or its
+         * encapsulated response could not be processed. If encap_response_status is
+         * LIBSPDM_STATUS_NOT_READY_PEER then libspdm resumes the flow later, except in the cases
          * listed under Encapsulated Errors above. Otherwise the flow ends here without the
-         * Requester's certificate chain, although libspdm still designates a certificate slot in
-         * the final ENCAPSULATED_RESPONSE_ACK. */
-        *terminate_flow = true;
-
+         * Requester's certificate chain, although after an encapsulated ERROR libspdm still
+         * designates a certificate slot in the final ENCAPSULATED_RESPONSE_ACK. */
         return LIBSPDM_STATUS_SUCCESS;
     }
 
@@ -284,6 +299,7 @@ libspdm_return_t encap_flow_handler(
     const uint32_t *session_id,
     libspdm_encap_flow_type_t encap_flow_type,
     uint8_t last_request_code,
+    libspdm_return_t encap_response_status,
     uint8_t error_code,
     bool *terminate_flow,
     size_t *encap_request_size,
@@ -296,11 +312,9 @@ libspdm_return_t encap_flow_handler(
 
     LIBSPDM_ASSERT(encap_flow_type == LIBSPDM_ENCAP_FLOW_GENERAL);
 
-    if (error_code != 0) {
-        /* The Requester returned an encapsulated ERROR, whose ErrorCode is in error_code, so this
-         * flow ends here. */
-        *terminate_flow = true;
-
+    if (LIBSPDM_STATUS_IS_ERROR(encap_response_status)) {
+        /* The Requester returned an encapsulated ERROR, whose ErrorCode is in error_code, or its
+         * encapsulated response could not be processed, so this flow ends here. */
         return LIBSPDM_STATUS_SUCCESS;
     }
 

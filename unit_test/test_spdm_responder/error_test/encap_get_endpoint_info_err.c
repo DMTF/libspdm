@@ -86,7 +86,7 @@ static void rsp_encap_get_endpoint_info_err_case1(void **state)
 
     status = libspdm_process_encap_response_endpoint_info(spdm_context, response_size,
                                                           spdm_response, &need_continue);
-    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_encap_e.buffer_size, 0);
 #endif
@@ -99,7 +99,7 @@ static void rsp_encap_get_endpoint_info_err_case1(void **state)
 
     status = libspdm_process_encap_response_endpoint_info(spdm_context, response_size,
                                                           spdm_response, &need_continue);
-    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_encap_e.buffer_size, 0);
 #endif

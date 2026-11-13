@@ -98,7 +98,7 @@ static void rsp_encap_get_digests_case2(void **state)
     status = libspdm_process_encap_response_digest(spdm_context, spdm_response_size,
                                                    &spdm_response, &need_continue);
 
-    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 }
 
 /**

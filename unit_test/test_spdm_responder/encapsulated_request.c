@@ -59,6 +59,8 @@ static uint8_t m_legality_request_code;
 /* The error_code the handler was last called with, so that a test can show the handler was
  * reached and given the Requester's ErrorCode. */
 static uint8_t m_observed_error_code;
+/* The encap_response_status the handler was last called with. */
+static libspdm_return_t m_observed_encap_response_status;
 /* The number of times the handler has been called, so that a test can show that libspdm continued
  * a multi-message operation itself rather than consulting the Integrator. */
 static uint32_t m_handler_calls;
@@ -69,8 +71,8 @@ static bool m_send_event_acknowledged;
 
 static libspdm_return_t encap_flow_handler(
     void *spdm_context, const uint32_t *session_id, libspdm_encap_flow_type_t encap_flow_type,
-    uint8_t last_request_code, uint8_t error_code, bool *terminate_flow, size_t *request_size,
-    void *request)
+    uint8_t last_request_code, libspdm_return_t encap_response_status, uint8_t error_code,
+    bool *terminate_flow, size_t *request_size, void *request)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_data_parameter_t parameter;
@@ -81,7 +83,15 @@ static libspdm_return_t encap_flow_handler(
 
     *terminate_flow = false;
     m_observed_error_code = error_code;
+    m_observed_encap_response_status = encap_response_status;
     m_handler_calls++;
+
+    if (last_request_code == 0) {
+        assert_int_equal(encap_response_status, LIBSPDM_STATUS_SUCCESS);
+    }
+    if (error_code != 0) {
+        assert_true(LIBSPDM_STATUS_IS_ERROR(encap_response_status));
+    }
 
     switch (m_case_id) {
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
@@ -317,6 +327,25 @@ static libspdm_return_t encap_flow_handler(
         break;
     case 0x82:
         break;
+    case 0x8A: {
+        /* Basic mutual authentication has concluded with a verified CHALLENGE_AUTH. The handler
+         * then tries to continue the flow and fails, both of which libspdm must ignore. */
+        spdm_get_digest_request_t *next_request = request;
+
+        assert_null(session_id);
+        assert_int_equal(encap_flow_type, LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH);
+        assert_int_equal(last_request_code, SPDM_CHALLENGE);
+        assert_int_equal(encap_response_status, LIBSPDM_STATUS_SUCCESS);
+        assert_int_equal(error_code, 0);
+
+        assert_true(*request_size >= sizeof(*next_request));
+        next_request->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        next_request->header.request_response_code = SPDM_GET_DIGESTS;
+        next_request->header.param1 = 0;
+        next_request->header.param2 = 0;
+        *request_size = sizeof(*next_request);
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+    }
     case 0x83:
         assert_non_null(session_id);
         assert_int_equal(*session_id, 0xFFFFFFFF);
@@ -330,6 +359,7 @@ static libspdm_return_t encap_flow_handler(
     case 0x9C:
     case 0xA0:
     case 0xA1:
+    case 0xC0:
         *terminate_flow = true;
         break;
     case 0x9D:
@@ -1889,6 +1919,8 @@ static void rsp_encapsulated_response_ack_case9(void **State)
                                                             spdm_request, &response_size,
                                                             response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(m_observed_error_code, SPDM_ERROR_CODE_RESPONSE_NOT_READY);
+    assert_int_equal(m_observed_encap_response_status, LIBSPDM_STATUS_NOT_READY_PEER);
     assert_int_equal(response_size, sizeof(spdm_encapsulated_response_ack_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
@@ -1915,9 +1947,10 @@ static void rsp_encapsulated_response_ack_case9(void **State)
 
 /**
  * Test 17: the Requester delivers an encapsulated ERROR whose ErrorCode is not ResponseNotReady.
- * Expected behavior: the handler is called with error_code set to that ErrorCode, and libspdm then
- * terminates the encapsulated flow by clearing ENCAPSULATED_RESPONSE_ACK.Param2. No
- * RESPOND_IF_READY state is retained, since there is no outstanding request to reissue.
+ * Expected behavior: the handler is called with error_code set to that ErrorCode and
+ * encap_response_status set to LIBSPDM_STATUS_ERROR_PEER, and libspdm then terminates the
+ * encapsulated flow by clearing ENCAPSULATED_RESPONSE_ACK.Param2. No RESPOND_IF_READY state is
+ * retained, since there is no outstanding request to reissue.
  **/
 static void rsp_encapsulated_response_ack_case17(void **State)
 {
@@ -1974,6 +2007,7 @@ static void rsp_encapsulated_response_ack_case17(void **State)
     encap_error->header.param2 = 0;
 
     m_observed_error_code = 0;
+    m_observed_encap_response_status = LIBSPDM_STATUS_SUCCESS;
 
     response_size = sizeof(response);
     status = libspdm_get_response_encapsulated_response_ack(spdm_context,
@@ -1984,6 +2018,7 @@ static void rsp_encapsulated_response_ack_case17(void **State)
 
     /* The handler was reached and told which ErrorCode the Requester returned. */
     assert_int_equal(m_observed_error_code, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal(m_observed_encap_response_status, LIBSPDM_STATUS_ERROR_PEER);
 
     /* The flow is terminated in the ACK rather than rejected with a top-level ERROR. */
     assert_int_equal(response_size, sizeof(spdm_encapsulated_response_ack_response_t));
@@ -2003,15 +2038,155 @@ static void rsp_encapsulated_response_ack_case17(void **State)
                      m_libspdm_m_deliver_encapsulated_response_request_t2.header.param1);
 }
 
+/* Deliver encap_response as the Requester's response to an encapsulated GET_DIGESTS in the basic
+ * mutual authentication flow, and return the Responder's response to it. */
+static libspdm_return_t deliver_response_to_get_digests(libspdm_context_t *spdm_context,
+                                                        const void *encap_response,
+                                                        size_t encap_response_size,
+                                                        size_t *response_size, void *response)
+{
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_deliver_encapsulated_response_request_t *spdm_request;
+
+    spdm_context->last_spdm_request_session_id_valid = false;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->encap_context.request_id = 0xFF;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH;
+    spdm_context->encap_context.last_encap_request_header.request_response_code = SPDM_GET_DIGESTS;
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    spdm_context->encap_context.response_not_ready = false;
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    libspdm_reset_message_b(spdm_context);
+    libspdm_register_encap_flow_handler(spdm_context, encap_flow_handler);
+
+    spdm_request = (void *)request;
+    libspdm_copy_mem(spdm_request, sizeof(request),
+                     &m_libspdm_m_deliver_encapsulated_response_request_t2,
+                     m_libspdm_m_deliver_encapsulated_response_request_t2_size);
+    libspdm_copy_mem(spdm_request + 1, sizeof(request) - sizeof(*spdm_request),
+                     encap_response, encap_response_size);
+
+    m_observed_error_code = 0;
+    m_observed_encap_response_status = LIBSPDM_STATUS_SUCCESS;
+    m_handler_calls = 0;
+
+    return libspdm_get_response_encapsulated_response_ack(
+        spdm_context, sizeof(*spdm_request) + encap_response_size, spdm_request,
+        response_size, response);
+}
+
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
+
+/**
+ * Test 35: the Requester delivers an encapsulated ERROR(Busy).
+ * Expected behavior: the handler is called with error_code set to Busy and encap_response_status
+ * set to LIBSPDM_STATUS_BUSY_PEER, and libspdm terminates the flow in ENCAPSULATED_RESPONSE_ACK.
+ * Skipped if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT is not set.
+ **/
+static void rsp_encapsulated_response_ack_case35(void **State)
+{
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_encapsulated_response_ack_response_t *spdm_response;
+    spdm_error_response_t encap_error;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t response_size;
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xC0;
+    m_case_id = spdm_test_context->case_id;
+
+    encap_error.header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    encap_error.header.request_response_code = SPDM_ERROR;
+    encap_error.header.param1 = SPDM_ERROR_CODE_BUSY;
+    encap_error.header.param2 = 0;
+
+    response_size = sizeof(response);
+    status = deliver_response_to_get_digests(spdm_context, &encap_error, sizeof(encap_error),
+                                             &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(m_handler_calls, 1);
+    assert_int_equal(m_observed_error_code, SPDM_ERROR_CODE_BUSY);
+    assert_int_equal(m_observed_encap_response_status, LIBSPDM_STATUS_BUSY_PEER);
+
+    assert_int_equal(response_size, sizeof(spdm_encapsulated_response_ack_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ENCAPSULATED_RESPONSE_ACK);
+    assert_int_equal(spdm_response->header.param2,
+                     SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT);
+    assert_int_equal(spdm_context->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
+#else
+    skip();
+#endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
+}
+
+/**
+ * Test 36: the Requester delivers a DIGESTS response that cannot be processed, as it reports no
+ * provisioned slots.
+ * Expected behavior: libspdm responds with ERROR(InvalidResponseCode) and terminates the flow. The
+ * handler is called once to be told why, with encap_response_status set to
+ * LIBSPDM_STATUS_INVALID_MSG_FIELD and error_code set to 0.
+ * Skipped if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT is not set.
+ **/
+static void rsp_encapsulated_response_ack_case36(void **State)
+{
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_error_response_t *spdm_response;
+    spdm_digest_response_t digests;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t response_size;
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xC0;
+    m_case_id = spdm_test_context->case_id;
+
+    digests.header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    digests.header.request_response_code = SPDM_DIGESTS;
+    digests.header.param1 = 0;
+    digests.header.param2 = 0;
+
+    response_size = sizeof(response);
+    status = deliver_response_to_get_digests(spdm_context, &digests, sizeof(digests),
+                                             &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(m_handler_calls, 1);
+    assert_int_equal(m_observed_error_code, 0);
+    assert_int_equal(m_observed_encap_response_status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE);
+    assert_int_equal(spdm_context->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
+#else
+    skip();
+#endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
+}
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
 /**
  * Test 10: In the basic mutual authentication flow, the Requester delivers the encapsulated
- * CHALLENGE_AUTH response. The Responder must then terminate the encapsulated flow.
- * Expected behavior: ENCAPSULATED_RESPONSE_ACK.Param2 is cleared, the flow is torn down, and the
- * Integrator's handler is not consulted. m_case_id is deliberately a value the handler does not
- * recognize, so consulting it trips the handler's default assert.
+ * CHALLENGE_AUTH response, whose signature verifies. The Responder must then terminate the
+ * encapsulated flow.
+ * Expected behavior: the Integrator's handler is called once, with last_request_code set to
+ * CHALLENGE and encap_response_status set to LIBSPDM_STATUS_SUCCESS, to be told that the Requester
+ * is authenticated. The request that the handler produces and the error that it returns are
+ * ignored: ENCAPSULATED_RESPONSE_ACK.Param2 is cleared and the flow is torn down.
  **/
 static void rsp_encapsulated_response_ack_case10(void **State)
 {
@@ -2034,8 +2209,8 @@ static void rsp_encapsulated_response_ack_case10(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8A;
-    /* Not a case the handler knows about; it must not be reached. */
     m_case_id = spdm_test_context->case_id;
+    m_handler_calls = 0;
 
     /* Basic mutual authentication occurs outside of a session. */
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
@@ -2126,6 +2301,10 @@ static void rsp_encapsulated_response_ack_case10(void **State)
                                                             &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
+    assert_int_equal(m_handler_calls, 1);
+
+    /* An SPDM 1.1 ENCAPSULATED_RESPONSE_ACK without a request is the bare message header. */
+    assert_int_equal(response_size, sizeof(spdm_message_header_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_ENCAPSULATED_RESPONSE_ACK);
     /* Param2 cleared: no further encapsulated request is issued. */
@@ -4471,8 +4650,12 @@ int libspdm_rsp_encapsulated_request_test(void)
         /* An encapsulated ERROR other than ResponseNotReady reaches the handler */
         cmocka_unit_test(rsp_encapsulated_response_ack_case17),
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
+        /* An encapsulated ERROR(Busy) reaches the handler as LIBSPDM_STATUS_BUSY_PEER */
+        cmocka_unit_test(rsp_encapsulated_response_ack_case35),
+        /* The handler is told when an encapsulated response cannot be processed */
+        cmocka_unit_test(rsp_encapsulated_response_ack_case36),
         #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
-        /* Basic mut auth terminates once the encapsulated CHALLENGE_AUTH is delivered */
+        /* Basic mut auth reports success, then terminates once CHALLENGE_AUTH is delivered */
         cmocka_unit_test(rsp_encapsulated_response_ack_case10),
 #endif
         /* Success Case: Responder issues VerifyNewKey after the UpdateKey acknowledgement,
