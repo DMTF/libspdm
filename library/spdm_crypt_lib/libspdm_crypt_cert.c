@@ -1859,9 +1859,15 @@ bool libspdm_verify_cert_chain_data(
     size_t root_cert_buffer_size;
     const uint8_t *leaf_cert_buffer;
     size_t leaf_cert_buffer_size;
+    size_t max_cert_chain_size;
 
+    if (spdm_version >= SPDM_MESSAGE_VERSION_14) {
+        max_cert_chain_size = SPDM_MAX_CERTIFICATE_CHAIN_SIZE_14;
+    } else {
+        max_cert_chain_size = SPDM_MAX_CERTIFICATE_CHAIN_SIZE;
+    }
     if (cert_chain_data_size >
-        SPDM_MAX_CERTIFICATE_CHAIN_SIZE - (sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE)) {
+        max_cert_chain_size - (sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainData - FAIL (chain size too large) !!!\n"));
         return false;

@@ -2812,6 +2812,37 @@ static void libspdm_test_crypt_spdm_verify_cert_chain_data_malformed(void **stat
                      false, SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT));
 }
 
+static void libspdm_test_crypt_spdm_verify_cert_chain_data_large(void **state)
+{
+#if (LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)
+    bool status;
+    uint8_t *file_buffer;
+    size_t file_buffer_size;
+
+    /* A chain longer than a certificate chain can be before SPDM 1.4. From SPDM 1.4 the
+     * length of a certificate chain is 4 bytes. */
+    status = libspdm_read_input_file("slh-dsa-sha2-256f/bundle_responder.certchain.der",
+                                     (void **)&file_buffer, &file_buffer_size);
+    assert_true(status);
+    assert_true(file_buffer_size >
+                SPDM_MAX_CERTIFICATE_CHAIN_SIZE -
+                (sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE));
+
+    status = libspdm_verify_cert_chain_data(
+        SPDM_MESSAGE_VERSION_14,
+        file_buffer, file_buffer_size,
+        0,
+        SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256F,
+        SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+        false,
+        SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+    assert_true(status);
+    free(file_buffer);
+#else
+    skip();
+#endif /* (LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT) && (LIBSPDM_SHA256_SUPPORT) */
+}
+
 static void libspdm_test_crypt_spdm_verify_certificate_chain_buffer_malformed(void **state)
 {
 #if (LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)
@@ -2974,6 +3005,7 @@ static int libspdm_crypt_lib_test_main(void)
         cmocka_unit_test(libspdm_test_crypt_is_root_certificate),
         cmocka_unit_test(libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_buffer_size),
         cmocka_unit_test(libspdm_test_crypt_spdm_verify_cert_chain_data_malformed),
+        cmocka_unit_test(libspdm_test_crypt_spdm_verify_cert_chain_data_large),
         cmocka_unit_test(libspdm_test_crypt_spdm_verify_certificate_chain_buffer_malformed),
         cmocka_unit_test(libspdm_test_crypt_spdm_verify_certificate_chain_buffer_length_width),
         cmocka_unit_test(libspdm_test_crypt_verify_req_info),
