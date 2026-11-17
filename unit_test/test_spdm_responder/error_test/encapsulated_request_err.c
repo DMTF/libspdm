@@ -10,14 +10,14 @@
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 
 /* Every test here delivers an encapsulated response that libspdm must reject, or that it must
- * not act on because the flow or session it belongs to has ended, so the Integrator's handler is
- * never consulted. */
+ * not act on because the flow or session it belongs to has ended. The Integrator's handler is
+ * only told that the flow ended, and never asked for another request. */
 static libspdm_return_t encap_flow_handler(
     void *spdm_context, const uint32_t *session_id, libspdm_encap_flow_type_t encap_flow_type,
-    uint8_t last_request_code, uint8_t error_code, bool *terminate_flow, size_t *request_size,
-    void *request)
+    uint8_t last_request_code, libspdm_return_t encap_response_status, uint8_t error_code,
+    bool *terminate_flow, size_t *request_size, void *request)
 {
-    assert_true(false);
+    assert_true(LIBSPDM_STATUS_IS_ERROR(encap_response_status));
 
     return LIBSPDM_STATUS_SUCCESS;
 }

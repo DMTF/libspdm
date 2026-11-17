@@ -229,30 +229,43 @@ void libspdm_register_key_update_callback_func(
  * - when a multi-part GET_CERTIFICATE or KEY_UPDATE is still in progress
  * - when the outstanding request is reissued with RESPOND_IF_READY after the Requester delivered
  *   an encapsulated ERROR(ResponseNotReady)
- * - when the flow is one that libspdm must terminate on the Responder's behalf
  *
- * @param  spdm_context       A pointer to the SPDM context.
- * @param  session_id         If non-NULL, the session ID.
- * @param  encap_flow_type    One of
- *                            - LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH
- *                            - LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH
- *                            - LIBSPDM_ENCAP_FLOW_GENERAL
- * @param  last_request_code  One of the SPDM_* request codes. If this function is called due to
- *                            GET_ENCAPSULATED_REQUEST then its value is 0x00.
- * @param  error_code         If the Requester delivered an encapsulated ERROR then its ErrorCode,
- *                            and the encapsulated flow terminates once this function returns. Its
- *                            value is 0x00 otherwise.
- * @param  terminate_flow     Specifies whether to terminate the encapsulated flow or not. Its
- *                            value is false on input. It must be set to true when error_code is
- *                            non-zero.
- * @param  encap_request_size Size, in bytes, of the encapsulated request.
- * @param  encap_request      The encapsulated request.
+ * If encap_response_status is an error then the encapsulated flow terminates once this function
+ * returns, as the Requester delivered an encapsulated ERROR or its encapsulated response could not
+ * be processed. libspdm then ignores terminate_flow, encap_request_size and encap_request, and
+ * sends the response to the Requester itself.
+ *
+ * In the LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH flow, once the signature of the Requester's
+ * encapsulated CHALLENGE_AUTH response has been verified, this function is called with
+ * last_request_code set to SPDM_CHALLENGE and encap_response_status set to
+ * LIBSPDM_STATUS_SUCCESS, to report that the Requester is authenticated. The encapsulated flow
+ * then terminates, so libspdm ignores the return value, terminate_flow, encap_request_size and
+ * encap_request.
+ *
+ * @param  spdm_context           A pointer to the SPDM context.
+ * @param  session_id             If non-NULL, the session ID.
+ * @param  encap_flow_type        One of
+ *                                - LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH
+ *                                - LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH
+ *                                - LIBSPDM_ENCAP_FLOW_GENERAL
+ * @param  last_request_code      One of the SPDM_* request codes. If this function is called due
+ *                                to GET_ENCAPSULATED_REQUEST then its value is 0x00.
+ * @param  encap_response_status  The status of processing the Requester's encapsulated response
+ *                                to last_request_code. Its value is LIBSPDM_STATUS_SUCCESS if
+ *                                last_request_code is 0x00.
+ * @param  error_code             If the Requester delivered an encapsulated ERROR then its
+ *                                ErrorCode. Its value is 0x00 otherwise.
+ * @param  terminate_flow         Specifies whether to terminate the encapsulated flow or not. Its
+ *                                value is false on input.
+ * @param  encap_request_size     Size, in bytes, of the encapsulated request.
+ * @param  encap_request          The encapsulated request.
  **/
 typedef libspdm_return_t (*libspdm_encap_flow_handler_func)(
     void *spdm_context,
     const uint32_t *session_id,
     libspdm_encap_flow_type_t encap_flow_type,
     uint8_t last_request_code,
+    libspdm_return_t encap_response_status,
     uint8_t error_code,
     bool *terminate_flow,
     size_t *encap_request_size,
