@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -29,6 +29,9 @@ int my_snprintf(char *str, size_t size, const char *format, ...)
 #ifdef MBEDTLS_PLATFORM_ZEROIZE_ALT
 void mbedtls_platform_zeroize(void *buf, size_t len)
 {
-    libspdm_zero_mem(buf, len);
+    /* Mbed TLS can pass a NULL buf when len is 0, which libspdm_zero_mem() does not accept. */
+    if (len != 0) {
+        libspdm_zero_mem(buf, len);
+    }
 }
 #endif /* MBEDTLS_PLATFORM_ZEROIZE_ALT */
