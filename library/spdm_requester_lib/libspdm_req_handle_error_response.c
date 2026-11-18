@@ -50,7 +50,6 @@ static libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *sp
                         spdm_context->local_context.capability.transport_tail_size;
 
     LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_response_if_ready_request_t));
-    spdm_context->crypto_request = true;
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_RESPOND_IF_READY;
     spdm_request->header.param1 = spdm_context->error_data.request_code;
