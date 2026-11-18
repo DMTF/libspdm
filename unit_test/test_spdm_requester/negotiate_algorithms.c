@@ -99,10 +99,22 @@ static uint16_t m_libspdm_test_key_schedule_sel;
 static uint16_t m_libspdm_test_req_pqc_asym_sel;
 static uint16_t m_libspdm_test_kem_sel;
 
+/* The code of the last request, and the token of the ERROR(ResponseNotReady) response. */
+static uint8_t m_last_request_code;
+static const uint8_t m_not_ready_token = 0xA5;
+
+/* The timeout with which the Requester receives the response to RESPOND_IF_READY. */
+static uint64_t m_respond_if_ready_timeout;
+
 static libspdm_return_t send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
+    const spdm_message_header_t *request_header;
+
+    request_header =
+        (const void *)((const uint8_t *)request + sizeof(libspdm_test_message_header_t));
+    m_last_request_code = request_header->request_response_code;
 
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
@@ -243,6 +255,17 @@ static libspdm_return_t send_message(
         assert_int_equal(spdm_request->struct_table[3].alg_supported,
                          LIBSPDM_TEST_KEM_ALGO_1);
     }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x2C:
+        if (request_header->request_response_code == SPDM_RESPOND_IF_READY) {
+            assert_int_equal(request_header->spdm_version, SPDM_MESSAGE_VERSION_11);
+            assert_int_equal(request_header->param1, SPDM_NEGOTIATE_ALGORITHMS);
+            assert_int_equal(request_header->param2, m_not_ready_token);
+        } else {
+            m_libspdm_local_buffer_size = request_size - sizeof(libspdm_test_message_header_t);
+            libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
+                             request_header, m_libspdm_local_buffer_size);
+        }
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -1645,6 +1668,58 @@ static libspdm_return_t receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
+    case 0x2C:
+        if (m_last_request_code == SPDM_NEGOTIATE_ALGORITHMS) {
+            spdm_error_response_data_response_not_ready_t *spdm_response;
+            size_t spdm_response_size;
+            size_t transport_header_size;
+
+            spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            libspdm_zero_mem(spdm_response, spdm_response_size);
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+            spdm_response->header.param2 = 0;
+            spdm_response->extend_error_data.rd_exponent = 1;
+            spdm_response->extend_error_data.rd_tm = 2;
+            spdm_response->extend_error_data.request_code = SPDM_NEGOTIATE_ALGORITHMS;
+            spdm_response->extend_error_data.token = m_not_ready_token;
+
+            libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                                  spdm_response_size, spdm_response,
+                                                  response_size, response);
+        } else {
+            /* SPDM 1.1 ALGORITHMS that selects no algorithms, as neither endpoint sets a
+             * capability that needs one. */
+            spdm_algorithms_response_t *spdm_response;
+            size_t spdm_response_size;
+            size_t transport_header_size;
+
+            m_respond_if_ready_timeout = timeout;
+
+            spdm_response_size = sizeof(spdm_algorithms_response_t);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+            libspdm_zero_mem(spdm_response, spdm_response_size);
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code = SPDM_ALGORITHMS;
+            spdm_response->length = (uint16_t)spdm_response_size;
+
+            libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                             sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
+                             spdm_response, spdm_response_size);
+            m_libspdm_local_buffer_size += spdm_response_size;
+
+            libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                                  spdm_response_size, spdm_response,
+                                                  response_size, response);
+        }
+        return LIBSPDM_STATUS_SUCCESS;
+
     default:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
@@ -1925,6 +2000,12 @@ static void req_negotiate_algorithms_case7(void **state)
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 }
 
+/**
+ * Test 8: the Responder returns ResponseNotReady to an SPDM 1.0 NEGOTIATE_ALGORITHMS.
+ * Expected behavior: returns with status LIBSPDM_STATUS_NOT_READY_PEER without sending
+ *                    RESPOND_IF_READY, as SPDM 1.0 does not allow ResponseNotReady in response to
+ *                    NEGOTIATE_ALGORITHMS.
+ **/
 static void req_negotiate_algorithms_case8(void **state)
 {
     libspdm_return_t status;
@@ -1945,6 +2026,7 @@ static void req_negotiate_algorithms_case8(void **state)
 
     status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
+    assert_int_equal(m_last_request_code, SPDM_NEGOTIATE_ALGORITHMS);
 }
 
 /**
@@ -3162,6 +3244,50 @@ static void req_negotiate_algorithms_case39(void **state)
                      m_libspdm_use_hash_algo);
 }
 
+/**
+ * Test 40: the Responder returns ResponseNotReady to an SPDM 1.1 NEGOTIATE_ALGORITHMS, and then
+ *          ALGORITHMS to RESPOND_IF_READY.
+ * Expected behavior: returns with status LIBSPDM_STATUS_SUCCESS. The Requester waits ST1 for the
+ *                    response to RESPOND_IF_READY, as NEGOTIATE_ALGORITHMS does not require
+ *                    cryptographic processing, and message A holds NEGOTIATE_ALGORITHMS and
+ *                    ALGORITHMS but neither the ERROR nor RESPOND_IF_READY.
+ *                    Skipped when RESPOND_IF_READY support is compiled out.
+ **/
+static void req_negotiate_algorithms_case40(void **state)
+{
+    #if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2C;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->local_context.algorithm.measurement_spec = 0;
+    spdm_context->local_context.algorithm.measurement_hash_algo = 0;
+    libspdm_reset_message_a(spdm_context);
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(m_last_request_code, SPDM_RESPOND_IF_READY);
+    assert_int_equal(m_respond_if_ready_timeout,
+                     spdm_context->local_context.capability.rtt +
+                     spdm_context->local_context.capability.st1);
+    assert_int_equal(spdm_context->connection_info.connection_state,
+                     LIBSPDM_CONNECTION_STATE_NEGOTIATED);
+    assert_int_equal(spdm_context->transcript.message_a.buffer_size, m_libspdm_local_buffer_size);
+    assert_memory_equal(spdm_context->transcript.message_a.buffer, m_libspdm_local_buffer,
+                        m_libspdm_local_buffer_size);
+    #else
+    skip();
+    #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
+}
+
 int libspdm_req_negotiate_algorithms_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -3204,6 +3330,7 @@ int libspdm_req_negotiate_algorithms_test(void)
         cmocka_unit_test(req_negotiate_algorithms_case37),
         cmocka_unit_test(req_negotiate_algorithms_case38),
         cmocka_unit_test(req_negotiate_algorithms_case39),
+        cmocka_unit_test(req_negotiate_algorithms_case40),
     };
 
     libspdm_test_context_t test_context = {
