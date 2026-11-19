@@ -95,4 +95,10 @@ jobs:
                --form file=@libspdm.tgz \
                --form version="$GITHUB_SHA" \
                --form description="${{ inputs.build }} build" \
-               https://scan.coverity.com/builds?project=libspdm
+               https://scan.coverity.com/builds?project=libspdm | tee upload.log
+        # Coverity Scan refuses some uploads without an HTTP error, such as one
+        # made while an earlier build is still queued for analysis.
+        if ! grep -q 'Build successfully submitted' upload.log; then
+          echo "::error::Coverity Scan did not accept the build"
+          exit 1
+        fi
