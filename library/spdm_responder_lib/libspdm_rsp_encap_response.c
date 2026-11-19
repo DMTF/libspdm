@@ -772,9 +772,17 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
         #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
         if (!encap_error_received && (last_request_code == SPDM_CHALLENGE)) {
             /* Basic mutual authentication concludes with the encapsulated CHALLENGE_AUTH
-             * response. The Responder must then terminate the encapsulated flow by clearing
-             * ENCAPSULATED_RESPONSE_ACK.Param2, so the Integrator's handler is not consulted
-             * and cannot continue the flow. */
+             * response, whose signature has been verified, so the Requester is authenticated.
+             * The Responder must then terminate the encapsulated flow by clearing
+             * ENCAPSULATED_RESPONSE_ACK.Param2. The Integrator's handler is told that the
+             * Requester is authenticated, but it cannot continue the flow, so its result and
+             * outputs are ignored. */
+            size_t ignored_request_size;
+
+            ignored_request_size = encap_request_size;
+            ((libspdm_encap_flow_handler_func)spdm_context->encap_flow_handler_callback)(
+                spdm_context, session_id, flow_type, last_request_code, encap_response_status, 0,
+                &terminate_flow, &ignored_request_size, encap_request);
             terminate_flow = true;
             goto set_ack_fields;
         }

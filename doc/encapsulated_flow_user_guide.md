@@ -133,6 +133,12 @@ query the Integrator on whether to pursue basic mutual authentication. If this f
 `true` then the basic mutual authentication flow begins, during which the Integrator can send the
 encapsulated `GET_DIGESTS`, `GET_CERTIFICATE`, and `CHALLENGE` requests to the Requester.
 
+Once the signature of the Requester's encapsulated `CHALLENGE_AUTH` response has been verified,
+libspdm calls the handler with `last_request_code` equal to `SPDM_CHALLENGE` and
+`encap_response_status` equal to `LIBSPDM_STATUS_SUCCESS`, and then terminates the flow itself.
+This call is how the Integrator learns that the Requester is authenticated. A flow that ends any
+other way, including one that the Requester abandons, has not authenticated the Requester.
+
 ```C
 libspdm_return_t encap_flow_handler(
     void *spdm_context,
@@ -171,11 +177,13 @@ libspdm_return_t encap_flow_handler(
                                                          sizeof(cert_chain), cert_chain,
                                                          encap_request_size, encap_request);
     case SPDM_GET_CERTIFICATE:
-        /* Send CHALLENGE request to Requester using certificate chain slot 5. libspdm terminates
-         * the flow itself once the Requester delivers CHALLENGE_AUTH, so this handler is not
-         * called again. */
+        /* Send CHALLENGE request to Requester using certificate chain slot 5. */
         return libspdm_get_encap_request_challenge(spdm_context, 5, NULL,
                                                    encap_request_size, encap_request);
+    case SPDM_CHALLENGE:
+        /* The signature of the Requester's CHALLENGE_AUTH has been verified, so the Requester is
+         * authenticated. libspdm terminates the flow itself, so no request is produced. */
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         *terminate_flow = true;
 

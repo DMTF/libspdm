@@ -327,6 +327,25 @@ static libspdm_return_t encap_flow_handler(
         break;
     case 0x82:
         break;
+    case 0x8A: {
+        /* Basic mutual authentication has concluded with a verified CHALLENGE_AUTH. The handler
+         * then tries to continue the flow and fails, both of which libspdm must ignore. */
+        spdm_get_digest_request_t *next_request = request;
+
+        assert_null(session_id);
+        assert_int_equal(encap_flow_type, LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH);
+        assert_int_equal(last_request_code, SPDM_CHALLENGE);
+        assert_int_equal(encap_response_status, LIBSPDM_STATUS_SUCCESS);
+        assert_int_equal(error_code, 0);
+
+        assert_true(*request_size >= sizeof(*next_request));
+        next_request->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        next_request->header.request_response_code = SPDM_GET_DIGESTS;
+        next_request->header.param1 = 0;
+        next_request->header.param2 = 0;
+        *request_size = sizeof(*next_request);
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+    }
     case 0x83:
         assert_non_null(session_id);
         assert_int_equal(*session_id, 0xFFFFFFFF);
@@ -2290,10 +2309,12 @@ static void rsp_encapsulated_response_ack_case38(void **State)
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
 /**
  * Test 10: In the basic mutual authentication flow, the Requester delivers the encapsulated
- * CHALLENGE_AUTH response. The Responder must then terminate the encapsulated flow.
- * Expected behavior: ENCAPSULATED_RESPONSE_ACK.Param2 is cleared, the flow is torn down, and the
- * Integrator's handler is not consulted. m_case_id is deliberately a value the handler does not
- * recognize, so consulting it trips the handler's default assert.
+ * CHALLENGE_AUTH response, whose signature verifies. The Responder must then terminate the
+ * encapsulated flow.
+ * Expected behavior: the Integrator's handler is called once, with last_request_code set to
+ * CHALLENGE and encap_response_status set to LIBSPDM_STATUS_SUCCESS, to be told that the Requester
+ * is authenticated. The request that the handler produces and the error that it returns are
+ * ignored: ENCAPSULATED_RESPONSE_ACK.Param2 is cleared and the flow is torn down.
  **/
 static void rsp_encapsulated_response_ack_case10(void **State)
 {
@@ -2316,8 +2337,8 @@ static void rsp_encapsulated_response_ack_case10(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8A;
-    /* Not a case the handler knows about; it must not be reached. */
     m_case_id = spdm_test_context->case_id;
+    m_handler_calls = 0;
 
     /* Basic mutual authentication occurs outside of a session. */
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
@@ -2408,6 +2429,10 @@ static void rsp_encapsulated_response_ack_case10(void **State)
                                                             &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
+    assert_int_equal(m_handler_calls, 1);
+
+    /* An SPDM 1.1 ENCAPSULATED_RESPONSE_ACK without a request is the bare message header. */
+    assert_int_equal(response_size, sizeof(spdm_message_header_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_ENCAPSULATED_RESPONSE_ACK);
     /* Param2 cleared: no further encapsulated request is issued. */
@@ -2419,9 +2444,6 @@ static void rsp_encapsulated_response_ack_case10(void **State)
     assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NORMAL);
 
     free(data);
-#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
-    libspdm_free_peer_leaf_cert_public_key(spdm_context, 0);
-#endif
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT) */
 
@@ -4976,8 +4998,8 @@ int libspdm_rsp_encapsulated_request_test(void)
         /* A certificate chain that fails verification is reported and not recorded */
         cmocka_unit_test_teardown(rsp_encapsulated_response_ack_case40, discard_slot0_teardown),
         #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
-        /* Basic mut auth terminates once the encapsulated CHALLENGE_AUTH is delivered */
-        cmocka_unit_test(rsp_encapsulated_response_ack_case10),
+        /* Basic mut auth reports success, then terminates once CHALLENGE_AUTH is delivered */
+        cmocka_unit_test_teardown(rsp_encapsulated_response_ack_case10, discard_slot0_teardown),
 #endif
         /* Success Case: Responder issues VerifyNewKey after the UpdateKey acknowledgement,
          * without consulting the Integrator */
