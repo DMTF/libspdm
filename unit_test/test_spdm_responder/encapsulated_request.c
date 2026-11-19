@@ -414,6 +414,48 @@ static libspdm_return_t encap_flow_handler(
         *terminate_flow = true;
         break;
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
+    case 0xC2: {
+        /* Session-based mutual authentication: retrieve the certificate chain in slot 0, then
+         * fail. */
+        libspdm_session_info_t *session_info;
+
+        assert_non_null(session_id);
+        assert_int_equal(encap_flow_type, LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH);
+        if (last_request_code == 0) {
+            return libspdm_get_encap_request_get_certificate(
+                spdm_context, session_id, 0, sizeof(m_libspdm_local_certificate_chain),
+                m_libspdm_local_certificate_chain, request_size, request);
+        }
+        assert_int_equal(last_request_code, SPDM_GET_CERTIFICATE);
+        assert_int_equal(encap_response_status, LIBSPDM_STATUS_SUCCESS);
+
+        /* libspdm has recorded the chain by the time the Integrator examines it. */
+        session_info = libspdm_get_session_info_via_session_id(spdm_context, *session_id);
+        assert_non_null(session_info);
+        assert_int_equal(session_info->encap_context.recorded_cert_chain_slot_mask, 1 << 0);
+
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+    }
+    case 0xC4:
+        /* Session-based mutual authentication: retrieve the certificate chain in slot 0, then ask
+         * for the Requester's digests. */
+        assert_non_null(session_id);
+        assert_int_equal(encap_flow_type, LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH);
+        if (last_request_code == 0) {
+            return libspdm_get_encap_request_get_certificate(
+                spdm_context, session_id, 0, sizeof(m_libspdm_local_certificate_chain),
+                m_libspdm_local_certificate_chain, request_size, request);
+        }
+        if (last_request_code == SPDM_GET_CERTIFICATE) {
+            assert_int_equal(encap_response_status, LIBSPDM_STATUS_SUCCESS);
+            return libspdm_get_encap_request_get_digests(spdm_context, session_id, request_size,
+                                                         request);
+        }
+        /* The DIGESTS could not be processed, so this call only reports why the flow ended. */
+        assert_int_equal(last_request_code, SPDM_GET_DIGESTS);
+        break;
+#endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
     case 0x9F: {
         /* Same as case 0x95, but the Integrator reports a size that is smaller than a bare ERROR
          * message. libspdm must reject it rather than propagate a truncated message. */
@@ -2314,7 +2356,8 @@ static void rsp_encapsulated_response_ack_case38(void **State)
  * Expected behavior: the Integrator's handler is called once, with last_request_code set to
  * CHALLENGE and encap_response_status set to LIBSPDM_STATUS_SUCCESS, to be told that the Requester
  * is authenticated. The request that the handler produces and the error that it returns are
- * ignored: ENCAPSULATED_RESPONSE_ACK.Param2 is cleared and the flow is torn down.
+ * ignored: ENCAPSULATED_RESPONSE_ACK.Param2 is cleared and the flow is torn down. The certificate
+ * chain that the flow recorded is kept.
  **/
 static void rsp_encapsulated_response_ack_case10(void **State)
 {
@@ -2347,6 +2390,8 @@ static void rsp_encapsulated_response_ack_case10(void **State)
     spdm_context->encap_context.request_id = 0xFF;
     spdm_context->encap_context.req_slot_id = 0;
     spdm_context->encap_context.last_encap_request_header.request_response_code = SPDM_CHALLENGE;
+    /* The flow recorded the Requester's certificate chain in slot 0. */
+    spdm_context->encap_context.recorded_cert_chain_slot_mask = 1 << 0;
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -2442,6 +2487,14 @@ static void rsp_encapsulated_response_ack_case10(void **State)
     /* The flow is torn down. */
     assert_int_equal(spdm_context->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
     assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NORMAL);
+
+    /* Mutual authentication succeeded, so the certificate chain is kept. */
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_size, data_size);
+#else
+    assert_int_not_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size, 0);
+    assert_non_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
     free(data);
 }
@@ -2975,7 +3028,8 @@ static void rsp_encapsulated_response_ack_case13(void **State)
  * slot than the one chosen at KEY_EXCHANGE time, via
  * libspdm_set_data(LIBSPDM_DATA_SESSION_ENCAP_REQ_SLOT_ID).
  * Expected behavior: the final ENCAPSULATED_RESPONSE_ACK conveys the designated slot. The
- * connection is SPDM 1.2, so the slot byte follows the full 8-byte ACK header.
+ * connection is SPDM 1.2, so the slot byte follows the full 8-byte ACK header. Mutual
+ * authentication has succeeded, so the session is not marked to be terminated.
  **/
 static void rsp_encapsulated_response_ack_case14(void **State)
 {
@@ -3024,6 +3078,8 @@ static void rsp_encapsulated_response_ack_case14(void **State)
                                               LIBSPDM_SESSION_STATE_HANDSHAKING);
 
     session_info->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH;
+    /* The context is shared with earlier tests, so clear any pending termination. */
+    spdm_context->session_id_to_terminate = INVALID_SESSION_ID;
     /* KEY_EXCHANGE_RSP designated slot 3; the handler overrides it with slot 5. */
     session_info->encap_context.mut_auth_req_slot_id = 3;
     session_info->peer_used_cert_chain_slot_id = 3;
@@ -3068,6 +3124,7 @@ static void rsp_encapsulated_response_ack_case14(void **State)
     /* FINISH verification reads the peer slot, so the designation must reach it too. */
     assert_int_equal(session_info->peer_used_cert_chain_slot_id, 5);
     assert_int_equal(session_info->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
+    assert_int_equal(spdm_context->session_id_to_terminate, INVALID_SESSION_ID);
 
     spdm_context->last_spdm_request_session_id_valid = false;
     free(data);
@@ -4152,6 +4209,14 @@ static void rsp_encapsulated_response_ack_case31(void **State)
     /* The chain must not fit in one CERTIFICATE response of the size this test delivers. */
     assert_true(cert_chain_size > LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
+    /* The context is shared with earlier tests, so clear whatever slot 0 holds. */
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = 0;
+#else
+    libspdm_free_peer_leaf_cert_public_key(spdm_context, 0);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size = 0;
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+
     /* The Requester starts a flow, and the handler asks for its certificate chain. */
     response_size = sizeof(response);
     status = libspdm_get_response_encapsulated_request(spdm_context,
@@ -4224,6 +4289,17 @@ static void rsp_encapsulated_response_ack_case31(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(payload_size, cert_chain_size);
     assert_memory_equal(m_libspdm_local_certificate_chain, cert_chain, cert_chain_size);
+
+    /* libspdm recorded the chain in slot 0, and the flow ended normally, so the chain is kept. */
+    assert_int_equal(spdm_context->encap_context.recorded_cert_chain_slot_mask, 1 << 0);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_size,
+                     cert_chain_size);
+#else
+    assert_int_not_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size,
+                         0);
+    assert_non_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
     spdm_context->local_context.peer_root_cert_provision_size[0] = 0;
     spdm_context->local_context.peer_root_cert_provision[0] = NULL;
@@ -4366,6 +4442,77 @@ static void rsp_encapsulated_response_ack_case32(void **State)
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 
 /**
+ * Test 49 (DELIVER_ENCAPSULATED_RESPONSE) a general flow records the Requester's certificate chain
+ * in slot 0 and ends. A basic mutual authentication flow then starts, and the Requester answers
+ * its encapsulated GET_DIGESTS with ERROR(Unspecified).
+ * Expected behavior: mutual authentication has failed, so libspdm discards the certificate chains
+ * that the basic flow recorded. That is none of them, so the chain in slot 0 is kept.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP or LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT is not
+ * set.
+ **/
+static void rsp_encapsulated_response_ack_case49(void **State)
+{
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
+    bool result;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t response_size;
+    void *cert_chain;
+    size_t cert_chain_size;
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xA3;
+    m_case_id = spdm_test_context->case_id;
+
+    set_standard_state(spdm_context);
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    libspdm_reset_message_mut_b(spdm_context);
+    result = provision_requester_root_cert(spdm_context, &cert_chain, &cert_chain_size);
+    assert_true(result);
+
+    /* The context is shared with earlier tests, so clear whatever slot 0 holds. */
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = 0;
+#else
+    libspdm_free_peer_leaf_cert_public_key(spdm_context, 0);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size = 0;
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+
+    /* A general flow records the chain in slot 0 and ends normally. */
+    response_size = sizeof(response);
+    deliver_requester_cert_chain(spdm_context, cert_chain, cert_chain_size, &response_size,
+                                 response);
+    assert_int_equal(spdm_context->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
+    assert_int_equal(spdm_context->encap_context.recorded_cert_chain_slot_mask, 1 << 0);
+
+    /* CHALLENGE_AUTH starts a basic flow, and the Requester declines its GET_DIGESTS. */
+    libspdm_start_encap_flow(&spdm_context->encap_context, LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH);
+    m_case_id = 0xC0;
+    response_size = sizeof(response);
+    deliver_encap_error(spdm_context, SPDM_GET_DIGESTS, SPDM_ERROR_CODE_UNSPECIFIED,
+                        sizeof(spdm_error_response_t), response, &response_size);
+    assert_int_equal(spdm_context->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
+
+    /* The chain that the general flow recorded is kept. */
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_size,
+                     cert_chain_size);
+#else
+    assert_int_not_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size, 0);
+    assert_non_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+
+    spdm_context->local_context.peer_root_cert_provision_size[0] = 0;
+    spdm_context->local_context.peer_root_cert_provision[0] = NULL;
+    free(cert_chain);
+#else
+    skip();
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
+}
+
+/**
  * Test 39 (DELIVER_ENCAPSULATED_RESPONSE) the Requester's certificate chain is valid, but root
  * certificates are provisioned and none of them anchors it.
  * Expected behavior: an untrusted root is a warning rather than an error, so libspdm records the
@@ -4506,6 +4653,206 @@ static void rsp_encapsulated_response_ack_case40(void **State)
 #else
     skip();
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
+}
+
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
+/* Set up the state that KEY_EXCHANGE_RSP leaves behind when it requests session-based mutual
+ * authentication with the given MutAuthRequested value, with the next message arriving within the
+ * session. */
+static libspdm_session_info_t *start_session_mut_auth(libspdm_context_t *spdm_context,
+                                                      uint32_t session_id,
+                                                      uint8_t mut_auth_requested)
+{
+    libspdm_session_info_t *session_info;
+
+    spdm_context->latest_session_id = session_id;
+    spdm_context->last_spdm_request_session_id_valid = true;
+    spdm_context->last_spdm_request_session_id = session_id;
+    spdm_context->session_id_to_terminate = INVALID_SESSION_ID;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    libspdm_secured_message_set_session_state(session_info->secured_message_context,
+                                              LIBSPDM_SESSION_STATE_HANDSHAKING);
+    session_info->mut_auth_requested = mut_auth_requested;
+    libspdm_start_encap_flow(&session_info->encap_context, LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH);
+
+    return session_info;
+}
+
+/* Undo start_session_mut_auth. */
+static void end_session_mut_auth(libspdm_context_t *spdm_context, uint32_t session_id)
+{
+    spdm_context->session_id_to_terminate = INVALID_SESSION_ID;
+    libspdm_free_session_id(spdm_context, session_id);
+    spdm_context->last_spdm_request_session_id_valid = false;
+}
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
+
+/**
+ * Test 41 (DELIVER_ENCAPSULATED_RESPONSE) in session-based mutual authentication the Integrator
+ * retrieves the Requester's certificate chain, and its handler then returns an error.
+ * Expected behavior: libspdm ends the flow with ERROR(Unspecified). Mutual authentication has
+ * failed, so libspdm discards the certificate chain that the flow recorded and marks the session to
+ * be terminated once the ERROR has been encoded.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP or LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT is not
+ * set.
+ **/
+static void rsp_encapsulated_response_ack_case41(void **State)
+{
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
+    bool result;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    const spdm_error_response_t *error;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t response_size;
+    void *cert_chain;
+    size_t cert_chain_size;
+    uint32_t session_id;
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xC2;
+    m_case_id = spdm_test_context->case_id;
+
+    set_standard_state(spdm_context);
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    libspdm_reset_message_mut_b(spdm_context);
+    result = provision_requester_root_cert(spdm_context, &cert_chain, &cert_chain_size);
+    assert_true(result);
+
+    session_id = 0xFFFFFFFF;
+    session_info = start_session_mut_auth(
+        spdm_context, session_id, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST);
+
+    response_size = sizeof(response);
+    deliver_requester_cert_chain(spdm_context, cert_chain, cert_chain_size, &response_size,
+                                 response);
+
+    error = (const void *)response;
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    assert_int_equal(error->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error->header.param1, SPDM_ERROR_CODE_UNSPECIFIED);
+    assert_int_equal(session_info->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
+
+    /* The chain was discarded, so no later session can verify a signature against it. */
+    assert_int_equal(session_info->encap_context.recorded_cert_chain_slot_mask, 0);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_size, 0);
+#else
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size, 0);
+    assert_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+
+    /* The session ends once libspdm_build_response has encoded the ERROR with its keys. */
+    assert_int_equal(spdm_context->session_id_to_terminate, session_id);
+    assert_non_null(libspdm_get_session_info_via_session_id(spdm_context, session_id));
+
+    end_session_mut_auth(spdm_context, session_id);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = 0;
+    spdm_context->local_context.peer_root_cert_provision[0] = NULL;
+    free(cert_chain);
+#else
+    skip();
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
+}
+
+/**
+ * Test 42 (DELIVER_ENCAPSULATED_RESPONSE) in session-based mutual authentication the Integrator
+ * retrieves the Requester's certificate chain and then asks for its digests, and the Requester
+ * answers with a DIGESTS response that cannot be processed, as it reports no provisioned slots.
+ * Expected behavior: libspdm responds with ERROR(InvalidResponseCode) and ends the flow. Mutual
+ * authentication has failed, so libspdm discards the certificate chain that the flow had already
+ * recorded and marks the session to be terminated once the ERROR has been encoded.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP or LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT is not
+ * set.
+ **/
+static void rsp_encapsulated_response_ack_case42(void **State)
+{
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
+    libspdm_return_t status;
+    bool result;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_session_info_t *session_info;
+    const spdm_message_header_t *ack;
+    const spdm_error_response_t *error;
+    spdm_deliver_encapsulated_response_request_t *deliver;
+    spdm_digest_response_t *digests;
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t response_size;
+    void *cert_chain;
+    size_t cert_chain_size;
+    uint32_t session_id;
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xC4;
+    m_case_id = spdm_test_context->case_id;
+
+    set_standard_state(spdm_context);
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    libspdm_reset_message_mut_b(spdm_context);
+    result = provision_requester_root_cert(spdm_context, &cert_chain, &cert_chain_size);
+    assert_true(result);
+
+    session_id = 0xFFFFFFFF;
+    session_info = start_session_mut_auth(
+        spdm_context, session_id, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST);
+
+    /* The chain is retrieved and recorded, and the handler then asks for the digests. */
+    response_size = sizeof(response);
+    deliver_requester_cert_chain(spdm_context, cert_chain, cert_chain_size, &response_size,
+                                 response);
+    ack = (const void *)response;
+    assert_int_equal(ack->request_response_code, SPDM_ENCAPSULATED_RESPONSE_ACK);
+    assert_int_equal(ack->param2, SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_PRESENT);
+    assert_int_equal(session_info->encap_context.recorded_cert_chain_slot_mask, 1 << 0);
+
+    deliver = (void *)temp_buf;
+    deliver->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    deliver->header.request_response_code = SPDM_DELIVER_ENCAPSULATED_RESPONSE;
+    deliver->header.param1 = ack->param1;
+    deliver->header.param2 = 0;
+    digests = (void *)(deliver + 1);
+    digests->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    digests->header.request_response_code = SPDM_DIGESTS;
+    digests->header.param1 = 0;
+    digests->header.param2 = 0;
+
+    m_observed_encap_response_status = LIBSPDM_STATUS_SUCCESS;
+    response_size = sizeof(response);
+    status = libspdm_get_response_encapsulated_response_ack(
+        spdm_context, sizeof(*deliver) + sizeof(*digests), deliver, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(m_observed_encap_response_status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+
+    error = (const void *)response;
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    assert_int_equal(error->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error->header.param1, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE);
+    assert_int_equal(session_info->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
+
+    /* The chain that the flow recorded was discarded, and the session ends. */
+    assert_int_equal(session_info->encap_context.recorded_cert_chain_slot_mask, 0);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_size, 0);
+#else
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size, 0);
+    assert_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+    assert_int_equal(spdm_context->session_id_to_terminate, session_id);
+
+    end_session_mut_auth(spdm_context, session_id);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = 0;
+    spdm_context->local_context.peer_root_cert_provision[0] = NULL;
+    free(cert_chain);
+#else
+    skip();
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
 }
 
 /**
@@ -4676,7 +5023,8 @@ static void rsp_encapsulated_request_case23(void **State)
  * Requester answers the implicit GET_DIGESTS, as it can when it already holds the Requester's
  * certificate chain.
  * Expected behavior: the flow has moved past its first message, so the mutual authentication
- * enforcement accepts FINISH rather than insisting on DELIVER_ENCAPSULATED_RESPONSE.
+ * enforcement accepts FINISH rather than insisting on DELIVER_ENCAPSULATED_RESPONSE. Mutual
+ * authentication has succeeded, so the session is not marked to be terminated.
  * Skipped unless LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT and LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
  * are enabled.
  **/
@@ -4706,6 +5054,8 @@ static void rsp_encapsulated_response_ack_case33(void **State)
     m_case_id = spdm_test_context->case_id;
 
     set_standard_state(spdm_context);
+    /* The context is shared with earlier tests, so clear any pending termination. */
+    spdm_context->session_id_to_terminate = INVALID_SESSION_ID;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
@@ -4770,6 +5120,7 @@ static void rsp_encapsulated_response_ack_case33(void **State)
     error_code = 0;
     assert_false(libspdm_is_request_unexpected_for_mut_auth_encap(spdm_context, &session_id,
                                                                   SPDM_FINISH, &error_code));
+    assert_int_equal(spdm_context->session_id_to_terminate, INVALID_SESSION_ID);
 
     spdm_context->last_spdm_request_session_id_valid = false;
     free(data);
@@ -5075,10 +5426,16 @@ int libspdm_rsp_encapsulated_request_test(void)
         /* The encapsulated DIGESTS transcript window of a session flow */
         cmocka_unit_test(rsp_encapsulated_request_case23),
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
+        /* A failed basic flow keeps the chain that an earlier general flow recorded */
+        cmocka_unit_test_teardown(rsp_encapsulated_response_ack_case49, discard_slot0_teardown),
         /* Optimized flow: FINISH is accepted once the implicit GET_DIGESTS is answered */
         cmocka_unit_test(rsp_encapsulated_response_ack_case33),
         /* Optimized flow: the implicit GET_DIGESTS is reissued after ResponseNotReady */
         cmocka_unit_test(rsp_encapsulated_response_ack_case34),
+        /* Session mutual auth: a handler error ends the session and discards the chain */
+        cmocka_unit_test_teardown(rsp_encapsulated_response_ack_case41, discard_slot0_teardown),
+        /* Session mutual auth: a malformed response discards the chain and ends the session */
+        cmocka_unit_test_teardown(rsp_encapsulated_response_ack_case42, discard_slot0_teardown),
     };
 
     libspdm_test_context_t test_context = {

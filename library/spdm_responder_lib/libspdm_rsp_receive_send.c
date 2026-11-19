@@ -858,7 +858,7 @@ response_dispatched:
             #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                return status;
+                goto done;
             }
         }
     }
@@ -1003,6 +1003,12 @@ response_dispatched:
 
     status = LIBSPDM_STATUS_SUCCESS;
 done:
+    if (context->session_id_to_terminate != INVALID_SESSION_ID) {
+        /* The response has been encoded, with the session's keys if it is in the session, so the
+         * session can now end. */
+        libspdm_terminate_session(context, context->session_id_to_terminate);
+        context->session_id_to_terminate = INVALID_SESSION_ID;
+    }
     if (session_id != NULL) {
         /* clean plain text in scratch buffer */
         libspdm_zero_mem (my_response, my_response_size);

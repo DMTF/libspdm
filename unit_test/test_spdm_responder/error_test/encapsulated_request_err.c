@@ -1297,6 +1297,163 @@ static void rsp_encapsulated_request_err_case15(void **state)
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 }
 
+/**
+ * Test 16: in the basic mutual authentication flow, the signature of the Requester's encapsulated
+ * CHALLENGE_AUTH response does not verify.
+ * Expected behavior: Responder returns ERROR(InvalidResponseCode) and tears the flow down. The
+ * Integrator's handler is told why, with encap_response_status set to LIBSPDM_STATUS_VERIF_FAIL.
+ * The Requester is not authenticated, so libspdm discards the certificate chain that the flow
+ * recorded.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP or LIBSPDM_SEND_CHALLENGE_SUPPORT is not set.
+ **/
+static void rsp_encapsulated_request_err_case16(void **state)
+{
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_error_response_t *spdm_response;
+    spdm_deliver_encapsulated_response_request_t *deliver;
+    spdm_challenge_auth_response_t *challenge_auth;
+    uint8_t temp_buf[LIBSPDM_SENDER_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t *ptr;
+    size_t sig_size;
+    size_t challenge_auth_size;
+    size_t response_size;
+    void *data;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x10;
+
+    /* Basic mutual authentication occurs outside of a session. The flow retrieved the Requester's
+     * certificate chain into slot 0 before it issued CHALLENGE. */
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->last_spdm_request_session_id_valid = false;
+    spdm_context->latest_session_id = INVALID_SESSION_ID;
+    spdm_context->encap_context.flow_type = LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH;
+    spdm_context->encap_context.request_id = 0xFF;
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->encap_context.last_encap_request_header.request_response_code = SPDM_CHALLENGE;
+    spdm_context->encap_context.has_last_encap_request = true;
+    spdm_context->encap_context.recorded_cert_chain_slot_mask = 1 << 0;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        assert_true(false);
+        return;
+    }
+
+    libspdm_reset_message_a(spdm_context);
+    libspdm_reset_message_mut_b(spdm_context);
+    libspdm_reset_message_mut_c(spdm_context);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#else
+    if (!libspdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo, data, data_size,
+                          spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash)) {
+        assert_true(false);
+        return;
+    }
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_free_peer_leaf_cert_public_key(spdm_context, 0);
+    if (!libspdm_get_leaf_cert_public_key_from_cert_chain(
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->connection_info.algorithm.req_base_asym_alg, data, data_size,
+            &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key)) {
+        assert_true(false);
+        return;
+    }
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+
+    libspdm_register_encap_flow_handler(spdm_context, encap_flow_handler);
+
+    deliver = (void *)temp_buf;
+    deliver->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    deliver->header.request_response_code = SPDM_DELIVER_ENCAPSULATED_RESPONSE;
+    deliver->header.param1 = spdm_context->encap_context.request_id;
+    deliver->header.param2 = 0;
+
+    challenge_auth = (void *)(temp_buf + sizeof(spdm_deliver_encapsulated_response_request_t));
+    sig_size = libspdm_get_asym_signature_size(m_libspdm_use_req_asym_algo);
+    challenge_auth_size = sizeof(spdm_challenge_auth_response_t) +
+                          libspdm_get_hash_size(m_libspdm_use_hash_algo) +
+                          SPDM_NONCE_SIZE + sizeof(uint16_t) + sig_size;
+    challenge_auth->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    challenge_auth->header.request_response_code = SPDM_CHALLENGE_AUTH;
+    challenge_auth->header.param1 = 0;
+    challenge_auth->header.param2 = (1 << 0);
+
+    ptr = (void *)(challenge_auth + 1);
+    if (!libspdm_hash_all(m_libspdm_use_hash_algo, data, data_size, ptr)) {
+        assert_true(false);
+        return;
+    }
+    ptr += libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    if (!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
+        assert_true(false);
+        return;
+    }
+    ptr += SPDM_NONCE_SIZE;
+    libspdm_write_uint16(ptr, 0);
+    ptr += sizeof(uint16_t);
+    if (!libspdm_requester_data_sign(
+            spdm_context, challenge_auth->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                0, SPDM_CHALLENGE_AUTH, m_libspdm_use_req_asym_algo,
+                m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo, false,
+                (uint8_t *)challenge_auth, challenge_auth_size - sig_size, ptr, &sig_size)) {
+        assert_true(false);
+        return;
+    }
+    /* Corrupt the signature, so that it does not verify. */
+    ptr[0] ^= 0xFF;
+
+    reset_handler_calls();
+    response_size = sizeof(response);
+    status = libspdm_get_response_encapsulated_response_ack(
+        spdm_context, sizeof(spdm_deliver_encapsulated_response_request_t) + challenge_auth_size,
+        temp_buf, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE);
+    assert_int_equal(spdm_context->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
+    assert_handler_told(SPDM_CHALLENGE, LIBSPDM_STATUS_VERIF_FAIL, 0);
+
+    /* The chain that the flow recorded was discarded. */
+    assert_int_equal(spdm_context->encap_context.recorded_cert_chain_slot_mask, 0);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_size, 0);
+#else
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size, 0);
+    assert_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+
+    free(data);
+#else
+    skip();
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT) */
+}
+
 
 int libspdm_rsp_encapsulated_request_error_test(void)
 {
@@ -1343,6 +1500,8 @@ int libspdm_rsp_encapsulated_request_error_test(void)
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT) */
         /* An encapsulated ERROR(DecryptError) reaches the handler as SESSION_MSG_ERROR */
         cmocka_unit_test(rsp_encapsulated_request_err_case15),
+        /* A CHALLENGE_AUTH whose signature does not verify fails basic mutual authentication */
+        cmocka_unit_test(rsp_encapsulated_request_err_case16),
     };
 
     libspdm_test_context_t test_context = {
