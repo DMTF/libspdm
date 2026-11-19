@@ -23,7 +23,8 @@ libspdm_test_context_t m_libspdm_response_encapsulated_request_test_context = {
 
 static libspdm_return_t libspdm_fuzzing_encap_handler(
     void *spdm_context, const uint32_t *session_id,
-    libspdm_encap_flow_type_t flow_type, uint8_t last_request_code, uint8_t error_code,
+    libspdm_encap_flow_type_t flow_type, uint8_t last_request_code,
+    libspdm_return_t encap_response_status, uint8_t error_code,
     bool *terminate_flow, size_t *request_size, void *request)
 {
     *terminate_flow = true;

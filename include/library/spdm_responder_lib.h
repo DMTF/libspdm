@@ -231,28 +231,33 @@ void libspdm_register_key_update_callback_func(
  *   an encapsulated ERROR(ResponseNotReady)
  * - when the flow is one that libspdm must terminate on the Responder's behalf
  *
- * @param  spdm_context       A pointer to the SPDM context.
- * @param  session_id         If non-NULL, the session ID.
- * @param  encap_flow_type    One of
- *                            - LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH
- *                            - LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH
- *                            - LIBSPDM_ENCAP_FLOW_GENERAL
- * @param  last_request_code  One of the SPDM_* request codes. If this function is called due to
- *                            GET_ENCAPSULATED_REQUEST then its value is 0x00.
- * @param  error_code         If the Requester delivered an encapsulated ERROR then its ErrorCode,
- *                            and the encapsulated flow terminates once this function returns. Its
- *                            value is 0x00 otherwise.
- * @param  terminate_flow     Specifies whether to terminate the encapsulated flow or not. Its
- *                            value is false on input. It must be set to true when error_code is
- *                            non-zero.
- * @param  encap_request_size Size, in bytes, of the encapsulated request.
- * @param  encap_request      The encapsulated request.
+ * See https://github.com/DMTF/libspdm/blob/main/doc/encapsulated_flow_user_guide.md for how it is
+ * called in each encapsulated flow.
+ *
+ * @param  spdm_context           A pointer to the SPDM context.
+ * @param  session_id             If non-NULL, the session ID.
+ * @param  encap_flow_type        One of
+ *                                - LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH
+ *                                - LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH
+ *                                - LIBSPDM_ENCAP_FLOW_GENERAL
+ * @param  last_request_code      One of the SPDM_* request codes. If this function is called due
+ *                                to GET_ENCAPSULATED_REQUEST then its value is 0x00.
+ * @param  encap_response_status  The status of processing the Requester's encapsulated response
+ *                                to last_request_code. Its value is LIBSPDM_STATUS_SUCCESS if
+ *                                last_request_code is 0x00.
+ * @param  error_code             If the Requester delivered an encapsulated ERROR then its
+ *                                ErrorCode. Its value is 0x00 otherwise.
+ * @param  terminate_flow         Specifies whether to terminate the encapsulated flow or not. Its
+ *                                value is false on input.
+ * @param  encap_request_size     Size, in bytes, of the encapsulated request.
+ * @param  encap_request          The encapsulated request.
  **/
 typedef libspdm_return_t (*libspdm_encap_flow_handler_func)(
     void *spdm_context,
     const uint32_t *session_id,
     libspdm_encap_flow_type_t encap_flow_type,
     uint8_t last_request_code,
+    libspdm_return_t encap_response_status,
     uint8_t error_code,
     bool *terminate_flow,
     size_t *encap_request_size,
@@ -319,6 +324,14 @@ libspdm_return_t libspdm_get_encap_request_get_digests(void *spdm_context,
  * flow handler once the entire chain has been retrieved. cert_chain shall therefore remain valid
  * until the handler is next called, at which point its size can be read with
  * libspdm_get_encap_payload_size.
+ *
+ * When the handler is called with the entire chain, encap_response_status is one of
+ * - LIBSPDM_STATUS_SUCCESS if the chain is valid.
+ * - LIBSPDM_STATUS_VERIF_NO_AUTHORITY if the chain is valid but root certificates are provisioned
+ *   with LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT and none of them anchors it. This is checked only when
+ *   no function is registered with libspdm_register_verify_spdm_cert_chain_func. It is a warning,
+ *   so libspdm records the chain, and the handler decides whether to accept it.
+ * - An error if the chain could not be retrieved or is not valid, which terminates the flow.
  *
  * @param  spdm_context        A pointer to the SPDM context.
  * @param  session_id          The session_id given to libspdm_encap_flow_handler_func.
