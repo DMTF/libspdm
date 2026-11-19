@@ -588,6 +588,142 @@ static void rsp_encap_challenge_case8(void **state)
     spdm_context->encap_context.req_slot_id = 0;
 }
 
+/* Prepare an encapsulated CHALLENGE for slot 0 and build the Requester's CHALLENGE_AUTH response
+ * to it, which carries the hash of the given certificate chain. The signature is never checked
+ * against a key, so it is all zeros. Returns the size of the response. */
+static size_t build_challenge_auth(libspdm_context_t *spdm_context, const void *cert_chain,
+                                   size_t cert_chain_size, uint8_t *buffer, size_t buffer_size)
+{
+    spdm_challenge_auth_response_t *spdm_response;
+    uint8_t *ptr;
+    size_t hash_size;
+    size_t sig_size;
+    size_t response_size;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    libspdm_reset_message_mut_c(spdm_context);
+    spdm_context->encap_context.req_slot_id = 0;
+
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    sig_size = libspdm_get_req_asym_signature_size(m_libspdm_use_req_asym_algo);
+    response_size = sizeof(spdm_challenge_auth_response_t) + hash_size + SPDM_NONCE_SIZE +
+                    sizeof(uint16_t) + sig_size;
+    assert_true(response_size <= buffer_size);
+    libspdm_zero_mem(buffer, response_size);
+
+    spdm_response = (void *)buffer;
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.param2 = (1 << 0);
+    ptr = (void *)(spdm_response + 1);
+    if (!libspdm_hash_all(m_libspdm_use_hash_algo, cert_chain, cert_chain_size, ptr)) {
+        assert(false);
+    }
+    ptr += hash_size;
+    if (!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
+        assert(false);
+    }
+    ptr += SPDM_NONCE_SIZE;
+    libspdm_write_uint16(ptr, 0);
+
+    return response_size;
+}
+
+/**
+ * Test 9: the Requester delivers CHALLENGE_AUTH for slot 0, but no certificate chain is recorded
+ * for that slot, as when the encapsulated flow did not retrieve one.
+ * Expected Behavior: the certificate chain hash in CHALLENGE_AUTH cannot match, so
+ * LIBSPDM_STATUS_INVALID_CERT is returned rather than asserting.
+ **/
+static void rsp_encap_challenge_case9(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t response_size;
+    bool need_continue;
+    void *data;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        assert_true(false);
+        return;
+    }
+    response_size = build_challenge_auth(spdm_context, data, data_size, temp_buf,
+                                         sizeof(temp_buf));
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_size, 0);
+#else
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size, 0);
+#endif
+
+    status = libspdm_process_encap_response_challenge_auth(spdm_context, response_size, temp_buf,
+                                                           &need_continue);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_CERT);
+    free(data);
+}
+
+/**
+ * Test 10: the Requester delivers CHALLENGE_AUTH for slot 0. The hash of its certificate chain is
+ * recorded for that slot but the public key is not, as when the key of the leaf certificate could
+ * not be retrieved.
+ * Expected Behavior: the signature cannot be verified, so LIBSPDM_STATUS_VERIF_FAIL is returned
+ * rather than asserting.
+ * Skipped if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT is set, as the public key is then taken from
+ * the recorded certificate chain.
+ **/
+static void rsp_encap_challenge_case10(void **state)
+{
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t response_size;
+    bool need_continue;
+    void *data;
+    size_t data_size;
+    bool result;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        assert_true(false);
+        return;
+    }
+    response_size = build_challenge_auth(spdm_context, data, data_size, temp_buf,
+                                         sizeof(temp_buf));
+    result = libspdm_hash_all(m_libspdm_use_hash_algo, data, data_size,
+                              spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    assert_true(result);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    assert_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+
+    status = libspdm_process_encap_response_challenge_auth(spdm_context, response_size, temp_buf,
+                                                           &need_continue);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
+    free(data);
+#else
+    skip();
+#endif
+}
+
 int libspdm_rsp_encap_challenge_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -606,6 +742,10 @@ int libspdm_rsp_encap_challenge_test(void)
         cmocka_unit_test(rsp_encap_challenge_case7),
         /* The slot of the Requester's certificate chain is bounds-checked */
         cmocka_unit_test(rsp_encap_challenge_case8),
+        /* No certificate chain is recorded for the slot */
+        cmocka_unit_test_setup(rsp_encap_challenge_case9, libspdm_unit_test_reset_context),
+        /* The certificate chain is recorded without its public key */
+        cmocka_unit_test_setup(rsp_encap_challenge_case10, libspdm_unit_test_reset_context),
     };
 
     libspdm_test_context_t test_context = {

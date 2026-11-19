@@ -5050,6 +5050,37 @@ static void libspdm_test_reset_context_digests_and_cache_case81(void **state)
     assert_int_equal(spdm_context->error_data.token, 0);
 }
 
+/**
+ * Test 82: Get the certificate chain data of a peer slot whose certificate chain has been
+ * discarded, so that its buffer size is 0.
+ * Expected Behavior: libspdm_get_peer_cert_chain_data returns a size of 0, rather than a size that
+ * underflows when the spdm_cert_chain_t header and the root hash are skipped.
+ * Skipped if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT is not set.
+ **/
+static void libspdm_test_get_peer_cert_chain_data_case82(void **state)
+{
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    const void *cert_chain_data;
+    size_t cert_chain_data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x52;
+
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = 0;
+
+    cert_chain_data = NULL;
+    cert_chain_data_size = 1;
+    libspdm_get_peer_cert_chain_data(spdm_context, 0, &cert_chain_data, &cert_chain_data_size);
+    assert_int_equal(cert_chain_data_size, 0);
+#else
+    skip();
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+}
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -5276,6 +5307,9 @@ int libspdm_common_context_data_test_main(void)
                                libspdm_unit_test_reset_context),
         /* reset_context clears the peer's DIGESTS results and the cached RESPOND_IF_READY request */
         cmocka_unit_test(libspdm_test_reset_context_digests_and_cache_case81),
+        /* A discarded peer certificate chain has no certificate chain data */
+        cmocka_unit_test_setup(libspdm_test_get_peer_cert_chain_data_case82,
+                               libspdm_unit_test_reset_context),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);

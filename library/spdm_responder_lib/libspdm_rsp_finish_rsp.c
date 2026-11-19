@@ -251,7 +251,10 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
         return false;
 #else
         context = spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key;
-        LIBSPDM_ASSERT(context != NULL);
+        if (context == NULL) {
+            /* No certificate chain has been recorded for the slot. */
+            return false;
+        }
 #endif
     }
 

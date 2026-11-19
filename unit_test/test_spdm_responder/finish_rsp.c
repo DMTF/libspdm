@@ -4595,6 +4595,173 @@ static void rsp_finish_rsp_case36(void **state)
     free(data1);
 }
 
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+/* Set up a handshaking session in which KEY_EXCHANGE_RSP requested mutual authentication with the
+ * Requester's certificate chain in slot 0, without recording that chain, and then send a FINISH
+ * with a signature. The signature is never checked against a key, so it is all zeros. */
+static void send_signed_finish(libspdm_context_t *spdm_context, void *local_cert_chain,
+                               size_t local_cert_chain_size, size_t *response_size,
+                               void *response)
+{
+    libspdm_return_t status;
+    libspdm_session_info_t *session_info;
+    libspdm_finish_request_mine_t request;
+    size_t request_size;
+    uint32_t session_id;
+    uint32_t hash_size;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->local_context.local_cert_chain_provision[0] = local_cert_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = local_cert_chain_size;
+    libspdm_reset_message_a(spdm_context);
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id,
+                              SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
+    session_info->local_used_cert_chain_slot_id = 0;
+    session_info->peer_used_cert_chain_slot_id = 0;
+    session_info->mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_secured_message_set_request_finished_key(
+        session_info->secured_message_context, m_dummy_buffer, hash_size);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context, LIBSPDM_SESSION_STATE_HANDSHAKING);
+
+    libspdm_zero_mem(&request, sizeof(request));
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
+    request.header.request_response_code = SPDM_FINISH;
+    request.header.param1 = SPDM_FINISH_REQUEST_ATTRIBUTES_SIGNATURE_INCLUDED;
+    request.header.param2 = 0;
+    request_size = sizeof(spdm_finish_request_t) +
+                   libspdm_get_req_asym_signature_size(m_libspdm_use_req_asym_algo) + hash_size;
+
+    status = libspdm_get_response_finish(spdm_context, request_size, &request,
+                                         response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+}
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) */
+
+/**
+ * Test 37: KEY_EXCHANGE_RSP requested mutual authentication with slot 0, but the Responder has no
+ * certificate chain recorded for that slot, as after an encapsulated flow that did not retrieve
+ * one. The Requester then sends a signed FINISH.
+ * Expected behavior: the FINISH transcript cannot include the hash of the Requester's certificate
+ * chain, so the Responder generates an ERROR_RESPONSE with code SPDM_ERROR_CODE_UNSPECIFIED rather
+ * than asserting.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP is not set or
+ * LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT is set, as the recorded certificate chain then provides the
+ * transcript.
+ **/
+static void rsp_finish_rsp_case37(void **state)
+{
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x25;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        assert_true(false);
+    }
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size, 0);
+
+    response_size = sizeof(response);
+    send_signed_finish(spdm_context, data1, data_size1, &response_size, response);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSPECIFIED);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    free(data1);
+#else
+    skip();
+#endif
+}
+
+/**
+ * Test 38: KEY_EXCHANGE_RSP requested mutual authentication with slot 0. The Responder recorded
+ * the hash of the Requester's certificate chain for that slot but not its public key, as when the
+ * key of the leaf certificate could not be retrieved. The Requester then sends a signed FINISH.
+ * Expected behavior: the signature cannot be verified, so the Responder generates an
+ * ERROR_RESPONSE with code SPDM_ERROR_CODE_DECRYPT_ERROR rather than asserting.
+ * Skipped if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP is not set or
+ * LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT is set, as the public key is then taken from the recorded
+ * certificate chain.
+ **/
+static void rsp_finish_rsp_case38(void **state)
+{
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    void *data2;
+    size_t data_size2;
+    bool result;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x26;
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        assert_true(false);
+    }
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data2,
+                                                         &data_size2, NULL, NULL)) {
+        assert_true(false);
+    }
+    result = libspdm_hash_all(m_libspdm_use_hash_algo, data2, data_size2,
+                              spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    assert_true(result);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    assert_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+
+    response_size = sizeof(response);
+    send_signed_finish(spdm_context, data1, data_size1, &response_size, response);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_DECRYPT_ERROR);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    free(data1);
+    free(data2);
+#else
+    skip();
+#endif
+}
+
 int libspdm_rsp_finish_rsp_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -4674,6 +4841,10 @@ int libspdm_rsp_finish_rsp_test(void)
         #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
         /* SPDM 1.4, a reserved FINISH.Param2 is not passed to libspdm_finish_rsp_opaque_data */
         cmocka_unit_test_setup(rsp_finish_rsp_case36, libspdm_unit_test_reset_context),
+        /* No certificate chain is recorded for the Requester's slot */
+        cmocka_unit_test_setup(rsp_finish_rsp_case37, libspdm_unit_test_reset_context),
+        /* The Requester's certificate chain is recorded without its public key */
+        cmocka_unit_test_setup(rsp_finish_rsp_case38, libspdm_unit_test_reset_context),
     };
 
     libspdm_test_context_t test_context = {

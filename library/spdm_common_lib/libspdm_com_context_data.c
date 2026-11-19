@@ -2209,10 +2209,11 @@ libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
                             return LIBSPDM_STATUS_CRYPTO_ERROR;
                         }
                     } else {
-                        LIBSPDM_ASSERT(
-                            hash_size ==
-                            spdm_context->connection_info
-                            .peer_used_cert_chain[slot_id].buffer_hash_size);
+                        if (spdm_context->connection_info
+                            .peer_used_cert_chain[slot_id].buffer_hash_size != hash_size) {
+                            /* No certificate chain has been recorded for the slot. */
+                            return LIBSPDM_STATUS_INVALID_STATE_PEER;
+                        }
 
                         libspdm_copy_mem(mut_cert_chain_buffer_hash,
                                          sizeof(mut_cert_chain_buffer_hash),
