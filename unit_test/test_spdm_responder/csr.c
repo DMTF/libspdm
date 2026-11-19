@@ -177,7 +177,7 @@ void libspdm_clear_cached_csr()
     char *new_name = "test_csr/cached.csr";
     char *file_name = "test_csr/cached.staging";
 
-    rename(file_name, new_name);
+    (void)rename(file_name, new_name);
 }
 
 /*clean the cached last SPDM csr request*/

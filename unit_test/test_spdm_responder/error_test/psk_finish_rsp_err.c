@@ -89,9 +89,12 @@ static void rsp_psk_finish_rsp_err_case1(void **state)
     g_generate_psk_finish_opaque_data = true;
     libspdm_secret_lib_psk_finish_opaque_data_size = SPDM_MAX_OPAQUE_DATA_SIZE + 1;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data1,
-                                                    &data_size1, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        assert_true(false);
+        return;
+    }
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
@@ -190,9 +193,12 @@ static void rsp_psk_finish_rsp_err_case2(void **state)
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
     g_psk_finish_opaque_data_error = true;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data1,
-                                                    &data_size1, NULL, NULL);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data1,
+                                                         &data_size1, NULL, NULL)) {
+        assert_true(false);
+        return;
+    }
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
