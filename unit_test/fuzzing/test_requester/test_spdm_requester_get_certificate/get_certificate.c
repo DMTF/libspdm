@@ -105,10 +105,14 @@ void libspdm_test_requester_get_certificate_case1(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
-                                          data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
-                                          &root_cert,
-                                          &root_cert_size);
+    if (!libspdm_x509_get_cert_from_cert_chain(
+            (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
+            data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+            &root_cert,
+            &root_cert_size)) {
+        LIBSPDM_ASSERT(false);
+        return;
+    }
     libspdm_dump_hex(root_cert, root_cert_size);
     spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
@@ -168,10 +172,14 @@ void libspdm_test_requester_get_certificate_case2(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
-                                          data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
-                                          &root_cert,
-                                          &root_cert_size);
+    if (!libspdm_x509_get_cert_from_cert_chain(
+            (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
+            data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+            &root_cert,
+            &root_cert_size)) {
+        LIBSPDM_ASSERT(false);
+        return;
+    }
     libspdm_dump_hex(root_cert, root_cert_size);
     spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
@@ -233,10 +241,14 @@ void libspdm_test_requester_get_certificate_case3(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
-                                          data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
-                                          &root_cert,
-                                          &root_cert_size);
+    if (!libspdm_x509_get_cert_from_cert_chain(
+            (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
+            data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+            &root_cert,
+            &root_cert_size)) {
+        LIBSPDM_ASSERT(false);
+        return;
+    }
     libspdm_dump_hex(root_cert, root_cert_size);
     spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
@@ -296,10 +308,14 @@ void libspdm_test_requester_get_certificate_ex_case1(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
-                                          data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
-                                          &root_cert,
-                                          &root_cert_size);
+    if (!libspdm_x509_get_cert_from_cert_chain(
+            (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
+            data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+            &root_cert,
+            &root_cert_size)) {
+        LIBSPDM_ASSERT(false);
+        return;
+    }
     libspdm_dump_hex(root_cert, root_cert_size);
     spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
@@ -382,9 +398,13 @@ void libspdm_test_requester_get_certificate_in_session_case1(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
-                                          data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
-                                          &root_cert, &root_cert_size);
+    if (!libspdm_x509_get_cert_from_cert_chain(
+            (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
+            data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+            &root_cert, &root_cert_size)) {
+        LIBSPDM_ASSERT(false);
+        return;
+    }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
     libspdm_dump_hex(
         root_cert,

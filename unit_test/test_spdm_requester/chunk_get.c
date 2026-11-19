@@ -852,10 +852,13 @@ static void req_chunk_get_case1(void** state)
         assert_true(false);
         return;
     }
-    libspdm_x509_get_cert_from_cert_chain(
-        (uint8_t*) data + sizeof(spdm_cert_chain_t) + hash_size,
-        data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
-        &root_cert, &root_cert_size);
+    if (!libspdm_x509_get_cert_from_cert_chain(
+            (uint8_t*) data + sizeof(spdm_cert_chain_t) + hash_size,
+            data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+            &root_cert, &root_cert_size)) {
+        assert_true(false);
+        return;
+    }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
     libspdm_dump_hex(root_cert, root_cert_size);
     spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
