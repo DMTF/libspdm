@@ -49,15 +49,15 @@ static libspdm_return_t libspdm_vendor_response_func_err_test(
     uint32_t *resp_size,
     void *resp_data)
 {
+    if (resp_size == NULL || *resp_size == 0)
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+
     /* get pointer to response data payload and populate */
     uint8_t *resp_payload = (uint8_t *)resp_data;
     /* get pointer to response length and populate */
     *resp_size = VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE;
     /* store length of response */
     libspdm_set_mem(resp_payload, *resp_size, 0xFF);
-
-    if (resp_size == NULL || *resp_size == 0)
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
 
     printf("Got request 0x%x, sent response 0x%x\n",
            ((const uint8_t*)req_data)[0], ((uint8_t*)resp_data)[0]);
