@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -298,8 +298,6 @@ void libspdm_test_responder_algorithms_case10(void **State)
     spdm_context->local_context.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
     spdm_context->local_context.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
-    spdm_context->local_context.algorithm.measurement_hash_algo =
-        m_libspdm_use_measurement_hash_algo;
     spdm_context->local_context.algorithm.measurement_hash_algo =
         SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_512;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
