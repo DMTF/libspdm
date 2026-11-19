@@ -725,6 +725,10 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
         /* The failure is local to the Responder; nothing was wrong with the Requester's
          * encapsulated response. */
         encap_context->flow_type = LIBSPDM_ENCAP_FLOW_NONE;
+        #if LIBSPDM_RESPOND_IF_READY_SUPPORT
+        /* A request that the Requester deferred with ResponseNotReady is not reissued either. */
+        encap_context->response_not_ready = false;
+        #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0, response_size, response);
     }
