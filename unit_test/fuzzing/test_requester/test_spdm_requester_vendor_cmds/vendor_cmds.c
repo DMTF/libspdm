@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -95,7 +95,7 @@ static void libspdm_test_requester_vendor_cmds_case1(void **state)
     spdm_context->local_context.is_requester = true;
 
     response.vendor_id_len = SPDM_MAX_VENDOR_ID_LENGTH;
-    response.data_len = SPDM_MAX_VENDOR_DEFINED_DATA_LEN;
+    response_data_len = SPDM_MAX_VENDOR_DEFINED_DATA_LEN;
 
     request.standard_id = 0x01;
     request.vendor_id_len = 1;
