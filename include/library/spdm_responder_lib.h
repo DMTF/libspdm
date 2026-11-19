@@ -337,10 +337,11 @@ libspdm_return_t libspdm_get_encap_request_get_digests(void *spdm_context,
  *
  * When the handler is called with the entire chain, encap_response_status is one of
  * - LIBSPDM_STATUS_SUCCESS if the chain is valid.
- * - LIBSPDM_STATUS_VERIF_NO_AUTHORITY if the chain is valid but root certificates are provisioned
- *   with LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT and none of them anchors it. This is checked only when
- *   no function is registered with libspdm_register_verify_spdm_cert_chain_func. It is a warning,
- *   so libspdm records the chain, and the handler decides whether to accept it.
+ * - LIBSPDM_STATUS_VERIF_NO_AUTHORITY if the chain is valid but no root certificate provisioned
+ *   with LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT anchors it, including when none is provisioned. This
+ *   is checked only when no function is registered with
+ *   libspdm_register_verify_spdm_cert_chain_func. It is a warning, so libspdm records the chain,
+ *   and the handler decides whether to accept it.
  * - An error if the chain could not be retrieved or is not valid, which terminates the flow.
  *
  * @param  spdm_context        A pointer to the SPDM context.

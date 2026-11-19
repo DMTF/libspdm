@@ -142,6 +142,11 @@
     - `libspdm_transport_tcp_encode_message` - returns `LIBSPDM_STATUS_UNSUPPORTED_CAP` for an
       application message, for which DSP0287 defines no format, and
       `libspdm_transport_tcp_decode_message` never reports one.
+    - `libspdm_get_certificate` and `libspdm_get_certificate_ex` - return the warning
+      `LIBSPDM_STATUS_VERIF_NO_AUTHORITY` when no root certificate is provisioned with
+      `LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT`, as they do when none of them anchors the chain, unless
+      a function is registered with `libspdm_register_verify_spdm_cert_chain_func`. 3.8 returned
+      `LIBSPDM_STATUS_SUCCESS`. The chain is still kept.
 - Library APIs removed:
     - Replaced by the registered encapsulated flow handler:
         - `libspdm_init_get_endpoint_info_encap_state`
@@ -356,6 +361,9 @@
   reverted the requirement that SPDM 1.3 added. If the extension is present then `cA` must be
   `FALSE`. 3.8 rejected a leaf certificate without it at SPDM 1.3, and in `SET_CERTIFICATE` at SPDM
   1.2 too.
+- The sample certificate chain verification function `libspdm_verify_spdm_cert_chain_with_dice`
+  fails when no root certificate is provisioned with `LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT`, which
+  3.8 did not require.
 - The TCP transport sets `PayloadLen` to the size of the SPDM message, as DSP0287 requires, where
   3.8 added 2.
 - The Application Data of a TCP In-Session Message is the SPDM message, as DSP0287 requires, where

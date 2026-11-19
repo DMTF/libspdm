@@ -1114,8 +1114,8 @@ bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_con
  * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
  *
  * @retval true  Peer certificate chain buffer authority verification passed.
- *               Or there is no root_cert in local_context.
- * @retval false Peer certificate chain buffer authority verification failed.
+ * @retval false Peer certificate chain buffer authority verification failed, including when no
+ *               root certificate is provisioned.
  **/
 bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_context,
                                                      const void *cert_chain_buffer,

@@ -4810,6 +4810,76 @@ static void rsp_encapsulated_response_ack_case40(void **State)
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 }
 
+/**
+ * Test 48 (DELIVER_ENCAPSULATED_RESPONSE) the Requester's certificate chain is valid, but no root
+ * certificate is provisioned, so nothing anchors it.
+ * Expected behavior: an unanchored chain is a warning rather than an error, so libspdm records the
+ * chain and tells the Integrator's handler, with encap_response_status set to
+ * LIBSPDM_STATUS_VERIF_NO_AUTHORITY. The handler then decides whether to accept the chain.
+ * Skipped if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT is not set.
+ **/
+static void rsp_encapsulated_response_ack_case48(void **State)
+{
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
+    bool result;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    const spdm_message_header_t *ack;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t response_size;
+    void *cert_chain;
+    size_t cert_chain_size;
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xA3;
+    m_case_id = spdm_test_context->case_id;
+
+    set_standard_state(spdm_context);
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    libspdm_reset_message_mut_b(spdm_context);
+    result = provision_requester_root_cert(spdm_context, &cert_chain, &cert_chain_size);
+    assert_true(result);
+    /* Withdraw the root certificate, so that nothing anchors the chain. */
+    spdm_context->local_context.peer_root_cert_provision_size[0] = 0;
+    spdm_context->local_context.peer_root_cert_provision[0] = NULL;
+
+    /* The context is shared with earlier tests, so clear whatever slot 0 holds. */
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = 0;
+#else
+    libspdm_free_peer_leaf_cert_public_key(spdm_context, 0);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size = 0;
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+
+    m_observed_error_code = 0;
+    m_observed_encap_response_status = LIBSPDM_STATUS_SUCCESS;
+    response_size = sizeof(response);
+    deliver_requester_cert_chain(spdm_context, cert_chain, cert_chain_size, &response_size,
+                                 response);
+
+    /* The handler was told, and then ended the flow. */
+    assert_int_equal(m_observed_encap_response_status, LIBSPDM_STATUS_VERIF_NO_AUTHORITY);
+    assert_int_equal(m_observed_error_code, 0);
+    ack = (const void *)response;
+    assert_int_equal(ack->request_response_code, SPDM_ENCAPSULATED_RESPONSE_ACK);
+    assert_int_equal(spdm_context->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_NONE);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_size,
+                     cert_chain_size);
+#else
+    assert_int_not_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size,
+                         0);
+    assert_non_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+
+    free(cert_chain);
+#else
+    skip();
+#endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
+}
+
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 /* Set up the state that KEY_EXCHANGE_RSP leaves behind when it requests session-based mutual
  * authentication with the given MutAuthRequested value, with the next message arriving within the
@@ -6364,6 +6434,8 @@ int libspdm_rsp_encapsulated_request_test(void)
         cmocka_unit_test_teardown(rsp_encapsulated_response_ack_case39, discard_slot0_teardown),
         /* A certificate chain that fails verification is reported and not recorded */
         cmocka_unit_test_teardown(rsp_encapsulated_response_ack_case40, discard_slot0_teardown),
+        /* An unanchored chain reaches the handler as LIBSPDM_STATUS_VERIF_NO_AUTHORITY */
+        cmocka_unit_test_teardown(rsp_encapsulated_response_ack_case48, discard_slot0_teardown),
         #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
         /* Basic mut auth reports success, then terminates once CHALLENGE_AUTH is delivered */
         cmocka_unit_test_teardown(rsp_encapsulated_response_ack_case10, discard_slot0_teardown),

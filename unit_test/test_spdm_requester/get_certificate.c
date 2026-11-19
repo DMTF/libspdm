@@ -2994,8 +2994,9 @@ static void req_get_certificate_case9(void **state)
 }
 
 /**
- * Test 10: Normal case, request a certificate chain. Validates certificate by using a preloaded chain instead of root hash
- * Expected Behavior: receives the correct number of Certificate messages
+ * Test 10: Normal case, request a certificate chain, but no root certificate is provisioned.
+ * Expected Behavior: get a LIBSPDM_STATUS_VERIF_NO_AUTHORITY, as nothing anchors the chain, and
+ * receives the certificate chain in the correct number of Certificate messages
  **/
 static void req_get_certificate_case10(void **state)
 {
@@ -3043,7 +3044,9 @@ static void req_get_certificate_case10(void **state)
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_NO_AUTHORITY);
+    assert_int_equal(cert_chain_size, data_size);
+    assert_memory_equal(cert_chain, data, data_size);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -4196,8 +4199,10 @@ static void req_get_certificate_case27(void **state)
 }
 
 /**
- * Test 28: Normal case, request a certificate chain. Validates certificate by using a preloaded chain instead of root hash
- * Expected Behavior: receives the correct number of Certificate messages
+ * Test 28: Normal case, request a certificate chain in the AliasCert model, but no root
+ * certificate is provisioned.
+ * Expected Behavior: get a LIBSPDM_STATUS_VERIF_NO_AUTHORITY, as nothing anchors the chain, and
+ * receives the certificate chain in the correct number of Certificate messages
  **/
 static void req_get_certificate_case28(void **state)
 {
@@ -4249,7 +4254,9 @@ static void req_get_certificate_case28(void **state)
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_NO_AUTHORITY);
+    assert_int_equal(cert_chain_size, data_size);
+    assert_memory_equal(cert_chain, data, data_size);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
