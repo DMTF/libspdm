@@ -343,6 +343,7 @@ static void rsp_encap_key_update_case7(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_set_standard_key_update_test_state(spdm_context, &session_id);
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    assert_non_null(session_info);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_HANDSHAKING);
 
@@ -592,6 +593,7 @@ static void rsp_encap_key_update_case14(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_set_standard_key_update_test_state(spdm_context, &session_id);
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    assert_non_null(session_info);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_HANDSHAKING);
 
@@ -674,6 +676,7 @@ static void rsp_encap_key_update_case16(void **state)
     libspdm_set_standard_key_update_test_state(spdm_context, &session_id);
 
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    assert_non_null(session_info);
     secured_message_context = session_info->secured_message_context;
     libspdm_set_standard_key_update_test_secrets(
         secured_message_context,
