@@ -6,6 +6,7 @@
 
 #include "library/spdm_transport_mctp_lib.h"
 #include "library/spdm_secured_message_lib.h"
+#include "internal/libspdm_common_lib.h"
 #include "hal/library/debuglib.h"
 
 /**
@@ -146,6 +147,7 @@ libspdm_return_t libspdm_transport_mctp_decode_message(
 {
     libspdm_return_t status;
     uint32_t *secured_message_session_id;
+    uint32_t received_session_id;
     uint8_t *secured_message;
     size_t secured_message_size;
     uint8_t *app_message;
@@ -184,12 +186,15 @@ libspdm_return_t libspdm_transport_mctp_decode_message(
     if (secured_message_session_id != NULL) {
         *session_id = secured_message_session_id;
 
+        /* The session ID is located inside the received message, which may not be aligned. */
+        received_session_id = libspdm_read_uint32((const uint8_t *)secured_message_session_id);
+
         secured_message_context =
             libspdm_get_secured_message_context_via_session_id(
-                spdm_context, *secured_message_session_id);
+                spdm_context, received_session_id);
         if (secured_message_context == NULL) {
             spdm_error.error_code = SPDM_ERROR_CODE_INVALID_SESSION;
-            spdm_error.session_id = *secured_message_session_id;
+            spdm_error.session_id = received_session_id;
             libspdm_set_last_spdm_error_struct(spdm_context,
                                                &spdm_error);
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -199,7 +204,7 @@ libspdm_return_t libspdm_transport_mctp_decode_message(
         app_message = *message;
         app_message_size = *message_size;
         status = libspdm_decode_secured_message(
-            secured_message_context, *secured_message_session_id,
+            secured_message_context, received_session_id,
             is_request_message, secured_message_size, secured_message,
             &app_message_size, (void **)&app_message,
             &spdm_secured_message_callbacks);
@@ -231,7 +236,7 @@ libspdm_return_t libspdm_transport_mctp_decode_message(
                 /* get encapsulated secured message - cannot handle it.*/
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                                "transport_decode_message - expect encapsulated normal but got session (%08x)\n",
-                               *secured_message_session_id));
+                               received_session_id));
                 return LIBSPDM_STATUS_UNSUPPORTED_CAP;
             }
         }
