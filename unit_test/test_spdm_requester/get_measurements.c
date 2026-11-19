@@ -2359,7 +2359,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->number_of_blocks = 2;
-        libspdm_write_uint32(spdm_response->measurement_record_length,
+        libspdm_write_uint24(spdm_response->measurement_record_length,
                              2 * ((uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
                                              libspdm_get_measurement_hash_size(
                                                  m_libspdm_use_measurement_hash_algo))));
