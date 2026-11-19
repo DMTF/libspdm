@@ -1407,8 +1407,8 @@ static void libspdm_test_responder_receive_send_rsp_case23(void **state)
  * ENCAP_CAP requires a handler; the tests below are about which requests reach libspdm at all. */
 static libspdm_return_t receive_send_encap_handler(
     void *spdm_context, const uint32_t *session_id, libspdm_encap_flow_type_t encap_flow_type,
-    uint8_t last_request_code, uint8_t error_code, bool *terminate_flow, size_t *request_size,
-    void *request)
+    uint8_t last_request_code, libspdm_return_t encap_response_status, uint8_t error_code,
+    bool *terminate_flow, size_t *request_size, void *request)
 {
     *terminate_flow = true;
     *request_size = 0;

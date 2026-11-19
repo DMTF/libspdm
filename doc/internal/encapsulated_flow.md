@@ -152,10 +152,9 @@ Requester.
 ### Requester Issuance of Encapsulated `ERROR` Message
 
 If the Requester delivers an encapsulated `ERROR` message to the Responder, then the handler is
-called with the value of the `error_code` parameter equal to `ERROR.ErrorCode`. In this state, the
-Integrator must acknowledge the error by setting the value of `terminate_flow` to `true`, which is
-enforced in libspdm with a `LIBSPDM_ASSERT`. When control returns to libspdm then it automatically
-terminates the encapsulated flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2`.
+called with the value of the `error_code` parameter equal to `ERROR.ErrorCode`. libspdm then ends
+the encapsulated flow and ignores `terminate_flow`. The encapsulated flow user guide describes the
+response that the Requester receives.
 
 The value of the `error_code` parameter is `0` for non-`ERROR` messages.
 
@@ -193,20 +192,21 @@ libspdm_return_t encap_flow_handler(
     const uint32_t *session_id,
     libspdm_encap_flow_type_t encap_flow_type,
     uint8_t last_request_code,
+    libspdm_return_t encap_response_status,
     uint8_t error_code,
     bool *terminate_flow,
     size_t *encap_request_size,
     void *encap_request)
 {
-    if (error_code != 0) {
-        /* The Requester returned an encapsulated ERROR in response to last_request_code. The flow
-         * terminates either way, but for ResponseNotReady libspdm reissues the outstanding request
-         * with RESPOND_IF_READY, so the Integrator retains the state belonging to this flow. */
-        if (error_code != SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
+    if (LIBSPDM_STATUS_IS_ERROR(encap_response_status)) {
+        /* The Requester returned an encapsulated ERROR in response to last_request_code, or its
+         * encapsulated response could not be processed. The flow terminates either way, but for
+         * ResponseNotReady libspdm reissues the outstanding request with RESPOND_IF_READY, so the
+         * Integrator retains the state belonging to this flow, except in the cases that the user
+         * guide lists. */
+        if (encap_response_status != LIBSPDM_STATUS_NOT_READY_PEER) {
             /* Release the Integrator-defined state associated with this flow. */
         }
-
-        *terminate_flow = true;
 
         return LIBSPDM_STATUS_SUCCESS;
     }
