@@ -131,7 +131,7 @@ static void libspdm_requester_chunk_get_test_case2_build_measurements_response(
     meas_rsp->header.param1 = 0;
     meas_rsp->header.param2 = 0;
     meas_rsp->number_of_blocks = 2;
-    libspdm_write_uint32(meas_rsp->measurement_record_length,
+    libspdm_write_uint24(meas_rsp->measurement_record_length,
                          2 * ((uint32_t) (sizeof(spdm_measurement_block_dmtf_t) +
                                           libspdm_get_measurement_hash_size( m_libspdm_use_measurement_hash_algo))));
     measurement_block = (void*) (meas_rsp + 1);
