@@ -365,8 +365,8 @@ passing `session_id` through to it unmodified. Returning an error terminates the
 libspdm does not call this function again to report it.
 <br/><br/>
 libspdm does not call this function when it determines the next message itself: while a multi-part
-`GET_CERTIFICATE` or `KEY_UPDATE` is in progress, when reissuing an outstanding request with
-`RESPOND_IF_READY`, or when it must terminate the flow on the Responder's behalf.
+`GET_CERTIFICATE` or `KEY_UPDATE` is in progress, or when reissuing an outstanding request with
+`RESPOND_IF_READY`.
 <br/><br/>
 It is called when the Requester delivers an encapsulated `ERROR`, so that the Integrator learns why
 the flow ended. `encap_response_status` is then `LIBSPDM_STATUS_NOT_READY_PEER` for
@@ -381,6 +381,12 @@ that libspdm encountered, and libspdm sends an `ERROR` response to the Requester
 <br/><br/>
 In either case the flow terminates, so libspdm ignores `terminate_flow`, `encap_request_size` and
 `encap_request`.
+<br/><br/>
+In the basic mutual authentication flow it is also called once the signature of the Requester's
+encapsulated `CHALLENGE_AUTH` response has been verified, with `last_request_code` set to
+`SPDM_CHALLENGE` and `encap_response_status` set to `LIBSPDM_STATUS_SUCCESS`. This is how the
+Integrator learns that the Requester is authenticated. libspdm then terminates the flow and ignores
+the return value and outputs of this function.
 <br/><br/>
 
 
@@ -545,8 +551,8 @@ A pointer to a buffer that will store the encapsulated request.
 ### Details
 This is only legal in the basic mutual authentication flow, whose messages are always sent outside
 of a session. libspdm terminates the flow once the encapsulated `CHALLENGE_AUTH` response has been
-delivered. Returns `LIBSPDM_STATUS_INVALID_PARAMETER` if `req_slot_id` is neither a valid slot nor
-0xFF.
+delivered, and reports the outcome to the encapsulated flow handler. Returns
+`LIBSPDM_STATUS_INVALID_PARAMETER` if `req_slot_id` is neither a valid slot nor 0xFF.
 <br/><br/>
 
 

@@ -231,7 +231,6 @@ void libspdm_register_key_update_callback_func(
  * - when a multi-part GET_CERTIFICATE or KEY_UPDATE is still in progress
  * - when the outstanding request is reissued with RESPOND_IF_READY after the Requester delivered
  *   an encapsulated ERROR(ResponseNotReady)
- * - when the flow is one that libspdm must terminate on the Responder's behalf
  *
  * See https://github.com/DMTF/libspdm/blob/main/doc/encapsulated_flow_user_guide.md for how it is
  * called in each encapsulated flow.
@@ -361,6 +360,9 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(void *spdm_context,
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
 /**
  * Get the SPDM encapsulated CHALLENGE request.
+ *
+ * libspdm terminates the flow once the Requester's encapsulated CHALLENGE_AUTH response has been
+ * delivered, and reports the outcome to the encapsulated flow handler.
  *
  * @param  spdm_context        A pointer to the SPDM context.
  * @param  req_slot_id         The Requester's certificate slot to be challenged, or 0xFF if its
