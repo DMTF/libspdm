@@ -98,6 +98,7 @@ not resume the flow in the following cases:
 - The outstanding request is `KEY_UPDATE`.
 - The flow is session-based mutual authentication and both endpoints have set
   `HANDSHAKE_IN_THE_CLEAR_CAP`.
+- The handler returns an error, which ends the flow with `ERROR(Unspecified)`.
 
 In these cases the Integrator should release its per-flow state as it would for any other
 `ErrorCode`.

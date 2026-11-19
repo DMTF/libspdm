@@ -367,7 +367,7 @@ It is called when the Requester delivers an encapsulated `ERROR`, including
 `ErrorCode=ResponseNotReady`, so that the Integrator learns why the flow ended. libspdm then
 terminates the flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2`. For `ResponseNotReady` the
 outstanding request is retained and reissued with `RESPOND_IF_READY` when the Requester returns
-with `GET_ENCAPSULATED_REQUEST`.
+with `GET_ENCAPSULATED_REQUEST`, unless this function returns an error.
 <br/><br/>
 
 
