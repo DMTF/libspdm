@@ -71,10 +71,10 @@ the Requester fails, the Integrator would send an `InvalidPolicy` or `Unspecifie
 Requester, and both the encapsulated flow and session establishment would halt.
 
 libspdm treats every failure of a mutual authentication flow this way, whether the Integrator's
-handler fails or libspdm cannot process the Requester's encapsulated response. It discards the
-certificate chains that the flow retrieved, and for session-based mutual authentication it
-terminates the session once the `ERROR` response has been encoded with the session's handshake
-keys, as it does after `END_SESSION_ACK`.
+handler rejects the Requester or libspdm cannot process the Requester's encapsulated response. It
+discards the certificate chains that the flow retrieved, and for session-based mutual
+authentication it terminates the session once the `ERROR` response has been encoded with the
+session's handshake keys, as it does after `END_SESSION_ACK`.
 
 ### Secure Session Management
 
@@ -107,10 +107,10 @@ from the Responder are limited to
 - `GET_DIGESTS` and `GET_CERTIFICATE` if the Requester's `CERT_CAP` is set.
 - `CHALLENGE`.
 
-The Responder can terminate the flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2` or sending an
-`ERROR` response. Once the encapsulated `CHALLENGE_AUTH` response is returned to the Responder, then
-it must terminate the encapsulated flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2`. All messages
-must be sent outside of a session.
+Once the encapsulated `CHALLENGE_AUTH` response is returned to the Responder, then it must terminate
+the encapsulated flow by clearing `ENCAPSULATED_RESPONSE_ACK.Param2`. Before that the Requester has
+not been authenticated, so the Responder can only end the flow with an `ERROR` response, and mutual
+authentication fails. All messages must be sent outside of a session.
 
 ### Session-based Mutual Authentication
 

@@ -474,27 +474,30 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
     error_response = (spdm_error_response_t *)encap_request;
 
     if (error_response->header.request_response_code == SPDM_ERROR) {
-        /* Handler generated an error response; propagate it directly. */
+        /* Handler generated an error response; propagate it directly. The ERROR ends the flow. */
         status = libspdm_propagate_encap_error(response, response_size,
                                                encap_request, encap_request_size);
+        libspdm_fail_encap_flow(spdm_context, session_id, encap_context);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            libspdm_fail_encap_flow(spdm_context, session_id, encap_context);
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0, response_size, response);
         }
         return LIBSPDM_STATUS_SUCCESS;
-    } else if (terminate_flow) {
-        if (encap_context->flow_type != LIBSPDM_ENCAP_FLOW_GENERAL) {
-            /* The Responder asked for this flow in CHALLENGE_AUTH or KEY_EXCHANGE_RSP, so it
-             * cannot then report that it has no request pending. */
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                           "encapsulated flow type %d cannot terminate without a request\n",
-                           encap_context->flow_type));
-            libspdm_fail_encap_flow(spdm_context, session_id, encap_context);
-            return libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0, response_size, response);
-        }
+    }
 
+    if ((terminate_flow || (encap_request_size == 0)) &&
+        (encap_context->flow_type != LIBSPDM_ENCAP_FLOW_GENERAL)) {
+        /* The Responder asked for this flow in CHALLENGE_AUTH or KEY_EXCHANGE_RSP, so it must
+         * issue a request rather than report that it has none pending. */
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "encapsulated flow type %d cannot terminate without a request\n",
+                       encap_context->flow_type));
+        libspdm_fail_encap_flow(spdm_context, session_id, encap_context);
+        return libspdm_generate_error_response(
+            spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0, response_size, response);
+    }
+
+    if (terminate_flow) {
         /* The Requester polled and the Responder has nothing to send, so no flow is in progress. */
         encap_context->flow_type = LIBSPDM_ENCAP_FLOW_NONE;
 
@@ -859,15 +862,27 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
         (((const spdm_message_header_t *)encap_request)->request_response_code == SPDM_ERROR)) {
         /* Handler generated an error response instead of an encapsulated request; propagate it
          * directly. This is checked before the legality test below, as SPDM_ERROR is not a
-         * request code and would otherwise be rejected there. */
+         * request code and would otherwise be rejected there. The ERROR ends the flow. */
         status = libspdm_propagate_encap_error(response, response_size,
                                                encap_request, encap_request_size);
+        libspdm_fail_encap_flow(spdm_context, session_id, encap_context);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            libspdm_fail_encap_flow(spdm_context, session_id, encap_context);
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0, response_size, response);
         }
         return LIBSPDM_STATUS_SUCCESS;
+    }
+
+    if ((terminate_flow || (encap_request_size == 0)) &&
+        (encap_context->flow_type == LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH)) {
+        /* Basic mutual authentication succeeds only once the CHALLENGE_AUTH signature has been
+         * verified, so the flow fails if it ends before then. */
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "encapsulated flow type %d cannot terminate before CHALLENGE_AUTH\n",
+                       encap_context->flow_type));
+        libspdm_fail_encap_flow(spdm_context, session_id, encap_context);
+        return libspdm_generate_error_response(
+            spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0, response_size, response);
     }
 
     if (!terminate_flow && (encap_request_size != 0) &&
