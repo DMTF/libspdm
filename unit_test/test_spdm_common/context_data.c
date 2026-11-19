@@ -515,7 +515,8 @@ static void libspdm_test_common_context_data_case4(void **state)
 
 /**
  * Test 5: There is no root cert.
- * Expected Behavior: Return true result.
+ * Expected Behavior: The certificate chain passes the integrity check but fails the authority
+ * check, as nothing anchors it.
  *
  * Skipped if LIBSPDM_CERT_PARSE_SUPPORT is disabled.
  **/
@@ -565,9 +566,11 @@ void libspdm_test_verify_peer_cert_chain_buffer_case5(void **state)
         spdm_context->local_context.peer_root_cert_provision_size[root_cert_index] = 0;
         spdm_context->local_context.peer_root_cert_provision[root_cert_index] = NULL;
     }
-    result = libspdm_verify_peer_cert_chain_buffer(spdm_context, data, data_size, &trust_anchor,
-                                                   &trust_anchor_size);
-    assert_int_equal (result, true);
+    result = libspdm_verify_peer_cert_chain_buffer_integrity(spdm_context, data, data_size);
+    assert_true(result);
+    result = libspdm_verify_peer_cert_chain_buffer_authority(spdm_context, data, data_size,
+                                                             &trust_anchor, &trust_anchor_size);
+    assert_false(result);
 
     free(data);
 #else

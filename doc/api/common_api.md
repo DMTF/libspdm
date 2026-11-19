@@ -231,7 +231,10 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
       certificates are then either compared against the root certificate returned by a peer
       endpoint, or appended to the partial (without root certificate) certificate chain returned by
       a peer endpoint. The root certificate(s) must be encoded as ASN.1 DER. Only available when
-      `LIBSPDM_CERT_PARSE_SUPPORT` is enabled.
+      `LIBSPDM_CERT_PARSE_SUPPORT` is enabled. If none is stored, then nothing anchors a peer
+      certificate chain, and retrieving it reports the warning `LIBSPDM_STATUS_VERIF_NO_AUTHORITY`,
+      unless a function registered with `libspdm_register_verify_spdm_cert_chain_func` verifies
+      the chain instead.
 - `LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN`
     - Allows multiple pointers to SPDM certificate chains to be stored in slots through the
       `additional_data` field. An SPDM certificate chain can then be returned through a

@@ -803,11 +803,12 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
         if (trust_anchor_size != NULL) {
             *trust_anchor_size = root_cert_size;
         }
+    } else {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "!!! verify_peer_cert_chain_buffer - "
+                       "FAIL (no root cert provisioned) !!!\n"));
+        return false;
     }
-    /*
-     * When there is no root_cert in local_context, the return is true too.
-     * No root_cert means the caller wants to verify the trust anchor of the cert chain.
-     */
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_peer_cert_chain_buffer - PASS !!!\n"));
 
     return true;
