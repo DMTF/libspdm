@@ -349,7 +349,8 @@ If the Requester delivered an encapsulated `ERROR` then its `ErrorCode`. Its val
 
 **terminate_flow**<br/>
 Its value is false on input. On output, set to true to end the encapsulated flow.
-`encap_request_size` is then ignored.
+`encap_request_size` is then ignored, unless the handler wrote an `ERROR` message into
+`encap_request`, which libspdm sends instead.
 
 **encap_request_size**<br/>
 On input, indicates the size, in bytes, of the buffer in which the encapsulated request will be
@@ -387,6 +388,11 @@ encapsulated `CHALLENGE_AUTH` response has been verified, with `last_request_cod
 `SPDM_CHALLENGE` and `encap_response_status` set to `LIBSPDM_STATUS_SUCCESS`. This is how the
 Integrator learns that the Requester is authenticated. libspdm then terminates the flow and ignores
 the return value and outputs of this function.
+<br/><br/>
+Otherwise the Integrator can reject the Requester's encapsulated response, for example because its
+certificate chain does not satisfy the Integrator's policy, by writing an `ERROR` message such as
+`ERROR(InvalidPolicy)` into `encap_request`. libspdm sends that `ERROR` to the Requester and
+terminates the flow.
 <br/><br/>
 A mutual authentication flow fails if it terminates with an error, whether that error comes from
 libspdm or from this function. The Requester is then not authenticated, so libspdm discards the

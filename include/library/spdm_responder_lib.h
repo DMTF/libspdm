@@ -232,6 +232,15 @@ void libspdm_register_key_update_callback_func(
  * - when the outstanding request is reissued with RESPOND_IF_READY after the Requester delivered
  *   an encapsulated ERROR(ResponseNotReady)
  *
+ * In the basic mutual authentication flow it is also called once the signature of the Requester's
+ * encapsulated CHALLENGE_AUTH has been verified. libspdm then terminates the flow, and ignores the
+ * return value and outputs of that call.
+ *
+ * If encap_response_status is an error then the flow terminates once this function returns, and
+ * libspdm ignores terminate_flow, encap_request_size and encap_request. Otherwise, if this function
+ * writes an ERROR message into encap_request then libspdm sends it in place of a request, whatever
+ * the value of terminate_flow, and the flow terminates.
+ *
  * See https://github.com/DMTF/libspdm/blob/main/doc/encapsulated_flow_user_guide.md for how it is
  * called in each encapsulated flow.
  *
