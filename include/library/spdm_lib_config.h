@@ -136,7 +136,8 @@
  *        ResponseNotReady ERROR then libspdm retains the outstanding request and reissues it
  *        as an encapsulated RESPOND_IF_READY when the Requester next sends
  *        GET_ENCAPSULATED_REQUEST. The encapsulated flow handler is not called to reissue the
- *        request.
+ *        request. doc/encapsulated_flow_user_guide.md lists the cases in which the flow is not
+ *        resumed, such as session-based mutual authentication.
  */
 #ifndef LIBSPDM_RESPOND_IF_READY_SUPPORT
 #define LIBSPDM_RESPOND_IF_READY_SUPPORT 1

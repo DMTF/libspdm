@@ -555,6 +555,7 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     bool terminate_flow;
     bool need_continue;
     bool response_not_ready;
+    bool flow_suspended;
     bool encap_error_received;
     uint8_t last_request_code;
     uint8_t error_code;
@@ -656,6 +657,7 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     terminate_flow = false;
     need_continue = false;
     response_not_ready = false;
+    flow_suspended = false;
     encap_error_received = false;
     error_code = 0;
     encap_response_status = LIBSPDM_STATUS_SUCCESS;
@@ -671,8 +673,7 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
         if ((flow_type == LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH) &&
             (last_request_code == SPDM_GET_DIGESTS) && !encap_context->has_last_encap_request) {
             /* This answers the GET_DIGESTS that KEY_EXCHANGE_RSP implies, which counts as
-             * issued from now on. The flow has then moved past its first message, and the
-             * request can be reissued after ResponseNotReady. */
+             * issued from now on. The flow has then moved past its first message. */
             encap_context->has_last_encap_request = true;
         }
 
@@ -742,7 +743,8 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
 
             /* The Requester delivered an encapsulated ERROR. Report its code to the handler so
              * that the Integrator learns why the flow ended. The status is derived from the
-             * ErrorCode alone, so that it does not depend on which request was answered. */
+             * ErrorCode, so that it does not depend on which request was answered, except that
+             * ResponseNotReady is reported as such only when the flow resumes. */
             encap_error_received = true;
             error_code = encap_error->header.param1;
             encap_response_status = libspdm_handle_encap_error_response_main(error_code);
@@ -785,13 +787,25 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
                         response_size, response);
                 }
 
-                libspdm_copy_mem(&encap_context->response_not_ready_data,
-                                 sizeof(encap_context->response_not_ready_data),
-                                 not_ready_data,
-                                 sizeof(spdm_error_data_response_not_ready_t));
-                encap_context->response_not_ready_flow_type = encap_context->flow_type;
-                encap_context->response_not_ready = true;
+                /* Session-based mutual authentication allows no encapsulated request but
+                 * GET_DIGESTS and GET_CERTIFICATE, so it cannot be resumed with
+                 * RESPOND_IF_READY. */
+                if (flow_type != LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH) {
+                    libspdm_copy_mem(&encap_context->response_not_ready_data,
+                                     sizeof(encap_context->response_not_ready_data),
+                                     not_ready_data,
+                                     sizeof(spdm_error_data_response_not_ready_t));
+                    encap_context->response_not_ready_flow_type = encap_context->flow_type;
+                    encap_context->response_not_ready = true;
+                    flow_suspended = true;
+                }
                 #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
+            }
+
+            if ((encap_response_status == LIBSPDM_STATUS_NOT_READY_PEER) && !flow_suspended) {
+                /* The flow does not resume, so ResponseNotReady ends it as any other ErrorCode
+                 * does. */
+                encap_response_status = LIBSPDM_STATUS_ERROR_PEER;
             }
         }
 
@@ -851,8 +865,19 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     }
 
     if (encap_error_received) {
-        /* An encapsulated ERROR ends the flow, so whatever the handler produced is discarded and
-         * the ERROR is acknowledged instead. */
+        /* An encapsulated ERROR ends the flow, so whatever the handler produced is discarded. */
+        if (!flow_suspended) {
+            libspdm_fail_encap_flow(spdm_context, session_id, encap_context);
+            if ((flow_type == LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH) && !response_not_ready) {
+                /* The Requester has not completed mutual authentication, so session
+                 * establishment halts instead of the final ENCAPSULATED_RESPONSE_ACK designating
+                 * its certificate slot. After ResponseNotReady that ENCAPSULATED_RESPONSE_ACK
+                 * must clear Param2 instead, designating no slot, and the session is still
+                 * terminated. */
+                return libspdm_generate_error_response(
+                    spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0, response_size, response);
+            }
+        }
         terminate_flow = true;
         encap_request_size = 0;
         goto set_ack_fields;

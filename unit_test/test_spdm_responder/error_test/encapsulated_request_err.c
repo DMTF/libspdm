@@ -1034,8 +1034,8 @@ static void rsp_encapsulated_request_err_case17(void **state)
  * Test 18: the Requester answers an encapsulated KEY_UPDATE with ERROR(ResponseNotReady).
  * Expected behavior: libspdm does not reissue KEY_UPDATE with RESPOND_IF_READY, so it ends the flow
  * with an ENCAPSULATED_RESPONSE_ACK that carries no request, and does not retain the request. The
- * Integrator's handler is told that the flow ended, with LIBSPDM_STATUS_NOT_READY_PEER and
- * ErrorCode ResponseNotReady.
+ * Integrator's handler is told that the flow ended, with LIBSPDM_STATUS_ERROR_PEER and ErrorCode
+ * ResponseNotReady, as the flow does not resume.
  **/
 static void rsp_encapsulated_request_err_case18(void **state)
 {
@@ -1094,7 +1094,7 @@ static void rsp_encapsulated_request_err_case18(void **state)
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     assert_false(session_info->encap_context.response_not_ready);
 #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
-    assert_handler_told(SPDM_KEY_UPDATE, LIBSPDM_STATUS_NOT_READY_PEER,
+    assert_handler_told(SPDM_KEY_UPDATE, LIBSPDM_STATUS_ERROR_PEER,
                         SPDM_ERROR_CODE_RESPONSE_NOT_READY);
 
     libspdm_free_session_id(spdm_context, session_id);
