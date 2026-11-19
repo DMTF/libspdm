@@ -921,6 +921,8 @@ void libspdm_get_peer_cert_chain_buffer(void *spdm_context,
 /**
  * This function returns peer certificate chain data without spdm_cert_chain_t header.
  *
+ * If no certificate chain is recorded for the slot then cert_chain_data_size is 0.
+ *
  * @param  spdm_context          A pointer to the SPDM context.
  * @param  slot_id               The number of slot for the certificate chain.
  * @param  cert_chain_data       Certificate chain data without spdm_cert_chain_t header.
