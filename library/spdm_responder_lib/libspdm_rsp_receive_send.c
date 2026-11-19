@@ -311,6 +311,9 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
         }
         context->last_spdm_request_session_id = libspdm_read_uint32((const uint8_t *)message_session_id);
         context->last_spdm_request_session_id_valid = true;
+        /* message_session_id points into the received message and may be misaligned.
+         * Return the aligned copy instead. */
+        *session_id = &context->last_spdm_request_session_id;
     }
 
     if (*is_app_message) {
