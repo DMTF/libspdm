@@ -58,6 +58,8 @@ void libspdm_register_get_response_func(
  *
  * @param  spdm_context    The SPDM context for the device.
  * @param  session_id      On output, a pointer to the session ID for a secured message, or NULL.
+ *                         On success it points to a copy held in the SPDM context, not into
+ *                         the request buffer.
  * @param  is_app_message  On output, indicates if it is an APP message or SPDM message.
  * @param  request_size    size in bytes of the request data buffer.
  * @param  request         A pointer to the received transport message.
