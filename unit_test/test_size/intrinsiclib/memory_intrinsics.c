@@ -111,8 +111,7 @@ int ascii_strncmp(const char *first_string, const char *second_string, size_t le
     if (length == 0) {
         return 0;
     }
-    while ((*first_string != '\0') && (*first_string != '\0')  &&
-           (*first_string == *second_string) && (length > 1)) {
+    while ((*first_string != '\0') && (*first_string == *second_string) && (length > 1)) {
         first_string++;
         second_string++;
         length--;
