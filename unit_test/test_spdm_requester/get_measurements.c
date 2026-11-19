@@ -5188,10 +5188,11 @@ static void req_get_measurements_case33(void **state) {
     spdm_test_context->case_id = 0x21;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
-                                                     m_libspdm_use_asym_algo,
-                                                     &data, &data_size,
-                                                     &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;

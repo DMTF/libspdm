@@ -1365,9 +1365,12 @@ static libspdm_return_t receive_message(
         static size_t calling_index = 0;
 
         if (m_libspdm_local_certificate_chain == NULL) {
-            libspdm_read_responder_public_certificate_chain_expiration(
-                &m_libspdm_local_certificate_chain,
-                &m_libspdm_local_certificate_chain_size, NULL, NULL);
+            if (!libspdm_read_responder_public_certificate_chain_expiration(
+                    &m_libspdm_local_certificate_chain,
+                    &m_libspdm_local_certificate_chain_size, NULL, NULL)) {
+                assert_true(false);
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
+            }
         }
         if (m_libspdm_local_certificate_chain == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
@@ -3429,10 +3432,11 @@ static void req_get_certificate_case16(void **state) {
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-    libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
-                                                     m_libspdm_use_asym_algo,
-                                                     &data, &data_size,
-                                                     &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     if (!libspdm_x509_get_cert_from_cert_chain(
             (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
             data_size - sizeof(spdm_cert_chain_t) - hash_size, 0, &root_cert, &root_cert_size)) {
@@ -3608,9 +3612,10 @@ static void req_get_certificate_case19(void **state)
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     /* Loading the target expiration certificate chain and saving root certificate hash
      * "rsa3072_Expiration/bundle_responder.certchain.der"*/
-    libspdm_read_responder_public_certificate_chain_expiration(&data,
-                                                               &data_size, &hash,
-                                                               &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain_expiration(&data, &data_size,
+                                                                    &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_x509_get_cert_from_cert_chain(
         (uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
         data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
