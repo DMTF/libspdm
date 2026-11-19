@@ -47,6 +47,7 @@ bool libspdm_init_test_buffer(const char *file_name, size_t max_buffer_size,
 {
     void *buffer;
     FILE *file;
+    long position;
     size_t file_size;
     size_t aligned_size;
     size_t copy_size;
@@ -59,7 +60,13 @@ bool libspdm_init_test_buffer(const char *file_name, size_t max_buffer_size,
     }
     fseek(file, 0, SEEK_END);
 
-    file_size = ftell(file);
+    position = ftell(file);
+    if (position < 0) {
+        fputs("file error", stderr);
+        fclose(file);
+        exit(1);
+    }
+    file_size = (size_t)position;
     rewind(file);
 
     if (file_size == 0) {

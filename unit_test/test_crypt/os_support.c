@@ -11,6 +11,7 @@
 bool libspdm_read_input_file(const char *file_name, void **file_data, size_t *file_size) {
     FILE *fp_in;
     size_t temp_result;
+    long position;
 
     if ((fp_in = fopen(file_name, "rb")) == NULL) {
         printf("Unable to open file %s\n", file_name);
@@ -19,7 +20,14 @@ bool libspdm_read_input_file(const char *file_name, void **file_data, size_t *fi
     }
 
     fseek(fp_in, 0, SEEK_END);
-    *file_size = ftell(fp_in);
+    position = ftell(fp_in);
+    if (position < 0) {
+        printf("Unable to get the size of file %s\n", file_name);
+        *file_data = NULL;
+        fclose(fp_in);
+        return false;
+    }
+    *file_size = (size_t)position;
 
     *file_data = (void *)malloc(*file_size);
     if (NULL == *file_data) {
