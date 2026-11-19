@@ -79,10 +79,10 @@ terminates the flow. The handler cannot continue the flow, so libspdm ignores `t
 any request the handler produces. The value of `error_code` is `0` on every other call.
 
 libspdm terminates the flow with an `ENCAPSULATED_RESPONSE_ACK` that carries no further request,
-and clears its `Param2`. The session-based mutual authentication flow is the exception: its final
-`ENCAPSULATED_RESPONSE_ACK` must designate the Requester's certificate slot, so libspdm sets
-`Param2` to `2` and sends the slot held by `LIBSPDM_DATA_SESSION_ENCAP_REQ_SLOT_ID`. That slot is
-`0` unless the Integrator has changed it.
+and clears its `Param2`. The session-based mutual authentication flow is the exception: the
+Requester has not completed mutual authentication, so session establishment halts. libspdm
+responds with `ERROR(Unspecified)` instead, except after `ResponseNotReady`, and terminates the
+session once that response has been encoded. See Rejecting the Requester below.
 
 libspdm also calls the handler when it cannot process the Requester's encapsulated response, for
 example because the response is malformed or its signature does not verify. `encap_response_status`
@@ -103,26 +103,26 @@ to a session, so functions such as `libspdm_get_data` fail for that session.
 
 `ErrorCode == ResponseNotReady` is the one value that does not mean the operation has failed. The
 Requester is asking for more time rather than declining the request, and the encapsulated request
-remains outstanding. libspdm clears `Param2` in this case, even in the session-based mutual
-authentication flow, and retains the request. When the Requester next sends
-`GET_ENCAPSULATED_REQUEST`, libspdm reissues the request as an encapsulated `RESPOND_IF_READY`
-request without calling the handler. The flow therefore resumes where it left off and can still
-complete. An Integrator that releases per-flow state when a flow ends should keep that state when
-`encap_response_status` is `LIBSPDM_STATUS_NOT_READY_PEER`, since the flow it belongs to is going
-to continue. With `LIBSPDM_RESPOND_IF_READY_SUPPORT` set, a `ResponseNotReady` to any request but
-`KEY_UPDATE` that libspdm cannot act on, for example because it is malformed, is reported with the
-error that libspdm encountered instead, and the flow does not resume.
+remains outstanding. libspdm clears `Param2` in this case and retains the request. When the
+Requester next sends `GET_ENCAPSULATED_REQUEST`, libspdm reissues the request as an encapsulated
+`RESPOND_IF_READY` request without calling the handler. The flow therefore resumes where it left
+off and can still complete. `encap_response_status` is `LIBSPDM_STATUS_NOT_READY_PEER` only in
+this case, so an Integrator that releases per-flow state when a flow ends should keep that state
+when it sees that status, since the flow it belongs to is going to continue.
 
 This resumption requires `LIBSPDM_RESPOND_IF_READY_SUPPORT`. When that macro is `0` libspdm does not
 retain the outstanding request, and the flow is not resumed. Even with the macro set, libspdm does
 not resume the flow in the following cases:
 - The outstanding request is `KEY_UPDATE`.
-- The flow is session-based mutual authentication and both endpoints have set
-  `HANDSHAKE_IN_THE_CLEAR_CAP`.
-- The handler returns an error, which ends the flow with `ERROR(Unspecified)`.
+- The flow is session-based mutual authentication, as that phase of the session allows no
+  encapsulated request but `GET_DIGESTS` and `GET_CERTIFICATE`. The flow fails instead, so libspdm
+  discards the certificate chains that it retrieved and terminates the session.
+- libspdm cannot act on the `ResponseNotReady`, for example because it is malformed.
 
-In these cases the Integrator should release its per-flow state as it would for any other
-`ErrorCode`.
+In these cases the flow ends as it would for any other `ErrorCode`. `error_code` is still
+`ResponseNotReady`, but `encap_response_status` is `LIBSPDM_STATUS_ERROR_PEER`, or the error that
+libspdm encountered. The flow also ends if the handler returns an error when it is told of a
+`ResponseNotReady` that libspdm would resume, and libspdm then responds with `ERROR(Unspecified)`.
 
 ### Rejecting the Requester
 
@@ -133,11 +133,12 @@ Requester and terminates the flow. `ErrorCode` `InvalidPolicy` exists from SPDM 
 examples below assume, so with an earlier version the handler writes `ERROR(Unspecified)` instead.
 
 A mutual authentication flow fails whenever it terminates with an error: the handler rejected the
-Requester or returned an error itself, or libspdm could not process the Requester's encapsulated
-response. The Requester is then not authenticated, so libspdm discards the certificate chains that
-the flow retrieved, and no later `CHALLENGE_AUTH` or `FINISH` signature can be verified against
-them. For session-based mutual authentication libspdm also terminates the session once the `ERROR`
-response has been encoded, so the session never reaches the application phase. The session state
+Requester or returned an error itself, libspdm could not process the Requester's encapsulated
+response, or the Requester returned an encapsulated `ERROR` other than a `ResponseNotReady` that
+libspdm resumes. The Requester is then not authenticated, so libspdm discards the certificate chains
+that the flow retrieved, and no later `CHALLENGE_AUTH` or `FINISH` signature can be verified against
+them. For session-based mutual authentication libspdm also terminates the session once the response
+has been encoded, so the session never reaches the application phase. The session state
 callback is notified with `LIBSPDM_SESSION_STATE_NOT_STARTED`.
 
 The call that reports a verified `CHALLENGE_AUTH` in the basic flow cannot reject the Requester, as
@@ -275,11 +276,8 @@ libspdm_return_t encap_flow_handler(
 
     if (LIBSPDM_STATUS_IS_ERROR(encap_response_status)) {
         /* The Requester returned an encapsulated ERROR, whose ErrorCode is in error_code, or its
-         * encapsulated response could not be processed. If encap_response_status is
-         * LIBSPDM_STATUS_NOT_READY_PEER then libspdm resumes the flow later, except in the cases
-         * listed under Encapsulated Errors above. Otherwise the flow ends here without the
-         * Requester's certificate chain, although after an encapsulated ERROR libspdm still
-         * designates a certificate slot in the final ENCAPSULATED_RESPONSE_ACK. */
+         * encapsulated response could not be processed. Mutual authentication has failed, even
+         * after ResponseNotReady, and libspdm terminates the session. */
         return LIBSPDM_STATUS_SUCCESS;
     }
 

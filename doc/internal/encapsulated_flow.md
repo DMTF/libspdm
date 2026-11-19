@@ -71,10 +71,11 @@ the Requester fails, the Integrator would send an `InvalidPolicy` or `Unspecifie
 Requester, and both the encapsulated flow and session establishment would halt.
 
 libspdm treats every failure of a mutual authentication flow this way, whether the Integrator's
-handler rejects the Requester or libspdm cannot process the Requester's encapsulated response. It
-discards the certificate chains that the flow retrieved, and for session-based mutual
-authentication it terminates the session once the `ERROR` response has been encoded with the
-session's handshake keys, as it does after `END_SESSION_ACK`.
+handler rejects the Requester, the Requester returns an encapsulated `ERROR` other than a
+`ResponseNotReady` that libspdm resumes, or libspdm cannot process the Requester's encapsulated
+response. It discards the certificate chains that the flow retrieved, and for session-based mutual
+authentication it terminates the session once the response has been encoded, as it does after
+`END_SESSION_ACK`.
 
 ### Secure Session Management
 
@@ -173,6 +174,14 @@ Within that channel, if it is inside a session then the next request message mus
 `GET_VERSION` or `GET_ENCAPSULATED_REQUEST`. When `GET_ENCAPSULATED_REQUEST` is received then
 libspdm automatically sends an encapsulated `RESPOND_IF_READY` request to resume the encapsulated
 flow.
+
+Session-based mutual authentication is not resumed, as that phase of the session allows no
+encapsulated request but `GET_DIGESTS` and `GET_CERTIFICATE`. The flow fails instead: libspdm
+discards the certificate chains that it retrieved and terminates the session.
+
+The handler is told `LIBSPDM_STATUS_NOT_READY_PEER` only when libspdm will resume the flow.
+Otherwise it is told `LIBSPDM_STATUS_ERROR_PEER`, or the error that libspdm encountered, as for any
+other `ErrorCode`.
 
 ## Basic Design and State Management
 
