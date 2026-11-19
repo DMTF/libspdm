@@ -124,6 +124,24 @@ not resume the flow in the following cases:
 In these cases the Integrator should release its per-flow state as it would for any other
 `ErrorCode`.
 
+### Rejecting the Requester
+
+The handler can reject the Requester, for example because its certificate chain does not satisfy
+the Integrator's policy, by returning an error. libspdm then sends `ERROR(Unspecified)` to the
+Requester and terminates the flow.
+
+A mutual authentication flow fails whenever it terminates with an error: the handler returned an
+error, or libspdm could not process the Requester's encapsulated response. The Requester is then not
+authenticated, so libspdm discards the certificate chains that the flow retrieved, and no later
+`CHALLENGE_AUTH` or `FINISH` signature can be verified against them. For session-based mutual
+authentication libspdm also terminates the session once the `ERROR` response has been encoded, so
+the session never reaches the application phase. The session state callback is notified with
+`LIBSPDM_SESSION_STATE_NOT_STARTED`.
+
+The call that reports a verified `CHALLENGE_AUTH` in the basic flow cannot reject the Requester, as
+libspdm ignores its return value and anything that it writes into `encap_request`. A handler that
+rejects the Requester in that flow does so before it issues `CHALLENGE`.
+
 ## Encapsulated Flows
 
 ### Basic Mutual Authentication

@@ -5088,6 +5088,28 @@ static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     NULL,
 };
 
+/**
+ * Test 84: libspdm_reset_context is called while a session is to be terminated once the current
+ * response has been encoded.
+ * Expected Behavior: session_id_to_terminate is INVALID_SESSION_ID, so the session of the previous
+ * connection is not terminated after the next response.
+ **/
+static void libspdm_test_reset_context_session_id_to_terminate_case84(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x54;
+
+    spdm_context->session_id_to_terminate = LIBSPDM_TEST_SESSION_ID;
+
+    libspdm_reset_context(spdm_context);
+
+    assert_int_equal(spdm_context->session_id_to_terminate, INVALID_SESSION_ID);
+}
+
 int libspdm_common_context_data_test_main(void)
 {
     const struct CMUnitTest spdm_common_context_data_tests[] = {
@@ -5310,6 +5332,8 @@ int libspdm_common_context_data_test_main(void)
         /* A discarded peer certificate chain has no certificate chain data */
         cmocka_unit_test_setup(libspdm_test_get_peer_cert_chain_data_case82,
                                libspdm_unit_test_reset_context),
+        /* reset_context forgets a session that was to be terminated */
+        cmocka_unit_test(libspdm_test_reset_context_session_id_to_terminate_case84),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);

@@ -193,6 +193,7 @@ void libspdm_start_encap_flow(libspdm_encap_context_t *encap_context,
     encap_context->flow_type = flow_type;
     encap_context->request_id = 0;
     encap_context->has_last_encap_request = false;
+    encap_context->recorded_cert_chain_slot_mask = 0;
     libspdm_zero_mem(&encap_context->last_encap_request_header,
                      sizeof(encap_context->last_encap_request_header));
 }

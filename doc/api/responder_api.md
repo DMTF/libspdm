@@ -388,6 +388,13 @@ encapsulated `CHALLENGE_AUTH` response has been verified, with `last_request_cod
 Integrator learns that the Requester is authenticated. libspdm then terminates the flow and ignores
 the return value and outputs of this function.
 <br/><br/>
+A mutual authentication flow fails if it terminates with an error, whether that error comes from
+libspdm or from this function. The Requester is then not authenticated, so libspdm discards the
+certificate chains that the flow retrieved. A failed `LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH` flow ends
+with an `ERROR` response, after which libspdm terminates the session. A
+`LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH` flow cannot fail once the `CHALLENGE_AUTH` signature has been
+verified, so the Integrator rejects the Requester before it issues `CHALLENGE`.
+<br/><br/>
 
 
 ---
