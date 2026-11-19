@@ -220,7 +220,7 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
         temp_session_context = libspdm_get_secured_message_context_via_session_id(
-            context, *message_session_id);
+            context, libspdm_read_uint32((const uint8_t *)message_session_id));
         if (temp_session_context == NULL) {
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
@@ -234,7 +234,7 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
         /* Retry decoding message with backup Requester key.
          * Must reset some of the parameters in case they were modified */
         if (session_id != NULL) {
-            *message_session_id = *session_id;
+            libspdm_write_uint32((uint8_t *)message_session_id, *session_id);
         } else {
             message_session_id = NULL;
         }
@@ -261,17 +261,19 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
                            (session_id != NULL) ? *session_id : 0x0));
             goto error;
         }
-        if (*message_session_id != *session_id) {
+        if (libspdm_read_uint32((const uint8_t *)message_session_id) != *session_id) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_receive_spdm_response[%x] GetSessionId - %x\n",
-                           (session_id != NULL) ? *session_id : 0x0, *message_session_id));
+                           (session_id != NULL) ? *session_id : 0x0,
+                           libspdm_read_uint32((const uint8_t *)message_session_id)));
             goto error;
         }
     } else {
         if (message_session_id != NULL) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_receive_spdm_response[%x] GetSessionId - %x\n",
-                           (session_id != NULL) ? *session_id : 0x0, *message_session_id));
+                           (session_id != NULL) ? *session_id : 0x0,
+                           libspdm_read_uint32((const uint8_t *)message_session_id)));
             goto error;
         }
     }

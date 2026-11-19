@@ -335,6 +335,7 @@ libspdm_return_t libspdm_transport_storage_decode_message(
 {
     libspdm_return_t status;
     uint32_t *secured_message_session_id;
+    uint32_t received_session_id;
     uint8_t *secured_message;
     size_t secured_message_size;
     libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
@@ -441,12 +442,15 @@ libspdm_return_t libspdm_transport_storage_decode_message(
         if (secured_message_session_id != NULL) {
             *session_id = secured_message_session_id;
 
+            /* The session ID is located inside the received message, which may not be aligned. */
+            received_session_id = libspdm_read_uint32((const uint8_t *)secured_message_session_id);
+
             secured_message_context =
                 libspdm_get_secured_message_context_via_session_id(
-                    spdm_context, *secured_message_session_id);
+                    spdm_context, received_session_id);
             if (secured_message_context == NULL) {
                 spdm_error.error_code = SPDM_ERROR_CODE_INVALID_SESSION;
-                spdm_error.session_id = *secured_message_session_id;
+                spdm_error.session_id = received_session_id;
                 libspdm_set_last_spdm_error_struct(spdm_context,
                                                    &spdm_error);
                 return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -454,7 +458,7 @@ libspdm_return_t libspdm_transport_storage_decode_message(
 
             /* Secured message to message*/
             status = libspdm_decode_secured_message(
-                secured_message_context, *secured_message_session_id,
+                secured_message_context, received_session_id,
                 is_request_message, secured_message_size,
                 (uint8_t *)secured_message,
                 message_size, message, &spdm_secured_message_callbacks);
@@ -468,7 +472,7 @@ libspdm_return_t libspdm_transport_storage_decode_message(
                 return status;
             }
 
-            status = libspdm_storage_secured_message_decode(spdm_context, **session_id, message_size,
+            status = libspdm_storage_secured_message_decode(spdm_context, received_session_id, message_size,
                                                             message, is_request_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,

@@ -217,7 +217,7 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
         temp_session_context = libspdm_get_secured_message_context_via_session_id(
-            context, *message_session_id);
+            context, libspdm_read_uint32((const uint8_t *)message_session_id));
         if (temp_session_context == NULL) {
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
@@ -228,7 +228,7 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
         libspdm_trigger_key_update_callback(
-            context, *message_session_id,
+            context, libspdm_read_uint32((const uint8_t *)message_session_id),
             LIBSPDM_KEY_UPDATE_OPERATION_DISCARD_UPDATE,
             LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
 
@@ -274,7 +274,7 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
         libspdm_trigger_key_update_callback(
-            context, *message_session_id,
+            context, libspdm_read_uint32((const uint8_t *)message_session_id),
             LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
             LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
     }
@@ -303,21 +303,23 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
     *session_id = message_session_id;
 
     if (message_session_id != NULL) {
-        session_info = libspdm_get_session_info_via_session_id(context, *message_session_id);
+        session_info = libspdm_get_session_info_via_session_id(context,
+                                                               libspdm_read_uint32(
+                                                                   (const uint8_t *)message_session_id));
         if (session_info == NULL) {
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
-        context->last_spdm_request_session_id = *message_session_id;
+        context->last_spdm_request_session_id = libspdm_read_uint32((const uint8_t *)message_session_id);
         context->last_spdm_request_session_id_valid = true;
     }
 
     if (*is_app_message) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmReceiveRequest[%x] app msg, size (0x%zx): \n",
-                       (message_session_id != NULL) ? *message_session_id : 0,
+                       (message_session_id != NULL) ? libspdm_read_uint32((const uint8_t *)message_session_id) : 0,
                        context->last_spdm_request_size));
     } else {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmReceiveRequest[%x] msg %s(0x%x), size (0x%zx): \n",
-                       (message_session_id != NULL) ? *message_session_id : 0,
+                       (message_session_id != NULL) ? libspdm_read_uint32((const uint8_t *)message_session_id) : 0,
                        libspdm_get_code_str(((spdm_message_header_t *)context->last_spdm_request)->
                                             request_response_code),
                        ((spdm_message_header_t *)context->last_spdm_request)->request_response_code,

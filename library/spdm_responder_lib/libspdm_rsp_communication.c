@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -48,7 +48,7 @@ libspdm_return_t libspdm_responder_dispatch_message(void *spdm_context)
 
     /* save the value of session_id */
     if (session_id != NULL) {
-        tmp_session_id = *session_id;
+        tmp_session_id = libspdm_read_uint32((const uint8_t *)session_id);
         session_id_ptr = &tmp_session_id;
     } else {
         session_id_ptr = NULL;
