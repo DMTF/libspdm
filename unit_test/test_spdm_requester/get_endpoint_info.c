@@ -65,6 +65,7 @@ static libspdm_return_t send_message(
         m_libspdm_local_buffer_size = 0;
         session_id = NULL;
         session_info = libspdm_get_session_info_via_session_id(spdm_context, 0xFFFFFFFF);
+        assert_non_null(session_info);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Request (0x%zx):\n", request_size));
         libspdm_dump_hex(request, request_size);
         libspdm_get_scratch_buffer (spdm_context, (void **)&app_message, &app_message_size);

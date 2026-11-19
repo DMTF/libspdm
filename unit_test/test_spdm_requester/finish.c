@@ -1468,6 +1468,7 @@ static libspdm_return_t receive_message(
                                                response_size, response);
 
         session_info = libspdm_get_session_info_via_session_id (spdm_context, session_id);
+        assert_non_null(session_info);
         ((libspdm_secured_message_context_t*)(session_info->secured_message_context))->
         handshake_secret.response_handshake_sequence_number--;
     }
@@ -1514,6 +1515,7 @@ static libspdm_return_t receive_message(
                                                response_size, response);
 
         session_info = libspdm_get_session_info_via_session_id (spdm_context, session_id);
+        assert_non_null(session_info);
         ((libspdm_secured_message_context_t*)(session_info->secured_message_context))->
         handshake_secret.response_handshake_sequence_number--;
     }

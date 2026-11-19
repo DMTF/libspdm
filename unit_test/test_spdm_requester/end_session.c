@@ -545,6 +545,7 @@ static libspdm_return_t receive_message(
                                                    spdm_response_size, spdm_response,
                                                    response_size, response);
             session_info = libspdm_get_session_info_via_session_id (spdm_context, session_id);
+            assert_non_null(session_info);
             ((libspdm_secured_message_context_t*)(session_info->secured_message_context))->
             application_secret.response_data_sequence_number--;
         }

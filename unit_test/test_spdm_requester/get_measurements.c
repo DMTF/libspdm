@@ -384,6 +384,7 @@ static libspdm_return_t send_message(
         m_libspdm_local_buffer_size = 0;
         session_id = NULL;
         session_info = libspdm_get_session_info_via_session_id( spdm_context, 0xFFFFFFFF);
+        assert_non_null(session_info);
         message_size = libspdm_test_get_measurement_request_size(
             spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
