@@ -504,6 +504,10 @@ typedef struct {
     size_t payload_buffer_size;
     size_t payload_buffer_max_size;
     bool use_large_cert_chain;
+    /* The certificate model of the certificate chain that GET_CERTIFICATE is retrieving. */
+    uint8_t cert_model;
+    /* The slots whose certificate chains this flow has recorded, which are discarded if mutual
+     * authentication fails. */
     uint8_t recorded_cert_chain_slot_mask;
     libspdm_encap_flow_type_t flow_type;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT

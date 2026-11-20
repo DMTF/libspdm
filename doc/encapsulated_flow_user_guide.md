@@ -153,6 +153,25 @@ request at any point before `CHALLENGE` is a failure too, and libspdm responds w
 `ERROR(Unspecified)`. The session-based flow ends when the handler sets `terminate_flow` once it has
 retrieved what it needs, as its example below shows.
 
+### Certificate Chains During Mutual Authentication
+
+`CHALLENGE_AUTH` and `FINISH` are verified against the Requester's certificate chains that libspdm
+has recorded. While a mutual authentication is in progress, only its own flow can replace a recorded
+certificate chain with a different one. A basic flow is in progress until it ends, including while
+`ResponseNotReady` has suspended it, and a session that requested mutual authentication is in
+progress until its handshake ends. Any other flow can still record a certificate chain for a slot
+that holds none, or record the chain that a slot already holds. If it retrieves a different chain
+for a slot that holds one, libspdm does not record it, and that flow ends with `ERROR(Unspecified)`
+once its handler is told `LIBSPDM_STATUS_INVALID_STATE_LOCAL`.
+
+A session whose handshake never completes, for example because the Requester abandoned it, remains
+in progress until the Requester sends `GET_VERSION`, which ends every session on the connection.
+
+This applies to the certificate chains that encapsulated flows retrieve. libspdm does not refuse
+`libspdm_set_data` with `LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER` while a mutual authentication is
+in progress, so the Integrator should not replace a recorded certificate chain that way in that
+time.
+
 ## Encapsulated Flows
 
 ### Basic Mutual Authentication

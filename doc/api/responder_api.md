@@ -504,6 +504,9 @@ When the handler is called with the entire chain, `encap_response_status` is one
   with `LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT` anchors it, including when none is provisioned. This is
   checked only when no function is registered with `libspdm_register_verify_spdm_cert_chain_func`.
   It is a warning, so libspdm records the chain, and the handler decides whether to accept it.
+- `LIBSPDM_STATUS_INVALID_STATE_LOCAL` if another mutual authentication is in progress and a
+  different chain is recorded for `slot_id`, as the encapsulated flow user guide describes. libspdm
+  does not record the chain, and the flow terminates.
 - An error if the chain could not be retrieved or is not valid, which terminates the flow.
 <br/><br/>
 
