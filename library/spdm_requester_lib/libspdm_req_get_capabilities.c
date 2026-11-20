@@ -328,8 +328,15 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
         goto receive_done;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
-        status = libspdm_handle_simple_error_response(
-            spdm_context, spdm_response->header.param1);
+        /* SPDM 1.0 does not allow ResponseNotReady in response to GET_CAPABILITIES. */
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+            status = libspdm_handle_error_response_main(
+                spdm_context, NULL, &spdm_response_size,
+                (void **)&spdm_response, SPDM_GET_CAPABILITIES, SPDM_CAPABILITIES);
+        } else {
+            status = libspdm_handle_simple_error_response(
+                spdm_context, spdm_response->header.param1);
+        }
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }

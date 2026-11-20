@@ -290,7 +290,15 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         goto receive_done;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
-        status = libspdm_handle_simple_error_response(spdm_context, spdm_response->header.param1);
+        /* SPDM 1.0 does not allow ResponseNotReady in response to NEGOTIATE_ALGORITHMS. */
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+            status = libspdm_handle_error_response_main(
+                spdm_context, NULL, &spdm_response_size,
+                (void **)&spdm_response, SPDM_NEGOTIATE_ALGORITHMS, SPDM_ALGORITHMS);
+        } else {
+            status = libspdm_handle_simple_error_response(
+                spdm_context, spdm_response->header.param1);
+        }
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
