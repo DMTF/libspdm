@@ -340,6 +340,9 @@ libspdm_return_t libspdm_get_encap_request_get_digests(void *spdm_context,
  *   is checked only when no function is registered with
  *   libspdm_register_verify_spdm_cert_chain_func. It is a warning, so libspdm records the chain,
  *   and the handler decides whether to accept it.
+ * - LIBSPDM_STATUS_INVALID_STATE_LOCAL if another mutual authentication is in progress and a
+ *   different chain is recorded for slot_id. libspdm does not record the chain, and the flow
+ *   terminates.
  * - An error if the chain could not be retrieved or is not valid, which terminates the flow.
  *
  * @param  spdm_context        A pointer to the SPDM context.
