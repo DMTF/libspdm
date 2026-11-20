@@ -2209,10 +2209,11 @@ libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
                             return LIBSPDM_STATUS_CRYPTO_ERROR;
                         }
                     } else {
-                        LIBSPDM_ASSERT(
-                            hash_size ==
-                            spdm_context->connection_info
-                            .peer_used_cert_chain[slot_id].buffer_hash_size);
+                        if (spdm_context->connection_info
+                            .peer_used_cert_chain[slot_id].buffer_hash_size != hash_size) {
+                            /* No certificate chain has been recorded for the slot. */
+                            return LIBSPDM_STATUS_INVALID_STATE_PEER;
+                        }
 
                         libspdm_copy_mem(mut_cert_chain_buffer_hash,
                                          sizeof(mut_cert_chain_buffer_hash),
@@ -2988,6 +2989,7 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
     context->max_spdm_session_sequence_number = LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER;
 
     context->latest_session_id = INVALID_SESSION_ID;
+    context->session_id_to_terminate = INVALID_SESSION_ID;
     context->last_spdm_request_session_id = INVALID_SESSION_ID;
     context->last_spdm_request_session_id_valid = false;
     context->last_spdm_request_size = 0;
@@ -3137,6 +3139,7 @@ void libspdm_reset_context(void *spdm_context)
     context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     context->current_token = 0;
     context->latest_session_id = INVALID_SESSION_ID;
+    context->session_id_to_terminate = INVALID_SESSION_ID;
     context->last_spdm_request_session_id = INVALID_SESSION_ID;
     context->last_spdm_request_session_id_valid = false;
     context->last_spdm_request_size = 0;

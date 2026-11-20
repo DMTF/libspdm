@@ -59,6 +59,12 @@ void libspdm_get_peer_cert_chain_data(void *spdm_context,
     hash_size = libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
 
     libspdm_get_peer_cert_chain_buffer(context, slot_id, cert_chain_data, cert_chain_data_size);
+    if (*cert_chain_data_size < sizeof(spdm_cert_chain_t) + hash_size) {
+        /* No certificate chain has been recorded for the slot. The buffer may still hold the
+         * bytes of a chain that was discarded, so none of it is returned. */
+        *cert_chain_data_size = 0;
+        return;
+    }
     *cert_chain_data = (const uint8_t *)*cert_chain_data + sizeof(spdm_cert_chain_t) + hash_size;
     *cert_chain_data_size = *cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
 }
@@ -797,11 +803,12 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
         if (trust_anchor_size != NULL) {
             *trust_anchor_size = root_cert_size;
         }
+    } else {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "!!! verify_peer_cert_chain_buffer - "
+                       "FAIL (no root cert provisioned) !!!\n"));
+        return false;
     }
-    /*
-     * When there is no root_cert in local_context, the return is true too.
-     * No root_cert means the caller wants to verify the trust anchor of the cert chain.
-     */
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_peer_cert_chain_buffer - PASS !!!\n"));
 
     return true;
@@ -951,9 +958,7 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
         return false;
     }
 #else
-    LIBSPDM_ASSERT(
-        spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size != 0);
-
+    /* This also fails if no certificate chain has been recorded for the slot. */
     if (spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size !=
         certificate_chain_hash_size) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! verify_certificate_chain_hash - FAIL !!!\n"));
@@ -1121,7 +1126,10 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
         return false;
 #else
         context = spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key;
-        LIBSPDM_ASSERT(context != NULL);
+        if (context == NULL) {
+            /* No certificate chain has been recorded for the slot. */
+            return false;
+        }
 #endif
     }
 
@@ -1459,7 +1467,10 @@ bool libspdm_verify_endpoint_info_signature(libspdm_context_t *spdm_context,
         return false;
 #else
         context = spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key;
-        LIBSPDM_ASSERT(context != NULL);
+        if (context == NULL) {
+            /* No certificate chain has been recorded for the slot. */
+            return false;
+        }
 #endif
     }
 

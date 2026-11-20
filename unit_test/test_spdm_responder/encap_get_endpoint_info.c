@@ -747,6 +747,113 @@ static void rsp_encap_get_endpoint_info_case9(void **state)
 }
 #endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
+/**
+ * Test 10: the Requester delivers an ENDPOINT_INFO for slot 0, signed with the key of its
+ * certificate chain, but no certificate chain is recorded for that slot. With
+ * LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT set, the slot's buffer still holds the bytes of that
+ * chain, as it does once a recorded chain has been discarded.
+ * Expected Behavior: the signature is not verified against a chain that is not recorded, so
+ * LIBSPDM_STATUS_VERIF_FAIL is returned.
+ **/
+static void rsp_encap_get_endpoint_info_case10(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_endpoint_info_response_t *spdm_response;
+    uint8_t temp_buf[LIBSPDM_SENDER_BUFFER_SIZE];
+    bool need_continue;
+    uint8_t *ptr;
+    size_t sig_size;
+    size_t response_size;
+    uint32_t endpoint_info_size;
+    void *data;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_test_context->case_id = 0xA;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->encap_context.payload_buffer = m_endpoint_info_buffer_send;
+    spdm_context->encap_context.payload_buffer_max_size = sizeof(m_endpoint_info_buffer_send);
+    spdm_context->encap_context.payload_buffer_size = 0;
+
+    if (!libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_req_asym_algo, &data,
+                                                         &data_size, NULL, NULL)) {
+        assert_true(false);
+        return;
+    }
+    libspdm_reset_message_a(spdm_context);
+    libspdm_reset_message_encap_e(spdm_context, NULL);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_size, 0);
+#else
+    assert_int_equal(spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size, 0);
+    assert_null(spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->encap_context.req_attributes =
+        SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED;
+    endpoint_info_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
+    status = libspdm_generate_device_endpoint_info(
+        spdm_context, NULL, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
+        SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
+        &endpoint_info_size, m_endpoint_info_buffer_receive);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    sig_size = libspdm_get_asym_signature_size(m_libspdm_use_req_asym_algo);
+
+    response_size = sizeof(spdm_endpoint_info_response_t) +
+                    SPDM_NONCE_SIZE + sizeof(uint32_t) +
+                    endpoint_info_size + sig_size;
+
+    spdm_response = (void *)temp_buf;
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    spdm_response->header.request_response_code = SPDM_ENDPOINT_INFO;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.param2 = 0;
+    spdm_response->reserved = 0;
+
+    ptr = (void *)(spdm_response + 1);
+    if (!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
+        assert(false);
+    }
+    ptr += SPDM_NONCE_SIZE;
+
+    libspdm_write_uint32(ptr, endpoint_info_size);
+    ptr += sizeof(uint32_t);
+
+    libspdm_copy_mem(ptr, endpoint_info_size, m_endpoint_info_buffer_receive, endpoint_info_size);
+    ptr += endpoint_info_size;
+
+    if (!libspdm_requester_data_sign(
+            spdm_context, spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                0, SPDM_ENDPOINT_INFO, m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo,
+                m_libspdm_use_hash_algo, false, (uint8_t *)spdm_response, response_size - sig_size,
+                ptr, &sig_size)) {
+        assert_true(false);
+        return;
+    }
+
+    status = libspdm_process_encap_response_endpoint_info(spdm_context, response_size,
+                                                          spdm_response, &need_continue);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
+
+    libspdm_reset_message_encap_e(spdm_context, NULL);
+    free(data);
+}
+
 int libspdm_rsp_encap_get_endpoint_info_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -768,6 +875,8 @@ int libspdm_rsp_encap_get_endpoint_info_test(void)
         /* A signed request starts a fresh IL1/IL2 transcript */
         cmocka_unit_test(rsp_encap_get_endpoint_info_case9),
 #endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+        /* No certificate chain is recorded for the slot */
+        cmocka_unit_test_setup(rsp_encap_get_endpoint_info_case10, libspdm_unit_test_reset_context),
     };
 
     libspdm_test_context_t test_context = {

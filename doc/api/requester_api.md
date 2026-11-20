@@ -145,7 +145,13 @@ chain has been retrieved libspdm will validate the chain and its leaf certificat
 2. Retrieves the certificate chain in blocks of the specified size (`length`).
 3. Verifies the integrity of the certificate chain from the root certificate to the leaf certificate, following the structure:
     - root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
-4. If a peer root certificate hash is deployed, validates the root certificate digest against the deployed root hash.
+4. Compares the root hash in the certificate chain with the hashes of the root certificates
+   deployed with `LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT`. If none is deployed, or none of them
+   matches, then the function returns the warning `LIBSPDM_STATUS_VERIF_NO_AUTHORITY`, and the
+   certificate chain is still kept.
+
+If a function is registered with `libspdm_register_verify_spdm_cert_chain_func`, then it verifies
+the certificate chain in place of steps 3 and 4.
 <br/><br/>
 
 ---

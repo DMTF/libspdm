@@ -504,6 +504,11 @@ typedef struct {
     size_t payload_buffer_size;
     size_t payload_buffer_max_size;
     bool use_large_cert_chain;
+    /* The certificate model of the certificate chain that GET_CERTIFICATE is retrieving. */
+    uint8_t cert_model;
+    /* The slots whose certificate chains this flow has recorded, which are discarded if mutual
+     * authentication fails. */
+    uint8_t recorded_cert_chain_slot_mask;
     libspdm_encap_flow_type_t flow_type;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     bool response_not_ready;
@@ -659,6 +664,10 @@ typedef struct {
 
     /* Cache latest session ID for HANDSHAKE_IN_THE_CLEAR */
     uint32_t latest_session_id;
+
+    /* A session to terminate once the response to the current request has been encoded, or
+     * INVALID_SESSION_ID. */
+    uint32_t session_id_to_terminate;
 
     /* Register for Responder state, be initial to Normal (responder only) */
     libspdm_response_state_t response_state;
@@ -1109,8 +1118,8 @@ bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_con
  * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
  *
  * @retval true  Peer certificate chain buffer authority verification passed.
- *               Or there is no root_cert in local_context.
- * @retval false Peer certificate chain buffer authority verification failed.
+ * @retval false Peer certificate chain buffer authority verification failed, including when no
+ *               root certificate is provisioned.
  **/
 bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_context,
                                                      const void *cert_chain_buffer,

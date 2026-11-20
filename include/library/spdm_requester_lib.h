@@ -95,10 +95,13 @@ libspdm_return_t libspdm_get_digest(void *spdm_context, const uint32_t *session_
  * This function verify the integrity of the certificate chain.
  * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
  *
- * If root certificates are provisioned with LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, then this
- * function also compares their hashes with the root hash in the certificate chain. If the chain
- * does not match one of them, then this function returns the warning
+ * This function also compares the hashes of the root certificates provisioned with
+ * LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT with the root hash in the certificate chain. If none is
+ * provisioned, or the chain does not match one of them, then this function returns the warning
  * LIBSPDM_STATUS_VERIF_NO_AUTHORITY, and the certificate chain is still kept.
+ *
+ * If a function is registered with libspdm_register_verify_spdm_cert_chain_func, then it verifies
+ * the certificate chain instead.
  *
  * @param  spdm_context     A pointer to the SPDM context.
  * @param  session_id       Indicates if it is a secured message protected via SPDM session.
@@ -131,7 +134,7 @@ libspdm_return_t libspdm_get_digest(void *spdm_context, const uint32_t *session_
  * @retval LIBSPDM_STATUS_VERIF_FAIL
  *         Verification of the certificate chain failed.
  * @retval LIBSPDM_STATUS_VERIF_NO_AUTHORITY
- *         The certificate chain does not match a provisioned root certificate.
+ *         No provisioned root certificate anchors the certificate chain.
  * @retval LIBSPDM_STATUS_INVALID_CERT
  *         The certificate is unable to be parsed or contains invalid field values.
  * @retval LIBSPDM_STATUS_CRYPTO_ERROR
@@ -150,10 +153,13 @@ libspdm_return_t libspdm_get_certificate(void *spdm_context,
  * This function verifies the integrity of the certificate chain:
  * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
  *
- * If root certificates are provisioned with LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, then this
- * function also compares their hashes with the root hash in the certificate chain. If the chain
- * does not match one of them, then this function returns the warning
+ * This function also compares the hashes of the root certificates provisioned with
+ * LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT with the root hash in the certificate chain. If none is
+ * provisioned, or the chain does not match one of them, then this function returns the warning
  * LIBSPDM_STATUS_VERIF_NO_AUTHORITY, and the certificate chain is still kept.
+ *
+ * If a function is registered with libspdm_register_verify_spdm_cert_chain_func, then it verifies
+ * the certificate chain instead.
  *
  * @param  spdm_context       A pointer to the SPDM context.
  * @param  session_id         Indicates if it is a secured message protected via SPDM session.

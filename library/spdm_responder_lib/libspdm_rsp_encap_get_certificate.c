@@ -149,6 +149,103 @@ libspdm_return_t libspdm_get_encap_request_get_certificate_continue(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
+/**
+ * Determines whether a mutual authentication other than the one that encap_context belongs to is
+ * in progress. Its CHALLENGE_AUTH or FINISH is verified against the certificate chains already
+ * recorded, so no other flow can replace one until it ends.
+ *
+ * @param  spdm_context   A pointer to the SPDM context.
+ * @param  encap_context  The encapsulated context of the flow that retrieved a certificate chain.
+ *
+ * @retval true   Another mutual authentication is in progress.
+ * @retval false  No other mutual authentication is in progress.
+ **/
+static bool libspdm_is_other_mut_auth_in_progress(libspdm_context_t *spdm_context,
+                                                  const libspdm_encap_context_t *encap_context)
+{
+    libspdm_session_info_t *session_info;
+    size_t index;
+
+    if (encap_context != &spdm_context->encap_context) {
+        /* A basic flow is in progress until it ends, including while ResponseNotReady has
+         * suspended it. */
+        if (spdm_context->encap_context.flow_type == LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH) {
+            return true;
+        }
+        #if LIBSPDM_RESPOND_IF_READY_SUPPORT
+        if (spdm_context->encap_context.response_not_ready &&
+            (spdm_context->encap_context.response_not_ready_flow_type ==
+             LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH)) {
+            return true;
+        }
+        #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
+    }
+
+    /* A session that requested mutual authentication is in progress until FINISH completes its
+     * handshake. Only its own session-based flow can record a certificate chain meanwhile. */
+    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
+        session_info = &spdm_context->session_info[index];
+        if ((session_info->session_id == INVALID_SESSION_ID) ||
+            (session_info->mut_auth_requested == 0) ||
+            (libspdm_secured_message_get_session_state(session_info->secured_message_context) !=
+             LIBSPDM_SESSION_STATE_HANDSHAKING)) {
+            continue;
+        }
+        if ((encap_context == &session_info->encap_context) &&
+            (encap_context->flow_type == LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH)) {
+            continue;
+        }
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Determines whether recording a certificate chain would replace a different certificate chain
+ * that is already recorded for the slot.
+ *
+ * @param  spdm_context     A pointer to the SPDM context.
+ * @param  slot_id          The slot that the certificate chain would be recorded for.
+ * @param  cert_chain       The certificate chain.
+ * @param  cert_chain_size  The size, in bytes, of cert_chain.
+ *
+ * @retval true   A different certificate chain is recorded for the slot.
+ * @retval false  No certificate chain, or the same certificate chain, is recorded for the slot.
+ **/
+static bool libspdm_replaces_recorded_cert_chain(libspdm_context_t *spdm_context,
+                                                 uint8_t slot_id,
+                                                 const uint8_t *cert_chain,
+                                                 size_t cert_chain_size)
+{
+    const libspdm_peer_used_cert_chain_t *peer_used_cert_chain;
+#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t cert_chain_hash[LIBSPDM_MAX_HASH_SIZE];
+#endif /* !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+
+    peer_used_cert_chain = &spdm_context->connection_info.peer_used_cert_chain[slot_id];
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    if (peer_used_cert_chain->buffer_size == 0) {
+        return false;
+    }
+    return (peer_used_cert_chain->buffer_size != cert_chain_size) ||
+           !libspdm_consttime_is_mem_equal(peer_used_cert_chain->buffer, cert_chain,
+                                           cert_chain_size);
+#else
+    if (peer_used_cert_chain->buffer_hash_size == 0) {
+        return false;
+    }
+    if (!libspdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
+                          cert_chain, cert_chain_size, cert_chain_hash)) {
+        /* The certificate chains cannot be compared, so they are treated as different. */
+        return true;
+    }
+    return !libspdm_consttime_is_mem_equal(peer_used_cert_chain->buffer_hash, cert_chain_hash,
+                                           peer_used_cert_chain->buffer_hash_size);
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+}
+
 libspdm_return_t libspdm_process_encap_response_certificate(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue)
@@ -279,10 +376,16 @@ libspdm_return_t libspdm_process_encap_response_certificate(
                 return LIBSPDM_STATUS_INVALID_MSG_FIELD;
             }
         }
-        if (spdm_context->connection_info.peer_cert_info[slot_id] ==
-            SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) {
-            spdm_context->connection_info.peer_cert_info[slot_id] = cert_model;
-        } else if (spdm_context->connection_info.peer_cert_info[slot_id] != cert_model) {
+        /* The certificate model is recorded with the certificate chain, so it must be the same in
+         * every CERTIFICATE response that carries the chain. */
+        if (request_offset == 0) {
+            encap_context->cert_model = cert_model;
+        } else if (encap_context->cert_model != cert_model) {
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        }
+        if ((spdm_context->connection_info.peer_cert_info[slot_id] !=
+             SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) &&
+            (spdm_context->connection_info.peer_cert_info[slot_id] != cert_model)) {
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
     }
@@ -325,6 +428,12 @@ libspdm_return_t libspdm_process_encap_response_certificate(
 
     *need_continue = false;
 
+    if (libspdm_is_other_mut_auth_in_progress(spdm_context, encap_context) &&
+        libspdm_replaces_recorded_cert_chain(spdm_context, slot_id, cert_chain_buffer,
+                                             cert_chain_buffer_size)) {
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+    }
+
     if (spdm_context->local_context.verify_peer_spdm_cert_chain != NULL) {
         result = spdm_context->local_context.verify_peer_spdm_cert_chain (
             spdm_context, encap_context->req_slot_id,
@@ -349,6 +458,10 @@ libspdm_return_t libspdm_process_encap_response_certificate(
 
     slot_id = encap_context->req_slot_id;
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
+    encap_context->recorded_cert_chain_slot_mask |= (uint8_t)(1 << slot_id);
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        spdm_context->connection_info.peer_cert_info[slot_id] = encap_context->cert_model;
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_size =
