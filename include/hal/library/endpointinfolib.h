@@ -25,7 +25,7 @@
  * @param  spdm_context         A pointer to the SPDM context.
  * @param  session_id           Indicates the session in which the request was received.
  *                              If NULL then the request was not received in a session.
- * @param  sub_code             The subcode of endpoint info, should be one of the
+ * @param  sub_code             The subcode of endpoint info. Its value is one of the
  *                              SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_* values.
  * @param  request_attributes   The request attributes of the endpoint info.
  * @param  endpoint_info_size   On input, the size, in bytes, of the buffer to hold
