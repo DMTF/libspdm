@@ -31,7 +31,7 @@
  * @param  spdm_context      A pointer to the SPDM context.
  * @param  spdm_version      Indicates the negotiated version.
  * @param  key_pair_id       Indicates the key_pair_id in multi-key use case.
- *                           It should be 0, if (SPDM version is < 1.3) OR
+ *                           Its value is 0 if (SPDM version is < 1.3) OR
  *                           ((SPDM version is >= 1.3) AND (LIBSPDM_DATA_MULTI_KEY_CONN_REQ is false))
  * @param  op_code           The code of the message that carries the signature.
  * @param  req_base_asym_alg Indicates the signing algorithm.
