@@ -87,6 +87,7 @@ libspdm_return_t libspdm_encode_secured_message(
     uint8_t *salt;
     uint8_t iv[LIBSPDM_MAX_AEAD_IV_SIZE];
     uint64_t sequence_number;
+    uint64_t saved_sequence_number;
     uint64_t sequence_num_in_header;
     uint8_t sequence_num_in_header_size;
     libspdm_session_type_t session_type;
@@ -166,6 +167,8 @@ libspdm_return_t libspdm_encode_secured_message(
         return LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW;
     }
 
+    saved_sequence_number = sequence_number;
+
     generate_iv(sequence_number, iv, salt, aead_iv_size,
                 secured_message_context->sequence_number_endian);
 
@@ -173,20 +176,6 @@ libspdm_return_t libspdm_encode_secured_message(
     sequence_num_in_header_size = spdm_secured_message_callbacks->get_sequence_number(
         sequence_number, (uint8_t *)&sequence_num_in_header);
     LIBSPDM_ASSERT(sequence_num_in_header_size <= sizeof(sequence_num_in_header));
-
-    if (session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) {
-        if (is_request_message) {
-            secured_message_context->handshake_secret.request_handshake_sequence_number++;
-        } else {
-            secured_message_context->handshake_secret.response_handshake_sequence_number++;
-        }
-    } else {
-        if (is_request_message) {
-            secured_message_context->application_secret.request_data_sequence_number++;
-        } else {
-            secured_message_context->application_secret.response_data_sequence_number++;
-        }
-    }
 
     record_header_size = sizeof(spdm_secured_message_a_data_header1_t) +
                          sequence_num_in_header_size +
@@ -199,7 +188,7 @@ libspdm_return_t libspdm_encode_secured_message(
             rand_count = 0;
             result = libspdm_get_random_number(sizeof(rand_count), (uint8_t *)&rand_count);
             if (!result) {
-                return LIBSPDM_STATUS_LOW_ENTROPY;
+                goto restore_sequence_number;
             }
             rand_count = (uint8_t)((rand_count % max_rand_count) + 1);
         } else {
@@ -237,7 +226,7 @@ libspdm_return_t libspdm_encode_secured_message(
                                            sizeof(spdm_secured_message_cipher_header_t) +
                                            app_message_size);
         if (!result) {
-            return LIBSPDM_STATUS_LOW_ENTROPY;
+            goto restore_sequence_number;
         }
 
         a_data = (uint8_t *)record_header1;
@@ -299,7 +288,39 @@ libspdm_return_t libspdm_encode_secured_message(
     if (!result) {
         return LIBSPDM_STATUS_CRYPTO_ERROR;
     }
+
+    if (session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) {
+        if (is_request_message) {
+            secured_message_context->handshake_secret.request_handshake_sequence_number++;
+        } else {
+            secured_message_context->handshake_secret.response_handshake_sequence_number++;
+        }
+    } else {
+        if (is_request_message) {
+            secured_message_context->application_secret.request_data_sequence_number++;
+        } else {
+            secured_message_context->application_secret.response_data_sequence_number++;
+        }
+    }
+
     return LIBSPDM_STATUS_SUCCESS;
+
+restore_sequence_number:
+    /* Restore sequence number to prevent desync with peer on RNG failure */
+    if (session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) {
+        if (is_request_message) {
+            secured_message_context->handshake_secret.request_handshake_sequence_number = saved_sequence_number;
+        } else {
+            secured_message_context->handshake_secret.response_handshake_sequence_number = saved_sequence_number;
+        }
+    } else {
+        if (is_request_message) {
+            secured_message_context->application_secret.request_data_sequence_number = saved_sequence_number;
+        } else {
+            secured_message_context->application_secret.response_data_sequence_number = saved_sequence_number;
+        }
+    }
+    return LIBSPDM_STATUS_LOW_ENTROPY;
 }
 
 libspdm_return_t libspdm_decode_secured_message(
