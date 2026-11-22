@@ -66,10 +66,12 @@ jobs:
             script: check_copyright_date.sh
           - name: Commit Message Encoding Check
             script: check_commit_message.sh
+          - name: Grammar Check
+            script: check_grammar.sh
     steps:
       - uses: actions/checkout@v7
         with:
-          # check_commit_message.sh needs the commits since main.
+          # check_commit_message.sh and check_grammar.sh need the commits since main.
           fetch-depth: 0
       - name: Check
         run: ./script/${{ matrix.script }}
