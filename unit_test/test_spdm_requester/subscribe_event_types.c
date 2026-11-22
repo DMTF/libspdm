@@ -169,7 +169,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param2 = 0;
     }
 
-    /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+    /* For a secured message, copy the message from the sender buffer to the scratch buffer.
      * transport_message is always in sender buffer. */
     libspdm_get_scratch_buffer(spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
     libspdm_copy_mem(scratch_buffer + transport_header_size,

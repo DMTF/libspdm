@@ -616,7 +616,7 @@ libspdm_return_t libspdm_transport_storage_encode_message(
              */
             *transport_message_size = secured_message_size +
                                       LIBSPDM_STORAGE_SECURED_MESSAGE_HEADER_RESERVED_BYTES;
-            /* Ensure we allow the 4 reserved bytes to be encapsulated */
+            /* Allow the 4 reserved bytes to be encapsulated */
             *transport_message = secured_message -
                                  LIBSPDM_STORAGE_SECURED_MESSAGE_HEADER_RESERVED_BYTES;
             return LIBSPDM_STATUS_SUCCESS;

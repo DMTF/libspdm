@@ -188,7 +188,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
     b) [LLVM](https://llvm.org/) (above LLVM10)
     - Install steps: `sudo apt-get install llvm-10` then `sudo apt-get install clang-10`.
     - Use `llvm-ar -version` and `clang -v` to confirm the LLVM version.
-    - If LLVM installation fails or LLVM installation version is low, you can update Linux version to fix the issue.
+    - If LLVM installation fails or LLVM installation version is low, update the Linux version to fix the issue.
 
 For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
@@ -339,7 +339,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
    The unit test output is at `libspdm/build/bin`.
    Open one command prompt at output dir to run `test_spdm_requester > NUL` and `test_spdm_responder > NUL`.
 
-   You should see something like:
+   The output should look something like:
 
    <pre>
       [==========] Running 2 test(s).
@@ -351,7 +351,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
       [  PASSED  ] 2 test(s).
    </pre>
 
-   Note: You must use a command prompt with the current working directory at `libspdm/build/bin` when running unit tests or they may fail.
+   Note: Run the unit tests from a command prompt whose current working directory is `libspdm/build/bin`, or they may fail.
    Eg. Don't run the unit tests from libspdm/build directory by calling "bin/test_spdm_responder > NULL"
 
 ### Other Tests

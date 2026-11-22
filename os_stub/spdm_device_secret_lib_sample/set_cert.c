@@ -175,7 +175,7 @@ bool libspdm_update_local_cert_chain(
         /* Alias Cert Model, the new `cert_chain` shall contain a partial
          * certificate chain from the root CA to the Device Certificate CA.
          *
-         * We need to update the old root CA to the Device Certificate CA
+         * Update the old root CA to the Device Certificate CA
          * and leave the other certs as they are. Then update the hash and
          * the size.
          */
@@ -206,7 +206,7 @@ bool libspdm_update_local_cert_chain(
             mutable_cert_offset += cert_size;
 
             if (libspdm_contains_hardware_id_oid(cert, cert_size)) {
-                /* We found the Device Certificate CA */
+                /* Found the Device Certificate CA */
                 break;
             }
 

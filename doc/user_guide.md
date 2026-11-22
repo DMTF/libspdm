@@ -128,7 +128,7 @@ Refer to spdm_client_init() in [spdm_requester_spdm.c](https://github.com/DMTF/s
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert, peer_root_cert_size);
    ```
-   If there are many peer root certs to set, you can set the peer root certs in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
+   If there are many peer root certs to set, set them in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
    ```C
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert1, peer_root_cert_size1);
@@ -432,7 +432,7 @@ Refer to spdm_server_init() in [spdm_responder_spdm.c](https://github.com/DMTF/s
    bytes), or `SPDM_MAX_CERTIFICATE_CHAIN_SIZE_14` (0xFFFFFFFF bytes) if SPDM 1.4 is negotiated and
    the Requester supports `LARGE_RESP_CAP`. However most certificate chains are smaller than that.
 
-   If there are many peer root certs to set, you can set the peer root certs in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
+   If there are many peer root certs to set, set them in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
    ```C
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert1, peer_root_cert_size1);

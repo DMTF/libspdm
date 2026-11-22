@@ -449,7 +449,7 @@ static void req_get_csr_case3(void **state)
 
     assert_int_equal(status, LIBSPDM_STATUS_RESET_REQUIRED_PEER);
 
-    /* Let's reset the responder and send the request again */
+    /* Reset the Responder and send the request again */
     spdm_context->connection_info.capability.flags &=
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
 

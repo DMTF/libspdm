@@ -19,7 +19,7 @@
 #include "library/spdm_crypt_lib.h"
 #include "hal/library/cryptlib_ext.h"
 
-/* We should always add mbedtls/build_info.h here
+/* Always add mbedtls/build_info.h here
  * to ensure the config override takes effect.
  *
  * Do not directly include custom libspdm_mbedtls_config.h. build_info.h

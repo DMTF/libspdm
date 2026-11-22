@@ -26,7 +26,7 @@ int GLOBAL_USED _fltused = 1;
 void *memset(void *dest, int ch, size_t count)
 {
 
-    /* NOTE: Here we use one base implementation for memset, instead of the direct
+    /* NOTE: Here memset uses one base implementation, instead of the direct
      *       optimized libspdm_set_mem() wrapper. Because the intrinsiclib has to be built
      *       without whole program optimization option, and there will be some
      *       potential register usage errors when calling other optimized codes.*/

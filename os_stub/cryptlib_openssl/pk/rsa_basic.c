@@ -344,7 +344,7 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
         goto err;
     }
 
-    /* Determine if we have private key components */
+    /* Determine whether private key components are present */
     is_public_only = true;
     for (i = 0; params[i].key != NULL; i++) {
         if (strcmp(params[i].key, OSSL_PKEY_PARAM_RSA_D) == 0 ||

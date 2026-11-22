@@ -234,7 +234,7 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_messa
     switch (pci_doe_header->data_object_type) {
     case PCI_DOE_DATA_OBJECT_TYPE_DOE_DISCOVERY:
         /*
-         * Check to see if we received a DOE discovery message.
+         * Check whether the received message is a DOE discovery message.
          * DOE discovery is not part of the SPDM spec, instead it's part
          * of the PCIe DOE spec. DOE discovery is mandatory for all
          * implementations.
@@ -321,7 +321,7 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_response(size_t transport_mess
     switch (pci_doe_header->data_object_type) {
     case PCI_DOE_DATA_OBJECT_TYPE_DOE_DISCOVERY:
         /*
-         * Check to see if we received a DOE discovery message.
+         * Check whether the received message is a DOE discovery message.
          * DOE discovery is not part of the SPDM spec, instead it's part
          * of the PCIe DOE spec. DOE discovery is mandatory for all
          * implementations.

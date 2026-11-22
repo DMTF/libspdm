@@ -35,7 +35,7 @@ echo "<duration> parameter is $3"
 export duration=$3
 
 if [[ "core" != `cat /proc/sys/kernel/core_pattern` ]];then
-    # Here 'test' is the sudo password, replace it with yours.
+    # Here 'test' is the sudo password; replace it with the local one.
     echo 'test' | sudo -S bash -c 'echo core >/proc/sys/kernel/core_pattern'
     pushd /sys/devices/system/cpu/
     echo 'test' | sudo -S bash -c 'echo performance | tee cpu*/cpufreq/scaling_governor'

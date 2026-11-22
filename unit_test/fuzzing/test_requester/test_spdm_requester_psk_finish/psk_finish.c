@@ -79,7 +79,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                                 32; /* MCTP_MAX_RANDOM_NUMBER_COUNT */
     aead_tag_max_size = LIBSPDM_MAX_AEAD_TAG_SIZE;
 
-    /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+    /* For a secured message, copy the message from the sender buffer to the scratch buffer.
      * transport_message is always in sender buffer. */
     libspdm_get_scratch_buffer(spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
     spdm_response = (void *)(scratch_buffer + test_message_header_size);

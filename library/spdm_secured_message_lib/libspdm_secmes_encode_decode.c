@@ -159,7 +159,7 @@ libspdm_return_t libspdm_encode_secured_message(
 
     /* max_spdm_session_sequence_number is the maximum sequence number that is ALLOWED (inclusive),
      * i.e. AeadLimit - 1. A message using it is permitted; the next one is not. The all-ones value
-     * is the special case: the 64-bit counter cannot represent max + 1, so we must reject at the
+     * is the special case: the 64-bit counter cannot represent max + 1, so libspdm must reject at the
      * all-ones value itself to keep the sequence number from wrapping back to 0 and reusing an IV. */
     if ((sequence_number > secured_message_context->max_spdm_session_sequence_number) ||
         (sequence_number == LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER)) {
@@ -405,7 +405,7 @@ libspdm_return_t libspdm_decode_secured_message(
 
     /* max_spdm_session_sequence_number is the maximum sequence number that is ALLOWED (inclusive),
      * i.e. AeadLimit - 1. A message using it is permitted; the next one is not. The all-ones value
-     * is the special case: the 64-bit counter cannot represent max + 1, so we must reject at the
+     * is the special case: the 64-bit counter cannot represent max + 1, so libspdm must reject at the
      * all-ones value itself to keep the sequence number from wrapping back to 0 and reusing an IV. */
     if ((sequence_number > secured_message_context->max_spdm_session_sequence_number) ||
         (sequence_number == LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER)) {

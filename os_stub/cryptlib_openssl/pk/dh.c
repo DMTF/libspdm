@@ -635,7 +635,7 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
         goto cleanup;
     }
 
-    /* We also need to set the same DH parameters (p, g) for the peer's key */
+    /* Also set the same DH parameters (p, g) for the peer's key */
     if (EVP_PKEY_get_bn_param(dh_key, OSSL_PKEY_PARAM_FFC_P, &p) > 0 &&
         EVP_PKEY_get_bn_param(dh_key, OSSL_PKEY_PARAM_FFC_G, &g) > 0) {
         OSSL_PARAM_BLD_push_BN(param_bld, OSSL_PKEY_PARAM_FFC_P, p);

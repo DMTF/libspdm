@@ -63,9 +63,8 @@ extern uint32_t libspdm_get_cert_chain_slot_storage_size(
  * chain and update `LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN` to
  * use the new chain in libspdm.
  *
- * After which the old certificate chain can be freed. Unfortunately we can't
- * handle this in libspdm as it might require allocation, which is why the
- * HAL must handle this.
+ * After which the old certificate chain can be freed. libspdm can't handle this
+ * itself as it might require allocation, which is why the HAL must handle this.
  *
  * For DEVICE_CERT and GENERIC_CERT this is a simple. All that needs to be done
  * is memory allocated, the new certificate copied and the old certificate freed.

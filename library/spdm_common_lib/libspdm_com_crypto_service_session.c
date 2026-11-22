@@ -96,7 +96,7 @@ bool libspdm_calculate_th_hash_for_exchange(
 
     LIBSPDM_ASSERT(*th_hash_buffer_size >= hash_size);
 
-    /* duplicate the th context, because we still need use original context to continue.*/
+    /* duplicate the th context, because libspdm still needs the original context to continue.*/
     digest_context_th = libspdm_hash_new (spdm_context->connection_info.algorithm.base_hash_algo);
     if (digest_context_th == NULL) {
         return false;
@@ -139,7 +139,7 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
 
     LIBSPDM_ASSERT(*th_hmac_buffer_size >= hash_size);
 
-    /* duplicate the th context, because we still need use original context to continue.*/
+    /* duplicate the th context, because libspdm still needs the original context to continue.*/
     hash_context_th = libspdm_hash_new (spdm_context->connection_info.algorithm.base_hash_algo);
     if (hash_context_th == NULL) {
         return false;
@@ -306,7 +306,7 @@ bool libspdm_calculate_th_hash_for_finish(libspdm_context_t *spdm_context,
 
     LIBSPDM_ASSERT(*th_hash_buffer_size >= hash_size);
 
-    /* duplicate the th context, because we still need use original context to continue.*/
+    /* duplicate the th context, because libspdm still needs the original context to continue.*/
     digest_context_th = libspdm_hash_new (spdm_context->connection_info.algorithm.base_hash_algo);
     if (digest_context_th == NULL) {
         return false;
@@ -351,7 +351,7 @@ bool libspdm_calculate_th_hmac_for_finish_rsp(libspdm_context_t *spdm_context,
     LIBSPDM_ASSERT(*th_hmac_buffer_size >= hash_size);
     LIBSPDM_ASSERT(session_info->session_transcript.digest_context_th != NULL);
 
-    /* duplicate the th context, because we still need use original context to continue.*/
+    /* duplicate the th context, because libspdm still needs the original context to continue.*/
     hash_context_th = libspdm_hash_new (spdm_context->connection_info.algorithm.base_hash_algo);
     if (hash_context_th == NULL) {
         return false;
@@ -400,7 +400,7 @@ bool libspdm_calculate_th_hmac_for_finish_req(libspdm_context_t *spdm_context,
     LIBSPDM_ASSERT(*th_hmac_buffer_size >= hash_size);
     LIBSPDM_ASSERT(session_info->session_transcript.digest_context_th != NULL);
 
-    /* duplicate the th context, because we still need use original context to continue.*/
+    /* duplicate the th context, because libspdm still needs the original context to continue.*/
     hash_context_th = libspdm_hash_new (spdm_context->connection_info.algorithm.base_hash_algo);
     if (hash_context_th == NULL) {
         return false;
