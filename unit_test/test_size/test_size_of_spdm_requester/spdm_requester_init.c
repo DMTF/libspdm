@@ -10,7 +10,7 @@ libspdm_return_t spdm_requester_send_message(void *spdm_context,
                                              size_t message_size, const void *message,
                                              uint64_t timeout)
 {
-    /* Dummy*/
+    /* Stub */
     return LIBSPDM_STATUS_SUCCESS;
 }
 
@@ -19,7 +19,7 @@ libspdm_return_t spdm_requester_receive_message(void *spdm_context,
                                                 void **message,
                                                 uint64_t timeout)
 {
-    /* Dummy*/
+    /* Stub */
     return LIBSPDM_STATUS_SUCCESS;
 }
 

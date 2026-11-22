@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -10,7 +10,7 @@ libspdm_return_t spdm_responder_send_message(void *spdm_context,
                                              size_t message_size, const void *message,
                                              uint64_t timeout)
 {
-    /* Dummy*/
+    /* Stub */
     return LIBSPDM_STATUS_SUCCESS;
 }
 
@@ -19,7 +19,7 @@ libspdm_return_t spdm_responder_receive_message(void *spdm_context,
                                                 void **message,
                                                 uint64_t timeout)
 {
-    /* Dummy*/
+    /* Stub */
     return LIBSPDM_STATUS_SUCCESS;
 }
 

@@ -25,7 +25,7 @@ static libspdm_psk_finish_request_mine_14_t m_libspdm_psk_finish_request = {
 };
 static size_t m_libspdm_psk_finish_request_size;
 
-static uint8_t m_libspdm_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
+static uint8_t m_libspdm_placeholder_buffer[LIBSPDM_MAX_HASH_SIZE];
 
 extern size_t libspdm_secret_lib_psk_finish_opaque_data_size;
 extern bool g_generate_psk_finish_opaque_data;
@@ -111,9 +111,9 @@ static void rsp_psk_finish_rsp_err_case1(void **state)
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-    libspdm_set_mem(m_libspdm_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem(m_libspdm_placeholder_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_request_finished_key(
-        session_info->secured_message_context, m_libspdm_dummy_buffer, hash_size);
+        session_info->secured_message_context, m_libspdm_placeholder_buffer, hash_size);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context, LIBSPDM_SESSION_STATE_HANDSHAKING);
 
@@ -215,9 +215,9 @@ static void rsp_psk_finish_rsp_err_case2(void **state)
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-    libspdm_set_mem(m_libspdm_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem(m_libspdm_placeholder_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_request_finished_key(
-        session_info->secured_message_context, m_libspdm_dummy_buffer, hash_size);
+        session_info->secured_message_context, m_libspdm_placeholder_buffer, hash_size);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context, LIBSPDM_SESSION_STATE_HANDSHAKING);
 

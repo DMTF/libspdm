@@ -59,7 +59,7 @@ target_link_libraries(test_size_of_spdm_requester
         debuglib_null
         spdm_requester_lib
         spdm_common_lib
-    #    cryptstublib_dummy
+    #    cryptstublib_null
     #    ${CRYPTO_LIB_PATHS}
     #    cryptlib_${CRYPTO}
     #    rnglib_null

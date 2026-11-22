@@ -899,8 +899,8 @@ static bool setup_handshaking_session(libspdm_context_t *spdm_context,
     libspdm_session_info_t *session_info;
     libspdm_secured_message_context_t *secured_ctx;
     const uint32_t session_id = 0xFFFFFFFF;
-    uint8_t dummy_shared_secret[LIBSPDM_MAX_SHARED_KEY_SIZE];
-    uint8_t dummy_th1[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t placeholder_shared_secret[LIBSPDM_MAX_SHARED_KEY_SIZE];
+    uint8_t placeholder_th1[LIBSPDM_MAX_HASH_SIZE];
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -932,13 +932,13 @@ static bool setup_handshaking_session(libspdm_context_t *spdm_context,
     if (secured_ctx->shared_key_size == 0) {
         return false;
     }
-    libspdm_set_mem(dummy_shared_secret, sizeof(dummy_shared_secret), 0xFF);
+    libspdm_set_mem(placeholder_shared_secret, sizeof(placeholder_shared_secret), 0xFF);
     libspdm_copy_mem(secured_ctx->master_secret.shared_secret,
                      sizeof(secured_ctx->master_secret.shared_secret),
-                     dummy_shared_secret, secured_ctx->shared_key_size);
+                     placeholder_shared_secret, secured_ctx->shared_key_size);
 
-    libspdm_set_mem(dummy_th1, sizeof(dummy_th1), 0xAA);
-    if (!libspdm_generate_session_handshake_key(session_info->secured_message_context, dummy_th1)) {
+    libspdm_set_mem(placeholder_th1, sizeof(placeholder_th1), 0xAA);
+    if (!libspdm_generate_session_handshake_key(session_info->secured_message_context, placeholder_th1)) {
         return false;
     }
 

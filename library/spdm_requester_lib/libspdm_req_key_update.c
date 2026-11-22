@@ -12,7 +12,7 @@
 #pragma pack(1)
 typedef struct {
     spdm_message_header_t header;
-    uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
+    uint8_t extended_error_data[sizeof(spdm_error_data_response_not_ready_t)];
 } libspdm_key_update_response_mine_t;
 #pragma pack()
 

@@ -10,8 +10,8 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 
-static uint8_t m_libspdm_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
-static uint8_t m_libspdm_dummy_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
+static uint8_t m_libspdm_placeholder_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
+static uint8_t m_libspdm_placeholder_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
 
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
@@ -19,7 +19,7 @@ static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
 static uint8_t m_libspdm_requester_opaque_data[8] = {1, 2, 3, 4, 5, 6, 7, 8};
 static uint8_t m_libspdm_responder_opaque_data[8] = {9, 10, 11, 12, 13, 14, 15, 16};
 
-static void libspdm_secured_message_set_dummy_finished_key( void *spdm_secured_message_context) {
+static void libspdm_secured_message_set_placeholder_finished_key( void *spdm_secured_message_context) {
 }
 
 static void libspdm_secured_message_set_response_handshake_encryption_key(
@@ -1125,7 +1125,7 @@ static void req_psk_finish_case1(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
@@ -1189,30 +1189,30 @@ static void req_psk_finish_case2(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -1280,30 +1280,30 @@ static void req_psk_finish_case3(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
@@ -1367,30 +1367,30 @@ static void req_psk_finish_case4(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
@@ -1455,30 +1455,30 @@ static void req_psk_finish_case5(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
@@ -1545,30 +1545,30 @@ static void req_psk_finish_case6(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -1637,30 +1637,30 @@ static void req_psk_finish_case7(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
@@ -1726,30 +1726,30 @@ static void req_psk_finish_case8(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
@@ -1815,30 +1815,30 @@ static void req_psk_finish_case9(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
@@ -1916,24 +1916,24 @@ static void req_psk_finish_case10(void **state) {
                                           sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
         libspdm_secured_message_set_session_state (session_info->secured_message_context,
                                                    LIBSPDM_SESSION_STATE_HANDSHAKING);
-        libspdm_set_mem (m_libspdm_dummy_key_buffer,
+        libspdm_set_mem (m_libspdm_placeholder_key_buffer,
                          ((libspdm_secured_message_context_t*)(session_info->secured_message_context))->aead_key_size,
                          (uint8_t)(0xFF));
         libspdm_secured_message_set_response_handshake_encryption_key (
-            session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+            session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
             ((libspdm_secured_message_context_t*)(session_info->secured_message_context))->aead_key_size);
-        libspdm_set_mem (m_libspdm_dummy_salt_buffer,
+        libspdm_set_mem (m_libspdm_placeholder_salt_buffer,
                          ((libspdm_secured_message_context_t*)(session_info->secured_message_context))->aead_iv_size,
                          (uint8_t)(0xFF));
         libspdm_secured_message_set_response_handshake_salt (session_info->secured_message_context,
-                                                             m_libspdm_dummy_salt_buffer,
+                                                             m_libspdm_placeholder_salt_buffer,
                                                              ((libspdm_secured_message_context_t*)(
                                                                   session_info->
                                                                   secured_message_context))->aead_iv_size);
         ((libspdm_secured_message_context_t*)(session_info->secured_message_context))->
         handshake_secret
         .response_handshake_sequence_number = 0;
-        libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+        libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
         status = libspdm_send_receive_psk_finish (spdm_context, session_id);
         if(error_code != SPDM_ERROR_CODE_DECRYPT_ERROR) {
@@ -2012,30 +2012,30 @@ static void req_psk_finish_case11(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     session_info->session_transcript.message_m.buffer_size =
@@ -2126,30 +2126,30 @@ static void req_psk_finish_case12(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
@@ -2214,30 +2214,30 @@ static void req_psk_finish_case13(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
@@ -2303,30 +2303,30 @@ static void req_psk_finish_case14(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_NOT_STARTED);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
@@ -2389,30 +2389,30 @@ static void req_psk_finish_case15(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t
                       *)(session_info->secured_message_context))
                     ->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info
                                            ->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_SESSION_MSG_ERROR);
@@ -2478,25 +2478,25 @@ static void req_psk_finish_case16(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
                     ->aead_key_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
                     ->aead_iv_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->handshake_secret.request_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -2570,25 +2570,25 @@ static void req_psk_finish_case17(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
                     ->aead_key_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
                     ->aead_iv_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->handshake_secret.request_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -2652,25 +2652,25 @@ static void req_psk_finish_case18(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer,
                     ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
                     ->aead_key_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
         ->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer,
                     ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
                     ->aead_iv_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
         ->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->handshake_secret.request_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
@@ -2712,15 +2712,15 @@ static void set_standard_state(libspdm_context_t *spdm_context, uint8_t spdm_ver
     secured_message_context = session_info->secured_message_context;
     libspdm_secured_message_set_session_state(secured_message_context,
                                               LIBSPDM_SESSION_STATE_HANDSHAKING);
-    libspdm_set_mem(m_libspdm_dummy_key_buffer, secured_message_context->aead_key_size,
+    libspdm_set_mem(m_libspdm_placeholder_key_buffer, secured_message_context->aead_key_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        secured_message_context, m_libspdm_dummy_key_buffer,
+        secured_message_context, m_libspdm_placeholder_key_buffer,
         secured_message_context->aead_key_size);
-    libspdm_set_mem(m_libspdm_dummy_salt_buffer, secured_message_context->aead_iv_size,
+    libspdm_set_mem(m_libspdm_placeholder_salt_buffer, secured_message_context->aead_iv_size,
                     (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        secured_message_context, m_libspdm_dummy_salt_buffer,
+        secured_message_context, m_libspdm_placeholder_salt_buffer,
         secured_message_context->aead_iv_size);
     secured_message_context->handshake_secret.response_handshake_sequence_number = 0;
     secured_message_context->handshake_secret.request_handshake_sequence_number = 0;

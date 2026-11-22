@@ -2487,7 +2487,7 @@ static void rsp_key_exchange_rsp_case28(void **state)
     size_t opaque_key_exchange_req_size;
     size_t index;
     /* Multiple bits set, then the reserved-bit singletons. A pure "at most one bit" test would
-    * accept the latter, so they are what distinguishes the whitelist from a popcount check. */
+    * accept the latter, so they are what distinguishes the allowlist from a popcount check. */
     const uint8_t illegal_values[] = {0x03, 0x05, 0x06, 0x07, 0x08, 0x10, 0x80, 0xFF};
 
     spdm_test_context = *state;

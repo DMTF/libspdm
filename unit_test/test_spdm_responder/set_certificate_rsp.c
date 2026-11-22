@@ -1217,7 +1217,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
     assert_non_null(installed_chain);
     /* Assert it's an allocated buffer */
     assert_ptr_not_equal(installed_chain, cert_chain_a);
-    /* These should be a blind copy */
+    /* These should be an exact copy */
     assert_int_equal(installed_chain_size, cert_chain_a_size);
     assert_memory_equal(installed_chain, cert_chain_a, cert_chain_a_size);
 
@@ -1239,7 +1239,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
     assert_non_null(installed_chain);
     /* Ensure it's a newly alloced buffer */
     assert_ptr_not_equal(installed_chain, cert_chain_b);
-    /* Again a blind copy */
+    /* Again an exact copy */
     assert_memory_equal(installed_chain, cert_chain_b, cert_chain_b_size);
 
     /* A rejected cert_model must not modify the NVM contents. */

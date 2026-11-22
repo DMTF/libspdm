@@ -715,7 +715,7 @@ static void rsp_respond_if_ready_case6(void **state) {
     void                 *data;
     size_t data_size;
     uint8_t                *ptr;
-    uint8_t dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t placeholder_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t                *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -767,9 +767,9 @@ static void rsp_respond_if_ready_case6(void **state) {
                                SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size (m_libspdm_use_hash_algo);
-    libspdm_set_mem (dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem (placeholder_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_request_finished_key (session_info->secured_message_context,
-                                                      dummy_buffer, hash_size);
+                                                      placeholder_buffer, hash_size);
     libspdm_secured_message_set_session_state (session_info->secured_message_context,
                                                LIBSPDM_SESSION_STATE_HANDSHAKING);
 
@@ -953,7 +953,7 @@ static void rsp_respond_if_ready_case8(void **state) {
     void                 *data;
     size_t data_size;
     uint8_t                *ptr;
-    uint8_t dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t placeholder_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t    *session_info;
@@ -1004,9 +1004,9 @@ static void rsp_respond_if_ready_case8(void **state) {
                                       LIBSPDM_TEST_PSK_HINT_STRING,
                                       sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     hash_size = libspdm_get_hash_size (m_libspdm_use_hash_algo);
-    libspdm_set_mem (dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem (placeholder_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_request_finished_key (session_info->secured_message_context,
-                                                      dummy_buffer, hash_size);
+                                                      placeholder_buffer, hash_size);
     libspdm_secured_message_set_session_state (session_info->secured_message_context,
                                                LIBSPDM_SESSION_STATE_HANDSHAKING);
 

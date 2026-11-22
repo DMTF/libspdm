@@ -63,7 +63,7 @@ void libspdm_test_responder_finish_case1(void **State)
     libspdm_finish_request_mine_t *spdm_test_finish_request;
     size_t spdm_test_finish_request_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t placeholder_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     spdm_test_context = *State;
 
@@ -111,9 +111,9 @@ void libspdm_test_responder_finish_case1(void **State)
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-    libspdm_set_mem(dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem(placeholder_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_request_finished_key(session_info->secured_message_context,
-                                                     dummy_buffer, hash_size);
+                                                     placeholder_buffer, hash_size);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_HANDSHAKING);
 
@@ -292,7 +292,7 @@ void libspdm_test_responder_finish_case7(void **State)
     uint32_t session_id;
     uint32_t hash_size;
 
-    uint8_t dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t placeholder_buffer[LIBSPDM_MAX_HASH_SIZE];
     spdm_test_context = *State;
 
     spdm_context = spdm_test_context->spdm_context;
@@ -333,13 +333,13 @@ void libspdm_test_responder_finish_case7(void **State)
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-    libspdm_set_mem(dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem(placeholder_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_request_finished_key(session_info->secured_message_context,
-                                                     dummy_buffer, hash_size);
+                                                     placeholder_buffer, hash_size);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_NOT_STARTED);
     libspdm_secured_message_set_request_finished_key(session_info->secured_message_context,
-                                                     dummy_buffer, hash_size);
+                                                     placeholder_buffer, hash_size);
 
     response_size = sizeof(response);
     libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
@@ -373,7 +373,7 @@ void libspdm_test_responder_finish_case8(void **State)
     uint32_t hmac_size;
     size_t req_asym_signature_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t placeholder_buffer[LIBSPDM_MAX_HASH_SIZE];
     libspdm_finish_request_mine_t *spdm_test_finish_request;
     size_t spdm_test_finish_request_size;
 
@@ -446,9 +446,9 @@ void libspdm_test_responder_finish_case8(void **State)
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, true);
     session_info->local_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-    libspdm_set_mem(dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem(placeholder_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_request_finished_key(session_info->secured_message_context,
-                                                     dummy_buffer, hash_size);
+                                                     placeholder_buffer, hash_size);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_HANDSHAKING);
     session_info->mut_auth_requested = 1;
