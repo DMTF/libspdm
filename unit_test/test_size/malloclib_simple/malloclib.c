@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -113,11 +113,11 @@ size_t libspdm_find_free_mem_region(size_t need_allocation_size)
         }
 
         if (sub_index == required_pages) {
-            /* Succeed! Return the Starting Offset.*/
+            /* Success: return the starting offset.*/
             return LIBSPDM_RT_PAGES_TO_SIZE (index);
         }
 
-        /* Failed! Skip current free memory pages and adjacent Used pages*/
+        /* Failure: skip the current free memory pages and adjacent used pages.*/
         while ((m_libspdm_rt_page_table->Pages[sub_index + index].page_flag &
                 LIBSPDM_RT_PAGE_USED) != 0) {
             sub_index++;
@@ -142,11 +142,11 @@ size_t libspdm_find_free_mem_region(size_t need_allocation_size)
         }
 
         if (sub_index == required_pages) {
-            /* Succeed! Return the Starting Offset.*/
+            /* Success: return the starting offset.*/
             return LIBSPDM_RT_PAGES_TO_SIZE (index);
         }
 
-        /* Failed! Skip current adjacent Used pages*/
+        /* Failure: skip the current adjacent used pages.*/
         while ((sub_index < (start_page_index - required_pages)) &&
                ((m_libspdm_rt_page_table->Pages[sub_index + index].page_flag &
                  LIBSPDM_RT_PAGE_USED) != 0)) {
@@ -156,7 +156,7 @@ size_t libspdm_find_free_mem_region(size_t need_allocation_size)
         index += sub_index;
     }
 
-    /* No available region for object allocation!*/
+    /* No region is available for object allocation.*/
     return (size_t)(-1);
 }
 

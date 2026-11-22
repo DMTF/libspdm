@@ -2179,7 +2179,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t pqc_asym_nid,
         goto free_all;
     }
     pubkey_der_len = (size_t)ret;
-    /*Note: data is written at the end of the buffer!*/
+    /*mbedtls_pk_write_pubkey_der() writes the data at the end of the buffer.*/
     pubkey_der_data = pubkey_buffer + sizeof(pubkey_buffer) - pubkey_der_len;
 
     /* requester info parse
