@@ -169,6 +169,6 @@ generates as `LIBSPDM_TPM_HANDLE_*_CERTCHAIN_SLOT_n`.
 
 ## Testing with spdm-emu + swtpm
 
-You can test TPM-backed libspdm integration using the official SPDM emulator:
+Test TPM-backed libspdm integration with the official SPDM emulator:
 
 [SPDM-EMU DOCS](https://github.com/DMTF/spdm-emu/blob/main/doc/)

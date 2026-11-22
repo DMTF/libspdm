@@ -212,7 +212,7 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
 
     if (status == LIBSPDM_STATUS_SESSION_TRY_DISCARD_KEY_UPDATE) {
         /* Failed to decode, but have backup keys. Try rolling back before aborting.
-         * message_session_id must be valid for us to have attempted decryption. */
+         * message_session_id must be valid for libspdm to have attempted decryption. */
         if (message_session_id == NULL) {
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
@@ -248,8 +248,8 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_decode_message : %x\n", status));
         if (context->last_spdm_error.error_code != 0) {
-            /* If the SPDM error code is Non-Zero, that means we need send the error message back to requester.
-             * In this case, we need return SUCCESS and let caller invoke libspdm_build_response() to send an ERROR message.*/
+            /* If the SPDM error code is Non-Zero, the Responder must send the error message back to the Requester.
+             * In this case, return SUCCESS and let caller invoke libspdm_build_response() to send an ERROR message.*/
             *session_id = &context->last_spdm_error.session_id;
             *is_app_message = false;
             return LIBSPDM_STATUS_SUCCESS;
@@ -260,11 +260,11 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
     /* Handle special case for bi-directional communication:
      * If the Requester returns RESPONSE_NOT_READY error to KEY_UPDATE, the Responder needs
      * to activate backup key to parse the error. Then later the Requester will return SUCCESS,
-     * the Responder needs new key. So we need to restore the environment by
+     * the Responder needs new key. So restore the environment by
      * libspdm_create_update_session_data_key() again.*/
     if (reset_key_update) {
         /* temp_session_context and message_session_id must necessarily
-         * be valid for us to reach here. */
+         * be valid for the code to reach here. */
         if (temp_session_context == NULL || message_session_id == NULL) {
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
@@ -617,7 +617,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     spdm_response = (void *)my_response;
 
     if (context->last_spdm_error.error_code != 0) {
-        /* Error in libspdm_process_request(), and we need send error message directly. */
+        /* Error in libspdm_process_request(), so send the error message directly. */
         switch (context->last_spdm_error.error_code) {
         case SPDM_ERROR_CODE_DECRYPT_ERROR:
             /* session ID is valid. Use it to encrypt the error message.*/
@@ -637,7 +637,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
             break;
         case SPDM_ERROR_CODE_INVALID_SESSION:
             /**
-             * don't use session ID, because we don't know which session ID should be used.
+             * don't use session ID, because libspdm doesn't know which session ID to use.
              * just ignore this message
              * return UNSUPPORTED and clear response_size to continue the dispatch without send response
              **/

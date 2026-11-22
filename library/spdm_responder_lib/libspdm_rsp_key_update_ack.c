@@ -187,7 +187,7 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t *spdm_context
             spdm_context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
 
-        /* We can commit to Responder key. */
+        /* Commit to the Responder key. */
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_activate_update_session_data_key[%x] Responder new\n",
                        session_id));
@@ -213,7 +213,7 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t *spdm_context
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
         }
-        /* With Requester key verified, we can discard backups. */
+        /* With Requester key verified, discard backups. */
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_activate_update_session_data_key[%x] Requester new\n",
                        session_id));

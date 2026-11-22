@@ -81,7 +81,7 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
     if (session_id != NULL) {
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
 
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -172,13 +172,13 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
 
     /*
      * The storage transport encoding, defined by DSP0286, does not indicate
-     * if we are/are not in a secure session in the transport data. This is
+     * in the transport data whether the message is in a secure session. This is
      * different to most other transport encodings, which includes session
      * information in the encoding.
      *
-     * As such if we are in a secure session, session_id != NULL, we set
+     * As such, if the message is in a secure session (session_id != NULL), set
      * message_session_id to be non-NULL to indicate to the lower layer
-     * that we are in a secure session.
+     * that the message is in a secure session.
      */
     if (session_id != NULL) {
         message_session_id = &message_id;
@@ -215,7 +215,7 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
 
     if (status == LIBSPDM_STATUS_SESSION_TRY_DISCARD_KEY_UPDATE) {
         /* Failed to decode, but have backup keys. Try rolling back before aborting.
-         * message_session_id must be valid for us to have attempted decryption. */
+         * message_session_id must be valid for libspdm to have attempted decryption. */
         if (message_session_id == NULL) {
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
@@ -311,11 +311,11 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
     /* Handle special case:
      * If the Responder returns RESPONSE_NOT_READY error to KEY_UPDATE, the Requester needs
      * to activate backup key to parse the error. Then later the Responder will return SUCCESS,
-     * the Requester needs new key. So we need to restore the environment by
+     * the Requester needs new key. So restore the environment by
      * libspdm_create_update_session_data_key() again.*/
     if (reset_key_update) {
         /* temp_session_context and message_session_id must necessarily
-         * be valid for us to reach here. */
+         * be valid for the code to reach here. */
         if (temp_session_context == NULL || message_session_id == NULL) {
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
@@ -395,7 +395,7 @@ static libspdm_return_t libspdm_handle_large_request(
             return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
         }
     }
-    /* now we can get sender buffer */
+    /* now acquire the sender buffer */
     transport_header_size = spdm_context->local_context.capability.transport_header_size;
 
     libspdm_get_scratch_buffer(spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);

@@ -842,7 +842,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -894,7 +894,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -938,7 +938,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
         spdm_response->header.param2 = 0;
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -980,7 +980,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
         spdm_response->header.param2 = 0;
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -1026,7 +1026,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response->header.param2 = 0;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1059,7 +1059,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1092,7 +1092,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1139,7 +1139,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
         spdm_response->header.param2 = 0;
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -1185,7 +1185,7 @@ static libspdm_return_t receive_message(
         spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
         spdm_response->extend_error_data.token = 0;
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -1236,7 +1236,7 @@ static libspdm_return_t receive_message(
             spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
             spdm_response->extend_error_data.token = 1;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1269,7 +1269,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1302,7 +1302,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1358,7 +1358,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = (uint8_t) error_code;
             spdm_response->header.param2 = 0;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1425,7 +1425,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -1478,7 +1478,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -1530,7 +1530,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -1582,7 +1582,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -1635,7 +1635,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -1688,7 +1688,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -1736,7 +1736,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1769,7 +1769,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
             spdm_response->header.param2 = 0;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1820,7 +1820,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1853,7 +1853,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response->header.param2 = 0;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1904,7 +1904,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1937,7 +1937,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response->header.param2 = 0;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -1970,7 +1970,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -2021,7 +2021,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -2054,7 +2054,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
             spdm_response->header.param2 = 0;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -2105,7 +2105,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -2142,7 +2142,7 @@ static libspdm_return_t receive_message(
             spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
             spdm_response->extend_error_data.token = 0;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -2193,7 +2193,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -2230,7 +2230,7 @@ static libspdm_return_t receive_message(
             spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
             spdm_response->extend_error_data.token = 0;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -2263,7 +2263,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -2320,7 +2320,7 @@ static libspdm_return_t receive_message(
                 spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_KEY;
                 spdm_response->header.param2 = m_libspdm_last_token;
 
-                /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+                /* For a secured message, copy the message from the sender buffer to the scratch buffer.
                  * transport_message is always in sender buffer. */
                 libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                             &scratch_buffer_size);
@@ -2354,7 +2354,7 @@ static libspdm_return_t receive_message(
                 spdm_response->header.param1 = (uint8_t) error_code;
                 spdm_response->header.param2 = 0;
 
-                /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+                /* For a secured message, copy the message from the sender buffer to the scratch buffer.
                  * transport_message is always in sender buffer. */
                 libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                             &scratch_buffer_size);
@@ -2427,7 +2427,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -2480,7 +2480,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 = m_libspdm_last_token + 1;
         }
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -2533,7 +2533,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param2 = m_libspdm_last_token;
         }
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -2589,7 +2589,7 @@ static libspdm_return_t receive_message(
              * sending the response */
         }
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -2665,7 +2665,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = SPDM_ERROR_CODE_INVALID_REQUEST;
         spdm_response->header.param2 = 0;
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -2753,7 +2753,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
         spdm_response->header.param2 = 0;
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -2843,7 +2843,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
             spdm_response->header.param2 = 0;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -2887,7 +2887,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -2919,7 +2919,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -2997,7 +2997,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
         spdm_response->header.param2 = 0;
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -3089,7 +3089,7 @@ static libspdm_return_t receive_message(
         spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
         spdm_response->extend_error_data.token = 0;
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,
@@ -3184,7 +3184,7 @@ static libspdm_return_t receive_message(
             spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
             spdm_response->extend_error_data.token = 1;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -3228,7 +3228,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_UPDATE_ALL_KEYS;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -3260,7 +3260,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_VERIFY_NEW_KEY;
             spdm_response->header.param2 = m_libspdm_last_token;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -3347,7 +3347,7 @@ static libspdm_return_t receive_message(
             spdm_response->header.param1 = (uint8_t) error_code;
             spdm_response->header.param2 = 0;
 
-            /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+            /* For a secured message, copy the message from the sender buffer to the scratch buffer.
              * transport_message is always in sender buffer. */
             libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer,
                                         &scratch_buffer_size);
@@ -3417,7 +3417,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = SPDM_ERROR_CODE_DECRYPT_ERROR;
         spdm_response->header.param2 = 0;
 
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+        /* For a secured message, copy the message from the sender buffer to the scratch buffer.
          * transport_message is always in sender buffer. */
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         libspdm_copy_mem (scratch_buffer + transport_header_size,

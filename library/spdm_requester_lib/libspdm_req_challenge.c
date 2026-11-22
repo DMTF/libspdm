@@ -395,7 +395,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     /* -=[Update State Phase]=- */
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
     if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
-        /* we must release it here, because libspdm_encapsulated_request() will acquire again. */
+        /* release it here, because libspdm_encapsulated_request() will acquire it again. */
         libspdm_release_receiver_buffer (spdm_context);
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "BasicMutAuth :\n"));

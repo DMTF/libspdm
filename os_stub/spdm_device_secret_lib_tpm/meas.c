@@ -430,7 +430,7 @@ libspdm_return_t libspdm_measurement_collection(
                SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS) {
 
         /* Calculate total_size_needed based on hash algo selected.
-         * If we have an hash algo, then the first HASH_NUMBER elements will be
+         * If there is a hash algo, then the first HASH_NUMBER elements will be
          * hash values, otherwise HASH_NUMBER raw bitstream values.*/
         if (!use_bit_stream) {
             total_size_needed =

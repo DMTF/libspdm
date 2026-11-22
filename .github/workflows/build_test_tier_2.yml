@@ -582,7 +582,7 @@ jobs:
           OS:         ${osname:-unknown}
           Kernel:     ${kernel:-unknown}
           Compiler:   $compiler
-          NOTE: this restores the source tree, not the toolchain. If your
+          NOTE: this restores the source tree, not the toolchain. If the local
                 compiler differs from the one above, a non-reproduction is
                 inconclusive rather than a refutation."
 
@@ -1492,7 +1492,7 @@ jobs:
           OS:         ${osname:-unknown}
           Kernel:     ${kernel:-unknown}
           Compiler:   $compiler
-          NOTE: this restores the source tree, not the toolchain. If your
+          NOTE: this restores the source tree, not the toolchain. If the local
                 compiler differs from the one above, a non-reproduction is
                 inconclusive rather than a refutation."
 
@@ -2034,7 +2034,7 @@ jobs:
           OS:         ${osname:-unknown}
           Kernel:     ${kernel:-unknown}
           Compiler:   $compiler
-          NOTE: this restores the source tree, not the toolchain. If your
+          NOTE: this restores the source tree, not the toolchain. If the local
                 compiler differs from the one above, a non-reproduction is
                 inconclusive rather than a refutation."
 
@@ -2496,7 +2496,7 @@ jobs:
           OS:         ${osname:-unknown}
           Kernel:     ${kernel:-unknown}
           Compiler:   $compiler
-          NOTE: this restores the source tree, not the toolchain. If your
+          NOTE: this restores the source tree, not the toolchain. If the local
                 compiler differs from the one above, a non-reproduction is
                 inconclusive rather than a refutation."
 
@@ -4087,7 +4087,7 @@ jobs:
           OS:         ${osname:-unknown}
           Kernel:     ${kernel:-unknown}
           Compiler:   $compiler
-          NOTE: this restores the source tree, not the toolchain. If your
+          NOTE: this restores the source tree, not the toolchain. If the local
                 compiler differs from the one above, a non-reproduction is
                 inconclusive rather than a refutation."
 
@@ -4462,7 +4462,7 @@ jobs:
           OS:         ${osname:-unknown}
           Kernel:     ${kernel:-unknown}
           Compiler:   $compiler
-          NOTE: this restores the source tree, not the toolchain. If your
+          NOTE: this restores the source tree, not the toolchain. If the local
                 compiler differs from the one above, a non-reproduction is
                 inconclusive rather than a refutation."
 
@@ -5071,7 +5071,7 @@ jobs:
           OS:         ${osname:-unknown}
           Kernel:     ${kernel:-unknown}
           Compiler:   $compiler
-          NOTE: this restores the source tree, not the toolchain. If your
+          NOTE: this restores the source tree, not the toolchain. If the local
                 compiler differs from the one above, a non-reproduction is
                 inconclusive rather than a refutation."
 
@@ -5380,7 +5380,7 @@ jobs:
           Kernel:     ${kernel:-unknown}
           Compiler:   $compiler
           Packages:   ${packages:-unknown}
-          NOTE: this restores the source tree, not the toolchain. If your
+          NOTE: this restores the source tree, not the toolchain. If the local
                 compiler differs from the one above, a non-reproduction is
                 inconclusive rather than a refutation."
 

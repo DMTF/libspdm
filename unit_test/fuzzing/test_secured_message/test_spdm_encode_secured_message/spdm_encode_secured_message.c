@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -67,7 +67,7 @@ void libspdm_test_encode_secured_message(void **State)
                              32; /* MCTP_MAX_RANDOM_NUMBER_COUNT */
     LIBSPDM_ASSERT(spdm_test_context->test_buffer_size > record_header_max_size);
 
-    /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+    /* For a secured message, copy the message from the sender buffer to the scratch buffer.
      * transport_message is always in sender buffer. */
     libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
     libspdm_copy_mem (scratch_buffer + record_header_max_size,

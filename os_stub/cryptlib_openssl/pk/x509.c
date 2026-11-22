@@ -2005,7 +2005,7 @@ bool libspdm_x509_get_tbs_cert(const uint8_t *cert, size_t cert_size,
      *    ...
      *    }*/
 
-    /* So we can just ASN1-parse the x.509 DER-encoded data. If we strip
+    /* So the code can just ASN1-parse the x.509 DER-encoded data. After stripping
      * the first SEQUENCE, the second SEQUENCE is the TBSCertificate.*/
 
     temp = cert;
@@ -2614,7 +2614,7 @@ bool libspdm_gen_x509_csr(
         case LIBSPDM_CRYPTO_NID_RSAPSS3072:
         case LIBSPDM_CRYPTO_NID_RSASSA4096:
         case LIBSPDM_CRYPTO_NID_RSAPSS4096: {
-            /* Context is our internal RSA ctx holding EVP_PKEY */
+            /* Context is the internal RSA ctx holding EVP_PKEY */
             libspdm_key_context *rsa_ctx = (libspdm_key_context *)context;
             if (rsa_ctx == NULL || rsa_ctx->evp_pkey == NULL) {
                 goto free_all;

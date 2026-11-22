@@ -2,7 +2,7 @@
 
 # Before run this script, please Download and install AFLTurbo. Unzip and follow docs\QuickStartGuide.txt. Build it with make.
 # If command 'screen' not found, please install with: sudo apt install screen.
-# If you also want to collect Code Coverage in Linux with AFLTurbo and lcov, please Install lcov with: sudo apt-get install lcov.
+# To also collect Code Coverage in Linux with AFLTurbo and lcov, install lcov with: sudo apt-get install lcov.
 
 if [ "$#" -ne "3" ];then
     echo "Usage: $0 <CRYPTO> <GCOV> <duration>"
@@ -46,7 +46,7 @@ export fuzzing_path=$libspdm_path/unit_test/fuzzing
 export fuzzing_seeds=$libspdm_path/unit_test/fuzzing/seeds
 export TIMESTAMP=`date +%Y-%m-%d_%H-%M-%S`
 
-# Here '~/aflturbo/' is the AFLTurbo PATH, replace it with yours.
+# Here '~/aflturbo/' is the AFLTurbo PATH; replace it with the local AFLTurbo path.
 export AFL_PATH=~/aflturbo/
 export PATH=$PATH:$AFL_PATH
 
@@ -82,7 +82,7 @@ done
 rm -rf $fuzzing_out/*
 
 if [[ "core" != `cat /proc/sys/kernel/core_pattern` ]];then
-    # Here 'test' is the sudo password, replace it with yours.
+    # Here 'test' is the sudo password; replace it with the local one.
     echo 'test' | sudo -S bash -c 'echo core >/proc/sys/kernel/core_pattern'
     pushd /sys/devices/system/cpu/
     echo 'test' | sudo -S bash -c 'echo performance | tee cpu*/cpufreq/scaling_governor'

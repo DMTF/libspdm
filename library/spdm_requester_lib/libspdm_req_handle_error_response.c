@@ -34,10 +34,10 @@ static libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *sp
 
     /* the response might be in response buffer in normal SPDM message
      * or it is in scratch buffer in case of secure SPDM message
-     * the response buffer is in acquired state, so we release it*/
+     * the response buffer is in acquired state, so release it*/
     libspdm_release_receiver_buffer (spdm_context);
 
-    /* now we can get sender buffer */
+    /* now acquire the sender buffer */
     transport_header_size = spdm_context->local_context.capability.transport_header_size;
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -268,7 +268,7 @@ libspdm_return_t libspdm_handle_error_large_response(
         (spdm_error_data_large_response_t*)(error_response + 1);
     chunk_handle = extend_error_data->handle;
 
-    /* now we can get sender buffer */
+    /* now acquire the sender buffer */
     transport_header_size = spdm_context->local_context.capability.transport_header_size;
 
     libspdm_get_scratch_buffer(spdm_context, (void**)&scratch_buffer, &scratch_buffer_size);

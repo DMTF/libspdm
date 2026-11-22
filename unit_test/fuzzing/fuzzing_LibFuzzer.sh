@@ -2,7 +2,7 @@
 
 # Before run this script, please install LLVM with: sudo apt install llvm, and install CLANG with: sudo apt install clang.
 # If command 'screen' not found, please install with: sudo apt install screen.
-# You can collect Code Coverage in Linux with LibFuzzer and llvm-cov.
+# LibFuzzer and llvm-cov can collect Code Coverage in Linux.
 
 if [ "$#" -ne "3" ];then
     echo "Usage: $0 <CRYPTO> <GCOV> <duration>"

@@ -1303,8 +1303,8 @@ static void rsp_set_certificate_rsp_case14(void **state)
     /* Ensure it's a newly alloced buffer */
     assert_ptr_not_equal(installed_chain, orig_alias_chain);
     assert_ptr_not_equal(installed_chain, alias_chain);
-    /* At this point we loaded the alias chain over the installed chain.
-     * For this test we `SET_CERTIFICATE` the same immutable chain, so the new
+    /* At this point the test has loaded the alias chain over the installed chain.
+     * This test sends `SET_CERTIFICATE` with the same immutable chain, so the new
      * buffer should be the same as the original one.
      */
     assert_memory_equal(installed_chain, orig_alias_chain, orig_alias_chain_size);
