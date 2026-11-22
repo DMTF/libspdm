@@ -12,10 +12,10 @@
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 
 uint8_t m_libspdm_test_message_header;
-static uint8_t m_libspdm_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
-static uint8_t m_libspdm_dummy_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
+static uint8_t m_libspdm_placeholder_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
+static uint8_t m_libspdm_placeholder_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
 
-static void libspdm_secured_message_set_dummy_finished_key(void *spdm_secured_message_context)
+static void libspdm_secured_message_set_placeholder_finished_key(void *spdm_secured_message_context)
 {
 }
 
@@ -167,22 +167,22 @@ void libspdm_test_requester_psk_finish_case1(void **State)
                                               LIBSPDM_SESSION_STATE_HANDSHAKING);
 
     libspdm_set_mem(
-        m_libspdm_dummy_key_buffer,
+        m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size,
         (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size);
     libspdm_set_mem(
-        m_libspdm_dummy_salt_buffer,
+        m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size,
         (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key(session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key(session_info->secured_message_context);
     libspdm_send_receive_psk_finish(spdm_context, session_id);
     free(data);
     libspdm_reset_message_f(spdm_context, session_info);
@@ -245,22 +245,22 @@ void libspdm_test_requester_psk_finish_case2(void **State)
                                               LIBSPDM_SESSION_STATE_HANDSHAKING);
 
     libspdm_set_mem(
-        m_libspdm_dummy_key_buffer,
+        m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size,
         (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size);
     libspdm_set_mem(
-        m_libspdm_dummy_salt_buffer,
+        m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size,
         (uint8_t)(0xFF));
     libspdm_secured_message_set_response_handshake_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->handshake_secret.response_handshake_sequence_number = 0;
-    libspdm_secured_message_set_dummy_finished_key(session_info->secured_message_context);
+    libspdm_secured_message_set_placeholder_finished_key(session_info->secured_message_context);
     libspdm_send_receive_psk_finish(spdm_context, session_id);
     free(data);
     libspdm_reset_message_f(spdm_context, session_info);

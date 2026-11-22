@@ -12,8 +12,8 @@
 #if (LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP) && \
     ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP))
 
-static uint8_t m_libspdm_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
-static uint8_t m_libspdm_dummy_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
+static uint8_t m_libspdm_placeholder_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
+static uint8_t m_libspdm_placeholder_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
 
 void libspdm_secured_message_set_response_data_encryption_key(void *spdm_secured_message_context,
                                                               const void *key, size_t key_size)
@@ -162,18 +162,18 @@ void libspdm_test_requester_heartbeat_case1(void **State)
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     libspdm_set_mem(
-        m_libspdm_dummy_key_buffer,
+        m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size,
         (uint8_t)(0xFF));
     libspdm_secured_message_set_response_data_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size);
     libspdm_set_mem(
-        m_libspdm_dummy_salt_buffer,
+        m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size,
         (uint8_t)(0xFF));
     libspdm_secured_message_set_response_data_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->application_secret.response_data_sequence_number = 0;
@@ -238,18 +238,18 @@ void libspdm_test_requester_heartbeat_case2(void **State)
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     libspdm_set_mem(
-        m_libspdm_dummy_key_buffer,
+        m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size,
         (uint8_t)(0xFF));
     libspdm_secured_message_set_response_data_encryption_key(
-        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_key_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size);
     libspdm_set_mem(
-        m_libspdm_dummy_salt_buffer,
+        m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size,
         (uint8_t)(0xFF));
     libspdm_secured_message_set_response_data_salt(
-        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        session_info->secured_message_context, m_libspdm_placeholder_salt_buffer,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size);
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->application_secret.response_data_sequence_number = 0;

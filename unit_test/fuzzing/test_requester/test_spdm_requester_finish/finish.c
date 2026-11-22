@@ -11,7 +11,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
+uint8_t m_placeholder_buffer[LIBSPDM_MAX_HASH_SIZE];
 uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
 
 void libspdm_secured_message_set_response_finished_key(void *spdm_secured_message_context,
@@ -129,9 +129,9 @@ void libspdm_test_send_receive_finish_case1(void **State)
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
     session_info->peer_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem(m_placeholder_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_response_finished_key(session_info->secured_message_context,
-                                                      m_dummy_buffer, hash_size);
+                                                      m_placeholder_buffer, hash_size);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_HANDSHAKING);
 
@@ -214,9 +214,9 @@ void libspdm_test_send_receive_finish_case2(void **State)
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
     session_info->peer_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem(m_placeholder_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_response_finished_key(session_info->secured_message_context,
-                                                      m_dummy_buffer, hash_size);
+                                                      m_placeholder_buffer, hash_size);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_HANDSHAKING);
 
@@ -311,9 +311,9 @@ void libspdm_test_send_receive_finish_case3(void **State)
                               SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT, false);
     session_info->peer_used_cert_chain_slot_id = 0;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem(m_placeholder_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_response_finished_key(session_info->secured_message_context,
-                                                      m_dummy_buffer, hash_size);
+                                                      m_placeholder_buffer, hash_size);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_HANDSHAKING);
     session_info->mut_auth_requested = 1;

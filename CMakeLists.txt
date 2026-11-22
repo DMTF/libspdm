@@ -984,7 +984,7 @@ else()
             (CMAKE_SYSTEM_NAME MATCHES "Linux" AND ARCH STREQUAL "aarch64") OR
             (CMAKE_SYSTEM_NAME MATCHES "Linux" AND ARCH STREQUAL "loongarch64"))
                 add_subdirectory(os_stub/cryptlib_null)
-                add_subdirectory(unit_test/test_size/cryptstublib_dummy)
+                add_subdirectory(unit_test/test_size/cryptstublib_null)
                 add_subdirectory(unit_test/test_size/intrinsiclib)
                 add_subdirectory(unit_test/test_size/malloclib_null)
                 add_subdirectory(unit_test/test_size/malloclib_simple)

@@ -370,7 +370,7 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
         supported_algorithms = (spdm_supported_algorithms_block_t *)(
             (uint8_t *)spdm_response + sizeof(spdm_capabilities_response_t));
 
-        /* Block length sanity: must cover at least the fixed part and not exceed response. */
+        /* Block length check: must cover at least the fixed part and not exceed response. */
         if (supported_algorithms->length < sizeof(spdm_supported_algorithms_block_t)) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;

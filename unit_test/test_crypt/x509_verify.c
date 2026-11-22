@@ -896,7 +896,7 @@ bool libspdm_validate_crypt_x509_verify_cert_chain_pathlen_constraints(void)
 
     libspdm_my_print("\nCrypto X509 verify_cert_chain pathLenConstraint Testing:\n");
 
-    /* Sanity: inter is legitimately signed by the root. */
+    /* Precondition: inter is legitimately signed by the root. */
     libspdm_my_print("- inter signed by root ... ");
     status = libspdm_x509_verify_cert(m_pathlen_inter_cert, sizeof(m_pathlen_inter_cert),
                                       m_pathlen_root_cert, sizeof(m_pathlen_root_cert));
@@ -906,7 +906,7 @@ bool libspdm_validate_crypt_x509_verify_cert_chain_pathlen_constraints(void)
     }
     libspdm_my_print("[Pass]\n");
 
-    /* Sanity: leaf is legitimately signed by inter. */
+    /* Precondition: leaf is legitimately signed by inter. */
     libspdm_my_print("- leaf signed by inter ... ");
     status = libspdm_x509_verify_cert(m_pathlen_leaf_cert, sizeof(m_pathlen_leaf_cert),
                                       m_pathlen_inter_cert, sizeof(m_pathlen_inter_cert));
@@ -1071,7 +1071,7 @@ bool libspdm_validate_crypt_x509_verify_cert_chain_name_constraints(void)
 
     libspdm_my_print("\nCrypto X509 verify_cert_chain nameConstraints Testing:\n");
 
-    /* Sanity: inter is legitimately signed by the root. */
+    /* Precondition: inter is legitimately signed by the root. */
     libspdm_my_print("- inter signed by root ... ");
     status = libspdm_x509_verify_cert(m_nc_inter_cert, sizeof(m_nc_inter_cert),
                                       m_nc_root_cert, sizeof(m_nc_root_cert));
@@ -1081,7 +1081,7 @@ bool libspdm_validate_crypt_x509_verify_cert_chain_name_constraints(void)
     }
     libspdm_my_print("[Pass]\n");
 
-    /* Sanity: leaf is legitimately signed by inter. */
+    /* Precondition: leaf is legitimately signed by inter. */
     libspdm_my_print("- leaf signed by inter ... ");
     status = libspdm_x509_verify_cert(m_nc_leaf_cert, sizeof(m_nc_leaf_cert),
                                       m_nc_inter_cert, sizeof(m_nc_inter_cert));
