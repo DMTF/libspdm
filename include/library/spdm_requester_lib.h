@@ -951,6 +951,7 @@ libspdm_return_t libspdm_set_certificate(void *spdm_context,
  *                          If the cert_chain is NULL, the cert_chain_size must be 0.
  * @param  request_attribute Set certificate request attributes. This field is only used for SPDM 1.3 and above.
  *                          And the bit[0~3] of request_attribute must be 0.
+ *                          SetCertModel GenericCert is not allowed for slot 0.
  * @param  key_pair_id      The value of this field shall be the unique key pair number identifying the desired
  *                          asymmetric key pair to associate with SlotID .
  **/

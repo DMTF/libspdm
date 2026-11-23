@@ -605,6 +605,48 @@ static void req_set_certificate_case9(void **state)
     free(data);
 }
 
+/**
+ * Test 10: Set MULTI_KEY_CONN_RSP = true, Erase = false, and SetCertModel = GenericCert for slot 0.
+ * The generic certificate model applies only to slots greater than slot 0.
+ * Expected Behavior: function returns LIBSPDM_STATUS_INVALID_PARAMETER.
+ **/
+static void req_set_certificate_case10(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    void *data;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xA;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo,
+                                                         &data, &data_size, NULL, NULL)) {
+        assert_true(false);
+        return;
+    }
+
+    status = libspdm_set_certificate_ex(spdm_context, NULL, 0, data, data_size,
+                                        (SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT <<
+                                         SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_OFFSET),
+                                        1);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
+
+    free(data);
+}
+
 int libspdm_req_set_certificate_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -622,6 +664,8 @@ int libspdm_req_set_certificate_test(void)
         cmocka_unit_test(req_set_certificate_case7),
         cmocka_unit_test(req_set_certificate_case8),
         cmocka_unit_test(req_set_certificate_case9),
+        /* SetCertModel = GenericCert for slot 0 */
+        cmocka_unit_test(req_set_certificate_case10),
     };
 
     libspdm_test_context_t test_context = {

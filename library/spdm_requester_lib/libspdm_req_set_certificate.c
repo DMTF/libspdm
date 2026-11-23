@@ -75,7 +75,9 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
             }
             if ((request_attribute & SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_ERASE) == 0) {
                 if ((set_cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) ||
-                    (set_cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+                    (set_cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) ||
+                    ((slot_id == 0) &&
+                     (set_cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT))) {
                     return LIBSPDM_STATUS_INVALID_PARAMETER;
                 }
             }

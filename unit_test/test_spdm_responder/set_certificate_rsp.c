@@ -1324,6 +1324,92 @@ static void rsp_set_certificate_rsp_case14(void **state)
     free(cert_chain_b);
 }
 
+/**
+ * Test 15: MULTI_KEY_CONN_RSP = true, Erase = false, and SetCertModel = GenericCert for slot 0. The
+ * generic certificate model applies only to slots greater than slot 0.
+ * Expected Behavior: produces SPDM_ERROR_CODE_INVALID_REQUEST message.
+ **/
+static void rsp_set_certificate_rsp_case15(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_set_certificate_response_t *spdm_response;
+    void *cert_chain;
+    size_t cert_chain_size;
+    spdm_set_certificate_request_t *m_libspdm_set_certificate_request;
+    const void *old_cert_chain;
+    size_t old_cert_chain_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xf;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+
+    old_cert_chain = spdm_context->local_context.local_cert_chain_provision[0];
+    old_cert_chain_size = spdm_context->local_context.local_cert_chain_provision_size[0];
+
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &cert_chain,
+                                                         &cert_chain_size, NULL, NULL)) {
+        assert_true(false);
+        return;
+    }
+
+    m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
+                                               cert_chain_size);
+
+    m_libspdm_set_certificate_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_set_certificate_request->header.request_response_code = SPDM_SET_CERTIFICATE;
+    /* SlotID 0, KeyPairID 1. */
+    m_libspdm_set_certificate_request->header.param1 =
+        SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT <<
+            SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_OFFSET;
+    m_libspdm_set_certificate_request->header.param2 = 1;
+
+    libspdm_copy_mem(m_libspdm_set_certificate_request + 1,
+                     cert_chain_size,
+                     (uint8_t *)cert_chain, cert_chain_size);
+
+    size_t m_libspdm_set_certificate_request_size = sizeof(spdm_set_certificate_request_t) +
+                                                    cert_chain_size;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_certificate(spdm_context,
+                                                  m_libspdm_set_certificate_request_size,
+                                                  m_libspdm_set_certificate_request,
+                                                  &response_size, response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    /* Slot 0 is unchanged. */
+    assert_ptr_equal(spdm_context->local_context.local_cert_chain_provision[0], old_cert_chain);
+    assert_int_equal(spdm_context->local_context.local_cert_chain_provision_size[0],
+                     old_cert_chain_size);
+
+    spdm_context->connection_info.multi_key_conn_rsp = false;
+    free(cert_chain);
+    free(m_libspdm_set_certificate_request);
+}
+
 int libspdm_rsp_set_certificate_rsp_test(void)
 {
     const struct CMUnitTest test_cases[] = {
@@ -1352,6 +1438,8 @@ int libspdm_rsp_set_certificate_rsp_test(void)
         cmocka_unit_test(rsp_set_certificate_rsp_case12),
         cmocka_unit_test(rsp_set_certificate_rsp_case13),
         cmocka_unit_test(rsp_set_certificate_rsp_case14),
+        /* SetCertModel = GenericCert for slot 0 */
+        cmocka_unit_test(rsp_set_certificate_rsp_case15),
     };
 
     libspdm_test_context_t test_context = {
