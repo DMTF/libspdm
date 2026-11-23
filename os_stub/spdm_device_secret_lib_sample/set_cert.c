@@ -119,6 +119,7 @@ bool libspdm_update_local_cert_chain(
     void *spdm_context,
     const uint32_t *session_id,
     uint8_t slot_id,
+    uint8_t key_pair_id,
     uint32_t base_hash_algo,
     uint32_t base_asym_algo,
     uint32_t pqc_asym_algo,
@@ -290,6 +291,12 @@ set_cert:
     if (status != LIBSPDM_STATUS_SUCCESS) {
         free(new_buffer);
         return false;
+    }
+
+    if (key_pair_id != 0) {
+        status = libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_KEY_PAIR_ID,
+                                  &parameter, &key_pair_id, sizeof(key_pair_id));
+        LIBSPDM_ASSERT(status == LIBSPDM_STATUS_SUCCESS);
     }
 
     /* libspdm no longer refers to the chain that was installed here before. */

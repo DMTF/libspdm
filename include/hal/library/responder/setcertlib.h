@@ -63,6 +63,10 @@ extern uint32_t libspdm_get_cert_chain_slot_storage_size(
  * chain and update `LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN` to
  * use the new chain in libspdm.
  *
+ * If key_pair_id is not 0 then the Requester asks for the key pair identified by key_pair_id to be
+ * associated with slot_id. If a reset is not required, the implementation should also update
+ * `LIBSPDM_DATA_LOCAL_KEY_PAIR_ID` for slot_id.
+ *
  * After which the old certificate chain can be freed. libspdm can't handle this
  * itself as it might require allocation, which is why the HAL must handle this.
  *
@@ -76,6 +80,8 @@ extern uint32_t libspdm_get_cert_chain_slot_storage_size(
  * @param[in]      session_id       Indicates the session in which the request was received.
  *                                  If NULL then the request was not received in a session.
  * @param[in]      slot_id          The slot id of the certificate chain.
+ * @param[in]      key_pair_id      The KeyPairID from the request, or 0 if MULTI_KEY_CONN_RSP is
+ *                                  false.
  * @param[in]      base_hash_algo   The negotiated base hash algorithm
  *                                  (SPDM_ALGORITHMS_BASE_HASH_ALGO_*). May be
  *                                  used by the HAL when (re)computing root
@@ -117,6 +123,7 @@ extern bool libspdm_update_local_cert_chain(
     void *spdm_context,
     const uint32_t *session_id,
     uint8_t slot_id,
+    uint8_t key_pair_id,
     uint32_t base_hash_algo,
     uint32_t base_asym_algo,
     uint32_t pqc_asym_algo,
