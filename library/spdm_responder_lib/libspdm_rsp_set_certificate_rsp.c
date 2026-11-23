@@ -190,7 +190,9 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
             }
             if (!erase) {
                 if ((set_cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) ||
-                    (set_cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+                    (set_cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) ||
+                    ((slot_id == 0) &&
+                     (set_cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT))) {
                     return libspdm_generate_error_response(spdm_context,
                                                            SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                            response_size, response);
