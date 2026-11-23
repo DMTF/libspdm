@@ -237,6 +237,7 @@ libspdm_return_t libspdm_handle_error_large_response(
     size_t large_response_size_so_far;
     uint64_t max_chunk_data_transfer_size;
     size_t min_large_response_size;
+    bool is_last_chunk;
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -292,6 +293,7 @@ libspdm_return_t libspdm_handle_error_large_response(
     large_response_size = 0;
     large_response_size_so_far = 0;
     chunk_seq_no = 0;
+    is_last_chunk = false;
 
     /* Mark that a CHUNK_GET transfer is in progress so that the response to a CHUNK_GET is not
      * itself dispatched back into this handler by libspdm_receive_spdm_response. Per spec the
@@ -473,16 +475,18 @@ libspdm_return_t libspdm_handle_error_large_response(
                          chunk_ptr, spdm_response->chunk_size);
 
         large_response_size_so_far += spdm_response->chunk_size;
+        is_last_chunk =
+            (spdm_response->header.param1 & SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK) != 0;
 
         chunk_seq_no++;
 
     } while (LIBSPDM_STATUS_IS_SUCCESS(status)
              && large_response_size_so_far < large_response_size
-             && !(spdm_response->header.param1 & SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK));
+             && !is_last_chunk);
 
 
     if (LIBSPDM_STATUS_IS_SUCCESS(status)) {
-        if (large_response_size_so_far != large_response_size) {
+        if (!is_last_chunk || (large_response_size_so_far != large_response_size)) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         } else if (large_response_size <= response_capacity) {
             libspdm_copy_mem(inout_response, response_capacity,

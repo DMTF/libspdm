@@ -1645,6 +1645,8 @@ static void rsp_chunk_send_ack_case17(void** state)
 
 /**
  * Test 18: Request missing LAST_CHUNK after all bytes transferred.
+ * Expected Behavior: the Responder rejects the chunk with EarlyErrorDetected and
+ * ERROR(InvalidRequest), and ends the transfer.
  **/
 static void rsp_chunk_send_ack_case18(void** state)
 {
@@ -1666,16 +1668,25 @@ static void rsp_chunk_send_ack_case18(void** state)
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
 
+    void *scratch_buffer;
+    size_t scratch_buffer_size;
+
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 18;
 
     libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
+
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+
     spdm_context->chunk_context.send.chunk_in_use = true;
     spdm_context->chunk_context.send.chunk_handle = (uint8_t) spdm_test_context->case_id;
     spdm_context->chunk_context.send.chunk_seq_no = 0;
+    spdm_context->chunk_context.send.large_message =
+        (uint8_t *)scratch_buffer + libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    spdm_context->chunk_context.send.large_message_capacity =
+        libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
     spdm_context->chunk_context.send.large_message_size = 1024;
-    spdm_context->chunk_context.send.chunk_bytes_transferred = 1022;
 
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
@@ -1686,8 +1697,14 @@ static void rsp_chunk_send_ack_case18(void** state)
     chunk_send_request->header.request_response_code = SPDM_CHUNK_SEND;
     chunk_send_request->header.param1 = 0;
     chunk_send_request->header.param2 = (uint8_t) spdm_test_context->case_id; /* chunk_handle */
-    chunk_send_request->chunk_seq_no = 0;
-    chunk_send_request->chunk_size = 2;
+    chunk_send_request->chunk_seq_no = 1;
+    chunk_send_request->chunk_size =
+        spdm_context->local_context.capability.data_transfer_size
+        - sizeof(spdm_chunk_send_request_t);
+
+    /* The chunk carries the final bytes of the large message. */
+    spdm_context->chunk_context.send.chunk_bytes_transferred =
+        spdm_context->chunk_context.send.large_message_size - chunk_send_request->chunk_size;
 
     chunk_dst = ((uint8_t*) (chunk_send_request + 1));
 
@@ -1716,6 +1733,9 @@ static void rsp_chunk_send_ack_case18(void** state)
     assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(error_response->header.param2, 0);
+
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+    assert_null(spdm_context->chunk_context.send.large_message);
 
     libspdm_test_responder_chunk_send_ack_reset_send_state(spdm_context);
 }
@@ -2399,6 +2419,189 @@ static void rsp_chunk_send_ack_case25(void** state)
     libspdm_test_responder_chunk_send_ack_reset_send_state(spdm_context);
 }
 
+/**
+ * Test 26: the first CHUNK_SEND carries all of a large NEGOTIATE_ALGORITHMS request, with LastChunk
+ * clear.
+ * Expected Behavior: the Responder rejects the chunk with EarlyErrorDetected and
+ * ERROR(InvalidRequest), and does not process the request.
+ **/
+static void rsp_chunk_send_ack_case26(void** state)
+{
+    libspdm_return_t status;
+
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+
+    size_t request_size;
+    size_t response_size;
+
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+
+    spdm_chunk_send_request_t* chunk_send_request;
+    spdm_chunk_send_ack_response_t* chunk_send_ack_response;
+    spdm_error_response_t* error_response;
+
+    uint8_t* chunk_dst;
+    uint32_t bytes_total;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 26;
+
+    libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
+
+    bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
+
+    /* The first CHUNK_SEND has room for the whole request. */
+    spdm_context->local_context.capability.data_transfer_size =
+        sizeof(spdm_chunk_send_request_t) + sizeof(uint32_t) + bytes_total;
+
+    libspdm_zero_mem(request, sizeof(request));
+    chunk_send_request = (spdm_chunk_send_request_t*) request;
+
+    chunk_send_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    chunk_send_request->header.request_response_code = SPDM_CHUNK_SEND;
+    chunk_send_request->header.param1 = 0;
+    chunk_send_request->header.param2 = (uint8_t) spdm_test_context->case_id; /* chunk_handle */
+    chunk_send_request->chunk_seq_no = 0;
+    chunk_send_request->chunk_size = bytes_total;
+
+    libspdm_write_uint32((uint8_t*) (chunk_send_request + 1), bytes_total);
+    chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
+
+    request_size = sizeof(spdm_chunk_send_request_t)
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size;
+
+    libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
+                     &m_libspdm_chunk_send_negotiate_algorithm_request1,
+                     chunk_send_request->chunk_size);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_chunk_send(
+        spdm_context,
+        request_size, request,
+        &response_size, response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
+                + sizeof(spdm_error_response_t));
+
+    chunk_send_ack_response = (spdm_chunk_send_ack_response_t*) response;
+    assert_int_equal(chunk_send_ack_response->header.param1,
+                     SPDM_CHUNK_SEND_ACK_RESPONSE_ATTRIBUTE_EARLY_ERROR_DETECTED);
+
+    error_response = (spdm_error_response_t*) (chunk_send_ack_response + 1);
+    assert_int_equal(error_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(error_response->header.param2, 0);
+
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+    /* NEGOTIATE_ALGORITHMS was not processed. */
+    assert_int_equal(spdm_context->connection_info.connection_state,
+                     LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES);
+}
+
+/* Sends a CHUNK_SEND with ChunkSize 0 and the given attributes partway through a large message,
+ * and checks that the Responder rejects it and ends the transfer. */
+static void rsp_chunk_send_ack_empty_chunk(void** state, uint32_t case_id, uint8_t attributes)
+{
+    libspdm_return_t status;
+
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+
+    size_t request_size;
+    size_t response_size;
+
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+
+    spdm_chunk_send_request_t* chunk_send_request;
+    spdm_chunk_send_ack_response_t* chunk_send_ack_response;
+    spdm_error_response_t* error_response;
+
+    void *scratch_buffer;
+    size_t scratch_buffer_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = case_id;
+
+    libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
+
+    libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+
+    /* Half of a 1024-byte large message has been received in the first chunk. */
+    spdm_context->chunk_context.send.chunk_in_use = true;
+    spdm_context->chunk_context.send.chunk_handle = (uint8_t) case_id;
+    spdm_context->chunk_context.send.chunk_seq_no = 0;
+    spdm_context->chunk_context.send.large_message =
+        (uint8_t *)scratch_buffer + libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    spdm_context->chunk_context.send.large_message_capacity =
+        libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
+    spdm_context->chunk_context.send.large_message_size = 1024;
+    spdm_context->chunk_context.send.chunk_bytes_transferred = 512;
+
+    libspdm_zero_mem(request, sizeof(request));
+    chunk_send_request = (spdm_chunk_send_request_t*) request;
+
+    chunk_send_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    chunk_send_request->header.request_response_code = SPDM_CHUNK_SEND;
+    chunk_send_request->header.param1 = attributes;
+    chunk_send_request->header.param2 = (uint8_t) case_id; /* chunk_handle */
+    chunk_send_request->chunk_seq_no = 1;
+    chunk_send_request->chunk_size = 0;
+
+    request_size = sizeof(spdm_chunk_send_request_t);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_chunk_send(
+        spdm_context,
+        request_size, request,
+        &response_size, response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
+                + sizeof(spdm_error_response_t));
+
+    chunk_send_ack_response = (spdm_chunk_send_ack_response_t*) response;
+    assert_int_equal(chunk_send_ack_response->header.param1,
+                     SPDM_CHUNK_SEND_ACK_RESPONSE_ATTRIBUTE_EARLY_ERROR_DETECTED);
+
+    error_response = (spdm_error_response_t*) (chunk_send_ack_response + 1);
+    assert_int_equal(error_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(error_response->header.param2, 0);
+
+    assert_false(spdm_context->chunk_context.send.chunk_in_use);
+    assert_null(spdm_context->chunk_context.send.large_message);
+
+    libspdm_test_responder_chunk_send_ack_reset_send_state(spdm_context);
+}
+
+/**
+ * Test 27: a CHUNK_SEND with ChunkSize 0 and LastChunk clear, partway through a large message.
+ * Expected Behavior: the Responder rejects the chunk with EarlyErrorDetected and
+ * ERROR(InvalidRequest), and ends the transfer.
+ **/
+static void rsp_chunk_send_ack_case27(void** state)
+{
+    rsp_chunk_send_ack_empty_chunk(state, 27, 0);
+}
+
+/**
+ * Test 28: a CHUNK_SEND with ChunkSize 0 and LastChunk set, partway through a large message.
+ * Expected Behavior: the Responder rejects the chunk with EarlyErrorDetected and
+ * ERROR(InvalidRequest), and ends the transfer.
+ **/
+static void rsp_chunk_send_ack_case28(void** state)
+{
+    rsp_chunk_send_ack_empty_chunk(state, 28, SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK);
+}
 
 int libspdm_rsp_chunk_send_ack_test(void)
 {
@@ -2462,6 +2665,11 @@ int libspdm_rsp_chunk_send_ack_test(void)
         cmocka_unit_test(rsp_chunk_send_ack_case24),
         /* First CHUNK_SEND of a request larger than 65532 bytes, with a DataTransferSize of 65549 */
         cmocka_unit_test(rsp_chunk_send_ack_case25),
+        /* First request carries the whole large message */
+        cmocka_unit_test(rsp_chunk_send_ack_case26),
+        /* Request has ChunkSize 0, with LastChunk clear and then set */
+        cmocka_unit_test(rsp_chunk_send_ack_case27),
+        cmocka_unit_test(rsp_chunk_send_ack_case28),
     };
 
     libspdm_test_context_t test_context = {
