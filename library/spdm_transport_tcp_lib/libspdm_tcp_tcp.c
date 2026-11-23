@@ -5,7 +5,7 @@
  **/
 
 #include "library/spdm_transport_tcp_lib.h"
-#include "internal/libspdm_common_lib.h"
+#include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 #include "industry_standard/spdm_tcp_binding.h"
 

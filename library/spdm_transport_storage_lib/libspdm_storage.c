@@ -6,7 +6,6 @@
 
 #include "library/spdm_transport_storage_lib.h"
 #include "industry_standard/spdm_storage_binding.h"
-#include "internal/libspdm_common_lib.h"
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 

@@ -6,7 +6,6 @@
 
 #include "library/spdm_transport_mctp_lib.h"
 #include "industry_standard/mctp.h"
-#include "internal/libspdm_common_lib.h"
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 
