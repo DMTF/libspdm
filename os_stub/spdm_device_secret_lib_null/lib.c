@@ -267,6 +267,7 @@ bool libspdm_update_local_cert_chain(
     void *spdm_context,
     const uint32_t *session_id,
     uint8_t slot_id,
+    uint8_t key_pair_id,
     uint32_t base_hash_algo,
     uint32_t base_asym_algo,
     uint32_t pqc_asym_algo,
