@@ -4637,9 +4637,9 @@ static void send_signed_finish(libspdm_context_t *spdm_context, void *local_cert
     session_info->peer_used_cert_chain_slot_id = 0;
     session_info->mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_set_mem(m_placeholder_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_request_finished_key(
-        session_info->secured_message_context, m_dummy_buffer, hash_size);
+        session_info->secured_message_context, m_placeholder_buffer, hash_size);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context, LIBSPDM_SESSION_STATE_HANDSHAKING);
 

@@ -1164,7 +1164,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
 
     /* Out-of-range slot id. */
     tmp_cert_size = cert_chain_a_size;
-    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, SPDM_MAX_SLOT_COUNT, 0,
+    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0, SPDM_MAX_SLOT_COUNT, 0,
                                                  m_libspdm_use_hash_algo,
                                                  m_libspdm_use_asym_algo,
                                                  0,
@@ -1178,7 +1178,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
     g_set_cert_is_busy = true;
     is_busy = false;
     tmp_cert_size = sizeof(spdm_cert_chain_t) + hash_size - 1;
-    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0, 0,
                                                  m_libspdm_use_hash_algo,
                                                  m_libspdm_use_asym_algo,
                                                  0,
@@ -1192,7 +1192,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
     assert_false(is_busy);
     /* Unsupported cert_model. */
     tmp_cert_size = cert_chain_a_size;
-    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0, 0,
                                                  m_libspdm_use_hash_algo,
                                                  m_libspdm_use_asym_algo,
                                                  0,
@@ -1206,7 +1206,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
 
     /* Device Cert, empty slot*/
     tmp_cert_size = cert_chain_a_size;
-    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0, 0,
                                                 m_libspdm_use_hash_algo,
                                                 m_libspdm_use_asym_algo,
                                                 0,
@@ -1227,7 +1227,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
 
     /* Device Cert, replace chain*/
     tmp_cert_size = cert_chain_b_size;
-    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0, 0,
                                                 m_libspdm_use_hash_algo,
                                                 m_libspdm_use_asym_algo,
                                                 0,
@@ -1250,7 +1250,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
     assert_int_equal(rsp_set_certificate_nvm_file_size(0),
                      cert_chain_b_size - sizeof(spdm_cert_chain_t) - hash_size);
     tmp_cert_size = cert_chain_a_size;
-    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0, 0,
                                                  m_libspdm_use_hash_algo,
                                                  m_libspdm_use_asym_algo,
                                                  0,
@@ -1265,7 +1265,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
 
     /* A shorter chain must not leave the tail of the old chain in NVM. */
     tmp_cert_size = sizeof(spdm_cert_chain_t) + hash_size + 16;
-    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0, 0,
                                                 m_libspdm_use_hash_algo,
                                                 m_libspdm_use_asym_algo,
                                                 0,
@@ -1291,7 +1291,7 @@ static void rsp_set_certificate_rsp_case14(void **state)
                     &alias_chain, &alias_chain_size, NULL, NULL));
 
     tmp_cert_size = alias_chain_size;
-    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0, 0,
                                                 m_libspdm_use_hash_algo,
                                                 m_libspdm_use_asym_algo,
                                                 0,

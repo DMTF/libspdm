@@ -118,6 +118,7 @@ static uint8_t *m_libspdm_installed_cert_chain[SPDM_MAX_SLOT_COUNT];
 bool libspdm_update_local_cert_chain(
     void *spdm_context,
     const uint32_t *session_id,
+    uint8_t bank_id,
     uint8_t slot_id,
     uint8_t key_pair_id,
     uint32_t base_hash_algo,
