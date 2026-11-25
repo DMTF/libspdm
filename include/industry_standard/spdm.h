@@ -16,6 +16,7 @@
 /* Encompasses SPDM specification versions 1.0, 1.1, 1.2, 1.3, 1.4 */
 #define SPDM_MAX_VERSION_COUNT 5
 #define SPDM_MAX_SLOT_COUNT 8
+#define SPDM_MAX_BANK_COUNT 240
 #define SPDM_MAX_OPAQUE_DATA_SIZE 1024
 #define SPDM_MAX_CSR_TRACKING_TAG 7
 /* MeasurementRecordLength is 3 bytes. */
@@ -1823,6 +1824,188 @@ typedef struct {
 #define SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION 0
 #define SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION 1
 #define SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION 2
+
+/* SPDM SLOT_MANAGEMENT request */
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == SubCode
+     * param2 == RSVD*/
+    uint16_t mgmt_struct_offset;
+    uint16_t reserved;
+    /* uint8_t slot_mgmt_req_struct[]; (SubCode dependent, at mgmt_struct_offset) */
+} spdm_slot_management_request_t;
+
+/* SPDM SLOT_MANAGEMENT_RESP response */
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == SubCode
+     * param2 == RSVD*/
+    uint16_t mgmt_struct_offset;
+    uint16_t reserved;
+    /* uint8_t slot_mgmt_resp_struct[]; (SubCode dependent, at mgmt_struct_offset) */
+} spdm_slot_management_response_t;
+
+/* SPDM SLOT_MANAGEMENT SubCodes */
+#define SPDM_SLOT_MANAGEMENT_SUBCODE_SUPPORTED_SUBCODES 0x00
+#define SPDM_SLOT_MANAGEMENT_SUBCODE_GET_BANK_INFO 0x01
+#define SPDM_SLOT_MANAGEMENT_SUBCODE_GET_BANK_DETAILS 0x02
+#define SPDM_SLOT_MANAGEMENT_SUBCODE_GET_CERTIFICATE_CHAIN 0x03
+#define SPDM_SLOT_MANAGEMENT_SUBCODE_GET_CSR 0x04
+#define SPDM_SLOT_MANAGEMENT_SUBCODE_MANAGE_BANK 0x20
+#define SPDM_SLOT_MANAGEMENT_SUBCODE_MANAGE_SLOT 0x21
+#define SPDM_SLOT_MANAGEMENT_SUBCODE_SET_CERTIFICATE 0x22
+
+/* SPDM SLOT_MANAGEMENT SupportedSubCodes response structure */
+typedef struct {
+    uint16_t resp_length;
+    uint16_t reserved;
+    uint8_t sub_code_bitmap[8];
+    uint8_t reserved2[24];
+} spdm_slot_management_supported_subcodes_struct_t;
+
+/* SPDM SLOT_MANAGEMENT SlotAddress request structure (used by multiple SubCodes) */
+typedef struct {
+    uint16_t req_length;
+    uint16_t reserved;
+    uint8_t bank_id;
+    uint8_t slot_id;
+    uint16_t reserved2;
+} spdm_slot_management_slot_address_struct_t;
+
+/* For this version of the specification, ReqLength of SlotAddress shall be 8. */
+#define SPDM_SLOT_MANAGEMENT_SLOT_ADDRESS_REQ_LENGTH 8
+
+/* The slot_id field of SlotAddress carries the SlotID in bits [3:0]. */
+#define SPDM_SLOT_MANAGEMENT_SLOT_ID_MASK 0x0F
+
+/* BankIDs are numbered consecutively from 0 to a maximum of 239, so a Responder can have at
+ * most 240 Banks. */
+#define SPDM_MAX_BANK_COUNT 240
+
+/* SPDM SLOT_MANAGEMENT GetBankInfo response structures */
+typedef struct {
+    uint8_t element_length;
+    uint8_t bank_id;
+    uint8_t slot_mask;
+    uint8_t modifiable_slot_mask;
+} spdm_slot_management_bank_element_struct_t;
+
+/* For this version of the specification, ElementLength of BankElement shall be 4. */
+#define SPDM_SLOT_MANAGEMENT_BANK_ELEMENT_LENGTH 4
+
+typedef struct {
+    uint16_t resp_length;
+    uint16_t reserved;
+    uint8_t num_bank_elements;
+    uint8_t reserved2[3];
+    /* spdm_slot_management_bank_element_struct_t bank_elements[num_bank_elements]; */
+} spdm_slot_management_bank_info_struct_t;
+
+/* SPDM SLOT_MANAGEMENT GetBankDetails response structures */
+typedef struct {
+    uint16_t element_length;
+    uint8_t slot_id;
+    uint8_t reserved;
+    uint8_t slot_attributes;
+    uint8_t key_pair_id;
+    uint8_t certificate_info;
+    uint8_t reserved2;
+    uint16_t key_usage;
+    uint16_t reserved3;
+    uint32_t slot_size;
+    /* uint8_t digest[H]; */
+} spdm_slot_management_slot_element_struct_t;
+
+/* SlotElement attributes */
+#define SPDM_SLOT_MANAGEMENT_SLOT_ATTRIBUTE_PROVISIONED 0x01
+#define SPDM_SLOT_MANAGEMENT_SLOT_ATTRIBUTE_WRITE_PROTECTED 0x02
+
+typedef struct {
+    uint16_t resp_length;
+    uint8_t bank_id;
+    uint8_t reserved;
+    uint16_t num_slot_elements;
+    uint8_t bank_attributes;
+    uint8_t reserved2;
+    uint32_t asym_algo_capabilities;
+    uint32_t current_asym_algo;
+    uint32_t available_asym_algo;
+    /* uint8_t pqc_asym_algo_cap_len;
+     * uint8_t pqc_asym_algo_capabilities[pqc_asym_algo_cap_len];
+     * uint8_t current_pqc_asym_algo_len;
+     * uint8_t current_pqc_asym_algo[current_pqc_asym_algo_len];
+     * uint8_t available_pqc_asym_algo_len;
+     * uint8_t available_pqc_asym_algo[available_pqc_asym_algo_len];
+     * uint8_t reserved3[4];
+     * spdm_slot_management_slot_element_struct_t slot_elements[num_slot_elements]; */
+} spdm_slot_management_bank_details_struct_t;
+
+/* BankDetails attributes */
+#define SPDM_SLOT_MANAGEMENT_BANK_ATTRIBUTE_SELECTED 0x01
+#define SPDM_SLOT_MANAGEMENT_BANK_ATTRIBUTE_CONFIG_ALGO 0x02
+
+/* SPDM SLOT_MANAGEMENT GetCertificateChain response structure */
+typedef struct {
+    uint32_t cc_length;
+    uint32_t reserved;
+    /* uint8_t cert_chain[cc_length]; */
+} spdm_slot_management_get_certificate_chain_struct_t;
+
+/* SPDM SLOT_MANAGEMENT ManageBank request structure (no response structure) */
+typedef struct {
+    spdm_slot_management_slot_address_struct_t slot_address;
+    uint8_t operation;
+    uint8_t reserved[3];
+    uint32_t select_asym_algo;
+    /* uint8_t select_pqc_asym_algo_len;
+     * uint8_t select_pqc_asym_algo[select_pqc_asym_algo_len]; */
+} spdm_slot_management_manage_bank_struct_t;
+
+/* ManageBank operation */
+#define SPDM_SLOT_MANAGEMENT_MANAGE_BANK_OPERATION_CONFIG_ALGO 0x01
+
+/* SPDM SLOT_MANAGEMENT ManageSlot request structure (no response structure) */
+typedef struct {
+    spdm_slot_management_slot_address_struct_t slot_address;
+    uint8_t operation;
+    uint8_t reserved[3];
+} spdm_slot_management_manage_slot_struct_t;
+
+/* ManageSlot operation */
+#define SPDM_SLOT_MANAGEMENT_MANAGE_SLOT_OPERATION_ERASE 0x01
+
+/* SPDM SLOT_MANAGEMENT GetCSR request structure */
+typedef struct {
+    spdm_slot_management_slot_address_struct_t slot_address;
+    uint8_t key_pair_id;
+    uint8_t request_attributes;
+    uint16_t reserved;
+    uint16_t requester_info_length;
+    uint16_t opaque_data_length;
+    /* uint8_t requester_info[requester_info_length];
+     * uint8_t opaque_data[opaque_data_length]; */
+} spdm_slot_management_get_csr_struct_t;
+
+/* SPDM SLOT_MANAGEMENT CSR response structure */
+typedef struct {
+    uint32_t csr_length;
+    uint32_t reserved;
+    /* uint8_t csr[csr_length]; */
+} spdm_slot_management_csr_struct_t;
+
+/* SPDM SLOT_MANAGEMENT SetCertificate request structure (no response structure) */
+typedef struct {
+    spdm_slot_management_slot_address_struct_t slot_address;
+    uint32_t cert_length;
+    uint8_t cert_attributes;
+    uint8_t key_pair_id;
+    uint8_t reserved[2];
+    /* uint8_t certificate[cert_length]; */
+} spdm_slot_management_set_certificate_struct_t;
+
+/* SetCertificate attributes: Bit[2:0] is the certificate model (see SPDM_CERTIFICATE_INFO_
+ * CERT_MODEL_*). */
+#define SPDM_SLOT_MANAGEMENT_SET_CERTIFICATE_ATTRIBUTE_CERT_MODEL_MASK 0x07
 
 #pragma pack()
 

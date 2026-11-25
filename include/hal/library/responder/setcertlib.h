@@ -79,6 +79,7 @@ extern uint32_t libspdm_get_cert_chain_slot_storage_size(
  * @param[in,out]  spdm_context     A pointer to the SPDM context.
  * @param[in]      session_id       Indicates the session in which the request was received.
  *                                  If NULL then the request was not received in a session.
+ * @param[in]      bank_id          The bank id of the certificate chain.
  * @param[in]      slot_id          The slot id of the certificate chain.
  * @param[in]      key_pair_id      The KeyPairID from the request, or 0 if MULTI_KEY_CONN_RSP is
  *                                  false.
@@ -122,6 +123,7 @@ extern uint32_t libspdm_get_cert_chain_slot_storage_size(
 extern bool libspdm_update_local_cert_chain(
     void *spdm_context,
     const uint32_t *session_id,
+    uint8_t bank_id,
     uint8_t slot_id,
     uint8_t key_pair_id,
     uint32_t base_hash_algo,

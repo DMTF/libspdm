@@ -49,8 +49,8 @@ void libspdm_test_responder_certificate_case1(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
         data_size;
 
     response_size = sizeof(response);
@@ -91,8 +91,8 @@ void libspdm_test_responder_certificate_case2(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
         data_size;
 
     response_size = sizeof(response);
@@ -181,8 +181,8 @@ void libspdm_test_responder_certificate_case5(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
         data_size;
 
     response_size = sizeof(response);

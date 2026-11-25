@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2025 DMTF. All rights reserved.
+ *  Copyright 2021-2026 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -181,5 +181,9 @@ void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size);
 void libspdm_dump_data(const uint8_t *buffer, size_t buffer_size);
 
 void libspdm_dump_hex(const uint8_t *buffer, size_t buffer_size);
+
+void libspdm_test_provision_key_pair_info(void *spdm_context);
+
+void libspdm_test_free_key_pair_info(void *spdm_context);
 
 #endif

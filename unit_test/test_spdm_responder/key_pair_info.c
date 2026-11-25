@@ -43,6 +43,7 @@ static void rsp_key_pair_info_case1(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     key_pair_id = 4;
     public_key_info_len = sizeof(public_key_info_ecp256);
@@ -83,6 +84,7 @@ static void rsp_key_pair_info_case2(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     /* An SPDM endpoint shall contain KeyPairID s starting from 1 to TotalKeyPairs inclusive and without gaps.
      * KeyPairID is set to 0.*/
@@ -123,6 +125,7 @@ static void rsp_key_pair_info_case3(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     /* key_pair_id > total_key_pairs (0xFF exceeds any possible TotalKeyPairs) */
     key_pair_id = 0xFF;
@@ -163,6 +166,7 @@ static void rsp_key_pair_info_case4(void **state)
     /* not set KEY_PAIR_INFO*/
     spdm_context->local_context.capability.flags &=
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     key_pair_id = 1;
     m_libspdm_get_key_pair_info_request1.key_pair_id = key_pair_id;
@@ -211,6 +215,7 @@ static void rsp_key_pair_info_case5(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     key_pair_id = 4;
     public_key_info_len = sizeof(public_key_info_ecp256);

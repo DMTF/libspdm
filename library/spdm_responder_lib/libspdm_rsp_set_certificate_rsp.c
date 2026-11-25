@@ -10,7 +10,7 @@
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
 /*set_cert verify cert_chain*/
-static bool libspdm_set_cert_verify_certchain(
+bool libspdm_set_cert_verify_certchain(
     uint8_t spdm_version,
     const uint8_t *cert_chain, size_t cert_chain_size,
     uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
@@ -170,9 +170,9 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     old_local_cert_chain =
-        spdm_context->local_context.local_cert_chain_provision[slot_id];
+        spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][slot_id];
     old_local_cert_chain_size =
-        spdm_context->local_context.local_cert_chain_provision_size[slot_id];
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][slot_id];
 
     key_pair_id = 0;
     if (spdm_version >= SPDM_MESSAGE_VERSION_13) {
@@ -241,6 +241,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         result = libspdm_update_local_cert_chain(
             spdm_context,
             session_id,
+            spdm_context->connection_info.current_bank,
             slot_id, key_pair_id, 0, 0, 0, 0,
             old_local_cert_chain,
             old_local_cert_chain_size,
@@ -319,6 +320,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         result = libspdm_update_local_cert_chain(
             spdm_context,
             session_id,
+            spdm_context->connection_info.current_bank,
             slot_id,
             key_pair_id,
             spdm_context->connection_info.algorithm.base_hash_algo,

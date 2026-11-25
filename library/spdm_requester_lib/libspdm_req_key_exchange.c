@@ -646,14 +646,14 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
             }
             /* The Responder shall not request a slot that is not provisioned. */
             if (cert_cap && (spdm_context->local_context.local_cert_chain_provision[
-                                 *req_slot_id_param] == NULL)) {
+                                 spdm_context->connection_info.current_bank][*req_slot_id_param] == NULL)) {
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto receive_done;
             }
             if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
                 spdm_context->connection_info.multi_key_conn_req &&
                 (*req_slot_id_param != 0xf)) {
-                if ((spdm_context->local_context.local_key_usage_bit_mask[*req_slot_id_param] &
+                if ((libspdm_get_key_usage_mask(spdm_context, *req_slot_id_param) &
                      SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE) == 0) {
                     status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                     goto receive_done;

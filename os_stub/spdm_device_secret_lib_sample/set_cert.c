@@ -91,7 +91,7 @@ static bool libspdm_write_certificate_to_nvm(
                 return false;
             }
         } else {
-            if ((fp_out = open(file_name, O_WRONLY | O_TRUNC)) == -1) {
+            if ((fp_out = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU)) == -1) {
                 printf("Unable to open file %s\n", file_name);
                 return false;
             }
@@ -118,6 +118,7 @@ static uint8_t *m_libspdm_installed_cert_chain[SPDM_MAX_SLOT_COUNT];
 bool libspdm_update_local_cert_chain(
     void *spdm_context,
     const uint32_t *session_id,
+    uint8_t bank_id,
     uint8_t slot_id,
     uint8_t key_pair_id,
     uint32_t base_hash_algo,
@@ -294,8 +295,18 @@ set_cert:
     }
 
     if (key_pair_id != 0) {
-        status = libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_KEY_PAIR_ID,
-                                  &parameter, &key_pair_id, sizeof(key_pair_id));
+        libspdm_key_pair_info_t key_pair_info;
+        size_t key_pair_info_size;
+
+        key_pair_info_size = sizeof(key_pair_info);
+        parameter.additional_data[0] = key_pair_id;
+        status = libspdm_get_data(spdm_context, LIBSPDM_DATA_LOCAL_KEY_PAIR_INFO, &parameter,
+                                  &key_pair_info, &key_pair_info_size);
+        if (status == LIBSPDM_STATUS_SUCCESS) {
+            key_pair_info.assoc_cert_slot_mask |= (uint8_t)(1 << slot_id);
+            status = libspdm_set_data(spdm_context, LIBSPDM_DATA_LOCAL_KEY_PAIR_INFO, &parameter,
+                                      &key_pair_info, sizeof(key_pair_info));
+        }
         LIBSPDM_ASSERT(status == LIBSPDM_STATUS_SUCCESS);
     }
 

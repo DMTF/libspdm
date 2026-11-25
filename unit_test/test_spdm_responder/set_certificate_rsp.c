@@ -884,7 +884,7 @@ static void rsp_set_certificate_rsp_case11(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     slot_id = 1;
     key_pair_id = 3;
-    spdm_context->local_context.local_key_pair_id[slot_id] = 0;
+    libspdm_test_provision_key_pair_info(spdm_context);
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |=
@@ -929,9 +929,22 @@ static void rsp_set_certificate_rsp_case11(void **state)
     assert_int_equal(response_size, sizeof(spdm_set_certificate_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_SET_CERTIFICATE_RSP);
-    assert_int_equal(spdm_context->local_context.local_key_pair_id[slot_id], key_pair_id);
+    {
+        libspdm_data_parameter_t parameter;
+        libspdm_key_pair_info_t key_pair_info;
+        size_t key_pair_info_size;
 
-    spdm_context->local_context.local_key_pair_id[slot_id] = 0;
+        libspdm_zero_mem(&parameter, sizeof(parameter));
+        parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+        parameter.additional_data[0] = key_pair_id;
+        key_pair_info_size = sizeof(key_pair_info);
+        assert_int_equal(libspdm_get_data(spdm_context, LIBSPDM_DATA_LOCAL_KEY_PAIR_INFO,
+                                          &parameter, &key_pair_info,
+                                          &key_pair_info_size), LIBSPDM_STATUS_SUCCESS);
+        assert_true((key_pair_info.assoc_cert_slot_mask & (1 << slot_id)) != 0);
+    }
+
+    libspdm_test_provision_key_pair_info(spdm_context);
     free(cert_chain);
     free(m_libspdm_set_certificate_request);
 }
@@ -1143,8 +1156,8 @@ static void rsp_set_certificate_rsp_case14(void **state)
 
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
 
-    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] = 0;
 
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
@@ -1164,7 +1177,8 @@ static void rsp_set_certificate_rsp_case14(void **state)
 
     /* Out-of-range slot id. */
     tmp_cert_size = cert_chain_a_size;
-    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, SPDM_MAX_SLOT_COUNT, 0,
+    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL,
+                                                 spdm_context->connection_info.current_bank, SPDM_MAX_SLOT_COUNT, 0,
                                                  m_libspdm_use_hash_algo,
                                                  m_libspdm_use_asym_algo,
                                                  0,
@@ -1178,7 +1192,8 @@ static void rsp_set_certificate_rsp_case14(void **state)
     g_set_cert_is_busy = true;
     is_busy = false;
     tmp_cert_size = sizeof(spdm_cert_chain_t) + hash_size - 1;
-    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL,
+                                                 spdm_context->connection_info.current_bank, 0, 0,
                                                  m_libspdm_use_hash_algo,
                                                  m_libspdm_use_asym_algo,
                                                  0,
@@ -1192,7 +1207,8 @@ static void rsp_set_certificate_rsp_case14(void **state)
     assert_false(is_busy);
     /* Unsupported cert_model. */
     tmp_cert_size = cert_chain_a_size;
-    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL,
+                                                 spdm_context->connection_info.current_bank, 0, 0,
                                                  m_libspdm_use_hash_algo,
                                                  m_libspdm_use_asym_algo,
                                                  0,
@@ -1201,12 +1217,14 @@ static void rsp_set_certificate_rsp_case14(void **state)
                                                  cert_chain_a, &tmp_cert_size,
                                                  SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE,
                                                  NULL, NULL));
-    assert_null(spdm_context->local_context.local_cert_chain_provision[0]);
-    assert_int_equal(spdm_context->local_context.local_cert_chain_provision_size[0], 0);
+    assert_null(spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0]);
+    assert_int_equal(
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0], 0);
 
     /* Device Cert, empty slot*/
     tmp_cert_size = cert_chain_a_size;
-    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL,
+                                                spdm_context->connection_info.current_bank, 0, 0,
                                                 m_libspdm_use_hash_algo,
                                                 m_libspdm_use_asym_algo,
                                                 0,
@@ -1216,8 +1234,10 @@ static void rsp_set_certificate_rsp_case14(void **state)
                                                 SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT,
                                                 NULL, NULL));
 
-    installed_chain = spdm_context->local_context.local_cert_chain_provision[0];
-    installed_chain_size = spdm_context->local_context.local_cert_chain_provision_size[0];
+    installed_chain =
+        spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0];
+    installed_chain_size =
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0];
     assert_non_null(installed_chain);
     /* Assert it's an allocated buffer */
     assert_ptr_not_equal(installed_chain, cert_chain_a);
@@ -1227,7 +1247,8 @@ static void rsp_set_certificate_rsp_case14(void **state)
 
     /* Device Cert, replace chain*/
     tmp_cert_size = cert_chain_b_size;
-    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL,
+                                                spdm_context->connection_info.current_bank, 0, 0,
                                                 m_libspdm_use_hash_algo,
                                                 m_libspdm_use_asym_algo,
                                                 0,
@@ -1238,8 +1259,10 @@ static void rsp_set_certificate_rsp_case14(void **state)
                                                 NULL, NULL));
     /* The sample frees the chain that it installed before, so the test does not. */
 
-    installed_chain = spdm_context->local_context.local_cert_chain_provision[0];
-    installed_chain_size = spdm_context->local_context.local_cert_chain_provision_size[0];
+    installed_chain =
+        spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0];
+    installed_chain_size =
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0];
     assert_non_null(installed_chain);
     /* Ensure it's a newly alloced buffer */
     assert_ptr_not_equal(installed_chain, cert_chain_b);
@@ -1250,7 +1273,8 @@ static void rsp_set_certificate_rsp_case14(void **state)
     assert_int_equal(rsp_set_certificate_nvm_file_size(0),
                      cert_chain_b_size - sizeof(spdm_cert_chain_t) - hash_size);
     tmp_cert_size = cert_chain_a_size;
-    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_false(libspdm_update_local_cert_chain(spdm_context, NULL,
+                                                 spdm_context->connection_info.current_bank, 0, 0,
                                                  m_libspdm_use_hash_algo,
                                                  m_libspdm_use_asym_algo,
                                                  0,
@@ -1261,11 +1285,12 @@ static void rsp_set_certificate_rsp_case14(void **state)
                                                  NULL, NULL));
     assert_int_equal(rsp_set_certificate_nvm_file_size(0),
                      cert_chain_b_size - sizeof(spdm_cert_chain_t) - hash_size);
-    assert_ptr_equal(spdm_context->local_context.local_cert_chain_provision[0], installed_chain);
+    assert_ptr_equal(spdm_context->local_context.local_cert_chain_provision[0][0], installed_chain);
 
     /* A shorter chain must not leave the tail of the old chain in NVM. */
     tmp_cert_size = sizeof(spdm_cert_chain_t) + hash_size + 16;
-    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL,
+                                                spdm_context->connection_info.current_bank, 0, 0,
                                                 m_libspdm_use_hash_algo,
                                                 m_libspdm_use_asym_algo,
                                                 0,
@@ -1275,8 +1300,8 @@ static void rsp_set_certificate_rsp_case14(void **state)
                                                 SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT,
                                                 NULL, NULL));
     assert_int_equal(rsp_set_certificate_nvm_file_size(0), 16);
-    installed_chain = spdm_context->local_context.local_cert_chain_provision[0];
-    installed_chain_size = spdm_context->local_context.local_cert_chain_provision_size[0];
+    installed_chain = spdm_context->local_context.local_cert_chain_provision[0][0];
+    installed_chain_size = spdm_context->local_context.local_cert_chain_provision_size[0][0];
 
     /* Alias Cert, existing slot*/
 
@@ -1291,7 +1316,8 @@ static void rsp_set_certificate_rsp_case14(void **state)
                     &alias_chain, &alias_chain_size, NULL, NULL));
 
     tmp_cert_size = alias_chain_size;
-    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL, 0, 0,
+    assert_true(libspdm_update_local_cert_chain(spdm_context, NULL,
+                                                spdm_context->connection_info.current_bank, 0, 0,
                                                 m_libspdm_use_hash_algo,
                                                 m_libspdm_use_asym_algo,
                                                 0,
@@ -1301,8 +1327,10 @@ static void rsp_set_certificate_rsp_case14(void **state)
                                                 SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT,
                                                 NULL, NULL));
 
-    installed_chain = spdm_context->local_context.local_cert_chain_provision[0];
-    installed_chain_size = spdm_context->local_context.local_cert_chain_provision_size[0];
+    installed_chain =
+        spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0];
+    installed_chain_size =
+        spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0];
     assert_non_null(installed_chain);
     /* Ensure it's a newly alloced buffer */
     assert_ptr_not_equal(installed_chain, orig_alias_chain);
@@ -1317,8 +1345,8 @@ static void rsp_set_certificate_rsp_case14(void **state)
 
     /* The sample still owns the installed chain, and frees it when slot 0 is next written. */
     free((void *)(uintptr_t)orig_alias_chain);
-    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] = 0;
 
     free(cert_chain_a);
     free(cert_chain_b);
@@ -1359,8 +1387,8 @@ static void rsp_set_certificate_rsp_case15(void **state)
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
-    old_cert_chain = spdm_context->local_context.local_cert_chain_provision[0];
-    old_cert_chain_size = spdm_context->local_context.local_cert_chain_provision_size[0];
+    old_cert_chain = spdm_context->local_context.local_cert_chain_provision[0][0];
+    old_cert_chain_size = spdm_context->local_context.local_cert_chain_provision_size[0][0];
 
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &cert_chain,
@@ -1401,8 +1429,8 @@ static void rsp_set_certificate_rsp_case15(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 
     /* Slot 0 is unchanged. */
-    assert_ptr_equal(spdm_context->local_context.local_cert_chain_provision[0], old_cert_chain);
-    assert_int_equal(spdm_context->local_context.local_cert_chain_provision_size[0],
+    assert_ptr_equal(spdm_context->local_context.local_cert_chain_provision[0][0], old_cert_chain);
+    assert_int_equal(spdm_context->local_context.local_cert_chain_provision_size[0][0],
                      old_cert_chain_size);
 
     spdm_context->connection_info.multi_key_conn_rsp = false;

@@ -53,8 +53,9 @@ void libspdm_test_responder_challenge_case1(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
@@ -96,8 +97,9 @@ void libspdm_test_responder_challenge_case2(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
@@ -138,8 +140,9 @@ void libspdm_test_responder_challenge_case3(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
@@ -184,8 +187,9 @@ void libspdm_test_responder_challenge_case4(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     g_start_basic_mut_auth = true;
@@ -228,8 +232,9 @@ void libspdm_test_responder_challenge_case5(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
@@ -275,8 +280,9 @@ void libspdm_test_responder_challenge_case6(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     response_size = sizeof(response);
@@ -317,8 +323,9 @@ void libspdm_test_responder_challenge_case7(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
@@ -360,8 +367,9 @@ void libspdm_test_responder_challenge_case8(void **State)
         LIBSPDM_ASSERT(false);
         return;
     }
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[spdm_context->connection_info.current_bank][0] =
+        data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
@@ -369,12 +377,6 @@ void libspdm_test_responder_challenge_case8(void **State)
     spdm_context->transcript.message_m.buffer_size =
         spdm_context->transcript.message_m.max_buffer_size;
 #endif
-
-    for (uint8_t i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_key_usage_bit_mask[i] =
-            SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
-            SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE;
-    }
 
     response_size = sizeof(response);
     libspdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,

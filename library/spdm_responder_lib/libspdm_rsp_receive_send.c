@@ -84,6 +84,10 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
     case SPDM_SET_KEY_PAIR_INFO: return libspdm_get_response_set_key_pair_info_ack;
     #endif /*LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP*/
 
+    #if LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP
+    case SPDM_SLOT_MANAGEMENT: return libspdm_get_response_slot_management;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_SLOT_MGMT_CAP */
+
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     case SPDM_CHUNK_GET: return libspdm_get_response_chunk_get;
     case SPDM_CHUNK_SEND: return libspdm_get_response_chunk_send;

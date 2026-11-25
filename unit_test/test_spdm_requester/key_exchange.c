@@ -8321,8 +8321,8 @@ static void req_key_exchange_case36(void **state)
 #endif
 
     /* The Requester has no certificate chain provisioned in slot 0. */
-    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
 
     heartbeat_period = 0;
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
@@ -8423,8 +8423,8 @@ static void req_key_exchange_case37(void **state)
 #endif
 
     /* The Requester has a certificate chain provisioned in slot 0. */
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = data_size;
 
     heartbeat_period = 0;
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
@@ -8434,8 +8434,8 @@ static void req_key_exchange_case37(void **state)
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
 
-    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
+    spdm_context->local_context.local_cert_chain_provision[0][0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0][0] = 0;
     spdm_context->local_context.capability.flags &= ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->connection_info.capability.flags &=
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;

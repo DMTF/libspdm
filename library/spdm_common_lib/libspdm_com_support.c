@@ -47,6 +47,9 @@ const char *libspdm_get_code_str(uint8_t request_code)
     case SPDM_SET_KEY_PAIR_INFO_ACK: return "SPDM_SET_KEY_PAIR_INFO_ACK";
     case SPDM_ENDPOINT_INFO: return "SPDM_ENDPOINT_INFO";
 
+    /* SPDM response code (1.4) */
+    case SPDM_SLOT_MANAGEMENT_RESP: return "SPDM_SLOT_MANAGEMENT_RESP";
+
     /* SPDM request code (1.0) */
     case SPDM_GET_DIGESTS: return "SPDM_GET_DIGESTS";
     case SPDM_GET_CERTIFICATE: return "SPDM_GET_CERTIFICATE";
@@ -83,6 +86,9 @@ const char *libspdm_get_code_str(uint8_t request_code)
     case SPDM_GET_KEY_PAIR_INFO: return "SPDM_GET_KEY_PAIR_INFO";
     case SPDM_SET_KEY_PAIR_INFO: return "SPDM_SET_KEY_PAIR_INFO";
     case SPDM_GET_ENDPOINT_INFO: return "SPDM_GET_ENDPOINT_INFO";
+
+    /* SPDM request code (1.4) */
+    case SPDM_SLOT_MANAGEMENT: return "SPDM_SLOT_MANAGEMENT";
 
     default:
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "RequestResponseCode 0x%x not found.\n", request_code));
@@ -476,4 +482,43 @@ bool libspdm_check_for_space(const uint8_t *ptr, const uint8_t *end_ptr, size_t 
     LIBSPDM_ASSERT(ptr <= end_ptr);
 
     return ((uintptr_t)(end_ptr - ptr) >= increment);
+}
+
+uint8_t libspdm_get_supported_slot_mask(libspdm_context_t *spdm_context)
+{
+    int i;
+    uint8_t ret = 0;
+
+    for (i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
+        if (spdm_context->local_context.local_cert_chain_provision[spdm_context->connection_info.current_bank][i] !=
+            NULL) {
+            ret |= 1 << i;
+        }
+    }
+
+    return ret;
+}
+
+spdm_key_pair_id_t libspdm_get_key_pair_id(libspdm_context_t *spdm_context, uint8_t slot_id)
+{
+    uint8_t i;
+
+    for (i = 0; i < LIBSPDM_MAX_KEY_PAIR_COUNT; i++) {
+        if ((1 << slot_id) & spdm_context->local_context.local_key_pair_info[i].assoc_cert_slot_mask) {
+            return i + 1;
+        }
+    }
+
+    return 0;
+}
+
+uint16_t libspdm_get_key_usage_mask(libspdm_context_t *spdm_context, uint8_t slot_id)
+{
+    spdm_key_pair_id_t key_offset = libspdm_get_key_pair_id(spdm_context, slot_id);
+
+    if (key_offset) {
+        return spdm_context->local_context.local_key_pair_info[key_offset - 1].current_key_usage;
+    } else {
+        return 0;
+    }
 }
