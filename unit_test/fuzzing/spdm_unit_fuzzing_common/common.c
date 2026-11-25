@@ -4,6 +4,12 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
+#if defined(__linux__)
+/* readlink() is POSIX, and the fuzzers are built as C99. */
+#define _POSIX_C_SOURCE 200112L
+#include <unistd.h>
+#endif /* __linux__ */
+
 #include "spdm_unit_fuzzing.h"
 
 libspdm_test_context_t *m_libspdm_test_context;
@@ -116,6 +122,38 @@ size_t libspdm_unit_test_group_teardown(void **State)
     return 0;
 }
 
+#if defined(__linux__)
+/* The build copies the sample keys beside the fuzzers, which CIFuzz can run from any working
+ * directory. */
+static FILE *libspdm_fopen_beside_executable(const char *file_name)
+{
+    char executable_path[FILENAME_MAX];
+    char path[FILENAME_MAX];
+    ssize_t size;
+    const char *slash;
+    int length;
+
+    size = readlink("/proc/self/exe", executable_path, sizeof(executable_path) - 1);
+    if (size <= 0) {
+        return NULL;
+    }
+    executable_path[size] = '\0';
+
+    slash = strrchr(executable_path, '/');
+    if (slash == NULL) {
+        return NULL;
+    }
+
+    length = snprintf(path, sizeof(path), "%.*s%s", (int)(slash - executable_path + 1),
+                      executable_path, file_name);
+    if ((length < 0) || ((size_t)length >= sizeof(path))) {
+        return NULL;
+    }
+
+    return fopen(path, "rb");
+}
+#endif /* __linux__ */
+
 bool libspdm_read_input_file(const char *file_name, void **file_data,
                              size_t *file_size)
 {
@@ -124,14 +162,21 @@ bool libspdm_read_input_file(const char *file_name, void **file_data,
     long position;
     char ci_file_name[UINT8_MAX];
 
-    if ((fp_in = fopen(file_name, "rb")) == NULL) {
+    fp_in = fopen(file_name, "rb");
+    if (fp_in == NULL) {
         /* CI environment working directory is parent folder */
         snprintf(ci_file_name, sizeof(ci_file_name), "build-out/%s", file_name);
-        if ((fp_in = fopen(ci_file_name, "rb")) == NULL) {
-            printf("Unable to open file %s\n", file_name);
-            *file_data = NULL;
-            return false;
-        }
+        fp_in = fopen(ci_file_name, "rb");
+    }
+#if defined(__linux__)
+    if (fp_in == NULL) {
+        fp_in = libspdm_fopen_beside_executable(file_name);
+    }
+#endif /* __linux__ */
+    if (fp_in == NULL) {
+        printf("Unable to open file %s\n", file_name);
+        *file_data = NULL;
+        return false;
     }
 
     fseek(fp_in, 0, SEEK_END);
