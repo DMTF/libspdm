@@ -294,6 +294,7 @@ void libspdm_test_get_encap_request_get_certificate_case2(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        free(spdm_request);
         LIBSPDM_ASSERT(false);
         return;
     }
