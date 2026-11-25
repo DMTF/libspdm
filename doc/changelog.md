@@ -138,7 +138,6 @@
     - `libspdm_check_context` - fails for a Responder with `PUB_KEY_ID_CAP` whose SPDM versions
       include 1.0, which has no provisioned public keys. `LIBSPDM_DATA_IS_REQUESTER` should be set
       before it is called.
-    - `libspdm_verify_req_info` - exists only when `LIBSPDM_CERT_PARSE_SUPPORT` is enabled.
     - `libspdm_transport_tcp_encode_message` - returns `LIBSPDM_STATUS_UNSUPPORTED_CAP` for an
       application message, for which DSP0287 defines no format, and
       `libspdm_transport_tcp_decode_message` never reports one.
@@ -175,11 +174,17 @@
     - `libspdm_terminate_session` - lets the Responder terminate a session, for example when the
       watchdog fires.
     - `libspdm_contains_hardware_id_oid` - checks a certificate for the SPDM hardware identity OID.
+    - `libspdm_get_cert_chain_length` - reads the length of a certificate chain from its header,
+      where the length is 2 bytes wide before SPDM 1.4 and 4 bytes wide from SPDM 1.4.
+    - `libspdm_read_uint16`, `libspdm_read_uint24`, `libspdm_read_uint32` and
+      `libspdm_read_uint64`, and the matching `libspdm_write_uint*` functions - read and write
+      integers at addresses that may be unaligned. 3.8 declared them in an internal header.
     - `libspdm_get_fips_selftest_buffer_size` - the size of the buffer that
       `libspdm_init_fips_selftest_context` takes.
-    - Cryptography functions in `spdm_crypt_lib.h` for post-quantum signatures (`libspdm_pqc_asym_*`
-      and `libspdm_req_pqc_asym_*`) and KEM (`libspdm_kem_*`), and size functions such as
-      `libspdm_get_kem_cipher_text_size` and `libspdm_get_dhe_shared_secret_size`.
+    - Cryptography functions in `spdm_crypt_lib.h` for post-quantum signatures
+      (`libspdm_pqc_asym_*`, `libspdm_req_pqc_asym_*` and
+      `libspdm_get_pqc_leaf_cert_public_key_from_cert_chain`) and KEM (`libspdm_kem_*`), and size
+      functions such as `libspdm_get_kem_cipher_text_size` and `libspdm_get_dhe_shared_secret_size`.
     - `libspdm_generate_handshake_key` and `libspdm_generate_data_key` - the SPDM key schedule.
 - Library macros:
     - `LISBPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE` is renamed to
@@ -217,8 +222,9 @@
       enabled.
 
 ## Industry Standard Header Changes
-- The `/include/industry_standard` headers add the definitions of SPDM 1.4, DSP0277 1.3, the
-  DSP0239 1.12 MCTP message types, PCIe 6.5 (DOE, IDE_KM and TDISP) and CXL 4.0 (TSP).
+- The `/include/industry_standard` headers add the definitions of SPDM 1.4, the SPDM 1.3
+  `SupportedAlgorithms` block of `CAPABILITIES`, DSP0277 1.3, the DSP0239 1.12 MCTP message types,
+  PCIe 6.5 (DOE, IDE_KM and TDISP) and CXL 4.0 (TSP).
 - Macros renamed:
     - `SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY`,
       `SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS` and
@@ -243,7 +249,8 @@
 - Structures changed:
     - `spdm_cert_chain_t` has a single `uint32_t length`, as DSP0274 1.4 defines, in place of
       `uint16_t length` and `uint16_t reserved`. A chain of at most 0xFFFF bytes is encoded as
-      before, but code that sets `reserved` must drop it.
+      before, but code that reads or writes `reserved` must drop it. `libspdm_get_cert_chain_length`
+      reads the length at any SPDM version.
     - Reserved fields that SPDM 1.4 defines are renamed. `reserved2` is `ext_flags` in
       `spdm_get_capabilities_request_t` and `spdm_capabilities_response_t`. The first four bytes of
       `reserved2` are `pqc_asym_algo` in `spdm_negotiate_algorithms_request_t` and `pqc_asym_sel` in
@@ -315,16 +322,23 @@
 
 ## Build Changes
 - VS2015 is no longer supported, and `TOOLCHAIN=VS` replaces `VS2019` and `VS2022`. MSVC builds use
-  `/std:c11`, which needs Visual Studio 2019 version 16.8 or later.
-- New `LOONGARCH64_GNU` toolchain.
+  `/std:c11`, which needs Visual Studio 2019 version 16.8 or later and Windows SDK 10.0.20348.0 or
+  later.
+- New `LOONGARCH64_GNU` toolchain, with `ARCH=loongarch64`.
 - libspdm builds on macOS with `TOOLCHAIN=CLANG`.
-- libspdm builds on Windows on Arm with `ARCH=aarch64` and `TOOLCHAIN=VS` or `CLANG`. Without
-  `ARCH`, MSVC and clang-cl builds take the architecture that the compiler targets, not the host's.
+- libspdm builds on Windows on Arm with `ARCH=aarch64` and `TOOLCHAIN=VS` or `CLANG`.
+- `ARCH` is optional, where 3.8 required it. Without it, MSVC and clang-cl builds take the
+  architecture that the compiler targets, not the host's, and other builds take
+  `CMAKE_SYSTEM_PROCESSOR`.
 - `os_stub` implementations of the debug and random number libraries, and of `libspdm_sleep`, for
   Zephyr.
 - New `X509_IGNORE_TIME` option, which makes the provided cryptography libraries ignore the validity
-  period of certificates.
-- Mbed TLS is updated from 3.6.2 to 3.6.7, OpenSSL from 3.5.1 to 3.5.9, and cmocka, which the unit
+  period of certificates, in place of undefining `OPENSSL_CHECK_TIME` or `MBEDTLS_HAVE_TIME_DATE`.
+  A build that does not use libspdm's CMake defines `OPENSSL_IGNORE_TIME=1` or
+  `LIBSPDM_MBEDTLS_X509_IGNORE_TIME` instead.
+- `X509_IGNORE_CRITICAL=ON` now also applies to Mbed TLS. 3.8 defined
+  `MBEDTLS_X509_ALLOW_UNSUPPORTED_CRITICAL_EXTENSION`, which Mbed TLS 3 does not read.
+- Mbed TLS is updated from 3.6.2 to 3.6.8, OpenSSL from 3.5.1 to 3.5.9, and cmocka, which the unit
   tests use, from 1.1.7 to 1.1.8.
 - OpenSSL is built by its own `Configure` script, which needs Perl, as a shared `libcrypto`, or a
   static one when `TOOLCHAIN=NONE`.
@@ -334,8 +348,8 @@
 - libspdm's own targets build as C99, except that MSVC, which has no C99 mode, uses C11, and the
   sample device secret library is C11. Their warning options and configuration definitions no longer
   apply to Mbed TLS, OpenSSL or cmocka.
-- The Windows build instructions for MinGW and ARM DS2022 use the MSYS2 UCRT64 environment instead
-  of MINGW64.
+- The Windows build instructions for ARM DS2022 use the MSYS2 UCRT64 environment instead of
+  MINGW64.
 - The KLEE and CBMC toolchains are removed.
 - The VS toolchains build with CMake's default runtime library, `/MD` or `/MDd`.
 - The GCC and Clang toolchains no longer pass `-fshort-wchar` or `-no-pie`, and Windows ia32 Mbed
@@ -343,14 +357,20 @@
 - Libraries and executables are position-independent, since `CMAKE_POSITION_INDEPENDENT_CODE`
   defaults to `ON` except with `TOOLCHAIN=NONE` and the bare-metal toolchains, so the libraries
   link into PIE executables and shared objects whatever the compiler's default.
+- With `BUILD_LINUX_SHARED_LIB=ON`, the shared libraries are versioned, and `libspdm.pc` reports
+  the version number, such as `4.0.0`, as its `Version`, where 3.8 reported `libspdm_version_3.8.0`.
 - The `os_stub` headers `cryptlib_ext.h`, `spdm_crypt_ext_lib.h` and
   `spdm_device_secret_lib_internal.h` move to `os_stub/include`, as `hal/library/cryptlib_ext.h`,
   `library/spdm_crypt_ext_lib.h` and `internal/libspdm_device_secret_lib.h`.
-- `os_stub/openssllib` no longer has `include/crt_support.h`, `buildinf.h`, `process_files.pl`,
-  `rand_pool.c` or `timer_wrapper.c`.
+- `os_stub/openssllib` holds only `CMakeLists.txt` and `version.txt` beside the OpenSSL submodule.
+  The generated `openssl_gen` files, the C library headers and `crt_support.h` in `include`,
+  `include/openssl/configuration.h`, `buildinf.h`, `ossl_store.c`, `process_files.pl`, `rand_pool.c`
+  and `timer_wrapper.c` are removed.
 - 14 core library source files are renamed after the message that they send, such as
-  `libspdm_rsp_finish.c` to `libspdm_rsp_finish_rsp.c`, and 17 are added. An Integrator that lists
-  the files in its own build must update the list.
+  `libspdm_rsp_finish.c` to `libspdm_rsp_finish_rsp.c`, and 17 are added. In `os_stub`,
+  `time_linux.c` is renamed `time_unix.c` in `platform_lib` and `platform_lib_null`,
+  `cryptlib_openssl/sys_call/crt_wrapper_host.c` is removed, and post-quantum, Zephyr, macOS and TPM
+  sources are added. An Integrator that lists the files in its own build must update the list.
 
 ## Additional Changes
 - Certificate chain verification in the provided cryptography libraries validates the whole path, as
