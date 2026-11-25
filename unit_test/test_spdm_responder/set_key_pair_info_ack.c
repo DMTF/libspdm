@@ -571,14 +571,7 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
     bool need_reset;
     bool result;
     uint8_t total_key_pairs;
-    uint16_t capabilities;
-    uint16_t key_usage_capabilities;
-    uint16_t current_key_usage;
-    uint32_t asym_algo_capabilities;
-    uint32_t current_asym_algo;
-    uint32_t pqc_asym_algo_capabilities;
-    uint32_t current_pqc_asym_algo;
-    uint8_t assoc_cert_slot_mask;
+    libspdm_key_pair_info_t key_pair_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -618,12 +611,12 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
     assert_false(need_reset);
 
     /* The applied PQC algorithm shall be ML-DSA-65 (the replayed value), not ML-DSA-44. */
+    key_pair_info.public_key_info = NULL;
     assert_true(libspdm_read_key_pair_info(
-                    spdm_context, NULL, key_pair_id, &total_key_pairs, &capabilities,
-                    &key_usage_capabilities, &current_key_usage, &asym_algo_capabilities,
-                    &current_asym_algo, &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
-                    &assoc_cert_slot_mask, NULL, NULL));
-    assert_int_equal(current_pqc_asym_algo, SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65);
+                    spdm_context, NULL, key_pair_id, &total_key_pairs,
+                    &key_pair_info));
+    assert_int_equal(key_pair_info.current_pqc_asym_algo,
+                     SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65);
 }
 
 /**
@@ -658,18 +651,8 @@ static void rsp_set_key_pair_info_ack_case7(void **state)
     uint32_t desired_asym_algo;
     uint8_t desired_assoc_cert_slot_mask;
 
-    uint16_t capabilities;
-    uint16_t key_usage_capabilities;
-    uint16_t current_key_usage;
-    uint32_t asym_algo_capabilities;
-    uint32_t current_asym_algo;
-    uint32_t pqc_asym_algo_capabilities;
-    uint32_t current_pqc_asym_algo;
-    uint8_t assoc_cert_slot_mask;
-
-    uint32_t victim_asym_algo;
-    uint32_t victim_pqc_asym_algo;
-    uint8_t victim_assoc_cert_slot_mask;
+    libspdm_key_pair_info_t key_pair_info;
+    libspdm_key_pair_info_t victim_key_pair_info;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -690,42 +673,39 @@ static void rsp_set_key_pair_info_ack_case7(void **state)
     victim_key_pair_id = 0;
     other_key_pair_id = 0;
     collide_slot = 0;
-    victim_assoc_cert_slot_mask = 0;
 
+    key_pair_info.public_key_info = NULL;
     (void)libspdm_read_key_pair_info(
-        spdm_context, NULL, 1, &total_key_pairs, &capabilities, &key_usage_capabilities,
-        &current_key_usage, &asym_algo_capabilities, &current_asym_algo,
-        &pqc_asym_algo_capabilities, &current_pqc_asym_algo, &assoc_cert_slot_mask, NULL, NULL);
+        spdm_context, NULL, 1, &total_key_pairs, &key_pair_info);
 
     for (victim_key_pair_id = 1;
          (victim_key_pair_id <= total_key_pairs) && !found_pair;
          victim_key_pair_id++) {
+        victim_key_pair_info.public_key_info = NULL;
         if (!libspdm_read_key_pair_info(
-                spdm_context, NULL, victim_key_pair_id, &total_key_pairs, &capabilities,
-                &key_usage_capabilities, &current_key_usage, &asym_algo_capabilities,
-                &victim_asym_algo, &pqc_asym_algo_capabilities, &victim_pqc_asym_algo,
-                &victim_assoc_cert_slot_mask, NULL, NULL)) {
+                spdm_context, NULL, victim_key_pair_id, &total_key_pairs,
+                &victim_key_pair_info)) {
             continue;
         }
-        if (victim_assoc_cert_slot_mask == 0) {
+        if (victim_key_pair_info.assoc_cert_slot_mask == 0) {
             continue;
         }
         for (other_key_pair_id = 1; other_key_pair_id <= total_key_pairs; other_key_pair_id++) {
             if (other_key_pair_id == victim_key_pair_id) {
                 continue;
             }
+            key_pair_info.public_key_info = NULL;
             if (!libspdm_read_key_pair_info(
-                    spdm_context, NULL, other_key_pair_id, &total_key_pairs, &capabilities,
-                    &key_usage_capabilities, &current_key_usage, &asym_algo_capabilities,
-                    &current_asym_algo, &pqc_asym_algo_capabilities, &current_pqc_asym_algo,
-                    &assoc_cert_slot_mask, NULL, NULL)) {
+                    spdm_context, NULL, other_key_pair_id, &total_key_pairs,
+                    &key_pair_info)) {
                 continue;
             }
-            if ((current_asym_algo == victim_asym_algo) &&
-                (current_pqc_asym_algo == victim_pqc_asym_algo)) {
+            if ((key_pair_info.current_asym_algo == victim_key_pair_info.current_asym_algo) &&
+                (key_pair_info.current_pqc_asym_algo ==
+                 victim_key_pair_info.current_pqc_asym_algo)) {
                 uint8_t slot_index;
                 for (slot_index = 0; slot_index < SPDM_MAX_SLOT_COUNT; slot_index++) {
-                    if ((victim_assoc_cert_slot_mask & (1 << slot_index)) != 0) {
+                    if ((victim_key_pair_info.assoc_cert_slot_mask & (1 << slot_index)) != 0) {
                         collide_slot = slot_index;
                         found_pair = true;
                         break;

@@ -20,20 +20,11 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
     libspdm_session_state_t session_state;
 
     uint8_t total_key_pairs;
-    uint16_t capabilities;
-    uint16_t key_usage_capabilities;
-    uint16_t current_key_usage;
-    uint32_t asym_algo_capabilities;
-    uint32_t current_asym_algo;
-    uint32_t pqc_asym_algo_capabilities;
-    uint32_t current_pqc_asym_algo;
+    libspdm_key_pair_info_t key_pair_info;
     uint8_t pqc_asym_algo_cap_len;
     uint8_t current_pqc_asym_algo_len;
-    uint16_t public_key_info_len;
-    uint8_t assoc_cert_slot_mask;
     uint8_t key_pair_id;
     bool result;
-    uint8_t *public_key_info;
     uint8_t *ptr;
 
     spdm_request = request;
@@ -107,29 +98,21 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
     key_pair_id = spdm_request->key_pair_id;
 
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_key_pair_info_response_t));
-    public_key_info_len = (uint16_t)(*response_size - sizeof(spdm_key_pair_info_response_t));
+    key_pair_info.public_key_info_len =
+        (uint16_t)(*response_size - sizeof(spdm_key_pair_info_response_t));
     libspdm_zero_mem(response, *response_size);
 
     /* libspdm_read_key_pair_info() always reports total_key_pairs (even on failure), so read first
      * and then validate the range -- identical to the SET_KEY_PAIR_INFO_ACK handler. An invalid
      * key_pair_id (0 or > total_key_pairs) is INVALID_REQUEST; any other read failure is UNSPECIFIED. */
     total_key_pairs = 0;
-    public_key_info = (uint8_t*)response + sizeof(spdm_key_pair_info_response_t);
+    key_pair_info.public_key_info = (uint8_t*)response + sizeof(spdm_key_pair_info_response_t);
     result = libspdm_read_key_pair_info(
         spdm_context,
         session_id,
         key_pair_id,
         &total_key_pairs,
-        &capabilities,
-        &key_usage_capabilities,
-        &current_key_usage,
-        &asym_algo_capabilities,
-        &current_asym_algo,
-        &pqc_asym_algo_capabilities,
-        &current_pqc_asym_algo,
-        &assoc_cert_slot_mask,
-        &public_key_info_len,
-        public_key_info);
+        &key_pair_info);
     if ((key_pair_id == 0) || (key_pair_id > total_key_pairs)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -145,7 +128,7 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP)) {
-        capabilities = 0;
+        key_pair_info.capabilities = 0;
     }
 
     spdm_response = response;
@@ -155,12 +138,13 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
         const size_t pqc_tail_size = sizeof(uint8_t) + sizeof(uint32_t) +
                                      sizeof(uint8_t) + sizeof(uint32_t);
         LIBSPDM_ASSERT(*response_size >= sizeof(spdm_key_pair_info_response_t) +
-                       public_key_info_len + pqc_tail_size);
-        *response_size = sizeof(spdm_key_pair_info_response_t) + public_key_info_len +
-                         pqc_tail_size;
+                       key_pair_info.public_key_info_len + pqc_tail_size);
+        *response_size = sizeof(spdm_key_pair_info_response_t) +
+                         key_pair_info.public_key_info_len + pqc_tail_size;
     } else {
         LIBSPDM_ASSERT(*response_size >= sizeof(spdm_key_pair_info_response_t));
-        *response_size = sizeof(spdm_key_pair_info_response_t) + public_key_info_len;
+        *response_size = sizeof(spdm_key_pair_info_response_t) +
+                         key_pair_info.public_key_info_len;
     }
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;
@@ -169,26 +153,29 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
     spdm_response->header.param2 = 0;
     spdm_response->total_key_pairs = total_key_pairs;
     spdm_response->key_pair_id = key_pair_id;
-    spdm_response->capabilities = capabilities & SPDM_KEY_PAIR_CAP_MASK;
-    spdm_response->key_usage_capabilities = key_usage_capabilities & SPDM_KEY_USAGE_BIT_MASK;
-    spdm_response->current_key_usage = current_key_usage & SPDM_KEY_USAGE_BIT_MASK;
-    spdm_response->asym_algo_capabilities = asym_algo_capabilities &
+    spdm_response->capabilities = key_pair_info.capabilities & SPDM_KEY_PAIR_CAP_MASK;
+    spdm_response->key_usage_capabilities = key_pair_info.key_usage_capabilities &
+                                            SPDM_KEY_USAGE_BIT_MASK;
+    spdm_response->current_key_usage = key_pair_info.current_key_usage & SPDM_KEY_USAGE_BIT_MASK;
+    spdm_response->asym_algo_capabilities = key_pair_info.asym_algo_capabilities &
                                             SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
-    spdm_response->current_asym_algo = current_asym_algo & SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
-    spdm_response->public_key_info_len = public_key_info_len;
-    spdm_response->assoc_cert_slot_mask = assoc_cert_slot_mask;
+    spdm_response->current_asym_algo = key_pair_info.current_asym_algo &
+                                       SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
+    spdm_response->public_key_info_len = key_pair_info.public_key_info_len;
+    spdm_response->assoc_cert_slot_mask = key_pair_info.assoc_cert_slot_mask;
 
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_14) {
-        ptr = (uint8_t *)spdm_response + sizeof(spdm_key_pair_info_response_t) + public_key_info_len;
-        pqc_asym_algo_cap_len = sizeof(pqc_asym_algo_capabilities);
-        current_pqc_asym_algo_len = sizeof(current_pqc_asym_algo);
+        ptr = (uint8_t *)spdm_response + sizeof(spdm_key_pair_info_response_t) +
+              key_pair_info.public_key_info_len;
+        pqc_asym_algo_cap_len = sizeof(key_pair_info.pqc_asym_algo_capabilities);
+        current_pqc_asym_algo_len = sizeof(key_pair_info.current_pqc_asym_algo);
         *ptr = pqc_asym_algo_cap_len;
         ptr += sizeof(uint8_t);
-        libspdm_write_uint32 (ptr, pqc_asym_algo_capabilities);
+        libspdm_write_uint32 (ptr, key_pair_info.pqc_asym_algo_capabilities);
         ptr += sizeof(uint32_t);
         *ptr = current_pqc_asym_algo_len;
         ptr += sizeof(uint8_t);
-        libspdm_write_uint32 (ptr, current_pqc_asym_algo);
+        libspdm_write_uint32 (ptr, key_pair_info.current_pqc_asym_algo);
         ptr += sizeof(uint32_t);
     }
 

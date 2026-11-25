@@ -11,26 +11,7 @@
 #include "internal/libspdm_lib_config.h"
 #include "industry_standard/spdm.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
-
 /**
- * read the key pair info of the key_pair_id.
- *
- * total_key_pairs is the TotalKeyPairs field of the KEY_PAIR_INFO response, and it is a fixed
- * number per SPDM connection. It shall always be set, including on the failure path (set it before
- * any other validation), because the Responder uses it to range-check key_pair_id. A device with no
- * key pairs shall set it to 0.
- *
- * The algorithm fields use the SPDM_KEY_PAIR_ASYM_ALGO_CAP_* and SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_*
- * encodings of KEY_PAIR_INFO, not those of BaseAsymAlgo and PqcAsymAlgo. public_key_info is the DER
- * encoding of the AlgorithmIdentifier of the public key, and public_key_info_len is 0 if the key
- * pair has not been generated.
- *
- * @param  spdm_context                A pointer to the SPDM context.
- * @param  session_id                  Indicates the session in which the request was received.
- *                                     If NULL then the request was not received in a session.
- * @param  key_pair_id                 Indicate which key pair ID's information to retrieve.
- * @param  total_key_pairs             Indicate the total number of key pairs on the Responder.
  * @param  capabilities                Indicate the capabilities of the requested key pairs.
  * @param  key_usage_capabilities      Indicate the key usages the responder allows.
  * @param  current_key_usage           Indicate the currently configured key usage for the requested
@@ -52,6 +33,41 @@
  * @param  public_key_info             A pointer to a destination buffer to store the
  *                                     public_key_info.
  *                                     It can be NULL, if public_key_info is not required.
+ */
+typedef struct {
+    uint16_t capabilities;
+    uint16_t key_usage_capabilities;
+    uint16_t current_key_usage;
+    uint32_t asym_algo_capabilities;
+    uint32_t current_asym_algo;
+    uint32_t pqc_asym_algo_capabilities;
+    uint32_t current_pqc_asym_algo;
+    uint16_t public_key_info_len;
+    uint8_t assoc_cert_slot_mask;
+    uint8_t *public_key_info;
+} libspdm_key_pair_info_t;
+
+#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+
+/**
+ * read the key pair info of the key_pair_id.
+ *
+ * total_key_pairs is the TotalKeyPairs field of the KEY_PAIR_INFO response, and it is a fixed
+ * number per SPDM connection. It shall always be set, including on the failure path (set it before
+ * any other validation), because the Responder uses it to range-check key_pair_id. A device with no
+ * key pairs shall set it to 0.
+ *
+ * The algorithm fields use the SPDM_KEY_PAIR_ASYM_ALGO_CAP_* and SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_*
+ * encodings of KEY_PAIR_INFO, not those of BaseAsymAlgo and PqcAsymAlgo. public_key_info is the DER
+ * encoding of the AlgorithmIdentifier of the public key, and public_key_info_len is 0 if the key
+ * pair has not been generated.
+ *
+ * @param  spdm_context                A pointer to the SPDM context.
+ * @param  session_id                  Indicates the session in which the request was received.
+ *                                     If NULL then the request was not received in a session.
+ * @param  key_pair_id                 Indicate which key pair ID's information to retrieve.
+ * @param  total_key_pairs             Indicate the total number of key pairs on the Responder.
+ *
  *
  * @retval true  get key pair info successfully.
  * @retval false get key pair info failed. total_key_pairs shall still be set on this path so the
@@ -63,16 +79,7 @@ extern bool libspdm_read_key_pair_info(
     const uint32_t *session_id,
     uint8_t key_pair_id,
     uint8_t *total_key_pairs,
-    uint16_t *capabilities,
-    uint16_t *key_usage_capabilities,
-    uint16_t *current_key_usage,
-    uint32_t *asym_algo_capabilities,
-    uint32_t *current_asym_algo,
-    uint32_t *pqc_asym_algo_capabilities,
-    uint32_t *current_pqc_asym_algo,
-    uint8_t *assoc_cert_slot_mask,
-    uint16_t *public_key_info_len,
-    uint8_t *public_key_info);
+    libspdm_key_pair_info_t *key_pair_info);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
