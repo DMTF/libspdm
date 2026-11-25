@@ -42,7 +42,7 @@ void libspdm_test_requester_encap_certificate(void **State)
         return;
     }
     spdm_request = (spdm_get_certificate_request_t *)spdm_test_context->test_buffer;
-    slot_id = spdm_request->header.param1;
+    slot_id = spdm_request->header.param1 & SPDM_GET_CERTIFICATE_REQUEST_SLOT_ID_MASK;
 
     request_size = spdm_test_context->test_buffer_size;
     if (request_size > sizeof(spdm_get_certificate_request_t)) {
@@ -57,8 +57,11 @@ void libspdm_test_requester_encap_certificate(void **State)
         return;
     }
 
-    spdm_context->local_context.local_cert_chain_provision[slot_id] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[slot_id] = data_size;
+    /* An invalid slot is left for libspdm to reject. */
+    if (slot_id < SPDM_MAX_SLOT_COUNT) {
+        spdm_context->local_context.local_cert_chain_provision[slot_id] = data;
+        spdm_context->local_context.local_cert_chain_provision_size[slot_id] = data_size;
+    }
 
     response_size = sizeof(response);
     libspdm_get_encap_response_certificate(spdm_context, request_size,
