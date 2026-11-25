@@ -557,7 +557,7 @@ static void rsp_set_key_pair_info_ack_case4(void **state)
 
 /**
  * Test 5: SET_KEY_PAIR_RESET replay where two requests differ only in DesiredPqcAsymAlgo.
- * This exercises the device_secret HAL (libspdm_write_key_pair_info) directly, since the
+ * This exercises the device_secret HAL (libspdm_update_local_key_pair_info) directly, since the
  * cached-request match that decides whether a post-reset replay is applied lives in the HAL.
  * Expected Behavior: a replay that changes only the PQC algorithm shall not be accepted as the
  * cached request; the correct PQC algorithm shall be applied only once the matching request is
@@ -589,7 +589,7 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
     /* First request: GenerateKeyPair with ML-DSA-44. With need_reset = true the HAL caches the
      * request and reports that a reset is still required (not yet applied). */
     need_reset = true;
-    result = libspdm_write_key_pair_info(
+    result = libspdm_update_local_key_pair_info(
         spdm_context, NULL, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
         SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE, 0,
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_44, 0, &need_reset);
@@ -600,7 +600,7 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
      * treated as the cached request: the HAL caches the new request and again reports that a
      * reset is required, rather than applying the stale ML-DSA-44 value. */
     need_reset = true;
-    result = libspdm_write_key_pair_info(
+    result = libspdm_update_local_key_pair_info(
         spdm_context, NULL, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
         SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE, 0,
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65, 0, &need_reset);
@@ -610,7 +610,7 @@ static void rsp_set_key_pair_info_ack_case5(void **state)
     /* Replay the ML-DSA-65 request identically: now it matches the cached request and is
      * applied (need_reset cleared). */
     need_reset = true;
-    result = libspdm_write_key_pair_info(
+    result = libspdm_update_local_key_pair_info(
         spdm_context, NULL, key_pair_id, SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION,
         SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE, 0,
         SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65, 0, &need_reset);

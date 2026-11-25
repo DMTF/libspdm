@@ -45,7 +45,7 @@ typedef struct {
     uint16_t public_key_info_len;
     uint8_t assoc_cert_slot_mask;
     uint8_t public_key_info[LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN];
-} libspdm_key_pair_info_t;
+} libspdm_sample_key_pair_info_t;
 
 /* Up to (9 traditional + 3 ML-DSA) PRIMARY key pairs, each backing slots 0 and 1, plus one
  * SECONDARY key pair per algorithm backing slot 4 (the multi-key example) -- hence x2. */
@@ -53,7 +53,7 @@ typedef struct {
 #define LIBSPDM_MAX_KEY_PAIR_COUNT ((9 + 3) * 2)
 #endif
 
-libspdm_key_pair_info_t m_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
+libspdm_sample_key_pair_info_t m_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
 
 uint8_t m_total_key_pair_count = 0;
 
@@ -545,7 +545,7 @@ bool libspdm_cache_last_set_key_pair_info_request(const uint8_t *last_set_key_pa
     return res;
 }
 
-bool libspdm_write_key_pair_info(
+bool libspdm_update_local_key_pair_info(
     void *spdm_context,
     const uint32_t *session_id,
     uint8_t key_pair_id,

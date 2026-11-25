@@ -76,8 +76,11 @@ extern bool libspdm_read_key_pair_info(
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
+
 /**
- * write the key pair info of the key_pair_id.
+ * Apply a validated SET_KEY_PAIR_INFO Operation (Erase/Generate/ChangeParameter) to key_pair_id
+ * and write the result to non-volatile memory, similar to libspdm_update_local_cert_chain() for
+ * SET_CERTIFICATE.
  *
  * The algorithm fields use the SPDM_KEY_PAIR_ASYM_ALGO_CAP_* and SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_*
  * encodings of SET_KEY_PAIR_INFO. A desired_key_usage, desired_asym_algo or desired_pqc_asym_algo
@@ -86,9 +89,11 @@ extern bool libspdm_read_key_pair_info(
  *
  * On input, need_reset is the value of SET_KEY_PAIR_RESET_CAP for SPDM 1.4 and later, and false for
  * SPDM 1.3. If need_reset is true on output then libspdm sends ERROR(ResetRequired), even if the
- * Responder does not set SET_KEY_PAIR_RESET_CAP. Otherwise libspdm_read_key_pair_info() must return
- * the new values as soon as this function returns, because libspdm reads them back. If false is
- * returned then libspdm sends ERROR(OperationFailed).
+ * Responder does not set SET_KEY_PAIR_RESET_CAP. Otherwise the implementation must update
+ * LIBSPDM_DATA_LOCAL_KEY_PAIR_INFO (via libspdm_set_data()) with the new values before this
+ * function returns, because libspdm reads them back. If a reset is required, the implementation
+ * must update LIBSPDM_DATA_LOCAL_KEY_PAIR_INFO once the reset has happened. If false is returned
+ * then libspdm sends ERROR(OperationFailed).
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    Indicates the session in which the request was received.
@@ -107,10 +112,10 @@ extern bool libspdm_read_key_pair_info(
  *                                       On output, indicates whether the device needs to be reset
  *                                       to complete the set_key_pair_info.
  *
- * @retval true  set key pair info successfully.
- * @retval false set key pair info failed.
+ * @retval true   the operation was applied and written to non-volatile memory successfully.
+ * @retval false  the operation could not be applied.
  **/
-extern bool libspdm_write_key_pair_info(
+extern bool libspdm_update_local_key_pair_info(
     void *spdm_context,
     const uint32_t *session_id,
     uint8_t key_pair_id,
@@ -119,7 +124,8 @@ extern bool libspdm_write_key_pair_info(
     uint32_t desired_asym_algo,
     uint32_t desired_pqc_asym_algo,
     uint8_t desired_assoc_cert_slot_mask,
-    bool * need_reset);
+    bool *need_reset);
+
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
 
 #endif /* RESPONDER_KEY_PAIR_INFO_H */

@@ -375,7 +375,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     } else {
         need_reset = false;
     }
-    result = libspdm_write_key_pair_info(
+    result = libspdm_update_local_key_pair_info(
         spdm_context,
         session_id,
         key_pair_id,

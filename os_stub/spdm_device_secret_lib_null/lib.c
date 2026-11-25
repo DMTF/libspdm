@@ -387,7 +387,7 @@ bool libspdm_read_key_pair_info(
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
-bool libspdm_write_key_pair_info(
+bool libspdm_update_local_key_pair_info(
     void *spdm_context,
     const uint32_t *session_id,
     uint8_t key_pair_id,
