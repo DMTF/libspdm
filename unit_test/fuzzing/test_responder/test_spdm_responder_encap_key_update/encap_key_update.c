@@ -162,6 +162,7 @@ void libspdm_test_get_encap_request_key_update_case1(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        free(spdm_request);
         LIBSPDM_ASSERT(false);
         return;
     }
@@ -218,6 +219,7 @@ void libspdm_test_get_encap_request_key_update_case2(void **State)
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
                                                          NULL, NULL)) {
+        free(spdm_request);
         LIBSPDM_ASSERT(false);
         return;
     }
