@@ -6476,6 +6476,7 @@ static void retrieve_cert_chain_during_mut_auth(libspdm_context_t *spdm_context,
     free(cert_chain);
 }
 
+#if (LIBSPDM_MAX_SESSION_COUNT) >= 2
 /* Start a second session, in session_info[1], whose handshake is in progress. */
 static libspdm_session_info_t *start_other_session(libspdm_context_t *spdm_context,
                                                    uint32_t session_id,
@@ -6497,6 +6498,7 @@ static libspdm_session_info_t *start_other_session(libspdm_context_t *spdm_conte
 
     return session_info;
 }
+#endif /* (LIBSPDM_MAX_SESSION_COUNT) >= 2 */
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
 
 /**
@@ -6726,11 +6728,12 @@ static void rsp_encapsulated_response_ack_case59(void **State)
  * Expected behavior: recording the chain changes no certificate chain that the first session could
  * be verified against, so libspdm records it, and the second session's flow continues.
  * Skipped if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP or LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT is not
- * set.
+ * set, or if LIBSPDM_MAX_SESSION_COUNT is less than 2, as the case opens two sessions.
  **/
 static void rsp_encapsulated_response_ack_case60(void **State)
 {
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) && \
+    (LIBSPDM_MAX_SESSION_COUNT) >= 2
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
@@ -6760,7 +6763,7 @@ static void rsp_encapsulated_response_ack_case60(void **State)
     end_session_mut_auth(spdm_context, session_id);
 #else
     skip();
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
 }
 
 /**
@@ -6771,11 +6774,12 @@ static void rsp_encapsulated_response_ack_case60(void **State)
  * flow with ERROR(Unspecified) after its handler is told LIBSPDM_STATUS_INVALID_STATE_LOCAL. Mutual
  * authentication in the second session has failed, so libspdm marks that session to be terminated.
  * Skipped if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP or LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT is not
- * set.
+ * set, or if LIBSPDM_MAX_SESSION_COUNT is less than 2, as the case opens two sessions.
  **/
 static void rsp_encapsulated_response_ack_case61(void **State)
 {
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) && \
+    (LIBSPDM_MAX_SESSION_COUNT) >= 2
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
@@ -6805,7 +6809,7 @@ static void rsp_encapsulated_response_ack_case61(void **State)
     end_session_mut_auth(spdm_context, session_id);
 #else
     skip();
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
 }
 
 /**
@@ -6870,7 +6874,7 @@ static void rsp_encapsulated_response_ack_case63(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
-    uint32_t other_session_id;
+    uint32_t session_id;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -6879,10 +6883,10 @@ static void rsp_encapsulated_response_ack_case63(void **State)
     m_illegal_request_after_cert_chain = false;
 
     set_standard_state(spdm_context);
-    other_session_id = 0xFFFFFFFE;
-    session_info = start_other_session(
-        spdm_context, other_session_id,
-        SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST);
+    session_id = 0xFFFFFFFF;
+    session_info = start_session_mut_auth(
+        spdm_context, session_id, SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST);
+    spdm_context->last_spdm_request_session_id_valid = false;
     libspdm_start_encap_flow(&spdm_context->encap_context, LIBSPDM_ENCAP_FLOW_BASIC_MUT_AUTH);
 
     retrieve_cert_chain_during_mut_auth(spdm_context, &spdm_context->encap_context,
@@ -6891,7 +6895,7 @@ static void rsp_encapsulated_response_ack_case63(void **State)
     assert_int_equal(spdm_context->session_id_to_terminate, INVALID_SESSION_ID);
     assert_int_equal(session_info->encap_context.flow_type, LIBSPDM_ENCAP_FLOW_SESS_MUT_AUTH);
 
-    libspdm_free_session_id(spdm_context, other_session_id);
+    end_session_mut_auth(spdm_context, session_id);
 #else
     skip();
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
