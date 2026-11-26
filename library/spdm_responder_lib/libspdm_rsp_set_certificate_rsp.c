@@ -241,7 +241,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         result = libspdm_update_local_cert_chain(
             spdm_context,
             session_id,
-            slot_id, key_pair_id, 0, 0, 0, 0,
+            0, slot_id, key_pair_id, 0, 0, 0, 0,
             old_local_cert_chain,
             old_local_cert_chain_size,
             NULL, 0,
@@ -319,6 +319,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         result = libspdm_update_local_cert_chain(
             spdm_context,
             session_id,
+            0,
             slot_id,
             key_pair_id,
             spdm_context->connection_info.algorithm.base_hash_algo,

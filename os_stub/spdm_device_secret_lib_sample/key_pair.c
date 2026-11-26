@@ -45,7 +45,7 @@ typedef struct {
     uint16_t public_key_info_len;
     uint8_t assoc_cert_slot_mask;
     uint8_t public_key_info[LIBSPDM_SAMPLE_MAX_PUBLIC_KEY_INFO_LEN];
-} libspdm_key_pair_info_t;
+} libspdm_sample_key_pair_info_t;
 
 /* Up to (9 traditional + 3 ML-DSA) PRIMARY key pairs, each backing slots 0 and 1, plus one
  * SECONDARY key pair per algorithm backing slot 4 (the multi-key example) -- hence x2. */
@@ -53,7 +53,7 @@ typedef struct {
 #define LIBSPDM_MAX_KEY_PAIR_COUNT ((9 + 3) * 2)
 #endif
 
-libspdm_key_pair_info_t m_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
+libspdm_sample_key_pair_info_t m_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
 
 uint8_t m_total_key_pair_count = 0;
 
@@ -436,19 +436,15 @@ uint8_t libspdm_get_key_pair_id_by_slot(uint32_t base_asym_algo, uint32_t pqc_as
  *
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  key_pair_id                Indicate which key pair ID's information to retrieve.
- *
  * @param  total_key_pairs            Indicate the total number of key pairs on the Responder.
- * @param  capabilities               Indicate the capabilities of the requested key pairs.
- * @param  key_usage_capabilities     Indicate the key usages the responder allows.
- * @param  current_key_usage          Indicate the currently configured key usage for the requested key pairs ID.
- * @param  asym_algo_capabilities     Indicate the asymmetric algorithms the Responder supports for this key pair ID.
- * @param  current_asym_algo          Indicate the currently configured asymmetric algorithm for this key pair ID.
- * @param  assoc_cert_slot_mask       This field is a bit mask representing the currently associated certificate slots.
- * @param  public_key_info_len        On input, indicate the size in bytes of the destination buffer to store.
- *                                    On output, indicate the size in bytes of the public_key_info.
- *                                    It can be NULL, if public_key_info is not required.
- * @param  public_key_info            A pointer to a destination buffer to store the public_key_info.
- *                                    It can be NULL, if public_key_info is not required.
+ * @param  key_pair_info              Returns the key pair info fields of key_pair_id. On input,
+ *                                    key_pair_info->public_key_info points to the destination
+ *                                    buffer for the public_key_info and
+ *                                    key_pair_info->public_key_info_len is its size in bytes;
+ *                                    on output, key_pair_info->public_key_info_len is the size in
+ *                                    bytes of the public_key_info. If
+ *                                    key_pair_info->public_key_info is NULL the public_key_info
+ *                                    is not required.
  *
  * @retval true  get key pair info successfully.
  * @retval false get key pair info failed.
@@ -458,16 +454,7 @@ bool libspdm_read_key_pair_info(
     const uint32_t *session_id,
     uint8_t key_pair_id,
     uint8_t *total_key_pairs,
-    uint16_t *capabilities,
-    uint16_t *key_usage_capabilities,
-    uint16_t *current_key_usage,
-    uint32_t *asym_algo_capabilities,
-    uint32_t *current_asym_algo,
-    uint32_t *pqc_asym_algo_capabilities,
-    uint32_t *current_pqc_asym_algo,
-    uint8_t *assoc_cert_slot_mask,
-    uint16_t *public_key_info_len,
-    uint8_t *public_key_info)
+    libspdm_key_pair_info_t *key_pair_info)
 {
     *total_key_pairs = libspdm_get_total_key_pairs();
 
@@ -476,32 +463,33 @@ bool libspdm_read_key_pair_info(
         return false;
     }
 
-    if (public_key_info_len != NULL) {
-        if (*public_key_info_len < m_key_pair_info[key_pair_id - 1].public_key_info_len) {
+    if (key_pair_info->public_key_info != NULL) {
+        if (key_pair_info->public_key_info_len <
+            m_key_pair_info[key_pair_id - 1].public_key_info_len) {
             return false;
         }
     }
 
     /*output*/
-    *capabilities = m_key_pair_info[key_pair_id - 1].capabilities;
-    *key_usage_capabilities = m_key_pair_info[key_pair_id - 1].key_usage_capabilities;
-    *current_key_usage = m_key_pair_info[key_pair_id - 1].current_key_usage;
-    *asym_algo_capabilities = m_key_pair_info[key_pair_id - 1].asym_algo_capabilities;
-    *current_asym_algo = m_key_pair_info[key_pair_id - 1].current_asym_algo;
-    if (pqc_asym_algo_capabilities != NULL) {
-        *pqc_asym_algo_capabilities = m_key_pair_info[key_pair_id - 1].pqc_asym_algo_capabilities;
-    }
-    if (current_pqc_asym_algo != NULL) {
-        *current_pqc_asym_algo = m_key_pair_info[key_pair_id - 1].current_pqc_asym_algo;
-    }
-    *assoc_cert_slot_mask = m_key_pair_info[key_pair_id - 1].assoc_cert_slot_mask;
+    key_pair_info->capabilities = m_key_pair_info[key_pair_id - 1].capabilities;
+    key_pair_info->key_usage_capabilities =
+        m_key_pair_info[key_pair_id - 1].key_usage_capabilities;
+    key_pair_info->current_key_usage = m_key_pair_info[key_pair_id - 1].current_key_usage;
+    key_pair_info->asym_algo_capabilities =
+        m_key_pair_info[key_pair_id - 1].asym_algo_capabilities;
+    key_pair_info->current_asym_algo = m_key_pair_info[key_pair_id - 1].current_asym_algo;
+    key_pair_info->pqc_asym_algo_capabilities =
+        m_key_pair_info[key_pair_id - 1].pqc_asym_algo_capabilities;
+    key_pair_info->current_pqc_asym_algo =
+        m_key_pair_info[key_pair_id - 1].current_pqc_asym_algo;
+    key_pair_info->assoc_cert_slot_mask = m_key_pair_info[key_pair_id - 1].assoc_cert_slot_mask;
 
-    if (public_key_info_len != NULL) {
-        *public_key_info_len = m_key_pair_info[key_pair_id - 1].public_key_info_len;
-        if (public_key_info != NULL) {
-            libspdm_copy_mem(public_key_info, *public_key_info_len,
-                             m_key_pair_info[key_pair_id - 1].public_key_info, *public_key_info_len);
-        }
+    if (key_pair_info->public_key_info != NULL) {
+        key_pair_info->public_key_info_len =
+            m_key_pair_info[key_pair_id - 1].public_key_info_len;
+        libspdm_copy_mem(key_pair_info->public_key_info, key_pair_info->public_key_info_len,
+                         m_key_pair_info[key_pair_id - 1].public_key_info,
+                         key_pair_info->public_key_info_len);
     }
 
     return true;
@@ -545,7 +533,7 @@ bool libspdm_cache_last_set_key_pair_info_request(const uint8_t *last_set_key_pa
     return res;
 }
 
-bool libspdm_write_key_pair_info(
+bool libspdm_update_local_key_pair_info(
     void *spdm_context,
     const uint32_t *session_id,
     uint8_t key_pair_id,
