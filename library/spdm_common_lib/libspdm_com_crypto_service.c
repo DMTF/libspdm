@@ -219,6 +219,7 @@ bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
         return false;
     }
 
+#if LIBSPDM_DEBUG_PRINT_ENABLE
     /* Debug code only - calculate and print value of l1l2 hash*/
     LIBSPDM_DEBUG_CODE(
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
@@ -234,6 +235,7 @@ bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
         LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         );
+#endif /* LIBSPDM_DEBUG_PRINT_ENABLE */
 
     return true;
 }
@@ -331,6 +333,7 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
             return false;
         }
 
+#if LIBSPDM_DEBUG_PRINT_ENABLE
         /* Debug code only - calculate and print value of m1m2 mut hash*/
         LIBSPDM_DEBUG_CODE(
             uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
@@ -346,6 +349,7 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
             LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
             );
+#endif /* LIBSPDM_DEBUG_PRINT_ENABLE */
 
     } else {
         if (((spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >
@@ -387,6 +391,7 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
             return false;
         }
 
+#if LIBSPDM_DEBUG_PRINT_ENABLE
         /* Debug code only - calculate and print value of m1m2 hash*/
         LIBSPDM_DEBUG_CODE(
             uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
@@ -402,6 +407,7 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
             LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
             );
+#endif /* LIBSPDM_DEBUG_PRINT_ENABLE */
     }
 
     return true;
@@ -506,6 +512,7 @@ static bool libspdm_calculate_il1il2(libspdm_context_t *spdm_context,
             return false;
         }
 
+#if LIBSPDM_DEBUG_PRINT_ENABLE
         /* Debug code only - calculate and print value of il1il2 hash*/
         LIBSPDM_DEBUG_CODE(
             uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
@@ -521,6 +528,7 @@ static bool libspdm_calculate_il1il2(libspdm_context_t *spdm_context,
             LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
             );
+#endif /* LIBSPDM_DEBUG_PRINT_ENABLE */
     } else {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
         LIBSPDM_INTERNAL_DUMP_HEX(
@@ -557,6 +565,7 @@ static bool libspdm_calculate_il1il2(libspdm_context_t *spdm_context,
             return false;
         }
 
+#if LIBSPDM_DEBUG_PRINT_ENABLE
         /* Debug code only - calculate and print value of il1il2 hash*/
         LIBSPDM_DEBUG_CODE(
             uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
@@ -572,6 +581,7 @@ static bool libspdm_calculate_il1il2(libspdm_context_t *spdm_context,
             LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
             );
+#endif /* LIBSPDM_DEBUG_PRINT_ENABLE */
     }
 
     return true;

@@ -132,9 +132,13 @@ bool libspdm_verify_key_exchange_rsp_signature(
     size_t cert_buffer_size;
 #endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 #endif
-#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
-    size_t hash_size;
+#if ((LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && (LIBSPDM_DEBUG_BLOCK_ENABLE)) || \
+    !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+#endif
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || \
+    ((LIBSPDM_DEBUG_PRINT_ENABLE) && (LIBSPDM_DEBUG_BLOCK_ENABLE))
+    size_t hash_size;
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 #endif
@@ -178,9 +182,11 @@ bool libspdm_verify_key_exchange_rsp_signature(
         return false;
     }
 #endif
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_BLOCK_ENABLE)
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hash - "));
     LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+#endif
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature - "));
     LIBSPDM_INTERNAL_DUMP_DATA(sign_data, sign_data_size);

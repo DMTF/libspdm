@@ -94,7 +94,8 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
 #endif
-#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || \
+    ((LIBSPDM_DEBUG_PRINT_ENABLE) && (LIBSPDM_DEBUG_BLOCK_ENABLE))
     size_t hash_size;
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
@@ -144,9 +145,11 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
         return false;
     }
 #endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_BLOCK_ENABLE)
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hash - "));
     LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+#endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_responder_data_sign(

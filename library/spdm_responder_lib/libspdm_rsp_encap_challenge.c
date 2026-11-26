@@ -199,23 +199,15 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         return LIBSPDM_STATUS_INVALID_CERT;
     }
 
-    LIBSPDM_DEBUG_CODE(
-        const void *nonce;
-        nonce = ptr;
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap nonce (0x%x) - ", SPDM_NONCE_SIZE));
-        LIBSPDM_INTERNAL_DUMP_DATA(nonce, SPDM_NONCE_SIZE);
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-        );
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap nonce (0x%x) - ", SPDM_NONCE_SIZE));
+    LIBSPDM_INTERNAL_DUMP_DATA(ptr, SPDM_NONCE_SIZE);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     ptr += SPDM_NONCE_SIZE;
 
-    LIBSPDM_DEBUG_CODE(
-        const void *measurement_summary_hash;
-        measurement_summary_hash = ptr;
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap measurement_summary_hash (0x%x) - ",
-                       measurement_summary_hash_size));
-        LIBSPDM_INTERNAL_DUMP_DATA(measurement_summary_hash, measurement_summary_hash_size);
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-        );
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap measurement_summary_hash (0x%x) - ",
+                   measurement_summary_hash_size));
+    LIBSPDM_INTERNAL_DUMP_DATA(ptr, measurement_summary_hash_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     ptr += measurement_summary_hash_size;
 
     opaque_length = libspdm_read_uint16(ptr);
@@ -248,12 +240,8 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
                              opaque_length + signature_size;
     }
 
-    LIBSPDM_DEBUG_CODE(
-        const void *opaque;
-        opaque = ptr;
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap opaque (0x%x):\n", opaque_length));
-        LIBSPDM_INTERNAL_DUMP_HEX(opaque, opaque_length);
-        );
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap opaque (0x%x):\n", opaque_length));
+    LIBSPDM_INTERNAL_DUMP_HEX(ptr, opaque_length);
     ptr += opaque_length;
 
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
