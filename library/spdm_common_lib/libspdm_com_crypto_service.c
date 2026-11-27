@@ -675,6 +675,7 @@ uint8_t libspdm_get_cert_slot_count(libspdm_context_t *spdm_context)
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
 bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_context,
+                                                     uint8_t slot_id,
                                                      const void *cert_chain_buffer,
                                                      size_t cert_chain_buffer_size)
 {
@@ -682,13 +683,21 @@ bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_con
     uint8_t cert_model;
     bool is_requester;
 
+    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
+
     is_requester = spdm_context->local_context.is_requester;
 
     cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
     /* Responder does not determine Requester's certificate model */
     if (is_requester) {
-        if ((spdm_context->connection_info.capability.flags &
-             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
+        if (spdm_context->connection_info.multi_key_conn_rsp &&
+            (spdm_context->connection_info.peer_cert_info[slot_id] !=
+             SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE)) {
+            /* With multiple asymmetric keys the certificate model can vary per slot, so the
+             * model is the one DIGESTS and CERTIFICATE give for this slot. */
+            cert_model = spdm_context->connection_info.peer_cert_info[slot_id];
+        } else if ((spdm_context->connection_info.capability.flags &
+                    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
             cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
         }
     }

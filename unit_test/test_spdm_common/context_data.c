@@ -44,7 +44,7 @@ static bool libspdm_verify_peer_cert_chain_buffer(void *spdm_context,
     bool result;
 
     /*verify peer cert chain integrity*/
-    result = libspdm_verify_peer_cert_chain_buffer_integrity(spdm_context, cert_chain_buffer,
+    result = libspdm_verify_peer_cert_chain_buffer_integrity(spdm_context, 0, cert_chain_buffer,
                                                              cert_chain_buffer_size);
     if (!result) {
         return false;
@@ -566,7 +566,7 @@ void libspdm_test_verify_peer_cert_chain_buffer_case5(void **state)
         spdm_context->local_context.peer_root_cert_provision_size[root_cert_index] = 0;
         spdm_context->local_context.peer_root_cert_provision[root_cert_index] = NULL;
     }
-    result = libspdm_verify_peer_cert_chain_buffer_integrity(spdm_context, data, data_size);
+    result = libspdm_verify_peer_cert_chain_buffer_integrity(spdm_context, 0, data, data_size);
     assert_true(result);
     result = libspdm_verify_peer_cert_chain_buffer_authority(spdm_context, data, data_size,
                                                              &trust_anchor, &trust_anchor_size);
@@ -5084,6 +5084,61 @@ static void libspdm_test_get_peer_cert_chain_data_case82(void **state)
 #endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 }
 
+/**
+ * Test 85: A Responder with ALIAS_CERT_CAP gives a DeviceCert chain, whose leaf certificate
+ * carries the hardware identity OID.
+ * Expected Behavior: without multiple keys every slot uses the AliasCert model, so the chain fails
+ * the integrity check. With multiple keys the chain is checked with the model given for its slot:
+ * it passes in a slot that uses the DeviceCert model and fails in one that uses the AliasCert model.
+ * Skipped if LIBSPDM_CERT_PARSE_SUPPORT is disabled.
+ **/
+static void libspdm_test_verify_peer_cert_chain_buffer_slot_cert_model_case85(void **state)
+{
+#if LIBSPDM_CERT_PARSE_SUPPORT
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+    bool result;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x55;
+
+    spdm_context->local_context.is_requester = true;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
+
+    spdm_context->connection_info.multi_key_conn_rsp = false;
+    result = libspdm_verify_peer_cert_chain_buffer_integrity(spdm_context, 0, data, data_size);
+    assert_false(result);
+
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    spdm_context->connection_info.peer_cert_info[0] = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
+    spdm_context->connection_info.peer_cert_info[4] = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+    result = libspdm_verify_peer_cert_chain_buffer_integrity(spdm_context, 4, data, data_size);
+    assert_true(result);
+    result = libspdm_verify_peer_cert_chain_buffer_integrity(spdm_context, 0, data, data_size);
+    assert_false(result);
+
+    free(data);
+#else
+    skip();
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
+}
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -5337,6 +5392,9 @@ int libspdm_common_context_data_test_main(void)
                                libspdm_unit_test_reset_context),
         /* reset_context forgets a session that was to be terminated */
         cmocka_unit_test(libspdm_test_reset_context_session_id_to_terminate_case84),
+        /* with multiple keys a chain is checked with the certificate model of its slot */
+        cmocka_unit_test_setup(libspdm_test_verify_peer_cert_chain_buffer_slot_cert_model_case85,
+                               libspdm_unit_test_reset_context),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);

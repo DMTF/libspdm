@@ -443,7 +443,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
         }
     } else {
         result = libspdm_verify_peer_cert_chain_buffer_integrity(
-            spdm_context, cert_chain_buffer, cert_chain_buffer_size);
+            spdm_context, encap_context->req_slot_id, cert_chain_buffer, cert_chain_buffer_size);
         if (!result) {
             return LIBSPDM_STATUS_VERIF_FAIL;
         }

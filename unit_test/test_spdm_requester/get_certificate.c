@@ -2244,6 +2244,7 @@ static libspdm_return_t receive_message(
         uint16_t portion_length;
         uint16_t remainder_length;
         size_t count;
+        bool result;
 
         if (m_calling_index ==0) {
             free(m_libspdm_local_certificate_chain);
@@ -2252,10 +2253,19 @@ static libspdm_return_t receive_message(
         }
 
         if (m_libspdm_local_certificate_chain == NULL) {
-            if (!libspdm_read_responder_public_certificate_chain(
+            /* A slot with the AliasCert model holds the AliasCert chain. */
+            if (m_cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT) {
+                result = libspdm_read_responder_public_certificate_chain_alias_cert(
                     m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
                     &m_libspdm_local_certificate_chain,
-                    &m_libspdm_local_certificate_chain_size, NULL, NULL)) {
+                    &m_libspdm_local_certificate_chain_size, NULL, NULL);
+            } else {
+                result = libspdm_read_responder_public_certificate_chain(
+                    m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+                    &m_libspdm_local_certificate_chain,
+                    &m_libspdm_local_certificate_chain_size, NULL, NULL);
+            }
+            if (!result) {
                 assert_true(false);
                 return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
@@ -4413,7 +4423,11 @@ static void req_get_certificate_case30(void **state)
     assert_memory_equal(cert_chain, m_libspdm_local_certificate_chain,
                         m_libspdm_local_certificate_chain_size);
 
-    /* Sub Case 2: CertModel Value of 2 , AliasCert model*/
+    /* Sub Case 2: CertModel Value of 2 , AliasCert model, which needs ALIAS_CERT_CAP. Each slot's
+     * chain is checked with the slot's model: the AliasCert chain in slot 0, then a DeviceCert
+     * chain in slot 1, whose leaf certificate carries the hardware identity OID. */
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
     spdm_context->connection_info.multi_key_conn_rsp = true;
     spdm_context->connection_info.peer_cert_info[0] = 0;
     m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
@@ -4429,6 +4443,23 @@ static void req_get_certificate_case30(void **state)
     assert_int_equal(cert_chain_size, m_libspdm_local_certificate_chain_size);
     assert_memory_equal(cert_chain, m_libspdm_local_certificate_chain,
                         m_libspdm_local_certificate_chain_size);
+
+    spdm_context->connection_info.peer_cert_info[1] = 0;
+    m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+    libspdm_reset_message_b(spdm_context);
+    m_slot_id = 1;
+    m_calling_index = 0;
+
+    cert_chain_size = sizeof(cert_chain);
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size, cert_chain);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[1], m_cert_model);
+    assert_int_equal(cert_chain_size, m_libspdm_local_certificate_chain_size);
+    assert_memory_equal(cert_chain, m_libspdm_local_certificate_chain,
+                        m_libspdm_local_certificate_chain_size);
+    spdm_context->connection_info.capability.flags &=
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
 
     /* Sub Case 3: CertModel Value of 3 GenericCert model , slot_id set 1
      * In all cases, the certificate model for slot 0 shall be either the device certificate model or the alias certificate model*/
