@@ -56,11 +56,11 @@ static uint32_t libspdm_prioritize_algorithm(const uint32_t *priority_table,
     return 0;
 }
 
-libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context,
-                                                 size_t request_size,
-                                                 const void *request,
-                                                 size_t *response_size,
-                                                 void *response)
+static libspdm_return_t libspdm_process_negotiate_algorithms(libspdm_context_t *spdm_context,
+                                                             size_t request_size,
+                                                             const void *request,
+                                                             size_t *response_size,
+                                                             void *response)
 {
     const spdm_negotiate_algorithms_request_t *spdm_request;
     size_t spdm_request_size;
@@ -1145,4 +1145,32 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
     libspdm_set_connection_state(spdm_context, LIBSPDM_CONNECTION_STATE_NEGOTIATED);
 
     return LIBSPDM_STATUS_SUCCESS;
+}
+
+libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context,
+                                                 size_t request_size,
+                                                 const void *request,
+                                                 size_t *response_size,
+                                                 void *response)
+{
+    libspdm_device_algorithm_t algorithm_before;
+    libspdm_return_t status;
+
+    /* The selected algorithms are written into connection_info.algorithm before
+     * they are validated. If the negotiation does not complete, restore what was
+     * there, so a later retry cannot inherit values from a rejected request. */
+    libspdm_copy_mem(&algorithm_before, sizeof(algorithm_before),
+                     &spdm_context->connection_info.algorithm,
+                     sizeof(spdm_context->connection_info.algorithm));
+
+    status = libspdm_process_negotiate_algorithms(spdm_context, request_size, request,
+                                                  response_size, response);
+
+    if (spdm_context->connection_info.connection_state != LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+        libspdm_copy_mem(&spdm_context->connection_info.algorithm,
+                         sizeof(spdm_context->connection_info.algorithm),
+                         &algorithm_before, sizeof(algorithm_before));
+    }
+
+    return status;
 }
