@@ -1097,7 +1097,11 @@ bool libspdm_generate_public_key_hash(libspdm_context_t *spdm_context,
  * This function verifies the integrity of peer certificate chain buffer including
  * spdm_cert_chain_t header.
  *
+ * When the Requester verifies a chain of a Responder that uses multiple asymmetric keys, the
+ * certificate model is the one the Responder gives for the slot, since it can vary per slot.
+ *
  * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  slot_id                       The slot ID of the certificate chain.
  * @param  cert_chain_buffer              Certificate chain buffer including spdm_cert_chain_t header.
  * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
  *
@@ -1105,6 +1109,7 @@ bool libspdm_generate_public_key_hash(libspdm_context_t *spdm_context,
  * @retval false Peer certificate chain buffer integrity verification failed.
  **/
 bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_context,
+                                                     uint8_t slot_id,
                                                      const void *cert_chain_buffer,
                                                      size_t cert_chain_buffer_size);
 

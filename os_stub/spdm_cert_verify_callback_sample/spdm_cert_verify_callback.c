@@ -219,7 +219,7 @@ bool libspdm_verify_spdm_cert_chain_with_dice(void *spdm_context, uint8_t slot_i
     uint8_t number_dice_tcb_info;
 
     /*verify peer cert chain integrity*/
-    result = libspdm_verify_peer_cert_chain_buffer_integrity(spdm_context, cert_chain,
+    result = libspdm_verify_peer_cert_chain_buffer_integrity(spdm_context, slot_id, cert_chain,
                                                              cert_chain_size);
     if (!result) {
         return false;

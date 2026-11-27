@@ -474,7 +474,7 @@ static libspdm_return_t libspdm_try_get_large_certificate(libspdm_context_t *spd
         }
     } else {
         result = libspdm_verify_peer_cert_chain_buffer_integrity(
-            spdm_context, cert_chain, cert_chain_size_internal);
+            spdm_context, slot_id, cert_chain, cert_chain_size_internal);
         if (!result) {
             status = LIBSPDM_STATUS_VERIF_FAIL;
             goto done;
